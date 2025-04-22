@@ -1133,6 +1133,16 @@
         ]
       },
       {
+        "Name":"OFF_ON_CONTROL",
+        "MaxValue":3,
+        "EnumValues":[
+          {"Name":"Off", "Value":0},
+          {"Name":"On", "Value":1},
+          {"Name":"Reserved", "Value":2},
+          {"Name":"Take no action (no change)", "Value":3}
+        ]
+      },
+      {
         "Name":"DIRECTION_REFERENCE",
         "MaxValue":3,
         "EnumValues":[
@@ -19725,9 +19735,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":3,
@@ -19739,9 +19749,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":4,
@@ -19753,9 +19763,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":5,
@@ -19767,9 +19777,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":6,
@@ -19781,9 +19791,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":7,
@@ -19795,9 +19805,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":8,
@@ -19809,9 +19819,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":9,
@@ -19823,9 +19833,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":10,
@@ -19837,9 +19847,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":11,
@@ -19851,9 +19861,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":12,
@@ -19865,9 +19875,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":13,
@@ -19879,9 +19889,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":14,
@@ -19893,9 +19903,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":15,
@@ -19907,9 +19917,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":16,
@@ -19921,9 +19931,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":17,
@@ -19935,9 +19945,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":18,
@@ -19949,9 +19959,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":19,
@@ -19963,9 +19973,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":20,
@@ -19977,9 +19987,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":21,
@@ -19991,9 +20001,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":22,
@@ -20005,9 +20015,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":23,
@@ -20019,9 +20029,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":24,
@@ -20033,9 +20043,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":25,
@@ -20047,9 +20057,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":26,
@@ -20061,9 +20071,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":27,
@@ -20075,9 +20085,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":28,
@@ -20089,9 +20099,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           },
           {
             "Order":29,
@@ -20103,9 +20113,9 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"OFF_ON_CONTROL"
           }
         ]
       },

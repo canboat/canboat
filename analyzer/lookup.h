@@ -828,6 +828,13 @@ LOOKUP(OFF_ON, 0, "Off")
 LOOKUP(OFF_ON, 1, "On") /* Note that Error and Unknown are automatically decoded */
 LOOKUP_END
 
+LOOKUP_TYPE(OFF_ON_CONTROL, BITS(2))
+LOOKUP(OFF_ON, 0, "Off")
+LOOKUP(OFF_ON, 1, "On")
+LOOKUP(OFF_ON, 2, "Reserved")
+LOOKUP(OFF_ON, 3, "Take no action (no change)")
+LOOKUP_END
+
 LOOKUP_TYPE(DIRECTION_REFERENCE, BITS(2))
 LOOKUP(DIRECTION_REFERENCE, 0, "True")
 LOOKUP(DIRECTION_REFERENCE, 1, "Magnetic")

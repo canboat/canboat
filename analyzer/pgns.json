@@ -16247,10 +16247,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":3,
             "Id":"switch2",
@@ -16262,10 +16264,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":4,
             "Id":"switch3",
@@ -16277,10 +16281,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":5,
             "Id":"switch4",
@@ -16292,10 +16298,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":6,
             "Id":"switch5",
@@ -16307,10 +16315,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":7,
             "Id":"switch6",
@@ -16322,10 +16332,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":8,
             "Id":"switch7",
@@ -16337,10 +16349,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":9,
             "Id":"switch8",
@@ -16352,10 +16366,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":10,
             "Id":"switch9",
@@ -16367,10 +16383,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":11,
             "Id":"switch10",
@@ -16382,10 +16400,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":12,
             "Id":"switch11",
@@ -16397,10 +16417,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":13,
             "Id":"switch12",
@@ -16412,10 +16434,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":14,
             "Id":"switch13",
@@ -16427,10 +16451,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":15,
             "Id":"switch14",
@@ -16442,10 +16468,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":16,
             "Id":"switch15",
@@ -16457,10 +16485,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":17,
             "Id":"switch16",
@@ -16472,10 +16502,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":18,
             "Id":"switch17",
@@ -16487,10 +16519,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":19,
             "Id":"switch18",
@@ -16502,10 +16536,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":20,
             "Id":"switch19",
@@ -16517,10 +16553,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":21,
             "Id":"switch20",
@@ -16532,10 +16570,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":22,
             "Id":"switch21",
@@ -16547,10 +16587,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":23,
             "Id":"switch22",
@@ -16562,10 +16604,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":24,
             "Id":"switch23",
@@ -16577,10 +16621,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":25,
             "Id":"switch24",
@@ -16592,10 +16638,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":26,
             "Id":"switch25",
@@ -16607,10 +16655,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":27,
             "Id":"switch26",
@@ -16622,10 +16672,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":28,
             "Id":"switch27",
@@ -16637,10 +16689,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]},
           {
             "Order":29,
             "Id":"switch28",
@@ -16652,10 +16706,12 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":2,
+            "RangeMax":3,
             "EnumValues":[
               {"name": "Off", "value": 0},
-              {"name": "On", "value": 1}]}]},
+              {"name": "On", "value": 1},
+              {"name": "Reserved", "value": 2},
+              {"name": "Take no action (no change)", "value": 3}]}]},
       {
         "PGN":127503,
         "Id":"acInputStatus",
