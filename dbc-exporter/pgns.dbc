@@ -1,4 +1,4 @@
-VERSION "5.1.3"
+VERSION "5.2.0"
 
 
 NS_ : 
@@ -2009,34 +2009,34 @@ VAL_ 2582777342 indicator4 0 "Off" 1 "On" ;
 VAL_ 2582777342 indicator3 0 "Off" 1 "On" ;
 VAL_ 2582777342 indicator2 0 "Off" 1 "On" ;
 VAL_ 2582777342 indicator1 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch28 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch27 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch26 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch25 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch24 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch23 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch22 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch21 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch20 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch19 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch18 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch17 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch16 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch15 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch14 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch13 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch12 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch11 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch10 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch9 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch8 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch7 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch6 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch5 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch4 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch3 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch2 0 "Off" 1 "On" ;
-VAL_ 2582777598 switch1 0 "Off" 1 "On" ;
+VAL_ 2582777598 switch28 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch27 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch26 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch25 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch24 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch23 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch22 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch21 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch20 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch19 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch18 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch17 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch16 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch15 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch14 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch13 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch12 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch11 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch10 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch9 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch8 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch7 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch6 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch5 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch4 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch3 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch2 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
+VAL_ 2582777598 switch1 0 "Off" 1 "On" 2 "Reserved" 3 "Take no action (no change)" ;
 VAL_ 2582778366 type 0 "Fuel" 1 "Water" 2 "Gray water" 3 "Live well" 4 "Oil" 5 "Black water" ;
 VAL_ 2582841086 rippleState 0 "Good" 1 "Warning" 2 "Error" ;
 VAL_ 2582841086 lowDcVoltageState 0 "Good" 1 "Warning" 2 "Error" ;

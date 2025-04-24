@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v5.1.3
+CANboat version v5.2.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -23,12 +23,12 @@ limitations under the License.
 -->
 <?xml-stylesheet type="text/xsl" href="canboat.xsl"?>
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SchemaVersion>2.1.1</SchemaVersion>
+  <SchemaVersion>2.2.0</SchemaVersion>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>5.1.3</Version>
-  <Copyright>CANboat version v5.1.3
+  <Version>5.2.0</Version>
+  <Copyright>CANboat version v5.2.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -976,6 +976,12 @@ limitations under the License.
     <LookupEnumeration Name='OFF_ON' MaxValue='3'>
       <EnumPair Value='0' Name='Off' />
       <EnumPair Value='1' Name='On' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='OFF_ON_CONTROL' MaxValue='3'>
+      <EnumPair Value='0' Name='Off' />
+      <EnumPair Value='1' Name='On' />
+      <EnumPair Value='2' Name='Reserved' />
+      <EnumPair Value='3' Name='Take no action (no change)' />
     </LookupEnumeration>
     <LookupEnumeration Name='DIRECTION_REFERENCE' MaxValue='3'>
       <EnumPair Value='0' Name='True' />
@@ -19367,9 +19373,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>3</Order>
@@ -19381,9 +19387,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>4</Order>
@@ -19395,9 +19401,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
@@ -19409,9 +19415,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
@@ -19423,9 +19429,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -19437,9 +19443,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -19451,9 +19457,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
@@ -19465,9 +19471,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>10</Order>
@@ -19479,9 +19485,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>11</Order>
@@ -19493,9 +19499,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
@@ -19507,9 +19513,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>13</Order>
@@ -19521,9 +19527,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>14</Order>
@@ -19535,9 +19541,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>15</Order>
@@ -19549,9 +19555,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>16</Order>
@@ -19563,9 +19569,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>17</Order>
@@ -19577,9 +19583,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>18</Order>
@@ -19591,9 +19597,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>19</Order>
@@ -19605,9 +19611,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>20</Order>
@@ -19619,9 +19625,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>21</Order>
@@ -19633,9 +19639,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>22</Order>
@@ -19647,9 +19653,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>23</Order>
@@ -19661,9 +19667,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>24</Order>
@@ -19675,9 +19681,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>25</Order>
@@ -19689,9 +19695,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>26</Order>
@@ -19703,9 +19709,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>27</Order>
@@ -19717,9 +19723,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>28</Order>
@@ -19731,9 +19737,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
         <Field>
           <Order>29</Order>
@@ -19745,9 +19751,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>OFF_ON_CONTROL</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>

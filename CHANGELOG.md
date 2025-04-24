@@ -42,6 +42,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #499: DataTransmitOffset is in centiseconds, not millis.
 - #508: Offset for Peukert coefficient is wrong.
 - #509: Fix fusion transport lookup
+- #514: Fix lookup for OFF_ON fields that control a setting (PGN 127502.)
 
 ### Added
 
@@ -52,6 +53,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #501: Split TIME into TIME and DURATION.
 - #503: Introduce PGN field type.
 - #502: Introduce ISO_NAME fieldtype.
+- #515: Rework Fusion PGNs.
 
 ### [5.1.3]
 

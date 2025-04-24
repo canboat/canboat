@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            5.1.3.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v5.1.3
+            5.2.0.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v5.2.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -5065,91 +5065,91 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Switch1</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Switch1</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>3</td><td>Switch2</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>3</td><td>Switch2</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>4</td><td>Switch3</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>4</td><td>Switch3</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>5</td><td>Switch4</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>5</td><td>Switch4</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>6</td><td>Switch5</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>6</td><td>Switch5</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>7</td><td>Switch6</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>7</td><td>Switch6</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>8</td><td>Switch7</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>8</td><td>Switch7</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>9</td><td>Switch8</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>9</td><td>Switch8</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>10</td><td>Switch9</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>10</td><td>Switch9</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>11</td><td>Switch10</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>11</td><td>Switch10</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>12</td><td>Switch11</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>12</td><td>Switch11</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>13</td><td>Switch12</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>13</td><td>Switch12</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>14</td><td>Switch13</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>14</td><td>Switch13</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>15</td><td>Switch14</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>15</td><td>Switch14</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>16</td><td>Switch15</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>16</td><td>Switch15</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>17</td><td>Switch16</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>17</td><td>Switch16</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>18</td><td>Switch17</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>18</td><td>Switch17</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>19</td><td>Switch18</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>19</td><td>Switch18</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>20</td><td>Switch19</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>20</td><td>Switch19</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>21</td><td>Switch20</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>21</td><td>Switch20</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>22</td><td>Switch21</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>22</td><td>Switch21</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>23</td><td>Switch22</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>23</td><td>Switch22</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>24</td><td>Switch23</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>24</td><td>Switch23</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>25</td><td>Switch24</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>25</td><td>Switch24</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>26</td><td>Switch25</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>26</td><td>Switch25</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>27</td><td>Switch26</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>27</td><td>Switch26</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>28</td><td>Switch27</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>28</td><td>Switch27</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>29</td><td>Switch28</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr><tr><td>29</td><td>Switch28</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr></table><h3 id="pgn-127503">0x1F20F:
+                      <a href="#lookup-OFF_ON_CONTROL">OFF_ON_CONTROL</a></td><td/></tr></table><h3 id="pgn-127503">0x1F20F:
             PGN 127503
             - AC Input Status</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -15043,7 +15043,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>OK</td></tr><tr><td>1</td><td>Warning</td></tr></table><h3 id="lookup-OFF_ON">OFF_ON
         (0 - 3)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr></table><h3 id="lookup-DIRECTION_REFERENCE">DIRECTION_REFERENCE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr></table><h3 id="lookup-OFF_ON_CONTROL">OFF_ON_CONTROL
+        (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Reserved</td></tr><tr><td>3</td><td>Take no action (no change)</td></tr></table><h3 id="lookup-DIRECTION_REFERENCE">DIRECTION_REFERENCE
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>True</td></tr><tr><td>1</td><td>Magnetic</td></tr><tr><td>2</td><td>Error</td></tr></table><h3 id="lookup-DIRECTION_RUDDER">DIRECTION_RUDDER
         (0 - 7)

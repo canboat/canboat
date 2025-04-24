@@ -2,7 +2,7 @@
     "Comment":"WARNING: DO NOT USE THIS FILE. IT IS INCLUDED FOR HISTORICAL DOWNSTREAM PROJECTS. See https://github.com/canboat/canboat for the full source code and the recommended new file to use.",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"5.1.3",
+    "Version":"5.2.0",
     "PGNs": [
     
       {
