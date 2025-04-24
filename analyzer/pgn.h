@@ -6489,10 +6489,10 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32772, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       LOOKUP_FIELD("Flags", BYTES(2), FUSION_PLAY_STATUS),
-      UINT32_FIELD("Track Number"),
-      UINT32_FIELD("Total Number of Tracks"),
-      DURATION_UFIX32_MS_FIELD("Track Length", NULL),
-      DURATION_UFIX32_MS_FIELD("Track Position", NULL),
+      UINT32_FIELD("Track #"),
+      UINT32_FIELD("Track Count"),
+      DURATION_UFIX32_MS_FIELD("Length", NULL),
+      DURATION_UFIX32_MS_FIELD("Position in track", NULL),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6505,7 +6505,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32773, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       UINT32_FIELD("Index"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Track"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6518,7 +6518,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32774, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       UINT32_FIELD("Index"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Artist"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6531,7 +6531,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32775, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       UINT32_FIELD("Index"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Album"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6566,7 +6566,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32777, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
-      DURATION_UFIX24_MS_FIELD("Position", NULL),
+      DURATION_UFIX24_MS_FIELD("Progress", NULL),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6581,7 +6581,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Scanning"),
       RADIO_FREQUENCY_FIELD("Frequency", 1),
       UINT8_FIELD("Signal Strength"),
-      STRINGVAR_FIELD("RDS"),
+      STRINGVAR_FIELD("Track"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6607,7 +6607,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32781, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
-      UINT8_FIELD("Minimum Level"),
+      UINT8_FIELD("Squelch"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6634,7 +6634,7 @@ Pgn pgnList[] = {
       UINT32_FIELD("Item Index"),
       UINT8_FIELD("Flags"),
       UINT8_FIELD("Lock ID"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Text"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6658,7 +6658,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32788, FUSION_STATUS_MESSAGE_ID),
       MATCH_LOOKUP_FIELD("ID", BYTES(4), 9, FUSION_SETTING),
-      LOOKUP_FIELD("Value", BYTES(4), FUSION_REPEAT_STATUS),
+      LOOKUP_FIELD("Status", BYTES(4), FUSION_REPEAT_STATUS),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6733,10 +6733,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32794, FUSION_STATUS_MESSAGE_ID),
-      UINT8_FIELD("Zone 1 Sublevel"),
-      UINT8_FIELD("Zone 2 Sublevel"),
-      UINT8_FIELD("Zone 3 Sublevel"),
-      UINT8_FIELD("Zone 4 Sublevel"),
+      UINT8_FIELD("Zone 1"),
+      UINT8_FIELD("Zone 2"),
+      UINT8_FIELD("Zone 3"),
+      UINT8_FIELD("Zone 4"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6750,7 +6750,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32795, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Zone"),
       SIMPLE_SIGNED_FIELD("Bass", BYTES(1)),
-      SIMPLE_SIGNED_FIELD("Middle", BYTES(1)),
+      SIMPLE_SIGNED_FIELD("Mid", BYTES(1)),
       SIMPLE_SIGNED_FIELD("Treble", BYTES(1)),
       END_OF_FIELDS},
      .priority = 7}
@@ -6776,10 +6776,10 @@ Pgn pgnList[] = {
       PACKET_FAST,
       {COMPANY(419),
        MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32797, FUSION_STATUS_MESSAGE_ID),
-       UINT8_FIELD("Zone 1 Volume"),
-       UINT8_FIELD("Zone 2 Volume"),
-       UINT8_FIELD("Zone 3 Volume"),
-       UINT8_FIELD("Zone 4 Volume"),
+       UINT8_FIELD("Zone 1"),
+       UINT8_FIELD("Zone 2"),
+       UINT8_FIELD("Zone 3"),
+       UINT8_FIELD("Zone 4"),
        END_OF_FIELDS},
       .priority = 7}
  
@@ -6858,7 +6858,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32805, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       UINT16_FIELD("Channel"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Title"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6871,7 +6871,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32806, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
       UINT16_FIELD("Channel"),
-      STRINGVAR_FIELD("Name"),
+      STRINGVAR_FIELD("Artist"),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -6884,7 +6884,7 @@ Pgn pgnList[] = {
        MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32807, FUSION_STATUS_MESSAGE_ID),
        UINT8_PRIMARY_KEY_FIELD("Source ID"),
        UINT16_FIELD("Channel"),
-       STRINGVAR_FIELD("Name"),
+       STRINGVAR_FIELD("Genre"),
        END_OF_FIELDS},
       .priority = 7}
  

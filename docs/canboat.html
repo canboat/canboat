@@ -12092,16 +12092,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Flags</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>Track Number</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS</a></td><td/></tr><tr><td>7</td><td>Track #</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Total Number of Tracks</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Track Count</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Track Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Length</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>10</td><td>Track Position</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>10</td><td>Position in track</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12139,7 +12139,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Track</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12176,7 +12176,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Artist</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12213,7 +12213,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Album</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12311,7 +12311,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Position</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Progress</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.213</div></td><td>24 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12355,7 +12355,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Signal Strength</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>RDS</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Track</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12428,7 +12428,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Minimum Level</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Squelch</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12506,7 +12506,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Lock ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Text</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12574,7 +12574,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   USB repeat</td><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                       lookup
                       <a href="#lookup-FUSION_REPEAT_STATUS">FUSION_REPEAT_STATUS</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12783,16 +12783,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Sublevels</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4 Sublevel</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12829,7 +12829,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Middle</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-127 .. 125</div></td><td>8 bits
@@ -12903,16 +12903,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Volumes</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4 Volume</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -13138,7 +13138,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Title</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -13175,7 +13175,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Artist</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -13212,7 +13212,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Name</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Genre</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
