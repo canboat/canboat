@@ -6798,15 +6798,15 @@ Pgn pgnList[] = {
 
     ,
     {"Fusion: Line Level Control",
-    130820,
-    PACKET_COMPLETE,
-    PACKET_FAST,
-    {COMPANY(419),
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32799, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Zone"),
       UINT8_FIELD("Control"),
       END_OF_FIELDS},
-    .priority = 7}
+     .priority = 7}
 
     ,
     {"Fusion: Power State",
