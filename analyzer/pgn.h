@@ -6873,20 +6873,20 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
-     ,
-     {"Fusion: SiriusXM Content Info",
-      130820,
-      PACKET_COMPLETE,
-      PACKET_FAST,
-      {COMPANY(419),
-       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32807, FUSION_STATUS_MESSAGE_ID),
-       UINT8_PRIMARY_KEY_FIELD("Source ID"),
-       UINT16_FIELD("Channel"),
-       STRINGVAR_FIELD("Genre"),
-       END_OF_FIELDS},
-      .priority = 7}
+    ,
+    {"Fusion: SiriusXM Content Info",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(419),
+      MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32807, FUSION_STATUS_MESSAGE_ID),
+      UINT8_PRIMARY_KEY_FIELD("Source ID"),
+      UINT16_FIELD("Channel"),
+      STRINGVAR_FIELD("Genre"),
+      END_OF_FIELDS},
+     .priority = 7}
  
-     ,
+    ,
     {"Fusion: SiriusXM Category",
      130820,
      PACKET_COMPLETE,
