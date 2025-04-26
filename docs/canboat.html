@@ -8978,7 +8978,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 3
+              at least 6
             bytes long and contains 12 fields.
 
             
@@ -8990,16 +8990,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Databases Available</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Databases Available</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Database Name</td><td/><td> </td><td>
@@ -9008,29 +9008,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Database Datestamp</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Position Resolution</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Position Resolution</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Reserved</td><td/><td/><td>2 bits
+                      lookup
+                      <a href="#lookup-WP_POSITION_RESOLUTION">WP_POSITION_RESOLUTION</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Number of Routes in Database</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Number of WPs in Database</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Number of WPs in Database</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Number of Bytes in Database</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Number of Bytes in Database</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130065">0x1FC11:
             PGN 130065
             - Route and WP Service - Route List</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 4
+              at least 8
             bytes long and contains 9 fields.
 
             
@@ -9042,48 +9042,48 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Routes in Database</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Routes in Database</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Route Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Identification Method</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Route Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      lookup
+                      <a href="#lookup-WP_IDENTIFICATION_METHOD">WP_IDENTIFICATION_METHOD</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Route Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130066">0x1FC12:
+                      lookup
+                      <a href="#lookup-WP_ROUTE_STATUS">WP_ROUTE_STATUS</a></td><td/></tr></table><h3 id="pgn-130066">0x1FC12:
             PGN 130066
             - Route and WP Service - Route/WP-List Attributes</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 15
-            bytes long and contains 13 fields.
+              at least 17
+            bytes long and contains 12 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Route/WP-List Name</td><td/><td> </td><td>
@@ -9092,38 +9092,37 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Route/WP-List Datestamp</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>6</td><td>Change at Last Timestamp</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>6</td><td>Change at Last Timestamp</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      bitfield
+                      <a href="#lookupbit-WP_CHANGE">WP_CHANGE</a></td><td/></tr><tr><td>7</td><td>Number of WPs in the Route/WP-List</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of WPs in the Route/WP-List</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Critical supplementary parameters</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Critical supplementary parameters</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      bitfield
+                      <a href="#lookupbit-WP_CRITICAL_PARAMETERS">WP_CRITICAL_PARAMETERS</a></td><td/></tr><tr><td>9</td><td>Navigation Method</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Navigation Method</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      lookup
+                      <a href="#lookup-WP_NAVIGATION_METHOD">WP_NAVIGATION_METHOD</a></td><td/></tr><tr><td>10</td><td>WP Identification Method</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>WP Identification Method</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      lookup
+                      <a href="#lookup-WP_IDENTIFICATION_METHOD">WP_IDENTIFICATION_METHOD</a></td><td/></tr><tr><td>11</td><td>Route Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Route Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      lookup
+                      <a href="#lookup-WP_ROUTE_STATUS">WP_ROUTE_STATUS</a></td><td/></tr><tr><td>12</td><td>XTE Limit for the Route</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32765</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>XTE Limit for the Route</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130067">0x1FC13:
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130067">0x1FC13:
             PGN 130067
             - Route and WP Service - Route - WP Name &amp; Position</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 6
+              at least 10
             bytes long and contains 9 fields.
 
             
@@ -9135,22 +9134,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of WPs in the Route/WP-List</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
@@ -9170,7 +9169,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 6
+              at least 10
             bytes long and contains 7 fields.
 
             
@@ -9182,22 +9181,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of WPs in the Route/WP-List</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
@@ -9206,12 +9205,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130069
             - Route and WP Service - XTE Limit &amp; Navigation Method</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 4
+              at least 6
             bytes long and contains 9 fields.
 
             
@@ -9223,41 +9222,41 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of WPs with a specific XTE Limit or Nav. Method</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>XTE limit in the leg after WP</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>XTE Limit in the leg after WP</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32765</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Nav. Method in the leg after WP</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Nav. Method in the leg after WP</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Reserved</td><td/><td/><td>4 bits
+                      lookup
+                      <a href="#lookup-WP_NAVIGATION_METHOD">WP_NAVIGATION_METHOD</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130070">0x1FC16:
             PGN 130070
             - Route and WP Service - WP Comment</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 6
+              at least 10
             bytes long and contains 7 fields.
 
             
@@ -9269,22 +9268,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of WPs with Comments</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID / RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID / RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Comment</td><td/><td> </td><td>
@@ -9293,12 +9292,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130071
             - Route and WP Service - Route Comment</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 5
+              at least 8
             bytes long and contains 6 fields.
 
             
@@ -9310,19 +9309,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Routes with Comments</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Comment</td><td/><td> </td><td>
@@ -9331,12 +9330,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130072
             - Route and WP Service - Database Comment</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 4
+              at least 6
             bytes long and contains 5 fields.
 
             
@@ -9348,16 +9347,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of Databases with Comments</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">4<div>Set 1</div></td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Comment</td><td/><td> </td><td>
@@ -9366,12 +9365,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130073
             - Route and WP Service - Radius of Turn</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 6
+              at least 10
             bytes long and contains 7 fields.
 
             
@@ -9383,37 +9382,37 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of WPs with a specific Radius of Turn</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Route ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>RPS#</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Radius of Turn</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Radius of Turn</td><td/><td><a href="#pq-DISTANCE">m</a><div class="xs">-32767 .. 32765</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130074">0x1FC1A:
             PGN 130074
             - Route and WP Service - WP List - WP Name &amp; Position</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
-              at least 6
+              at least 10
             bytes long and contains 9 fields.
 
             
@@ -9425,20 +9424,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (with name "nItems".)
       
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start WP ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Start WP ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>nItems</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Number of valid WPs in the WP-List</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Database ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>WP ID</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
@@ -15355,7 +15354,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Auto</td></tr><tr><td>1</td><td>Loran</td></tr><tr><td>2</td><td>MSK Beacon</td></tr><tr><td>3</td><td>FM Subcarrier</td></tr><tr><td>4</td><td>AIS</td></tr><tr><td>5</td><td>Ground based radio</td></tr><tr><td>6</td><td>SBAS</td></tr><tr><td>7</td><td>Satellite</td></tr></table><h3 id="lookup-DIFFERENTIAL_MODE">DIFFERENTIAL_MODE
         (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Manual</td></tr><tr><td>1</td><td>Auto Power</td></tr><tr><td>2</td><td>Auto Range</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Manual</td></tr><tr><td>1</td><td>Auto Power</td></tr><tr><td>2</td><td>Auto Range</td></tr></table><h3 id="lookup-WP_POSITION_RESOLUTION">WP_POSITION_RESOLUTION
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>more than 0.1 min</td></tr><tr><td>1</td><td>&lt;0.01 .. 0.1] min</td></tr><tr><td>2</td><td>&lt;0.001 .. 0.01] min</td></tr><tr><td>3</td><td>&lt;0.0001 .. 0.001] min</td></tr><tr><td>4</td><td>&lt;0 .. 0.0001] min</td></tr></table><h3 id="lookup-WP_IDENTIFICATION_METHOD">WP_IDENTIFICATION_METHOD
+        (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Waypoints in WP list</td></tr><tr><td>1</td><td>Waypoints embedded in route</td></tr></table><h3 id="lookup-WP_ROUTE_STATUS">WP_ROUTE_STATUS
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Active</td></tr><tr><td>1</td><td>Inactive</td></tr><tr><td>2</td><td>Deleted</td></tr></table><h3 id="lookup-WP_NAVIGATION_METHOD">WP_NAVIGATION_METHOD
+        (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Great Circle</td></tr><tr><td>1</td><td>Rhumb Line</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value in other field</th><th>Value</th><th>Description</th></tr><tr><td>10</td><td>130</td><td>Diagnostic</td></tr><tr><td>10</td><td>140</td><td>Bus Traffic Logger</td></tr><tr><td>20</td><td>110</td><td>Alarm Enunciator</td></tr><tr><td>20</td><td>130</td><td>Emergency Position Indicating Radio Beacon (EPIRB)</td></tr><tr><td>20</td><td>135</td><td>Man Overboard</td></tr><tr><td>20</td><td>140</td><td>Voyage Data Recorder</td></tr><tr><td>20</td><td>150</td><td>Camera</td></tr><tr><td>25</td><td>130</td><td>PC Gateway</td></tr><tr><td>25</td><td>131</td><td>NMEA 2000 to Analog Gateway</td></tr><tr><td>25</td><td>132</td><td>Analog to NMEA 2000 Gateway</td></tr><tr><td>25</td><td>133</td><td>NMEA 2000 to Serial Gateway</td></tr><tr><td>25</td><td>135</td><td>NMEA 0183 Gateway</td></tr><tr><td>25</td><td>136</td><td>NMEA Network Gateway</td></tr><tr><td>25</td><td>137</td><td>NMEA 2000 Wireless Gateway</td></tr><tr><td>25</td><td>140</td><td>Router</td></tr><tr><td>25</td><td>150</td><td>Bridge</td></tr><tr><td>25</td><td>160</td><td>Repeater</td></tr><tr><td>30</td><td>130</td><td>Binary Event Monitor</td></tr><tr><td>30</td><td>140</td><td>Load Controller</td></tr><tr><td>30</td><td>141</td><td>AC/DC Input</td></tr><tr><td>30</td><td>150</td><td>Function Controller</td></tr><tr><td>35</td><td>140</td><td>Engine</td></tr><tr><td>35</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>35</td><td>142</td><td>Solar Panel (Solar Array)</td></tr><tr><td>35</td><td>143</td><td>Wind Generator (DC)</td></tr><tr><td>35</td><td>144</td><td>Fuel Cell</td></tr><tr><td>35</td><td>145</td><td>Network Power Supply</td></tr><tr><td>35</td><td>151</td><td>AC Generator</td></tr><tr><td>35</td><td>152</td><td>AC Bus</td></tr><tr><td>35</td><td>153</td><td>AC Mains (Utility/Shore)</td></tr><tr><td>35</td><td>154</td><td>AC Output</td></tr><tr><td>35</td><td>160</td><td>Power Converter - Battery Charger</td></tr><tr><td>35</td><td>161</td><td>Power Converter - Battery Charger+Inverter</td></tr><tr><td>35</td><td>162</td><td>Power Converter - Inverter</td></tr><tr><td>35</td><td>163</td><td>Power Converter - DC</td></tr><tr><td>35</td><td>170</td><td>Battery</td></tr><tr><td>35</td><td>180</td><td>Engine Gateway</td></tr><tr><td>40</td><td>130</td><td>Follow-up Controller</td></tr><tr><td>40</td><td>140</td><td>Mode Controller</td></tr><tr><td>40</td><td>150</td><td>Autopilot</td></tr><tr><td>40</td><td>155</td><td>Rudder</td></tr><tr><td>40</td><td>160</td><td>Heading Sensors</td></tr><tr><td>40</td><td>170</td><td>Trim (Tabs)/Interceptors</td></tr><tr><td>40</td><td>180</td><td>Attitude (Pitch, Roll, Yaw) Control</td></tr><tr><td>50</td><td>130</td><td>Engineroom Monitoring</td></tr><tr><td>50</td><td>140</td><td>Engine</td></tr><tr><td>50</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>50</td><td>150</td><td>Engine Controller</td></tr><tr><td>50</td><td>151</td><td>AC Generator</td></tr><tr><td>50</td><td>155</td><td>Motor</td></tr><tr><td>50</td><td>160</td><td>Engine Gateway</td></tr><tr><td>50</td><td>165</td><td>Transmission</td></tr><tr><td>50</td><td>170</td><td>Throttle/Shift Control</td></tr><tr><td>50</td><td>180</td><td>Actuator</td></tr><tr><td>50</td><td>190</td><td>Gauge Interface</td></tr><tr><td>50</td><td>200</td><td>Gauge Large</td></tr><tr><td>50</td><td>210</td><td>Gauge Small</td></tr><tr><td>60</td><td>130</td><td>Bottom Depth</td></tr><tr><td>60</td><td>135</td><td>Bottom Depth/Speed</td></tr><tr><td>60</td><td>136</td><td>Bottom Depth/Speed/Temperature</td></tr><tr><td>60</td><td>140</td><td>Ownship Attitude</td></tr><tr><td>60</td><td>145</td><td>Ownship Position (GNSS)</td></tr><tr><td>60</td><td>150</td><td>Ownship Position (Loran C)</td></tr><tr><td>60</td><td>155</td><td>Speed</td></tr><tr><td>60</td><td>160</td><td>Turn Rate Indicator</td></tr><tr><td>60</td><td>170</td><td>Integrated Navigation</td></tr><tr><td>60</td><td>175</td><td>Integrated Navigation System</td></tr><tr><td>60</td><td>190</td><td>Navigation Management</td></tr><tr><td>60</td><td>195</td><td>Automatic Identification System (AIS)</td></tr><tr><td>60</td><td>200</td><td>Radar</td></tr><tr><td>60</td><td>201</td><td>Infrared Imaging</td></tr><tr><td>60</td><td>205</td><td>ECDIS</td></tr><tr><td>60</td><td>210</td><td>ECS</td></tr><tr><td>60</td><td>220</td><td>Direction Finder</td></tr><tr><td>60</td><td>230</td><td>Voyage Status</td></tr><tr><td>70</td><td>130</td><td>EPIRB</td></tr><tr><td>70</td><td>140</td><td>AIS</td></tr><tr><td>70</td><td>150</td><td>DSC</td></tr><tr><td>70</td><td>160</td><td>Data Receiver/Transceiver</td></tr><tr><td>70</td><td>170</td><td>Satellite</td></tr><tr><td>70</td><td>180</td><td>Radio-telephone (MF/HF)</td></tr><tr><td>70</td><td>190</td><td>Radiotelephone</td></tr><tr><td>75</td><td>130</td><td>Temperature</td></tr><tr><td>75</td><td>140</td><td>Pressure</td></tr><tr><td>75</td><td>150</td><td>Fluid Level</td></tr><tr><td>75</td><td>160</td><td>Flow</td></tr><tr><td>75</td><td>170</td><td>Humidity</td></tr><tr><td>80</td><td>130</td><td>Time/Date Systems</td></tr><tr><td>80</td><td>140</td><td>VDR</td></tr><tr><td>80</td><td>150</td><td>Integrated Instrumentation</td></tr><tr><td>80</td><td>160</td><td>General Purpose Displays</td></tr><tr><td>80</td><td>170</td><td>General Sensor Box</td></tr><tr><td>80</td><td>180</td><td>Weather Instruments</td></tr><tr><td>80</td><td>190</td><td>Transducer/General</td></tr><tr><td>80</td><td>200</td><td>NMEA 0183 Converter</td></tr><tr><td>85</td><td>130</td><td>Atmospheric</td></tr><tr><td>85</td><td>160</td><td>Aquatic</td></tr><tr><td>90</td><td>130</td><td>HVAC</td></tr><tr><td>100</td><td>130</td><td>Scale (Catch)</td></tr><tr><td>110</td><td>130</td><td>Button Interface</td></tr><tr><td>110</td><td>135</td><td>Switch Interface</td></tr><tr><td>110</td><td>140</td><td>Analog Interface</td></tr><tr><td>120</td><td>130</td><td>Display</td></tr><tr><td>120</td><td>140</td><td>Alarm Enunciator</td></tr><tr><td>125</td><td>130</td><td>Multimedia Player</td></tr><tr><td>125</td><td>140</td><td>Multimedia Controller</td></tr></table><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h3 id="lookupbit-STATION_STATUS">STATION_STATUS
         (0 - 2^3-1)
@@ -15385,7 +15392,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^1-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Song</td></tr><tr><td>1</td><td>Play queue</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_SHUFFLE_BITFIELD">ENTERTAINMENT_SHUFFLE_BITFIELD
         (0 - 2^1-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h3 id="lookupbit-WP_CHANGE">WP_CHANGE
+        (0 - 2^7-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Change in main data (Position, Name)</td></tr><tr><td>1</td><td>Change in supplementary parameters (or new added)</td></tr><tr><td>2</td><td>Changed number of WPs in Route/WP-List, and/or name changed/added</td></tr><tr><td>3</td><td>Route: Change supplementary parameters (or new added)</td></tr><tr><td>6</td><td>Other not specified changed</td></tr></table><h3 id="lookupbit-WP_CRITICAL_PARAMETERS">WP_CRITICAL_PARAMETERS
+        (0 - 2^7-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Navigation Method</td></tr><tr><td>1</td><td>XTE Limit</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Heading Offset</td><td>0.0001 rad</td><td>16 bits 
               

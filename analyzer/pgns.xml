@@ -33597,7 +33597,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>3</Length>
+      <Length>6</Length>
       <RepeatingFieldSet1Size>9</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -33606,60 +33606,60 @@ limitations under the License.
           <Order>1</Order>
           <Id>startDatabaseId</Id>
           <Name>Start Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>numberOfDatabasesAvailable</Id>
-          <Name>Number of Databases Available</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>4</Order>
-          <Id>databaseId</Id>
-          <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <Order>3</Order>
+          <Id>numberOfDatabasesAvailable</Id>
+          <Name>Number of Databases Available</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>databaseId</Id>
+          <Name>Database ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>databaseName</Id>
           <Name>Database Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>32</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -33693,18 +33693,25 @@ limitations under the License.
           <Order>8</Order>
           <Id>wpPositionResolution</Id>
           <Name>WP Position Resolution</Name>
-          <BitLength>6</BitLength>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='more than 0.1 min' />
+            <EnumPair Value='1' Name='&lt;0.01 .. 0.1] min' />
+            <EnumPair Value='2' Name='&lt;0.001 .. 0.01] min' />
+            <EnumPair Value='3' Name='&lt;0.0001 .. 0.001] min' />
+            <EnumPair Value='4' Name='&lt;0 .. 0.0001] min' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <BitLength>4</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -33723,23 +33730,23 @@ limitations under the License.
           <Order>11</Order>
           <Id>numberOfWpsInDatabase</Id>
           <Name>Number of WPs in Database</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
         <Field>
           <Order>12</Order>
           <Id>numberOfBytesInDatabase</Id>
           <Name>Number of Bytes in Database</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -33753,9 +33760,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>4</Length>
+      <Length>8</Length>
       <RepeatingFieldSet1Size>5</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -33764,73 +33770,73 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRouteId</Id>
           <Name>Start Route ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>numberOfRoutesInDatabase</Id>
-          <Name>Number of Routes in Database</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>4</Order>
-          <Id>databaseId</Id>
-          <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
+          <Order>3</Order>
+          <Id>numberOfRoutesInDatabase</Id>
+          <Name>Number of Routes in Database</Name>
+          <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>databaseId</Id>
+          <Name>Database ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>routeName</Id>
           <Name>Route Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>40</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -33839,7 +33845,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
+          <BitLength>2</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -33848,22 +33854,31 @@ limitations under the License.
           <Id>wpIdentificationMethod</Id>
           <Name>WP Identification Method</Name>
           <BitLength>2</BitLength>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Waypoints in WP list' />
+            <EnumPair Value='1' Name='Waypoints embedded in route' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>routeStatus</Id>
           <Name>Route Status</Name>
-          <BitLength>2</BitLength>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Active' />
+            <EnumPair Value='1' Name='Inactive' />
+            <EnumPair Value='2' Name='Deleted' />
+          </EnumValues>
         </Field>
       </Fields>
     </PGNInfo>
@@ -33877,42 +33892,41 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>15</Length>
+      <Length>17</Length>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>routeWpListName</Id>
           <Name>Route/WP-List Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -33947,11 +33961,16 @@ limitations under the License.
           <Id>changeAtLastTimestamp</Id>
           <Name>Change at Last Timestamp</Name>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
+          <Type>Bitfield</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Change in main data (Position, Name)' />
+            <EnumPair Bit='1' Name='Change in supplementary parameters (or new added)' />
+            <EnumPair Bit='2' Name='Changed number of WPs in Route/WP-List, and/or name changed/added' />
+            <EnumPair Bit='3' Name='Route: Change supplementary parameters (or new added)' />
+            <EnumPair Bit='6' Name='Other not specified changed' />
+          </EnumBitValues>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33969,63 +33988,71 @@ limitations under the License.
           <Id>criticalSupplementaryParameters</Id>
           <Name>Critical supplementary parameters</Name>
           <BitLength>8</BitLength>
-          <Type>Integer</Type>
+          <Type>Bitfield</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <EnumBitValues>
+            <EnumPair Bit='0' Name='Navigation Method' />
+            <EnumPair Bit='1' Name='XTE Limit' />
+          </EnumBitValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>navigationMethod</Id>
           <Name>Navigation Method</Name>
           <BitLength>2</BitLength>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Great Circle' />
+            <EnumPair Value='1' Name='Rhumb Line' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>wpIdentificationMethod</Id>
           <Name>WP Identification Method</Name>
           <BitLength>2</BitLength>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Waypoints in WP list' />
+            <EnumPair Value='1' Name='Waypoints embedded in route' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>routeStatus</Id>
           <Name>Route Status</Name>
-          <BitLength>2</BitLength>
-          <Type>Integer</Type>
+          <BitLength>4</BitLength>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Active' />
+            <EnumPair Value='1' Name='Inactive' />
+            <EnumPair Value='2' Name='Deleted' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>12</Order>
           <Id>xteLimitForTheRoute</Id>
           <Name>XTE Limit for the Route</Name>
           <BitLength>16</BitLength>
-          <Type>Integer</Type>
+          <Units>m</Units>
+          <Type>Number</Type>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -34039,9 +34066,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>6</Length>
+      <Length>10</Length>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34050,34 +34076,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfWpsInTheRouteWpList</Id>
           <Name>Number of WPs in the Route/WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34089,47 +34115,47 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>wpId</Id>
-          <Name>WP ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wpId</Id>
+          <Name>WP ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -34172,7 +34198,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>6</Length>
+      <Length>10</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34181,34 +34207,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfWpsInTheRouteWpList</Id>
           <Name>Number of WPs in the Route/WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34220,47 +34246,47 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>wpId</Id>
-          <Name>WP ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wpId</Id>
+          <Name>WP ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -34277,9 +34303,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>4</Length>
+      <Length>6</Length>
       <RepeatingFieldSet1Size>6</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34288,34 +34313,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfWpsWithASpecificXteLimitOrNavMethod</Id>
           <Name>Number of WPs with a specific XTE Limit or Nav. Method</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34327,47 +34352,8 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>rps</Id>
-          <Name>RPS#</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>xteLimitInTheLegAfterWp</Id>
-          <Name>XTE limit in the leg after WP</Name>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34376,25 +34362,69 @@ limitations under the License.
           <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>navMethodInTheLegAfterWp</Id>
-          <Name>Nav. Method in the leg after WP</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>72</BitOffset>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>rps</Id>
+          <Name>RPS#</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>xteLimitInTheLegAfterWp</Id>
+          <Name>XTE Limit in the leg after WP</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>navMethodInTheLegAfterWp</Id>
+          <Name>Nav. Method in the leg after WP</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Lookup table</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Great Circle' />
+            <EnumPair Value='1' Name='Rhumb Line' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>76</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>6</BitLength>
+          <BitOffset>114</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
         </Field>
@@ -34410,9 +34440,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>6</Length>
+      <Length>10</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34421,34 +34450,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startId</Id>
           <Name>Start ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfWpsWithComments</Id>
           <Name>Number of WPs with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34460,47 +34489,47 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>wpIdRps</Id>
-          <Name>WP ID / RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wpIdRps</Id>
+          <Name>WP ID / RPS#</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -34517,9 +34546,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>5</Length>
+      <Length>8</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34528,34 +34556,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRouteId</Id>
           <Name>Start Route ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfRoutesWithComments</Id>
           <Name>Number of Routes with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34567,34 +34595,34 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>48</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -34611,9 +34639,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>4</Length>
+      <Length>6</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34622,34 +34649,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startDatabaseId</Id>
           <Name>Start Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfDatabasesWithComments</Id>
           <Name>Number of Databases with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34661,21 +34688,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>40</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>
@@ -34692,9 +34719,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>6</Length>
+      <Length>10</Length>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34703,34 +34729,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfWpsWithASpecificRadiusOfTurn</Id>
           <Name>Number of WPs with a specific Radius of Turn</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34742,53 +34768,54 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>rps</Id>
-          <Name>RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>radiusOfTurn</Id>
-          <Name>Radius of Turn</Name>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>rps</Id>
+          <Name>RPS#</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Type>Integer</Type>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>radiusOfTurn</Id>
+          <Name>Radius of Turn</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Units>m</Units>
+          <Type>Number</Type>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>
@@ -34802,9 +34829,8 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <Length>6</Length>
+      <Length>10</Length>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34813,34 +34839,34 @@ limitations under the License.
           <Order>1</Order>
           <Id>startWpId</Id>
           <Name>Start WP ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfValidWpsInTheWpList</Id>
           <Name>Number of valid WPs in the WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
@@ -34852,21 +34878,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34875,21 +34901,21 @@ limitations under the License.
           <Order>6</Order>
           <Id>wpId</Id>
           <Name>WP ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Type>ASCII or UNICODE string starting with length and control byte</Type>
           <Signed>false</Signed>

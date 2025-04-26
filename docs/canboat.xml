@@ -2386,6 +2386,26 @@ limitations under the License.
       <EnumPair Value='1' Name='Auto Power' />
       <EnumPair Value='2' Name='Auto Range' />
     </LookupEnumeration>
+    <LookupEnumeration Name='WP_POSITION_RESOLUTION' MaxValue='15'>
+      <EnumPair Value='0' Name='more than 0.1 min' />
+      <EnumPair Value='1' Name='&lt;0.01 .. 0.1] min' />
+      <EnumPair Value='2' Name='&lt;0.001 .. 0.01] min' />
+      <EnumPair Value='3' Name='&lt;0.0001 .. 0.001] min' />
+      <EnumPair Value='4' Name='&lt;0 .. 0.0001] min' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='WP_IDENTIFICATION_METHOD' MaxValue='3'>
+      <EnumPair Value='0' Name='Waypoints in WP list' />
+      <EnumPair Value='1' Name='Waypoints embedded in route' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='WP_ROUTE_STATUS' MaxValue='15'>
+      <EnumPair Value='0' Name='Active' />
+      <EnumPair Value='1' Name='Inactive' />
+      <EnumPair Value='2' Name='Deleted' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='WP_NAVIGATION_METHOD' MaxValue='3'>
+      <EnumPair Value='0' Name='Great Circle' />
+      <EnumPair Value='1' Name='Rhumb Line' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
@@ -2646,6 +2666,17 @@ limitations under the License.
     <LookupBitEnumeration Name='ENTERTAINMENT_SHUFFLE_BITFIELD' MaxValue='1'>
       <BitPair Bit='0' Name='Play queue' />
       <BitPair Bit='1' Name='All' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='WP_CHANGE' MaxValue='7'>
+      <BitPair Bit='0' Name='Change in main data (Position, Name)' />
+      <BitPair Bit='1' Name='Change in supplementary parameters (or new added)' />
+      <BitPair Bit='2' Name='Changed number of WPs in Route/WP-List, and/or name changed/added' />
+      <BitPair Bit='3' Name='Route: Change supplementary parameters (or new added)' />
+      <BitPair Bit='6' Name='Other not specified changed' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='WP_CRITICAL_PARAMETERS' MaxValue='7'>
+      <BitPair Bit='0' Name='Navigation Method' />
+      <BitPair Bit='1' Name='XTE Limit' />
     </LookupBitEnumeration>
   </LookupBitEnumerations>
   <LookupFieldTypeEnumerations>
@@ -33570,7 +33601,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>12</FieldCount>
-      <MinLength>3</MinLength>
+      <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>9</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -33580,52 +33611,52 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startDatabaseId</Id>
           <Name>Start Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfDatabasesAvailable</Id>
           <Name>Number of Databases Available</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33633,7 +33664,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>databaseName</Id>
           <Name>Database Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>32</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -33667,18 +33698,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>wpPositionResolution</Id>
           <Name>WP Position Resolution</Name>
-          <BitLength>6</BitLength>
+          <BitLength>4</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_POSITION_RESOLUTION</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>2</BitLength>
+          <BitLength>4</BitLength>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -33697,22 +33729,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>numberOfWpsInDatabase</Id>
           <Name>Number of WPs in Database</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>12</Order>
           <Id>numberOfBytesInDatabase</Id>
           <Name>Number of Bytes in Database</Name>
-          <BitLength>16</BitLength>
+          <BitLength>32</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>4294967293</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -33727,10 +33759,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <MinLength>4</MinLength>
+      <MinLength>8</MinLength>
       <RepeatingFieldSet1Size>5</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -33740,65 +33771,65 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRouteId</Id>
           <Name>Start Route ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>numberOfRoutesInDatabase</Id>
           <Name>Number of Routes in Database</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33806,7 +33837,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>routeName</Id>
           <Name>Route Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>40</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -33814,7 +33845,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
+          <BitLength>2</BitLength>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -33827,18 +33858,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_IDENTIFICATION_METHOD</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>routeStatus</Id>
           <Name>Route Status</Name>
-          <BitLength>2</BitLength>
+          <BitLength>4</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_ROUTE_STATUS</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -33852,36 +33885,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
-      <MinLength>15</MinLength>
+      <FieldCount>12</FieldCount>
+      <MinLength>17</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -33889,7 +33921,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>routeWpListName</Id>
           <Name>Route/WP-List Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -33925,10 +33957,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>Change at Last Timestamp</Name>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>WP_CHANGE</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33947,10 +33979,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>Critical supplementary parameters</Name>
           <BitLength>8</BitLength>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>WP_CRITICAL_PARAMETERS</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
@@ -33961,7 +33993,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_NAVIGATION_METHOD</LookupEnumeration>
         </Field>
         <Field>
           <Order>10</Order>
@@ -33972,37 +34005,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_IDENTIFICATION_METHOD</LookupEnumeration>
         </Field>
         <Field>
           <Order>11</Order>
           <Id>routeStatus</Id>
           <Name>Route Status</Name>
-          <BitLength>2</BitLength>
+          <BitLength>4</BitLength>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_ROUTE_STATUS</LookupEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
           <Id>xteLimitForTheRoute</Id>
           <Name>XTE Limit for the Route</Name>
           <BitLength>16</BitLength>
+          <Unit>m</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -34016,10 +34045,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <MinLength>6</MinLength>
+      <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34029,26 +34057,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34056,7 +34084,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfWpsInTheRouteWpList</Id>
           <Name>Number of WPs in the Route/WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34068,39 +34096,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>wpId</Id>
           <Name>WP ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34108,7 +34136,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -34153,7 +34181,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <MinLength>6</MinLength>
+      <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34163,26 +34191,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34190,7 +34218,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfWpsInTheRouteWpList</Id>
           <Name>Number of WPs in the Route/WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34202,39 +34230,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>wpId</Id>
           <Name>WP ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34242,7 +34270,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -34258,10 +34286,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <MinLength>4</MinLength>
+      <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>6</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34271,26 +34298,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34298,7 +34325,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfWpsWithASpecificXteLimitOrNavMethod</Id>
           <Name>Number of WPs with a specific XTE Limit or Nav. Method</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34310,47 +34337,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>routeId</Id>
-          <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>rps</Id>
-          <Name>RPS#</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>xteLimitInTheLegAfterWp</Id>
-          <Name>XTE limit in the leg after WP</Name>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34359,25 +34347,67 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>navMethodInTheLegAfterWp</Id>
-          <Name>Nav. Method in the leg after WP</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>72</BitOffset>
+          <Order>5</Order>
+          <Id>routeId</Id>
+          <Name>Route ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>rps</Id>
+          <Name>RPS#</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>xteLimitInTheLegAfterWp</Id>
+          <Name>XTE Limit in the leg after WP</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>navMethodInTheLegAfterWp</Id>
+          <Name>Nav. Method in the leg after WP</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>WP_NAVIGATION_METHOD</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>76</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>6</BitLength>
+          <BitOffset>114</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -34393,10 +34423,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <MinLength>6</MinLength>
+      <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34406,26 +34435,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startId</Id>
           <Name>Start ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34433,7 +34462,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfWpsWithComments</Id>
           <Name>Number of WPs with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34445,39 +34474,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>wpIdRps</Id>
           <Name>WP ID / RPS#</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34485,7 +34514,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -34501,10 +34530,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
-      <MinLength>5</MinLength>
+      <MinLength>8</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>5</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34514,26 +34542,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRouteId</Id>
           <Name>Start Route ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34541,7 +34569,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfRoutesWithComments</Id>
           <Name>Number of Routes with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34553,26 +34581,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34580,7 +34608,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>48</BitOffset>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -34596,10 +34624,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
-      <MinLength>4</MinLength>
+      <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>4</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34609,26 +34636,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startDatabaseId</Id>
           <Name>Start Database ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34636,7 +34663,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfDatabasesWithComments</Id>
           <Name>Number of Databases with Comments</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34648,13 +34675,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34662,7 +34689,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>comment</Id>
           <Name>Comment</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>40</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>
@@ -34678,10 +34705,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <MinLength>6</MinLength>
+      <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34691,26 +34717,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startRps</Id>
           <Name>Start RPS#</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34718,7 +34744,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfWpsWithASpecificRadiusOfTurn</Id>
           <Name>Number of WPs with a specific Radius of Turn</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34730,39 +34756,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>routeId</Id>
           <Name>Route ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>rps</Id>
           <Name>RPS#</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34770,13 +34796,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>radiusOfTurn</Id>
           <Name>Radius of Turn</Name>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
+          <Unit>m</Unit>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32765</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -34790,10 +34818,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <MinLength>6</MinLength>
+      <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
       <RepeatingFieldSet1CountField>2</RepeatingFieldSet1CountField>
@@ -34803,26 +34830,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>startWpId</Id>
           <Name>Start WP ID</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>2</Order>
           <Id>nitems</Id>
           <Name>nItems</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>8</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34830,7 +34857,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>numberOfValidWpsInTheWpList</Id>
           <Name>Number of valid WPs in the WP-List</Name>
           <BitLength>16</BitLength>
-          <BitOffset>16</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -34842,21 +34869,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>databaseId</Id>
           <Name>Database ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -34865,13 +34892,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>6</Order>
           <Id>wpId</Id>
           <Name>WP ID</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -34879,7 +34906,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>wpName</Id>
           <Name>WP Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>56</BitOffset>
+          <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
         </Field>

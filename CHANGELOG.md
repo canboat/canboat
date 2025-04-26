@@ -43,6 +43,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #508: Offset for Peukert coefficient is wrong.
 - #509: Fix fusion transport lookup
 - #514: Fix lookup for OFF_ON fields that control a setting (PGN 127502.)
+- #522: Fix PGNs 130064-130074
 
 ### Added
 
