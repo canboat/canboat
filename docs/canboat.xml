@@ -33593,13 +33593,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceDatabaseList</Id>
       <Description>Route and WP Service - Database List</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>9</RepeatingFieldSet1Size>
@@ -33754,12 +33748,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRouteList</Id>
       <Description>Route and WP Service - Route List</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>9</FieldCount>
       <MinLength>8</MinLength>
       <RepeatingFieldSet1Size>5</RepeatingFieldSet1Size>
@@ -33880,12 +33869,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRouteWpListAttributes</Id>
       <Description>Route and WP Service - Route/WP-List Attributes</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>12</FieldCount>
       <MinLength>17</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -34040,12 +34024,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRouteWpNamePosition</Id>
       <Description>Route and WP Service - Route - WP Name &amp; Position</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>9</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
@@ -34173,13 +34152,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRouteWpName</Id>
       <Description>Route and WP Service - Route - WP Name</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
@@ -34281,12 +34254,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceXteLimitNavigationMethod</Id>
       <Description>Route and WP Service - XTE Limit &amp; Navigation Method</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>9</FieldCount>
       <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>6</RepeatingFieldSet1Size>
@@ -34418,12 +34386,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceWpComment</Id>
       <Description>Route and WP Service - WP Comment</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
@@ -34525,12 +34488,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRouteComment</Id>
       <Description>Route and WP Service - Route Comment</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <MinLength>8</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
@@ -34619,12 +34577,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceDatabaseComment</Id>
       <Description>Route and WP Service - Database Comment</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>5</FieldCount>
       <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
@@ -34700,12 +34653,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceRadiusOfTurn</Id>
       <Description>Route and WP Service - Radius of Turn</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>7</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
@@ -34813,12 +34761,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>routeAndWpServiceWpListWpNamePosition</Id>
       <Description>Route and WP Service - WP List - WP Name &amp; Position</Description>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>9</FieldCount>
       <MinLength>10</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
