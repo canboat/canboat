@@ -44221,8 +44221,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>trackNumber</Id>
-          <Name>Track Number</Name>
+          <Id>track</Id>
+          <Name>Track #</Name>
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -44234,8 +44234,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>totalNumberOfTracks</Id>
-          <Name>Total Number of Tracks</Name>
+          <Id>trackCount</Id>
+          <Name>Track Count</Name>
           <BitLength>32</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
@@ -44247,8 +44247,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>trackLength</Id>
-          <Name>Track Length</Name>
+          <Id>length</Id>
+          <Name>Length</Name>
           <BitLength>32</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
@@ -44261,8 +44261,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>trackPosition</Id>
-          <Name>Track Position</Name>
+          <Id>positionInTrack</Id>
+          <Name>Position in track</Name>
           <BitLength>32</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
@@ -44369,8 +44369,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>track</Id>
+          <Name>Track</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -44473,8 +44473,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>artist</Id>
+          <Name>Artist</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -44577,8 +44577,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>album</Id>
+          <Name>Album</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -44837,8 +44837,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>position</Id>
-          <Name>Position</Name>
+          <Id>progress</Id>
+          <Name>Progress</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -44976,8 +44976,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>rds</Id>
-          <Name>RDS</Name>
+          <Id>track</Id>
+          <Name>Track</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
@@ -45184,8 +45184,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>minimumLevel</Id>
-          <Name>Minimum Level</Name>
+          <Id>squelch</Id>
+          <Name>Squelch</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -45415,8 +45415,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>text</Id>
+          <Name>Text</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
@@ -45602,8 +45602,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>value</Id>
-          <Name>Value</Name>
+          <Id>status</Id>
+          <Name>Status</Name>
           <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -46325,8 +46325,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>zone1Sublevel</Id>
-          <Name>Zone 1 Sublevel</Name>
+          <Id>zone1</Id>
+          <Name>Zone 1</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -46338,8 +46338,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>zone2Sublevel</Id>
-          <Name>Zone 2 Sublevel</Name>
+          <Id>zone2</Id>
+          <Name>Zone 2</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -46351,8 +46351,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>zone3Sublevel</Id>
-          <Name>Zone 3 Sublevel</Name>
+          <Id>zone3</Id>
+          <Name>Zone 3</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -46364,8 +46364,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>zone4Sublevel</Id>
-          <Name>Zone 4 Sublevel</Name>
+          <Id>zone4</Id>
+          <Name>Zone 4</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -46471,8 +46471,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>middle</Id>
-          <Name>Middle</Name>
+          <Id>mid</Id>
+          <Name>Mid</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -46685,8 +46685,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>zone1Volume</Id>
-          <Name>Zone 1 Volume</Name>
+          <Id>zone1</Id>
+          <Name>Zone 1</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -46698,8 +46698,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>zone2Volume</Id>
-          <Name>Zone 2 Volume</Name>
+          <Id>zone2</Id>
+          <Name>Zone 2</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -46711,8 +46711,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>zone3Volume</Id>
-          <Name>Zone 3 Volume</Name>
+          <Id>zone3</Id>
+          <Name>Zone 3</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -46724,8 +46724,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>zone4Volume</Id>
-          <Name>Zone 4 Volume</Name>
+          <Id>zone4</Id>
+          <Name>Zone 4</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -47397,8 +47397,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>title</Id>
+          <Name>Title</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -47501,8 +47501,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>artist</Id>
+          <Name>Artist</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -47605,8 +47605,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>genre</Id>
+          <Name>Genre</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
