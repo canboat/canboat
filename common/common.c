@@ -29,8 +29,6 @@ static LogLevel logLevel = LOGLEVEL_INFO;
 static char *progName;
 static char  fixedTimestamp[DATE_LENGTH];
 
-#ifndef WIN32
-
 uint64_t getNow(void)
 {
   struct timeval tv;
@@ -50,57 +48,38 @@ uint64_t getNow(void)
   return 0L;
 }
 
-void storeTimestamp(char str[DATE_LENGTH], uint64_t when)
+const char *getTimestamp(char str[DATE_LENGTH], uint64_t when)
 {
-  time_t    t;
-  struct tm tm;
-  int       msec;
-  size_t    len;
-
-  t    = when / 1000L;
-  msec = when % 1000L;
-  gmtime_r(&t, &tm);
-  strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
-  len = strlen(str);
-  snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", msec);
-}
-
-const char *now(char str[DATE_LENGTH])
-{
-  uint64_t now = getNow();
-
   if (fixedTimestamp[0] != '\0')
   {
     return (const char *) fixedTimestamp;
   }
+  else
+  {
+    time_t    t;
+    struct tm tm;
+    int       msec;
+    size_t    len;
 
-  storeTimestamp(str, now);
-  return (const char *) str;
+    if (when == UINT64_C(0))
+    {
+      when = getNow();
+    }
+
+    t    = when / 1000L;
+    msec = when % 1000L;
+    gmtime_r(&t, &tm);
+    strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
+    len = strlen(str);
+    snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", msec);
+    return str;
+  }
 }
-
-#else
 
 const char *now(char str[DATE_LENGTH])
 {
-  struct _timeb timebuffer;
-  struct tm     tm;
-  size_t        len;
-
-  if (fixedTimestamp[0] != '\0')
-  {
-    return (const char *) fixedTimestamp;
-  }
-
-  _ftime_s(&timebuffer);
-  gmtime_s(&tm, &timebuffer.time);
-  strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
-  len = strlen(str);
-  snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", timebuffer.millitm);
-
-  return (const char *) str;
+  return getTimestamp(str, UINT64_C(0));
 }
-
-#endif
 
 static int logBase(LogLevel level, const char *format, va_list ap)
 {

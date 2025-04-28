@@ -51,18 +51,21 @@ static unsigned char NGT_STARTUP_SEQ[] = {
 
 #define BUFFER_SIZE 900
 
-static int  verbose        = 0;
-static int  readonly       = 0;
-static int  writeonly      = 0;
-static int  passthru       = 0;
-static long timeout        = 0;
-static int  outputCommands = 0;
-static bool isFile;
+static int      verbose        = 0;
+static int      readonly       = 0;
+static int      writeonly      = 0;
+static int      passthru       = 0;
+static long     timeout        = 0;
+static int      outputCommands = 0;
+static bool     isFile;
+static bool     isEBL;
+static uint64_t timestamp = 0;
 
 enum MSG_State
 {
   MSG_START,
   MSG_ESCAPE,
+  MSG_HEADER,
   MSG_MESSAGE
 };
 
@@ -74,8 +77,9 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd);
 static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
 static bool readNGT1Byte(unsigned char c);
 static int  readNGT1(int handle);
+static void headerReceived(const unsigned char *msg, size_t msgLen);
 static void messageReceived(const unsigned char *msg, size_t msgLen);
-static void n2kMessageReceived(const unsigned char *msg, size_t msgLen);
+static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, unsigned char command);
 static void ngtMessageReceived(const unsigned char *msg, size_t msgLen);
 
 int main(int argc, char **argv)
@@ -234,11 +238,23 @@ int main(int argc, char **argv)
       logAbort("Cannot determine device %s\n", device);
     }
     isFile = S_ISREG(statbuf.st_mode);
+    if (isFile)
+    {
+      readonly = 1;
+    }
   }
 
   if (isFile)
   {
-    logInfo("Device is a normal file, do not set the attributes.\n");
+    if (strncmp(device + strlen(device) - STRSIZE(".ebl"), ".ebl", STRSIZE(".ebl")) == 0)
+    {
+      isEBL = true;
+      logDebug("EBL mode selected\n");
+    }
+    else
+    {
+      logDebug("Device is a normal file, do not set the attributes.\n");
+    }
   }
   else
   {
@@ -263,18 +279,21 @@ int main(int argc, char **argv)
     sleep(2);
   }
 
-  // Do not read anything until we have seen 10 messages on bus
-  for (i = 0; i < 10;)
+  if (!isFile)
   {
-    int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, timeout);
-
-    if ((r & FD1_ReadReady) > 0)
+    // Do not read anything until we have seen 10 messages on bus
+    for (i = 0; i < 10;)
     {
-      if (readNGT1(handle) <= 0)
+      int r = isReady(handle, INVALID_SOCKET, INVALID_SOCKET, timeout);
+
+      if ((r & FD1_ReadReady) > 0)
       {
-        break;
+        if (readNGT1(handle) <= 0)
+        {
+          break;
+        }
+        i++;
       }
-      i++;
     }
   }
 
@@ -529,22 +548,33 @@ static bool getInMsg(unsigned char *msg, size_t msgLen)
 
 static bool readNGT1Byte(unsigned char c)
 {
-  static enum MSG_State state    = MSG_START;
-  static bool           noEscape = false;
+  static enum MSG_State prev_state = MSG_MESSAGE;
+  static enum MSG_State state      = MSG_START;
+  static bool           noEscape   = false;
   static unsigned char  buf[500];
   static unsigned char *head = buf;
 
-  if (state == MSG_START)
+  logDebug("readNGT1Byte isFile=%d isEBL=%d state=%d c=0x%02x\n", isFile, isEBL, state, c);
+
+  if (state == MSG_START && isFile && !isEBL && c == ESC)
   {
-    if ((c == ESC) && isFile)
-    {
-      noEscape = true;
-    }
+    noEscape = true;
   }
 
   if (state == MSG_ESCAPE)
   {
-    if (c == ETX)
+    if (c == SOH && isEBL)
+    {
+      head  = buf;
+      state = MSG_HEADER;
+    }
+    else if (c == LF && isEBL)
+    {
+      headerReceived(buf, head - buf);
+      head  = buf;
+      state = MSG_START;
+    }
+    else if (c == ETX)
     {
       messageReceived(buf, head - buf);
       head  = buf;
@@ -557,8 +587,11 @@ static bool readNGT1Byte(unsigned char c)
     }
     else if ((c == DLE) || ((c == ESC) && isFile) || noEscape)
     {
-      *head++ = c;
-      state   = MSG_MESSAGE;
+      if (head < buf + sizeof(buf))
+      {
+        *head++ = c;
+      }
+      state = prev_state;
     }
     else
     {
@@ -568,24 +601,34 @@ static bool readNGT1Byte(unsigned char c)
   }
   else if (state == MSG_MESSAGE)
   {
-    if (c == DLE)
+    if (c == DLE || (isFile && (c == ESC) && !noEscape))
     {
-      state = MSG_ESCAPE;
+      prev_state = state;
+      state      = MSG_ESCAPE;
     }
-    else if (isFile && (c == ESC) && !noEscape)
+    else if (head < buf + sizeof(buf))
     {
-      state = MSG_ESCAPE;
+      *head++ = c;
     }
-    else
+  }
+  else if (state == MSG_HEADER)
+  {
+    if (c == ESC)
+    {
+      prev_state = state;
+      state      = MSG_ESCAPE;
+    }
+    else if (head < buf + sizeof(buf))
     {
       *head++ = c;
     }
   }
   else
   {
-    if (c == DLE)
+    if (c == DLE || (isFile && (c == ESC) && !noEscape))
     {
-      state = MSG_ESCAPE;
+      prev_state = state;
+      state      = MSG_ESCAPE;
     }
   }
 
@@ -612,7 +655,11 @@ static int readNGT1(int handle)
     }
     if (r <= 0) /* No char read, abort message read */
     {
-      logAbort("Unable to read from NGT1 device, errno=%d\n", errno);
+      if (!isFile)
+      {
+        logAbort("Unable to read from NGT1 device, errno=%d\n", errno);
+      }
+      exit(0);
     }
 
     if (isLogLevelEnabled(LOGLEVEL_DEBUG))
@@ -632,6 +679,45 @@ static int readNGT1(int handle)
   } while (!finish);
 
   return r;
+}
+
+static void headerReceived(const unsigned char *msg, size_t msgLen)
+{
+  unsigned char command;
+  unsigned char payloadLen;
+
+  command    = msg[0];
+  payloadLen = msgLen - 1;
+
+  logDebug("header command = %02x len = %zu\n", command, payloadLen);
+
+  if (command == EBL_TIMESTAMP)
+  {
+    if (payloadLen != 8)
+    {
+      logError("Invalid EBL timestamp length %zu\n", payloadLen);
+      exit(3);
+    }
+    else
+    {
+      // Filetime to Unix epoch millis, see
+      // https://devblogs.microsoft.com/oldnewthing/20220602-00/?p=106706
+      uint64_t ft = *(uint64_t *) (msg + 1);
+
+      ft = ft / 10000;
+      ft -= 11644473600000;
+      timestamp = ft;
+      logDebug("EBL timestamp %" PRIu64 "\n", timestamp);
+    }
+  }
+  else if (command == EBL_VERSION)
+  {
+    logDebug("EBL version\n");
+  }
+  else
+  {
+    logError("EBL unknown message type %02x\n", command);
+  }
 }
 
 static void messageReceived(const unsigned char *msg, size_t msgLen)
@@ -662,9 +748,9 @@ static void messageReceived(const unsigned char *msg, size_t msgLen)
 
   logDebug("message command = %02x len = %u\n", command, payloadLen);
 
-  if (command == N2K_MSG_RECEIVED)
+  if (command == N2K_MSG_RECEIVED || (isFile && command == N2K_MSG_SEND))
   {
-    n2kMessageReceived(msg + 2, payloadLen);
+    n2kMessageReceived(msg + 2, payloadLen, command);
   }
   else if (command == NGT_MSG_RECEIVED)
   {
@@ -685,7 +771,7 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
     return;
   }
 
-  sprintf(line, "%s,%u,%u,%u,%u,%u", now(dateStr), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
+  sprintf(line, "%s,%u,%u,%u,%u,%u", getTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
   {
@@ -698,7 +784,7 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
   fflush(stdout);
 }
 
-static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
+static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, const unsigned char command)
 {
   unsigned int prio, src, dst;
   unsigned int pgn;
@@ -707,8 +793,9 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
   char         line[800];
   char        *p;
   char         dateStr[DATE_LENGTH];
+  size_t       headerLen = (command == N2K_MSG_SEND) ? 6 : 11;
 
-  if (msgLen < 11)
+  if (msgLen < headerLen)
   {
     logError("Ignoring N2K message - too short\n");
     return;
@@ -716,9 +803,16 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
   prio = msg[0];
   pgn  = (unsigned int) msg[1] + 256 * ((unsigned int) msg[2] + 256 * (unsigned int) msg[3]);
   dst  = msg[4];
-  src  = msg[5];
-  /* Skip the timestamp logged by the NGT-1-A in bytes 6-9 */
-  len = msg[10];
+  if (command == N2K_MSG_SEND)
+  {
+    len = msg[5];
+  }
+  else
+  {
+    src = msg[5];
+    /* Skip the timestamp logged by the NGT-1-A in bytes 6-9 */
+    len = msg[10];
+  }
 
   if (len > 223)
   {
@@ -727,12 +821,16 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen)
   }
 
   p = line;
-
-  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", now(dateStr), prio, pgn, src, dst, len);
+  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", getTimestamp(dateStr, timestamp), prio, pgn, src, dst, len);
   p += strlen(line);
 
-  len += 11;
-  for (i = 11; i < len; i++)
+  i = headerLen;
+  len += i;
+  if (len > msgLen)
+  {
+    len = msgLen;
+  }
+  for (; i < len; i++)
   {
     snprintf(p, line + sizeof(line) - p, ",%02x", msg[i]);
     p += strlen(p);

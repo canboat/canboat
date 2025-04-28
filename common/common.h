@@ -161,8 +161,8 @@ SOCKET open_socket_stream(const char *url);
 
 #define DATE_LENGTH 60
 const char *now(char str[DATE_LENGTH]);
+const char *getTimestamp(char str[DATE_LENGTH], uint64_t timestamp);
 uint64_t    getNow(void);
-void        storeTimestamp(char str[DATE_LENGTH], uint64_t when);
 
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);

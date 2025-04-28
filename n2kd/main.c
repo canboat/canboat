@@ -422,13 +422,12 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
         Message *m = &pgn->p_message[s];
         char     last_ts[DATE_LENGTH];
 
-        storeTimestamp(last_ts, m->m_last);
         sbAppendFormat(&state,
                        "  ,\"%u%s%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n",
                        m->m_src,
                        m->m_key2 ? "_" : "",
                        m->m_key2 ? m->m_key2 : "",
-                       last_ts,
+                       getTimestamp(last_ts, m->m_last),
                        m->m_interval,
                        m->m_count);
       }

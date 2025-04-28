@@ -450,8 +450,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
  */
 static void computeIKonvertTime(RawMessage *msg)
 {
-  lastNow = getNow();
-  storeTimestamp(msg->timestamp, lastNow);
+  getTimestamp(msg->timestamp, UINT64_C(0));
 }
 
 static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
@@ -667,7 +666,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     n2k->prio = 7;
     n2k->src  = 0;
     n2k->dst  = 255;
-    storeTimestamp(n2k->timestamp, getNow());
+    getTimestamp(n2k->timestamp, UINT64_C(0));
 
     int load, errors, count, uptime, addr, rejected;
 
