@@ -45,6 +45,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #514: Fix lookup for OFF_ON fields that control a setting (PGN 127502.)
 - #522: Fix PGNs 130064-130074
 - #521: Navico PGN 130817 contains unknown data, not product information.
+- #517: PGN 130323 field Mode should be lookup RESIDUAL_MODE.
 
 ### Added
 

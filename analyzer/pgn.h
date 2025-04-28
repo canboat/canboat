@@ -5543,7 +5543,7 @@ Pgn pgnList[] = {
      130323,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
-     {SIMPLE_FIELD("Mode", 4),
+     {LOOKUP_FIELD("Mode", 4, RESIDUAL_MODE),
       RESERVED_FIELD(4),
       DATE_FIELD("Measurement Date"),
       TIME_FIELD("Measurement Time"),

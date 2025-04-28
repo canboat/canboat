@@ -36297,7 +36297,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"RESIDUAL_MODE"
           },
           {
             "Order":2,
