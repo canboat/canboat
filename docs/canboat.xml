@@ -42729,8 +42729,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130817</PGN>
-      <Id>navicoProductInformation</Id>
-      <Description>Navico: Product Information</Description>
+      <Id>navicoUnknown</Id>
+      <Description>Navico: Unknown</Description>
     <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -42740,8 +42740,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>11</FieldCount>
-      <Length>113</Length>
+      <FieldCount>8</FieldCount>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -42789,33 +42789,36 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>productCode</Id>
-          <Name>Product Code</Name>
-          <BitLength>16</BitLength>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>model</Id>
-          <Name>Model</Name>
-          <BitLength>256</BitLength>
-          <BitOffset>32</BitOffset>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>253</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>c</Id>
+          <Name>C</Name>
           <BitLength>8</BitLength>
-          <BitOffset>288</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -42825,10 +42828,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>d</Id>
+          <Name>D</Name>
           <BitLength>8</BitLength>
-          <BitOffset>296</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -42838,43 +42841,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>c</Id>
-          <Name>C</Name>
+          <Id>e</Id>
+          <Name>E</Name>
           <BitLength>8</BitLength>
-          <BitOffset>304</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>firmwareVersion</Id>
-          <Name>Firmware version</Name>
-          <BitLength>80</BitLength>
-          <BitOffset>312</BitOffset>
-          <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>firmwareDate</Id>
-          <Name>Firmware date</Name>
-          <BitLength>256</BitLength>
-          <BitOffset>392</BitOffset>
-          <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>firmwareTime</Id>
-          <Name>Firmware time</Name>
-          <BitLength>256</BitLength>
-          <BitOffset>648</BitOffset>
-          <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

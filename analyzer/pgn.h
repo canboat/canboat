@@ -6373,20 +6373,11 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Navico: Product Information",
+    {"Navico: Unknown",
      130817,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275),
-      UINT16_PRIMARY_KEY_FIELD("Product Code"),
-      STRING_FIX_FIELD("Model", BYTES(32)),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
-      UINT8_FIELD("C"),
-      STRING_FIX_FIELD("Firmware version", BYTES(10)),
-      STRING_FIX_FIELD("Firmware date", BYTES(32)),
-      STRING_FIX_FIELD("Firmware time", BYTES(32)),
-      END_OF_FIELDS},
+     {COMPANY(275), UINT8_FIELD("A"), UINT8_FIELD("B"), UINT8_FIELD("C"), UINT8_FIELD("D"), UINT8_FIELD("E"), END_OF_FIELDS},
      .priority = 7}
 
     ,
