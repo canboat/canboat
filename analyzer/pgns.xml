@@ -19225,9 +19225,6 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
@@ -19410,12 +19407,10 @@ limitations under the License.
       <PGN>127511</PGN>
       <Id>inverterConfigurationStatus</Id>
       <Description>Inverter Configuration Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <Length>8</Length>
       <Fields>
@@ -19465,73 +19460,80 @@ limitations under the License.
           <BitLength>2</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>6</BitLength>
+          <Id>inverterMode</Id>
+          <Name>Inverter Mode</Name>
+          <BitLength>4</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Standalone' />
+            <EnumPair Value='1' Name='Series Master' />
+            <EnumPair Value='2' Name='Series Slave' />
+            <EnumPair Value='3' Name='Parallel Master' />
+            <EnumPair Value='4' Name='Parallel Slave' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>inverterMode</Id>
-          <Name>Inverter Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
+          <Id>loadSenseEnableDisable</Id>
+          <Name>Load Sense Enable/Disable</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Type>Lookup table</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>2</RangeMax>
+          <EnumValues>
+            <EnumPair Value='0' Name='Off' />
+            <EnumPair Value='1' Name='On' />
+          </EnumValues>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>loadSenseEnableDisable</Id>
-          <Name>Load Sense Enable/Disable</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <Id>loadSensePowerThreshold</Id>
+          <Name>Load Sense Power Threshold</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Units>W</Units>
           <Type>Integer</Type>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>loadSensePowerThreshold</Id>
-          <Name>Load Sense Power Threshold</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-        </Field>
-        <Field>
-          <Order>9</Order>
           <Id>loadSenseInterval</Id>
           <Name>Load Sense Interval</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Type>Integer</Type>
-          <Resolution>1</Resolution>
+          <Units>s</Units>
+          <Type>Time</Type>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
         </Field>
       </Fields>
     </PGNInfo>

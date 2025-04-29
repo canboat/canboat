@@ -3200,6 +3200,17 @@
           {"Name":"Great Circle", "Value":0},
           {"Name":"Rhumb Line", "Value":1}
         ]
+      },
+      {
+        "Name":"INVERTER_MODE",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"Standalone", "Value":0},
+          {"Name":"Series Master", "Value":1},
+          {"Name":"Series Slave", "Value":2},
+          {"Name":"Parallel Master", "Value":3},
+          {"Name":"Parallel Slave", "Value":4}
+        ]
       }
     ],
     "LookupIndirectEnumerations":[
@@ -21061,7 +21072,7 @@
         "Description":"Charger Configuration Status",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData"
+        "Missing":["SampleData"
         ],
         "FieldCount":11,
         "Length":8,
@@ -21225,11 +21236,11 @@
         "PGN":127511,
         "Id":"inverterConfigurationStatus",
         "Description":"Inverter Configuration Status",
-        "Type":"Single",
+        "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution"
+        "Missing":["SampleData"
         ],
-        "FieldCount":9,
+        "FieldCount":8,
         "Length":8,
         "TransmissionIrregular":true,
         "Fields":[
@@ -21286,69 +21297,66 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           },
           {
             "Order":5,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":6,
+            "Id":"inverterMode",
+            "Name":"Inverter Mode",
+            "BitLength":4,
             "BitOffset":26,
             "BitStart":2,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INVERTER_MODE"
           },
           {
             "Order":6,
-            "Id":"inverterMode",
-            "Name":"Inverter Mode",
-            "BitLength":8,
-            "BitOffset":32,
-            "BitStart":0,
+            "Id":"loadSenseEnableDisable",
+            "Name":"Load Sense Enable/Disable",
+            "BitLength":2,
+            "BitOffset":30,
+            "BitStart":6,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           },
           {
             "Order":7,
-            "Id":"loadSenseEnableDisable",
-            "Name":"Load Sense Enable/Disable",
-            "BitLength":8,
-            "BitOffset":40,
+            "Id":"loadSensePowerThreshold",
+            "Name":"Load Sense Power Threshold",
+            "BitLength":16,
+            "BitOffset":32,
             "BitStart":0,
+            "Unit":"W",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "RangeMax":65533,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_POWER"
           },
           {
             "Order":8,
-            "Id":"loadSensePowerThreshold",
-            "Name":"Load Sense Power Threshold",
-            "BitLength":8,
-            "BitOffset":48,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":9,
             "Id":"loadSenseInterval",
             "Name":"Load Sense Interval",
-            "BitLength":8,
-            "BitOffset":56,
+            "BitLength":16,
+            "BitOffset":48,
             "BitStart":0,
-            "Resolution":1,
+            "Unit":"s",
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":253,
-            "FieldType":"NUMBER"
+            "RangeMax":655.33,
+            "FieldType":"DURATION",
+            "PhysicalQuantity":"DURATION"
           }
         ]
       },

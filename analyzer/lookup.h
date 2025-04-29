@@ -2739,6 +2739,14 @@ LOOKUP(WP_NAVIGATION_METHOD, 0, "Great Circle")
 LOOKUP(WP_NAVIGATION_METHOD, 1, "Rhumb Line")
 LOOKUP_END
 
+LOOKUP_TYPE(INVERTER_MODE, BITS(4))
+LOOKUP(INVERTER_MODE, 0, "Standalone")
+LOOKUP(INVERTER_MODE, 1, "Series Master")
+LOOKUP(INVERTER_MODE, 2, "Series Slave")
+LOOKUP(INVERTER_MODE, 3, "Parallel Master")
+LOOKUP(INVERTER_MODE, 4, "Parallel Slave")
+LOOKUP_END
+
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE
 #undef LOOKUP_TYPE_TRIPLET

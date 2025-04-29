@@ -686,15 +686,8 @@ BO_ 2582779646 PGN_127510_chargerConfigurationS: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582779902 PGN_127511_inverterConfiguration: 8 Vector__XXX
- SG_ loadSenseInterval : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ loadSensePowerThreshold : 48|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ loadSenseEnableDisable : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ inverterMode : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ reserved : 26|6@1+ (1,0) [0|0] "" Vector__XXX
- SG_ inverterEnableDisable : 24|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dcInstance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ acInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582780158 PGN_127512_agsConfigurationStatu: 8 Vector__XXX
  SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX

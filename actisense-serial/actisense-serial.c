@@ -38,6 +38,7 @@ limitations under the License.
 #include "actisense.h"
 #include "common.h"
 #include "license.h"
+#include "parse.h"
 
 /* The following startup command reverse engineered from Actisense NMEAreader.
  * It instructs the NGT1 to clear its PGN message TX list, thus it starts
@@ -72,9 +73,9 @@ enum MSG_State
 int baudRate = B115200;
 
 static bool readIn(void);
-static bool getInMsg(unsigned char *msg, size_t len);
-static void parseAndWriteIn(int handle, const unsigned char *cmd);
-static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len);
+static bool getInMsg(char *msg, size_t len);
+static void parseAndWriteIn(int handle, const char *cmd);
+static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len, uint64_t when);
 static bool readNGT1Byte(unsigned char c);
 static int  readNGT1(int handle);
 static void headerReceived(const unsigned char *msg, size_t msgLen);
@@ -227,21 +228,33 @@ int main(int argc, char **argv)
   }
   else
   {
-    handle = open(device, O_RDWR | O_NOCTTY | O_NONBLOCK);
+    int oflag = O_NOCTTY | O_NONBLOCK;
+
+    if (writeonly)
+    {
+      oflag |= O_WRONLY;
+      oflag |= O_CREAT;
+    }
+    else if (readonly)
+    {
+      oflag |= O_RDONLY;
+    }
+    else
+    {
+      oflag |= O_RDWR;
+    }
+    handle = open(device, oflag, 0777);
+
     logDebug("fd = %d\n", handle);
     if (handle < 0)
     {
-      logAbort("Cannot open NGT-1-A device %s\n", device);
+      logAbort("Cannot open NGT-1-A device/file %s\n", device);
     }
     if (fstat(handle, &statbuf) < 0)
     {
-      logAbort("Cannot determine device %s\n", device);
+      logAbort("Cannot determine status of %s\n", device);
     }
     isFile = S_ISREG(statbuf.st_mode);
-    if (isFile)
-    {
-      readonly = 1;
-    }
   }
 
   if (isFile)
@@ -275,7 +288,7 @@ int main(int argc, char **argv)
 
     logDebug("Device is a serial port, send the startup sequence.\n");
 
-    writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ));
+    writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
     sleep(2);
   }
 
@@ -299,8 +312,8 @@ int main(int argc, char **argv)
 
   for (;;)
   {
-    unsigned char msg[BUFFER_SIZE];
-    int r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
+    char msg[BUFFER_SIZE];
+    int  r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
@@ -317,7 +330,7 @@ int main(int argc, char **argv)
       }
     }
 
-    if (getInMsg(msg, sizeof(msg)))
+    while (getInMsg(msg, sizeof(msg)))
     {
       if (!passthru)
       {
@@ -329,17 +342,10 @@ int main(int argc, char **argv)
         fflush(stdout);
       }
     }
-    else
+    if (time(0) - lastPing > 20)
     {
-      if (writeonly)
-      {
-        break;
-      }
-      if (time(0) - lastPing > 20)
-      {
-        writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ));
-        lastPing = time(0);
-      }
+      writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
+      lastPing = time(0);
     }
   }
 
@@ -347,7 +353,7 @@ int main(int argc, char **argv)
   return 0;
 }
 
-static void parseAndWriteIn(int handle, const unsigned char *cmd)
+static void parseAndWriteIn(int handle, const char *cmd)
 {
   unsigned char  msg[500];
   unsigned char *m;
@@ -363,14 +369,15 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   int          b;
   unsigned int byt;
   int          r;
+  uint64_t     when = 0;
 
   if (!cmd || !*cmd || *cmd == '\n')
   {
     return;
   }
 
-  // Skip the time field, content is not used
-  p = strchr((char *) cmd, ',');
+  parseTimestamp(cmd, &when);
+  p = strchr(cmd, ',');
   if (!p)
   {
     return;
@@ -415,13 +422,31 @@ static void parseAndWriteIn(int handle, const unsigned char *cmd)
   }
 
   logDebug("About to write:  %s\n", cmd);
-  writeMessage(handle, N2K_MSG_SEND, msg, m - msg);
+  writeMessage(handle, N2K_MSG_SEND, msg, m - msg, when);
+}
+
+static size_t writeUint64(uint64_t v, unsigned char *buf)
+{
+  size_t out = 0;
+  for (int byte = 0; byte < 8; byte++)
+  {
+    uint8_t c = (uint8_t) v;
+    if (c == ESC)
+    {
+      *buf++ = c;
+      out++;
+    }
+    *buf++ = c;
+    out++;
+    v = v >> 8;
+  }
+  return out;
 }
 
 /*
  * Wrap the PGN or NGT message and send to NGT
  */
-static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len)
+static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len, uint64_t when)
 {
   unsigned char  bst[255];
   unsigned char *b = bst;
@@ -429,6 +454,23 @@ static void writeMessage(int handle, unsigned char command, const unsigned char 
   unsigned char  crc;
 
   int i;
+
+  if (isEBL)
+  {
+    if (when == 0)
+    {
+      when = getNow();
+    }
+    // Prepend with timestamp
+    when = (when + UINT64_C(11644473600000)) * UINT64_C(10000);
+
+    *b++ = ESC;
+    *b++ = SOH;
+    *b++ = EBL_TIMESTAMP;
+    b += writeUint64(when, b);
+    *b++ = ESC;
+    *b++ = LF;
+  }
 
   *b++ = DLE;
   *b++ = STX;
@@ -511,8 +553,14 @@ static bool readIn(void)
 
   if (r <= 0)
   {
-    logAbort("EOF on reading stdin\n");
-    return false;
+    if (!isFile)
+    {
+      logAbort("EOF on reading stdin\n");
+    }
+    else
+    {
+      exit(0);
+    }
   }
 
   sbAppendData(&inBuffer, buf, r);
@@ -523,7 +571,7 @@ static bool readIn(void)
  * After readIn returns data, you can retrieve messages from the
  * internal buffer until getInMsg() returns false.
  */
-static bool getInMsg(unsigned char *msg, size_t msgLen)
+static bool getInMsg(char *msg, size_t msgLen)
 {
   char  *p;
   size_t len;
@@ -537,6 +585,8 @@ static bool getInMsg(unsigned char *msg, size_t msgLen)
   memcpy(msg, sbGet(&inBuffer), len);
   msg[len] = 0;
   sbDelete(&inBuffer, 0, len);
+
+  logDebug("getInMsg => '%s'\n", msg);
 
   return true;
 }

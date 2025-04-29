@@ -3427,7 +3427,7 @@ Pgn pgnList[] = {
     ,
     {"Charger Configuration Status",
      127510,
-     PACKET_PDF_ONLY,
+     PACKET_NOT_SEEN,
      PACKET_FAST,
      {INSTANCE_FIELD,
       UINT8_PRIMARY_KEY_FIELD("Battery Instance"),
@@ -3450,17 +3450,16 @@ Pgn pgnList[] = {
     ,
     {"Inverter Configuration Status",
      127511,
-     PACKET_INCOMPLETE,
-     PACKET_SINGLE,
+     PACKET_NOT_SEEN,
+     PACKET_FAST,
      {INSTANCE_FIELD,
       UINT8_PRIMARY_KEY_FIELD("AC Instance"),
       UINT8_PRIMARY_KEY_FIELD("DC Instance"),
-      SIMPLE_FIELD("Inverter Enable/Disable", 2),
-      RESERVED_FIELD(6),
-      UINT8_FIELD("Inverter Mode"),
-      UINT8_FIELD("Load Sense Enable/Disable"),
-      UINT8_FIELD("Load Sense Power Threshold"),
-      UINT8_FIELD("Load Sense Interval"),
+      LOOKUP_FIELD("Inverter Enable/Disable", 2, OFF_ON),
+      LOOKUP_FIELD("Inverter Mode", 4, INVERTER_MODE),
+      LOOKUP_FIELD("Load Sense Enable/Disable", 2, OFF_ON),
+      POWER_U16_FIELD("Load Sense Power Threshold"),
+      DURATION_UFIX16_CS_FIELD("Load Sense Interval", NULL),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -6770,7 +6769,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Zone 4"),
       END_OF_FIELDS},
      .priority = 7}
- 
+
     ,
     {"Fusion: Capabilities",
      130820,
@@ -6875,7 +6874,7 @@ Pgn pgnList[] = {
       STRINGVAR_FIELD("Genre"),
       END_OF_FIELDS},
      .priority = 7}
- 
+
     ,
     {"Fusion: SiriusXM Category",
      130820,

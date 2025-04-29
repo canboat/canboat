@@ -30,7 +30,7 @@ CFLAGS= -Wall -O2
 all: $(TARGETS)
 
 $(ACTISENSE): actisense-serial.c actisense.h $(COMMON)
-	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ACTISENSE) -I../common actisense-serial.c ../common/common.c $(LDLIBS$(LDLIBS-$(@)))
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ACTISENSE) -I../common actisense-serial.c ../common/common.c ../common/parse.c $(LDLIBS$(LDLIBS-$(@)))
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

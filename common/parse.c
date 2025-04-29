@@ -580,3 +580,58 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
 
   return 0;
 }
+
+bool parseTimestamp(const char *msg, uint64_t *when)
+{
+  struct tm t;
+  time_t    epoch;
+  int       year  = 0;
+  int       month = 0;
+  int       day   = 0;
+  int       hour  = 0;
+  int       min   = 0;
+  int       sec   = 0;
+  int       milli = 0;
+  char     *p;
+
+  p = strstr(msg, "Z,");
+  if (p)
+  {
+    if (sscanf(msg, "%d-%d-%dT%d:%d:%d.%dZ", &year, &month, &day, &hour, &min, &sec, &milli) < 6)
+    {
+      logDebug("Unable to parse timestamp '%s'\n", msg);
+      return false;
+    }
+    t.tm_year  = year - 1900;
+    t.tm_mon   = month - 1;
+    t.tm_mday  = day;
+    t.tm_hour  = hour;
+    t.tm_min   = min;
+    t.tm_sec   = sec;
+    t.tm_isdst = -1;
+    epoch      = timegm(&t);
+  }
+  else
+  {
+    if (sscanf(msg, "%d-%d-%d %d:%d:%d.%d", &year, &month, &day, &hour, &min, &sec, &milli) < 6)
+    {
+      logDebug("Unable to parse timestamp '%s'\n", msg);
+      return false;
+    }
+    t.tm_year  = year - 1900;
+    t.tm_mon   = month - 1;
+    t.tm_mday  = day;
+    t.tm_hour  = hour;
+    t.tm_min   = min;
+    t.tm_sec   = sec;
+    t.tm_isdst = -1;
+    epoch      = mktime(&t);
+  }
+
+  logDebug("parseTimestamp '%s' => %d-%d-%d %d:%d:%d.%03d\n", msg, year, month, day, hour, min, sec, milli);
+
+  *when = epoch * UINT64_C(1000) + milli;
+
+  return true;
+}
+
