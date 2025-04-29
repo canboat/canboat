@@ -1361,7 +1361,7 @@ extern bool fieldPrintStringLZ(const Field   *field,
                                size_t         startBit,
                                size_t        *bits)
 {
-  // STRINGLZ format is <len> [ <data> ... ]
+  // STRINGLZ format is <len> [ <data> ... ] <zero>
   size_t len;
 
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
@@ -1372,7 +1372,7 @@ extern bool fieldPrintStringLZ(const Field   *field,
   // Cap to dataLen
   len   = *data++;
   len   = CB_MIN(len, dataLen - 1);
-  *bits = BYTES(len + 1);
+  *bits = BYTES(len + 2);
 
   return printString(fieldName, data, len);
 }
