@@ -302,8 +302,8 @@ limitations under the License.
     </FieldType>
     <FieldType Name="STRING_LZ">
       <Description>A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</Description>
-      <EncodingDescription>The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes the zero byte but not itself.</EncodingDescription>
-      <Comment>These fields have a length containing what we believe to be the maximum allowed length. Unfortunately, these are only used in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced, and for neither do we have any logfiles. Therefore the exact way to parse these fields is unclear at the moment.  It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</Comment>
+      <EncodingDescription>The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.</EncodingDescription>
+      <Comment>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.</Comment>
       <VariableSize>true</VariableSize>
     </FieldType>
     <FieldType Name="STRING_LAU">
