@@ -2031,12 +2031,12 @@ limitations under the License.
       <EnumPair Value='32769' Name='API Version' />
       <EnumPair Value='32770' Name='Source' />
       <EnumPair Value='32771' Name='Source Count' />
-      <EnumPair Value='32772' Name='Media' />
+      <EnumPair Value='32772' Name='Track Info' />
       <EnumPair Value='32773' Name='Track Title' />
       <EnumPair Value='32774' Name='Track Artist' />
       <EnumPair Value='32775' Name='Track Album' />
       <EnumPair Value='32776' Name='Cover Art' />
-      <EnumPair Value='32777' Name='Track Position' />
+      <EnumPair Value='32777' Name='Track Progress' />
       <EnumPair Value='32778' Name='Tuner Align' />
       <EnumPair Value='32779' Name='Tuner' />
       <EnumPair Value='32780' Name='Marine Tuner' />
@@ -2060,7 +2060,7 @@ limitations under the License.
       <EnumPair Value='32798' Name='Capabilities' />
       <EnumPair Value='32799' Name='Line Level Control' />
       <EnumPair Value='32800' Name='Power' />
-      <EnumPair Value='32801' Name='Device Name' />
+      <EnumPair Value='32801' Name='Unit Name' />
       <EnumPair Value='32802' Name='Sirius' />
       <EnumPair Value='32803' Name='SiriusXM Preset Event' />
       <EnumPair Value='32804' Name='SiriusXM Channel' />
@@ -43811,7 +43811,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Media</Description>
+          <Description>Track Info</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44303,7 +44303,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Device Name</Description>
+          <Description>Unit Name</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44485,7 +44485,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Position</Description>
+          <Description>Track Progress</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
