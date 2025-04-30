@@ -44332,7 +44332,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Name</Description>
+          <Description>Track Title</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44436,7 +44436,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Artist Name</Description>
+          <Description>Track Artist</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44540,7 +44540,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Album Name</Description>
+          <Description>Track Album</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44735,8 +44735,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>source</Id>
-          <Name>Source</Name>
+          <Id>number</Id>
+          <Name>Number</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -46434,7 +46434,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>EQ</Description>
+          <Description>Tone</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -46674,7 +46674,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Volumes</Description>
+          <Description>Volume</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47021,7 +47021,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Power State</Description>
+          <Description>Power</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47256,7 +47256,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Channel</Description>
+          <Description>SiriusXM Channel</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47282,8 +47282,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>channel</Id>
-          <Name>Channel</Name>
+          <Id>channelNumber</Id>
+          <Name>Channel Number</Name>
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -47295,8 +47295,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>channel</Id>
+          <Name>Channel</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -47360,7 +47360,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Title</Description>
+          <Description>SiriusXM Title</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47464,7 +47464,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Artist</Description>
+          <Description>SiriusXM Artist</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47568,7 +47568,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Content Info</Description>
+          <Description>SiriusXM Genre</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47672,7 +47672,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Category</Description>
+          <Description>SiriusXM Category</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47776,7 +47776,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Signal</Description>
+          <Description>SiriusXm Signal</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47870,7 +47870,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Presets</Description>
+          <Description>SiriusXM Presets</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
