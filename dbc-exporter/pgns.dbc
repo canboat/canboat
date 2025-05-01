@@ -690,23 +690,16 @@ BO_ 2582779902 PGN_127511_inverterConfiguration: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582780158 PGN_127512_agsConfigurationStatu: 8 Vector__XXX
- SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX
- SG_ agsMode : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ generatorInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582780414 PGN_127513_batteryConfigurationS: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582780670 PGN_127514_agsStatus: 8 Vector__XXX
- SG_ reserved : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ generatorOffReason : 40|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ generatorOnReason : 32|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ generatorState : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ agsOperatingState : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ generatorInstance : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ instance : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582839550 PGN_127744_acPowerCurrentPhaseA: 8 Vector__XXX
  SG_ power : 32|32@1- (1,0) [0|0] "W" Vector__XXX
@@ -921,19 +914,19 @@ BO_ 2583167742 PGN_129026_cogSogRapidUpdate: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583167998 PGN_129027_positionDeltaRapidUpd: 8 Vector__XXX
- SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ longitudeDelta : 40|16@1- (1,0) [0|0] "" Vector__XXX
- SG_ latitudeDelta : 24|16@1- (1,0) [0|0] "" Vector__XXX
- SG_ timeDelta : 8|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ longitudeDelta : 40|24@1- (2.77778e-09,0) [0|0] "deg" Vector__XXX
+ SG_ latitudeDelta : 16|24@1- (2.77778e-09,0) [0|0] "deg" Vector__XXX
+ SG_ timeDelta : 8|8@1+ (0.005,0) [0|0] "s" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168254 PGN_129028_altitudeDeltaRapidUpd: 8 Vector__XXX
- SG_ altitudeDelta : 48|16@1- (1,0) [0|0] "" Vector__XXX
- SG_ cog : 32|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ reserved : 28|4@1+ (1,0) [0|0] "" Vector__XXX
- SG_ direction : 26|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ gnssQuality : 24|2@1+ (1,0) [0|0] "" Vector__XXX
- SG_ timeDelta : 8|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ reserved8 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ altitudeDelta : 40|16@1- (0.001,0) [0|0] "m" Vector__XXX
+ SG_ cog : 24|16@1+ (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ reserved : 22|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ direction : 20|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ gnssQuality : 16|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ timeDelta : 8|8@1+ (0.005,0) [0|0] "s" Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583168510 PGN_129029_gnssPositionData: 8 Vector__XXX
@@ -1501,6 +1494,8 @@ CM_ BO_ 2565341438 "ISO Acknowledgement";
 CM_ SG_ 2565341438 pgn "Parameter Group Number of requested information";
 CM_ BO_ 2565472510 "ISO Request";
 CM_ BO_ 2565538046 "ISO Transport Protocol, Data Transfer";
+CM_ SG_ 2565538046 data "Multi-packet packetized data - 56 bits organized as seven 8-bit bytes, each of the bytes is transmitted in the same order as it would in a standard (i.e., single frame) message. Unused bytes shall be filled with 0xFF.";
+CM_ SG_ 2565538046 sid "Sequence number of multi-packet frame";
 CM_ BO_ 2565734654 "ISO Address Claim";
 CM_ SG_ 2565734654 arbitraryAddressCapable "Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims";
 CM_ SG_ 2565734654 systemInstance "ISO Device Class Instance";
@@ -1617,6 +1612,7 @@ CM_ BO_ 2582645758 "Alert Threshold";
 CM_ BO_ 2582646014 "Alert Value";
 CM_ BO_ 2582647038 "System Time";
 CM_ SG_ 2582647038 time "Seconds since midnight";
+CM_ SG_ 2582647038 sid "An upward counting number used to tie releated information together between different PGNs. For example the SID would be used to tie together the COG, SOG and RAIM values to a given position.";
 CM_ BO_ 2582647294 "Heartbeat";
 CM_ SG_ 2582647294 dataTransmitOffset "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset.";
 CM_ BO_ 2582648062 "Product Information";
@@ -2053,6 +2049,8 @@ VAL_ 2583103998 rodeTypeStatus 0 "Chain presently detected" 1 "Rope presently de
 VAL_ 2583103998 windlassMotionStatus 0 "Windlass stopped" 1 "Deployment occurring" 2 "Retrieval occurring" ;
 VAL_ 2583103998 windlassDirectionControl 0 "Off" 1 "Down" 2 "Up" ;
 VAL_ 2583167742 cogReference 0 "True" 1 "Magnetic" 2 "Error" ;
+VAL_ 2583168254 direction 0 "True" 1 "Magnetic" 2 "Error" ;
+VAL_ 2583168254 gnssQuality 0 "no GNSS" 1 "GNSS fix" 2 "DGNSS fix" 3 "Precise GNSS" 4 "RTK Fixed Integer" 5 "RTK float" 6 "Estimated (DR) mode" 7 "Manual Input" 8 "Simulate mode" ;
 VAL_ 2583233534 navigationTerminated 0 "No" 1 "Yes" ;
 VAL_ 2583233534 xteMode 0 "Autonomous" 1 "Differential enhanced" 2 "Estimated" 3 "Simulator" 4 "Manual" ;
 VAL_ 2583235582 setReference 0 "True" 1 "Magnetic" 2 "Error" ;

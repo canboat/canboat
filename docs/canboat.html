@@ -137,10 +137,10 @@ limitations under the License.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td>Sequence number of multi-packet frame</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td/><td>56 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td>Multi-packet packetized data - 56 bits organized as seven 8-bit bytes, each of the bytes is transmitted in the same order as it would in a standard (i.e., single frame) message. Unused bytes shall be filled with 0xFF.</td><td/><td>56 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - Request To Send</h3><p>
@@ -330,7 +330,9 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Arbitrary address capable</td><td>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</td><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf">https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf</a></p><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
             PGN 61184
             - Seatalk: Wireless Keypad Light Control</h3><p>
               This PGN description applies when the following field(s) match:
@@ -1116,7 +1118,7 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65240">0xFED8:
             PGN 65240
-            - ISO Commanded Address</h3><p/><p>
+            - ISO Commanded Address</h3><p>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NMAE information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -2351,7 +2353,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-GROUP_FUNCTION">GROUP_FUNCTION</a></td><td/></tr><tr><td>2</td><td>PGN</td><td>Requested PGN</td><td><div class="xs">0 .. 262143</div></td><td>24 bits
-                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                  <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Transmission interval</td><td>0x0: Turn off transmission; 0xFFFF FFFE = Restore default interval, 0xFFFF FFFF in this field and 0xFFFF in field 4 = Transmit now without changing timing variables</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>Transmission interval offset</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -4167,7 +4169,7 @@ limitations under the License.
               The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td>An upward counting number used to tie releated information together between different PGNs. For example the SID would be used to tie together the COG, SOG and RAIM values to a given position.</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Source</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -4224,7 +4226,7 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>NMEA 2000 Version</td><td/><td>0.001 <div class="xs">0 .. 65.533</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>NMEA 2000 Version</td><td>Binary number containing a decimal number of format AABBB, where AA is the major and BBB is the minor release. The decimal point position is assumed.</td><td>0.001 <div class="xs">0 .. 65.533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Product Code</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
@@ -4236,8 +4238,8 @@ limitations under the License.
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>6</td><td>Model Serial Code</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>7</td><td>Certification Level</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Load Equivalency</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-CERTIFICATION_LEVEL">CERTIFICATION_LEVEL</a></td><td/></tr><tr><td>8</td><td>Load Equivalency</td><td>Garantueed maximum power consumption, 50 mA per LEN</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126998">0x1F016:
@@ -5521,11 +5523,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 127512
             - AGS Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
-             single-frame 
+             fast-packet 
             PGN is
-            8
+            3
             bytes long and contains 4 fields.
 
             
@@ -5536,15 +5538,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Generator Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>AGS Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>AGS Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>40 bits
+                      lookup
+                      <a href="#lookup-AGS_MODE">AGS_MODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-127513">0x1F219:
             PGN 127513
             - Battery Configuration Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -5586,12 +5588,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 127514
             - AGS Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
-             single-frame 
+             fast-packet 
             PGN is
-            8
-            bytes long and contains 7 fields.
+            5
+            bytes long and contains 6 fields.
 
             
               It is normally transmitted every 1500 milliseconds.
@@ -5601,20 +5603,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>2</td><td>Generator Instance</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>AGS Operating State</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>AGS Operating State</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Generator State</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-AGS_OPERATING_STATE">AGS_OPERATING_STATE</a></td><td/></tr><tr><td>4</td><td>Generator State</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Generator On Reason</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-AGS_GENERATING_STATE">AGS_GENERATING_STATE</a></td><td/></tr><tr><td>5</td><td>Generator On Reason</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Generator Off Reason</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-AGS_ON_REASON">AGS_ON_REASON</a></td><td/></tr><tr><td>6</td><td>Generator Off Reason</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-127744">0x1F300:
+                      lookup
+                      <a href="#lookup-AGS_OFF_REASON">AGS_OFF_REASON</a></td><td/></tr></table><h3 id="pgn-127744">0x1F300:
             PGN 127744
             - AC Power / Current - Phase A</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -6103,8 +6104,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            233
-            bytes long and contains 15 fields.
+            
+              at least 26
+            bytes long and contains 17 fields.
 
             
               It is normally transmitted every 1000 milliseconds.
@@ -6130,24 +6132,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Bearing</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance</td><td/><td>0.001 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 4294967.293000001</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Distance</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.45</div></td><td>32 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Course</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>CPA</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>CPA</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.45</div></td><td>32 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>TCPA</td><td>negative = time elapsed since event, positive = time to go</td><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">-2147483.647 .. 2147483.645</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>UTC of Fix</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>15</td><td>Name</td><td/><td> </td><td>1664 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><h3 id="pgn-128538">0x1F61A:
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>15</td><td>Name</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>16</td><td>Reference Target</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>17</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-128538">0x1F61A:
             PGN 128538
             - Elevator Car Status</h3><p>This PGN provides the status information of an elevator car. This includes the elevator car id and type, sensors for load and weight limits, smoke detection, door status, motor status, and brake status. Also provided are weight and speed measurements, current and destination deck location, proximity switch status, inertial measurement unit status and Emergency button and buzzer status.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -6512,7 +6519,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              single-frame 
             PGN is
             8
-            bytes long and contains 5 fields.
+            bytes long and contains 4 fields.
 
             
               The default priority (as observed in the field) is 2.
@@ -6521,17 +6528,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td>2.77778e-09 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-0.02330168611111111 .. 0.02330168055555556</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td>2.77778e-09 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-0.02330168611111111 .. 0.02330168055555556</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-129028">0x1F804:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129028">0x1F804:
             PGN 129028
             - Altitude Delta, Rapid Update</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -6540,7 +6546,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              single-frame 
             PGN is
             8
-            bytes long and contains 7 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 2.
@@ -6549,23 +6555,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
-                  
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>GNSS Quality</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.265</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Direction</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>GNSS Quality</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>4 bits
+                      lookup
+                      <a href="#lookup-GNS_METHOD">GNS_METHOD</a></td><td/></tr><tr><td>4</td><td>Direction</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-DIRECTION_REFERENCE">DIRECTION_REFERENCE</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>COG</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Altitude Delta</td><td/><td><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Altitude Delta</td><td/><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.767 .. 32.765</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129029">0x1F805:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-129029">0x1F805:
             PGN 129029
             - GNSS Position Data</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -6610,7 +6617,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-GNS">GNS</a></td><td/></tr><tr><td>8</td><td>Method</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-GNS_METHOD">GNS_METHOD</a></td><td/></tr><tr><td>9</td><td>Integrity</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-GNS_METHOD">GNS_METHOD</a></td><td/></tr><tr><td>9</td><td>Integrity</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-GNS_INTEGRITY">GNS_INTEGRITY</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>6 bits
@@ -7210,13 +7217,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129301
             - Navigation - Route / Time to+from Mark</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             10
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
@@ -7236,7 +7245,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129302
             - Bearing and Distance between two Marks</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -7244,7 +7253,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 10 fields.
 
             
-              It is normally transmitted every 1000 milliseconds.
+              The default priority (as observed in the field) is 6.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
@@ -7277,13 +7286,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129538
             - GNSS Control Status</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             14
             bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SV Elevation Mask</td><td>Will not use SV below this elevation</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.2767 .. 3.2765</div></td><td>16 bits
@@ -7407,7 +7418,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129541
             - GPS Almanac Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -7460,80 +7471,84 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129542
             - GNSS Pseudorange Noise Statistics</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            9
+            15
             bytes long and contains 8 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>RMS of Position Uncertainty</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>RMS of Position Uncertainty</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>STD of Major axis</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>STD of Major axis</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>STD of Minor axis</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>STD of Minor axis</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Orientation of Major axis</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Orientation of Major axis</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>STD of Lat Error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>STD of Lat Error</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>STD of Lon Error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>STD of Lon Error</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>STD of Alt Error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>STD of Alt Error</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129545">0x1FA09:
             PGN 129545
             - GNSS RAIM Output</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            9
+            15
             bytes long and contains 10 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Integrity flag</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Integrity flag</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Latitude expected error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-GNS_INTEGRITY">GNS_INTEGRITY</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Latitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude expected error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Altitude expected error</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Altitude expected error</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>SV ID of most likely failed sat</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Probability of missed detection</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Probability of missed detection</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Estimate of pseudorange bias</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Estimate of pseudorange bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Std Deviation of bias</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Std Deviation of bias</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129546">0x1FA0A:
             PGN 129546
             - GNSS RAIM Settings</h3><p/><p>
@@ -7785,7 +7800,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129792
             - AIS DGNSS Broadcast Binary Message</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -7830,12 +7845,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129793
             - AIS UTC and Date Report</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            25
-            bytes long and contains 15 fields.
+            24
+            bytes long and contains 14 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -7875,8 +7890,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>14</td><td>GNSS type</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-POSITION_FIX_DEVICE">POSITION_FIX_DEVICE</a></td><td/></tr><tr><td>15</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr></table><p>
+                      <a href="#lookup-POSITION_FIX_DEVICE">POSITION_FIX_DEVICE</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129794">0x1FB02:
             PGN 129794
@@ -8019,8 +8033,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Destination ID #1</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Destination ID #1</td><td/><td><div class="xs">0 .. 4294967293</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Sequence Number for ID 1</td><td>reserved</td><td/><td>2 bits
@@ -8058,8 +8072,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Binary Data</td><td/><td/><td>
@@ -8072,13 +8086,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129798
             - AIS SAR Aircraft Position Report</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             27
             bytes long and contains 16 fields.
 
+            
+              The default priority (as observed in the field) is 4.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8108,7 +8124,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-TIME_STAMP">TIME_STAMP</a></td><td/></tr><tr><td>9</td><td>COG</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>SOG</td><td/><td>0.1 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>SOG</td><td>Originally this used the same resolution as SOG for boats (0.01 m/s), but this did not allow for speeds over 180 km/h so in some addendum this has been amended to have a resolution of 0.1 m/s</td><td>0.1 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 6553.3</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Communication State</td><td>Information used by the TDMA slot allocation algorithm and synchronization information</td><td/><td>19 bits
@@ -8128,14 +8144,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129799">0x1FB07:
             PGN 129799
             - Radio Frequency/Mode/Power</h3><p>The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3 (indicating private channels as allowed in some countries.)</p><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
+              </p><p>
             This
              fast-packet 
             PGN is
-            19
+            18
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Rx Frequency</td><td/><td>10 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 42949672930</div></td><td>32 bits
@@ -8144,27 +8162,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Tx Frequency</td><td/><td>10 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 42949672930</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Radio Channel</td><td/><td> </td><td>48 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Radio Channel</td><td>MF/HF telephone channels to have first digit 3 followed by ITU channel numbers with leading zeros as required. MF/HF teletype channels to have first digit 4; the send and third digit give the frequency bads; and the fourth to sixth digits ITU channel numbers; each with leading zeros as required. VHF channels to have the first digit 9 followed by zero. The next digit is 1 indicating the ship stations transmit frequency is being used as a simplex channel frequency, or 2 indicating the cost stations transmit frequency is being used as a simplex channel frequency, 0 otherwise. THe remaining three numbers are the VHF channel numbers with leading zeros as required.</td><td> </td><td>48 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>4</td><td>Tx Power</td><td/><td><a href="#pq-ELECTRICAL_POWER">W</a><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel Bandwidth</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 65533</div></td><td>16 bits
+                      lookup
+                      <a href="#lookup-TELEPHONE_MODE">TELEPHONE_MODE</a></td><td/></tr><tr><td>6</td><td>Channel Bandwidth</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129800">0x1FB08:
             PGN 129800
             - AIS UTC/Date Inquiry</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             10
-            bytes long and contains 6 fields.
+            bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8176,11 +8196,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr></table><p>
@@ -8189,13 +8210,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129801
             - AIS Addressed Safety Related Message</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            128
-            bytes long and contains 10 fields.
+            
+              at least 11
+            bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8207,34 +8231,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Sequence Number</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Sequence Number</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>1 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>7 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Safety Related Text</td><td/><td> </td><td>936 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><p>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Safety Related Text</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
               Source:
               <a href="https://navcen.uscg.gov/ais-addressed-safety-related-message12">https://navcen.uscg.gov/ais-addressed-safety-related-message12</a></p><h3 id="pgn-129802">0x1FB0A:
             PGN 129802
             - AIS Safety Related Broadcast Message</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            168
-            bytes long and contains 6 fields.
+            
+              at least 6
+            bytes long and contains 7 fields.
 
+            
+              The default priority (as observed in the field) is 5.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8246,24 +8275,28 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Safety Related Text</td><td/><td> </td><td>1296 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><p>
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Safety Related Text</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14">https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14</a></p><h3 id="pgn-129803">0x1FB0B:
             PGN 129803
             - AIS Interrogation</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            23
-            bytes long and contains 19 fields.
+            26
+            bytes long and contains 22 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8283,32 +8316,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Destination ID 1</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Message ID 1.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Message ID 1.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
-                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>9</td><td>Slot Offset 1.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>10</td><td>Slot Offset 1.1</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>2 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Message ID 1.2</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>12</td><td>Message ID 1.2</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
-                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>12</td><td>Slot Offset 1.2</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>13</td><td>Slot Offset 1.2</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Spare</td><td/><td/><td>2 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>14</td><td>Destination ID 2</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>16</td><td>Destination ID 2</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>15</td><td>Message ID 2.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>17</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>18</td><td>Message ID 2.1</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
-                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>16</td><td>Slot Offset 2.1</td><td/><td><div class="xs">0 .. 4093</div></td><td>12 bits
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>19</td><td>Slot Offset 2.1</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Spare</td><td/><td/><td>2 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>19</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>20</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>21</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>22</td><td>SID</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
@@ -8317,13 +8353,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129804
             - AIS Assignment Mode Command</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            22
-            bytes long and contains 11 fields.
+            23
+            bytes long and contains 14 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8335,45 +8373,48 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Destination ID A</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Destination ID A</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>7</td><td>Offset A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>8</td><td>Offset A</td><td>Offset from current slot to first assigned slot</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Increment A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Increment A</td><td>Increment to next assigned slot</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Destination ID B</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Destination ID B</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>10</td><td>Offset B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>11</td><td>Offset B</td><td>Offset from current slot to first assigned slot</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Increment B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Increment B</td><td>Increment to next assigned slot</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Spare</td><td/><td/><td>4 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129805">0x1FB0D:
             PGN 129805
             - AIS Data Link Management Message</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
               at least 6
-            bytes long and contains 9 fields.
+            bytes long and contains 10 fields.
 
             
         The 4 fields starting at field 
-        6 
+        7 
         (with name "Offset")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
       
@@ -8389,20 +8430,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>Offset</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">7<div>Set 1</div></td><td>Offset</td><td>Reserved offset number</td><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Number of Slots</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Number of Slots</td><td>Reserved consecutive slots</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Timeout</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Timeout</td><td/><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 15180</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>Increment</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Increment</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
@@ -8411,13 +8453,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 129806
             - AIS Channel Management</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            30
-            bytes long and contains 20 fields.
+            31
+            bytes long and contains 23 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
@@ -8429,61 +8473,64 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
-                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Channel A</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Channel A</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Channel B</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Channel B</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Power</td><td>reserved</td><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Power</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Tx/Rx Mode</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-POWER_MODE">POWER_MODE</a></td><td/></tr><tr><td>11</td><td>Tx/Rx Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      lookup
+                      <a href="#lookup-TX_RX_MODE">TX_RX_MODE</a></td><td/></tr><tr><td>12</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>South West Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>6 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>16</td><td>Addressed or Broadcast Message Indicator</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Addressed or Broadcast Message Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR</a></td><td/></tr><tr><td>18</td><td>Channel A Bandwidth</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BANDWIDTH">BANDWIDTH</a></td><td/></tr><tr><td>19</td><td>Channel B Bandwidth</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BANDWIDTH">BANDWIDTH</a></td><td/></tr><tr><td>20</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>21</td><td>Transitional Zone Size</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Channel A Bandwidth</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Channel B Bandwidth</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>19</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>20</td><td>Transitional Zone Size</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>22</td><td>Spare</td><td/><td/><td>23 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>23</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129807">0x1FB0F:
             PGN 129807
             - AIS Class B Group Assignment</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            28
-            bytes long and contains 17 fields.
+            29
+            bytes long and contains 19 fields.
 
             
               It is not transmitted at a regular interval, but when data is available or it is requested.
@@ -8507,7 +8554,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>South West Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
@@ -8519,16 +8566,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-STATION_TYPE">STATION_TYPE</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>13</td><td>Ship and Cargo Filter</td><td/><td><div class="xs">0 .. 253</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Spare</td><td/><td/><td>22 bits
+                      lookup
+                      <a href="#lookup-SHIP_TYPE">SHIP_TYPE</a></td><td/></tr><tr><td>14</td><td>Spare</td><td/><td/><td>22 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>16</td><td>Reporting Interval</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-REPORTING_INTERVAL">REPORTING_INTERVAL</a></td><td/></tr><tr><td>17</td><td>Quiet Time</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-REPORTING_INTERVAL">REPORTING_INTERVAL</a></td><td/></tr><tr><td>17</td><td>Quiet Time</td><td>Commanded quiet time</td><td>60 <a href="#pq-DURATION">s</a><div class="xs">0 .. 780</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>18</td><td>Spare</td><td/><td/><td>6 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>19</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129808">0x1FB10:
             PGN 129808
@@ -8771,35 +8820,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130052
             - Loran-C TD Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             32
             bytes long and contains 15 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+            
+              The default priority (as observed in the field) is 3.
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>V Secondary TD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>W Secondary TD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>X Secondary TD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Y Secondary TD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Z Secondary TD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary TD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       bitfield
                       <a href="#lookupbit-STATION_STATUS">STATION_STATUS</a></td><td/></tr><tr><td>9</td><td>Station status: V</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
@@ -8825,35 +8878,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130053
             - Loran-C Range Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             32
             bytes long and contains 15 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+            
+              The default priority (as observed in the field) is 3.
+            
+              It is normally transmitted every 1000 milliseconds.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Master Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>V Secondary Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>V Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>W Secondary Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>4</td><td>W Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>X Secondary Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>X Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Y Secondary Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>6</td><td>Y Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Z Secondary Range</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Z Secondary Range</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>8</td><td>Station status: Master</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
                   
                       bitfield
                       <a href="#lookupbit-STATION_STATUS">STATION_STATUS</a></td><td/></tr><tr><td>9</td><td>Station status: V</td><td/><td><div class="xs">0 .. 15</div></td><td>4 bits
@@ -8879,27 +8936,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130054
             - Loran-C Signal Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             15
             bytes long and contains 5 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Group Repetition Interval (GRI)</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Station identifier</td><td/><td> </td><td>8 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>2</td><td>Station identifier</td><td/><td> </td><td>8 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>3</td><td>Station SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.65</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Station ECD</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Station ECD</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Station ASF</td><td/><td><div class="xs">-2147483647 .. 2147483645</div></td><td>32 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>5</td><td>Station ASF</td><td/><td>1e-09 <a href="#pq-DURATION">s</a><div class="xs">-2.147483647 .. 2.147483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130060">0x1FC0C:
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-130060">0x1FC0C:
             PGN 130060
             - Label</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -9697,6 +9754,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 11 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -9738,6 +9797,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             bytes long and contains 10 fields.
 
             
+              The default priority (as observed in the field) is 6.
+            
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -9767,51 +9828,56 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130322
             - Current Station Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             
               at least 25
-            bytes long and contains 12 fields.
+            bytes long and contains 13 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Measurement Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
+                      lookup
+                      <a href="#lookup-RESIDUAL_MODE">RESIDUAL_MODE</a></td><td/></tr><tr><td>2</td><td>State</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-FLOOD_STATE">FLOOD_STATE</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>1 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Measurement Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>4</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>5</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86402</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-214.7483647 .. 214.7483645</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Measurement Depth</td><td>Depth below transducer</td><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Measurement Depth</td><td>Depth below transducer</td><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.93</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Current speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Current speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Current flow direction</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Current flow direction</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.5533</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Water Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Water Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Station ID</td><td/><td> </td><td>
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Station ID</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>12</td><td>Station Name</td><td/><td> </td><td>
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>13</td><td>Station Name</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130323">0x1FD13:
             PGN 130323
             - Meteorological Station Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
@@ -9864,19 +9930,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130324
             - Moored Buoy Station Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            42
+            
+              at least 34
             bytes long and contains 18 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>4 bits
+                      lookup
+                      <a href="#lookup-RESIDUAL_MODE">RESIDUAL_MODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Measurement Date</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65533</div></td><td>16 bits
                   
                         unsigned
@@ -9900,16 +9969,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Wind Gusts</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Wave Height</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Wave Height</td><td/><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Dominant Wave Period</td><td/><td><div class="xs">0 .. 65533</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Dominant Wave Period</td><td/><td>0.01 <a href="#pq-DURATION">s</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Atmospheric Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553300</div></td><td>16 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>14</td><td>Atmospheric Pressure</td><td/><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553300</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pressure Tendency Rate</td><td/><td><a href="#pq-PRESSURE_RATE">Pa/hr</a><div class="xs">-32767 .. 32765</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Pressure Tendency Rate</td><td/><td>10 <a href="#pq-PRESSURE_RATE">Pa/hr</a><div class="xs">-327670 .. 327650</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Air Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
@@ -9918,8 +9987,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Water Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.33</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Station ID</td><td/><td> </td><td>64 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><h3 id="pgn-130330">0x1FD1A:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Station ID</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130330">0x1FD1A:
             PGN 130330
             - Lighting System Settings</h3><p>This PGN provides a lighting controller settings and number of supported capabilities.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -10675,13 +10745,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130577
             - Direction Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
             This
              fast-packet 
             PGN is
             14
             bytes long and contains 10 fields.
 
+            
+              The default priority (as observed in the field) is 3.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Data Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -10723,6 +10795,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             12
             bytes long and contains 6 fields.
 
+            
+              The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 250 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Longitudinal Speed, Water-referenced</td><td/><td>0.001 <a href="#pq-SPEED">m/s</a><div class="xs">-32.767 .. 32.765</div></td><td>16 bits
@@ -14948,9 +15022,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.</p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.</p><p>
             Encoding:
-            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.</p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p>It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, but this has not been seen in the wild yet.</p><p>
+            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.</p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p/><p>
             Encoding:
-            The length of the string is determined by a starting length byte. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
+            The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
             Encoding:
             Unspecified content consisting of any number of bits.</p><h3 id="ft-RESERVED">RESERVED - Reserved field</h3><p>NMEA reserved for future expansion and/or to align next data on byte boundary</p><p>
             Encoding:
@@ -15024,7 +15098,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>no GNSS</td></tr><tr><td>1</td><td>GNSS fix</td></tr><tr><td>2</td><td>DGNSS fix</td></tr><tr><td>3</td><td>Precise GNSS</td></tr><tr><td>4</td><td>RTK Fixed Integer</td></tr><tr><td>5</td><td>RTK float</td></tr><tr><td>6</td><td>Estimated (DR) mode</td></tr><tr><td>7</td><td>Manual Input</td></tr><tr><td>8</td><td>Simulate mode</td></tr></table><h3 id="lookup-GNS_INTEGRITY">GNS_INTEGRITY
         (0 - 3)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No integrity checking</td></tr><tr><td>1</td><td>Safe</td></tr><tr><td>2</td><td>Caution</td></tr></table><h3 id="lookup-SYSTEM_TIME">SYSTEM_TIME
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No integrity checking</td></tr><tr><td>1</td><td>Safe</td></tr><tr><td>2</td><td>Caution</td></tr><tr><td>3</td><td>Unsafe</td></tr></table><h3 id="lookup-SYSTEM_TIME">SYSTEM_TIME
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>GPS</td></tr><tr><td>1</td><td>GLONASS</td></tr><tr><td>2</td><td>Radio Station</td></tr><tr><td>3</td><td>Local Cesium clock</td></tr><tr><td>4</td><td>Local Rubidium clock</td></tr><tr><td>5</td><td>Local Crystal clock</td></tr></table><h3 id="lookup-MAGNETIC_VARIATION">MAGNETIC_VARIATION
         (0 - 15)
@@ -15362,7 +15436,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Great Circle</td></tr><tr><td>1</td><td>Rhumb Line</td></tr></table><h3 id="lookup-INVERTER_MODE">INVERTER_MODE
         (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standalone</td></tr><tr><td>1</td><td>Series Master</td></tr><tr><td>2</td><td>Series Slave</td></tr><tr><td>3</td><td>Parallel Master</td></tr><tr><td>4</td><td>Parallel Slave</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standalone</td></tr><tr><td>1</td><td>Series Master</td></tr><tr><td>2</td><td>Series Slave</td></tr><tr><td>3</td><td>Parallel Master</td></tr><tr><td>4</td><td>Parallel Slave</td></tr></table><h3 id="lookup-CERTIFICATION_LEVEL">CERTIFICATION_LEVEL
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Level A</td></tr><tr><td>1</td><td>Level B</td></tr></table><h3 id="lookup-AGS_MODE">AGS_MODE
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Automatic</td></tr></table><h3 id="lookup-AGS_OPERATING_STATE">AGS_OPERATING_STATE
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Quiet time</td></tr><tr><td>1</td><td>Auto on</td></tr><tr><td>2</td><td>Auto off</td></tr><tr><td>3</td><td>Manual On</td></tr><tr><td>4</td><td>Manual Off</td></tr><tr><td>5</td><td>Generator shutdown</td></tr><tr><td>6</td><td>External shutdown</td></tr><tr><td>7</td><td>Fault</td></tr><tr><td>8</td><td>Suspend</td></tr><tr><td>9</td><td>Not operating</td></tr></table><h3 id="lookup-AGS_GENERATING_STATE">AGS_GENERATING_STATE
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Preheating</td></tr><tr><td>1</td><td>Start delay</td></tr><tr><td>2</td><td>Cranking</td></tr><tr><td>3</td><td>Starter cooling</td></tr><tr><td>4</td><td>Warming up</td></tr><tr><td>5</td><td>Cooling down</td></tr><tr><td>6</td><td>Spinning up</td></tr><tr><td>7</td><td>Shutdown bypass</td></tr><tr><td>8</td><td>Stopping</td></tr><tr><td>9</td><td>Running</td></tr><tr><td>10</td><td>Stopped</td></tr><tr><td>11</td><td>Crank delaty</td></tr></table><h3 id="lookup-AGS_ON_REASON">AGS_ON_REASON
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Not on</td></tr><tr><td>1</td><td>DC voltage low</td></tr><tr><td>2</td><td>Battery state of charge low</td></tr><tr><td>3</td><td>AC current high</td></tr><tr><td>4</td><td>Contact closed</td></tr><tr><td>5</td><td>Manual on</td></tr><tr><td>6</td><td>Exercise</td></tr><tr><td>7</td><td>Non Quiet time</td></tr><tr><td>8</td><td>External on via AGS</td></tr><tr><td>9</td><td>External on via generator</td></tr><tr><td>10</td><td>Unable to stop</td></tr></table><h3 id="lookup-AGS_OFF_REASON">AGS_OFF_REASON
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Not off</td></tr><tr><td>1</td><td>DC voltage high</td></tr><tr><td>2</td><td>Battery state of charge high</td></tr><tr><td>3</td><td>AC current low</td></tr><tr><td>4</td><td>Contact opened</td></tr><tr><td>5</td><td>Reached absorption</td></tr><tr><td>6</td><td>Reached float</td></tr><tr><td>7</td><td>Manual off</td></tr><tr><td>8</td><td>Max run time</td></tr><tr><td>9</td><td>Max auto cycle</td></tr><tr><td>10</td><td>Exercise done</td></tr><tr><td>11</td><td>Quiet time</td></tr><tr><td>12</td><td>External off via AGS</td></tr><tr><td>13</td><td>Safe mode</td></tr><tr><td>14</td><td>External off via generator</td></tr><tr><td>15</td><td>External shutdown</td></tr><tr><td>16</td><td>Auto off</td></tr><tr><td>17</td><td>Fault</td></tr><tr><td>18</td><td>Unable to start</td></tr></table><h3 id="lookup-TELEPHONE_MODE">TELEPHONE_MODE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>F3E/G3E simplex, telephone</td></tr><tr><td>1</td><td>F3E/G3E duplex, telephone</td></tr><tr><td>2</td><td>J3E, telephone</td></tr><tr><td>3</td><td>H3E, telephone</td></tr><tr><td>4</td><td>F1B/J2B FEC NBDP, telex/teleprinter</td></tr><tr><td>5</td><td>F1B/J2B ARQ NBDP, telex/teleprinter</td></tr><tr><td>6</td><td>F1B/J2B receive only, teleprinter/DSC</td></tr><tr><td>7</td><td>F1B/J2B, teleprinter/DSC</td></tr><tr><td>8</td><td>A1A Morse, tape recorder</td></tr><tr><td>9</td><td>A1A Morse, Morse key/head set</td></tr><tr><td>10</td><td>F1C/F2C/F3C, FAX machine</td></tr></table><h3 id="lookup-POWER_MODE">POWER_MODE
+        (0 - 1)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>High</td></tr><tr><td>1</td><td>Low</td></tr></table><h3 id="lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Broadcast geo area message</td></tr><tr><td>1</td><td>Addressed message</td></tr></table><h3 id="lookup-BANDWIDTH">BANDWIDTH
+        (0 - 1)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Default</td></tr><tr><td>1</td><td>12.5 kHz</td></tr></table><h3 id="lookup-FLOOD_STATE">FLOOD_STATE
+        (0 - 7)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Flood</td></tr><tr><td>1</td><td>Slack</td></tr><tr><td>2</td><td>Ebb</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value in other field</th><th>Value</th><th>Description</th></tr><tr><td>10</td><td>130</td><td>Diagnostic</td></tr><tr><td>10</td><td>140</td><td>Bus Traffic Logger</td></tr><tr><td>20</td><td>110</td><td>Alarm Enunciator</td></tr><tr><td>20</td><td>130</td><td>Emergency Position Indicating Radio Beacon (EPIRB)</td></tr><tr><td>20</td><td>135</td><td>Man Overboard</td></tr><tr><td>20</td><td>140</td><td>Voyage Data Recorder</td></tr><tr><td>20</td><td>150</td><td>Camera</td></tr><tr><td>25</td><td>130</td><td>PC Gateway</td></tr><tr><td>25</td><td>131</td><td>NMEA 2000 to Analog Gateway</td></tr><tr><td>25</td><td>132</td><td>Analog to NMEA 2000 Gateway</td></tr><tr><td>25</td><td>133</td><td>NMEA 2000 to Serial Gateway</td></tr><tr><td>25</td><td>135</td><td>NMEA 0183 Gateway</td></tr><tr><td>25</td><td>136</td><td>NMEA Network Gateway</td></tr><tr><td>25</td><td>137</td><td>NMEA 2000 Wireless Gateway</td></tr><tr><td>25</td><td>140</td><td>Router</td></tr><tr><td>25</td><td>150</td><td>Bridge</td></tr><tr><td>25</td><td>160</td><td>Repeater</td></tr><tr><td>30</td><td>130</td><td>Binary Event Monitor</td></tr><tr><td>30</td><td>140</td><td>Load Controller</td></tr><tr><td>30</td><td>141</td><td>AC/DC Input</td></tr><tr><td>30</td><td>150</td><td>Function Controller</td></tr><tr><td>35</td><td>140</td><td>Engine</td></tr><tr><td>35</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>35</td><td>142</td><td>Solar Panel (Solar Array)</td></tr><tr><td>35</td><td>143</td><td>Wind Generator (DC)</td></tr><tr><td>35</td><td>144</td><td>Fuel Cell</td></tr><tr><td>35</td><td>145</td><td>Network Power Supply</td></tr><tr><td>35</td><td>151</td><td>AC Generator</td></tr><tr><td>35</td><td>152</td><td>AC Bus</td></tr><tr><td>35</td><td>153</td><td>AC Mains (Utility/Shore)</td></tr><tr><td>35</td><td>154</td><td>AC Output</td></tr><tr><td>35</td><td>160</td><td>Power Converter - Battery Charger</td></tr><tr><td>35</td><td>161</td><td>Power Converter - Battery Charger+Inverter</td></tr><tr><td>35</td><td>162</td><td>Power Converter - Inverter</td></tr><tr><td>35</td><td>163</td><td>Power Converter - DC</td></tr><tr><td>35</td><td>170</td><td>Battery</td></tr><tr><td>35</td><td>180</td><td>Engine Gateway</td></tr><tr><td>40</td><td>130</td><td>Follow-up Controller</td></tr><tr><td>40</td><td>140</td><td>Mode Controller</td></tr><tr><td>40</td><td>150</td><td>Autopilot</td></tr><tr><td>40</td><td>155</td><td>Rudder</td></tr><tr><td>40</td><td>160</td><td>Heading Sensors</td></tr><tr><td>40</td><td>170</td><td>Trim (Tabs)/Interceptors</td></tr><tr><td>40</td><td>180</td><td>Attitude (Pitch, Roll, Yaw) Control</td></tr><tr><td>50</td><td>130</td><td>Engineroom Monitoring</td></tr><tr><td>50</td><td>140</td><td>Engine</td></tr><tr><td>50</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>50</td><td>150</td><td>Engine Controller</td></tr><tr><td>50</td><td>151</td><td>AC Generator</td></tr><tr><td>50</td><td>155</td><td>Motor</td></tr><tr><td>50</td><td>160</td><td>Engine Gateway</td></tr><tr><td>50</td><td>165</td><td>Transmission</td></tr><tr><td>50</td><td>170</td><td>Throttle/Shift Control</td></tr><tr><td>50</td><td>180</td><td>Actuator</td></tr><tr><td>50</td><td>190</td><td>Gauge Interface</td></tr><tr><td>50</td><td>200</td><td>Gauge Large</td></tr><tr><td>50</td><td>210</td><td>Gauge Small</td></tr><tr><td>60</td><td>130</td><td>Bottom Depth</td></tr><tr><td>60</td><td>135</td><td>Bottom Depth/Speed</td></tr><tr><td>60</td><td>136</td><td>Bottom Depth/Speed/Temperature</td></tr><tr><td>60</td><td>140</td><td>Ownship Attitude</td></tr><tr><td>60</td><td>145</td><td>Ownship Position (GNSS)</td></tr><tr><td>60</td><td>150</td><td>Ownship Position (Loran C)</td></tr><tr><td>60</td><td>155</td><td>Speed</td></tr><tr><td>60</td><td>160</td><td>Turn Rate Indicator</td></tr><tr><td>60</td><td>170</td><td>Integrated Navigation</td></tr><tr><td>60</td><td>175</td><td>Integrated Navigation System</td></tr><tr><td>60</td><td>190</td><td>Navigation Management</td></tr><tr><td>60</td><td>195</td><td>Automatic Identification System (AIS)</td></tr><tr><td>60</td><td>200</td><td>Radar</td></tr><tr><td>60</td><td>201</td><td>Infrared Imaging</td></tr><tr><td>60</td><td>205</td><td>ECDIS</td></tr><tr><td>60</td><td>210</td><td>ECS</td></tr><tr><td>60</td><td>220</td><td>Direction Finder</td></tr><tr><td>60</td><td>230</td><td>Voyage Status</td></tr><tr><td>70</td><td>130</td><td>EPIRB</td></tr><tr><td>70</td><td>140</td><td>AIS</td></tr><tr><td>70</td><td>150</td><td>DSC</td></tr><tr><td>70</td><td>160</td><td>Data Receiver/Transceiver</td></tr><tr><td>70</td><td>170</td><td>Satellite</td></tr><tr><td>70</td><td>180</td><td>Radio-telephone (MF/HF)</td></tr><tr><td>70</td><td>190</td><td>Radiotelephone</td></tr><tr><td>75</td><td>130</td><td>Temperature</td></tr><tr><td>75</td><td>140</td><td>Pressure</td></tr><tr><td>75</td><td>150</td><td>Fluid Level</td></tr><tr><td>75</td><td>160</td><td>Flow</td></tr><tr><td>75</td><td>170</td><td>Humidity</td></tr><tr><td>80</td><td>130</td><td>Time/Date Systems</td></tr><tr><td>80</td><td>140</td><td>VDR</td></tr><tr><td>80</td><td>150</td><td>Integrated Instrumentation</td></tr><tr><td>80</td><td>160</td><td>General Purpose Displays</td></tr><tr><td>80</td><td>170</td><td>General Sensor Box</td></tr><tr><td>80</td><td>180</td><td>Weather Instruments</td></tr><tr><td>80</td><td>190</td><td>Transducer/General</td></tr><tr><td>80</td><td>200</td><td>NMEA 0183 Converter</td></tr><tr><td>85</td><td>130</td><td>Atmospheric</td></tr><tr><td>85</td><td>160</td><td>Aquatic</td></tr><tr><td>90</td><td>130</td><td>HVAC</td></tr><tr><td>100</td><td>130</td><td>Scale (Catch)</td></tr><tr><td>110</td><td>130</td><td>Button Interface</td></tr><tr><td>110</td><td>135</td><td>Switch Interface</td></tr><tr><td>110</td><td>140</td><td>Analog Interface</td></tr><tr><td>120</td><td>130</td><td>Display</td></tr><tr><td>120</td><td>140</td><td>Alarm Enunciator</td></tr><tr><td>125</td><td>130</td><td>Multimedia Player</td></tr><tr><td>125</td><td>140</td><td>Multimedia Controller</td></tr></table><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h3 id="lookupbit-STATION_STATUS">STATION_STATUS
         (0 - 2^3-1)

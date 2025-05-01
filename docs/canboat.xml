@@ -308,8 +308,7 @@ limitations under the License.
     </FieldType>
     <FieldType Name="STRING_LAU">
       <Description>A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</Description>
-      <EncodingDescription>The length of the string is determined by a starting length byte. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</EncodingDescription>
-      <Comment>It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, but this has not been seen in the wild yet.</Comment>
+      <EncodingDescription>The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</EncodingDescription>
       <VariableSize>true</VariableSize>
     </FieldType>
     <FieldType Name="BINARY">
@@ -924,6 +923,7 @@ limitations under the License.
       <EnumPair Value='0' Name='No integrity checking' />
       <EnumPair Value='1' Name='Safe' />
       <EnumPair Value='2' Name='Caution' />
+      <EnumPair Value='3' Name='Unsafe' />
     </LookupEnumeration>
     <LookupEnumeration Name='SYSTEM_TIME' MaxValue='15'>
       <EnumPair Value='0' Name='GPS' />
@@ -2413,6 +2413,105 @@ limitations under the License.
       <EnumPair Value='3' Name='Parallel Master' />
       <EnumPair Value='4' Name='Parallel Slave' />
     </LookupEnumeration>
+    <LookupEnumeration Name='CERTIFICATION_LEVEL' MaxValue='255'>
+      <EnumPair Value='0' Name='Level A' />
+      <EnumPair Value='1' Name='Level B' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='AGS_MODE' MaxValue='15'>
+      <EnumPair Value='0' Name='Off' />
+      <EnumPair Value='1' Name='On' />
+      <EnumPair Value='2' Name='Automatic' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='AGS_OPERATING_STATE' MaxValue='15'>
+      <EnumPair Value='0' Name='Quiet time' />
+      <EnumPair Value='1' Name='Auto on' />
+      <EnumPair Value='2' Name='Auto off' />
+      <EnumPair Value='3' Name='Manual On' />
+      <EnumPair Value='4' Name='Manual Off' />
+      <EnumPair Value='5' Name='Generator shutdown' />
+      <EnumPair Value='6' Name='External shutdown' />
+      <EnumPair Value='7' Name='Fault' />
+      <EnumPair Value='8' Name='Suspend' />
+      <EnumPair Value='9' Name='Not operating' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='AGS_GENERATING_STATE' MaxValue='15'>
+      <EnumPair Value='0' Name='Preheating' />
+      <EnumPair Value='1' Name='Start delay' />
+      <EnumPair Value='2' Name='Cranking' />
+      <EnumPair Value='3' Name='Starter cooling' />
+      <EnumPair Value='4' Name='Warming up' />
+      <EnumPair Value='5' Name='Cooling down' />
+      <EnumPair Value='6' Name='Spinning up' />
+      <EnumPair Value='7' Name='Shutdown bypass' />
+      <EnumPair Value='8' Name='Stopping' />
+      <EnumPair Value='9' Name='Running' />
+      <EnumPair Value='10' Name='Stopped' />
+      <EnumPair Value='11' Name='Crank delaty' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='AGS_ON_REASON' MaxValue='255'>
+      <EnumPair Value='0' Name='Not on' />
+      <EnumPair Value='1' Name='DC voltage low' />
+      <EnumPair Value='2' Name='Battery state of charge low' />
+      <EnumPair Value='3' Name='AC current high' />
+      <EnumPair Value='4' Name='Contact closed' />
+      <EnumPair Value='5' Name='Manual on' />
+      <EnumPair Value='6' Name='Exercise' />
+      <EnumPair Value='7' Name='Non Quiet time' />
+      <EnumPair Value='8' Name='External on via AGS' />
+      <EnumPair Value='9' Name='External on via generator' />
+      <EnumPair Value='10' Name='Unable to stop' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='AGS_OFF_REASON' MaxValue='255'>
+      <EnumPair Value='0' Name='Not off' />
+      <EnumPair Value='1' Name='DC voltage high' />
+      <EnumPair Value='2' Name='Battery state of charge high' />
+      <EnumPair Value='3' Name='AC current low' />
+      <EnumPair Value='4' Name='Contact opened' />
+      <EnumPair Value='5' Name='Reached absorption' />
+      <EnumPair Value='6' Name='Reached float' />
+      <EnumPair Value='7' Name='Manual off' />
+      <EnumPair Value='8' Name='Max run time' />
+      <EnumPair Value='9' Name='Max auto cycle' />
+      <EnumPair Value='10' Name='Exercise done' />
+      <EnumPair Value='11' Name='Quiet time' />
+      <EnumPair Value='12' Name='External off via AGS' />
+      <EnumPair Value='13' Name='Safe mode' />
+      <EnumPair Value='14' Name='External off via generator' />
+      <EnumPair Value='15' Name='External shutdown' />
+      <EnumPair Value='16' Name='Auto off' />
+      <EnumPair Value='17' Name='Fault' />
+      <EnumPair Value='18' Name='Unable to start' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='TELEPHONE_MODE' MaxValue='255'>
+      <EnumPair Value='0' Name='F3E/G3E simplex, telephone' />
+      <EnumPair Value='1' Name='F3E/G3E duplex, telephone' />
+      <EnumPair Value='2' Name='J3E, telephone' />
+      <EnumPair Value='3' Name='H3E, telephone' />
+      <EnumPair Value='4' Name='F1B/J2B FEC NBDP, telex/teleprinter' />
+      <EnumPair Value='5' Name='F1B/J2B ARQ NBDP, telex/teleprinter' />
+      <EnumPair Value='6' Name='F1B/J2B receive only, teleprinter/DSC' />
+      <EnumPair Value='7' Name='F1B/J2B, teleprinter/DSC' />
+      <EnumPair Value='8' Name='A1A Morse, tape recorder' />
+      <EnumPair Value='9' Name='A1A Morse, Morse key/head set' />
+      <EnumPair Value='10' Name='F1C/F2C/F3C, FAX machine' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='POWER_MODE' MaxValue='1'>
+      <EnumPair Value='0' Name='High' />
+      <EnumPair Value='1' Name='Low' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='BROADCAST_INDICATOR' MaxValue='15'>
+      <EnumPair Value='0' Name='Broadcast geo area message' />
+      <EnumPair Value='1' Name='Addressed message' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='BANDWIDTH' MaxValue='1'>
+      <EnumPair Value='0' Name='Default' />
+      <EnumPair Value='1' Name='12.5 kHz' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='FLOOD_STATE' MaxValue='7'>
+      <EnumPair Value='0' Name='Flood' />
+      <EnumPair Value='1' Name='Slack' />
+      <EnumPair Value='2' Name='Ebb' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
@@ -3184,6 +3283,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>sid</Id>
           <Name>SID</Name>
+          <Description>Sequence number of multi-packet frame</Description>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -3197,6 +3297,7 @@ limitations under the License.
           <Order>2</Order>
           <Id>data</Id>
           <Name>Data</Name>
+          <Description>Multi-packet packetized data - 56 bits organized as seven 8-bit bytes, each of the bytes is transmitted in the same order as it would in a standard (i.e., single frame) message. Unused bytes shall be filled with 0xFF.</Description>
           <BitLength>56</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
@@ -3597,6 +3698,7 @@ limitations under the License.
       <Description>ISO Address Claim</Description>
     <Priority>6</Priority>
       <Explanation>This network management message is used to claim network address, reply to devices requesting the claimed address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group Function. This PGN contains several fields that are requestable, either independently or in any combination. Note that there are several places where this 64-bit data also occurs, these are named ISO_NAME and can be recursively explained.</Explanation>
+      <URL>https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>10</FieldCount>
@@ -6115,6 +6217,7 @@ limitations under the License.
       <PGN>65240</PGN>
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
+      <Explanation>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NMAE information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</Explanation>
       <Type>ISO</Type>
       <Complete>false</Complete>
       <Missing>
@@ -10221,6 +10324,7 @@ limitations under the License.
           <Order>3</Order>
           <Id>transmissionInterval</Id>
           <Name>Transmission interval</Name>
+          <Description>0x0: Turn off transmission; 0xFFFF FFFE = Restore default interval, 0xFFFF FFFF in this field and 0xFFFF in field 4 = Transmit now without changing timing variables</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -16181,6 +16285,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>sid</Id>
           <Name>SID</Name>
+          <Description>An upward counting number used to tie releated information together between different PGNs. For example the SID would be used to tie together the COG, SOG and RAIM values to a given position.</Description>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -16361,6 +16466,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>nmea2000Version</Id>
           <Name>NMEA 2000 Version</Name>
+          <Description>Binary number containing a decimal number of format AABBB, where AA is the major and BBB is the minor release. The decimal point position is assumed.</Description>
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -16435,12 +16541,14 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>CERTIFICATION_LEVEL</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>loadEquivalency</Id>
           <Name>Load Equivalency</Name>
+          <Description>Garantueed maximum power consumption, 50 mA per LEN</Description>
           <BitLength>8</BitLength>
           <BitOffset>1064</BitOffset>
           <BitStart>0</BitStart>
@@ -20976,15 +21084,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127512</PGN>
       <Id>agsConfigurationStatus</Id>
       <Description>AGS Configuration Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>4</FieldCount>
-      <Length>8</Length>
+      <Length>3</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -21019,22 +21125,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>3</Order>
           <Id>agsMode</Id>
           <Name>AGS Mode</Name>
-          <BitLength>8</BitLength>
+          <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AGS_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>40</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -21047,9 +21154,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
       <Length>8</Length>
@@ -21198,15 +21303,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>127514</PGN>
       <Id>agsStatus</Id>
       <Description>AGS Status</Description>
-      <Type>Single</Type>
+      <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
-      <Length>8</Length>
+      <FieldCount>6</FieldCount>
+      <Length>5</Length>
       <TransmissionInterval>1500</TransmissionInterval>
       <Fields>
         <Field>
@@ -21241,19 +21344,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>3</Order>
           <Id>agsOperatingState</Id>
           <Name>AGS Operating State</Name>
-          <BitLength>8</BitLength>
+          <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AGS_OPERATING_STATE</LookupEnumeration>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>generatorState</Id>
           <Name>Generator State</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AGS_GENERATING_STATE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>generatorOnReason</Id>
+          <Name>Generator On Reason</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -21261,12 +21379,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AGS_ON_REASON</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>generatorOnReason</Id>
-          <Name>Generator On Reason</Name>
+          <Order>6</Order>
+          <Id>generatorOffReason</Id>
+          <Name>Generator Off Reason</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21274,30 +21393,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>generatorOffReason</Id>
-          <Name>Generator Off Reason</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AGS_OFF_REASON</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22903,8 +23000,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>15</FieldCount>
-      <Length>233</Length>
+      <FieldCount>17</FieldCount>
+      <MinLength>26</MinLength>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -23023,12 +23120,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>m</Unit>
-          <Resolution>0.001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967.293000001</RangeMax>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-21474836.47</RangeMin>
+          <RangeMax>21474836.45</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -23069,11 +23166,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>42949672.93</RangeMax>
+          <Signed>true</Signed>
+          <RangeMin>-21474836.47</RangeMin>
+          <RangeMax>21474836.45</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -23110,10 +23207,30 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>15</Order>
           <Id>name</Id>
           <Name>Name</Name>
-          <BitLength>1664</BitLength>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
+          <FieldType>STRING_LAU</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>referenceTarget</Id>
+          <Name>Reference Target</Name>
+          <BitLength>2</BitLength>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>reserved17</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24429,7 +24546,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>5</FieldCount>
+      <FieldCount>4</FieldCount>
       <Length>8</Length>
       <TransmissionInterval>100</TransmissionInterval>
       <Fields>
@@ -24450,50 +24567,46 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>2</Order>
           <Id>timeDelta</Id>
           <Name>Time Delta</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>0.005</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1.265</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>latitudeDelta</Id>
           <Name>Latitude Delta</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>24</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>deg</Unit>
+          <Resolution>2.77778e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32765</RangeMax>
+          <RangeMin>-0.02330168611111111</RangeMin>
+          <RangeMax>0.02330168055555556</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>longitudeDelta</Id>
           <Name>Longitude Delta</Name>
-          <BitLength>16</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>deg</Unit>
+          <Resolution>2.77778e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32765</RangeMax>
+          <RangeMin>-0.02330168611111111</RangeMin>
+          <RangeMax>0.02330168055555556</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24507,7 +24620,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
+      <FieldCount>8</FieldCount>
       <Length>8</Length>
       <TransmissionInterval>100</TransmissionInterval>
       <Fields>
@@ -24528,48 +24641,52 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>2</Order>
           <Id>timeDelta</Id>
           <Name>Time Delta</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32765</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <Unit>s</Unit>
+          <Resolution>0.005</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1.265</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>gnssQuality</Id>
           <Name>GNSS Quality</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>GNS_METHOD</LookupEnumeration>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>direction</Id>
           <Name>Direction</Name>
           <BitLength>2</BitLength>
-          <BitOffset>26</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>DIRECTION_REFERENCE</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>28</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -24578,7 +24695,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>cog</Id>
           <Name>COG</Name>
           <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
           <Resolution>0.0001</Resolution>
@@ -24593,13 +24710,25 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Id>altitudeDelta</Id>
           <Name>Altitude Delta</Name>
           <BitLength>16</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32.767</RangeMin>
+          <RangeMax>32.765</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32765</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24744,7 +24873,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
+          <RangeMax>3</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>GNS_INTEGRITY</LookupEnumeration>
         </Field>
@@ -27057,12 +27186,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129301</PGN>
       <Id>navigationRouteTimeToFromMark</Id>
       <Description>Navigation - Route / Time to+from Mark</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
@@ -27141,17 +27268,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129302</PGN>
       <Id>bearingAndDistanceBetweenTwoMarks</Id>
       <Description>Bearing and Distance between two Marks</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
       <Length>17</Length>
-      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -27294,12 +27419,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129538</PGN>
       <Id>gnssControlStatus</Id>
       <Description>GNSS Control Status</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>11</FieldCount>
@@ -27738,9 +27861,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>14</FieldCount>
       <Length>26</Length>
@@ -27948,16 +28069,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129542</PGN>
       <Id>gnssPseudorangeNoiseStatistics</Id>
       <Description>GNSS Pseudorange Noise Statistics</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
-      <Length>9</Length>
+      <Length>15</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -27980,89 +28099,103 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>stdOfMajorAxis</Id>
           <Name>STD of Major axis</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
           <Id>stdOfMinorAxis</Id>
           <Name>STD of Minor axis</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>orientationOfMajorAxis</Id>
           <Name>Orientation of Major axis</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>6.5533</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>stdOfLatError</Id>
           <Name>STD of Lat Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>stdOfLonError</Id>
           <Name>STD of Lon Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
           <Id>stdOfAltError</Id>
           <Name>STD of Alt Error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -28070,16 +28203,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129545</PGN>
       <Id>gnssRaimOutput</Id>
       <Description>GNSS RAIM Output</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>9</Length>
+      <Length>15</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -28099,22 +28230,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>2</Order>
           <Id>integrityFlag</Id>
           <Name>Integrity flag</Name>
-          <BitLength>4</BitLength>
+          <BitLength>2</BitLength>
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>3</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>GNS_INTEGRITY</LookupEnumeration>
         </Field>
         <Field>
           <Order>3</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>12</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>6</BitLength>
+          <BitOffset>10</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -28122,47 +28254,53 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>latitudeExpectedError</Id>
           <Name>Latitude expected error</Name>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>longitudeExpectedError</Id>
           <Name>Longitude expected error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>altitudeExpectedError</Id>
           <Name>Altitude expected error</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
           <Id>svIdOfMostLikelyFailedSat</Id>
           <Name>SV ID of most likely failed sat</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -28174,40 +28312,46 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>probabilityOfMissedDetection</Id>
           <Name>Probability of missed detection</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
           <Id>estimateOfPseudorangeBias</Id>
           <Name>Estimate of pseudorange bias</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>stdDeviationOfBias</Id>
           <Name>Std Deviation of bias</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.65</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -29109,9 +29253,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>12</FieldCount>
@@ -29278,12 +29419,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>15</FieldCount>
-      <Length>25</Length>
+      <FieldCount>14</FieldCount>
+      <Length>24</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -29474,16 +29613,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>15</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>15</Order>
-          <Id>spare15</Id>
-          <Name>Spare</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>192</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -30020,13 +30149,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved6</Id>
-          <Name>Reserved</Name>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -30164,13 +30293,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved6</Id>
-          <Name>Reserved</Name>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>46</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -30202,13 +30331,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129798</PGN>
       <Id>aisSarAircraftPositionReport</Id>
       <Description>AIS SAR Aircraft Position Report</Description>
+    <Priority>4</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>16</FieldCount>
@@ -30348,6 +30475,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>sog</Id>
           <Name>SOG</Name>
+          <Description>Originally this used the same resolution as SOG for boats (0.01 m/s), but this did not allow for speeds over 180 km/h so in some addendum this has been amended to have a resolution of 0.1 m/s</Description>
           <BitLength>16</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
@@ -30439,16 +30567,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129799</PGN>
       <Id>radioFrequencyModePower</Id>
       <Description>Radio Frequency/Mode/Power</Description>
+    <Priority>3</Priority>
       <Explanation>The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3 (indicating private channels as allowed in some countries.)</Explanation>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
-      <Length>19</Length>
+      <Length>18</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -30485,6 +30609,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>3</Order>
           <Id>radioChannel</Id>
           <Name>Radio Channel</Name>
+          <Description>MF/HF telephone channels to have first digit 3 followed by ITU channel numbers with leading zeros as required. MF/HF teletype channels to have first digit 4; the send and third digit give the frequency bads; and the fourth to sixth digits ITU channel numbers; each with leading zeros as required. VHF channels to have the first digit 9 followed by zero. The next digit is 1 indicating the ship stations transmit frequency is being used as a simplex channel frequency, or 2 indicating the cost stations transmit frequency is being used as a simplex channel frequency, 0 otherwise. THe remaining three numbers are the VHF channel numbers with leading zeros as required.</Description>
           <BitLength>48</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -30509,21 +30634,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>mode</Id>
           <Name>Mode</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>253</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>TELEPHONE_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>channelBandwidth</Id>
           <Name>Channel Bandwidth</Name>
           <BitLength>16</BitLength>
-          <BitOffset>136</BitOffset>
+          <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
           <Resolution>1</Resolution>
@@ -30539,15 +30665,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129800</PGN>
       <Id>aisUtcDateInquiry</Id>
       <Description>AIS UTC/Date Inquiry</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>7</FieldCount>
       <Length>10</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -30595,11 +30720,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -30608,17 +30743,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>destinationId</Id>
           <Name>Destination ID</Name>
           <BitLength>32</BitLength>
@@ -30637,16 +30772,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129801</PGN>
       <Id>aisAddressedSafetyRelatedMessage</Id>
       <Description>AIS Addressed Safety Related Message</Description>
+    <Priority>5</Priority>
       <URL>https://navcen.uscg.gov/ais-addressed-safety-related-message12</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>128</Length>
+      <FieldCount>11</FieldCount>
+      <MinLength>11</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -30693,11 +30827,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -30706,27 +30850,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
+          <Order>6</Order>
           <Id>sequenceNumber</Id>
           <Name>Sequence Number</Name>
           <BitLength>2</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>1</BitLength>
-          <BitOffset>47</BitOffset>
-          <BitStart>7</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -30744,11 +30878,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>retransmitFlag</Id>
           <Name>Retransmit flag</Name>
           <BitLength>1</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>86</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -30756,23 +30900,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
-          <Id>reserved9</Id>
-          <Name>Reserved</Name>
-          <BitLength>7</BitLength>
-          <BitOffset>81</BitOffset>
-          <BitStart>1</BitStart>
+          <Order>10</Order>
+          <Id>spare10</Id>
+          <Name>Spare</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>87</BitOffset>
+          <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>safetyRelatedText</Id>
           <Name>Safety Related Text</Name>
-          <BitLength>936</BitLength>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
+          <FieldType>STRING_LAU</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -30780,16 +30924,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129802</PGN>
       <Id>aisSafetyRelatedBroadcastMessage</Id>
       <Description>AIS Safety Related Broadcast Message</Description>
+    <Priority>5</Priority>
       <URL>https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
-      <Length>168</Length>
+      <FieldCount>7</FieldCount>
+      <MinLength>6</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -30836,11 +30979,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -30849,23 +31002,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>safetyRelatedText</Id>
           <Name>Safety Related Text</Name>
-          <BitLength>1296</BitLength>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
+          <FieldType>STRING_LAU</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -30873,6 +31026,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129803</PGN>
       <Id>aisInterrogation</Id>
       <Description>AIS Interrogation</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -30880,9 +31034,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>19</FieldCount>
-      <Length>23</Length>
+      <FieldCount>22</FieldCount>
+      <Length>26</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -30977,84 +31132,104 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
           <Id>messageId11</Id>
           <Name>Message ID 1.1</Name>
           <BitLength>6</BitLength>
-          <BitOffset>80</BitOffset>
+          <BitOffset>82</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>slotOffset11</Id>
+          <Name>Slot Offset 1.1</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>slotOffset11</Id>
-          <Name>Slot Offset 1.1</Name>
-          <BitLength>12</BitLength>
-          <BitOffset>86</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4093</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
-          <Id>spare10</Id>
+          <Order>11</Order>
+          <Id>spare11</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
-          <BitOffset>98</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>12</Order>
           <Id>messageId12</Id>
           <Name>Message ID 1.2</Name>
           <BitLength>6</BitLength>
-          <BitOffset>100</BitOffset>
-          <BitStart>4</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>61</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>slotOffset12</Id>
-          <Name>Slot Offset 1.2</Name>
-          <BitLength>12</BitLength>
           <BitOffset>106</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4093</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>61</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>spare13</Id>
-          <Name>Spare</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>118</BitOffset>
-          <BitStart>6</BitStart>
+          <Id>slotOffset12</Id>
+          <Name>Slot Offset 1.2</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65533</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>14</Order>
+          <Id>reserved14</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>reserved15</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>134</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
           <Id>destinationId2</Id>
           <Name>Destination ID 2</Name>
           <BitLength>32</BitLength>
-          <BitOffset>120</BitOffset>
+          <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31064,12 +31239,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
-          <Order>15</Order>
+          <Order>17</Order>
+          <Id>reserved17</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
           <Id>messageId21</Id>
           <Name>Message ID 2.1</Name>
           <BitLength>6</BitLength>
-          <BitOffset>152</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>170</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -31078,44 +31263,44 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_MESSAGE_ID</LookupEnumeration>
         </Field>
         <Field>
-          <Order>16</Order>
+          <Order>19</Order>
           <Id>slotOffset21</Id>
           <Name>Slot Offset 2.1</Name>
-          <BitLength>12</BitLength>
-          <BitOffset>158</BitOffset>
-          <BitStart>6</BitStart>
+          <BitLength>16</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>4093</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>17</Order>
-          <Id>spare17</Id>
+          <Order>20</Order>
+          <Id>spare20</Id>
           <Name>Spare</Name>
           <BitLength>2</BitLength>
-          <BitOffset>170</BitOffset>
-          <BitStart>2</BitStart>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>18</Order>
-          <Id>reserved18</Id>
+          <Order>21</Order>
+          <Id>reserved21</Id>
           <Name>Reserved</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>172</BitOffset>
-          <BitStart>4</BitStart>
+          <BitLength>6</BitLength>
+          <BitOffset>194</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>19</Order>
+          <Order>22</Order>
           <Id>sid</Id>
           <Name>SID</Name>
           <BitLength>8</BitLength>
-          <BitOffset>176</BitOffset>
+          <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -31129,17 +31314,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129804</PGN>
       <Id>aisAssignmentModeCommand</Id>
       <Description>AIS Assignment Mode Command</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>11</FieldCount>
-      <Length>22</Length>
+      <FieldCount>14</FieldCount>
+      <Length>23</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -31186,11 +31369,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -31199,17 +31392,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>destinationIdA</Id>
           <Name>Destination ID A</Name>
           <BitLength>32</BitLength>
@@ -31223,9 +31416,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>8</Order>
           <Id>offsetA</Id>
           <Name>Offset A</Name>
+          <Description>Offset from current slot to first assigned slot</Description>
           <BitLength>16</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -31236,9 +31430,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
+          <Order>9</Order>
           <Id>incrementA</Id>
           <Name>Increment A</Name>
+          <Description>Increment to next assigned slot</Description>
           <BitLength>16</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
@@ -31249,7 +31444,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>destinationIdB</Id>
           <Name>Destination ID B</Name>
           <BitLength>32</BitLength>
@@ -31263,9 +31458,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>offsetB</Id>
           <Name>Offset B</Name>
+          <Description>Offset from current slot to first assigned slot</Description>
           <BitLength>16</BitLength>
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
@@ -31276,9 +31472,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>12</Order>
           <Id>incrementB</Id>
           <Name>Increment B</Name>
+          <Description>Increment to next assigned slot</Description>
           <BitLength>16</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
@@ -31287,6 +31484,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>spare13</Id>
+          <Name>Spare</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved14</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>180</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31299,14 +31516,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>9</FieldCount>
+      <FieldCount>10</FieldCount>
       <MinLength>6</MinLength>
       <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
-      <RepeatingFieldSet1StartField>6</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1StartField>7</RepeatingFieldSet1StartField>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -31353,11 +31568,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -31366,19 +31591,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>offset</Id>
           <Name>Offset</Name>
+          <Description>Reserved offset number</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -31389,9 +31615,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>8</Order>
           <Id>numberOfSlots</Id>
           <Name>Number of Slots</Name>
+          <Description>Reserved consecutive slots</Description>
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -31402,20 +31629,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
+          <Order>9</Order>
           <Id>timeout</Id>
           <Name>Timeout</Name>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>60</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>15180</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>increment</Id>
           <Name>Increment</Name>
           <BitLength>16</BitLength>
@@ -31433,16 +31662,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>129806</PGN>
       <Id>aisChannelManagement</Id>
       <Description>AIS Channel Management</Description>
+    <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>20</FieldCount>
-      <Length>30</Length>
+      <FieldCount>23</FieldCount>
+      <Length>31</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -31489,11 +31717,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
           <Id>aisTransceiverInformation</Id>
           <Name>AIS Transceiver information</Name>
           <BitLength>5</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitOffset>41</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -31502,99 +31740,85 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>AIS_TRANSCEIVER</LookupEnumeration>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>3</BitLength>
-          <BitOffset>45</BitOffset>
-          <BitStart>5</BitStart>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>46</BitOffset>
+          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>channelA</Id>
           <Name>Channel A</Name>
-          <BitLength>7</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>125</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>channelB</Id>
-          <Name>Channel B</Name>
-          <BitLength>7</BitLength>
-          <BitOffset>55</BitOffset>
-          <BitStart>7</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>125</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>reserved8</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>62</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>power</Id>
-          <Name>Power</Name>
-          <Description>reserved</Description>
-          <BitLength>8</BitLength>
+          <Id>channelB</Id>
+          <Name>Channel B</Name>
+          <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>65533</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>reserved9</Id>
+          <Name>Reserved</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>txRxMode</Id>
-          <Name>Tx/Rx Mode</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
+          <Id>power</Id>
+          <Name>Power</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>83</BitOffset>
+          <BitStart>3</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>POWER_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>northEastLongitudeCorner1</Id>
-          <Name>North East Longitude Corner 1</Name>
-          <BitLength>32</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Unit>deg</Unit>
-          <Resolution>1e-07</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-214.7483647</RangeMin>
-          <RangeMax>214.7483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <Id>txRxMode</Id>
+          <Name>Tx/Rx Mode</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>84</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>TX_RX_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>northEastLatitudeCorner1</Id>
-          <Name>North East Latitude Corner 1</Name>
+          <Id>northEastLongitudeCorner1</Id>
+          <Name>North East Longitude Corner 1</Name>
           <BitLength>32</BitLength>
-          <BitOffset>112</BitOffset>
+          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Unit>deg</Unit>
           <Resolution>1e-07</Resolution>
@@ -31606,10 +31830,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>13</Order>
-          <Id>southWestLongitudeCorner1</Id>
-          <Name>South West Longitude Corner 1</Name>
+          <Id>northEastLatitudeCorner1</Id>
+          <Name>North East Latitude Corner 1</Name>
           <BitLength>32</BitLength>
-          <BitOffset>144</BitOffset>
+          <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Unit>deg</Unit>
           <Resolution>1e-07</Resolution>
@@ -31621,10 +31845,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>14</Order>
-          <Id>southWestLatitudeCorner2</Id>
-          <Name>South West Latitude Corner 2</Name>
+          <Id>southWestLongitudeCorner2</Id>
+          <Name>South West Longitude Corner 2</Name>
           <BitLength>32</BitLength>
-          <BitOffset>176</BitOffset>
+          <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <Unit>deg</Unit>
           <Resolution>1e-07</Resolution>
@@ -31636,75 +31860,113 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>15</Order>
-          <Id>reserved15</Id>
-          <Name>Reserved</Name>
-          <BitLength>6</BitLength>
-          <BitOffset>208</BitOffset>
+          <Id>southWestLatitudeCorner2</Id>
+          <Name>South West Latitude Corner 2</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Unit>deg</Unit>
+          <Resolution>1e-07</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-214.7483647</RangeMin>
+          <RangeMax>214.7483645</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>16</Order>
-          <Id>addressedOrBroadcastMessageIndicator</Id>
-          <Name>Addressed or Broadcast Message Indicator</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>214</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>17</Order>
-          <Id>channelABandwidth</Id>
-          <Name>Channel A Bandwidth</Name>
-          <BitLength>7</BitLength>
+          <Id>reserved16</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
           <BitOffset>216</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>125</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>18</Order>
-          <Id>channelBBandwidth</Id>
-          <Name>Channel B Bandwidth</Name>
-          <BitLength>7</BitLength>
-          <BitOffset>223</BitOffset>
-          <BitStart>7</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>125</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>19</Order>
-          <Id>reserved19</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>230</BitOffset>
-          <BitStart>6</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>20</Order>
-          <Id>transitionalZoneSize</Id>
-          <Name>Transitional Zone Size</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>232</BitOffset>
-          <BitStart>0</BitStart>
+          <Order>17</Order>
+          <Id>addressedOrBroadcastMessageIndicator</Id>
+          <Name>Addressed or Broadcast Message Indicator</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>217</BitOffset>
+          <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>253</RangeMax>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>BROADCAST_INDICATOR</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>channelABandwidth</Id>
+          <Name>Channel A Bandwidth</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>218</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>BANDWIDTH</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>channelBBandwidth</Id>
+          <Name>Channel B Bandwidth</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>219</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>BANDWIDTH</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>20</Order>
+          <Id>reserved20</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>220</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>21</Order>
+          <Id>transitionalZoneSize</Id>
+          <Name>Transitional Zone Size</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>221</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>spare22</Id>
+          <Name>Spare</Name>
+          <BitLength>23</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>23</Order>
+          <Id>reserved23</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>247</BitOffset>
+          <BitStart>7</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -31716,13 +31978,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>17</FieldCount>
-      <Length>28</Length>
+      <FieldCount>19</FieldCount>
+      <Length>29</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -31833,8 +32092,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>southWestLongitudeCorner1</Id>
-          <Name>South West Longitude Corner 1</Name>
+          <Id>southWestLongitudeCorner2</Id>
+          <Name>South West Longitude Corner 2</Name>
           <BitLength>32</BitLength>
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
@@ -31896,7 +32155,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>253</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SHIP_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>14</Order>
@@ -31936,14 +32196,37 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>17</Order>
           <Id>quietTime</Id>
           <Name>Quiet Time</Name>
+          <Description>Commanded quiet time</Description>
           <BitLength>4</BitLength>
           <BitOffset>220</BitOffset>
           <BitStart>4</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>60</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>780</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>spare18</Id>
+          <Name>Spare</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>224</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>19</Order>
+          <Id>reserved19</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>230</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -32826,15 +33109,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130052</PGN>
       <Id>loranCTdData</Id>
       <Description>Loran-C TD Data</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>15</FieldCount>
       <Length>32</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -32843,11 +33126,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -32856,11 +33141,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -32869,11 +33156,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -32882,11 +33171,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -32895,11 +33186,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -32908,11 +33201,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -32921,11 +33216,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -33035,15 +33332,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130053</PGN>
       <Id>loranCRangeData</Id>
       <Description>Loran-C Range Data</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>15</FieldCount>
       <Length>32</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -33052,11 +33349,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -33065,11 +33364,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -33078,11 +33379,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -33091,11 +33394,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -33104,11 +33409,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -33117,11 +33424,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33130,11 +33439,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -33247,7 +33558,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -33261,11 +33571,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -33298,11 +33610,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -33311,11 +33625,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483645</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>-2.147483647</RangeMin>
+          <RangeMax>2.147483645</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35576,6 +35892,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130320</PGN>
       <Id>tideStationData</Id>
       <Description>Tide Station Data</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>11</FieldCount>
@@ -35733,6 +36050,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130321</PGN>
       <Id>salinityStationData</Id>
       <Description>Salinity Station Data</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -35877,15 +36195,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130322</PGN>
       <Id>currentStationData</Id>
       <Description>Current Station Data</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>13</FieldCount>
       <MinLength>25</MinLength>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
@@ -35900,20 +36216,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>RESIDUAL_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>4</BitLength>
+          <Id>state</Id>
+          <Name>State</Name>
+          <BitLength>3</BitLength>
           <BitOffset>4</BitOffset>
           <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FLOOD_STATE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>7</BitOffset>
+          <BitStart>7</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>3</Order>
+          <Order>4</Order>
           <Id>measurementDate</Id>
           <Name>Measurement Date</Name>
           <BitLength>16</BitLength>
@@ -35928,7 +36259,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>DATE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>4</Order>
+          <Order>5</Order>
           <Id>measurementTime</Id>
           <Name>Measurement Time</Name>
           <Description>Seconds since midnight</Description>
@@ -35943,7 +36274,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>TIME</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>5</Order>
+          <Order>6</Order>
           <Id>stationLatitude</Id>
           <Name>Station Latitude</Name>
           <BitLength>32</BitLength>
@@ -35958,7 +36289,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>6</Order>
+          <Order>7</Order>
           <Id>stationLongitude</Id>
           <Name>Station Longitude</Name>
           <BitLength>32</BitLength>
@@ -35973,7 +36304,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>8</Order>
           <Id>measurementDepth</Id>
           <Name>Measurement Depth</Name>
           <Description>Depth below transducer</Description>
@@ -35989,7 +36320,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>8</Order>
+          <Order>9</Order>
           <Id>currentSpeed</Id>
           <Name>Current speed</Name>
           <BitLength>16</BitLength>
@@ -36004,7 +36335,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>SPEED</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>10</Order>
           <Id>currentFlowDirection</Id>
           <Name>Current flow direction</Name>
           <BitLength>16</BitLength>
@@ -36019,7 +36350,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>waterTemperature</Id>
           <Name>Water Temperature</Name>
           <BitLength>16</BitLength>
@@ -36034,7 +36365,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>12</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
           <BitLengthVariable>true</BitLengthVariable>
@@ -36043,7 +36374,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>STRING_LAU</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
+          <Order>13</Order>
           <Id>stationName</Id>
           <Name>Station Name</Name>
           <BitLengthVariable>true</BitLengthVariable>
@@ -36059,9 +36390,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>15</FieldCount>
@@ -36273,16 +36601,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130324</PGN>
       <Id>mooredBuoyStationData</Id>
       <Description>Moored Buoy Station Data</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>18</FieldCount>
-      <Length>42</Length>
+      <MinLength>34</MinLength>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
@@ -36296,7 +36622,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>RESIDUAL_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>2</Order>
@@ -36444,11 +36771,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
+          <RangeMax>655.33</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -36457,11 +36786,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>s</Unit>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65533</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>655.33</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -36486,10 +36817,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa/hr</Unit>
-          <Resolution>1</Resolution>
+          <Resolution>10</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32765</RangeMax>
+          <RangeMin>-327670</RangeMin>
+          <RangeMax>327650</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>PRESSURE_RATE</PhysicalQuantity>
         </Field>
@@ -36527,10 +36858,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>18</Order>
           <Id>stationId</Id>
           <Name>Station ID</Name>
-          <BitLength>64</BitLength>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>272</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>STRING_FIX</FieldType>
+          <FieldType>STRING_LAU</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -39035,12 +39366,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130577</PGN>
       <Id>directionData</Id>
       <Description>Direction Data</Description>
+    <Priority>3</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
@@ -39194,6 +39523,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130578</PGN>
       <Id>vesselSpeedComponents</Id>
       <Description>Vessel Speed Components</Description>
+    <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>

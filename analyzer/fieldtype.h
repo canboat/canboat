@@ -666,6 +666,17 @@ FieldType fieldTypeList[] = {
 
     {.name = "ANGLE_UFIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "UFIX16"},
 
+    {.name        = "GEO_DELTA_FIX24",
+     .description = "Geographical latitude or longitude delta",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or about 1 "
+       "mm when we refer to an Earth position",
+     .resolution    = 1.0e-5 / 3600.,
+     .physical      = &GEO_COORDINATE,
+     .pf            = fieldPrintNumber,
+     .baseFieldType = "FIX24",
+     .v1Type        = "Lat/Lon"},
+
     {.name        = "GEO_FIX32",
      .description = "Geographical latitude or longitude",
      .encodingDescription
@@ -845,6 +856,20 @@ FieldType fieldTypeList[] = {
      .hasSign       = False,
      .baseFieldType = "DURATION"},
 
+    {.name          = "DURATION_UFIX8_MIN",
+     .description   = "Time duration, 8 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 8,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX4_MIN",
+     .description   = "Time duration, 4 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 4,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
     {.name          = "DURATION_UFIX16_MS",
      .description   = "Time duration, 16 bits with millisecond resolution",
      .resolution    = 0.001,
@@ -897,6 +922,13 @@ FieldType fieldTypeList[] = {
     {.name          = "DURATION_FIX32_MS",
      .description   = "Time duration",
      .resolution    = 0.001,
+     .size          = 32,
+     .hasSign       = True,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_FIX32_NANO_S",
+     .description   = "Time duration",
+     .resolution    = 1e-9,
      .size          = 32,
      .hasSign       = True,
      .baseFieldType = "DURATION"},
@@ -1183,8 +1215,8 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_RATE_FIX16_PA",
-     .description   = "Pressure change rate, 16 bit signed in pascal resolution.",
-     .resolution    = 1,
+     .description   = "Pressure change rate, 16 bit signed in decapascal resolution.",
+     .resolution    = 10,
      .physical      = &PRESSURE_RATE,
      .baseFieldType = "FIX16"},
 
@@ -1370,14 +1402,11 @@ FieldType fieldTypeList[] = {
     {.name = "STRING_LAU",
      .description
      = "A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
-     .encodingDescription
-     = "The length of the string is determined by a starting length byte. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
-     .comment
-     = "It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, "
-       "but this has not been seen in the wild yet.",
-     .variableSize = True,
-     .pf           = fieldPrintStringLAU,
-     .v1Type       = "ASCII or UNICODE string starting with length and control byte"},
+     .encodingDescription = "The length of the string is determined by a starting length byte. This count includes the length and "
+                            "type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
+     .variableSize        = True,
+     .pf                  = fieldPrintStringLAU,
+     .v1Type              = "ASCII or UTF16 string starting with length and control byte"},
 
     // Others
     {.name                = "BINARY",

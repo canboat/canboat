@@ -47,6 +47,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #521: Navico PGN 130817 contains unknown data, not product information.
 - #517: PGN 130323 field Mode should be lookup RESIDUAL_MODE.
 - #518: PGN 127510 + 127511 revised field lengths and lookups
+- #525: Sync with latest publicly known sources
 
 ### Added
 
