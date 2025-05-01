@@ -6638,7 +6638,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32813, FUSION_STATUS_MESSAGE_ID),
-      UINT8_PRIMARY_KEY_FIELD("Source"),
+      UINT8_PRIMARY_KEY_FIELD("Number"),
       STRINGVAR_FIELD("Name"),
       END_OF_FIELDS},
      .priority = 7}
@@ -6929,8 +6929,8 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD("Message ID", BYTES(2), 32804, FUSION_STATUS_MESSAGE_ID),
       UINT8_PRIMARY_KEY_FIELD("Source ID"),
-      UINT16_FIELD("Channel"),
-      STRINGVAR_FIELD("Name"),
+      UINT16_FIELD("Channel Number"),
+      STRINGVAR_FIELD("Channel"),
       END_OF_FIELDS},
      .priority = 7}
 

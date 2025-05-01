@@ -2031,12 +2031,12 @@ limitations under the License.
       <EnumPair Value='32769' Name='API Version' />
       <EnumPair Value='32770' Name='Source' />
       <EnumPair Value='32771' Name='Source Count' />
-      <EnumPair Value='32772' Name='Media' />
-      <EnumPair Value='32773' Name='Track Name' />
-      <EnumPair Value='32774' Name='Artist Name' />
-      <EnumPair Value='32775' Name='Album Name' />
+      <EnumPair Value='32772' Name='Track Info' />
+      <EnumPair Value='32773' Name='Track Title' />
+      <EnumPair Value='32774' Name='Track Artist' />
+      <EnumPair Value='32775' Name='Track Album' />
       <EnumPair Value='32776' Name='Cover Art' />
-      <EnumPair Value='32777' Name='Track Position' />
+      <EnumPair Value='32777' Name='Track Progress' />
       <EnumPair Value='32778' Name='Tuner Align' />
       <EnumPair Value='32779' Name='Tuner' />
       <EnumPair Value='32780' Name='Marine Tuner' />
@@ -2054,24 +2054,24 @@ limitations under the License.
       <EnumPair Value='32792' Name='Balance' />
       <EnumPair Value='32793' Name='Low Pass Filter' />
       <EnumPair Value='32794' Name='Sublevels' />
-      <EnumPair Value='32795' Name='EQ' />
+      <EnumPair Value='32795' Name='Tone' />
       <EnumPair Value='32796' Name='Volume Limits' />
-      <EnumPair Value='32797' Name='Volumes' />
+      <EnumPair Value='32797' Name='Volume' />
       <EnumPair Value='32798' Name='Capabilities' />
       <EnumPair Value='32799' Name='Line Level Control' />
-      <EnumPair Value='32800' Name='Power State' />
-      <EnumPair Value='32801' Name='Device Name' />
+      <EnumPair Value='32800' Name='Power' />
+      <EnumPair Value='32801' Name='Unit Name' />
       <EnumPair Value='32802' Name='Sirius' />
-      <EnumPair Value='32803' Name='Sirius Preset Event' />
-      <EnumPair Value='32804' Name='Sirius Channel' />
-      <EnumPair Value='32805' Name='Sirius Title' />
-      <EnumPair Value='32806' Name='Sirius Artist' />
-      <EnumPair Value='32807' Name='Sirius Content Info' />
-      <EnumPair Value='32808' Name='Sirius Category' />
-      <EnumPair Value='32809' Name='Sirius Signal' />
-      <EnumPair Value='32810' Name='Sirius Parental Request' />
-      <EnumPair Value='32811' Name='Sirius Diagnostics' />
-      <EnumPair Value='32812' Name='Sirius Presets' />
+      <EnumPair Value='32803' Name='SiriusXM Preset Event' />
+      <EnumPair Value='32804' Name='SiriusXM Channel' />
+      <EnumPair Value='32805' Name='SiriusXM Title' />
+      <EnumPair Value='32806' Name='SiriusXM Artist' />
+      <EnumPair Value='32807' Name='SiriusXM Genre' />
+      <EnumPair Value='32808' Name='SiriusXM Category' />
+      <EnumPair Value='32809' Name='SiriusXm Signal' />
+      <EnumPair Value='32810' Name='SiriusXM Parental Request' />
+      <EnumPair Value='32811' Name='SiriusXM Diagnostics' />
+      <EnumPair Value='32812' Name='SiriusXM Presets' />
       <EnumPair Value='32813' Name='Zone Name' />
     </LookupEnumeration>
     <LookupEnumeration Name='SONICHUB_CONTROL' MaxValue='255'>
@@ -44141,7 +44141,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Media</Description>
+          <Description>Track Info</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44300,7 +44300,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Name</Description>
+          <Description>Track Title</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44411,7 +44411,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Artist Name</Description>
+          <Description>Track Artist</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44522,7 +44522,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Album Name</Description>
+          <Description>Track Album</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44633,7 +44633,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Device Name</Description>
+          <Description>Unit Name</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -44731,8 +44731,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>source</Id>
-          <Name>Source</Name>
+          <Id>number</Id>
+          <Name>Number</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -44815,7 +44815,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Track Position</Description>
+          <Description>Track Progress</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -46372,7 +46372,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>EQ</Description>
+          <Description>Tone</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -46627,7 +46627,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Volumes</Description>
+          <Description>Volume</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -46996,7 +46996,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Power State</Description>
+          <Description>Power</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47229,7 +47229,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Channel</Description>
+          <Description>SiriusXM Channel</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47257,8 +47257,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>channel</Id>
-          <Name>Channel</Name>
+          <Id>channelNumber</Id>
+          <Name>Channel Number</Name>
           <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -47270,8 +47270,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>name</Id>
-          <Name>Name</Name>
+          <Id>channel</Id>
+          <Name>Channel</Name>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -47340,7 +47340,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Title</Description>
+          <Description>SiriusXM Title</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47451,7 +47451,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Artist</Description>
+          <Description>SiriusXM Artist</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47562,7 +47562,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Content Info</Description>
+          <Description>SiriusXM Genre</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47673,7 +47673,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Category</Description>
+          <Description>SiriusXM Category</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47784,7 +47784,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Signal</Description>
+          <Description>SiriusXm Signal</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -47886,7 +47886,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>messageId</Id>
           <Name>Message ID</Name>
-          <Description>Sirius Presets</Description>
+          <Description>SiriusXM Presets</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
