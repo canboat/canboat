@@ -504,8 +504,8 @@ BO_ 2582713086 PGN_127250_vesselHeading: 8 Vector__XXX
 
 BO_ 2582713342 PGN_127251_rateOfTurn: 8 Vector__XXX
  SG_ reserved : 40|24@1+ (1,0) [0|0] "" Vector__XXX
- SG_ rate : 8|32@1- (3.125e-08,0) [0|0] "rad/s" Vector__XXX
- SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ someRate : 8|32@1- (3.125e-08,0) [0|0] "rad/s" Vector__XXX
+ SG_ someSID : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582713598 PGN_127252_heave: 8 Vector__XXX
  SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX

@@ -311,7 +311,11 @@ void camelCase(bool upperCamelCase)
     {
       const char *name = pgnList[i].fieldList[j].name;
 
-      pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      if ( pgnList[i].fieldList[j].camelName == NULL )
+      {
+          pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      }
+      
       if (strcmp(name, "Reserved") == 0 || strcmp(name, "Spare") == 0)
       {
         haveEarlierSpareOrReserved = true;
