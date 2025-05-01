@@ -3757,7 +3757,7 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"data",
+            "Id":"someData",
             "Name":"Data",
             "BitLength":64,
             "BitOffset":0,
@@ -17641,7 +17641,7 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"sid",
+            "Id":"someSID",
             "Name":"SID",
             "BitLength":8,
             "BitOffset":0,
@@ -17654,7 +17654,7 @@
           },
           {
             "Order":2,
-            "Id":"rate",
+            "Id":"someRate",
             "Name":"Rate",
             "BitLength":32,
             "BitOffset":8,

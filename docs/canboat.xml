@@ -3069,7 +3069,7 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>data</Id>
+          <Id>someData</Id>
           <Name>Data</Name>
           <BitLength>64</BitLength>
           <BitOffset>0</BitOffset>
@@ -17224,7 +17224,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>sid</Id>
+          <Id>someSID</Id>
           <Name>SID</Name>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
@@ -17237,7 +17237,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>rate</Id>
+          <Id>someRate</Id>
           <Name>Rate</Name>
           <BitLength>32</BitLength>
           <BitOffset>8</BitOffset>

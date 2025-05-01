@@ -14236,7 +14236,7 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"sid",
+            "Id":"someSID",
             "Name":"SID",
             "BitLength":8,
             "BitOffset":0,
@@ -14248,7 +14248,7 @@
             "RangeMax":253},
           {
             "Order":2,
-            "Id":"rate",
+            "Id":"someRate",
             "Name":"Rate",
             "BitLength":32,
             "BitOffset":8,

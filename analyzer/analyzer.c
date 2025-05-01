@@ -86,6 +86,7 @@ bool       showJsonEmpty = false;
 bool       showJsonValue = false;
 bool       showVersion   = true;
 bool       showSI        = false; // Output everything in strict SI units
+bool       showCamel     = false;
 GeoFormats showGeo       = GEO_DD;
 
 char *sep = " ";
@@ -181,6 +182,7 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
+      showCamel = true;
       camelCase(false);
     }
     else if (strcasecmp(av[1], "-upper-camel") == 0)
@@ -1241,7 +1243,16 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       break;
     }
 
-    strcpy(fieldName, field->camelName ? field->camelName : field->name);
+    if ( showCamel )
+    {
+      strcpy(fieldName, field->camelName ? field->camelName : field->name);
+    }
+    else
+    {
+      strcpy(fieldName, field->name);
+    }
+
+    
     if (repetition >= 1 && !showJson)
     {
       strcat(fieldName, field->camelName ? "_" : " ");

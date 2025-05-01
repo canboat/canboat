@@ -15585,7 +15585,7 @@ limitations under the License.
       <Fields>
         <Field>
           <Order>1</Order>
-          <Id>sid</Id>
+          <Id>someSID</Id>
           <Name>SID</Name>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
@@ -15598,7 +15598,7 @@ limitations under the License.
         </Field>
         <Field>
           <Order>2</Order>
-          <Id>rate</Id>
+          <Id>someRate</Id>
           <Name>Rate</Name>
           <BitLength>32</BitLength>
           <BitOffset>8</BitOffset>

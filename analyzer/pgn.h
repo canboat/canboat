@@ -207,6 +207,8 @@ typedef struct
 
 #define BINARY_FIELD(nam, len, desc) {.name = nam, .size = (len), .resolution = 1, .description = desc, .fieldType = "BINARY"}
 
+#define BINARY_FIELD_CAMEL(cam, nam, len, desc) {.camelName = cam, .name = nam, .size = (len), .resolution = 1, .description = desc, .fieldType = "BINARY"} 
+
 #define BINARY_UNIT_FIELD(nam, len, unt, desc, prop) \
   {.name = nam, .size = (len), .resolution = 1, .unit = unt, .description = desc, .proprietary = prop, .fieldType = "BINARY"}
 
@@ -516,6 +518,8 @@ typedef struct
 
 #define UINT8_FIELD(nam) UINT8_DESC_FIELD(nam, NULL)
 
+#define UINT8_FIELD_CAMEL(id, nam) {.name = nam, .size = BYTES(1), .resolution = 1, .fieldType = "UINT8", .camelName = id}
+
 #define UINT8_PRIMARY_KEY_FIELD(nam) UINT8_DESC_PRIMARY_KEY_FIELD(nam, NULL)
 
 #define UINT16_DESC_FIELD(nam, desc) {.name = nam, .size = BYTES(2), .resolution = 1, .fieldType = "UINT16", .description = desc}
@@ -794,6 +798,9 @@ typedef struct
 #define ROTATION_FIX32_FIELD(nam) \
   {.name = nam, .size = BYTES(4), .resolution = (1e-6 / 32.0), .hasSign = true, .unit = "rad/s", .fieldType = "ROTATION_FIX32"}
 
+#define ROTATION_FIX32_FIELD_CAMEL(ident, nam)                              \
+  {.name = nam, .size = BYTES(4), .resolution = (1e-6 / 32.0), .hasSign = true, .unit = "rad/s", .fieldType = "ROTATION_FIX32", .camelName = ident}
+
 #define PRESSURE_UFIX16_HPA_FIELD(nam) \
   {.name = nam, .size = BYTES(2), .resolution = 100, .unit = "Pa", .fieldType = "PRESSURE_UFIX16_HPA"}
 
@@ -964,7 +971,7 @@ Pgn pgnList[] = {
      0xe800,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {BINARY_FIELD("Data", BYTES(8), NULL), END_OF_FIELDS},
+     {BINARY_FIELD_CAMEL("someData", "Data", BYTES(8), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
                     "0xEE00 (59392 - 60928). "
@@ -2979,7 +2986,7 @@ Pgn pgnList[] = {
      127251,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {UINT8_FIELD("SID"), ROTATION_FIX32_FIELD("Rate"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS},
+     {UINT8_FIELD_CAMEL("someSID", "SID"), ROTATION_FIX32_FIELD_CAMEL("someRate", "Rate"), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS},
      .interval = 100,
      .priority = 2}
 
