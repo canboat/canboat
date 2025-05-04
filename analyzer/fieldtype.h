@@ -1389,9 +1389,8 @@ FieldType fieldTypeList[] = {
 
     {.name        = "STRING_LZ",
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
-     .encodingDescription
-     = "The length of the string is determined by a starting length byte. It also contains a terminating "
-       "zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.",
+     .encodingDescription = "The length of the string is determined by a starting length byte. It also contains a terminating "
+                            "zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
      .comment
      = "This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of "
        "the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.",

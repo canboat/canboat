@@ -15022,7 +15022,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.</p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.</p><p>
             Encoding:
-            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.</p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p/><p>
+            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.</p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p/><p>
             Encoding:
             The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
             Encoding:
