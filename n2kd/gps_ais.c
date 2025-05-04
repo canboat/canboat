@@ -194,7 +194,7 @@ extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
     double latitude  = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
     double longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
 
-    if (getJSONValue(msg, "Time", timeString, sizeof(timeString)))
+    if (getJSONLookupName(msg, "Time", timeString, sizeof(timeString)))
     {
       removeChar(timeString, ':');
     }
