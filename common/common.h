@@ -77,6 +77,10 @@ typedef int SOCKET;
 #define STDOUT (1)
 #define STDERR (2)
 
+// Macro expansion trickery
+#define EMPTY()
+#define DEFER(x) x EMPTY()
+
 typedef enum LogLevel
 {
   LOGLEVEL_FATAL,
