@@ -10,8 +10,8 @@ VENV=$(TARGETDIR)/venv
 
 all: pgns.dbc
 
-pgns.dbc: dbc-exporter ../analyzer/pgns.json
-	"$(VENV)/bin/canboat-dbc-exporter" ../analyzer/pgns.json pgns.dbc
+pgns.dbc: dbc-exporter ../docs/canboat.json
+	"$(VENV)/bin/canboat-dbc-exporter" ../docs/canboat.json pgns.dbc
 	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer pgns.dbc
 
 dbc-exporter: $(VENV)

@@ -8,6 +8,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+This is a major upgrade because the old v1 xml and json files are no longer being
+supplied.
+
 This is a minor upgrade because there is a new interesting field added to the XML,
 `PartOfPrimaryKey` which is a boolean attribute; any field carrying this (have the 
 field present with a `true` value) contributes to the _Primary key_ of the data -- 
@@ -30,6 +33,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #474: PGN updates
 - #473: PGN 129546 field lengths and types
 - #472: PGN 127488 field Tilt/Trim is a percentage field
+- #478: Make analyzer/pgn.xml+json obsolete
 - #483: PGN 127506 field ripple voltage is 1 mV precision
 - #489: Raymarine sends C style strings in `STRING_FIXED` fields
 - #493: Remove Fallback filter from canboat.json

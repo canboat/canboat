@@ -24,19 +24,11 @@ ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
 TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
-XMLFILE=pgns.xml
-XMLFILE_J1939=pgns-j1939.xml
-JSONFILE=pgns.json
-JSONFILE_J1939=pgns-j1939.json
 XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
-NGTXMLFILE=pgns-ngt.xml
-NGTJSONFILE=pgns-ngt.json
-IKXMLFILE=pgns-ik.xml
-IKJSONFILE=pgns-ik.json
 NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
@@ -70,12 +62,6 @@ $(ANALYZER_EXPLAIN_J1939): $(ANALYZER_EXPLAIN_J1939_SOURCES)
 	@mkdir -p $(TARGETDIR)
 	$(CC) -DEXPLAIN -DJ1939 $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN_J1939) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
-$(XMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-xml -camel -v1 >$(XMLFILE)
-
-$(XMLFILE_J1939): $(ANALYZER_EXPLAIN_J1939_DEP)
-	$(ANALYZER_EXPLAIN_J1939) -explain-xml -camel -v1 >$(XMLFILE_J1939)
-
 $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
 	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
@@ -85,31 +71,9 @@ $(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
 $(HTML2FILE): $(XSL2FILE) $(XML2FILE)
 	xsltproc $(XSL2FILE) $(XML2FILE) | ./fixup-html.sh > $(HTML2FILE)
 
-$(NGTXMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-ngt-xml -camel -v1 >$(NGTXMLFILE)
-
-$(IKXMLFILE): $(ANALYZER_EXPLAIN_DEP)
-	$(ANALYZER_EXPLAIN) -explain-ik-xml -camel -v1 >$(IKXMLFILE)
-
-$(JSONFILE): $(XMLFILE) pgns2json.xslt validate-json.py
-	xsltproc pgns2json.xslt $(XMLFILE) >$(@)
-	python3 validate-json.py $(@)
-
-$(JSONFILE_J1939): $(XMLFILE) pgns2json.xslt validate-json.py
-	xsltproc pgns2json.xslt $(XMLFILE_J1939) >$(@)
-	python3 validate-json.py $(@)
-
 $(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
 	python3 validate-json.py --range $(@)
-
-$(NGTJSONFILE): $(NGTXMLFILE) pgns2json.xslt validate-json.py
-	xsltproc pgns2json.xslt $(NGTXMLFILE) >$(@)
-	python3 validate-json.py $(@)
-
-$(IKJSONFILE): $(IKXMLFILE) pgns2json.xslt validate-json.py
-	xsltproc pgns2json.xslt $(IKXMLFILE) >$(@)
-	python3 validate-json.py $(@)
 
 $(NPMFILE): ../common/version.h $(ANALYZER) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)

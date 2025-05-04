@@ -31,7 +31,7 @@ def get_unique_id(id_: str, reserved_ids: Set[str]) -> str:
 
 
 class Field:
-    def __init__(self, field_dict: dict, reserved_field_ids: set):
+    def __init__(self, field_dict: dict, lookups: dict, reserved_field_ids: set):
         self.order: int = field_dict["Order"]
         self.id: str = get_unique_id(field_dict["Id"], reserved_field_ids)
         self.name: str = field_dict["Name"]
@@ -41,15 +41,17 @@ class Field:
         self.bit_length: int = field_dict["BitLength"]
         self.bit_offset: int = field_dict["BitOffset"]
         self.bit_start: int = field_dict["BitStart"]
-        self.units: str = field_dict["Units"] if "Units" in field_dict else None
-        self.type: str = field_dict["Type"] if "Type" in field_dict else None
+        self.unit: str = field_dict["Unit"] if "Unit" in field_dict else None
+        self.type: str = field_dict["FieldType"] if "FieldType" in field_dict else None
         self.resolution: float = (
             field_dict["Resolution"] if "Resolution" in field_dict else 1
         )
-        self.signed: bool = field_dict["Signed"] if "Resolution" in field_dict else None
-        if self.type == "Lookup table" and "EnumValues" in field_dict:
+        self.signed: bool = field_dict["Signed"] if "Signed" in field_dict else None
+
+        lookup = field_dict["LookupEnumeration"] if "LookupEnumeration" in field_dict else None
+        if lookup in lookups:
             self.enum_values: Dict[int, str] = {
-                d["value"]: d["name"] for d in field_dict["EnumValues"]
+                d["Value"]: d["Name"] for d in lookups[lookup]
             }
         else:
             self.enum_values = None
@@ -82,8 +84,15 @@ class CanboatReader:
         """
         pgns = {}
         for pgn in self._json_data["PGNs"]:
-            pgn_number = pgn["PGN"]
-            pgns.setdefault(pgn_number, []).append(pgn)
+            if "Fallback" in pgn:
+                continue
+            else:
+                pgn_number = pgn["PGN"]
+                pgns.setdefault(pgn_number, []).append(pgn)
+
+        lookups = {}
+        for lookup in self._json_data["LookupEnumerations"]:
+            lookups[lookup["Name"]] = lookup["EnumValues"]
 
         for pgn_number, variants in pgns.items():
             if len(variants) > 1:
@@ -94,14 +103,14 @@ class CanboatReader:
                     logging.warning("Could not multiplex PGN %d, ignoring", pgn_number)
                     continue
             else:
-                msg = self._json_to_message(variants[0])
+                msg = self._json_to_message(variants[0], lookups)
                 if msg is not None:
                     yield msg
                 else:
                     logging.warning("Could not process PGN %d, ignoring", pgn_number)
                     continue
 
-    def _json_to_message(self, json_data: dict) -> Message:
+    def _json_to_message(self, json_data: dict, lookups: dict) -> Message:
         """
         Convert a canboat json message to a cantools Message
         """
@@ -117,7 +126,7 @@ class CanboatReader:
 
         pgn_type = json_data["Type"] if "Type" in json_data else None
 
-        pgn_length = json_data["Length"]
+        pgn_length = json_data["Length" if "Length" in json_data else "MinLength"]
 
         if pgn_type and pgn_type == "ISO":
             logging.warning(
@@ -128,13 +137,13 @@ class CanboatReader:
             return None
 
         if (pgn_type and pgn_type == "Fast") or (pgn_length > 8):
-            return self._fast_to_message(json_data)
+            return self._fast_to_message(json_data, lookups)
 
         # fall back to single
 
-        return self._single_to_message(json_data)
+        return self._single_to_message(json_data, lookups)
 
-    def _fast_to_message(self, json_data):
+    def _fast_to_message(self, json_data, lookups):
         """
         Convert a fast packet PGN to a cantools Message
         """
@@ -142,7 +151,7 @@ class CanboatReader:
         pgn_number = json_data["PGN"]
         pgn_id = f"PGN_{pgn_number}_{json_data['Id']}"
         pgn_description = json_data["Description"]
-        pgn_length = json_data["Length"]
+        pgn_length = json_data["Length" if "Length" in json_data else "MinLength"]
 
         # fast packets cannot be represented by DBC; replace the data definition
         # with a generic message representation
@@ -154,7 +163,7 @@ class CanboatReader:
             "BitLength": 8,
             "BitOffset": 0,
             "BitStart": 0,
-            "Type": "Integer",
+            "FieldType": "NUMBER",
             "Signed": False,
         }
 
@@ -170,15 +179,15 @@ class CanboatReader:
 
         reserved_field_ids = set()
         signals = [
-            self._field_to_signal(Field(first_field, reserved_field_ids)),
-            self._field_to_signal(Field(data_field, reserved_field_ids)),
+            self._field_to_signal(Field(first_field, lookups, reserved_field_ids)),
+            self._field_to_signal(Field(data_field, lookups, reserved_field_ids)),
         ]
 
         return self._pgn_to_message(
             pgn_number, pgn_id, pgn_description, pgn_length, signals
         )
 
-    def _single_to_message(self, json_data: dict) -> Message:
+    def _single_to_message(self, json_data: dict, lookups: dict) -> Message:
         """
         Convert a single frame PGN to a cantools Message
         """
@@ -203,7 +212,7 @@ class CanboatReader:
 
         reserved_field_ids = set()
         pgn_signals = [
-            self._field_to_signal(Field(field, reserved_field_ids))
+            self._field_to_signal(Field(field, lookups, reserved_field_ids))
             for field in json_data["Fields"]
         ]
 
@@ -235,9 +244,12 @@ class CanboatReader:
         # generate the message data
         pgn_id = f"PGN_{pgn_number}_multiplexed"
         pgn_description = "Multiplexed message"
-        pgn_length = max([v["Length"] for v in variants])
+        for v in variants:
+            logging.warning("Variant %d [ %s ]", pgn_number, json.dumps(v))
 
-        valid_variants = [v for v in variants if v["Length"] < 8 and v["Type"] != "Fast"]
+        pgn_length = max([v["Length" if "Length" in v else "MinLength"] for v in variants])
+
+        valid_variants = [v for v in variants if v["Length" if "Length" in v else "MinLength"] < 8 and v["Type"] != "Fast"]
 
         if len(valid_variants) < len(variants):
             logging.warning(
@@ -376,7 +388,7 @@ class CanboatReader:
             byte_order="little_endian",
             is_signed=field.signed,
             scale=field.resolution,
-            unit=field.units,
+            unit=field.unit,
             comment=field.description,
             choices=field.enum_values,
             is_multiplexer=field.multiplexer,
