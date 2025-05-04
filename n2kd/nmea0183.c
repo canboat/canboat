@@ -552,6 +552,7 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 
   if (!getJSONInteger(msg, "pgn", &prn))
   {
+    logDebug("convertJSONToNMEA0183: skip no pgn [%s]\n", msg);
     return;
   }
 
@@ -604,15 +605,18 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
       rateType = RATE_NO_LIMIT;
       break;
     default:
+      logDebug("convertJSONToNMEA0183: no nmea in prn %d\n", prn);
       return;
   }
 
   if (!getJSONInteger(msg, "src", &src))
   {
+    logDebug("NMEA no src in [%s]\n", msg);
     return;
   }
   if (srcFilter && !matchFilter(src, srcFilter))
   {
+    logDebug("NMEA no match for src %d in [%s]\n", src, srcFilter);
     return;
   }
 
@@ -682,6 +686,7 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
     default:
       return;
   }
+  logDebug("NMEA message: %s -> %s\n", msg, sbGet(msg183));
 }
 
 bool getJSONNumber(const char *message, const char *fieldName, double *value, Unit unit)

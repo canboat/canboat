@@ -24,11 +24,16 @@ TEMPDIR=/tmp
 
 all:	tests
 
-test1:
-	$(ANALYZER) < ais-lookup.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/ais-lookup.out 2> $(TEMPDIR)/ais-lookup.err
-	diff $(TEMPDIR)/ais-lookup.out ais-lookup.out
-	diff $(TEMPDIR)/ais-lookup.err ais-lookup.err
+ais-lookup:
+	$(ANALYZER) < $@.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/$@.out 2> $(TEMPDIR)/$@.err
+	diff $(TEMPDIR)/$@.out $@.out
+	diff $(TEMPDIR)/$@.err $@.err
 
-tests:	test1
+nmea0183:	
+	$(N2KD) --nmea0183 -fixtime test-n2kd < $@.in > $(TEMPDIR)/$@.out 2> $(TEMPDIR)/$@.err
+	diff $(TEMPDIR)/$@.out $@.out
+	diff $(TEMPDIR)/$@.err $@.err
 
-.PHONY: test1 tests
+tests:	ais-lookup nmea0183
+
+.PHONY: ais-lookup nmea0183 tests
