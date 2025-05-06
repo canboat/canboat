@@ -163,7 +163,7 @@ int main(int argc, char **argv)
   }
 
   fillLookups();
-  fillFieldType(false);
+  fillFieldType(true);
 
   if (doExplain)
   {
@@ -926,11 +926,11 @@ static void explainPGNXML(Pgn pgn)
 
       if (!isnan(f.rangeMin))
       {
-        printf("          <RangeMin>%.16g</RangeMin>\n", f.rangeMin);
+        printf("          <RangeMin>%.15g</RangeMin>\n", f.rangeMin);
       }
       else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        printf("          <RangeMin>%.16g</RangeMin>\n", 0.0);
+        printf("          <RangeMin>%.15g</RangeMin>\n", 0.0);
       }
 
       if (!isnan(f.rangeMax))
@@ -942,18 +942,18 @@ static void explainPGNXML(Pgn pgn)
         }
         else
         {
-          printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+          printf("          <RangeMax>%.15g</RangeMax>\n", f.rangeMax);
         }
       }
       else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        logDebug("PGN %u '%s' unit='%s' size=%u\n -> rangeMax %.16g\n",
+        logDebug("PGN %u '%s' unit='%s' size=%u\n -> rangeMax %.15g\n",
                  pgn.pgn,
                  f.name,
                  STRNULL(f.unit),
                  f.size,
                  (double) ((UINT64_C(1) << f.size) - 1));
-        printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
+        printf("          <RangeMax>%.15g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
       }
 
       if (!doV1)
@@ -1133,16 +1133,16 @@ static void explainFieldTypesXML(void)
     }
     if (ft->resolution != 1.0 && ft->resolution != 0.0)
     {
-      printf("      <Resolution>%.16g</Resolution>\n", ft->resolution);
+      printf("      <Resolution>%.15g</Resolution>\n", ft->resolution);
     }
 
     if (!isnan(ft->rangeMin))
     {
-      printf("      <RangeMin>%.16g</RangeMin>\n", ft->rangeMin);
+      printf("      <RangeMin>%.15g</RangeMin>\n", ft->rangeMin);
     }
     if (!isnan(ft->rangeMax))
     {
-      printf("      <RangeMax>%.16g</RangeMax>\n", ft->rangeMax);
+      printf("      <RangeMax>%.15g</RangeMax>\n", ft->rangeMax);
     }
 
     printf("    </FieldType>\n");

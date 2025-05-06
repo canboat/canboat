@@ -24,11 +24,13 @@ ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
 TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
+NMEA_XMLFILE=../sources/NMEA_database_1_300.xml
 XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
+CSV_XSLFILE=./canboat-csv.xsl
 NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
@@ -78,7 +80,13 @@ $(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
 $(NPMFILE): ../common/version.h $(ANALYZER) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
 
-generated: $(JSONFILE) $(JSON2FILE) $(NGTJSONFILE) $(IKJSONFILE) $(NPMFILE) $(HTML2FILE)
+validation: $(ANALYZER_EXPLAIN) $(XML2FILE) $(NMEA_XMLFILE) $(CSV_XSLFILE)
+	xsltproc $(CSV_XSLFILE) $(XML2FILE) > /tmp/canboat.csv
+	xsltproc $(CSV_XSLFILE) $(NMEA_XMLFILE) > /tmp/nmea.csv
+	python3 validate-csv.py /tmp/canboat.csv /tmp/nmea.csv
+	
+
+generated: validation $(JSON2FILE) $(NPMFILE) $(HTML2FILE) 
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
@@ -89,4 +97,4 @@ tests:	$(ANALYZER)
 webserver:
 	cd ../docs; python3 -m http.server --cgi 8080
 
-.PHONY:	generated clean tests webserver analyzer
+.PHONY:	generated clean tests webserver analyzer validation

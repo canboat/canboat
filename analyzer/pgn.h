@@ -93,7 +93,7 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
-  int32_t offset;          /* Only used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
+  int32_t offset;          /* Mostly used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
                             *    of two's complement as used by NMEA 2000.
                             *    See http://en.wikipedia.org/wiki/Offset_binary
                             */
@@ -214,19 +214,47 @@ typedef struct
   {.name = nam, .size = BYTES(3), .resolution = 1e-5 * (1 / 3600), .hasSign = true, .unit = "deg", .fieldType = "GEO_DELTA_FIX24"}
 
 #define LATITUDE_I32_FIELD(nam) \
-  {.name = nam, .size = BYTES(4), .resolution = 1e-7, .hasSign = true, .unit = "deg", .fieldType = "GEO_FIX32"}
+  {.name       = nam,           \
+   .size       = BYTES(4),      \
+   .resolution = 1e-7,          \
+   .hasSign    = true,          \
+   .unit       = "deg",         \
+   .fieldType  = "GEO_FIX32",   \
+   .rangeMin   = -90.,          \
+   .rangeMax   = 90.0}
 
 #define LATITUDE_I64_FIELD(nam) \
-  {.name = nam, .size = BYTES(8), .resolution = 1e-16, .hasSign = true, .unit = "deg", .fieldType = "GEO_FIX64"}
+  {.name       = nam,           \
+   .size       = BYTES(8),      \
+   .resolution = 1e-16,         \
+   .hasSign    = true,          \
+   .unit       = "deg",         \
+   .fieldType  = "GEO_FIX64",   \
+   .rangeMin   = -90.,          \
+   .rangeMax   = 90.0}
 
 #define LONGITUDE_DELTA_I24_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 1e-5 * (1 / 3600), .hasSign = true, .unit = "deg", .fieldType = "GEO_DELTA_FIX24"}
 
 #define LONGITUDE_I32_FIELD(nam) \
-  {.name = nam, .size = BYTES(4), .resolution = 1e-7, .hasSign = true, .unit = "deg", .fieldType = "GEO_FIX32"}
+  {.name       = nam,            \
+   .size       = BYTES(4),       \
+   .resolution = 1e-7,           \
+   .hasSign    = true,           \
+   .unit       = "deg",          \
+   .fieldType  = "GEO_FIX32",    \
+   .rangeMin   = -180.,          \
+   .rangeMax   = 180.0}
 
 #define LONGITUDE_I64_FIELD(nam) \
-  {.name = nam, .size = BYTES(8), .resolution = 1e-16, .hasSign = true, .unit = "deg", .fieldType = "GEO_FIX64"}
+  {.name       = nam,            \
+   .size       = BYTES(8),       \
+   .resolution = 1e-16,          \
+   .hasSign    = true,           \
+   .unit       = "deg",          \
+   .fieldType  = "GEO_FIX64",    \
+   .rangeMin   = -180.,          \
+   .rangeMax   = 180.0}
 
 #define ANGLE_U16_FIELD(nam, desc) \
   {.name        = nam,             \
@@ -366,6 +394,15 @@ typedef struct
    .description = desc,                    \
    .fieldType   = "DISTANCE_FIX16_MM"}
 
+#define DISTANCE_FIX24_MM_FIELD(nam, desc) \
+  {.name        = nam,                     \
+   .size        = BYTES(3),                \
+   .resolution  = 0.001,                   \
+   .hasSign     = true,                    \
+   .unit        = "m",                     \
+   .description = desc,                    \
+   .fieldType   = "DISTANCE_FIX24_MM"}
+
 #define DISTANCE_FIX32_MM_FIELD(nam, desc) \
   {.name        = nam,                     \
    .size        = BYTES(4),                \
@@ -441,7 +478,7 @@ typedef struct
 
 #define ELECTRIC_CHARGE_UFIX16_AH(nam) {.name = nam, .fieldType = "ELECTRIC_CHARGE_UFIX16_AH"}
 
-#define PEUKERT_FIELD(nam) {.name = nam, .fieldType = "PEUKERT_EXPONENT"}
+#define PEUKERT_FIELD(nam) {.name = nam, .fieldType = "PEUKERT_EXPONENT", .rangeMin = 1.0, .rangeMax = 1.5}
 
 // Fully defined NUMBER fields
 
@@ -455,6 +492,9 @@ typedef struct
    .rangeMin    = 0,         \
    .rangeMax    = 0x3ffff}
 
+#define UINT2_FIELD(nam) \
+  {.name = nam, .size = BITS(2), .resolution = 1, .fieldType = "UNSIGNED_INTEGER", .hasSign = false, .rangeMin = 0, .rangeMax = 3}
+
 #define ISO_NAME_FIELD(nam) \
   {.name = nam, .size = BYTES(8), .resolution = 1, .fieldType = "ISO_NAME", .hasSign = false, .rangeMin = 0, .rangeMax = UINT64_MAX}
 
@@ -464,8 +504,15 @@ typedef struct
 #define POWER_FACTOR_U16_FIELD \
   {.name = "Power factor", .size = BYTES(2), .resolution = 1 / 16384., .unit = "Cos Phi", .fieldType = "UFIX16"}
 
-#define POWER_FACTOR_U8_FIELD \
-  {.name = "Power factor", .size = BYTES(1), .resolution = 0.01, .unit = "Cos Phi", .fieldType = "UFIX8"}
+#define POWER_FACTOR_I8_FIELD    \
+  {.name       = "Power factor", \
+   .size       = BYTES(1),       \
+   .resolution = 0.01,           \
+   .unit       = "Cos Phi",      \
+   .hasSign    = true,           \
+   .fieldType  = "FIX8",         \
+   .rangeMin   = -1.,            \
+   .rangeMax   = 1.}
 
 // End of NUMBER fields
 
@@ -775,7 +822,7 @@ typedef struct
    .fieldType   = "TIME",                   \
    .description = "Seconds since midnight", \
    .rangeMin    = 0,                        \
-   .rangeMax    = 86402}
+   .rangeMax    = 86401}
 
 #define DATE_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "d", .hasSign = false, .fieldType = "DATE"}
 
@@ -2982,7 +3029,7 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Track", NULL),
       ANGLE_U16_FIELD("Rudder Limit", NULL),
       ANGLE_U16_FIELD("Off-Heading Limit", NULL),
-      ANGLE_I16_FIELD("Radius of Turn Order", NULL),
+      DISTANCE_FIX16_M_FIELD("Radius of Turn Order", NULL),
       ROTATION_FIX16_FIELD("Rate of Turn Order"),
       DISTANCE_FIX16_M_FIELD("Off-Track Limit", NULL),
       ANGLE_U16_FIELD("Vessel Heading", NULL),
@@ -3055,7 +3102,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = 1000,
-     .priority = 2}
+     .priority = 3}
 
     /* NMEA + Simrad AT10 */
     /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
@@ -3072,7 +3119,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .interval = 1000,
-     .priority = 6}
+     .priority = 7}
 
     /* Engine group PGNs all derived PGN Numbers from              */
     /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
@@ -3166,6 +3213,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Discrete Status 1"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .priority = 2,
      .interval = 100}
 
     ,
@@ -3224,6 +3272,7 @@ Pgn pgnList[] = {
       VOLUME_UFIX16_L_FIELD("Estimated Fuel Remaining"),
       DURATION_UFIX32_MS_FIELD("Trip Run Time", NULL),
       END_OF_FIELDS},
+     .priority = 5,
      .interval = 1000}
 
     ,
@@ -3237,6 +3286,7 @@ Pgn pgnList[] = {
       VOLUMETRIC_FLOW_FIELD("Fuel Rate, Economy"),
       VOLUMETRIC_FLOW_FIELD("Instantaneous Fuel Economy"),
       END_OF_FIELDS},
+     .priority = 5,
      .interval = 1000}
 
     ,
@@ -3246,9 +3296,10 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {LOOKUP_PRIMARY_KEY_FIELD("Instance", BYTES(1), ENGINE_INSTANCE),
       ROTATION_UFIX16_RPM_FIELD("Rated Engine Speed", NULL),
-      STRING_FIX_FIELD("VIN", BYTES(17)),
-      STRING_FIX_FIELD("Software ID", BYTES(32)),
+      STRINGLAU_FIELD("VIN"),
+      STRINGLAU_FIELD("Software ID"),
       END_OF_FIELDS},
+     .priority = 5,
      .interval = UINT16_MAX}
 
     ,
@@ -3337,7 +3388,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Switch26", 2, OFF_ON_CONTROL),
       LOOKUP_FIELD("Switch27", 2, OFF_ON_CONTROL),
       LOOKUP_FIELD("Switch28", 2, OFF_ON_CONTROL),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .priority = 3}
 
     ,
     {"AC Input Status",
@@ -3346,8 +3398,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {INSTANCE_FIELD,
       UINT8_FIELD("Number of Lines"),
-      SIMPLE_FIELD("Line", 2),
-      LOOKUP_FIELD("Acceptability", 2, ACCEPTABILITY),
+      LOOKUP_FIELD("Line", BITS(2), AC_LINE),
+      LOOKUP_FIELD("Acceptability", BITS(2), ACCEPTABILITY),
       RESERVED_FIELD(4),
       VOLTAGE_U16_10MV_FIELD("Voltage"),
       CURRENT_UFIX16_DA_FIELD("Current"),
@@ -3355,7 +3407,7 @@ Pgn pgnList[] = {
       CURRENT_UFIX16_DA_FIELD("Breaker Size"),
       POWER_U32_FIELD("Real Power"),
       POWER_U32_VAR_FIELD("Reactive Power"),
-      POWER_FACTOR_U8_FIELD,
+      POWER_FACTOR_I8_FIELD,
       END_OF_FIELDS},
      .interval        = 1500,
      .priority        = 6,
@@ -3380,7 +3432,7 @@ Pgn pgnList[] = {
       CURRENT_UFIX16_DA_FIELD("Breaker Size"),
       POWER_U32_FIELD("Real Power"),
       POWER_U32_VAR_FIELD("Reactive Power"),
-      POWER_FACTOR_U8_FIELD,
+      POWER_FACTOR_I8_FIELD,
       END_OF_FIELDS},
      .interval        = 1500,
      .priority        = 6,
@@ -3414,7 +3466,7 @@ Pgn pgnList[] = {
       INSTANCE_FIELD,
       LOOKUP_FIELD("DC Type", BYTES(1), DC_SOURCE),
       PERCENTAGE_U8_FIELD("State of Charge"),
-      UINT8_FIELD("State of Health"),
+      PERCENTAGE_U8_FIELD("State of Health"),
       DURATION_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
       VOLTAGE_U16_1MV_FIELD("Ripple Voltage"),
       ELECTRIC_CHARGE_UFIX16_AH("Remaining capacity"),
@@ -3497,6 +3549,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Over Charge Enable/Disable", 2, OFF_ON),
       DURATION_UFIX16_MIN_FIELD("Equalize Time", NULL),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -3513,6 +3566,7 @@ Pgn pgnList[] = {
       POWER_U16_FIELD("Load Sense Power Threshold"),
       DURATION_UFIX16_CS_FIELD("Load Sense Interval", NULL),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -3525,6 +3579,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("AGS Mode", BITS(4), AGS_MODE),
       RESERVED_FIELD(BITS(4)),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     /* #143, @ksltd writes that it is definitely 10 bytes and that
@@ -3554,6 +3609,7 @@ Pgn pgnList[] = {
       PEUKERT_FIELD("Peukert Exponent"),
       PERCENTAGE_I8_FIELD("Charge Efficiency Factor"),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -3568,6 +3624,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Generator On Reason", BITS(8), AGS_ON_REASON),
       LOOKUP_FIELD("Generator Off Reason", BITS(8), AGS_OFF_REASON),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = 1500}
 
     ,
@@ -3815,8 +3872,8 @@ Pgn pgnList[] = {
      PACKET_NOT_SEEN,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
-      SIMPLE_DESC_FIELD("Target ID #", BYTES(1), "Number of route, waypoint, event, mark, etc."),
-      LOOKUP_FIELD("Track Status", 2, TRACKING),
+      SIMPLE_DESC_FIELD("Target ID #", BYTES(2), "Number of route, waypoint, event, mark, etc."),
+      BITLOOKUP_FIELD("Track Status", BITS(2), TRACKING),
       LOOKUP_FIELD("Reported Target", 1, YES_NO),
       LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
       LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),
@@ -3832,6 +3889,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Reference Target", 2, YES_NO),
       RESERVED_FIELD(6),
       END_OF_FIELDS},
+     .priority = 2,
      .interval = 1000}
 
     ,
@@ -4031,8 +4089,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Direction", BITS(2), DIRECTION_REFERENCE),
       RESERVED_FIELD(2),
       ANGLE_U16_FIELD("COG", NULL),
-      DISTANCE_FIX16_MM_FIELD("Altitude Delta", NULL),
-      RESERVED_FIELD(8),
+      DISTANCE_FIX24_MM_FIELD("Altitude Delta", NULL),
       END_OF_FIELDS},
      .priority = 2,
      .interval = 100}
@@ -4085,8 +4142,8 @@ Pgn pgnList[] = {
      {LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
       LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
       MMSI_FIELD("User ID"),
-      LATITUDE_I32_FIELD("Longitude"),
-      LONGITUDE_I32_FIELD("Latitude"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
       LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
       LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
       LOOKUP_FIELD_DESC("Time Stamp", 6, TIME_STAMP, "0-59 = UTC second when the report was generated"),
@@ -4245,17 +4302,17 @@ Pgn pgnList[] = {
       DISTANCE_FIX32_CM_FIELD("Delta Z", "Delta shift in Z axis from WGS 84"),
       FLOAT_FIELD(
           "Rotation in X",
-          NULL,
+          "rad",
           "Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
       FLOAT_FIELD(
           "Rotation in Y",
-          NULL,
+          "rad",
           "Rotational shift in Y axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
       FLOAT_FIELD(
           "Rotation in Z",
-          NULL,
+          "rad",
           "Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
       FLOAT_FIELD("Scale", "ppm", NULL),
@@ -4267,6 +4324,7 @@ Pgn pgnList[] = {
                             " First three chars are datum ID as per IHO tables."
                             " Fourth char is local datum subdivision code."),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4327,7 +4385,7 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
-     .priority        = 7,
+     .priority        = 6,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 4,
@@ -4345,6 +4403,7 @@ Pgn pgnList[] = {
       SPEED_U16_CM_FIELD("Drift"),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
+     .priority = 3,
      .interval = 1000}
 
     ,
@@ -4392,9 +4451,9 @@ Pgn pgnList[] = {
       SIGNALTONOISERATIO_FIX16_FIELD("SNR Mask", "Will not use SV below this SNR"),
       LOOKUP_FIELD("GNSS Mode (desired)", 3, GNSS_MODE),
       LOOKUP_FIELD("DGNSS Mode (desired)", 3, DGNSS_MODE),
-      SIMPLE_FIELD("Position/Velocity Filter", 2),
-      SIMPLE_FIELD("Max Correction Age", BYTES(2)),
-      DISTANCE_FIX16_CM_FIELD("Antenna Altitude for 2D Mode", ""),
+      LOOKUP_FIELD("Position/Velocity Filter", 2, YES_NO),
+      DURATION_UFIX16_CS_FIELD("Max Correction Age", NULL),
+      DISTANCE_FIX32_CM_FIELD("Antenna Altitude for 2D Mode", ""),
       LOOKUP_FIELD("Use Antenna Altitude for 2D Mode", 2, YES_NO),
       RESERVED_FIELD(6),
       END_OF_FIELDS},
@@ -4430,7 +4489,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("PRN"),
       ANGLE_I16_FIELD("Elevation", NULL),
       ANGLE_U16_FIELD("Azimuth", NULL),
-      SIGNALTONOISERATIO_UFIX16_FIELD("SNR", NULL),
+      SIGNALTONOISERATIO_FIX16_FIELD("SNR", NULL),
       DISTANCE_FIX32_MMM_FIELD("Range residuals", NULL),
       LOOKUP_FIELD("Status", 4, SATELLITE_STATUS),
       RESERVED_FIELD(4),
@@ -4482,6 +4541,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       END_OF_FIELDS},
      .url      = "https://www.gps.gov/technical/icwg/ICD-GPS-200C.pdf",
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4525,12 +4585,13 @@ Pgn pgnList[] = {
      129546,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {DISTANCE_FIX16_CM_FIELD("Radial Position Error Maximum Threshold", ""),
+     {LENGTH_UFIX16_CM_FIELD("Radial Position Error Maximum Threshold"),
       PERCENTAGE_I8_FIELD("Probability of False Alarm"),
       PERCENTAGE_I8_FIELD("Probability of Missed Detection"),
       DURATION_UFIX16_S_FIELD("Pseudorange Residual Filtering Time Constant"),
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4539,14 +4600,15 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_FAST,
      {UINT8_FIELD("SID"),
-      DISTANCE_FIX16_CM_FIELD("RMS Std Dev of Range Inputs", ""),
-      DISTANCE_FIX16_CM_FIELD("Std Dev of Major error ellipse", ""),
-      DISTANCE_FIX16_CM_FIELD("Std Dev of Minor error ellipse", ""),
+      LENGTH_UFIX16_CM_FIELD("RMS Std Dev of Range Inputs"),
+      LENGTH_UFIX16_CM_FIELD("Std Dev of Major error ellipse"),
+      LENGTH_UFIX16_CM_FIELD("Std Dev of Minor error ellipse"),
       ANGLE_U16_FIELD("Orientation of error ellipse", ""),
-      DISTANCE_FIX16_CM_FIELD("Std Dev Lat Error", ""),
-      DISTANCE_FIX16_CM_FIELD("Std Dev Lon Error", ""),
-      DISTANCE_FIX16_CM_FIELD("Std Dev Alt Error", ""),
+      LENGTH_UFIX16_CM_FIELD("Std Dev Lat Error"),
+      LENGTH_UFIX16_CM_FIELD("Std Dev Lon Error"),
+      LENGTH_UFIX16_CM_FIELD("Std Dev Alt Error"),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4557,7 +4619,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       INTEGER_FIELD("Reference Station ID", 12),
       LOOKUP_FIELD("Reference Station Type", 4, GNS),
-      DURATION_UFIX16_MS_FIELD("Time of corrections", NULL),
+      DURATION_UFIX16_DS_FIELD("Time of corrections", NULL),
       LOOKUP_FIELD("Station Health", 4, STATION_HEALTH),
       RESERVED_FIELD(BITS(4)),
       UINT8_FIELD("Satellite ID"),
@@ -4566,6 +4628,7 @@ Pgn pgnList[] = {
       LENGTH_UFIX16_CM_FIELD("UDRE"),
       UINT8_FIELD("IOD"),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4581,6 +4644,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Differential Operation Mode", 4, DIFFERENTIAL_MODE),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4603,6 +4667,7 @@ Pgn pgnList[] = {
       DURATION_UFIX16_CS_FIELD("Time since Last Sat Differential Sync", "Age of differential corrections"),
       UINT16_FIELD("Satellite Service ID No."),
       END_OF_FIELDS},
+     .priority = 6,
      .interval = UINT16_MAX}
 
     ,
@@ -4628,6 +4693,7 @@ Pgn pgnList[] = {
      .explanation = "Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These "
                     "parameters are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.",
      .url         = "https://www.unavco.org/help/glossary/docs/ICD_GLONASS_5.1_%282008%29_en.pdf",
+     .priority    = 6,
      .interval    = UINT16_MAX}
 
     ,
@@ -4648,6 +4714,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
+     .priority = 6,
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
@@ -4719,15 +4786,16 @@ Pgn pgnList[] = {
       MMSI_FIELD("Source ID"),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      SIMPLE_FIELD("Sequence Number", 2),
+      UINT2_FIELD("Sequence Number"),
       MMSI_FIELD("Destination ID"),
       RESERVED_FIELD(6),
-      SIMPLE_FIELD("Retransmit flag", 1),
+      LOOKUP_FIELD("Retransmit flag", 1, YES_NO),
       RESERVED_FIELD(1),
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .priority = 5,
      .interval = UINT16_MAX}
 
     ,
@@ -4741,14 +4809,16 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
       SPARE_FIELD(2),
-      UINT32_FIELD("Destination ID #1"),
-      BINARY_FIELD("Sequence Number for ID 1", 2, "reserved"),
-      RESERVED_FIELD(6),
-      BINARY_FIELD("Sequence Number for ID n", 2, "reserved"),
+      MMSI_FIELD("Destination ID"),
+      UINT2_FIELD("Sequence Number"),
       RESERVED_FIELD(6),
       END_OF_FIELDS},
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
-     .interval = UINT16_MAX}
+     .priority        = 7,
+     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .interval        = UINT16_MAX,
+     .repeatingField1 = 255,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 7}
 
     ,
     {"AIS Binary Broadcast Message",
@@ -4764,7 +4834,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
-     .priority = 7,
+     .priority = 5,
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
@@ -4792,7 +4862,8 @@ Pgn pgnList[] = {
       DISTANCE_FIX32_CM_FIELD("Altitude", NULL),
       BINARY_FIELD("Reserved for Regional Applications", BYTES(1), NULL),
       LOOKUP_FIELD("DTE", 1, AVAILABLE),
-      RESERVED_FIELD(7),
+      SPARE_FIELD(5),
+      RESERVED_FIELD(2),
       END_OF_FIELDS},
      .priority = 4,
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
@@ -4814,7 +4885,7 @@ Pgn pgnList[] = {
           "zero. The next digit is 1 indicating the ship stations transmit frequency is being used as a simplex channel frequency, "
           "or 2 indicating the cost stations transmit frequency is being used as a simplex channel frequency, 0 otherwise. THe "
           "remaining three numbers are the VHF channel numbers with leading zeros as required."),
-      POWER_U8_FIELD("Tx Power"),
+      POWER_U16_FIELD("Tx Power"),
       LOOKUP_FIELD("Mode", BITS(8), TELEPHONE_MODE),
       FREQUENCY_FIELD("Channel Bandwidth", 1),
       END_OF_FIELDS},
@@ -4850,10 +4921,10 @@ Pgn pgnList[] = {
       MMSI_FIELD("Source ID"),
       RESERVED_FIELD(1),
       LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
-      SIMPLE_FIELD("Sequence Number", 2),
+      UINT2_FIELD("Sequence Number"),
       MMSI_FIELD("Destination ID"),
       RESERVED_FIELD(6),
-      SIMPLE_FIELD("Retransmit flag", 1),
+      LOOKUP_FIELD("Retransmit flag", 1, YES_NO),
       SPARE_FIELD(1),
       STRINGLAU_FIELD("Safety Related Text"),
       END_OF_FIELDS},
@@ -4982,7 +5053,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Channel A Bandwidth", BITS(1), BANDWIDTH),
       LOOKUP_FIELD("Channel B Bandwidth", BITS(1), BANDWIDTH),
       RESERVED_FIELD(1),
-      SIMPLE_FIELD("Transitional Zone Size", BITS(3)),
+      LOOKUP_FIELD("Transitional Zone Size", BITS(3), ZONE_SIZE),
       SPARE_FIELD(23),
       RESERVED_FIELD(1),
       END_OF_FIELDS},
@@ -5015,6 +5086,7 @@ Pgn pgnList[] = {
       SPARE_FIELD(6),
       RESERVED_FIELD(2),
       END_OF_FIELDS},
+     .priority = 7,
      .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
@@ -5060,6 +5132,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
       END_OF_FIELDS},
+     .priority        = 4,
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
@@ -5095,6 +5168,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("DSC Expansion Field Symbol", BYTES(1), DSC_EXPANSION_DATA),
       STRINGLAU_FIELD("DSC Expansion Field Data"),
       END_OF_FIELDS},
+     .priority        = 4,
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 2,
@@ -5205,6 +5279,7 @@ Pgn pgnList[] = {
       DURATION_FIX32_NANO_FIELD("Station ECD", NULL),
       DURATION_FIX32_NANO_FIELD("Station ASF", NULL),
       END_OF_FIELDS},
+     .priority = 3,
      .interval = 0}
 
     ,
@@ -5259,6 +5334,7 @@ Pgn pgnList[] = {
       UINT32_FIELD("Number of WPs in Database"),
       UINT32_FIELD("Number of Bytes in Database"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 9,
@@ -5279,6 +5355,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("WP Identification Method", 2, WP_IDENTIFICATION_METHOD),
       LOOKUP_FIELD("Route Status", 4, WP_ROUTE_STATUS),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 5,
@@ -5302,6 +5379,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Route Status", 4, WP_ROUTE_STATUS),
       DISTANCE_FIX16_M_FIELD("XTE Limit for the Route", NULL),
       END_OF_FIELDS},
+     .priority = 7,
      .interval = UINT16_MAX}
 
     ,
@@ -5319,6 +5397,7 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 4,
@@ -5337,6 +5416,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("WP ID"),
       STRINGLAU_FIELD("WP Name"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
@@ -5357,6 +5437,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Nav. Method in the leg after WP", 2, WP_NAVIGATION_METHOD),
       RESERVED_FIELD(6),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 6,
@@ -5375,6 +5456,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("WP ID / RPS#"),
       STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
@@ -5392,6 +5474,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Route ID"),
       STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
@@ -5408,6 +5491,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Database ID"),
       STRINGLAU_FIELD("Comment"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
@@ -5426,6 +5510,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("RPS#"),
       DISTANCE_FIX16_M_FIELD("Radius of Turn", NULL),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
@@ -5446,6 +5531,7 @@ Pgn pgnList[] = {
       LATITUDE_I32_FIELD("WP Latitude"),
       LONGITUDE_I32_FIELD("WP Longitude"),
       END_OF_FIELDS},
+     .priority        = 7,
      .interval        = UINT16_MAX,
      .repeatingField1 = 2,
      .repeatingCount1 = 4,
@@ -5552,7 +5638,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       INSTANCE_FIELD,
       LOOKUP_FIELD("Source", BYTES(1), PRESSURE_SOURCE),
-      PRESSURE_UFIX32_DPA_FIELD("Pressure"),
+      PRESSURE_FIX32_DPA_FIELD("Pressure"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 5,
@@ -5930,8 +6016,8 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("Album Name"),
       STRINGLAU_FIELD("Station Name"),
       END_OF_FIELDS},
-     .url
-     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
+            "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Group",
@@ -5953,8 +6039,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 7,
      .repeatingCount1 = 3,
      .repeatingStart1 = 9,
-     .url
-     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url             = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
+                        "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Library Data Search",
@@ -5971,8 +6057,8 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Group type 3", BYTES(1), ENTERTAINMENT_GROUP),
       STRINGLAU_FIELD("Group name 3"),
       END_OF_FIELDS},
-     .url
-     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
+            "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Source Data",
@@ -5996,8 +6082,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 2,
      .repeatingCount1 = 10,
      .repeatingStart1 = 4,
-     .url
-     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url             = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
+                        "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Supported Zone Data",
@@ -6013,8 +6099,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
      .repeatingStart1 = 4,
-     .url
-     = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+     .url             = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
+                        "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
     ,
     {"Small Craft Status",
@@ -6022,6 +6108,7 @@ Pgn pgnList[] = {
      PACKET_NOT_SEEN,
      PACKET_SINGLE,
      {PERCENTAGE_I8_FIELD("Port trim tab"), PERCENTAGE_I8_FIELD("Starboard trim tab"), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
+     .priority = 2,
      .interval = 200}
 
     ,

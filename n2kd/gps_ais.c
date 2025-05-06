@@ -639,8 +639,8 @@ static int aisEnum(const char *msg, const char *fieldName)
     logDebug("getJSONLookupValue(msg, '%s') = %" PRId64 "\n", fieldName, n);
     return (int) n;
   }
-  logError("getJSONLookupValue(msg, '%s') = no result -> 0\n", fieldName);
-  return 0;
+  logDebug("getJSONLookupValue(msg, '%s') = no result -> -1\n", fieldName);
+  return -1;
 }
 
 // Ship dimensions must be translated from pgn

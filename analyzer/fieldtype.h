@@ -1294,6 +1294,12 @@ FieldType fieldTypeList[] = {
      .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
 
+    {.name          = "DISTANCE_FIX24_MM",
+     .description   = "Distance, with millimeter resolution",
+     .resolution    = 0.001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX24"},
+
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
      .resolution    = 0.001,
