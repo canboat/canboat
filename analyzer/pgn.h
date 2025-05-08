@@ -140,7 +140,7 @@ typedef struct
    .lookup.name       = xstr(typ),              \
    .fieldType         = "LOOKUP"}
 
-#define LOOKUP_FIELDTYPE_FIELD(nam, len, typ)       \
+#define LOOKUP_DYNAMIC_FIELD_KEY(nam, len, typ)     \
   {.name                   = nam,                   \
    .size                   = len,                   \
    .resolution             = 1,                     \
@@ -148,7 +148,12 @@ typedef struct
    .lookup.type            = LOOKUP_TYPE_FIELDTYPE, \
    LOOKUP_FIELDTYPE_MEMBER = lookup##typ,           \
    .lookup.name            = xstr(typ),             \
-   .fieldType              = "FIELDTYPE_LOOKUP"}
+   .fieldType              = "DYNAMIC_FIELD_KEY"}
+
+#define DYNAMIC_FIELD_LENGTH(nam, len, desc) \
+  {.name = nam, .size = len, .resolution = 1, .hasSign = false, .description = desc, .fieldType = "DYNAMIC_FIELD_LENGTH"}
+
+#define DYNAMIC_FIELD_VALUE(nam, desc) {.name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "DYNAMIC_FIELD_VALUE"}
 
 #define LOOKUP_TRIPLET_FIELD(nam, len, typ, desc, order) \
   {.name                 = nam,                          \
@@ -827,8 +832,6 @@ typedef struct
 #define DATE_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "d", .hasSign = false, .fieldType = "DATE"}
 
 #define VARIABLE_FIELD(nam, desc) {.name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "VARIABLE"}
-
-#define KEY_VALUE_FIELD(nam, desc) {.name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "KEY_VALUE"}
 
 #define ENERGY_UINT32_FIELD(nam) {.name = nam, .size = BYTES(4), .resolution = 1, .unit = "kWh", .fieldType = "ENERGY_UINT32"}
 
@@ -7156,9 +7159,9 @@ Pgn pgnList[] = {
      PACKET_LOOKUPS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(381),
-      LOOKUP_FIELDTYPE_FIELD("Key", 12, BANDG_KEY_VALUE),
-      SIMPLE_DESC_FIELD("Length", 4, "Length of field 6"),
-      KEY_VALUE_FIELD("Value", "Data value"),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", 12, BANDG_KEY_VALUE),
+      DYNAMIC_FIELD_LENGTH("Length", 4, "Length of field 6"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
      .priority        = 2,
      .repeatingField1 = UINT8_MAX,
@@ -7227,7 +7230,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(381),
-      LOOKUP_FIELDTYPE_FIELD("Data Type", 12, BANDG_KEY_VALUE),
+      LOOKUP_DYNAMIC_FIELD_KEY("Data Type", 12, BANDG_KEY_VALUE),
       SIMPLE_DESC_FIELD("Length", 4, "Length of field 8"),
       RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELD("Decimals", 8, BANDG_DECIMALS),
@@ -7417,10 +7420,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat Indicator", BYTES(1), REPEAT_INDICATOR),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      LOOKUP_FIELDTYPE_FIELD("Key", BYTES(2), SIMNET_KEY_VALUE),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", BYTES(2), SIMNET_KEY_VALUE),
       SPARE_FIELD(BYTES(1)),
-      SIMPLE_DESC_FIELD("MinLength", BYTES(1), "Length of data field"),
-      KEY_VALUE_FIELD("Value", "Data value"),
+      SIMPLE_DESC_FIELD("MinLength", BYTES(1), "Possibly the length of data field; probably something else"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 
@@ -7434,10 +7437,10 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       UINT16_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_FIELDTYPE_FIELD("Key", BYTES(2), SIMNET_KEY_VALUE),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", BYTES(2), SIMNET_KEY_VALUE),
       SPARE_FIELD(BYTES(1)),
-      SIMPLE_DESC_FIELD("Length", BYTES(1), "Length of data field"),
-      KEY_VALUE_FIELD("Value", "Data value"),
+      SIMPLE_DESC_FIELD("Length", BYTES(1), "Possibly the length of data field; probably something else"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
 

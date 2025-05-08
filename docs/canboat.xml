@@ -270,11 +270,19 @@ limitations under the License.
       <EncodingDescription>Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</EncodingDescription>
       <Comment>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</Comment>
     </FieldType>
-    <FieldType Name="FIELDTYPE_LOOKUP">
-      <Description>Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field</Description>
+    <FieldType Name="DYNAMIC_FIELD_KEY">
+      <Description>Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table</Description>
       <EncodingDescription>Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</EncodingDescription>
       <Comment>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</Comment>
       <Signed>false</Signed>
+    </FieldType>
+    <FieldType Name="DYNAMIC_FIELD_LENGTH">
+      <Description>Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field</Description>
+      <Signed>false</Signed>
+    </FieldType>
+    <FieldType Name="DYNAMIC_FIELD_VALUE">
+      <Description>Variable field whose type and length is dynamic</Description>
+      <EncodingDescription>The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.</EncodingDescription>
     </FieldType>
     <FieldType Name="TIME">
       <Description>Time</Description>
@@ -343,10 +351,6 @@ limitations under the License.
       <Description>Variable</Description>
       <EncodingDescription>The definition of the field is that of the reference PGN and reference field, this is totally variable.</EncodingDescription>
       <VariableSize>true</VariableSize>
-    </FieldType>
-    <FieldType Name="KEY_VALUE">
-      <Description>Key/value</Description>
-      <EncodingDescription>The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field.</EncodingDescription>
     </FieldType>
     <FieldType Name="FIELD_INDEX">
       <Description>Field Index</Description>
@@ -2813,19 +2817,19 @@ limitations under the License.
       <EnumFieldType Value='260' Name='True wind high' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='264' Name='Deep water' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m' Bits='32'/>
+ Resolution='0.01' Unit='m' Bits='16'/>
       <EnumFieldType Value='516' Name='True wind low' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='517' Name='Low boat speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='520' Name='Shallow water' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m' Bits='32'/>
+ Resolution='0.01' Unit='m' Bits='16'/>
       <EnumFieldType Value='768' Name='Local field' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1800' Name='Anchor depth' FieldType='NUMBER' Signed='false'
- Resolution='0.01' Unit='m/s' Bits='16'/>
+ Resolution='0.01' Unit='m' Bits='16'/>
       <EnumFieldType Value='4863' Name='Backlight level' FieldType='LOOKUP' Signed='false'
  Bits='8'>
           <LookupEnumeration>SIMNET_BACKLIGHT_LEVEL</LookupEnumeration>
@@ -48537,7 +48541,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4092</RangeMax>
-          <FieldType>FIELDTYPE_LOOKUP</FieldType>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -48552,7 +48556,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
@@ -48562,7 +48566,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>KEY_VALUE</FieldType>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -49160,7 +49164,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>4092</RangeMax>
-          <FieldType>FIELDTYPE_LOOKUP</FieldType>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -51088,7 +51092,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>FIELDTYPE_LOOKUP</FieldType>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -51105,7 +51109,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>minlength</Id>
           <Name>MinLength</Name>
-          <Description>Length of data field</Description>
+          <Description>Possibly the length of data field; probably something else</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -51123,7 +51127,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>KEY_VALUE</FieldType>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -51253,7 +51257,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>FIELDTYPE_LOOKUP</FieldType>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
         </Field>
         <Field>
@@ -51270,7 +51274,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>length</Id>
           <Name>Length</Name>
-          <Description>Length of data field</Description>
+          <Description>Possibly the length of data field; probably something else</Description>
           <BitLength>8</BitLength>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
@@ -51288,7 +51292,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>KEY_VALUE</FieldType>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

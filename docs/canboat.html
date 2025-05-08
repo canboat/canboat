@@ -13668,9 +13668,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                     </td><td/></tr><tr><td class="repeating">5<div>Set 1</div></td><td>Length</td><td>Length of field 6</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Value</td><td>Data value</td><td> </td><td>
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Value</td><td>Data value</td><td> </td><td>
                     Variable length
-                  <a href="#ft-KEY_VALUE">KEY_VALUE</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
             PGN 130824
             - Maretron: Annunciator</h3><p>
               This PGN description applies when the following field(s) match:
@@ -14425,12 +14425,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
                       that defines the next variable field's type.
                     </td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>MinLength</td><td>Length of data field</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>MinLength</td><td>Possibly the length of data field; probably something else</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
                     Variable length
-                  <a href="#ft-KEY_VALUE">KEY_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
             - Simnet: Parameter Set</h3><p>
               This PGN description applies when the following field(s) match:
@@ -14473,12 +14473,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
                       that defines the next variable field's type.
                     </td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Length</td><td>Length of data field</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Length</td><td>Possibly the length of data field; probably something else</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
                     Variable length
-                  <a href="#ft-KEY_VALUE">KEY_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
             - Furuno: Motion Sensor Status Extended</h3><p>
               This PGN description applies when the following field(s) match:
@@ -15085,9 +15085,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             Encoding:
             Each lookup has a LookupIndirectEnumeration defining what the possible values mean</p><h3 id="ft-BITLOOKUP">BITLOOKUP - Number value where each bit value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
             Encoding:
-            Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</p><h3 id="ft-FIELDTYPE_LOOKUP">FIELDTYPE_LOOKUP - Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field</h3><p>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</p><p>
+            Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</p><h3 id="ft-DYNAMIC_FIELD_KEY">DYNAMIC_FIELD_KEY - Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table</h3><p>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</p><p>
             Encoding:
-            Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
+            Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><h3 id="ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH - Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field</h3><p/><h3 id="ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE - Variable field whose type and length is dynamic</h3><p/><p>
+            Encoding:
+            The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.</p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DURATION">DURATION - Duration</h3><p/><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
             
@@ -15130,9 +15132,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           For more information see:
           <a href="https://navcen.uscg.gov/maritime-mobile-service-identity">https://navcen.uscg.gov/maritime-mobile-service-identity</a></p><h3 id="ft-VARIABLE">VARIABLE - Variable</h3><p/><p>
             Encoding:
-            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><h3 id="ft-KEY_VALUE">KEY_VALUE - Key/value</h3><p/><p>
-            Encoding:
-            The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field.</p><h3 id="ft-FIELD_INDEX">FIELD_INDEX - Field Index</h3><p/><p>8 bits
+            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><h3 id="ft-FIELD_INDEX">FIELD_INDEX - Field Index</h3><p/><p>8 bits
             
                 unsigned
               
@@ -15596,7 +15596,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>260</td><td>True wind high</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>Deep water</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>264</td><td>Deep water</td><td>0.01 m</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>516</td><td>True wind low</td><td>0.01 m/s</td><td>16 bits 
@@ -15605,7 +15605,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>517</td><td>Low boat speed</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>520</td><td>Shallow water</td><td>0.01 m</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>520</td><td>Shallow water</td><td>0.01 m</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.0001 rad</td><td>16 bits 
@@ -15614,7 +15614,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1800</td><td>Anchor depth</td><td>0.01 m</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4863</td><td>Backlight level</td><td> </td><td>8 bits 

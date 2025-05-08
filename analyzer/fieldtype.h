@@ -596,13 +596,27 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintBitLookup,
      .v1Type  = "Bitfield"},
 
-    {.name        = "FIELDTYPE_LOOKUP",
-     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+    {.name        = "DYNAMIC_FIELD_KEY",
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable "
+                    "field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is "
+                    "no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
      .encodingDescription = "Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
      .comment = "These values have been determined by reverse engineering, given the known values it is anticipated that there are "
                 "unkown enumeration values and some known values have incorrect datatypes",
      .hasSign = False,
      .pf      = fieldPrintLookup},
+
+    {.name        = "DYNAMIC_FIELD_LENGTH",
+     .description = "Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
+     .hasSign     = False,
+     .pf          = fieldPrintNumber},
+
+    {.name        = "DYNAMIC_FIELD_VALUE",
+     .description = "Variable field whose type and length is dynamic",
+     .encodingDescription
+     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
+       "the preceding length field or the length determined by the lookup value.",
+     .pf = fieldPrintKeyValue},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -1481,13 +1495,6 @@ FieldType fieldTypeList[] = {
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
      .variableSize = True,
      .pf           = fieldPrintVariable},
-
-    {.name        = "KEY_VALUE",
-     .description = "Key/value",
-     .encodingDescription
-     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
-       "the preceding length field.",
-     .pf = fieldPrintKeyValue},
 
     {.name                = "FIELD_INDEX",
      .description         = "Field Index",

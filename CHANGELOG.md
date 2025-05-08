@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
+    
+
+### Explicity garantuee on Id values
+
+PGN field names have been left the same as in v5.1.3, and only two fallback PGN ids have been changed.
+
+From this point forward, we will garantuee that the <Id> values do not change. 
+We shall be making improvements to the <Name> values.
+
+Therefore, all downstream consumers are urged to make sure they match on PGN Id and field Id, not name.
+
+### Changed
 
 This is a major upgrade because the old v1 xml and json files are no longer being
 supplied.
@@ -17,17 +29,37 @@ field present with a `true` value) contributes to the _Primary key_ of the data 
 e.g. any message with a different primary key is from a different source. Fields 
 like `Source Id`, `Message Id` or `Instance` will have this set to true.
 
-Also, in `-json -nv` mode and in text mode all fields that refer to a PGN will explain
+Also, in n2kd `-json -nv` mode and in text mode all fields that refer to a PGN will explain
 the meaning of the PGN value (if it is not a proprietary PGN number.)
 
-Also, in `json -nv` mode any NAME fields that occur (so far, only in the Alerts PGNs)
+Also, in n2kd `json -nv` mode any NAME fields that occur (so far, only in the Alerts PGNs)
 will contain in the `name:` attribute a recursive expansion of the fields contained
 in that single NAME field. These subfields are the same fields as described in PGN
 60928 (Address Claim.)
 
-Furthermore, physical quantity GEOGRAPHICAL_COORDINATE has been split into 
-GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
+Further possibly breaking changes in the definitions:
 
+  * PhysicalQuantity:
+    * GEOGRAPHICAL_COORDINATE has been split into GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
+    * SIGNAL_STRENGTH has been added.
+    * DURATION has been added.
+  * FieldType
+    * PGN, ISO_NAME, DURATION have been added. They are specialisations of NUMBER, BINARY and TIME, which is what they were before.
+    * Navico specific: fieldtype FIELDTYPE_LOOKUP is now named DYNAMIC_FIELD_LOOKUP. KEY_VALUE is now named DYNAMIC_FIELD_VALUE.
+      Fieldtype DYNAMIC_FIELD_LENGTH has been added.
+  * PGN
+    * Fusion PGNs have been reworked.
+    * PrimaryKey attribute has been added.
+    * Many missing attributes such as priority have been added.
+    * Fields have moved from being a plain NUMBER to LOOKUP because the lookup values are now known.
+  * PGN names
+    * PGN fallback 59392 is now correctly named 0xe8000xee00StandardizedSingleFrameAddressed instead 
+      of 0xe8000xeeffStandardizedSingleFrameAddressed (note the ff -> 00 change).
+    * PGN fallback 126720 is now correctly named 0x1ef000ManufacturerProprietaryFastPacketAddressed
+      instead of 0x1ef000x1efffManufacturerProprietaryFastPacketAddressed.
+  * PGN fields
+    * Fusion PGNs have been reworked.
+    
 ### Fixed
 
 - Updated copyrights to 2025.
@@ -55,6 +87,7 @@ GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
 - #517: PGN 130323 field Mode should be lookup RESIDUAL_MODE.
 - #518: PGN 127510 + 127511 revised field lengths and lookups
 - #525: Sync with latest publicly known sources
+- #529: FIELDTYPE_LOOKUP -> DYNAMIC_FIELD_LOOKUP, KEY_VALUE -> DYNAMIC_FIELD_VALUE
 
 ### Added
 

@@ -262,11 +262,21 @@
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation."
       },
     {
-        "Name":"FIELDTYPE_LOOKUP",
-      "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+        "Name":"DYNAMIC_FIELD_KEY",
+      "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
       "EncodingDescription":"Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
       "Comment":"These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes",
       "Signed":false
+      },
+    {
+        "Name":"DYNAMIC_FIELD_LENGTH",
+      "Description":"Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
+      "Signed":false
+      },
+    {
+        "Name":"DYNAMIC_FIELD_VALUE",
+      "Description":"Variable field whose type and length is dynamic",
+      "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value."
       },
     {
         "Name":"TIME",
@@ -348,11 +358,6 @@
       "Description":"Variable",
       "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable.",
       "VariableSize":true
-      },
-    {
-        "Name":"KEY_VALUE",
-      "Description":"Key/value",
-      "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field."
       },
     {
         "Name":"FIELD_INDEX",
@@ -3732,13 +3737,13 @@
         {"name": "Heading Offset", "value": 0, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Timezone offset", "value": 41, "FieldType": "DURATION", "Resolution": 60, "Unit": "s", "Bits": "16"},
         {"name": "True wind high", "value": 260, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Deep water", "value": 264, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
+        {"name": "Deep water", "value": 264, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "16"},
         {"name": "True wind low", "value": 516, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Low boat speed", "value": 517, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Shallow water", "value": 520, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
+        {"name": "Shallow water", "value": 520, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "16"},
         {"name": "Local field", "value": 768, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Field angle", "value": 1024, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
-        {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
+        {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "16"},
         {"name": "Backlight level", "value": 4863, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_BACKLIGHT_LEVEL"},
         {"name": "Time format", "value": 5160, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_TIME_FORMAT"},
         {"name": "Time hour display", "value": 5161, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_HOUR_DISPLAY"},
@@ -48628,7 +48633,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4092,
-            "FieldType":"FIELDTYPE_LOOKUP",
+            "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
           },
           {
@@ -48643,7 +48648,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"NUMBER"
+            "FieldType":"DYNAMIC_FIELD_LENGTH"
           },
           {
             "Order":6,
@@ -48653,7 +48658,7 @@
             "BitLengthVariable":true,
             "BitOffset":32,
             "BitStart":0,
-            "FieldType":"KEY_VALUE"
+            "FieldType":"DYNAMIC_FIELD_VALUE"
           }
         ]
       },
@@ -49219,7 +49224,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4092,
-            "FieldType":"FIELDTYPE_LOOKUP",
+            "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
           },
           {
@@ -51084,7 +51089,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"FIELDTYPE_LOOKUP",
+            "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
           },
           {
@@ -51101,7 +51106,7 @@
             "Order":10,
             "Id":"minlength",
             "Name":"MinLength",
-            "Description":"Length of data field",
+            "Description":"Possibly the length of data field; probably something else",
             "BitLength":8,
             "BitOffset":72,
             "BitStart":0,
@@ -51119,7 +51124,7 @@
             "BitLengthVariable":true,
             "BitOffset":80,
             "BitStart":0,
-            "FieldType":"KEY_VALUE"
+            "FieldType":"DYNAMIC_FIELD_VALUE"
           }
         ]
       },
@@ -51246,7 +51251,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"FIELDTYPE_LOOKUP",
+            "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
           },
           {
@@ -51263,7 +51268,7 @@
             "Order":10,
             "Id":"length",
             "Name":"Length",
-            "Description":"Length of data field",
+            "Description":"Possibly the length of data field; probably something else",
             "BitLength":8,
             "BitOffset":80,
             "BitStart":0,
@@ -51281,7 +51286,7 @@
             "BitLengthVariable":true,
             "BitOffset":88,
             "BitStart":0,
-            "FieldType":"KEY_VALUE"
+            "FieldType":"DYNAMIC_FIELD_VALUE"
           }
         ]
       },
