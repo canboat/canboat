@@ -35,7 +35,7 @@ if (sys.argv[1] == '--line-by-line'):
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
 checkRange = False
-allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'VARIABLE', 'STRING_LAU', 'STRING_LZ', 'STRING_FIX', 'KEY_VALUE' }
+allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'STRING_LZ', 'STRING_FIX' }
 
 if (sys.argv[1] == '--range'):
     checkRange = True
@@ -76,7 +76,7 @@ for pgn in pgns:
                     res = 1
                 else:
                     ft = field['FieldType']
-                    if (not 'RangeMax' in field and not ft in allowedNoRange):
+                    if (not 'RangeMax' in field and not ft in allowedNoRange and not 'BitLengthVariable' in field):
                         print("ERROR: PGN", prn, "'" +  desc + "' field " , order , fid , "has no rangeMax")
                         print(field)
                         res = 1
