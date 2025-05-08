@@ -161,9 +161,17 @@
       "Unit":"s"
       },
     {
-        "Name":"GEOGRAPHICAL_COORDINATE",
-      "Description":"Geographical coordinate",
-      "Comment":"Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
+        "Name":"GEOGRAPHICAL_LATITUDE",
+      "Description":"Geographical latitude",
+      "Comment":"Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.",
+      "URL":"https://en.wikipedia.org/wiki/Geographic_coordinate_system",
+      "UnitDescription":"degree",
+      "Unit":"deg"
+      },
+    {
+        "Name":"GEOGRAPHICAL_LONGITUDE",
+      "Description":"Geographical longitude",
+      "Comment":"Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.",
       "URL":"https://en.wikipedia.org/wiki/Geographic_coordinate_system",
       "UnitDescription":"degree",
       "Unit":"deg"
@@ -17233,7 +17241,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":11,
@@ -17248,7 +17256,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":12,
@@ -24834,7 +24842,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":2,
@@ -24849,7 +24857,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           }
         ]
       },
@@ -24997,8 +25005,7 @@
             "Signed":true,
             "RangeMin":-0.0233016861111111,
             "RangeMax":0.0233016777777778,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "FieldType":"NUMBER"
           },
           {
             "Order":4,
@@ -25012,8 +25019,7 @@
             "Signed":true,
             "RangeMin":-0.0233016861111111,
             "RangeMax":0.0233016777777778,
-            "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -25198,7 +25204,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":5,
@@ -25213,7 +25219,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":6,
@@ -25524,7 +25530,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -25539,7 +25545,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -25810,7 +25816,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -25825,7 +25831,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -26140,7 +26146,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -26155,7 +26161,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -26512,7 +26518,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -26527,7 +26533,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -26801,7 +26807,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":3,
@@ -26816,7 +26822,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":4,
@@ -27288,7 +27294,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":14,
@@ -27303,7 +27309,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":15,
@@ -27472,7 +27478,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":13,
@@ -27485,7 +27491,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           }
         ]
       },
@@ -29749,7 +29755,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":8,
@@ -29764,7 +29770,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":9,
@@ -29881,7 +29887,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -29896,7 +29902,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -30784,7 +30790,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":5,
@@ -30799,7 +30805,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -32214,7 +32220,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":13,
@@ -32229,7 +32235,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":14,
@@ -32244,7 +32250,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":15,
@@ -32259,7 +32265,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":16,
@@ -32462,7 +32468,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":8,
@@ -32477,7 +32483,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":9,
@@ -32492,7 +32498,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":10,
@@ -32507,7 +32513,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":11,
@@ -32745,7 +32751,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":10,
@@ -32758,7 +32764,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":11,
@@ -33011,7 +33017,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":10,
@@ -33024,7 +33030,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":11,
@@ -34821,7 +34827,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":9,
@@ -34834,7 +34840,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           }
         ]
       },
@@ -35562,7 +35568,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":9,
@@ -35575,7 +35581,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           }
         ]
       },
@@ -36362,7 +36368,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":7,
@@ -36377,7 +36383,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":8,
@@ -36508,7 +36514,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -36523,7 +36529,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":7,
@@ -36666,7 +36672,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":7,
@@ -36681,7 +36687,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":8,
@@ -36842,7 +36848,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -36857,7 +36863,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":7,
@@ -37056,7 +37062,7 @@
             "RangeMin":-90,
             "RangeMax":90,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LATITUDE"
           },
           {
             "Order":6,
@@ -37071,7 +37077,7 @@
             "RangeMin":-180,
             "RangeMax":180,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"GEOGRAPHICAL_COORDINATE"
+            "PhysicalQuantity":"GEOGRAPHICAL_LONGITUDE"
           },
           {
             "Order":7,

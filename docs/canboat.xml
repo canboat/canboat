@@ -183,9 +183,16 @@ limitations under the License.
       <UnitDescription>Second</UnitDescription>
       <Unit>s</Unit>
     </PhysicalQuantity>
-    <PhysicalQuantity Name="GEOGRAPHICAL_COORDINATE">
-      <Description>Geographical coordinate</Description>
-      <Comment>Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.</Comment>
+    <PhysicalQuantity Name="GEOGRAPHICAL_LATITUDE">
+      <Description>Geographical latitude</Description>
+      <Comment>Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.</Comment>
+      <URL>https://en.wikipedia.org/wiki/Geographic_coordinate_system</URL>
+      <UnitDescription>degree</UnitDescription>
+      <Unit>deg</Unit>
+    </PhysicalQuantity>
+    <PhysicalQuantity Name="GEOGRAPHICAL_LONGITUDE">
+      <Description>Geographical longitude</Description>
+      <Comment>Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.</Comment>
       <URL>https://en.wikipedia.org/wiki/Geographic_coordinate_system</URL>
       <UnitDescription>degree</UnitDescription>
       <Unit>deg</Unit>
@@ -16764,7 +16771,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -16779,7 +16786,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>12</Order>
@@ -24448,7 +24455,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -24463,7 +24470,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24613,7 +24620,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.0233016861111111</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -24628,7 +24634,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.0233016861111111</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24814,7 +24819,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -24829,7 +24834,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -25140,7 +25145,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -25155,7 +25160,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -25426,7 +25431,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -25441,7 +25446,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -25757,7 +25762,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -25772,7 +25777,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -26129,7 +26134,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -26144,7 +26149,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -26418,7 +26423,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -26433,7 +26438,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -26905,7 +26910,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -26920,7 +26925,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>15</Order>
@@ -27089,7 +27094,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -27102,7 +27107,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -29375,7 +29380,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -29390,7 +29395,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -29508,7 +29513,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -29523,7 +29528,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -30412,7 +30417,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -30427,7 +30432,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -31852,7 +31857,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -31867,7 +31872,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -31882,7 +31887,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>15</Order>
@@ -31897,7 +31902,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>16</Order>
@@ -32101,7 +32106,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -32116,7 +32121,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -32131,7 +32136,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -32146,7 +32151,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -32388,7 +32393,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -32401,7 +32406,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -32658,7 +32663,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -32671,7 +32676,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -34480,7 +34485,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -34493,7 +34498,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -35221,7 +35226,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -35234,7 +35239,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -36022,7 +36027,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -36037,7 +36042,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -36169,7 +36174,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -36184,7 +36189,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -36328,7 +36333,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -36343,7 +36348,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -36505,7 +36510,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -36520,7 +36525,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -36720,7 +36725,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-90</RangeMin>
           <RangeMax>90</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LATITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -36735,7 +36740,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-180</RangeMin>
           <RangeMax>180</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>GEOGRAPHICAL_COORDINATE</PhysicalQuantity>
+          <PhysicalQuantity>GEOGRAPHICAL_LONGITUDE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>

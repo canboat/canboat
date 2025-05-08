@@ -213,47 +213,47 @@ typedef struct
 #define LATITUDE_DELTA_I24_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 1e-5 * (1 / 3600), .hasSign = true, .unit = "deg", .fieldType = "GEO_DELTA_FIX24"}
 
-#define LATITUDE_I32_FIELD(nam) \
-  {.name       = nam,           \
-   .size       = BYTES(4),      \
-   .resolution = 1e-7,          \
-   .hasSign    = true,          \
-   .unit       = "deg",         \
-   .fieldType  = "GEO_FIX32",   \
-   .rangeMin   = -90.,          \
+#define LATITUDE_I32_FIELD(nam)   \
+  {.name       = nam,             \
+   .size       = BYTES(4),        \
+   .resolution = 1e-7,            \
+   .hasSign    = true,            \
+   .unit       = "deg",           \
+   .fieldType  = "GEO_LAT_FIX32", \
+   .rangeMin   = -90.,            \
    .rangeMax   = 90.0}
 
-#define LATITUDE_I64_FIELD(nam) \
-  {.name       = nam,           \
-   .size       = BYTES(8),      \
-   .resolution = 1e-16,         \
-   .hasSign    = true,          \
-   .unit       = "deg",         \
-   .fieldType  = "GEO_FIX64",   \
-   .rangeMin   = -90.,          \
+#define LATITUDE_I64_FIELD(nam)   \
+  {.name       = nam,             \
+   .size       = BYTES(8),        \
+   .resolution = 1e-16,           \
+   .hasSign    = true,            \
+   .unit       = "deg",           \
+   .fieldType  = "GEO_LAT_FIX64", \
+   .rangeMin   = -90.,            \
    .rangeMax   = 90.0}
 
 #define LONGITUDE_DELTA_I24_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 1e-5 * (1 / 3600), .hasSign = true, .unit = "deg", .fieldType = "GEO_DELTA_FIX24"}
 
-#define LONGITUDE_I32_FIELD(nam) \
-  {.name       = nam,            \
-   .size       = BYTES(4),       \
-   .resolution = 1e-7,           \
-   .hasSign    = true,           \
-   .unit       = "deg",          \
-   .fieldType  = "GEO_FIX32",    \
-   .rangeMin   = -180.,          \
+#define LONGITUDE_I32_FIELD(nam)  \
+  {.name       = nam,             \
+   .size       = BYTES(4),        \
+   .resolution = 1e-7,            \
+   .hasSign    = true,            \
+   .unit       = "deg",           \
+   .fieldType  = "GEO_LON_FIX32", \
+   .rangeMin   = -180.,           \
    .rangeMax   = 180.0}
 
-#define LONGITUDE_I64_FIELD(nam) \
-  {.name       = nam,            \
-   .size       = BYTES(8),       \
-   .resolution = 1e-16,          \
-   .hasSign    = true,           \
-   .unit       = "deg",          \
-   .fieldType  = "GEO_FIX64",    \
-   .rangeMin   = -180.,          \
+#define LONGITUDE_I64_FIELD(nam)  \
+  {.name       = nam,             \
+   .size       = BYTES(8),        \
+   .resolution = 1e-16,           \
+   .hasSign    = true,            \
+   .unit       = "deg",           \
+   .fieldType  = "GEO_LON_FIX64", \
+   .rangeMin   = -180.,           \
    .rangeMax   = 180.0}
 
 #define ANGLE_U16_FIELD(nam, desc) \

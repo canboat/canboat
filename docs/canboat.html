@@ -4303,10 +4303,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>9</td><td>Position Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>10</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>10</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>COG Reference</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -6498,10 +6498,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               The default priority (as observed in the field) is 2.
             
               It is normally transmitted every 100 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129026">0x1F802:
@@ -6556,10 +6556,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Time Delta</td><td/><td>0.005 <a href="#pq-DURATION">s</a><div class="xs">0 .. 1.26</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td>2.77778e-09 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>3</td><td>Latitude Delta</td><td/><td>2.77778e-09 deg<div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td>2.77778e-09 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Longitude Delta</td><td/><td>2.77778e-09 deg<div class="xs">-0.0233016861111111 .. 0.0233016777777778</div></td><td>24 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129028">0x1F804:
@@ -6626,10 +6626,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>3</td><td>Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>4</td><td>Latitude</td><td/><td>1e-16 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>64 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>4</td><td>Latitude</td><td/><td>1e-16 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>64 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude</td><td/><td>1e-16 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>64 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Longitude</td><td/><td>1e-16 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>64 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Altitude</td><td>Altitude referenced to WGS-84</td><td>1e-06 <a href="#pq-DISTANCE">m</a><div class="xs">-9223372036854.78 .. 9223372036854.78</div></td><td>64 bits
@@ -6715,10 +6715,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -6784,10 +6784,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -6862,10 +6862,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -6947,10 +6947,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -7016,10 +7016,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             
               It is normally transmitted every 10000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Local Datum</td><td>defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth char is local datum subdivision code.</td><td> </td><td>32 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>2</td><td>Delta Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>2</td><td>Delta Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delta Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Delta Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Delta Altitude</td><td/><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-21474836.47 .. 21474836.44</div></td><td>32 bits
@@ -7147,10 +7147,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Destination Waypoint Number</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Destination Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Destination Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Destination Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Destination Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Waypoint Closing Velocity</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
@@ -7206,10 +7206,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-129291">0x1F90B:
@@ -7868,10 +7868,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>3 bits
@@ -7909,10 +7909,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -8160,10 +8160,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -8546,16 +8546,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-POWER_MODE">POWER_MODE</a></td><td/></tr><tr><td>11</td><td>Tx/Rx Mode</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-TX_RX_MODE">TX_RX_MODE</a></td><td/></tr><tr><td>12</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#lookup-TX_RX_MODE">TX_RX_MODE</a></td><td/></tr><tr><td>12</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>1 bits
@@ -8605,16 +8605,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-TX_RX_MODE">TX_RX_MODE</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>North East Longitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>North East Latitude Corner 1</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>South West Longitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>South West Latitude Corner 2</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Station Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -8679,10 +8679,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>7</td><td>Proposed Tx Frequency/Channel</td><td/><td> </td><td>48 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>8</td><td>Telephone Number</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>9</td><td>Latitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>9</td><td>Latitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Time of Position</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
@@ -8752,10 +8752,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>7</td><td>Proposed Tx Frequency/Channel</td><td/><td> </td><td>48 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>8</td><td>Telephone Number</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>9</td><td>Latitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>9</td><td>Latitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Longitude of Vessel Reported</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Time of Position</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
@@ -9281,10 +9281,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130068">0x1FC14:
@@ -9583,10 +9583,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>WP Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>WP Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>WP Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130306">0x1FD02:
@@ -9853,10 +9853,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>5</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Tide Level</td><td>Relative to MLLW</td><td>0.001 <a href="#pq-DISTANCE">m</a><div class="xs">-32.767 .. 32.764</div></td><td>16 bits
@@ -9893,10 +9893,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>4</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Salinity</td><td/><td>ppt<div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
@@ -9936,10 +9936,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>5</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>6</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Measurement Depth</td><td>Depth below transducer</td><td>0.01 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 42949672.92</div></td><td>32 bits
@@ -9982,10 +9982,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>4</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Wind Speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -10035,10 +10035,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-DATE">DATE</a></td><td/></tr><tr><td>4</td><td>Measurement Time</td><td>Seconds since midnight</td><td>0.0001 <a href="#pq-TIME">s</a><div class="xs">0 .. 86401</div></td><td>32 bits
-                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  <a href="#ft-TIME">TIME</a></td><td/></tr><tr><td>5</td><td>Station Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_COORDINATE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Station Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Wind Speed</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -15044,7 +15044,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="pq-TIME">TIME - Time</h3><p>Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)</p><p>In the CAN data these are expressed in Second, abbreviated as s.</p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="pq-DURATION">DURATION - Duration of an event or interval between two points in time</h3><p/><p>In the CAN data these are expressed in Second, abbreviated as s.</p><h3 id="pq-GEOGRAPHICAL_COORDINATE">GEOGRAPHICAL_COORDINATE - Geographical coordinate</h3><p>Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="pq-DURATION">DURATION - Duration of an event or interval between two points in time</h3><p/><p>In the CAN data these are expressed in Second, abbreviated as s.</p><h3 id="pq-GEOGRAPHICAL_LATITUDE">GEOGRAPHICAL_LATITUDE - Geographical latitude</h3><p>Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">https://en.wikipedia.org/wiki/Geographic_coordinate_system</a></p><h3 id="pq-GEOGRAPHICAL_LONGITUDE">GEOGRAPHICAL_LONGITUDE - Geographical longitude</h3><p>Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">https://en.wikipedia.org/wiki/Geographic_coordinate_system</a></p><h3 id="pq-TEMPERATURE">TEMPERATURE - Temperature</h3><p/><p>In the CAN data these are expressed in Kelvin, abbreviated as K.</p><p>
           For more information see:

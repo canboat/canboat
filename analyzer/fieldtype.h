@@ -321,10 +321,18 @@ static const PhysicalQuantity MAGNETIC_FIELD = {.name         = "MAGNETIC_FIELD"
                                                 .abbreviation = "T",
                                                 .url          = "https://en.wikipedia.org/wiki/Magnetic_field"};
 
-static const PhysicalQuantity GEO_COORDINATE
-    = {.name         = "GEOGRAPHICAL_COORDINATE",
-       .description  = "Geographical coordinate",
-       .comment      = "Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
+static const PhysicalQuantity GEO_LATITUDE
+    = {.name        = "GEOGRAPHICAL_LATITUDE",
+       .description = "Geographical latitude",
+       .comment = "Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.",
+       .abbreviation = "deg",
+       .unit         = "degree",
+       .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
+
+static const PhysicalQuantity GEO_LONGITUDE
+    = {.name        = "GEOGRAPHICAL_LONGITUDE",
+       .description = "Geographical longitude",
+       .comment = "Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.",
        .abbreviation = "deg",
        .unit         = "degree",
        .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
@@ -387,7 +395,8 @@ const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                         &DATE,
                                                         &TIME,
                                                         &DURATION,
-                                                        &GEO_COORDINATE,
+                                                        &GEO_LATITUDE,
+                                                        &GEO_LONGITUDE,
                                                         &TEMPERATURE,
                                                         &PRESSURE,
                                                         &PRESSURE_RATE,
@@ -672,28 +681,48 @@ FieldType fieldTypeList[] = {
      = "The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or about 1 "
        "mm when we refer to an Earth position",
      .resolution    = 1.0e-5 / 3600.,
-     .physical      = &GEO_COORDINATE,
      .pf            = fieldPrintNumber,
      .baseFieldType = "FIX24",
      .v1Type        = "Lat/Lon"},
 
-    {.name        = "GEO_FIX32",
-     .description = "Geographical latitude or longitude",
+    {.name        = "GEO_LAT_FIX32",
+     .description = "Geographical latitude",
      .encodingDescription
      = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
        "cm when we refer to an Earth position",
      .resolution    = 1.0e-7,
-     .physical      = &GEO_COORDINATE,
+     .physical      = &GEO_LATITUDE,
      .pf            = fieldPrintLatLon,
      .baseFieldType = "FIX32",
      .v1Type        = "Lat/Lon"},
 
-    {.name                = "GEO_FIX64",
+    {.name        = "GEO_LON_FIX32",
+     .description = "Geographical longitude",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
+       "cm when we refer to an Earth position",
+     .resolution    = 1.0e-7,
+     .physical      = &GEO_LONGITUDE,
+     .pf            = fieldPrintLatLon,
+     .baseFieldType = "FIX32",
+     .v1Type        = "Lat/Lon"},
+
+    {.name                = "GEO_LON_FIX64",
      .description         = "Geographical latitude or longitude, high resolution",
      .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
                             "refer to an Earth position",
      .resolution          = 1.0e-16,
-     .physical            = &GEO_COORDINATE,
+     .physical            = &GEO_LONGITUDE,
+     .pf                  = fieldPrintLatLon,
+     .baseFieldType       = "FIX64",
+     .v1Type              = "Lat/Lon"},
+
+    {.name                = "GEO_LAT_FIX64",
+     .description         = "Geographical latitude or longitude, high resolution",
+     .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
+                            "refer to an Earth position",
+     .resolution          = 1.0e-16,
+     .physical            = &GEO_LATITUDE,
      .pf                  = fieldPrintLatLon,
      .baseFieldType       = "FIX64",
      .v1Type              = "Lat/Lon"},

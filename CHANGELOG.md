@@ -25,6 +25,9 @@ will contain in the `name:` attribute a recursive expansion of the fields contai
 in that single NAME field. These subfields are the same fields as described in PGN
 60928 (Address Claim.)
 
+Furthermore, physical quantity GEOGRAPHICAL_COORDINATE has been split into 
+GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
+
 ### Fixed
 
 - Updated copyrights to 2025.
@@ -64,6 +67,7 @@ in that single NAME field. These subfields are the same fields as described in P
 - #502: Introduce ISO_NAME fieldtype.
 - #515: Rework Fusion PGNs.
 - #523: Add support for .EBL file reading to actisense-serial.
+- #530: Split GEOGRAPHICAL_COORDINATE into GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
 
 ### [5.1.3]
 
