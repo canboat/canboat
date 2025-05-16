@@ -34,6 +34,10 @@ limitations under the License.
 #define SPEED_LENGTH sizeof("-12345.999")
 #define OTHER_LENGTH (20)
 
+double  g_sog        = 0.0;
+double  g_cog        = 0.0;
+int64_t g_sog_cog_ts = 0;
+
 static void removeChar(char *str, char garbage)
 {
   char *src, *dst;
@@ -102,6 +106,9 @@ extern void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
   if (getJSONNumber(msg, "SOG", &sog, U_VELOCITY) && getJSONNumber(msg, "COG", &cog, U_ANGLE))
   {
     nmea0183CreateMessage(msg183, src, "VTG,%.1f,T,,M,%.2f,N,%.2f,K", cog, SPEED_M_S_TO_KNOTS(sog), SPEED_M_S_TO_KMH(sog));
+    g_sog        = sog;
+    g_cog        = cog;
+    g_sog_cog_ts = epoch();
   }
 }
 
@@ -173,6 +180,35 @@ Field Number:
 7. FAA mode indicator (NMEA 2.3 and later)
 8. Checksum
 
+RMC - Recommended Minimum Navigation Information
+
+This is one of the sentences commonly emitted by GPS units.
+        1         2 3       4 5        6  7   8   9    10 11
+        |         | |       | |        |  |   |   |    |  |
+ $--RMC,hhmmss.ss,A,ddmm.mm,a,dddmm.mm,a,x.x,x.x,xxxx,x.x,a*hh<CR><LF>
+NMEA 2.3:
+ $--RMC,hhmmss.ss,A,ddmm.mm,a,dddmm.mm,a,x.x,x.x,xxxx,x.x,a,m*hh<CR><LF>
+NMEA 4.1:
+ $--RMC,hhmmss.ss,A,ddmm.mm,a,dddmm.mm,a,x.x,x.x,xxxx,x.x,a,m,s*hh<CR><LF>
+Field Number:
+UTC of position fix, hh is hours, mm is minutes, ss.ss is seconds.
+Status, A = Valid, V = Warning
+Latitude, dd is degrees. mm.mm is minutes.
+N or S
+Longitude, ddd is degrees. mm.mm is minutes.
+E or W
+Speed over ground, knots
+Track made good, degrees true
+Date, ddmmyy
+Magnetic Variation, degrees
+E or W
+FAA mode indicator (NMEA 2.3 and later)
+Nav Status (NMEA 4.1 and later) A=autonomous, D=differential, E=Estimated, M=Manual input mode N=not valid, S=Simulator, V = Valid
+Checksum
+A status of V means the GPS has a valid fix that is below an internal quality threshold, e.g. because the dilution of precision is
+too high or an elevation mask test failed. The number of digits past the decimal point for Time, Latitude and Longitude is model
+dependent.
+
 {"timestamp":"2015-12-11T19:59:22.399Z","prio":2,"src":2,"dst":255,"pgn":129025,"description":"Position, Rapid
 Update","fields":{"Latitude":36.1571104,"Longitude":-5.3561568}}
 {"timestamp":"2015-12-11T20:01:19.010Z","prio":3,"src":2,"dst":255,"pgn":129029,"description":"GNSS Position
@@ -188,18 +224,49 @@ extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
 
   if (getJSONValue(msg, "Latitude", latString, sizeof(latString)) && getJSONValue(msg, "Longitude", lonString, sizeof(lonString)))
   {
-    char   timeString[OTHER_LENGTH] = "";
-    char   latHemisphere;
-    char   lonHemisphere;
-    double latitude  = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
-    double longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
+    char    dateString[OTHER_LENGTH] = "";
+    char    timeString[OTHER_LENGTH] = "";
+    char    sogString[OTHER_LENGTH]  = "";
+    char    cogString[OTHER_LENGTH]  = "";
+    char    latHemisphere;
+    char    lonHemisphere;
+    double  latitude  = convert2kCoordinateToNMEA0183(latString, "NS", &latHemisphere);
+    double  longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
+    int64_t date;
 
-    if (getJSONValue(msg, "Time", timeString, sizeof(timeString)))
+    if (getJSONLookupValue(msg, "Date", &date))
     {
-      removeChar(timeString, ':');
+      time_t     t  = date * 86400;
+      struct tm *tm = gmtime(&t);
+
+      snprintf(dateString, STRSIZE(dateString), "%02d%02d%02d", tm->tm_mday, tm->tm_mon + 1, tm->tm_year % 100);
     }
 
-    nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A,D", latitude, latHemisphere, longitude, lonHemisphere, timeString);
+    if (getJSONLookupName(msg, "Time", timeString, sizeof(timeString)))
+    {
+      logDebug("Got time string '%s'\n", timeString);
+      removeChar(timeString, ':');
+      logDebug("Cleaned time string '%s'\n", timeString);
+    }
+
+    if (g_sog_cog_ts >= epoch() - 1000)
+    {
+      snprintf(sogString, STRSIZE(sogString), "%.2f", SPEED_M_S_TO_KNOTS(g_sog));
+      snprintf(cogString, STRSIZE(cogString), "%.1f", g_cog);
+    }
+
+    nmea0183CreateMessage(msg183, src, "GLL,%.4f,%c,%.4f,%c,%s,A", latitude, latHemisphere, longitude, lonHemisphere, timeString);
+    nmea0183CreateMessage(msg183,
+                          src,
+                          "RMC,%s,A,%.4f,%c,%.4f,%c,%s,%s,%s,,,A",
+                          timeString,
+                          latitude,
+                          latHemisphere,
+                          longitude,
+                          lonHemisphere,
+                          sogString,
+                          cogString,
+                          dateString);
   }
 }
 
