@@ -35657,7 +35657,8 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"WIND_REFERENCE"
+            "LookupEnumeration":"WIND_REFERENCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,

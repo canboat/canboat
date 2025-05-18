@@ -5548,7 +5548,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"),
       SPEED_U16_CM_FIELD("Wind Speed"),
       ANGLE_U16_FIELD("Wind Angle", NULL),
-      LOOKUP_FIELD("Reference", 3, WIND_REFERENCE),
+      LOOKUP_PRIMARY_KEY_FIELD("Reference", 3, WIND_REFERENCE),
       RESERVED_FIELD(5 + BYTES(2)),
       END_OF_FIELDS},
      .priority = 2,
