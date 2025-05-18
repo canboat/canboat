@@ -2105,7 +2105,7 @@ VAL_ 2583299070 desiredMode 0 "1D" 1 "2D" 2 "3D" 3 "Auto" ;
 VAL_ 2583301886 differentialOperationMode 0 "Manual" 1 "Auto Power" 2 "Auto Range" ;
 VAL_ 2583301886 differentialSource 0 "Auto" 1 "Loran" 2 "MSK Beacon" 3 "FM Subcarrier" 4 "AIS" 5 "Ground based radio" 6 "SBAS" 7 "Satellite" ;
 VAL_ 2583301886 serialInterfaceDetectionMode 0 "Auto bit rate" 1 "Manual bit rate" ;
-VAL_ 2583301886 serialInterfaceBitRate 0 "25" 1 "50" 2 "100" 3 "200" 4 "300" 5 "600" 6 "1200" 7 "2400" 8 "4800" 9 "9600" 10 "19200" 11 "19200" 12 "38400" 13 "57600" ;
+VAL_ 2583301886 serialInterfaceBitRate 0 "25" 1 "50" 2 "100" 3 "200" 4 "300" 5 "600" 6 "1200" 7 "2400" 8 "4800" 9 "9600" 10 "19200" 11 "38400" 12 "57600" ;
 VAL_ 2583495422 reference 0 "True (ground referenced to North)" 1 "Magnetic (ground referenced to Magnetic North)" 2 "Apparent" 3 "True (boat referenced)" 4 "True (water referenced)" ;
 VAL_ 2583496702 humiditySource 0 "Inside" 1 "Outside" ;
 VAL_ 2583496702 temperatureSource 0 "Sea Temperature" 1 "Outside Temperature" 2 "Inside Temperature" 3 "Engine Room Temperature" 4 "Main Cabin Temperature" 5 "Live Well Temperature" 6 "Bait Well Temperature" 7 "Refrigeration Temperature" 8 "Heating System Temperature" 9 "Dew Point Temperature" 10 "Apparent Wind Chill Temperature" 11 "Theoretical Wind Chill Temperature" 12 "Heat Index Temperature" 13 "Freezer Temperature" 14 "Exhaust Gas Temperature" 15 "Shaft Seal Temperature" ;

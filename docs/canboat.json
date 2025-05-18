@@ -3141,9 +3141,8 @@
           {"Name":"4800", "Value":8},
           {"Name":"9600", "Value":9},
           {"Name":"19200", "Value":10},
-          {"Name":"19200", "Value":11},
-          {"Name":"38400", "Value":12},
-          {"Name":"57600", "Value":13}
+          {"Name":"38400", "Value":11},
+          {"Name":"57600", "Value":12}
         ]
       },
       {
@@ -3748,7 +3747,7 @@
         {"name": "Time format", "value": 5160, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_TIME_FORMAT"},
         {"name": "Time hour display", "value": 5161, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_HOUR_DISPLAY"},
         {"name": "Night mode", "value": 9983, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE"},
-        {"name": "True wind shift", "value": 11524, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
+        {"name": "True wind shift", "value": 11524, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "AP low boat speed", "value": 22296, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Alert bits", "value": 32789, "FieldType": "BITLOOKUP", "Bits": "16", "LookupBitEnumeration": "SIMNET_ALERT_BITFIELD"},
         {"name": "Night mode color", "value": 44079, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE_COLOR"},

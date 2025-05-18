@@ -88,6 +88,7 @@ Further possibly breaking changes in the definitions:
 - #518: PGN 127510 + 127511 revised field lengths and lookups
 - #525: Sync with latest publicly known sources
 - #529: FIELDTYPE_LOOKUP -> DYNAMIC_FIELD_LOOKUP, KEY_VALUE -> DYNAMIC_FIELD_VALUE
+- #533: Lookup SERIAL_BIT_RATE fixed, SIMNET_KEY_VALUE 11524 data type fixed
 
 ### Added
 
