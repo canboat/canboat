@@ -34949,6 +34949,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>WIND_REFERENCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
