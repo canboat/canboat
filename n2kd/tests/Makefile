@@ -16,7 +16,7 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 N2KD=$(TARGETDIR)/n2kd

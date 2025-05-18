@@ -15,8 +15,7 @@ SYSCONFDIR= /etc
 DATAROOTDIR ?= $(PREFIX)/share
 MANDIR= $(DATAROOTDIR)/man
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-OS=$(shell uname -o 2>&1)
+PLATFORM ?= $(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial replay
 
 BUILDDIR ?= ./rel/$(PLATFORM)
@@ -101,7 +100,11 @@ copyright:
 	rm -rf rel/
 	./util/update-copyright.sh
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile copyright
+aarch64-linux-musl:
+	./cross-compile.sh aarch64-linux-musl
+
+
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile copyright aarch64-linux-musl openwrt
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

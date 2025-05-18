@@ -102,6 +102,7 @@ Further possibly breaking changes in the definitions:
 - #523: Add support for .EBL file reading to actisense-serial.
 - #530: Split GEOGRAPHICAL_COORDINATE into GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
 - #532: Add RMC sentence to n2kd nmea0183 output
+- #535: Improve makefiles for cross compilation
 
 ### [5.1.3]
 
