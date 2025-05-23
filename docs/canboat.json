@@ -4481,7 +4481,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2097148,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":2,

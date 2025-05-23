@@ -3740,6 +3740,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>2097148</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>2</Order>
