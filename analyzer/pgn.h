@@ -1214,7 +1214,7 @@ Pgn pgnList[] = {
      60928,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {SIMPLE_DESC_FIELD("Unique Number", 21, "ISO Identity Number"),
+     {SIMPLE_DESC_PRIMARY_KEY_FIELD("Unique Number", 21, "ISO Identity Number"),
       MANUFACTURER_FIELD(NULL, NULL, false),
       SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
       SIMPLE_DESC_PRIMARY_KEY_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
