@@ -20875,7 +20875,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"DC_SOURCE"
+            "LookupEnumeration":"DC_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,

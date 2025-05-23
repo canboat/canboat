@@ -3467,7 +3467,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {UINT8_FIELD("SID"),
       INSTANCE_FIELD,
-      LOOKUP_FIELD("DC Type", BYTES(1), DC_SOURCE),
+      LOOKUP_PRIMARY_KEY_FIELD("DC Type", BYTES(1), DC_SOURCE),
       PERCENTAGE_U8_FIELD("State of Charge"),
       PERCENTAGE_U8_FIELD("State of Health"),
       DURATION_UFIX16_MIN_FIELD("Time Remaining", "Time remaining at current rate of discharge"),
