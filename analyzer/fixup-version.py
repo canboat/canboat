@@ -51,10 +51,10 @@ with open(filename,'r') as file:
 
 if not do_schema_version:
     filedata = re.sub('"version": "[^"]*"', '"version": "' + version + '"', filedata)
-    filedata = re.sub('CANboat version v[.0-9]*', 'CANboat version v' + version, filedata)
+    filedata = re.sub('CANboat version v[.0-9]*-*[^ ,]*', 'CANboat version v' + version, filedata)
     filedata = re.sub('^VERSION "[^"]*"', 'VERSION "' + version + '"', filedata)
 else:
-    filedata = re.sub('version="[.0-9]*"', 'version="' + version + '"', filedata)
+    filedata = re.sub('version="[^"]*"', 'version="' + version + '"', filedata)
 
 with open(filename,'w', newline=newline) as file:
     file.write(filedata)

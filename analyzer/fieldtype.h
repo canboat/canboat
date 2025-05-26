@@ -321,10 +321,18 @@ static const PhysicalQuantity MAGNETIC_FIELD = {.name         = "MAGNETIC_FIELD"
                                                 .abbreviation = "T",
                                                 .url          = "https://en.wikipedia.org/wiki/Magnetic_field"};
 
-static const PhysicalQuantity GEO_COORDINATE
-    = {.name         = "GEOGRAPHICAL_COORDINATE",
-       .description  = "Geographical coordinate",
-       .comment      = "Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
+static const PhysicalQuantity GEO_LATITUDE
+    = {.name        = "GEOGRAPHICAL_LATITUDE",
+       .description = "Geographical latitude",
+       .comment = "Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.",
+       .abbreviation = "deg",
+       .unit         = "degree",
+       .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
+
+static const PhysicalQuantity GEO_LONGITUDE
+    = {.name        = "GEOGRAPHICAL_LONGITUDE",
+       .description = "Geographical longitude",
+       .comment = "Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.",
        .abbreviation = "deg",
        .unit         = "degree",
        .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
@@ -387,7 +395,8 @@ const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                         &DATE,
                                                         &TIME,
                                                         &DURATION,
-                                                        &GEO_COORDINATE,
+                                                        &GEO_LATITUDE,
+                                                        &GEO_LONGITUDE,
                                                         &TEMPERATURE,
                                                         &PRESSURE,
                                                         &PRESSURE_RATE,
@@ -587,13 +596,27 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintBitLookup,
      .v1Type  = "Bitfield"},
 
-    {.name        = "FIELDTYPE_LOOKUP",
-     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field",
+    {.name        = "DYNAMIC_FIELD_KEY",
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable "
+                    "field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is "
+                    "no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
      .encodingDescription = "Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
      .comment = "These values have been determined by reverse engineering, given the known values it is anticipated that there are "
                 "unkown enumeration values and some known values have incorrect datatypes",
      .hasSign = False,
      .pf      = fieldPrintLookup},
+
+    {.name        = "DYNAMIC_FIELD_LENGTH",
+     .description = "Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
+     .hasSign     = False,
+     .pf          = fieldPrintNumber},
+
+    {.name        = "DYNAMIC_FIELD_VALUE",
+     .description = "Variable field whose type and length is dynamic",
+     .encodingDescription
+     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
+       "the preceding length field or the length determined by the lookup value.",
+     .pf = fieldPrintKeyValue},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -666,23 +689,54 @@ FieldType fieldTypeList[] = {
 
     {.name = "ANGLE_UFIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "UFIX16"},
 
-    {.name        = "GEO_FIX32",
-     .description = "Geographical latitude or longitude",
+    {.name        = "GEO_DELTA_FIX24",
+     .description = "Geographical latitude or longitude delta",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or about 1 "
+       "mm when we refer to an Earth position",
+     .resolution    = 1.0e-5 / 3600.,
+     .pf            = fieldPrintNumber,
+     .baseFieldType = "FIX24",
+     .v1Type        = "Lat/Lon"},
+
+    {.name        = "GEO_LAT_FIX32",
+     .description = "Geographical latitude",
      .encodingDescription
      = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
        "cm when we refer to an Earth position",
      .resolution    = 1.0e-7,
-     .physical      = &GEO_COORDINATE,
+     .physical      = &GEO_LATITUDE,
      .pf            = fieldPrintLatLon,
      .baseFieldType = "FIX32",
      .v1Type        = "Lat/Lon"},
 
-    {.name                = "GEO_FIX64",
+    {.name        = "GEO_LON_FIX32",
+     .description = "Geographical longitude",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
+       "cm when we refer to an Earth position",
+     .resolution    = 1.0e-7,
+     .physical      = &GEO_LONGITUDE,
+     .pf            = fieldPrintLatLon,
+     .baseFieldType = "FIX32",
+     .v1Type        = "Lat/Lon"},
+
+    {.name                = "GEO_LON_FIX64",
      .description         = "Geographical latitude or longitude, high resolution",
      .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
                             "refer to an Earth position",
      .resolution          = 1.0e-16,
-     .physical            = &GEO_COORDINATE,
+     .physical            = &GEO_LONGITUDE,
+     .pf                  = fieldPrintLatLon,
+     .baseFieldType       = "FIX64",
+     .v1Type              = "Lat/Lon"},
+
+    {.name                = "GEO_LAT_FIX64",
+     .description         = "Geographical latitude or longitude, high resolution",
+     .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
+                            "refer to an Earth position",
+     .resolution          = 1.0e-16,
+     .physical            = &GEO_LATITUDE,
      .pf                  = fieldPrintLatLon,
      .baseFieldType       = "FIX64",
      .v1Type              = "Lat/Lon"},
@@ -845,6 +899,20 @@ FieldType fieldTypeList[] = {
      .hasSign       = False,
      .baseFieldType = "DURATION"},
 
+    {.name          = "DURATION_UFIX8_MIN",
+     .description   = "Time duration, 8 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 8,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX4_MIN",
+     .description   = "Time duration, 4 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 4,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
     {.name          = "DURATION_UFIX16_MS",
      .description   = "Time duration, 16 bits with millisecond resolution",
      .resolution    = 0.001,
@@ -897,6 +965,13 @@ FieldType fieldTypeList[] = {
     {.name          = "DURATION_FIX32_MS",
      .description   = "Time duration",
      .resolution    = 0.001,
+     .size          = 32,
+     .hasSign       = True,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_FIX32_NANO_S",
+     .description   = "Time duration",
+     .resolution    = 1e-9,
      .size          = 32,
      .hasSign       = True,
      .baseFieldType = "DURATION"},
@@ -1183,8 +1258,8 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_RATE_FIX16_PA",
-     .description   = "Pressure change rate, 16 bit signed in pascal resolution.",
-     .resolution    = 1,
+     .description   = "Pressure change rate, 16 bit signed in decapascal resolution.",
+     .resolution    = 10,
      .physical      = &PRESSURE_RATE,
      .baseFieldType = "FIX16"},
 
@@ -1261,6 +1336,12 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.001,
      .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
+
+    {.name          = "DISTANCE_FIX24_MM",
+     .description   = "Distance, with millimeter resolution",
+     .resolution    = 0.001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX24"},
 
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
@@ -1357,9 +1438,8 @@ FieldType fieldTypeList[] = {
 
     {.name        = "STRING_LZ",
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
-     .encodingDescription
-     = "The length of the string is determined by a starting length byte. It also contains a terminating "
-       "zero byte. The length byte includes neither the zero byte or itself. The character encoding is believed to be UTF-8.",
+     .encodingDescription = "The length of the string is determined by a starting length byte. It also contains a terminating "
+                            "zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
      .comment
      = "This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of "
        "the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.",
@@ -1370,14 +1450,11 @@ FieldType fieldTypeList[] = {
     {.name = "STRING_LAU",
      .description
      = "A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
-     .encodingDescription
-     = "The length of the string is determined by a starting length byte. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
-     .comment
-     = "It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, "
-       "but this has not been seen in the wild yet.",
-     .variableSize = True,
-     .pf           = fieldPrintStringLAU,
-     .v1Type       = "ASCII or UNICODE string starting with length and control byte"},
+     .encodingDescription = "The length of the string is determined by a starting length byte. This count includes the length and "
+                            "type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
+     .variableSize        = True,
+     .pf                  = fieldPrintStringLAU,
+     .v1Type              = "ASCII or UTF16 string starting with length and control byte"},
 
     // Others
     {.name                = "BINARY",
@@ -1418,13 +1495,6 @@ FieldType fieldTypeList[] = {
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
      .variableSize = True,
      .pf           = fieldPrintVariable},
-
-    {.name        = "KEY_VALUE",
-     .description = "Key/value",
-     .encodingDescription
-     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
-       "the preceding length field.",
-     .pf = fieldPrintKeyValue},
 
     {.name                = "FIELD_INDEX",
      .description         = "Field Index",

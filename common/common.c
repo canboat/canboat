@@ -375,6 +375,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
     loc = strstr(loc, fieldName);
     if (!loc)
     {
+      logDebug("getJSONValue('%s','%s',...) => name not found\n", message, fieldName);
       return false;
     }
     if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
@@ -394,6 +395,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
   if (strncmp(loc, "null", 4) == 0)
   {
+    logDebug("getJSONValue('%s','%s',...) => value null\n", message, fieldName);
     return false;
   }
 
@@ -405,6 +407,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
       len--;
     }
     *value = 0;
+    logDebug("getJSONValue('%s','%s',...) => valid number\n", message, fieldName);
     return true;
   }
 
@@ -462,6 +465,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
     len--;
   }
   *value = 0;
+  logDebug("getJSONValue('%s','%s',...) => valid string\n", message, fieldName);
   return true;
 }
 
@@ -531,6 +535,7 @@ bool getJSONLookupName(const char *message, const char *fieldName, char *value, 
 
   if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)))
   {
+    logDebug("getJSONLookupList('%s','%s'...) = '%s'\n", message, fieldName, buffer);
     return getJSONValue(buffer, "name", value, len);
   }
   return false;

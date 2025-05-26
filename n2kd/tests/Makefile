@@ -16,7 +16,7 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 N2KD=$(TARGETDIR)/n2kd
@@ -25,10 +25,15 @@ TEMPDIR=/tmp
 all:	tests
 
 test1:
-	$(ANALYZER) < ais-lookup.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/ais-lookup.out 2> $(TEMPDIR)/ais-lookup.err
+	$(ANALYZER) -format fast < ais-lookup.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/ais-lookup.out 2> $(TEMPDIR)/ais-lookup.err
 	diff $(TEMPDIR)/ais-lookup.out ais-lookup.out
 	diff $(TEMPDIR)/ais-lookup.err ais-lookup.err
 
-tests:	test1
+test2:
+	$(ANALYZER) -format fast < nmea0183.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/nmea0183.out 2> $(TEMPDIR)/nmea0183.err
+	diff $(TEMPDIR)/nmea0183.out nmea0183.out
+	diff $(TEMPDIR)/nmea0183.err nmea0183.err
 
-.PHONY: test1 tests
+tests:	test1 test2
+
+.PHONY: test1 test2 tests

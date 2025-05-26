@@ -81,7 +81,7 @@ static void fillMaxRangeLookup(size_t n, const char *s)
 
 static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup)
 {
-  uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
+  uint64_t specialvalues = (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
   uint32_t highbit       = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
   double   r;
@@ -132,6 +132,18 @@ void fixupUnit(Field *f)
       f->rangeMax *= 3600.0;
       f->unit = "C";
     }
+    else if (strcmp(f->unit, "rad") == 0)
+    {
+      if (f->hasSign)
+      {
+        f->rangeMin = max(f->rangeMin, -3.1415926);
+        f->rangeMax = min(f->rangeMax, 3.1415926);
+      }
+      else
+      {
+        f->rangeMax = min(f->rangeMax, 2 * 3.1415926);
+      }
+    }
 
     // Many more to follow, but pgn.h is not yet complete enough...
   }
@@ -168,6 +180,7 @@ void fixupUnit(Field *f)
       f->resolution *= RadianToDegree;
       f->rangeMin *= RadianToDegree;
       f->rangeMax *= RadianToDegree;
+      f->rangeMax  = max(f->rangeMax, 360);
       f->unit      = "deg";
       f->precision = 1;
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
