@@ -3754,7 +3754,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>3</Order>
@@ -3769,7 +3768,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>6</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -3784,7 +3782,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>29</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -3839,7 +3836,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
@@ -4128,8 +4124,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>pid</Id>
-          <Name>PID</Name>
+          <Id>PID</Id>
+          <Name>Proprietary ID</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -6239,7 +6235,7 @@ limitations under the License.
       <PGN>65240</PGN>
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
-      <Explanation>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NMAE information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</Explanation>
+      <Explanation>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</Explanation>
       <Type>ISO</Type>
       <Complete>false</Complete>
       <Missing>
@@ -6273,7 +6269,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>3</Order>
@@ -6288,7 +6283,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>6</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -6303,7 +6297,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>29</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -6358,7 +6351,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>13</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
@@ -10689,7 +10681,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -10714,7 +10705,6 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -10844,7 +10834,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -10869,7 +10858,6 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -11006,7 +10994,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -11031,7 +11018,6 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -11168,7 +11154,6 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -11193,7 +11178,6 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -11834,6 +11818,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -11924,6 +11909,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -12027,6 +12013,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -12118,6 +12105,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -12234,6 +12222,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -12911,6 +12900,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13035,6 +13025,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13289,6 +13280,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13387,6 +13379,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13484,6 +13477,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13586,6 +13580,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13703,6 +13698,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13816,6 +13812,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -13930,6 +13927,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -14060,6 +14058,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -14174,6 +14173,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -14304,6 +14304,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -16510,7 +16511,6 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>3</Order>
@@ -16520,7 +16520,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -16530,7 +16529,6 @@ limitations under the License.
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -16540,7 +16538,6 @@ limitations under the License.
           <BitOffset>544</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -16550,7 +16547,6 @@ limitations under the License.
           <BitOffset>800</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_FIX</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>7</Order>
@@ -20432,6 +20428,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>DC_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -43308,7 +43305,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44204,6 +44200,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44363,6 +44360,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44474,6 +44472,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44585,6 +44584,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44696,6 +44696,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44780,6 +44781,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44878,6 +44880,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -44982,6 +44985,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45122,6 +45126,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45246,6 +45251,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45348,6 +45354,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45451,6 +45458,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45588,6 +45596,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45690,6 +45699,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45795,6 +45805,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -45900,6 +45911,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46015,6 +46027,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46104,6 +46117,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46206,6 +46220,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46308,6 +46323,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46435,6 +46451,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46563,6 +46580,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46690,6 +46708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46817,6 +46836,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -46957,6 +46977,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47059,6 +47080,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47148,6 +47170,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47292,6 +47315,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47403,6 +47427,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47514,6 +47539,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47625,6 +47651,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47736,6 +47763,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47847,6 +47875,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47949,6 +47978,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -50215,6 +50245,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -50532,6 +50563,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>61</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -51724,6 +51756,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>7</Order>
@@ -51870,6 +51903,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -52068,6 +52102,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>7</Order>
@@ -52209,6 +52244,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>

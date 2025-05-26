@@ -304,13 +304,13 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Manufacturer Code</td><td/><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Device Function</td><td>ISO Function</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Device Function</td><td>ISO Function</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       indirect lookup
                       <a href="#indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION</a>
@@ -324,7 +324,7 @@ limitations under the License.
                       <a href="#lookup-DEVICE_CLASS">DEVICE_CLASS</a></td><td/></tr><tr><td>8</td><td>System Instance</td><td>ISO Device Class Instance</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Industry Group</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Industry Group</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Arbitrary address capable</td><td>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</td><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -390,7 +390,7 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>PID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Variant</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -1118,7 +1118,7 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65240">0xFED8:
             PGN 65240
-            - ISO Commanded Address</h3><p>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NMAE information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</p><p>
+            - ISO Commanded Address</h3><p>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -1131,13 +1131,13 @@ limitations under the License.
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Manufacturer Code</td><td/><td>Manufacturer Code<div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>3</td><td>Device Instance Lower</td><td>ISO ECU Instance</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Device Instance Upper</td><td>ISO Function Instance</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Device Function</td><td>ISO Function</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Device Function</td><td>ISO Function</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       indirect lookup
                       <a href="#indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION</a>
@@ -1151,7 +1151,7 @@ limitations under the License.
                       <a href="#lookup-DEVICE_CLASS">DEVICE_CLASS</a></td><td/></tr><tr><td>8</td><td>System Instance</td><td>ISO Device Class Instance</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Industry Code</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Industry Code</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
@@ -2491,11 +2491,11 @@ limitations under the License.
                   <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2552,11 +2552,11 @@ limitations under the License.
                   <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2615,11 +2615,11 @@ limitations under the License.
                   <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2678,11 +2678,11 @@ limitations under the License.
                   <a href="#ft-PGN">PGN</a></td><td/></tr><tr><td>3</td><td>Manufacturer Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td>Only in PGN when Commanded PGN is proprietary</td><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Industry Code</td><td>Only in PGN when Commanded PGN is proprietary</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>6</td><td>Unique ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Number of Selection Pairs</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2861,7 +2861,7 @@ limitations under the License.
                   Request Status</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -2890,7 +2890,7 @@ limitations under the License.
                   Source</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2922,7 +2922,7 @@ limitations under the License.
                   </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -2951,7 +2951,7 @@ limitations under the License.
                   Set Zone Volume</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -2986,7 +2986,7 @@ limitations under the License.
                   Set All Volumes</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -3179,7 +3179,7 @@ limitations under the License.
                   Attitude Offsets</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Azimuth offset</td><td>Positive: sensor rotated to port, negative: sensor rotated to starboard</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Azimuth offset</td><td>Positive: sensor rotated to port, negative: sensor rotated to starboard</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Pitch offset</td><td>Positive: sensor tilted to bow, negative: sensor tilted to stern</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
@@ -3218,7 +3218,7 @@ limitations under the License.
                   Calibrate Compass</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Calibrate Function</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Calibrate Function</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-AIRMAR_CALIBRATE_FUNCTION">AIRMAR_CALIBRATE_FUNCTION</a></td><td/></tr><tr><td>6</td><td>Calibration Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -3284,7 +3284,7 @@ limitations under the License.
                   True Wind Options</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>COG substitution for HDG</td><td>Allow use of COG when HDG not available?</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>COG substitution for HDG</td><td>Allow use of COG when HDG not available?</td><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>22 bits
@@ -3318,7 +3318,7 @@ limitations under the License.
                   Simulate Mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Simulate Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Simulate Mode</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-OFF_ON">OFF_ON</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>22 bits
@@ -3352,7 +3352,7 @@ limitations under the License.
                   Calibrate Depth</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Speed of Sound Mode</td><td>actual allowed range is 1350.0 to 1650.0 m/s</td><td>0.1 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Speed of Sound Mode</td><td>actual allowed range is 1350.0 to 1650.0 m/s</td><td>0.1 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
@@ -3394,7 +3394,7 @@ limitations under the License.
                   Calibrate Speed</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Number of pairs of data points</td><td>actual range is 0 to 25. 254=restore default speed curve</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Number of pairs of data points</td><td>actual range is 0 to 25. 254=restore default speed curve</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>Input frequency</td><td/><td>0.1 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
@@ -3433,7 +3433,7 @@ limitations under the License.
                   Calibrate Temperature</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Temperature instance</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Temperature instance</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-AIRMAR_TEMPERATURE_INSTANCE">AIRMAR_TEMPERATURE_INSTANCE</a></td><td>true</td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>6 bits
@@ -3470,7 +3470,7 @@ limitations under the License.
                   Speed Filter</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Filter type</td><td>0:
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Filter type</td><td>0:
                   No filter</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
@@ -3508,7 +3508,7 @@ limitations under the License.
                   Speed Filter</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Filter type</td><td>1:
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Filter type</td><td>1:
                   IIR filter</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
@@ -3549,7 +3549,7 @@ limitations under the License.
                   Temperature Filter</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Filter type</td><td>0:
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Filter type</td><td>0:
                   No filter</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
@@ -3587,7 +3587,7 @@ limitations under the License.
                   Temperature Filter</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Filter type</td><td>1:
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Filter type</td><td>1:
                   IIR filter</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
@@ -3628,7 +3628,7 @@ limitations under the License.
                   NMEA 2000 options</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td/></tr><tr><td>5</td><td>Transmission Interval</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Transmission Interval</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-AIRMAR_TRANSMISSION_INTERVAL">AIRMAR_TRANSMISSION_INTERVAL</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>22 bits
@@ -4232,11 +4232,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Product Code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Model ID</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>4</td><td>Software Version Code</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>5</td><td>Model Version</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>6</td><td>Model Serial Code</td><td/><td> </td><td>256 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td>true</td></tr><tr><td>7</td><td>Certification Level</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Model ID</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>4</td><td>Software Version Code</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>5</td><td>Model Version</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>Model Serial Code</td><td/><td> </td><td>256 bits
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>7</td><td>Certification Level</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-CERTIFICATION_LEVEL">CERTIFICATION_LEVEL</a></td><td/></tr><tr><td>8</td><td>Load Equivalency</td><td>Garantueed maximum power consumption, 50 mA per LEN</td><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -5336,7 +5336,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>DC Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-DC_SOURCE">DC_SOURCE</a></td><td/></tr><tr><td>4</td><td>State of Charge</td><td/><td>%<div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-DC_SOURCE">DC_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>State of Charge</td><td/><td>%<div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>State of Health</td><td/><td>%<div class="xs">0 .. 252</div></td><td>8 bits
@@ -11963,7 +11963,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Product Code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Model</td><td/><td> </td><td>256 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -12244,7 +12244,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Track Info</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Flags</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -12291,7 +12291,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Track Title</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12328,7 +12328,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Track Artist</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12365,7 +12365,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Track Album</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12402,7 +12402,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Unit Name</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Name</td><td/><td> </td><td>
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Name</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
@@ -12433,7 +12433,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Zone Name</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Name</td><td/><td> </td><td>
@@ -12466,7 +12466,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Track Progress</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Progress</td><td/><td>0.001 <a href="#pq-DURATION">s</a><div class="xs">0 .. 16777.212</div></td><td>24 bits
@@ -12501,7 +12501,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Tuner</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_RADIO_SOURCE">FUSION_RADIO_SOURCE</a></td><td>true</td></tr><tr><td>6</td><td>Scanning</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12544,7 +12544,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Tuner</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12583,7 +12583,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Squelch</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Squelch</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12617,7 +12617,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Scan Mode</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Scan</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12652,7 +12652,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Menu Item</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Item Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12694,7 +12694,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Aux Gain</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12728,7 +12728,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Setting</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>ID</td><td>9:
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>ID</td><td>9:
                   USB repeat</td><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                       lookup
@@ -12763,7 +12763,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Setting</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>ID</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>ID</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                       lookup
                       <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12805,7 +12805,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Settings</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Count</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Count</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>ID</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
@@ -12842,7 +12842,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Mute</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Mute</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Mute</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -12873,7 +12873,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Balance</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>VALUE</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12907,7 +12907,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Low Pass Filter</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Filter</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12941,7 +12941,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Sublevels</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -12981,7 +12981,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Tone</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
@@ -13021,7 +13021,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Volume Limits</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1 Volume Limit</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1 Volume Limit</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2 Volume Limit</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -13061,7 +13061,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Volume</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -13101,7 +13101,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Capabilities</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13144,7 +13144,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Line Level Control</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Control</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -13178,7 +13178,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Power</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_POWER_STATE">FUSION_POWER_STATE</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
@@ -13209,7 +13209,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Sirius</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Com State</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
@@ -13253,7 +13253,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Channel</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel Number</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13290,7 +13290,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Title</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13327,7 +13327,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Artist</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13364,7 +13364,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Genre</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13401,7 +13401,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Category</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Channel</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -13437,7 +13437,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXm Signal</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Signal</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -13472,7 +13472,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   SiriusXM Presets</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td/></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Count</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -14181,7 +14181,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Msg 24 Part A</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>6</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -14269,7 +14269,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Msg 24 Part B</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>6</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -14609,7 +14609,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td/></tr><tr><td>7</td><td>AP status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>AP status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS</a></td><td/></tr><tr><td>8</td><td>AP Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -14650,7 +14650,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td/></tr><tr><td>5</td><td>Unused A</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Unused A</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Controlling Device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -14705,7 +14705,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Alarm</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Alarm</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
@@ -14746,7 +14746,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Address</td><td>NMEA 2000 address of controlling device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
