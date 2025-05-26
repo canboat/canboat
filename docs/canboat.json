@@ -4495,8 +4495,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":3,
@@ -4510,8 +4509,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":4,
@@ -4525,8 +4523,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -4580,8 +4577,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":9,
@@ -4858,8 +4854,8 @@
           },
           {
             "Order":4,
-            "Id":"pid",
-            "Name":"PID",
+            "Id":"PID",
+            "Name":"Proprietary ID",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -6926,7 +6922,7 @@
         "PGN":65240,
         "Id":"isoCommandedAddress",
         "Description":"ISO Commanded Address",
-        "Explanation":"ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NMAE information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.",
+        "Explanation":"ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.",
         "Type":"ISO",
         "Complete":false,
         "Missing":["Interval"
@@ -6958,8 +6954,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":3,
@@ -6973,8 +6968,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":4,
@@ -6988,8 +6982,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -7043,8 +7036,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":9,
@@ -11259,8 +11251,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":4,
@@ -11284,8 +11275,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":6,
@@ -11414,8 +11404,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":4,
@@ -11439,8 +11428,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":6,
@@ -11576,8 +11564,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":4,
@@ -11601,8 +11588,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":6,
@@ -11738,8 +11724,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":4,
@@ -11763,8 +11748,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":6,
@@ -12384,7 +12368,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -12470,7 +12455,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -12569,7 +12555,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -12656,7 +12643,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -12768,7 +12756,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -13429,7 +13418,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -13552,7 +13542,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -13803,7 +13794,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -13901,7 +13893,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -13998,7 +13991,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14100,7 +14094,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14217,7 +14212,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14330,7 +14326,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14444,7 +14441,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14574,7 +14572,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14688,7 +14687,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -14818,7 +14818,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"AIRMAR_COMMAND"
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -16990,8 +16991,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":3,
@@ -17000,8 +17000,7 @@
             "BitLength":256,
             "BitOffset":32,
             "BitStart":0,
-            "FieldType":"STRING_FIX",
-            "PartOfPrimaryKey":true
+            "FieldType":"STRING_FIX"
           },
           {
             "Order":4,
@@ -17010,8 +17009,7 @@
             "BitLength":256,
             "BitOffset":288,
             "BitStart":0,
-            "FieldType":"STRING_FIX",
-            "PartOfPrimaryKey":true
+            "FieldType":"STRING_FIX"
           },
           {
             "Order":5,
@@ -17020,8 +17018,7 @@
             "BitLength":256,
             "BitOffset":544,
             "BitStart":0,
-            "FieldType":"STRING_FIX",
-            "PartOfPrimaryKey":true
+            "FieldType":"STRING_FIX"
           },
           {
             "Order":6,
@@ -17030,8 +17027,7 @@
             "BitLength":256,
             "BitOffset":800,
             "BitStart":0,
-            "FieldType":"STRING_FIX",
-            "PartOfPrimaryKey":true
+            "FieldType":"STRING_FIX"
           },
           {
             "Order":7,
@@ -20875,7 +20871,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"DC_SOURCE"
+            "LookupEnumeration":"DC_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -43464,8 +43461,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
-            "PartOfPrimaryKey":true
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -44342,7 +44338,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -44500,7 +44497,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -44610,7 +44608,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -44720,7 +44719,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -44830,7 +44830,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -44913,7 +44914,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45010,7 +45012,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45113,7 +45116,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45252,7 +45256,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45375,7 +45380,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45476,7 +45482,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45578,7 +45585,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45714,7 +45722,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45815,7 +45824,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -45919,7 +45929,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46023,7 +46034,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46137,7 +46149,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46225,7 +46238,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46326,7 +46340,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46427,7 +46442,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46553,7 +46569,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46680,7 +46697,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46806,7 +46824,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -46932,7 +46951,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47071,7 +47091,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47172,7 +47193,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47260,7 +47282,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47403,7 +47426,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47513,7 +47537,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47623,7 +47648,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47733,7 +47759,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47843,7 +47870,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -47953,7 +47981,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -48054,7 +48083,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID"
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -50235,7 +50265,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -50544,7 +50575,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -51700,7 +51732,8 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":7,
@@ -51842,7 +51875,8 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -52037,7 +52071,8 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":7,
@@ -52174,7 +52209,8 @@
             "RangeMin":0,
             "RangeMax":255,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_EVENT_COMMAND"
+            "LookupEnumeration":"SIMNET_EVENT_COMMAND",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
