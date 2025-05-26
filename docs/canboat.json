@@ -38112,8 +38112,8 @@
         "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
         ],
         "FieldCount":8,
-        "MinLength":3,
-        "RepeatingFieldSet1Size":5,
+        "MinLength":2,
+        "RepeatingFieldSet1Size":6,
         "RepeatingFieldSet1StartField":3,
         "RepeatingFieldSet1CountField":2,
         "Fields":[

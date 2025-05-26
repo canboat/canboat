@@ -5911,7 +5911,7 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("Color Temperature", 16),
       SIMPLE_FIELD("Intensity", 8),
       END_OF_FIELDS},
-     .repeatingCount1 = 5,
+     .repeatingCount1 = 6,
      .repeatingStart1 = 3,
      .repeatingField1 = 2,
      .explanation     = "Sequences could be 1 to (PGN Lighting - System Configuration) Max Color Sequence Color Count colors."}

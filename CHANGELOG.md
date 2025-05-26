@@ -89,6 +89,7 @@ Further possibly breaking changes in the definitions:
 - #525: Sync with latest publicly known sources
 - #529: FIELDTYPE_LOOKUP -> DYNAMIC_FIELD_LOOKUP, KEY_VALUE -> DYNAMIC_FIELD_VALUE
 - #533: Lookup SERIAL_BIT_RATE fixed, SIMNET_KEY_VALUE 11524 data type fixed
+- #539: PGN 130565 field 8 repeats as well
 
 ### Added
 
