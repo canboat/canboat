@@ -687,6 +687,13 @@ FieldType fieldTypeList[] = {
      .physical      = &ANGLE,
      .baseFieldType = "FIX16"},
 
+    {.name          = "ANGLE_FIX16_CDEG",
+     .description   = "Angle",
+     .resolution    = 0.01,
+     .unit          = "deg",
+     .physical      = &ANGLE,
+     .baseFieldType = "FIX16"},
+
     {.name = "ANGLE_UFIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "UFIX16"},
 
     {.name        = "GEO_DELTA_FIX24",

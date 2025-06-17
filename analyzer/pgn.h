@@ -864,6 +864,9 @@ typedef struct
 #define ANGLE_FIX16_DDEG_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.1, .hasSign = true, .unit = "deg", .fieldType = "ANGLE_FIX16_DDEG"}
 
+#define ANGLE_FIX16_CDEG_FIELD(nam, desc) \
+  {.name = nam, .size = BYTES(2), .resolution = 0.01, .hasSign = true, .unit = "deg", .fieldType = "ANGLE_FIX16_CDEG"}
+
 #define FLOAT_FIELD(nam, unt, desc) \
   {.name        = nam,              \
    .size        = BYTES(4),         \
@@ -1914,6 +1917,7 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    /*
     {"Seatalk: Pilot Locked Heading",
      65360,
      PACKET_COMPLETE,
@@ -1927,6 +1931,20 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    */
+    {"SeaStar: Helm Command",
+     65360,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {MANUFACTURER_FIELDS,
+      LOOKUP_FIELD("Command", 4, SEASTAR_HELM_COMMAND),
+      BINARY_FIELD("Resistance", 12, "Helm resistance setting"),
+      ANGLE_FIX16_DDEG_FIELD("Port brake", "range -3060 to 3060, 0x7FFE = Error, 0x7FFF = NA"),
+      ANGLE_FIX16_DDEG_FIELD("Stbd brake", "range -3060 to 3060, 0x7FFE = Error, 0x7FFF = NA"),
+      END_OF_FIELDS},
+     .priority = 2}
+
+    ,
     {"Seatalk: Silence Alarm",
      65361,
      PACKET_COMPLETE,
@@ -1936,6 +1954,45 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Alarm Group", BYTES(1), SEATALK_ALARM_GROUP),
       RESERVED_FIELD(32),
       END_OF_FIELDS}}
+
+    ,
+    {"SeaStar: Helm Feedback",
+     65365,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {MANUFACTURER_FIELDS,
+      BINARY_FIELD("Source instance", 4, "Source instance (Helm)"),
+      RESERVED_FIELD(4),
+      ANGLE_FIX16_CDEG_FIELD("Steering movement", "range -180 to 180, 0x7FFE = Error, 0x7FFF = NA"),
+      ANGLE_FIX16_DDEG_FIELD("Position", "range -1800 to 1800, 0x7FFE = Error, 0x7FFF = NA"),
+      LOOKUP_FIELD("Danger fault", 1, YES_NO),
+      LOOKUP_FIELD("Warning fault", 1, YES_NO),
+      RESERVED_FIELD(6),
+      END_OF_FIELDS},
+     .priority = 2}
+
+    ,
+    {"SeaStar: Absolute Angle",
+     65366,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {MANUFACTURER_FIELDS,
+      BINARY_FIELD("Instance", 4, "Source instance (Helm)"),
+      LOOKUP_FIELD("Input A", 1, YES_NO),
+      LOOKUP_FIELD("Input B", 1, YES_NO),
+      RESERVED_FIELD(2),
+      ANGLE_FIX16_CDEG_FIELD("Angle 1", "range -90 to 90, 0x7FFE = Error, 0x7FFF = NA"),
+      ANGLE_FIX16_CDEG_FIELD("Angle 2", "range -90 to 90, 0x7FFE = Error, 0x7FFF = NA"),
+      LOOKUP_FIELD("Sync flag", 1, YES_NO),
+      LOOKUP_FIELD("Communication fault", 1, YES_NO),
+      LOOKUP_FIELD("Hardware fault", 1, YES_NO),
+      LOOKUP_FIELD("Sensor fault", 1, YES_NO),
+      LOOKUP_FIELD("Voltage fault", 1, YES_NO),
+      LOOKUP_FIELD("Single network flag", 1, YES_NO),
+      LOOKUP_FIELD("Single power flag", 1, YES_NO),
+      RESERVED_FIELD(1),
+      END_OF_FIELDS},
+     .priority = 2}
 
     ,
     {"Seatalk: Keypad Message",
@@ -2035,6 +2092,22 @@ Pgn pgnList[] = {
      .interval    = 1000,
      .explanation = "Seen as sent by AC-42 only so far.",
      .priority    = 6}
+
+    ,
+    {"SeaStar: Helm Configuration",
+     65465,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {MANUFACTURER_FIELDS,
+      LOOKUP_FIELD("Sync request", 1, YES_NO),
+      SPARE_FIELD(1),
+      LOOKUP_FIELD("Reinstance request", 1, YES_NO),
+      RESERVED_FIELD(5),
+      UNSIGNED_ALMANAC_PARAMETER_FIELD("Turns", BYTES(1), 0.1, "2rad", "Number of helm turns, 2.0 to 8.5, 0xFE = Error, 0xFF = NA"),
+      UNSIGNED_ALMANAC_PARAMETER_FIELD("Resistance", BYTES(1), 1, "%", "Helm resistance setting, 0 to 100, 0xFE = Error, 0xFF = NA"),
+      RESERVED_FIELD(24),
+      END_OF_FIELDS},
+     .priority = 6}
 
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
