@@ -1096,7 +1096,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   {
     if (pgn->camelDescription)
     {
-      mprintf("\"%s\":", pgn->camelDescription);
+      mprintf("{\"%s\":", pgn->camelDescription);
     }
     mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"",
             msg->timestamp,
@@ -1114,7 +1114,14 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       }
       mprintf("\"");
     }
-    strcpy(closingBraces, "}");
+    if (pgn->camelDescription)
+    {
+      strcpy(closingBraces, "}}");
+    } 
+    else 
+    {
+      strcpy(closingBraces, "}");
+    }
     sep = ",\"fields\":{";
   }
   else
