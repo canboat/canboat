@@ -1,6 +1,6 @@
 {
-  "name": "@canboat/pgns",
-  "version": "6.0.0-alpha",
+  "name": "@tamago89/pgns",
+  "version": "6.0.0-fork.1",
   "description": "Json description of canboat supported pgns",
   "main": "pgns.json",
   "scripts": {
@@ -21,11 +21,15 @@
     {
       "name": "Jouni Hartikainen",
       "email": "jouni.hartikainen@iki.fi"
+    },
+    {
+      "name": "Andrea Tamantini",
+      "email": "ing.tamantini@gmail.com"
     }
   ],
   "license": "Apache-2.0",
   "repository": {
     "type": "git",
-    "url": "https://github.com/canboat/canboat.git"
+    "url": "https://github.com/TamaGO89/cmc-canboat.git"
   }
 }

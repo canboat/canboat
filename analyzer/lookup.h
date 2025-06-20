@@ -2871,6 +2871,12 @@ LOOKUP(ZONE_SIZE, 4, "5 nm")
 LOOKUP(ZONE_SIZE, 5, "6 nm")
 LOOKUP_END
 
+LOOKUP_TYPE(SEASTAR_HELM_COMMAND, 4)
+LOOKUP(SEASTAR_HELM_COMMAND, 0, "No command")
+LOOKUP(SEASTAR_HELM_COMMAND, 1, "Power down")
+LOOKUP(SEASTAR_HELM_COMMAND, 2, "Reset")
+LOOKUP_END
+
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE
 #undef LOOKUP_TYPE_TRIPLET
