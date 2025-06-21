@@ -4,8 +4,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"6.0.0-alpha",
-    "Copyright":"CANboat version v6.0.0-alpha\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"6.0.0",
+    "Copyright":"CANboat version v6.0.0\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
       {
         "Name":"ELECTRICAL_CURRENT",
@@ -35787,7 +35787,8 @@
             "RangeMin":0,
             "RangeMax":61,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"TEMPERATURE_SOURCE"
+            "LookupEnumeration":"TEMPERATURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":3,
@@ -35899,7 +35900,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"TEMPERATURE_SOURCE"
+            "LookupEnumeration":"TEMPERATURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -35993,7 +35995,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"HUMIDITY_SOURCE"
+            "LookupEnumeration":"HUMIDITY_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -36085,7 +36088,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"PRESSURE_SOURCE"
+            "LookupEnumeration":"PRESSURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -36164,7 +36168,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"PRESSURE_SOURCE"
+            "LookupEnumeration":"PRESSURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -36244,7 +36249,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"TEMPERATURE_SOURCE"
+            "LookupEnumeration":"TEMPERATURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -36425,7 +36431,8 @@
             "BitLengthVariable":true,
             "BitOffset":152,
             "BitStart":0,
-            "FieldType":"STRING_LAU"
+            "FieldType":"STRING_LAU",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":11,
@@ -36759,7 +36766,8 @@
             "BitLengthVariable":true,
             "BitOffset":200,
             "BitStart":0,
-            "FieldType":"STRING_LAU"
+            "FieldType":"STRING_LAU",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":13,
@@ -36973,7 +36981,8 @@
             "BitLengthVariable":true,
             "BitOffset":208,
             "BitStart":0,
-            "FieldType":"STRING_LAU"
+            "FieldType":"STRING_LAU",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":15,
@@ -37247,7 +37256,8 @@
             "BitLengthVariable":true,
             "BitOffset":272,
             "BitStart":0,
-            "FieldType":"STRING_LAU"
+            "FieldType":"STRING_LAU",
+            "PartOfPrimaryKey":true
           }
         ]
       },
