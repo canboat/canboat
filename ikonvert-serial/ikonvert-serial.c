@@ -209,7 +209,7 @@ int main(int argc, char **argv)
             "Options:\n"
             "  -w                    writeonly mode, data from device is not sent to stdout\n"
             "  -r                    readonly mode, data from stdin is not sent to device\n"
-            "  -p                    passthru mode, data from stdin is sent to stdout\n"
+            "  -p                    passthru mode, data from stdin is also sent to stdout\n"
             "  -v                    verbose\n"
             "  -d                    debug\n"
             "  -rx <list>            Set PGN receive list\n"
