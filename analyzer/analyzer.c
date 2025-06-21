@@ -111,7 +111,8 @@ static bool            printField(const Field   *field,
                                   const uint8_t *data,
                                   size_t         dataLen,
                                   size_t         startBit,
-                                  size_t        *bits);
+                                  size_t        *bits,
+                                  bool           allowKey);
 static void            printCanRaw(const RawMessage *msg);
 static void            showBuffers(void);
 static unsigned int    getMessageByteCount(const char *const msg);
@@ -913,7 +914,8 @@ static bool printField(const Field   *field,
                        const uint8_t *data,
                        size_t         dataLen,
                        size_t         startBit,
-                       size_t        *bits)
+                       size_t        *bits,
+                       bool           allowKey)
 {
   size_t bytes;
   double resolution;
@@ -1016,15 +1018,29 @@ static bool printField(const Field   *field,
         logError("PGN %u: field \"%s\" print routine did not print anything\n", field->pgn->pgn, field->name);
         r = false;
       }
-      else if (showBytes && field->ft->pf != fieldPrintVariable)
+      else if (field->ft->pf != fieldPrintVariable)
       {
-        location3 = mlocation();
-        if (mchr(location3 - 1) == '}')
+        location3     = mlocation();
+        bool endQuote = mchr(location3 - 1) == '}';
+        if (endQuote)
         {
           mset(location3 - 1);
+          location3--;
         }
-        showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
-        if (showJson)
+        if (showBytes)
+        {
+          showBytesOrBits(data + (startBit >> 3), startBit & 7, *bits);
+          if (showJson)
+          {
+            endQuote = true;
+          }
+        }
+        if (showJsonValue && field->partOfPrimaryKey && allowKey)
+        {
+          mprintf(",\"key\":true");
+          endQuote = true;
+        }
+        if (endQuote)
         {
           mprintf("}");
         }
@@ -1266,7 +1282,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 
-    if (!printField(field, fieldName, data, length, startBit, &bits))
+    if (!printField(field, fieldName, data, length, startBit, &bits, true))
     {
       r = false;
       break;
@@ -1292,7 +1308,7 @@ extern bool fieldPrintVariable(const Field   *field,
   if (refField)
   {
     logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPgn, refField->name);
-    r     = printField(refField, fieldName, data, dataLen, startBit, bits);
+    r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
     *bits = (*bits + 7) & ~0x07; // round to bytes
     return r;
   }
