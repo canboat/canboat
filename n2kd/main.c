@@ -1390,9 +1390,10 @@ static void verifyStdin(void)
       line_end                        = strchr(stream[i].buffer, '\n');
       if (line_end != NULL)
       {
-        if (strstr(stream[i].buffer, "\"version\":") == NULL || strstr(stream[i].buffer, "\"showLookupValues\":true") == NULL)
+        if (strstr(stream[i].buffer, "\"version\":") == NULL || strstr(stream[i].buffer, "\"showLookupValues\":true") == NULL
+            || strstr(stream[i].buffer, "\"showUniqueId\":true") == NULL)
         {
-          logAbort("Standard input must be piped from `analyzer` in `-json -nv` mode\n");
+          logAbort("Standard input must be piped from `analyzer` in `-json -nv -camel` mode\n");
         }
         remain = stream[i].buffer + stream[i].len - (line_end + 1);
         memcpy(stream[i].buffer, line_end + 1, remain);

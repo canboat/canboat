@@ -25,12 +25,12 @@ TEMPDIR=/tmp
 all:	tests
 
 test1:
-	$(ANALYZER) -format fast < ais-lookup.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/ais-lookup.out 2> $(TEMPDIR)/ais-lookup.err
+	$(ANALYZER) -format fast < ais-lookup.in -json -nv -empty -camel -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/ais-lookup.out 2> $(TEMPDIR)/ais-lookup.err
 	diff $(TEMPDIR)/ais-lookup.out ais-lookup.out
 	diff $(TEMPDIR)/ais-lookup.err ais-lookup.err
 
 test2:
-	$(ANALYZER) -format fast < nmea0183.in -json -nv -empty -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/nmea0183.out 2> $(TEMPDIR)/nmea0183.err
+	$(ANALYZER) -format fast < nmea0183.in -json -nv -empty -camel -fixtime test-n2kd | $(N2KD) --nmea0183 -fixtime test-n2kd > $(TEMPDIR)/nmea0183.out 2> $(TEMPDIR)/nmea0183.err
 	diff $(TEMPDIR)/nmea0183.out nmea0183.out
 	diff $(TEMPDIR)/nmea0183.err nmea0183.err
 
