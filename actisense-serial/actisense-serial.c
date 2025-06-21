@@ -855,6 +855,7 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, const un
   dst  = msg[4];
   if (command == N2K_MSG_SEND)
   {
+    src = 0;
     len = msg[5];
   }
   else
