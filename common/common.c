@@ -400,7 +400,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
   if (*loc == '{')
   {
-    /* It is a nested value like "field" : {
+    /* It is a nested value like "field" : {"value":0,"name":"Under way using engine"} */
   }
 
   if (strncmp(loc, "null", 4) == 0)
@@ -423,545 +423,545 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
 
   /* field is string */
 
-    loc++;
+  loc++;
 
-    while (len > 1)
-    {
-      if (*loc == '\\')
-      {
-        loc++;
-        switch (*loc)
-        {
-          case 'b':
-            *value++ = '\b';
-            loc++;
-            break;
-          case 'f':
-            *value++ = '\f';
-            loc++;
-            break;
-          case 'n':
-            *value++ = '\n';
-            loc++;
-            break;
-          case 'r':
-            *value++ = '\r';
-            loc++;
-            break;
-          case 't':
-            *value++ = '\t';
-            loc++;
-            break;
-          case 'u': {
-            unsigned int n;
-            sscanf(loc, "%4x", &n);
-            loc += 4;
-            *value++ = n & 255; // We're single byte, forget about the high byte...
-          }
-          break;
-
-          default:
-            *value++ = *loc++;
-        }
-      }
-      else if (*loc == '"')
-      {
-        break;
-      }
-      else
-      {
-        *value++ = *loc++;
-      }
-      len--;
-    }
-    *value = 0;
-    logDebug("getJSONValue('%s','%s',...) => valid string\n", message, fieldName);
-    return true;
-  }
-
-  /*
-   * Retrieve a lookup list in a JSON styled message.
-   * Example: {"value":0,"name":"Under way using engine"}
-   */
-  static bool getJSONLookupList(const char *message, const char *fieldName, char *value, size_t len)
+  while (len > 1)
   {
-    const char *loc      = message + 1;
-    size_t      fieldLen = strlen(fieldName);
-    const char *end;
-
-    for (;;)
-    {
-      loc = strstr(loc, fieldName);
-      if (!loc)
-      {
-        return false;
-      }
-      if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
-      {
-        break;
-      }
-      loc += fieldLen;
-    }
-
-    /* field has been found */
-    loc += fieldLen + 2;
-
-    while (isspace((unsigned char) *loc))
+    if (*loc == '\\')
     {
       loc++;
-    }
+      switch (*loc)
+      {
+        case 'b':
+          *value++ = '\b';
+          loc++;
+          break;
+        case 'f':
+          *value++ = '\f';
+          loc++;
+          break;
+        case 'n':
+          *value++ = '\n';
+          loc++;
+          break;
+        case 'r':
+          *value++ = '\r';
+          loc++;
+          break;
+        case 't':
+          *value++ = '\t';
+          loc++;
+          break;
+        case 'u': {
+          unsigned int n;
+          sscanf(loc, "%4x", &n);
+          loc += 4;
+          *value++ = n & 255; // We're single byte, forget about the high byte...
+        }
+        break;
 
-    if (strncmp(loc, "null", 4) == 0)
+        default:
+          *value++ = *loc++;
+      }
+    }
+    else if (*loc == '"')
     {
-      return false;
+      break;
     }
-
-    end = strchr(loc, '}');
-
-    if (*loc != '{' || end == NULL)
+    else
     {
-      logError("Cannot extract lookup for field '%s': it is not a -nv style lookup\n%s\n", fieldName, loc);
-      return false;
+      *value++ = *loc++;
     }
-    end++;
     len--;
-    if (end - loc < len)
-    {
-      len = end - loc;
-    }
-    memcpy(value, loc, len);
-    value[len] = '\0';
+  }
+  *value = 0;
+  logDebug("getJSONValue('%s','%s',...) => valid string\n", message, fieldName);
+  return true;
+}
 
+/*
+ * Retrieve a lookup list in a JSON styled message.
+ * Example: {"value":0,"name":"Under way using engine"}
+ */
+static bool getJSONLookupList(const char *message, const char *fieldName, char *value, size_t len)
+{
+  const char *loc      = message + 1;
+  size_t      fieldLen = strlen(fieldName);
+  const char *end;
+
+  for (;;)
+  {
+    loc = strstr(loc, fieldName);
+    if (!loc)
+    {
+      return false;
+    }
+    if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
+    {
+      break;
+    }
+    loc += fieldLen;
+  }
+
+  /* field has been found */
+  loc += fieldLen + 2;
+
+  while (isspace((unsigned char) *loc))
+  {
+    loc++;
+  }
+
+  if (strncmp(loc, "null", 4) == 0)
+  {
+    return false;
+  }
+
+  end = strchr(loc, '}');
+
+  if (*loc != '{' || end == NULL)
+  {
+    logError("Cannot extract lookup for field '%s': it is not a -nv style lookup\n%s\n", fieldName, loc);
+    return false;
+  }
+  end++;
+  len--;
+  if (end - loc < len)
+  {
+    len = end - loc;
+  }
+  memcpy(value, loc, len);
+  value[len] = '\0';
+
+  return true;
+}
+
+/*
+ * Retrieve a name out of a lookup list in a JSON styled message.
+ * Example: {"value":0,"name":"Under way using engine"} -> Under way using engine
+ */
+bool getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len)
+{
+  char buffer[128];
+
+  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)))
+  {
+    logDebug("getJSONLookupList('%s','%s'...) = '%s'\n", message, fieldName, buffer);
+    return getJSONValue(buffer, "name", value, len);
+  }
+  return false;
+}
+
+/*
+ * Retrieve a value out of a JSON styled message.
+ */
+bool getJSONLookupValue(const char *message, const char *fieldName, int64_t *value)
+{
+  char buffer[128];
+
+  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", buffer, sizeof(buffer))
+      && sscanf(buffer, "%" PRId64, value) == 1)
+  {
     return true;
   }
+  return false;
+}
 
-  /*
-   * Retrieve a name out of a lookup list in a JSON styled message.
-   * Example: {"value":0,"name":"Under way using engine"} -> Under way using engine
-   */
-  bool getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len)
+char *sbSearchChar(const StringBuffer *const in, char c)
+{
+  char  *p = sbGet(in);
+  size_t i;
+
+  for (i = 0; i < in->len; i++)
   {
-    char buffer[128];
-
-    if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)))
+    if (p[i] == c)
     {
-      logDebug("getJSONLookupList('%s','%s'...) = '%s'\n", message, fieldName, buffer);
-      return getJSONValue(buffer, "name", value, len);
-    }
-    return false;
-  }
-
-  /*
-   * Retrieve a value out of a JSON styled message.
-   */
-  bool getJSONLookupValue(const char *message, const char *fieldName, int64_t *value)
-  {
-    char buffer[128];
-
-    if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", buffer, sizeof(buffer))
-        && sscanf(buffer, "%" PRId64, value) == 1)
-    {
-      return true;
-    }
-    return false;
-  }
-
-  char *sbSearchChar(const StringBuffer *const in, char c)
-  {
-    char  *p = sbGet(in);
-    size_t i;
-
-    for (i = 0; i < in->len; i++)
-    {
-      if (p[i] == c)
-      {
-        return p + i;
-      }
-    }
-    return 0;
-  }
-
-  /*
-   * Table 1 - Mapping of ISO 11783 into CAN's Arbitration and Control Fields
-  29 Bit Identifiers
-  CAN   ISO 11783 Bit Number
-  SOF     SOF*      1
-  ID 28   P 3       2
-  ID 27   P 2       3
-  ID 26   P 1       4
-  ID 23   R 1       5
-  ID 24   DP        6
-  ID 23   PF 8      7
-  ID 22   PF 7      8
-  ID 21   PF 6      9
-  ID 20   PF 5     10
-  ID 19   PF 4     11
-  ID 18   PF 3     12
-  SRR (r) SRR*     13
-  IDE (r) IDE*     14
-  ID 17   PF 2     15
-  ID 16   PF 1     16
-  ID 13   PS 8     17
-  ID 14   PS 7     18
-  ID 13   PS 6     19
-  ID 12   PS 5     20
-  ID 11   PS 4     21
-  ID 10   PS 3     22
-  ID 9    PS 2     23
-  ID 8    PS 1     24
-  ID 7    SA 8     25
-  ID 6    SA 7     26
-  ID 3    SA 6     27
-  ID 4    SA 5     28
-  ID 3    SA 4     29
-  ID 2    SA 3     30
-  ID 1    SA 2     31
-  ID 0    SA 1     32
-  RTR (x) RTR*     33
-  r 1     r 1*     34
-  r 0     r 0*     35
-  DLC 4   DLC 4    36
-  DLC 3   DLC 3    37
-  DLC 2   DLC 2    38
-  DLC 1   DLC 1    39
-  Notes:
-  SOF - Start of Frame Bit P# - ISO 11783 Priority Bit #n
-  ID## - Identifier Bit #n R# - ISO 11783 Reserved Bit #n
-  SRR - Substitute Remote Request SA# - ISO 11783 Source Address Bit #n
-  RTR - Remote Transmission Request Bit DP - ISO 11783 Data Page
-  IDE - Identifier Extension Bit PF# - ISO 11783 PDU Format Bit #n
-  r# - CAN Reserved Bit #n PS# - ISO 11783 PDU Specific Bit #n
-  DLC# - Data Length Code Bit #n *CAN Defined Bit, Unchanged in ISO 11783
-  (d) - dominant bit 1 Required format of proprietary 11 bit identifiers
-  (r) - recessive bit
-
-  For NMEA2000 the R bit is always 0, but SAE J1939 it is not. J1939 calls
-  this the "Extended Data Page" (EDP).
-  */
-
-  void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
-  {
-    unsigned char PF  = (unsigned char) (id >> 16);
-    unsigned char PS  = (unsigned char) (id >> 8);
-    unsigned char RDP = (unsigned char) (id >> 24) & 3; // Use R + DP bits
-
-    if (src)
-    {
-      *src = (unsigned char) id >> 0;
-    }
-    if (prio)
-    {
-      *prio = (unsigned char) ((id >> 26) & 0x7);
-    }
-
-    if (PF < 240)
-    {
-      /* PDU1 format, the PS contains the destination address */
-      if (dst)
-      {
-        *dst = PS;
-      }
-      if (pgn)
-      {
-        *pgn = (RDP << 16) + (PF << 8);
-      }
-    }
-    else
-    {
-      /* PDU2 format, the destination is implied global and the PGN is extended */
-      if (dst)
-      {
-        *dst = 0xff;
-      }
-      if (pgn)
-      {
-        *pgn = (RDP << 16) + (PF << 8) + PS;
-      }
+      return p + i;
     }
   }
+  return 0;
+}
 
-  /*
-    This does the opposite from getISO11783BitsFromCanId: given n2k fields produces the extended frame CAN id
-  */
-  unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
+/*
+ * Table 1 - Mapping of ISO 11783 into CAN's Arbitration and Control Fields
+29 Bit Identifiers
+CAN   ISO 11783 Bit Number
+SOF     SOF*      1
+ID 28   P 3       2
+ID 27   P 2       3
+ID 26   P 1       4
+ID 23   R 1       5
+ID 24   DP        6
+ID 23   PF 8      7
+ID 22   PF 7      8
+ID 21   PF 6      9
+ID 20   PF 5     10
+ID 19   PF 4     11
+ID 18   PF 3     12
+SRR (r) SRR*     13
+IDE (r) IDE*     14
+ID 17   PF 2     15
+ID 16   PF 1     16
+ID 13   PS 8     17
+ID 14   PS 7     18
+ID 13   PS 6     19
+ID 12   PS 5     20
+ID 11   PS 4     21
+ID 10   PS 3     22
+ID 9    PS 2     23
+ID 8    PS 1     24
+ID 7    SA 8     25
+ID 6    SA 7     26
+ID 3    SA 6     27
+ID 4    SA 5     28
+ID 3    SA 4     29
+ID 2    SA 3     30
+ID 1    SA 2     31
+ID 0    SA 1     32
+RTR (x) RTR*     33
+r 1     r 1*     34
+r 0     r 0*     35
+DLC 4   DLC 4    36
+DLC 3   DLC 3    37
+DLC 2   DLC 2    38
+DLC 1   DLC 1    39
+Notes:
+SOF - Start of Frame Bit P# - ISO 11783 Priority Bit #n
+ID## - Identifier Bit #n R# - ISO 11783 Reserved Bit #n
+SRR - Substitute Remote Request SA# - ISO 11783 Source Address Bit #n
+RTR - Remote Transmission Request Bit DP - ISO 11783 Data Page
+IDE - Identifier Extension Bit PF# - ISO 11783 PDU Format Bit #n
+r# - CAN Reserved Bit #n PS# - ISO 11783 PDU Specific Bit #n
+DLC# - Data Length Code Bit #n *CAN Defined Bit, Unchanged in ISO 11783
+(d) - dominant bit 1 Required format of proprietary 11 bit identifiers
+(r) - recessive bit
+
+For NMEA2000 the R bit is always 0, but SAE J1939 it is not. J1939 calls
+this the "Extended Data Page" (EDP).
+*/
+
+void getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst)
+{
+  unsigned char PF  = (unsigned char) (id >> 16);
+  unsigned char PS  = (unsigned char) (id >> 8);
+  unsigned char RDP = (unsigned char) (id >> 24) & 3; // Use R + DP bits
+
+  if (src)
   {
-    unsigned int canId
-        = (src & 0xff) | 0x80000000U; // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses
-    // only extended frames (EFF bit).
-
-    unsigned int PF = (pgn >> 8) & 0xff;
-
-    if (PF < 240)
-    { // PDU 1
-      canId |= (dst & 0xff) << 8;
-      canId |= (pgn << 8);
-    }
-    else
-    { // PDU 2
-      canId |= pgn << 8;
-    }
-    canId |= prio << 26;
-
-    return canId;
+    *src = (unsigned char) id >> 0;
+  }
+  if (prio)
+  {
+    *prio = (unsigned char) ((id >> 26) & 0x7);
   }
 
-  static void resolve_address(const char *url, char **host, const char **service)
+  if (PF < 240)
   {
-    const char *s;
-    size_t      hostlen;
-
-    if (strncmp(url, "tcp:", STRSIZE("tcp:")) == 0)
+    /* PDU1 format, the PS contains the destination address */
+    if (dst)
     {
-      url += STRSIZE("tcp:");
+      *dst = PS;
     }
-    while (*url == '/')
+    if (pgn)
     {
-      url++;
-    }
-
-    s = strchr(url, ':');
-    if (s)
-    {
-      hostlen = s - url;
-      s++;
-    }
-    else
-    {
-      hostlen = strlen(url);
-    }
-
-    *host = malloc(hostlen + 1);
-    if (!*host)
-    {
-      die("Out of memory");
-    }
-    memcpy(*host, url, hostlen);
-    (*host)[hostlen] = 0;
-
-    if (s)
-    {
-      *service = s;
-    }
-    else
-    {
-      *service = "80";
+      *pgn = (RDP << 16) + (PF << 8);
     }
   }
-
-  SOCKET open_socket_stream(const char *url)
+  else
   {
-    SOCKET          sockfd = INVALID_SOCKET;
-    int             n;
-    struct addrinfo hints, *res, *addr;
-    char           *host;
-    const char     *service;
-
-    resolve_address(url, &host, &service);
-
-    memset(&hints, 0, sizeof(hints));
-    hints.ai_family   = AF_UNSPEC;
-    hints.ai_socktype = SOCK_STREAM;
-
-    n = getaddrinfo(host, service, &hints, &res);
-    if (n != 0)
+    /* PDU2 format, the destination is implied global and the PGN is extended */
+    if (dst)
     {
-      logError("Unable to open connection to %s:%s: %s\n", host, service, gai_strerror(n));
+      *dst = 0xff;
     }
-    else
+    if (pgn)
     {
-      for (addr = res; addr; addr = addr->ai_next)
-      {
-        sockfd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-        if (sockfd == INVALID_SOCKET)
-        {
-          continue;
-        }
-
-        if (!connect(sockfd, res->ai_addr, res->ai_addrlen))
-        {
-          break;
-        }
-        close(sockfd);
-        sockfd = INVALID_SOCKET;
-      }
-      if (!addr)
-      {
-        logError("Unable to open connection to %s:%s: %s\n", host, service, strerror(errno));
-      }
+      *pgn = (RDP << 16) + (PF << 8) + PS;
     }
+  }
+}
 
-    freeaddrinfo(res);
-    free(host);
+/*
+  This does the opposite from getISO11783BitsFromCanId: given n2k fields produces the extended frame CAN id
+*/
+unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst)
+{
+  unsigned int canId
+      = (src & 0xff) | 0x80000000U; // src bits are the lowest ones of the CAN ID. Also set the highest bit to 1 as n2k uses
+  // only extended frames (EFF bit).
 
-    return sockfd;
+  unsigned int PF = (pgn >> 8) & 0xff;
+
+  if (PF < 240)
+  { // PDU 1
+    canId |= (dst & 0xff) << 8;
+    canId |= (pgn << 8);
+  }
+  else
+  { // PDU 2
+    canId |= pgn << 8;
+  }
+  canId |= prio << 26;
+
+  return canId;
+}
+
+static void resolve_address(const char *url, char **host, const char **service)
+{
+  const char *s;
+  size_t      hostlen;
+
+  if (strncmp(url, "tcp:", STRSIZE("tcp:")) == 0)
+  {
+    url += STRSIZE("tcp:");
+  }
+  while (*url == '/')
+  {
+    url++;
   }
 
-  uint8_t scanNibble(char c)
+  s = strchr(url, ':');
+  if (s)
   {
-    if (isdigit((unsigned char) c))
-    {
-      return c - '0';
-    }
-    if (c >= 'A' && c <= 'F')
-    {
-      return c - 'A' + 10;
-    }
-    if (c >= 'a' && c <= 'f')
-    {
-      return c - 'a' + 10;
-    }
-    return 16;
+    hostlen = s - url;
+    s++;
+  }
+  else
+  {
+    hostlen = strlen(url);
   }
 
-  int scanHex(char **p, uint8_t *m)
+  *host = malloc(hostlen + 1);
+  if (!*host)
   {
-    uint8_t hi, lo;
-
-    if (!(*p)[0] || !(*p)[1])
-    {
-      return 1;
-    }
-
-    hi = scanNibble((*p)[0]);
-    if (hi > 15)
-    {
-      return 1;
-    }
-    lo = scanNibble((*p)[1]);
-    if (lo > 15)
-    {
-      return 1;
-    }
-    (*p) += 2;
-    *m = hi << 4 | lo;
-    /* printf("(b=%02X,p=%p) ", *m, *p); */
-    return 0;
+    die("Out of memory");
   }
+  memcpy(*host, url, hostlen);
+  (*host)[hostlen] = 0;
 
-  int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout)
+  if (s)
   {
-    fd_set         fds;
-    fd_set         fdw;
-    struct timeval waitfor;
-    int            setsize;
-    int            r;
-    int            ret = 0;
-
-    FD_ZERO(&fds);
-    FD_ZERO(&fdw);
-    if (fd1 > INVALID_SOCKET)
-    {
-      FD_SET(fd1, &fds);
-    }
-    if (fd2 > INVALID_SOCKET)
-    {
-      FD_SET(fd2, &fds);
-    }
-    if (fd3 > INVALID_SOCKET)
-    {
-      FD_SET(fd3, &fdw);
-    }
-    waitfor.tv_sec  = timeout ? timeout : 10;
-    waitfor.tv_usec = 0;
-    setsize         = CB_MAX(CB_MAX(fd1, fd2), fd3) + 1;
-    r               = select(setsize, &fds, &fdw, 0, &waitfor);
-    if (r < 0)
-    {
-      logAbort("I/O error; restart by quit\n");
-    }
-    if (r > 0)
-    {
-      if (fd1 > INVALID_SOCKET && FD_ISSET(fd1, &fds))
-      {
-        ret |= FD1_ReadReady;
-      }
-      if (fd2 > INVALID_SOCKET && FD_ISSET(fd2, &fds))
-      {
-        ret |= FD2_ReadReady;
-      }
-      if (fd3 > INVALID_SOCKET && FD_ISSET(fd3, &fdw))
-      {
-        ret |= FD3_WriteReady;
-      }
-    }
-    if (!ret && timeout)
-    {
-      logAbort("Timeout %ld seconds; restart by quit\n", timeout);
-    }
-    return ret;
+    *service = s;
   }
-
-  /*
-   * Send a message to a serial device.
-   *
-   * The buffer to the device may be slow or limited in size,
-   * cater for this.
-   *
-   */
-  int writeSerial(SOCKET handle, const uint8_t *data, size_t len)
+  else
   {
-    int     retryCount = 5;
-    ssize_t written;
+    *service = "80";
+  }
+}
 
-    do
+SOCKET open_socket_stream(const char *url)
+{
+  SOCKET          sockfd = INVALID_SOCKET;
+  int             n;
+  struct addrinfo hints, *res, *addr;
+  char           *host;
+  const char     *service;
+
+  resolve_address(url, &host, &service);
+
+  memset(&hints, 0, sizeof(hints));
+  hints.ai_family   = AF_UNSPEC;
+  hints.ai_socktype = SOCK_STREAM;
+
+  n = getaddrinfo(host, service, &hints, &res);
+  if (n != 0)
+  {
+    logError("Unable to open connection to %s:%s: %s\n", host, service, gai_strerror(n));
+  }
+  else
+  {
+    for (addr = res; addr; addr = addr->ai_next)
     {
-      written = write(handle, data, len);
-      if (written != -1)
+      sockfd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
+      if (sockfd == INVALID_SOCKET)
       {
-        data += written;
-        len -= written;
+        continue;
       }
-      else if (errno == EAGAIN)
-      {
-        retryCount--;
-        usleep(25000);
-      }
-      else
+
+      if (!connect(sockfd, res->ai_addr, res->ai_addrlen))
       {
         break;
       }
-    } while (len > 0 && retryCount >= 0);
-
-    if (written == -1)
-    {
-      logError("Write failed: %s\n", strerror(errno));
-      return -1;
+      close(sockfd);
+      sockfd = INVALID_SOCKET;
     }
-    else if (len > 0)
+    if (!addr)
     {
-      logError("Write timeout: %s\n", strerror(errno));
-      return -1;
+      logError("Unable to open connection to %s:%s: %s\n", host, service, strerror(errno));
     }
-    return 0;
   }
 
-  bool parseInt(const char **msg, int *value, int defValue)
-  {
-    char *end;
+  freeaddrinfo(res);
+  free(host);
 
-    *value = strtol(*msg, &end, 10);
-    if (end == *msg)
-    {
-      *value = defValue;
-    }
-    *msg = end;
-    if (*end == ',')
-    {
-      *msg = end + 1;
-    }
-    else if (*end != '\0')
-    {
-      return false;
-    }
-    return true;
+  return sockfd;
+}
+
+uint8_t scanNibble(char c)
+{
+  if (isdigit((unsigned char) c))
+  {
+    return c - '0';
+  }
+  if (c >= 'A' && c <= 'F')
+  {
+    return c - 'A' + 10;
+  }
+  if (c >= 'a' && c <= 'f')
+  {
+    return c - 'a' + 10;
+  }
+  return 16;
+}
+
+int scanHex(char **p, uint8_t *m)
+{
+  uint8_t hi, lo;
+
+  if (!(*p)[0] || !(*p)[1])
+  {
+    return 1;
   }
 
-  bool parseConst(const char **msg, const char *str)
+  hi = scanNibble((*p)[0]);
+  if (hi > 15)
   {
-    if (strncmp(*msg, str, strlen(str)) == 0)
+    return 1;
+  }
+  lo = scanNibble((*p)[1]);
+  if (lo > 15)
+  {
+    return 1;
+  }
+  (*p) += 2;
+  *m = hi << 4 | lo;
+  /* printf("(b=%02X,p=%p) ", *m, *p); */
+  return 0;
+}
+
+int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout)
+{
+  fd_set         fds;
+  fd_set         fdw;
+  struct timeval waitfor;
+  int            setsize;
+  int            r;
+  int            ret = 0;
+
+  FD_ZERO(&fds);
+  FD_ZERO(&fdw);
+  if (fd1 > INVALID_SOCKET)
+  {
+    FD_SET(fd1, &fds);
+  }
+  if (fd2 > INVALID_SOCKET)
+  {
+    FD_SET(fd2, &fds);
+  }
+  if (fd3 > INVALID_SOCKET)
+  {
+    FD_SET(fd3, &fdw);
+  }
+  waitfor.tv_sec  = timeout ? timeout : 10;
+  waitfor.tv_usec = 0;
+  setsize         = CB_MAX(CB_MAX(fd1, fd2), fd3) + 1;
+  r               = select(setsize, &fds, &fdw, 0, &waitfor);
+  if (r < 0)
+  {
+    logAbort("I/O error; restart by quit\n");
+  }
+  if (r > 0)
+  {
+    if (fd1 > INVALID_SOCKET && FD_ISSET(fd1, &fds))
     {
-      *msg += strlen(str);
-      return true;
+      ret |= FD1_ReadReady;
     }
+    if (fd2 > INVALID_SOCKET && FD_ISSET(fd2, &fds))
+    {
+      ret |= FD2_ReadReady;
+    }
+    if (fd3 > INVALID_SOCKET && FD_ISSET(fd3, &fdw))
+    {
+      ret |= FD3_WriteReady;
+    }
+  }
+  if (!ret && timeout)
+  {
+    logAbort("Timeout %ld seconds; restart by quit\n", timeout);
+  }
+  return ret;
+}
+
+/*
+ * Send a message to a serial device.
+ *
+ * The buffer to the device may be slow or limited in size,
+ * cater for this.
+ *
+ */
+int writeSerial(SOCKET handle, const uint8_t *data, size_t len)
+{
+  int     retryCount = 5;
+  ssize_t written;
+
+  do
+  {
+    written = write(handle, data, len);
+    if (written != -1)
+    {
+      data += written;
+      len -= written;
+    }
+    else if (errno == EAGAIN)
+    {
+      retryCount--;
+      usleep(25000);
+    }
+    else
+    {
+      break;
+    }
+  } while (len > 0 && retryCount >= 0);
+
+  if (written == -1)
+  {
+    logError("Write failed: %s\n", strerror(errno));
+    return -1;
+  }
+  else if (len > 0)
+  {
+    logError("Write timeout: %s\n", strerror(errno));
+    return -1;
+  }
+  return 0;
+}
+
+bool parseInt(const char **msg, int *value, int defValue)
+{
+  char *end;
+
+  *value = strtol(*msg, &end, 10);
+  if (end == *msg)
+  {
+    *value = defValue;
+  }
+  *msg = end;
+  if (*end == ',')
+  {
+    *msg = end + 1;
+  }
+  else if (*end != '\0')
+  {
     return false;
   }
+  return true;
+}
+
+bool parseConst(const char **msg, const char *str)
+{
+  if (strncmp(*msg, str, strlen(str)) == 0)
+  {
+    *msg += strlen(str);
+    return true;
+  }
+  return false;
+}
