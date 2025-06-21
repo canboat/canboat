@@ -6,14 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
-## [Unreleased]
-    
+## [v6.0.0]
 
 ### Explicity garantuee on Id values
 
 PGN field names have been left the same as in v5.1.3, and only two fallback PGN ids have been changed.
 
-From this point forward, we will garantuee that the <Id> values do not change. 
+From this point forward, we will garantuee that the <Id> values do not change.
 We shall be making improvements to the <Name> values.
 
 Therefore, all downstream consumers are urged to make sure they match on PGN Id and field Id, not name.
@@ -24,9 +23,9 @@ This is a major upgrade because the old v1 xml and json files are no longer bein
 supplied.
 
 This is a minor upgrade because there is a new interesting field added to the XML,
-`PartOfPrimaryKey` which is a boolean attribute; any field carrying this (have the 
-field present with a `true` value) contributes to the _Primary key_ of the data -- 
-e.g. any message with a different primary key is from a different source. Fields 
+`PartOfPrimaryKey` which is a boolean attribute; any field carrying this (have the
+field present with a `true` value) contributes to the _Primary key_ of the data --
+e.g. any message with a different primary key is from a different source. Fields
 like `Source Id`, `Message Id` or `Instance` will have this set to true.
 
 Also, in n2kd `-json -nv` mode and in text mode all fields that refer to a PGN will explain
@@ -805,7 +804,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v5.1.3...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.0.0..HEAD
+[6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0
 [5.1.3]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.3
 [5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
 [5.1.0]: https://github.com/canboat/canboat/compare/v5.0.3...v5.1.0
