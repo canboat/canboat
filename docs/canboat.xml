@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v6.0.0-alpha
+CANboat version v6.0.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -27,8 +27,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>6.0.0-alpha</Version>
-  <Copyright>CANboat version v6.0.0-alpha
+  <Version>6.0.0</Version>
+  <Copyright>CANboat version v6.0.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -35445,6 +35445,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>61</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TEMPERATURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>3</Order>
@@ -35557,6 +35558,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TEMPERATURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -35651,6 +35653,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>HUMIDITY_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -35743,6 +35746,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>PRESSURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -35822,6 +35826,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>PRESSURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -35903,6 +35908,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TEMPERATURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -36084,6 +36090,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>11</Order>
@@ -36420,6 +36427,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>200</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>13</Order>
@@ -36635,6 +36643,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>15</Order>
@@ -36910,6 +36919,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>272</BitOffset>
           <BitStart>0</BitStart>
           <FieldType>STRING_LAU</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
       </Fields>
     </PGNInfo>

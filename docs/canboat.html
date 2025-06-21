@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            6.0.0-alpha.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v6.0.0-alpha
+            6.0.0.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v6.0.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -9668,7 +9668,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Temperature Source</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                       lookup
-                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>3</td><td>Humidity Source</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td>true</td></tr><tr><td>3</td><td>Humidity Source</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
                       <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td/></tr><tr><td>4</td><td>Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -9704,7 +9704,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>4</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Set Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
@@ -9735,7 +9735,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td/></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.056</div></td><td>16 bits
+                      <a href="#lookup-HUMIDITY_SOURCE">HUMIDITY_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Actual Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.056</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Set Humidity</td><td/><td>0.004 %<div class="xs">-131.068 .. 131.056</div></td><td>16 bits
@@ -9766,7 +9766,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td/></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
+                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -9794,7 +9794,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td/></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
+                      <a href="#lookup-PRESSURE_SOURCE">PRESSURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Pressure</td><td/><td>0.1 <a href="#pq-PRESSURE">Pa</a><div class="xs">-214748364.7 .. 214748364.4</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
@@ -9820,7 +9820,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>3</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>4</td><td>Temperature</td><td/><td>0.001 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 16777.212</div></td><td>24 bits
+                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td>true</td></tr><tr><td>4</td><td>Temperature</td><td/><td>0.001 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 16777.212</div></td><td>24 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Set Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
@@ -9867,7 +9867,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Station ID</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>11</td><td>Station Name</td><td/><td> </td><td>
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td>true</td></tr><tr><td>11</td><td>Station Name</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130321">0x1FD11:
             PGN 130321
@@ -9956,7 +9956,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Station ID</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>13</td><td>Station Name</td><td/><td> </td><td>
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td>true</td></tr><tr><td>13</td><td>Station Name</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130323">0x1FD13:
             PGN 130323
@@ -10009,7 +10009,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Station ID</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>15</td><td>Station Name</td><td/><td> </td><td>
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td>true</td></tr><tr><td>15</td><td>Station Name</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130324">0x1FD14:
             PGN 130324
@@ -10074,7 +10074,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Station ID</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130330">0x1FD1A:
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td>true</td></tr></table><h3 id="pgn-130330">0x1FD1A:
             PGN 130330
             - Lighting System Settings</h3><p>This PGN provides a lighting controller settings and number of supported capabilities.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
