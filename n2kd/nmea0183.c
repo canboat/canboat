@@ -214,7 +214,7 @@ static void nmea0183VesselHeading(StringBuffer *msg183, int src, const char *msg
   double  variation;
   int64_t reference;
 
-  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONLookupValue(msg, "Reference", &reference))
+  if (getJSONNumber(msg, "Heading", &heading, U_ANGLE) && getJSONInt64(msg, "Reference", &reference))
   {
     if (getJSONNumber(msg, "Deviation", &deviation, U_ANGLE) && getJSONNumber(msg, "Variation", &variation, U_ANGLE)
         && reference == 1)
@@ -267,7 +267,7 @@ static void nmea0183WindData(StringBuffer *msg183, int src, const char *msg)
   int64_t reference;
 
   if (getJSONNumber(msg, "Wind Speed", &speed, U_VELOCITY) && getJSONNumber(msg, "Wind Angle", &angle, U_ANGLE)
-      && getJSONLookupValue(msg, "Reference", &reference))
+      && getJSONInt64(msg, "Reference", &reference))
   {
     if (reference == 3)
     {
@@ -406,8 +406,7 @@ static void nmea0183WaterTemperature(StringBuffer *msg183, int src, const char *
   double  temp;
   int64_t source;
 
-  if (getJSONLookupValue(msg, "Temperature Source", &source) && (source == 0)
-      && getJSONNumber(msg, "Temperature", &temp, U_TEMPERATURE))
+  if (getJSONInt64(msg, "Temperature Source", &source) && (source == 0) && getJSONNumber(msg, "Temperature", &temp, U_TEMPERATURE))
   {
     nmea0183CreateMessage(msg183, src, "MTW,%.1f,C", TEMP_K_TO_C(temp));
   }

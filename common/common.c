@@ -401,6 +401,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
   if (*loc == '{')
   {
     /* It is a nested value like "field" : {"value":0,"name":"Under way using engine"} */
+    return getJSONLookupValue(message, fieldName, value, len);
   }
 
   if (strncmp(loc, "null", 4) == 0)
@@ -554,16 +555,18 @@ bool getJSONLookupName(const char *message, const char *fieldName, char *value, 
 /*
  * Retrieve a value out of a JSON styled message.
  */
-bool getJSONLookupValue(const char *message, const char *fieldName, int64_t *value)
+bool getJSONLookupValue(const char *message, const char *fieldName, char *value, size_t len)
 {
-  char buffer[128];
+  char buffer[256];
 
-  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", buffer, sizeof(buffer))
-      && sscanf(buffer, "%" PRId64, value) == 1)
-  {
-    return true;
-  }
-  return false;
+  return getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", value, len);
+}
+
+bool getJSONInt64(const char *message, const char *fieldName, int64_t *value)
+{
+  char buffer[16];
+
+  return getJSONValue(message, fieldName, buffer, sizeof buffer) && sscanf(buffer, "%" PRId64, value) == 1;
 }
 
 char *sbSearchChar(const StringBuffer *const in, char c)

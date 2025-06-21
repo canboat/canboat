@@ -234,7 +234,7 @@ extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
     double  longitude = convert2kCoordinateToNMEA0183(lonString, "EW", &lonHemisphere);
     int64_t date;
 
-    if (getJSONLookupValue(msg, "Date", &date))
+    if (getJSONInt64(msg, "Date", &date))
     {
       time_t     t  = date * 86400;
       struct tm *tm = gmtime(&t);
@@ -701,12 +701,12 @@ static int aisEnum(const char *msg, const char *fieldName)
 {
   int64_t n;
 
-  if (getJSONLookupValue(msg, fieldName, &n))
+  if (getJSONInt64(msg, fieldName, &n))
   {
-    logDebug("getJSONLookupValue(msg, '%s') = %" PRId64 "\n", fieldName, n);
+    logDebug("getJSONInt64(msg, '%s') = %" PRId64 "\n", fieldName, n);
     return (int) n;
   }
-  logDebug("getJSONLookupValue(msg, '%s') = no result -> -1\n", fieldName);
+  logDebug("getJSONInt64(msg, '%s') = no result -> -1\n", fieldName);
   return -1;
 }
 
