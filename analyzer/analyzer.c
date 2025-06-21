@@ -346,12 +346,12 @@ int main(int argc, char **argv)
            VERSION,
            showSI ? "si" : "std",
            showJsonValue ? "true" : "false");
+    if (showCamel)
+    {
+      printf(",\"showUniqueId\":true");
+    }
+    printf("}\n");
   }
-  if (showCamel)
-  {
-    printf(",\"showUniqueId\":true");
-  }
-  printf("}\n");
 
   fillLookups();
   fillFieldType(true);
@@ -1138,8 +1138,8 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
     if (pgn->camelDescription)
     {
       strcpy(closingBraces, "}}");
-    } 
-    else 
+    }
+    else
     {
       strcpy(closingBraces, "}");
     }
