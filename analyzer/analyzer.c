@@ -342,11 +342,16 @@ int main(int argc, char **argv)
   }
   else if (showVersion)
   {
-    printf("{\"version\":\"%s\",\"units\":\"%s\",\"showLookupValues\":%s}\n",
+    printf("{\"version\":\"%s\",\"units\":\"%s\",\"showLookupValues\":%s",
            VERSION,
            showSI ? "si" : "std",
            showJsonValue ? "true" : "false");
   }
+  if (showCamel)
+  {
+    printf(",\"showUniqueId\":true");
+  }
+  printf("}\n");
 
   fillLookups();
   fillFieldType(true);
@@ -1266,7 +1271,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       break;
     }
 
-    if ( showCamel )
+    if (showCamel)
     {
       strcpy(fieldName, field->camelName ? field->camelName : field->name);
     }
@@ -1275,7 +1280,6 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
       strcpy(fieldName, field->name);
     }
 
-    
     if (repetition >= 1 && !showJson)
     {
       strcat(fieldName, field->camelName ? "_" : " ");
