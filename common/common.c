@@ -310,6 +310,11 @@ void sbAppendString(StringBuffer *sb, const char *string)
   sbAppendData(sb, string, len);
 }
 
+void sbAppendChar(StringBuffer *sb, const char c)
+{
+  sbAppendData(sb, &c, sizeof(c));
+}
+
 void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap)
 {
   int     n;

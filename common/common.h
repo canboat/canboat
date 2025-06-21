@@ -119,6 +119,7 @@ void  sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, en
 void  sbAppendDecodeHex(StringBuffer *sb, const char *data, size_t len);                                     // hex to binary
 void  sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum Base64Encoding encoding);    // base64 to binary
 void  sbAppendData(StringBuffer *sb, const void *data, size_t len);
+void  sbAppendChar(StringBuffer *sb, const char c);
 void  sbAppendString(StringBuffer *sb, const char *string);
 void  sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
 void  sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
