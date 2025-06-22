@@ -38,7 +38,9 @@ limitations under the License.
 #include <signal.h>
 #include <sys/select.h>
 
+#include "common.h"
 #include "n2kd.h"
+#include "nmea0183.h"
 
 #define PORT 2597
 
@@ -55,9 +57,10 @@ bool     unitSI   = false;
 
 struct sockaddr_in udpWildcardAddress;
 
-#define SENSOR_TIMEOUT (120)    /* Timeout when PGN messages expire (no longer retransmitted) */
-#define AIS_TIMEOUT (3600)      /* AIS messages expiration is much longer */
-#define CLAIM_TIMEOUT (8640000) /* .. as are address claims and device names */
+#define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
+#define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
+#define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
+#define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
 
 static void closeStream(int i);
 
@@ -193,18 +196,18 @@ StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
  *
  * the 'primary key' is the combination of the following 2 fields:
  * - src
- * - key2 (_field_field_field for all fields that have "key":true in message)
+ * - key2 (value of some field in the message, or null)
  *
  */
 typedef struct
 {
-  uint8_t      m_src;
-  uint32_t     m_interval; // Interval to previous m_last
-  uint64_t     m_time;     // Message valid until this time
-  uint64_t     m_last;     // When received
-  uint32_t     m_count;    // How many times received
-  StringBuffer m_key2;
-  char        *m_text;
+  uint8_t  m_src;
+  uint32_t m_interval; // Interval to previous m_last
+  uint64_t m_time;     // Message valid until this time
+  uint64_t m_last;     // When received
+  uint32_t m_count;    // How many times received
+  char    *m_key2;
+  char    *m_text;
 } Message;
 
 /*
@@ -234,8 +237,29 @@ Pgn *pgnIdx[PGN_SPACE];
 Pgn  **pgnList[512];
 size_t maxPgnList;
 
+/*
+ * If one of the fields is named like one of these then we index
+ * the array by its value as well.
+ *
+ * The easiest insight is that an AIS transmission from a particular User ID
+ * is completely separate from that of any other.
+ */
+static char *secondaryKeyList[] = {
+    "Instance\":",        // A different tank or sensor. Note no leading " so any instance will do.
+    "\"Reference\":",     // A different type of data value, for instance "True" and "Apparent"
+    "\"User ID\":",       // Different AIS transmission source (station)
+    "\"Message ID\":",    // Different AIS transmission source (station)
+    "\"Proprietary ID\":" // Different SonicHub item
+};
+
+static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT, AIS_TIMEOUT, SONICHUB_TIMEOUT, SENSOR_TIMEOUT};
+
 /* Characters that occur between key name and value */
 #define SKIP_CHARACTERS "\": "
+
+#ifndef ARRAYSIZE
+#define ARRAYSIZE(x) (sizeof(x) / sizeof(x[0]))
+#endif
 
 /*****************************************************************************************/
 
@@ -399,9 +423,10 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
         char     last_ts[DATE_LENGTH];
 
         sbAppendFormat(&state,
-                       "  ,\"%u%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n",
+                       "  ,\"%u%s%s\":{\"last\":\"%s\",\"interval\":%u,\"count\":%u}\n",
                        m->m_src,
-                       sbGet(&m->m_key2),
+                       m->m_key2 ? "_" : "",
+                       m->m_key2 ? m->m_key2 : "",
                        getTimestamp(last_ts, m->m_last),
                        m->m_interval,
                        m->m_count);
@@ -428,7 +453,7 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
 
           if (m->m_time >= now)
           {
-            sbAppendFormat(&state, "  ,\"%u%s\":%s", m->m_src, sbGet(&m->m_key2), m->m_text);
+            sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
           }
         }
         sbAppendString(&state, "  }\n");
@@ -841,159 +866,17 @@ static void checkSrcIsKnown(int src, int64_t n)
   }
 }
 
-typedef enum
-{
-  TOKEN_NONE,
-  TOKEN_START_OBJECT,
-  TOKEN_END_OBJECT,
-  TOKEN_START_ARRAY,
-  TOKEN_END_ARRAY,
-  TOKEN_COMMA,
-  TOKEN_KEY,
-  TOKEN_WORD,
-} TokenType;
-
-static TokenType parseToken(const char *line, size_t *pos, StringBuffer *sb)
-{
-  while (isspace(line[*pos]))
-  {
-    (*pos)++;
-  }
-
-  switch (line[*pos])
-  {
-    case '\0':
-      return TOKEN_NONE;
-    case '"': {
-      for ((*pos)++; line[*pos] != '\0'; (*pos)++)
-      {
-        if (line[*pos] == '\\' && line[*pos + 1] == '"')
-        {
-          // Escaped double quote
-          (*pos)++;
-        }
-        else if (line[*pos] == '"')
-        {
-          // End of string
-          break;
-        }
-        sbAppendChar(sb, line[*pos]);
-      }
-      (*pos)++;
-      while (isspace(line[*pos]))
-      {
-        (*pos)++;
-      }
-      if (line[*pos] == ':')
-      {
-        (*pos)++;
-        return TOKEN_KEY;
-      }
-      return TOKEN_WORD;
-    }
-    case '{':
-      return TOKEN_START_OBJECT;
-    case '}':
-      return TOKEN_END_OBJECT;
-    case '[':
-      return TOKEN_START_ARRAY;
-    case ']':
-      return TOKEN_END_ARRAY;
-    case ',':
-      return TOKEN_COMMA;
-    default: {
-      while (!strchr(":{}[], ", line[*pos]))
-      {
-        sbAppendChar(sb, line[*pos]);
-        (*pos)++;
-      }
-      return TOKEN_WORD;
-    }
-  }
-}
-
-// Parse the fields JSON
-// Examples:
-// line = "bla":{"value":0,"name":"Initial"},"User ID":{"value":"244180106","key":true},"Longitude": 5.3134516,
-// sb = _244180106
-// line = "bla":{"value":0,"name":"Initial","key":true}
-// sb = _Initial
-//
-static void appendKeys(StringBuffer *keys, char *line)
-{
-  StringBuffer token = sbNew;
-  StringBuffer value = sbNew;
-  size_t       pos   = 0;
-
-  while (true)
-  {
-    // Start by skipping the name of the field
-    if (parseToken(line, &pos, &token) != TOKEN_KEY)
-    {
-      break;
-    }
-    int nest = 0;
-
-    do
-    {
-      sbEmpty(&token);
-      sbEmpty(&value);
-      switch (parseToken(line, &pos, &token))
-      {
-        case TOKEN_START_ARRAY:
-        case TOKEN_START_OBJECT: {
-          nest++;
-          break;
-        }
-        case TOKEN_END_ARRAY:
-        case TOKEN_END_OBJECT: {
-          nest--;
-          break;
-        }
-        case TOKEN_COMMA: {
-          break;
-        }
-        case TOKEN_KEY: {
-          if (strcmp(sbGet(&token), "key") == 0)
-          {
-            sbAppendChar(keys, '_');
-            sbAppendString(keys, sbGet(&value));
-          }
-          break;
-        }
-        case TOKEN_WORD: {
-          sbAppendString(&value, sbGet(&token));
-          break;
-        }
-        case TOKEN_NONE:
-          return;
-      }
-    } while (nest > 0);
-
-    TokenType type = parseToken(line, &pos, &token);
-    if (type == TOKEN_NONE || type == TOKEN_END_OBJECT)
-    {
-      return;
-    }
-    if (type != TOKEN_COMMA)
-    {
-      logError("Unexpected token '%s'; ending field match for keys\n", sbGet(&token));
-      return;
-    }
-  }
-}
-
 static bool storeMessage(char *line, size_t len)
 {
-  char        *s, *e = 0, *e2;
-  Message     *m;
-  int          i, idx;
-  int          src = 0, dst = 255, prn = 0;
-  Pgn         *pgn;
-  int64_t      now  = epoch();
-  StringBuffer key2 = sbNew;
-  int          valid;
-  char         value[16];
+  char    *s, *e = 0, *e2;
+  Message *m;
+  int      i, idx, k;
+  int      src = 0, dst = 255, prn = 0;
+  Pgn     *pgn;
+  int64_t  now  = epoch();
+  char    *key2 = 0;
+  int      valid;
+  char     value[16];
 
   if (isLogLevelEnabled(LOG_DEBUG))
   {
@@ -1060,17 +943,56 @@ static bool storeMessage(char *line, size_t len)
   }
 
   /* Look for a secondary key */
-  s = strstr(line, "fields:{");
-  if (s != NULL)
+  for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
   {
-    s += STRSIZE("fields:{");
-    appendKeys(&key2, s);
+    s = strstr(line, secondaryKeyList[k]);
+    if (s)
+    {
+      logDebug("Found 2nd key %d = %s\n", k, secondaryKeyList[k]);
+      s += strlen(secondaryKeyList[k]);
+      if (*s == '{')
+      {
+        s = strstr(s, "name\":");
+        if (s == NULL)
+        {
+          continue;
+        }
+        s += STRSIZE("name\":");
+      }
+      while (strchr(SKIP_CHARACTERS, *s))
+      {
+        s++;
+      }
+
+      e  = strchr(s, ' ');
+      e2 = strchr(s, '"');
+      if (!e || e2 < e)
+      {
+        e = e2;
+      }
+      if (!e)
+      {
+        e = s + strlen(s);
+      }
+      if (e > s && e[-1] == ',')
+      {
+        e--;
+      }
+      key2 = malloc(e - s + 1);
+      if (!key2)
+      {
+        logAbort("Out of memory allocating %u bytes\n", e - s);
+      }
+      memcpy(key2, s, e - s);
+      key2[e - s] = 0;
+      break;
+    }
   }
 
   pgn = pgnIdx[idx];
   if (!pgn)
   {
-    if (maxPgnList == ARRAY_SIZE(pgnList))
+    if (maxPgnList == ARRAYSIZE(pgnList))
     {
       logAbort("Too many PGNs\n");
     }
@@ -1119,9 +1041,9 @@ static bool storeMessage(char *line, size_t len)
   {
     if (pgn->p_message[i].m_src == src)
     {
-      if (sbGetLength(&pgn->p_message[i].m_key2) != 0)
+      if (pgn->p_message[i].m_key2)
       {
-        if (strcmp(sbGet(&pgn->p_message[i].m_key2), sbGet(&key2)) == 0)
+        if (key2 && strcmp(pgn->p_message[i].m_key2, key2) == 0)
         {
           break;
         }
@@ -1141,9 +1063,12 @@ static bool storeMessage(char *line, size_t len)
       if (pgn->p_message[i].m_time < now)
       {
         pgn->p_message[i].m_src = (uint8_t) src;
-        sbClean(&pgn->p_message[i].m_key2);
+        if (pgn->p_message[i].m_key2)
+        {
+          free(pgn->p_message[i].m_key2);
+        }
         pgn->p_message[i].m_key2 = key2;
-        key2                     = sbNew;
+        key2                     = 0;
         break;
       }
     }
@@ -1164,7 +1089,7 @@ static bool storeMessage(char *line, size_t len)
     pgnIdx[idx]                  = pgn;
     pgn->p_message[i].m_src      = (uint8_t) src;
     pgn->p_message[i].m_key2     = key2;
-    key2                         = sbNew;
+    key2                         = 0;
     pgn->p_message[i].m_text     = 0;
     pgn->p_message[i].m_interval = 0;
     pgn->p_message[i].m_last     = 0;
@@ -1192,17 +1117,19 @@ static bool storeMessage(char *line, size_t len)
   {
     valid = CLAIM_TIMEOUT;
   }
-  else if (strncmp(pgn->p_description, "AIS ", STRSIZE("AIS ")) == 0)
+  else if (prn == 130816)
   {
-    valid = AIS_TIMEOUT;
+    valid = SONICHUB_TIMEOUT;
   }
   else
   {
-    valid = SENSOR_TIMEOUT;
+    valid = secondaryKeyTimeout[k];
   }
-
-  logDebug("stored prn %d timeout=%d 2ndKey='%s'\n", prn, valid, sbGet(&key2));
-  sbClean(&key2);
+  logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
+  if (key2)
+  {
+    free(key2);
+  }
   m->m_time = now + valid * INT64_C(1000);
   if (m->m_last > 0)
   {

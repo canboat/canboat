@@ -6,6 +6,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [Unreleased]
+
+## [v6.0.1]
+
+### Fixed
+
+- undo incomplete primary key update to n2kd making it not use any key.
+
 ## [v6.0.0]
 
 ### Explicity garantuee on Id values
@@ -804,7 +812,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.0.0..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.0.1..HEAD
+[6.0.1]: https://github.com/canboat/canboat/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0
 [5.1.3]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.3
 [5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
