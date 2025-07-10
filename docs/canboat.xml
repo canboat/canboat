@@ -1902,6 +1902,7 @@ limitations under the License.
       <EnumPair Value='1' Name='Green' />
       <EnumPair Value='2' Name='Blue' />
       <EnumPair Value='3' Name='White' />
+      <EnumPair Value='4' Name='Magenta' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_DISPLAY_GROUP' MaxValue='255'>
       <EnumPair Value='1' Name='Default' />
