@@ -2501,7 +2501,8 @@
           {"Name":"Red", "Value":0},
           {"Name":"Green", "Value":1},
           {"Name":"Blue", "Value":2},
-          {"Name":"White", "Value":3}
+          {"Name":"White", "Value":3},
+          {"Name":"Magenta", "Value":4}
         ]
       },
       {
