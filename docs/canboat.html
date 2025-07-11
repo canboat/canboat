@@ -2900,14 +2900,14 @@ limitations under the License.
             PGN 126720
             - Fusion: Set Mute</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>23</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>17</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            4
-            bytes long and contains 5 fields.
+            5
+            bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -2918,11 +2918,14 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>23:
-                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>17:
+                  Mute</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:

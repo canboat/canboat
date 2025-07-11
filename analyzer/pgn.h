@@ -2334,7 +2334,8 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(419),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 23, FUSION_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 17, FUSION_MESSAGE_ID),
+      UINT8_FIELD("Unknown"),
       LOOKUP_FIELD("Command", BYTES(1), FUSION_MUTE_COMMAND),
       END_OF_FIELDS}}
 
