@@ -12936,7 +12936,7 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"FUSION_POWER_STATE"
           }
         ]
       },

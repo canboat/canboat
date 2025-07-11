@@ -2373,7 +2373,7 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 28, FUSION_MESSAGE_ID),
       UINT8_FIELD("Unknown"),
-      LOOKUP_FIELD("Power", 8, OFF_ON),
+      LOOKUP_FIELD("Power", 8, FUSION_POWER_STATE),
       END_OF_FIELDS}}    
 
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */

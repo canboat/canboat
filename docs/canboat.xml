@@ -12405,7 +12405,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>OFF_ON</LookupEnumeration>
+          <LookupEnumeration>FUSION_POWER_STATE</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
