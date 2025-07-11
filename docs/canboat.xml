@@ -2535,6 +2535,11 @@ limitations under the License.
       <EnumPair Value='4' Name='5 nm' />
       <EnumPair Value='5' Name='6 nm' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SEASTAR_HELM_COMMAND' MaxValue='15'>
+      <EnumPair Value='0' Name='No command' />
+      <EnumPair Value='1' Name='Power down' />
+      <EnumPair Value='2' Name='Reset' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
@@ -3481,8 +3486,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>pgn</Id>
-          <Name>PGN</Name>
+          <Id>pgnData</Id>
+          <Name>PGN Data</Name>
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -9145,9 +9150,9 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65360</PGN>
-      <Id>seatalkPilotLockedHeading</Id>
-      <Description>Seatalk: Pilot Locked Heading</Description>
-    <Priority>7</Priority>
+      <Id>seastarHelmCommand</Id>
+      <Description>SeaStar: Helm Command</Description>
+    <Priority>2</Priority>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -9160,11 +9165,9 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>Raymarine</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Match>1851</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9187,11 +9190,9 @@ limitations under the License.
           <Order>3</Order>
           <Id>industryCode</Id>
           <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
           <BitLength>3</BitLength>
           <BitOffset>13</BitOffset>
           <BitStart>5</BitStart>
-          <Match>4</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -9202,53 +9203,58 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>sid</Id>
-          <Name>SID</Name>
-          <BitLength>8</BitLength>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEASTAR_HELM_COMMAND</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>resistance</Id>
+          <Name>Resistance</Name>
+          <Description>Helm resistance setting</Description>
+          <BitLength>12</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
-          <Order>5</Order>
-          <Id>targetHeadingTrue</Id>
-          <Name>Target Heading True</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Unit>rad</Unit>
-          <Resolution>0.0001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6.2831852</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>ANGLE</PhysicalQuantity>
-        </Field>
-        <Field>
           <Order>6</Order>
-          <Id>targetHeadingMagnetic</Id>
-          <Name>Target Heading Magnetic</Name>
+          <Id>portBrake</Id>
+          <Name>Port brake</Name>
           <BitLength>16</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>rad</Unit>
-          <Resolution>0.0001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6.2831852</RangeMax>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>reserved7</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <Id>stbdBrake</Id>
+          <Name>Stbd brake</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -9343,6 +9349,392 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65365</PGN>
+      <Id>seastarHelmFeedback</Id>
+      <Description>SeaStar: Helm Feedback</Description>
+    <Priority>2</Priority>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>sourceInstance</Id>
+          <Name>Source instance</Name>
+          <Description>Source instance (Helm)</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>steeringMovement</Id>
+          <Name>Steering movement</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>position</Id>
+          <Name>Position</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>dangerFault</Id>
+          <Name>Danger fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>warningFault</Id>
+          <Name>Warning fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>57</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>58</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65366</PGN>
+      <Id>seastarAbsoluteAngle</Id>
+      <Description>SeaStar: Absolute Angle</Description>
+    <Priority>2</Priority>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>17</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <Description>Source instance (Helm)</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>inputA</Id>
+          <Name>Input A</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>inputB</Id>
+          <Name>Input B</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>angle1</Id>
+          <Name>Angle 1</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>angle2</Id>
+          <Name>Angle 2</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>syncFlag</Id>
+          <Name>Sync flag</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>communicationFault</Id>
+          <Name>Communication fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>57</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>hardwareFault</Id>
+          <Name>Hardware fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>58</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>sensorFault</Id>
+          <Name>Sensor fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>59</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>voltageFault</Id>
+          <Name>Voltage fault</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>60</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>singleNetworkFlag</Id>
+          <Name>Single network flag</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>61</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>singlePowerFlag</Id>
+          <Name>Single power flag</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>62</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>reserved17</Id>
+          <Name>Reserved</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>63</BitOffset>
+          <BitStart>7</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -10184,6 +10576,149 @@ limitations under the License.
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65465</PGN>
+      <Id>seastarHelmConfiguration</Id>
+      <Description>SeaStar: Helm Configuration</Description>
+    <Priority>6</Priority>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>syncRequest</Id>
+          <Name>Sync request</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>spare5</Id>
+          <Name>Spare</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>17</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reinstanceRequest</Id>
+          <Name>Reinstance request</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>18</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>19</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>turns</Id>
+          <Name>Turns</Name>
+          <Description>Number of helm turns, 2.0 to 8.5, 0xFE = Error, 0xFF = NA</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>2rad</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>25.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>resistance</Id>
+          <Name>Resistance</Name>
+          <Description>Helm resistance setting, 0 to 100, 0xFE = Error, 0xFF = NA</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
