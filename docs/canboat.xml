@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v6.0.1
+CANboat version v6.1.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -23,12 +23,12 @@ limitations under the License.
 -->
 <?xml-stylesheet type="text/xsl" href="canboat.xsl"?>
 <PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-  <SchemaVersion>2.2.0</SchemaVersion>
+  <SchemaVersion>2.3.0</SchemaVersion>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>6.0.1</Version>
-  <Copyright>CANboat version v6.0.1
+  <Version>6.1.0</Version>
+  <Copyright>CANboat version v6.1.0
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -2175,7 +2175,7 @@ limitations under the License.
       <EnumPair Value='0' Name='AM' />
       <EnumPair Value='1' Name='FM' />
     </LookupEnumeration>
-    <LookupEnumeration Name='FUSION_SETTING' MaxValue='0'>
+    <LookupEnumeration Name='FUSION_SETTING' MaxValue='4294967295'>
       <EnumPair Value='0' Name='Alpha Search Threshold' />
       <EnumPair Value='1' Name='iPod Subtitles' />
       <EnumPair Value='2' Name='Zone 2 Linked' />
@@ -2255,7 +2255,7 @@ limitations under the License.
       <EnumPair Value='76' Name='BT Auto Connect' />
       <EnumPair Value='77' Name='Null Setting' />
     </LookupEnumeration>
-    <LookupEnumeration Name='FUSION_REPEAT_STATUS' MaxValue='0'>
+    <LookupEnumeration Name='FUSION_REPEAT_STATUS' MaxValue='4294967295'>
       <EnumPair Value='0' Name='Off' />
       <EnumPair Value='1' Name='One/track' />
       <EnumPair Value='2' Name='All/album' />
