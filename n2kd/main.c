@@ -853,7 +853,7 @@ static void checkSrcIsKnown(int src, int64_t n)
   }
 
   // Oops, no product info for this source
-  logInfo("New device src=%d seen\n", src);
+  logDebug("New device src=%d seen\n", src);
 
   if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_STREAM)
   {
