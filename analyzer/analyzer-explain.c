@@ -568,26 +568,26 @@ static void explainPGN(Pgn pgn)
           printf("                  Enumeration: %s\n", f.lookup.name);
           if (!(f.unit && f.unit[0] == '='))
           {
-            uint32_t maxValue = (1 << f.size) - 1;
-            printf("                  Range: 0..%u\n", maxValue);
+            uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
+            printf("                  Range: 0..%" PRIu64 "\n", maxValue);
             (f.lookup.function.pairEnumerator)(explainPairText);
           }
           break;
         }
 
         case LOOKUP_TYPE_TRIPLET: {
-          uint32_t maxValue = (1 << f.size) - 1;
+          uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
           printf("                  IndirectEnumeration: %s\n", f.lookup.name);
-          printf("                  Range: 0..%u\n", maxValue);
+          printf("                  Range: 0..%" PRIu64 "\n", maxValue);
           (f.lookup.function.tripletEnumerator)(explainTripletText);
           break;
         }
 
         case LOOKUP_TYPE_BIT: {
-          uint32_t maxValue = f.size;
+          uint64_t maxValue = f.size;
 
           printf("                  BitEnumeration: %s\n", f.lookup.name);
-          printf("                  BitRange: 0..%u\n", maxValue);
+          printf("                  BitRange: 0..%" PRIu64 "\n", maxValue);
           (f.lookup.function.bitEnumerator)(explainBitText);
           break;
         }
@@ -596,8 +596,8 @@ static void explainPGN(Pgn pgn)
           printf("                  Enumeration: %s\n", f.lookup.name);
           if (!(f.unit && f.unit[0] == '='))
           {
-            uint32_t maxValue = (1 << f.size) - 1;
-            printf("                  Range: 0..%u\n", maxValue);
+            uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
+            printf("                  Range: 0..%" PRIu64 "\n", maxValue);
             (f.lookup.function.fieldtypeEnumerator)(explainFieldtypeText);
           }
           break;
@@ -1204,9 +1204,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
-      uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
+      uint64_t maxValue = (UINT64_C(1) << lookupEnums[i].size) - 1;
 
-      printf("    <LookupEnumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
+      printf("    <LookupEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", lookupEnums[i].name, maxValue);
       (lookupEnums[i].function.pairEnumerator)(explainPairXMLv2);
       printf("    </LookupEnumeration>\n");
     }
@@ -1215,9 +1215,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupIndirectEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(tripletEnums); i++)
     {
-      uint32_t maxValue = (1 << tripletEnums[i].size) - 1;
+      uint64_t maxValue = (UINT64_C(1) << tripletEnums[i].size) - 1;
 
-      printf("    <LookupIndirectEnumeration Name='%s' MaxValue='%u'>\n", tripletEnums[i].name, maxValue);
+      printf("    <LookupIndirectEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", tripletEnums[i].name, maxValue);
       (tripletEnums[i].function.tripletEnumerator)(explainTripletXML2);
       printf("    </LookupIndirectEnumeration>\n");
     }
@@ -1226,8 +1226,8 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupBitEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
-      uint32_t maxValue = bitfieldEnums[i].size - 1;
-      printf("    <LookupBitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
+      uint64_t maxValue = bitfieldEnums[i].size - 1;
+      printf("    <LookupBitEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", bitfieldEnums[i].name, maxValue);
       (bitfieldEnums[i].function.bitEnumerator)(explainBitXMLv2);
       printf("    </LookupBitEnumeration>\n");
     }
@@ -1236,9 +1236,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupFieldTypeEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(fieldtypeEnums); i++)
     {
-      uint32_t maxValue = (1 << fieldtypeEnums[i].size) - 1;
+      uint64_t maxValue = (UINT64_C(1) << fieldtypeEnums[i].size) - 1;
 
-      printf("    <LookupFieldTypeEnumeration Name='%s' MaxValue='%u'>\n", fieldtypeEnums[i].name, maxValue);
+      printf("    <LookupFieldTypeEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", fieldtypeEnums[i].name, maxValue);
       (fieldtypeEnums[i].function.fieldtypeEnumerator)(explainFieldtypeXMLv2);
       printf("    </LookupFieldTypeEnumeration>\n");
     }

@@ -8,6 +8,22 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Minor schema change
+
+The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' because there are two lookups that use four bytes, the maximum unsigned value of that is not a valid int.
+
+### Fixed
+
+- #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
+
+### Added
+
+- #555: Add Magenta colour to SIMNET_MODE_COLOR.
+- #556: Fusion updates
+- #558: Fusion updates
+
+
+
 ## [v6.0.1]
 
 ### Fixed
