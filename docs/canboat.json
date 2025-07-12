@@ -2595,33 +2595,57 @@
       },
       {
         "Name":"FUSION_MESSAGE_ID",
-        "MaxValue":255,
+        "MaxValue":65535,
         "EnumValues":[
           {"Name":"Request Status", "Value":1},
-          {"Name":"Source", "Value":2},
-          {"Name":"Track Info", "Value":4},
-          {"Name":"Track Title", "Value":5},
-          {"Name":"Track Artist", "Value":6},
-          {"Name":"Track Album", "Value":7},
-          {"Name":"Track Progress", "Value":9},
-          {"Name":"AM/FM Station", "Value":11},
-          {"Name":"VHF", "Value":12},
-          {"Name":"Squelch", "Value":13},
-          {"Name":"Scan", "Value":14},
-          {"Name":"Mute", "Value":17},
-          {"Name":"Replay", "Value":20},
+          {"Name":"Set Source", "Value":2},
+          {"Name":"Media Command", "Value":3},
+          {"Name":"Tuner Command", "Value":5},
+          {"Name":"Marine Tuner Command", "Value":6},
+          {"Name":"Set Marine Tuner Squelch", "Value":7},
+          {"Name":"Set Marine Tuner Scan Mode", "Value":8},
+          {"Name":"Menu Action", "Value":9},
+          {"Name":"Request Menu Count", "Value":10},
+          {"Name":"Request Menu Item", "Value":11},
+          {"Name":"Request Menu Lock ID", "Value":12},
+          {"Name":"Set Aux Gain", "Value":13},
+          {"Name":"Set Settings", "Value":15},
+          {"Name":"DAB Updtate Command", "Value":16},
+          {"Name":"Set Mute", "Value":17},
+          {"Name":"Set Balance", "Value":18},
+          {"Name":"Set Low Pass Filer", "Value":19},
+          {"Name":"Set Sublevel", "Value":20},
+          {"Name":"Set Equalizer", "Value":22},
+          {"Name":"Set Volume Limit", "Value":23},
           {"Name":"Set Zone Volume", "Value":24},
           {"Name":"Set All Volumes", "Value":25},
-          {"Name":"Sub Volume", "Value":26},
-          {"Name":"Tone", "Value":27},
+          {"Name":"Set Line Level Control", "Value":27},
           {"Name":"Power", "Value":28},
-          {"Name":"Volume", "Value":29},
-          {"Name":"Unit Name", "Value":33},
-          {"Name":"SiriusXM Channel", "Value":36},
-          {"Name":"SiriusXM Title", "Value":37},
-          {"Name":"SiriusXM Artist", "Value":38},
-          {"Name":"SiriusXM Genre", "Value":40},
-          {"Name":"Zone Name", "Value":45}
+          {"Name":"Set Device Name", "Value":29},
+          {"Name":"Send Sirius Command", "Value":30},
+          {"Name":"Set Sirius Parental", "Value":31},
+          {"Name":"Send Factory Reset Command", "Value":33},
+          {"Name":"Set Zone Name", "Value":34},
+          {"Name":"Send Dvd Command", "Value":35},
+          {"Name":"Dvd Press Ir Key", "Value":36},
+          {"Name":"Send Select Sirius Team", "Value":39},
+          {"Name":"Send Select Sirius Artist", "Value":40},
+          {"Name":"Send Sirius Sport Alert User Action", "Value":41},
+          {"Name":"Send Sirius Artist Song User Action", "Value":45},
+          {"Name":"Send Multiroom Command", "Value":50},
+          {"Name":"Get Multiroom Device Record", "Value":51},
+          {"Name":"Scan Multirooom Devices", "Value":52},
+          {"Name":"Send File Transfer", "Value":53},
+          {"Name":"Set Loud", "Value":54},
+          {"Name":"Fapi Set Source Multiroom Enabled", "Value":56},
+          {"Name":"Request Head Unit Dsp Settings", "Value":57},
+          {"Name":"Send Transfer Status", "Value":64},
+          {"Name":"Fapi Get Server Info", "Value":65},
+          {"Name":"Fapi Set Source Enabled", "Value":69},
+          {"Name":"Fapi Set Source Name", "Value":70},
+          {"Name":"Send External Amp Gain", "Value":73},
+          {"Name":"Send Internal Amp Gain", "Value":74},
+          {"Name":"Send Mono", "Value":75}
         ]
       },
       {
@@ -12080,9 +12104,9 @@
         "Description":"Fusion: Media Control",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":7,
+        "FieldCount":6,
         "Length":6,
         "Fields":[
           {
@@ -12133,33 +12157,21 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Media Control",
-            "BitLength":8,
+            "Description":"Media Command",
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":3,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER",
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"sourceId",
             "Name":"Source ID",
             "BitLength":8,
@@ -12172,7 +12184,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":7,
+            "Order":6,
             "Id":"command",
             "Name":"Command",
             "BitLength":8,
@@ -12193,10 +12205,10 @@
         "Description":"Fusion: Sirius Control",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
         "FieldCount":7,
-        "Length":6,
+        "Length":8,
         "Fields":[
           {
             "Order":1,
@@ -12246,33 +12258,21 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Sirius Control",
-            "BitLength":8,
+            "Description":"Send Sirius Command",
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":30,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER",
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"sourceId",
             "Name":"Source ID",
             "BitLength":8,
@@ -12285,7 +12285,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":7,
+            "Order":6,
             "Id":"command",
             "Name":"Command",
             "BitLength":8,
@@ -12297,6 +12297,19 @@
             "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SIRIUS_COMMAND"
+          },
+          {
+            "Order":7,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -12306,9 +12319,9 @@
         "Description":"Fusion: Request Status",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":5,
+        "FieldCount":4,
         "Length":4,
         "Fields":[
           {
@@ -12360,30 +12373,17 @@
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
             "Description":"Request Status",
-            "BitLength":8,
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":1,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
-          },
-          {
-            "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
           }
         ]
       },
@@ -12393,9 +12393,9 @@
         "Description":"Fusion: Set Source",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":6,
+        "FieldCount":5,
         "Length":5,
         "Fields":[
           {
@@ -12446,34 +12446,21 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Source",
-            "BitLength":8,
+            "Description":"Set Source",
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":2,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"sourceId",
             "Name":"Source ID",
             "BitLength":8,
@@ -12493,9 +12480,9 @@
         "Description":"Fusion: Set Mute",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":6,
+        "FieldCount":5,
         "Length":5,
         "Fields":[
           {
@@ -12546,34 +12533,21 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Mute",
-            "BitLength":8,
+            "Description":"Set Mute",
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":17,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"command",
             "Name":"Command",
             "BitLength":8,
@@ -12594,9 +12568,9 @@
         "Description":"Fusion: Set Zone Volume",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":7,
+        "FieldCount":6,
         "Length":6,
         "Fields":[
           {
@@ -12648,33 +12622,20 @@
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
             "Description":"Set Zone Volume",
-            "BitLength":8,
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":24,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"zone",
             "Name":"Zone",
             "BitLength":8,
@@ -12687,7 +12648,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":7,
+            "Order":6,
             "Id":"volume",
             "Name":"Volume",
             "BitLength":8,
@@ -12707,9 +12668,9 @@
         "Description":"Fusion: Set All Volumes",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":9,
+        "FieldCount":8,
         "Length":8,
         "Fields":[
           {
@@ -12761,33 +12722,20 @@
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
             "Description":"Set All Volumes",
-            "BitLength":8,
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":25,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"zone1",
             "Name":"Zone1",
             "BitLength":8,
@@ -12800,7 +12748,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":7,
+            "Order":6,
             "Id":"zone2",
             "Name":"Zone2",
             "BitLength":8,
@@ -12813,7 +12761,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":8,
+            "Order":7,
             "Id":"zone3",
             "Name":"Zone3",
             "BitLength":8,
@@ -12826,7 +12774,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":9,
+            "Order":8,
             "Id":"zone4",
             "Name":"Zone4",
             "BitLength":8,
@@ -12937,7 +12885,7 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_POWER_STATE"
+            "LookupEnumeration":"OFF_ON"
           }
         ]
       },

@@ -1964,32 +1964,56 @@ limitations under the License.
       <EnumPair Value='57' Name='Low boat speed' />
       <EnumPair Value='58' Name='Wind data missing' />
     </LookupEnumeration>
-    <LookupEnumeration Name='FUSION_MESSAGE_ID' MaxValue='255'>
+    <LookupEnumeration Name='FUSION_MESSAGE_ID' MaxValue='65535'>
       <EnumPair Value='1' Name='Request Status' />
-      <EnumPair Value='2' Name='Source' />
-      <EnumPair Value='4' Name='Track Info' />
-      <EnumPair Value='5' Name='Track Title' />
-      <EnumPair Value='6' Name='Track Artist' />
-      <EnumPair Value='7' Name='Track Album' />
-      <EnumPair Value='9' Name='Track Progress' />
-      <EnumPair Value='11' Name='AM/FM Station' />
-      <EnumPair Value='12' Name='VHF' />
-      <EnumPair Value='13' Name='Squelch' />
-      <EnumPair Value='14' Name='Scan' />
-      <EnumPair Value='17' Name='Mute' />
-      <EnumPair Value='20' Name='Replay' />
+      <EnumPair Value='2' Name='Set Source' />
+      <EnumPair Value='3' Name='Media Command' />
+      <EnumPair Value='5' Name='Tuner Command' />
+      <EnumPair Value='6' Name='Marine Tuner Command' />
+      <EnumPair Value='7' Name='Set Marine Tuner Squelch' />
+      <EnumPair Value='8' Name='Set Marine Tuner Scan Mode' />
+      <EnumPair Value='9' Name='Menu Action' />
+      <EnumPair Value='10' Name='Request Menu Count' />
+      <EnumPair Value='11' Name='Request Menu Item' />
+      <EnumPair Value='12' Name='Request Menu Lock ID' />
+      <EnumPair Value='13' Name='Set Aux Gain' />
+      <EnumPair Value='15' Name='Set Settings' />
+      <EnumPair Value='16' Name='DAB Updtate Command' />
+      <EnumPair Value='17' Name='Set Mute' />
+      <EnumPair Value='18' Name='Set Balance' />
+      <EnumPair Value='19' Name='Set Low Pass Filer' />
+      <EnumPair Value='20' Name='Set Sublevel' />
+      <EnumPair Value='22' Name='Set Equalizer' />
+      <EnumPair Value='23' Name='Set Volume Limit' />
       <EnumPair Value='24' Name='Set Zone Volume' />
       <EnumPair Value='25' Name='Set All Volumes' />
-      <EnumPair Value='26' Name='Sub Volume' />
-      <EnumPair Value='27' Name='Tone' />
+      <EnumPair Value='27' Name='Set Line Level Control' />
       <EnumPair Value='28' Name='Power' />
-      <EnumPair Value='29' Name='Volume' />
-      <EnumPair Value='33' Name='Unit Name' />
-      <EnumPair Value='36' Name='SiriusXM Channel' />
-      <EnumPair Value='37' Name='SiriusXM Title' />
-      <EnumPair Value='38' Name='SiriusXM Artist' />
-      <EnumPair Value='40' Name='SiriusXM Genre' />
-      <EnumPair Value='45' Name='Zone Name' />
+      <EnumPair Value='29' Name='Set Device Name' />
+      <EnumPair Value='30' Name='Send Sirius Command' />
+      <EnumPair Value='31' Name='Set Sirius Parental' />
+      <EnumPair Value='33' Name='Send Factory Reset Command' />
+      <EnumPair Value='34' Name='Set Zone Name' />
+      <EnumPair Value='35' Name='Send Dvd Command' />
+      <EnumPair Value='36' Name='Dvd Press Ir Key' />
+      <EnumPair Value='39' Name='Send Select Sirius Team' />
+      <EnumPair Value='40' Name='Send Select Sirius Artist' />
+      <EnumPair Value='41' Name='Send Sirius Sport Alert User Action' />
+      <EnumPair Value='45' Name='Send Sirius Artist Song User Action' />
+      <EnumPair Value='50' Name='Send Multiroom Command' />
+      <EnumPair Value='51' Name='Get Multiroom Device Record' />
+      <EnumPair Value='52' Name='Scan Multirooom Devices' />
+      <EnumPair Value='53' Name='Send File Transfer' />
+      <EnumPair Value='54' Name='Set Loud' />
+      <EnumPair Value='56' Name='Fapi Set Source Multiroom Enabled' />
+      <EnumPair Value='57' Name='Request Head Unit Dsp Settings' />
+      <EnumPair Value='64' Name='Send Transfer Status' />
+      <EnumPair Value='65' Name='Fapi Get Server Info' />
+      <EnumPair Value='69' Name='Fapi Set Source Enabled' />
+      <EnumPair Value='70' Name='Fapi Set Source Name' />
+      <EnumPair Value='73' Name='Send External Amp Gain' />
+      <EnumPair Value='74' Name='Send Internal Amp Gain' />
+      <EnumPair Value='75' Name='Send Mono' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_PLAY_STATUS' MaxValue='65535'>
       <EnumPair Value='0' Name='Invalid' />
@@ -11518,12 +11542,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -11574,33 +11595,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Media Control</Description>
-          <BitLength>8</BitLength>
+          <Description>Media Command</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>3</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
           <BitLength>8</BitLength>
@@ -11613,7 +11622,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>command</Id>
           <Name>Command</Name>
           <BitLength>8</BitLength>
@@ -11635,13 +11644,10 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
-      <Length>6</Length>
+      <Length>8</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11691,33 +11697,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Sirius Control</Description>
-          <BitLength>8</BitLength>
+          <Description>Send Sirius Command</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>30</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
           <BitLength>8</BitLength>
@@ -11730,7 +11724,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>command</Id>
           <Name>Command</Name>
           <BitLength>8</BitLength>
@@ -11743,6 +11737,19 @@ limitations under the License.
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_SIRIUS_COMMAND</LookupEnumeration>
         </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -11752,12 +11759,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>5</FieldCount>
+      <FieldCount>4</FieldCount>
       <Length>4</Length>
       <Fields>
         <Field>
@@ -11809,30 +11813,17 @@ limitations under the License.
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
           <Description>Request Status</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -11843,12 +11834,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>5</FieldCount>
       <Length>5</Length>
       <Fields>
         <Field>
@@ -11899,34 +11887,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Source</Description>
-          <BitLength>8</BitLength>
+          <Description>Set Source</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>2</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
           <BitLength>8</BitLength>
@@ -11947,12 +11922,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>5</FieldCount>
       <Length>5</Length>
       <Fields>
         <Field>
@@ -12003,34 +11975,21 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>Mute</Description>
-          <BitLength>8</BitLength>
+          <Description>Set Mute</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>17</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>command</Id>
           <Name>Command</Name>
           <BitLength>8</BitLength>
@@ -12052,12 +12011,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>6</Length>
       <Fields>
         <Field>
@@ -12109,33 +12065,20 @@ limitations under the License.
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
           <Description>Set Zone Volume</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>24</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>zone</Id>
           <Name>Zone</Name>
           <BitLength>8</BitLength>
@@ -12148,7 +12091,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>volume</Id>
           <Name>Volume</Name>
           <BitLength>8</BitLength>
@@ -12169,12 +12112,9 @@ limitations under the License.
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>9</FieldCount>
+      <FieldCount>8</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -12226,33 +12166,20 @@ limitations under the License.
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
           <Description>Set All Volumes</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>25</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>zone1</Id>
           <Name>Zone1</Name>
           <BitLength>8</BitLength>
@@ -12265,7 +12192,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>zone2</Id>
           <Name>Zone2</Name>
           <BitLength>8</BitLength>
@@ -12278,7 +12205,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
+          <Order>7</Order>
           <Id>zone3</Id>
           <Name>Zone3</Name>
           <BitLength>8</BitLength>
@@ -12291,7 +12218,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>8</Order>
           <Id>zone4</Id>
           <Name>Zone4</Name>
           <BitLength>8</BitLength>
@@ -12406,7 +12333,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_POWER_STATE</LookupEnumeration>
+          <LookupEnumeration>OFF_ON</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
