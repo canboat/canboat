@@ -868,7 +868,7 @@ static void checkSrcIsKnown(int src, int64_t n)
 
 static bool storeMessage(char *line, size_t len)
 {
-  char    *s, *e = 0, *e2;
+  const char    *s, *e = 0, *e2;
   Message *m;
   int      i, idx, k;
   int      src = 0, dst = 255, prn = 0;
@@ -952,12 +952,22 @@ static bool storeMessage(char *line, size_t len)
       s += strlen(secondaryKeyList[k]);
       if (*s == '{')
       {
-        s = strstr(s, "name\":");
-        if (s == NULL)
+        const char *s2 = strstr(s, "name\":");
+        const char *s3 = strchr(s, '}');
+        if (s2 == NULL || s2 > s3)
         {
-          continue;
+          s2 = strstr(s, "value\":");
+          if (s2 == NULL || s2 > s3)
+          {
+            continue;
+          }
+          s2 += STRSIZE("value\":");
         }
-        s += STRSIZE("name\":");
+        else
+        {
+          s2 += STRSIZE("name\":");
+        }
+        s = s2;
       }
       while (strchr(SKIP_CHARACTERS, *s))
       {

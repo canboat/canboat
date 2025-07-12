@@ -15,6 +15,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 ### Fixed
 
 - #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
+- n2kd: Fix secondary key determination when multiple { } values are present
 
 ### Added
 
