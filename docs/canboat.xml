@@ -12851,7 +12851,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>5</FieldCount>
       <Length>5</Length>
       <Fields>
         <Field>
@@ -12903,33 +12903,20 @@ limitations under the License.
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
           <Description>Power</Description>
-          <BitLength>8</BitLength>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Match>28</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>power</Id>
           <Name>Power</Name>
           <BitLength>8</BitLength>

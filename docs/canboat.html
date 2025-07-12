@@ -3139,7 +3139,7 @@ limitations under the License.
              fast-packet 
             PGN is
             5
-            bytes long and contains 6 fields.
+            bytes long and contains 5 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
                   Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -3151,13 +3151,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Proprietary ID</td><td>28:
-                  Power</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  Power</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Unknown</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Power</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Power</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-FUSION_POWER_STATE">FUSION_POWER_STATE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
