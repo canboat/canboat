@@ -12795,7 +12795,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":6,
+        "FieldCount":5,
         "Length":5,
         "Fields":[
           {
@@ -12847,33 +12847,20 @@
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
             "Description":"Power",
-            "BitLength":8,
+            "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
             "Match":28,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
+            "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"unknown",
-            "Name":"Unknown",
-            "BitLength":8,
-            "BitOffset":24,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
             "Id":"power",
             "Name":"Power",
             "BitLength":8,
@@ -12884,7 +12871,7 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"OFF_ON"
+            "LookupEnumeration":"FUSION_POWER_STATE"
           }
         ]
       },
