@@ -69,7 +69,7 @@ StringBuffer rxList;      // RX list to send to iKonvert
 uint64_t lastNow; // Epoch time of last timestamp
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
-static void processReadBuffer(StringBuffer *in, int out);
+static bool processReadBuffer(StringBuffer *in, int out);
 static void initializeDevice(void);
 static void sendNextInitCommand(void);
 
@@ -291,8 +291,10 @@ int main(int argc, char **argv)
 
   for (;;)
   {
-    uint8_t data[128];
+    uint8_t data[1024];
     ssize_t r;
+    bool    receivedSomething = false;
+
     int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
     int     inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
 
@@ -355,7 +357,7 @@ int main(int argc, char **argv)
     if (sbGetLength(&readBuffer) > 0)
     {
       logDebug("readBuffer len=%zu\n", sbGetLength(&readBuffer));
-      processReadBuffer(&readBuffer, STDOUT);
+      receivedSomething = processReadBuffer(&readBuffer, STDOUT);
     }
 
     // The isReady() function already aborted the program
@@ -373,14 +375,15 @@ int main(int argc, char **argv)
         debugReset--;
       }
 
-      if (lastNow == 0)
+      if (lastNow == 0 || receivedSomething)
       {
         lastNow = now;
       }
       if (lastNow < now - 1000 * resetTimeout || debugReset == 0)
       {
         close(handle);
-        logDebug("Restart process to reset\n");
+        logError("Last received N2K data %"PRIu64" ms ago.\n", now - lastNow);
+        logError("Restart process to reset device\n");
         execvp(argv[0], argv);
       }
     }
@@ -450,7 +453,7 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
  */
 static void computeIKonvertTime(RawMessage *msg)
 {
-  getTimestamp(msg->timestamp, UINT64_C(0));
+  fmtTimestamp(msg->timestamp, UINT64_C(0));
 }
 
 static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
@@ -666,7 +669,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     n2k->prio = 7;
     n2k->src  = 0;
     n2k->dst  = 255;
-    getTimestamp(n2k->timestamp, UINT64_C(0));
+    fmtTimestamp(n2k->timestamp, UINT64_C(0));
 
     int load, errors, count, uptime, addr, rejected;
 
@@ -742,12 +745,13 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
   return false;
 }
 
-static void processReadBuffer(StringBuffer *in, int out)
+static bool processReadBuffer(StringBuffer *in, int out)
 {
   RawMessage  msg;
   char       *p;
   const char *w;
   bool        allowInit = true;
+  bool        ret = false;
 
   logDebug("processReadBuffer len=%zu\n", sbGetLength(in));
   while ((p = sbSearchChar(in, '\n')) != 0)
@@ -810,6 +814,7 @@ static void processReadBuffer(StringBuffer *in, int out)
         }
 
         sbEmpty(&dataBuffer);
+        ret = true;
       }
     }
     else
@@ -823,4 +828,6 @@ static void processReadBuffer(StringBuffer *in, int out)
     // Remove any gibberish from buffer
     sbEmpty(in);
   }
+
+  return ret;
 }

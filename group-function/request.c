@@ -121,7 +121,7 @@ int main(int argc, char **argv)
   command.count        = cnt;
 
   bytes = b - (uint8_t *) &command;
-  printf("%s,2,126208,0,%lu,%zu", now(dateStr), dest, bytes);
+  printf("%s,2,126208,0,%lu,%zu", fmtNow(dateStr), dest, bytes);
   for (i = 0; i < bytes; i++)
   {
     printf(",%02x", ((unsigned char *) &command)[i]);

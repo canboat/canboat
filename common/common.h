@@ -167,8 +167,8 @@ unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsig
 SOCKET open_socket_stream(const char *url);
 
 #define DATE_LENGTH 60
-const char *now(char str[DATE_LENGTH]);
-const char *getTimestamp(char str[DATE_LENGTH], uint64_t timestamp);
+const char *fmtNow(char str[DATE_LENGTH]);
+const char *fmtTimestamp(char str[DATE_LENGTH], uint64_t timestamp);
 uint64_t    getNow(void);
 
 uint8_t scanNibble(char c);

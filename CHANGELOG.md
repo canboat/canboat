@@ -16,6 +16,8 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 
 - #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
 - n2kd: Fix secondary key determination when multiple { } values are present
+- n2kd: Fix secondary key determination for PGN 60928
+- n2kd: Do not request product information for a stuck device whenever it sends a PGN
 
 ### Added
 
