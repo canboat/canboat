@@ -821,7 +821,7 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
     return;
   }
 
-  sprintf(line, "%s,%u,%u,%u,%u,%u", getTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
+  sprintf(line, "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
   {
@@ -872,7 +872,7 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, const un
   }
 
   p = line;
-  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", getTimestamp(dateStr, timestamp), prio, pgn, src, dst, len);
+  snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, timestamp), prio, pgn, src, dst, len);
   p += strlen(line);
 
   i = headerLen;

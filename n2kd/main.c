@@ -61,6 +61,7 @@ struct sockaddr_in udpWildcardAddress;
 #define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
 #define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
+#define PROD_INFO_TIMEOUT (60)     /* How often we ask for product information */
 
 static void closeStream(int i);
 
@@ -180,6 +181,8 @@ StringBuffer tcpMessage;  /* Buffer for sending to TCP clients */
 StringBuffer outMessage;  /* Buffer for sending to stdout */
 StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 
+uint64_t lastRequestForProdInfo[256]; /* Timestamps of last request for product info */
+
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
 #define CANBOAT_RNG (CANBOAT_PGN_END - CANBOAT_PGN_START + 1)
@@ -263,20 +266,6 @@ static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT,
 
 /*****************************************************************************************/
 
-/*
- * Return time in milliseconds since UNIX epoch
- */
-uint64_t epoch(void)
-{
-  struct timeval t;
-
-  if (gettimeofday(&t, 0))
-  {
-    logAbort("Error on obtaining wall clock\n");
-  }
-  return (uint64_t) t.tv_sec * 1000 + t.tv_usec / 1000;
-}
-
 static void setHaveNMEA0183Client(void)
 {
   int i;
@@ -318,7 +307,7 @@ static int setFdUsed(SOCKET fd, StreamType ct)
   }
 
   stream[i].fd          = fd;
-  stream[i].timeout     = epoch() + UPDATE_INTERVAL;
+  stream[i].timeout     = getNow() + UPDATE_INTERVAL;
   stream[i].type        = ct;
   stream[i].readHandler = readHandlers[ct];
   stream[i].writeBuffer = sbNew;
@@ -427,7 +416,7 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
                        m->m_src,
                        m->m_key2 ? "_" : "",
                        m->m_key2 ? m->m_key2 : "",
-                       getTimestamp(last_ts, m->m_last),
+                       fmtTimestamp(last_ts, m->m_last),
                        m->m_interval,
                        m->m_count);
       }
@@ -701,7 +690,7 @@ static void writeAllClients(void)
     ws  = writeSet;
     es  = writeSet;
     r   = select(socketFdMax + 1, 0, &ws, &es, &timeout);
-    now = epoch();
+    now = getNow();
     logDebug("write to %d streams (%u..%u fdMax=%d)\n", r, socketIdxMin, socketIdxMax, socketFdMax);
 
     for (i = socketIdxMin; r > 0 && i <= socketIdxMax; i++)
@@ -829,22 +818,23 @@ static void writeAllClients(void)
 #endif
 }
 
-static void checkSrcIsKnown(int src, int64_t n)
+static void checkSrcIsKnown(int src, int64_t now)
 {
   static const int PRODUCT_INFO_IDX = PrnToIdx(126996);
   int              i;
   Pgn             *pgn = pgnIdx[PRODUCT_INFO_IDX];
 
-  if (src == 0)
+  if (src == 0 || now > lastCheckForProdInfo[src] + UINT64_C(1000) * PROD_INFO_TIMEOUT)
   {
     return;
   }
+  lastCheckedForProdInfo[src] = now;
 
   if (pgn != NULL)
   {
     for (i = 0; i < pgn->p_maxSrc; i++)
     {
-      if (pgn->p_message[i].m_src == src && pgn->p_message[i].m_time >= n)
+      if (pgn->p_message[i].m_src == src && pgn->p_message[i].m_time >= now)
       {
         // Yes, we have product information for this source
         return;
@@ -860,7 +850,7 @@ static void checkSrcIsKnown(int src, int64_t n)
     char         strTmp[DATE_LENGTH];
     StringBuffer msg = sbNew;
 
-    sbAppendFormat(&msg, "%s,6,59904,0,%d,3,14,f0,01\n", now(strTmp), src);
+    sbAppendFormat(&msg, "%s,6,59904,0,%d,3,14,f0,01\n", fmtNow(strTmp), src);
     safeWriteBuffer(stdoutfd, &msg);
     sbClean(&msg);
   }
@@ -873,7 +863,7 @@ static bool storeMessage(char *line, size_t len)
   int      i, idx, k;
   int      src = 0, dst = 255, prn = 0;
   Pgn     *pgn;
-  int64_t  now  = epoch();
+  int64_t  now  = getNow();
   char    *key2 = 0;
   int      valid;
   char     value[16];
@@ -942,60 +932,62 @@ static bool storeMessage(char *line, size_t len)
     return false;
   }
 
-  /* Look for a secondary key */
-  for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
-  {
-    s = strstr(line, secondaryKeyList[k]);
-    if (s)
+  if (prn != 60928) {
+    /* Look for a secondary key */
+    for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
     {
-      logDebug("Found 2nd key %d = %s\n", k, secondaryKeyList[k]);
-      s += strlen(secondaryKeyList[k]);
-      if (*s == '{')
+      s = strstr(line, secondaryKeyList[k]);
+      if (s)
       {
-        const char *s2 = strstr(s, "name\":");
-        const char *s3 = strchr(s, '}');
-        if (s2 == NULL || s2 > s3)
+        logDebug("Found 2nd key %d = %s\n", k, secondaryKeyList[k]);
+        s += strlen(secondaryKeyList[k]);
+        if (*s == '{')
         {
-          s2 = strstr(s, "value\":");
+          const char *s2 = strstr(s, "name\":");
+          const char *s3 = strchr(s, '}');
           if (s2 == NULL || s2 > s3)
           {
-            continue;
+            s2 = strstr(s, "value\":");
+            if (s2 == NULL || s2 > s3)
+            {
+              continue;
+            }
+            s2 += STRSIZE("value\":");
           }
-          s2 += STRSIZE("value\":");
+          else
+          {
+            s2 += STRSIZE("name\":");
+          }
+          s = s2;
         }
-        else
+        while (strchr(SKIP_CHARACTERS, *s))
         {
-          s2 += STRSIZE("name\":");
+          s++;
         }
-        s = s2;
-      }
-      while (strchr(SKIP_CHARACTERS, *s))
-      {
-        s++;
-      }
 
-      e  = strchr(s, ' ');
-      e2 = strchr(s, '"');
-      if (!e || e2 < e)
-      {
-        e = e2;
+        e  = strchr(s, ' ');
+        e2 = strchr(s, '"');
+        if (!e || e2 < e)
+        {
+          e = e2;
+        }
+        if (!e)
+        {
+          e = s + strlen(s);
+        }
+        if (e > s && e[-1] == ',')
+        {
+          e--;
+        }
+        key2 = malloc(e - s + 1);
+        if (!key2)
+        {
+          logAbort("Out of memory allocating %u bytes\n", e - s);
+        }
+        memcpy(key2, s, e - s);
+        key2[e - s] = 0;
+        break;
       }
-      if (!e)
-      {
-        e = s + strlen(s);
-      }
-      if (e > s && e[-1] == ',')
-      {
-        e--;
-      }
-      key2 = malloc(e - s + 1);
-      if (!key2)
-      {
-        logAbort("Out of memory allocating %u bytes\n", e - s);
-      }
-      memcpy(key2, s, e - s);
-      key2[e - s] = 0;
-      break;
     }
   }
 

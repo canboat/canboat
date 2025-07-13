@@ -48,7 +48,7 @@ uint64_t getNow(void)
   return 0L;
 }
 
-const char *getTimestamp(char str[DATE_LENGTH], uint64_t when)
+const char *fmtTimestamp(char str[DATE_LENGTH], uint64_t when)
 {
   if (fixedTimestamp[0] != '\0')
   {
@@ -76,9 +76,9 @@ const char *getTimestamp(char str[DATE_LENGTH], uint64_t when)
   }
 }
 
-const char *now(char str[DATE_LENGTH])
+const char *fmtNow(char str[DATE_LENGTH])
 {
-  return getTimestamp(str, UINT64_C(0));
+  return fmtTimestamp(str, UINT64_C(0));
 }
 
 static int logBase(LogLevel level, const char *format, va_list ap)
@@ -90,7 +90,7 @@ static int logBase(LogLevel level, const char *format, va_list ap)
     return 0;
   }
 
-  fprintf(stderr, "%s %s [%s] ", logLevels[level], now(strTmp), progName);
+  fprintf(stderr, "%s %s [%s] ", logLevels[level], fmtNow(strTmp), progName);
 
   return vfprintf(stderr, format, ap);
 }
