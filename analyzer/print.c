@@ -1057,7 +1057,19 @@ extern bool fieldPrintLatLon(const Field   *field,
       degrees   = floor(dd);
       remainder = dd - degrees;
       minutes   = floor(remainder * 60.);
-      seconds   = floor(remainder * 3600.) - 60. * minutes;
+      seconds   = (remainder * 3600.) - 60. * minutes;
+
+      if (seconds >= 59.9995)
+      {
+        minutes += 1.0;
+        seconds = 0.0;
+      }
+      if (minutes >= 60.0)
+      {
+        degrees += 1.0;
+        minutes = 0.0;
+        seconds = 0.0;
+      }
 
       mprintf((showJson ? "\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%02ud %02u' %06.3f\"%c"),
               (int) degrees,

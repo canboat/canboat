@@ -115,4 +115,14 @@ test11:
 	diff $(TEMPDIR)/pgn-126983-nv.out pgn-126983-nv.out
 	diff $(TEMPDIR)/pgn-126983-nv.err pgn-126983-nv.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11
+#
+# This tests that analyzer correctly rounds seconds in long/lat in DMS format
+#
+test12:	
+	$(ANALYZER) -q -geo dd  < dms-format.in >  $(TEMPDIR)/dms-format.out -fixtime pgn-test 2>  $(TEMPDIR)/dms-format.err
+	$(ANALYZER) -q -geo dm  < dms-format.in >> $(TEMPDIR)/dms-format.out -fixtime pgn-test 2>> $(TEMPDIR)/dms-format.err
+	$(ANALYZER) -q -geo dms < dms-format.in >> $(TEMPDIR)/dms-format.out -fixtime pgn-test 2>> $(TEMPDIR)/dms-format.err
+	diff $(TEMPDIR)/dms-format.out dms-format.out
+	diff $(TEMPDIR)/dms-format.err dms-format.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12
