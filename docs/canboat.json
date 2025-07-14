@@ -5171,7 +5171,7 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+            "PhysicalQuantity":"OTENTIAL_DIFFERENCE"
           },
           {
             "Order":2,
@@ -9590,7 +9590,7 @@
         "Description":"Simnet: Magnetic Field",
         "Type":"Single",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval","NoCompanyFields"
+        "Missing":["Fields","FieldLengths","Resolution","Interval","MissingCompanyFields"
         ],
         "FieldCount":5,
         "Length":8,

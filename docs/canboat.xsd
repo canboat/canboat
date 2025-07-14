@@ -24,6 +24,17 @@ limitations under the License.
 </xs:documentation>
 
     </xs:annotation>
+
+    <xs:key name="PhysicalQuantity">
+      <xs:selector xpath="./PhysicalQuantities/PhysicalQuantity"/>
+      <xs:field xpath="@Name"/>
+    </xs:key>
+
+    <xs:keyref name="PhysicalQuantityRef" refer="PhysicalQuantity">
+      <xs:selector xpath="./PGNS/PGNInfo/Fields/Field"/>
+      <xs:field xpath="@PhysicalQuantity"/>
+    </xs:keyref>
+
   </xs:element>
 
   <xs:complexType name="PGNDefinitions">

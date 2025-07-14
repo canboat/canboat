@@ -22,6 +22,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #563: PGN 65240 field 'Manufacturer Code' should not have a unit
 - #554: Fix print of geo positions in DMS format
 - #562: Revert kWh -> J change; kWh is the underlying resolution so a more precise translation of the data.
+- #560: MissingEnumeration NoCompanyFields should be MissingCompanyFields.
 
 ### Added
 
