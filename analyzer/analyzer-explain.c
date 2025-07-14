@@ -767,7 +767,7 @@ static void explainPGNXML(Pgn pgn)
     }
     if (bit(pgn.complete, PACKET_MISSING_COMPANY_FIELDS))
     {
-      printXML(8, "MissingAttribute", "NoCompanyFields");
+      printXML(8, "MissingAttribute", "MissingCompanyFields");
     }
 
     printf("      </Missing>\n");
