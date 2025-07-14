@@ -6958,7 +6958,6 @@
             "BitLength":11,
             "BitOffset":21,
             "BitStart":5,
-            "Unit":"Manufacturer Code",
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,

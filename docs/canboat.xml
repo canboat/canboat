@@ -6268,7 +6268,6 @@ limitations under the License.
           <BitLength>11</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
-          <Unit>Manufacturer Code</Unit>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
