@@ -255,7 +255,7 @@ static char *secondaryKeyList[] = {
     "\"Proprietary ID\":" // Different SonicHub item
 };
 
-static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT, AIS_TIMEOUT, SONICHUB_TIMEOUT, SENSOR_TIMEOUT};
+static int secondaryKeyTimeout[] = {SENSOR_TIMEOUT, SENSOR_TIMEOUT, AIS_TIMEOUT, AIS_TIMEOUT, SONICHUB_TIMEOUT};
 
 /* Characters that occur between key name and value */
 #define SKIP_CHARACTERS "\": "
@@ -932,6 +932,7 @@ static bool storeMessage(char *line, size_t len)
     return false;
   }
 
+  valid = SENSOR_TIMEOUT;
   if (prn != 60928)
   {
     /* Look for a secondary key */
@@ -987,6 +988,7 @@ static bool storeMessage(char *line, size_t len)
         }
         memcpy(key2, s, e - s);
         key2[e - s] = 0;
+        valid       = secondaryKeyTimeout[k];
         break;
       }
     }
@@ -1116,6 +1118,7 @@ static bool storeMessage(char *line, size_t len)
   m->m_text[len]     = '\n';
   m->m_text[len + 1] = 0;
 
+  // Overrule timeout of valid pgn for some specific PGNs
   if (prn == 60928 || prn == 126996)
   {
     valid = CLAIM_TIMEOUT;
@@ -1124,11 +1127,8 @@ static bool storeMessage(char *line, size_t len)
   {
     valid = SONICHUB_TIMEOUT;
   }
-  else
-  {
-    valid = secondaryKeyTimeout[k];
-  }
-  logDebug("stored prn %d timeout=%d 2ndKey=%d\n", prn, valid, k);
+
+  logDebug("stored prn %d timeout=%d\n", prn, valid);
   if (key2)
   {
     free(key2);
