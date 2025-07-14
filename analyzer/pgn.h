@@ -3916,7 +3916,7 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {UINT8_FIELD("SID"),
       SIMPLE_DESC_FIELD("Target ID #", BYTES(2), "Number of route, waypoint, event, mark, etc."),
-      BITLOOKUP_FIELD("Track Status", BITS(2), TRACKING),
+      LOOKUP_FIELD("Track Status", BITS(2), TRACKING),
       LOOKUP_FIELD("Reported Target", 1, YES_NO),
       LOOKUP_FIELD("Target Acquisition", 1, TARGET_ACQUISITION),
       LOOKUP_FIELD("Bearing Reference", 2, DIRECTION_REFERENCE),

@@ -18,6 +18,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - n2kd: Fix secondary key determination when multiple { } values are present
 - n2kd: Fix secondary key determination for PGN 60928
 - n2kd: Do not request product information for a stuck device whenever it sends a PGN
+- #564: PGN 128520 field 'Track Status' is not a bit lookup
 
 ### Added
 
