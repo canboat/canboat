@@ -36,7 +36,7 @@ jobs:
         run: |
           export TARGET=armv7l-linux-musleabihf
           mkdir $HOME/musl && cd $_
-          wget https://musl.cc/${TARGET}-cross.tgz
+          wget https://keversoft.com/downloads/${TARGET}-cross.tgz
           tar xvf ${TARGET}-cross.tgz
 
       - name: Build for ARMv7 musl
