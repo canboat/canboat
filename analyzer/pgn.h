@@ -1579,7 +1579,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_ISO_TP,
      {BINARY_FIELD("Unique Number", 21, "ISO Identity Number"),
-      MANUFACTURER_FIELD("Manufacturer Code", NULL, false),
+      MANUFACTURER_FIELD(NULL, NULL, false),
       SIMPLE_DESC_FIELD("Device Instance Lower", 3, "ISO ECU Instance"),
       SIMPLE_DESC_FIELD("Device Instance Upper", 5, "ISO Function Instance"),
       LOOKUP_TRIPLET_FIELD("Device Function", BYTES(1), DEVICE_FUNCTION, "ISO Function", 7 /*Device Class*/),
