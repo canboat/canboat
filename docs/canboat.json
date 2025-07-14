@@ -23543,10 +23543,11 @@
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
+            "Signed":false,
             "RangeMin":0,
             "RangeMax":3,
-            "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"TRACKING"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"TRACKING"
           },
           {
             "Order":4,
