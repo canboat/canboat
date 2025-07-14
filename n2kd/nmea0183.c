@@ -619,7 +619,7 @@ extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg)
 
   if (rateLimit && rateType != RATE_NO_LIMIT)
   {
-    int64_t now = epoch();
+    int64_t now = getNow();
 
     if (rateLimitPassed[src][rateType] > (now - 1000L))
     {
