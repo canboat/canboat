@@ -4640,11 +4640,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>J</Unit>
-          <Resolution>3.6e+06</Resolution>
+          <Unit>kWh</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.54618822512e+16</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_ENERGY</PhysicalQuantity>
         </Field>
@@ -4655,11 +4655,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>J</Unit>
-          <Resolution>3.6e+06</Resolution>
+          <Unit>kWh</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.54618822512e+16</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_ENERGY</PhysicalQuantity>
         </Field>
@@ -5448,11 +5448,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>J</Unit>
-          <Resolution>3.6e+06</Resolution>
+          <Unit>kWh</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.54618822512e+16</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_ENERGY</PhysicalQuantity>
         </Field>
@@ -5463,11 +5463,11 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>J</Unit>
-          <Resolution>3.6e+06</Resolution>
+          <Unit>kWh</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.54618822512e+16</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_ENERGY</PhysicalQuantity>
         </Field>
@@ -19285,11 +19285,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>32</BitLength>
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>J</Unit>
-          <Resolution>3.6e+06</Resolution>
+          <Unit>kWh</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1.54618822512e+16</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_ENERGY</PhysicalQuantity>
         </Field>
@@ -21136,11 +21136,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
-          <Resolution>3600</Resolution>
+          <Unit>Ah</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>235915200</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_CHARGE</PhysicalQuantity>
         </Field>
@@ -21915,11 +21915,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>C</Unit>
-          <Resolution>3600</Resolution>
+          <Unit>Ah</Unit>
+          <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>235915200</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>ELECTRICAL_CHARGE</PhysicalQuantity>
         </Field>
