@@ -23,6 +23,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #554: Fix print of geo positions in DMS format
 - #562: Revert kWh -> J change; kWh is the underlying resolution so a more precise translation of the data.
 - #560: MissingEnumeration NoCompanyFields should be MissingCompanyFields.
+- #553: INDUSTRY_CODE 4 lookup value should be "Marine Industry", not "Marine".
 
 ### Added
 

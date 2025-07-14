@@ -22,9 +22,7 @@ limitations under the License.
 
 -->
 <?xml-stylesheet type="text/xsl" href="canboat.xsl"?>
-<PGNDefinitions 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SchemaVersion>2.3.0</SchemaVersion>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
@@ -383,7 +381,7 @@ limitations under the License.
       <EnumPair Value='1' Name='Highway' />
       <EnumPair Value='2' Name='Agriculture' />
       <EnumPair Value='3' Name='Construction' />
-      <EnumPair Value='4' Name='Marine' />
+      <EnumPair Value='4' Name='Marine Industry' />
       <EnumPair Value='5' Name='Industrial' />
     </LookupEnumeration>
     <LookupEnumeration Name='MANUFACTURER_CODE' MaxValue='2047'>
@@ -4453,7 +4451,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>OTENTIAL_DIFFERENCE</PhysicalQuantity>
+          <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>

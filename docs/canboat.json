@@ -417,7 +417,7 @@
           {"Name":"Highway", "Value":1},
           {"Name":"Agriculture", "Value":2},
           {"Name":"Construction", "Value":3},
-          {"Name":"Marine", "Value":4},
+          {"Name":"Marine Industry", "Value":4},
           {"Name":"Industrial", "Value":5}
         ]
       },
@@ -5171,7 +5171,7 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"OTENTIAL_DIFFERENCE"
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           },
           {
             "Order":2,
