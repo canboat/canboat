@@ -118,21 +118,7 @@ void fixupUnit(Field *f)
 {
   if (showSI)
   {
-    if (strcmp(f->unit, "kWh") == 0)
-    {
-      f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ.
-      f->rangeMin *= 3.6e6;
-      f->rangeMax *= 3.6e6;
-      f->unit = "J";
-    }
-    else if (strcmp(f->unit, "Ah") == 0)
-    {
-      f->resolution *= 3600.0; // 1 Ah = 3600 C.
-      f->rangeMin *= 3600.0;
-      f->rangeMax *= 3600.0;
-      f->unit = "C";
-    }
-    else if (strcmp(f->unit, "rad") == 0)
+    if (strcmp(f->unit, "rad") == 0)
     {
       if (f->hasSign)
       {

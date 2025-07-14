@@ -533,10 +533,10 @@ limitations under the License.
 
             
               The default priority (as observed in the field) is 3.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td>3.6e+06 <a href="#pq-ELECTRICAL_ENERGY">J</a><div class="xs">0 .. 1.54618822512e+16</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Total Energy Import</td><td/><td>3.6e+06 <a href="#pq-ELECTRICAL_ENERGY">J</a><div class="xs">0 .. 1.54618822512e+16</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Total Energy Import</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65006">0xFDEE:
@@ -830,10 +830,10 @@ limitations under the License.
 
             
               The default priority (as observed in the field) is 3.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td>3.6e+06 <a href="#pq-ELECTRICAL_ENERGY">J</a><div class="xs">0 .. 1.54618822512e+16</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Total Energy Export</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Total Energy Import</td><td/><td>3.6e+06 <a href="#pq-ELECTRICAL_ENERGY">J</a><div class="xs">0 .. 1.54618822512e+16</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Total Energy Import</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65019">0xFDFB:
@@ -4836,7 +4836,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Minimum Temperature Shut Off</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Usable Battery Energy</td><td/><td>3.6e+06 <a href="#pq-ELECTRICAL_ENERGY">J</a><div class="xs">0 .. 1.54618822512e+16</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Usable Battery Energy</td><td/><td><a href="#pq-ELECTRICAL_ENERGY">kWh</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>State of Health</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -5362,7 +5362,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr><tr><td>7</td><td>Ripple Voltage</td><td/><td>0.001 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 65.532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Remaining capacity</td><td/><td>3600 <a href="#pq-ELECTRICAL_CHARGE">C</a><div class="xs">0 .. 235915200</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Remaining capacity</td><td/><td><a href="#pq-ELECTRICAL_CHARGE">Ah</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-127507">0x1F213:
@@ -5606,7 +5606,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-BATTERY_VOLTAGE">BATTERY_VOLTAGE</a></td><td/></tr><tr><td>6</td><td>Chemistry</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-BATTERY_CHEMISTRY">BATTERY_CHEMISTRY</a></td><td/></tr><tr><td>7</td><td>Capacity</td><td/><td>3600 <a href="#pq-ELECTRICAL_CHARGE">C</a><div class="xs">0 .. 235915200</div></td><td>16 bits
+                      <a href="#lookup-BATTERY_CHEMISTRY">BATTERY_CHEMISTRY</a></td><td/></tr><tr><td>7</td><td>Capacity</td><td/><td><a href="#pq-ELECTRICAL_CHARGE">Ah</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Temperature Coefficient</td><td/><td>%<div class="xs">-127 .. 124</div></td><td>8 bits
