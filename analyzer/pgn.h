@@ -2360,7 +2360,7 @@ Pgn pgnList[] = {
     ,
     {"Fusion: Set Power ",
      126720,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {COMPANY(419),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(2), 28, FUSION_MESSAGE_ID),
