@@ -824,11 +824,11 @@ static void checkSrcIsKnown(int src, int64_t now)
   int              i;
   Pgn             *pgn = pgnIdx[PRODUCT_INFO_IDX];
 
-  if (src == 0 || now > lastCheckForProdInfo[src] + UINT64_C(1000) * PROD_INFO_TIMEOUT)
+  if (src == 0 || now > lastRequestForProdInfo[src] + UINT64_C(1000) * PROD_INFO_TIMEOUT)
   {
     return;
   }
-  lastCheckedForProdInfo[src] = now;
+  lastRequestForProdInfo[src] = now;
 
   if (pgn != NULL)
   {
@@ -858,15 +858,15 @@ static void checkSrcIsKnown(int src, int64_t now)
 
 static bool storeMessage(char *line, size_t len)
 {
-  const char    *s, *e = 0, *e2;
-  Message *m;
-  int      i, idx, k;
-  int      src = 0, dst = 255, prn = 0;
-  Pgn     *pgn;
-  int64_t  now  = getNow();
-  char    *key2 = 0;
-  int      valid;
-  char     value[16];
+  const char *s, *e = 0, *e2;
+  Message    *m;
+  int         i, idx, k;
+  int         src = 0, dst = 255, prn = 0;
+  Pgn        *pgn;
+  int64_t     now  = getNow();
+  char       *key2 = 0;
+  int         valid;
+  char        value[16];
 
   if (isLogLevelEnabled(LOG_DEBUG))
   {
@@ -932,7 +932,8 @@ static bool storeMessage(char *line, size_t len)
     return false;
   }
 
-  if (prn != 60928) {
+  if (prn != 60928)
+  {
     /* Look for a secondary key */
     for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
     {

@@ -108,7 +108,7 @@ extern void nmea0183VTG(StringBuffer *msg183, int src, const char *msg)
     nmea0183CreateMessage(msg183, src, "VTG,%.1f,T,,M,%.2f,N,%.2f,K", cog, SPEED_M_S_TO_KNOTS(sog), SPEED_M_S_TO_KMH(sog));
     g_sog        = sog;
     g_cog        = cog;
-    g_sog_cog_ts = epoch();
+    g_sog_cog_ts = getNow();
   }
 }
 
@@ -249,7 +249,7 @@ extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
       logDebug("Cleaned time string '%s'\n", timeString);
     }
 
-    if (g_sog_cog_ts >= epoch() - 1000)
+    if (g_sog_cog_ts >= getNow() - 1000)
     {
       snprintf(sogString, STRSIZE(sogString), "%.2f", SPEED_M_S_TO_KNOTS(g_sog));
       snprintf(cogString, STRSIZE(cogString), "%.1f", g_cog);
