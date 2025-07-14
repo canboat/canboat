@@ -4660,8 +4660,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -4685,8 +4684,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -4725,8 +4723,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -4752,8 +4749,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -4847,8 +4843,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -4874,8 +4869,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -4954,8 +4948,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -4981,8 +4974,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -5037,8 +5029,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -5062,8 +5053,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7126,8 +7116,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7151,8 +7140,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7192,8 +7180,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7219,8 +7206,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7275,8 +7261,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7302,8 +7287,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7386,8 +7370,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7413,8 +7396,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7467,8 +7449,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7494,8 +7475,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7563,8 +7543,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7590,8 +7569,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7700,8 +7678,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7727,8 +7704,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7768,8 +7744,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7795,8 +7770,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7876,8 +7850,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7903,8 +7876,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -7944,8 +7916,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -7971,8 +7942,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8063,8 +8033,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8090,8 +8059,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8130,8 +8098,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8157,8 +8124,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8197,8 +8163,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8224,8 +8189,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8264,8 +8228,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8291,8 +8254,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8332,8 +8294,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8359,8 +8320,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8429,8 +8389,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8456,8 +8415,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8550,8 +8508,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8577,8 +8534,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8661,8 +8617,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8688,8 +8643,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8760,8 +8714,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8787,8 +8740,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8870,8 +8822,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8897,8 +8848,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -8969,8 +8919,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -8996,8 +8945,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9067,8 +9015,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9094,8 +9041,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9176,8 +9122,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9203,8 +9148,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9273,8 +9217,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9300,8 +9243,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9406,8 +9348,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9433,8 +9374,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9512,8 +9452,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9539,8 +9478,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9692,8 +9630,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9719,8 +9656,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9800,8 +9736,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9827,8 +9762,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -9907,8 +9841,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -9934,8 +9867,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10002,8 +9934,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10029,8 +9960,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10158,8 +10088,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10185,8 +10114,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10266,8 +10194,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10293,8 +10220,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10369,8 +10295,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10396,8 +10321,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10465,8 +10389,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10492,8 +10415,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10576,8 +10498,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10603,8 +10524,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10689,8 +10609,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10716,8 +10635,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -10821,8 +10739,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -10848,8 +10765,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -11912,8 +11828,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -11937,8 +11852,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -11977,8 +11891,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12004,8 +11917,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12122,8 +12034,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12149,8 +12060,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12223,8 +12133,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12250,8 +12159,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12337,8 +12245,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12364,8 +12271,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12411,8 +12317,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12438,8 +12343,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12498,8 +12402,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12525,8 +12428,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12586,8 +12488,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12613,8 +12514,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12686,8 +12586,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12713,8 +12612,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12812,8 +12710,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12839,8 +12736,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -12900,8 +12796,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -12927,8 +12822,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13039,8 +12933,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13066,8 +12959,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13151,8 +13043,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13178,8 +13069,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13287,8 +13177,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13314,8 +13203,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13423,8 +13311,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13450,8 +13337,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13547,8 +13433,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13574,8 +13459,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13799,8 +13683,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13826,8 +13709,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13898,8 +13780,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -13925,8 +13806,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -13996,8 +13876,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14023,8 +13902,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14099,8 +13977,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14126,8 +14003,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14217,8 +14093,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14244,8 +14119,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14331,8 +14205,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14358,8 +14231,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14446,8 +14318,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14473,8 +14344,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14577,8 +14447,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14604,8 +14473,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14692,8 +14560,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14719,8 +14586,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14823,8 +14689,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14850,8 +14715,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14921,8 +14785,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -14948,8 +14811,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -14992,8 +14854,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -15019,8 +14880,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -15103,8 +14963,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -15130,8 +14989,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -15270,8 +15128,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -15297,8 +15154,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -15437,8 +15293,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -15464,8 +15319,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -40850,8 +40704,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -40877,8 +40730,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -40975,8 +40827,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41002,8 +40853,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41148,8 +40998,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41175,8 +41024,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41260,8 +41108,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41287,8 +41134,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41373,8 +41219,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41400,8 +41245,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41507,8 +41351,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41534,8 +41377,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41620,8 +41462,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41647,8 +41488,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41793,8 +41633,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -41820,8 +41659,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -41975,8 +41813,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42002,8 +41839,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42096,8 +41932,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42123,8 +41958,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42217,8 +42051,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42244,8 +42077,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42338,8 +42170,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42365,8 +42196,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42498,8 +42328,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42525,8 +42354,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42610,8 +42438,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42637,8 +42464,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42735,8 +42561,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42762,8 +42587,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42860,8 +42684,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42887,8 +42710,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -42959,8 +42781,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -42986,8 +42807,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43073,8 +42893,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43100,8 +42919,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43198,8 +43016,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43225,8 +43042,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43357,8 +43173,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43384,8 +43199,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43480,8 +43294,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43507,8 +43320,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43626,8 +43438,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43653,8 +43464,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43720,8 +43530,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43747,8 +43556,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -43778,8 +43586,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43805,8 +43612,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43869,8 +43675,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -43896,8 +43701,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -43992,8 +43796,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44019,8 +43822,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44131,8 +43933,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44158,8 +43959,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44267,8 +44067,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44294,8 +44093,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44354,8 +44152,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44381,8 +44178,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44513,8 +44309,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44540,8 +44335,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44624,8 +44418,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44651,8 +44444,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44735,8 +44527,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44762,8 +44553,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44846,8 +44636,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44873,8 +44662,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -44930,8 +44718,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -44957,8 +44744,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45028,8 +44814,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45055,8 +44840,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45132,8 +44916,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45159,8 +44942,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45272,8 +45054,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45299,8 +45080,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45396,8 +45176,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45423,8 +45202,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45498,8 +45276,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45525,8 +45302,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45601,8 +45377,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45628,8 +45403,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45738,8 +45512,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45765,8 +45538,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45840,8 +45612,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45867,8 +45638,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -45945,8 +45715,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -45972,8 +45741,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46050,8 +45818,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46077,8 +45844,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46165,8 +45931,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46192,8 +45957,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46254,8 +46018,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46281,8 +46044,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46356,8 +46118,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46383,8 +46144,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46458,8 +46218,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46485,8 +46244,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46585,8 +46343,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46612,8 +46369,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46713,8 +46469,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46740,8 +46495,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46840,8 +46594,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46867,8 +46620,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -46967,8 +46719,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -46994,8 +46745,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47107,8 +46857,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47134,8 +46883,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47209,8 +46957,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47236,8 +46983,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47298,8 +47044,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47325,8 +47070,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47442,8 +47186,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47469,8 +47212,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47553,8 +47295,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47580,8 +47321,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47664,8 +47404,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47691,8 +47430,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47775,8 +47513,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47802,8 +47539,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47886,8 +47622,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -47913,8 +47648,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -47997,8 +47731,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48024,8 +47757,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48099,8 +47831,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48126,8 +47857,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48213,8 +47943,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48240,8 +47969,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48293,8 +48021,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48320,8 +48047,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48481,8 +48207,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48508,8 +48233,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48549,8 +48273,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48576,8 +48299,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48682,8 +48404,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48709,8 +48430,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48778,8 +48498,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48805,8 +48524,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48900,8 +48618,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48927,8 +48644,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -48967,8 +48683,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -48994,8 +48709,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -49102,8 +48816,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49129,8 +48842,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49159,8 +48871,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49186,8 +48897,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49216,8 +48926,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49243,8 +48952,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49273,8 +48981,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49300,8 +49007,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -49400,8 +49106,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49427,8 +49132,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49457,8 +49161,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49484,8 +49187,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49514,8 +49216,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49541,8 +49242,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -49693,8 +49393,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49720,8 +49419,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -49870,8 +49568,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49897,8 +49594,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -49927,8 +49623,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -49954,8 +49649,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -50110,8 +49804,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50137,8 +49830,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -50167,8 +49859,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50194,8 +49885,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -50225,8 +49915,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50252,8 +49941,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -50282,8 +49970,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50309,8 +49996,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -50418,8 +50104,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50445,8 +50130,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -50592,8 +50276,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50619,8 +50302,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -50845,8 +50527,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -50872,8 +50553,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -50973,8 +50653,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51000,8 +50679,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -51030,8 +50708,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51057,8 +50734,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -51088,8 +50764,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51115,8 +50790,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -51246,8 +50920,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51273,8 +50946,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -51407,8 +51079,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51434,8 +51105,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -51464,8 +51134,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51491,8 +51160,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -51590,8 +51258,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51617,8 +51284,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -51724,8 +51390,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51751,8 +51416,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -51891,8 +51555,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -51918,8 +51581,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52063,8 +51725,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52090,8 +51751,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52225,8 +51885,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52252,8 +51911,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52397,8 +52055,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52424,8 +52081,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52505,8 +52161,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52532,8 +52187,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52641,8 +52295,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52668,8 +52321,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52757,8 +52409,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52784,8 +52435,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -52874,8 +52524,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -52901,8 +52550,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,
@@ -53035,8 +52683,7 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"MANUFACTURER_CODE"
           },
           {
             "Order":2,
@@ -53062,8 +52709,7 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE",
-            "PartOfPrimaryKey":true
+            "LookupEnumeration":"INDUSTRY_CODE"
           },
           {
             "Order":4,

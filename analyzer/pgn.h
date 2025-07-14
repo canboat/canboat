@@ -543,11 +543,11 @@ typedef struct
    .proprietary       = prop,                \
    .fieldType         = "INDUSTRY"}
 
-#define MARINE_INDUSTRY_FIELD INDUSTRY_FIELD("=4", "Marine Industry", PK(false))
+#define MARINE_INDUSTRY_FIELD INDUSTRY_FIELD("=4", "Marine Industry", false)
 
-#define COMPANY(id) MANUFACTURER_FIELD("=" xstr(id), NULL, PK(false)), RESERVED_FIELD(2), MARINE_INDUSTRY_FIELD
+#define COMPANY(id) MANUFACTURER_FIELD("=" xstr(id), NULL, false), RESERVED_FIELD(2), MARINE_INDUSTRY_FIELD
 
-#define MANUFACTURER_FIELDS MANUFACTURER_FIELD(NULL, NULL, PK(false)), RESERVED_FIELD(2), INDUSTRY_FIELD(NULL, NULL, PK(false))
+#define MANUFACTURER_FIELDS MANUFACTURER_FIELD(NULL, NULL, false), RESERVED_FIELD(2), INDUSTRY_FIELD(NULL, NULL, false)
 
 #define MANUFACTURER_PROPRIETARY_FIELDS                                            \
   MANUFACTURER_FIELD(NULL, "Only in PGN when Commanded PGN is proprietary", true), \
