@@ -6838,6 +6838,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TEMPERATURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -18339,6 +18340,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>13</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MAGNETIC_VARIATION</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>3</Order>
@@ -31061,9 +31063,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967292</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMin>2000000</RangeMin>
+          <RangeMax>999999999</RangeMax>
+          <FieldType>MMSI</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
@@ -49254,6 +49257,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>TEMPERATURE_SOURCE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>7</Order>

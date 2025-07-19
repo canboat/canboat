@@ -1275,7 +1275,7 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td>true</td></tr><tr><td>4</td><td>Temperature Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>5</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td>true</td></tr><tr><td>5</td><td>Actual Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
@@ -4742,7 +4742,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Source</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-MAGNETIC_VARIATION">MAGNETIC_VARIATION</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
+                      <a href="#lookup-MAGNETIC_VARIATION">MAGNETIC_VARIATION</a></td><td>true</td></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Age of service</td><td/><td><a href="#pq-DATE">d</a><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -8317,10 +8317,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>2</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>3</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
                   
                       lookup
@@ -13820,7 +13820,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td/></tr><tr><td>7</td><td>Actual Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                      <a href="#lookup-TEMPERATURE_SOURCE">TEMPERATURE_SOURCE</a></td><td>true</td></tr><tr><td>7</td><td>Actual Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Set Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits

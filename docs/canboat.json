@@ -7528,7 +7528,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"TEMPERATURE_SOURCE"
+            "LookupEnumeration":"TEMPERATURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -18813,7 +18814,8 @@
             "RangeMin":0,
             "RangeMax":13,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MAGNETIC_VARIATION"
+            "LookupEnumeration":"MAGNETIC_VARIATION",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":3,
@@ -31444,9 +31446,10 @@
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
-            "RangeMin":0,
-            "RangeMax":4294967292,
-            "FieldType":"NUMBER"
+            "RangeMin":2000000,
+            "RangeMax":999999999,
+            "FieldType":"MMSI",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,
@@ -49354,7 +49357,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"TEMPERATURE_SOURCE"
+            "LookupEnumeration":"TEMPERATURE_SOURCE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":7,
