@@ -146,6 +146,7 @@ typedef struct
    .lookup.type            = LOOKUP_TYPE_FIELDTYPE, \
    LOOKUP_FIELDTYPE_MEMBER = lookup##typ,           \
    .lookup.name            = xstr(typ),             \
+   .partOfPrimaryKey       = true,                  \
    .fieldType              = "DYNAMIC_FIELD_KEY"}
 
 #define DYNAMIC_FIELD_LENGTH(nam, len, desc) \

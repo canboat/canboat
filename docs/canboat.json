@@ -48596,7 +48596,8 @@
             "RangeMin":0,
             "RangeMax":4092,
             "FieldType":"DYNAMIC_FIELD_KEY",
-            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
+            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -49173,7 +49174,8 @@
             "RangeMin":0,
             "RangeMax":4092,
             "FieldType":"DYNAMIC_FIELD_KEY",
-            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE"
+            "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
@@ -51008,7 +51010,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"DYNAMIC_FIELD_KEY",
-            "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
+            "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":9,
@@ -51168,7 +51171,8 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"DYNAMIC_FIELD_KEY",
-            "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE"
+            "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":9,

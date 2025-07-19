@@ -48473,6 +48473,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>4092</RangeMax>
           <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -49082,6 +49083,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>4092</RangeMax>
           <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>BANDG_KEY_VALUE</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
@@ -50980,6 +50982,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
@@ -51143,6 +51146,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>65532</RangeMax>
           <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
