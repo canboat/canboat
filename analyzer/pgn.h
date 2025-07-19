@@ -2616,14 +2616,27 @@ Pgn pgnList[] = {
      {COMPANY(135), UINT8_FIELD(PK("Proprietary ID")), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Deviation Calibration Response",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {COMPANY(137),
+      LOOKUP_FIELD("Product code", BYTES(2), MARETRON_PRODUCT_CODE),
+      MATCH_LOOKUP_FIELD("Software code", BYTES(2), 1, MARETRON_SOFTWARE_CODE),
+      MATCH_LOOKUP_FIELD("Command", BYTES(1), 80, MARETRON_COMMAND),
+      LOOKUP_FIELD("Status", BYTES(1), MARETRON_STATUS_DEVIATION),
+      END_OF_FIELDS},
+     .url = "https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html"}
+
+    ,
     {"Maretron: Slave Response",
      126720,
      PACKET_LOOKUPS_UNKNOWN,
      PACKET_FAST,
      {COMPANY(137),
-      SIMPLE_DESC_FIELD("Product code", BYTES(2), "0x1b2=SSC200"),
+      UINT16_FIELD("Product code"),
       UINT16_FIELD("Software code"),
-      UINT8_DESC_FIELD("Command", "0x50=Deviation calibration result"),
+      UINT8_FIELD("Command"),
       UINT8_FIELD("Status"),
       END_OF_FIELDS}}
 
