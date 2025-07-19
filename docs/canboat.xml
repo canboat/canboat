@@ -2537,10 +2537,30 @@ limitations under the License.
       <EnumPair Value='4' Name='5 nm' />
       <EnumPair Value='5' Name='6 nm' />
     </LookupEnumeration>
+<<<<<<< HEAD
     <LookupEnumeration Name='SEASTAR_HELM_COMMAND' MaxValue='15'>
       <EnumPair Value='0' Name='No command' />
       <EnumPair Value='1' Name='Power down' />
       <EnumPair Value='2' Name='Reset' />
+=======
+    <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='255'>
+      <EnumPair Value='434' Name='SSC200' />
+      <EnumPair Value='2686' Name='SSC300' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='MARETRON_SOFTWARE_CODE' MaxValue='255'>
+      <EnumPair Value='1' Name='Version 1' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='MARETRON_COMMAND' MaxValue='255'>
+      <EnumPair Value='80' Name='Deviation calibration' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='MARETRON_STATUS_DEVIATION' MaxValue='255'>
+      <EnumPair Value='1' Name='Started' />
+      <EnumPair Value='2' Name='Completed successfully' />
+      <EnumPair Value='3' Name='Failed to complete' />
+      <EnumPair Value='4' Name='Turning too fast' />
+      <EnumPair Value='5' Name='Turning too slow' />
+      <EnumPair Value='6' Name='Invalid movement' />
+>>>>>>> 3856601 (Fix #571: Maretron PGN 126720 field decoding improvements)
     </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
@@ -15051,6 +15071,123 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
+      <Id>maretronDeviationCalibrationResponse</Id>
+      <Description>Maretron: Deviation Calibration Response</Description>
+      <URL>https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html</URL>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Maretron</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>137</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>productCode</Id>
+          <Name>Product code</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MARETRON_PRODUCT_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>softwareCode</Id>
+          <Name>Software code</Name>
+          <Description>Version 1</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MARETRON_SOFTWARE_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Deviation calibration</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>80</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MARETRON_COMMAND</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MARETRON_STATUS_DEVIATION</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
       <Id>maretronSlaveResponse</Id>
       <Description>Maretron: Slave Response</Description>
       <Type>Fast</Type>
@@ -15110,7 +15247,6 @@ limitations under the License.
           <Order>4</Order>
           <Id>productCode</Id>
           <Name>Product code</Name>
-          <Description>0x1b2=SSC200</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -15137,7 +15273,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>command</Id>
           <Name>Command</Name>
-          <Description>0x50=Deviation calibration result</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>

@@ -29,6 +29,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #555: Add Magenta colour to SIMNET_MODE_COLOR.
 - #556: Fusion updates
 - #558: Fusion updates
+- #571: Maretron PGN 126720 field decoding improvements
 
 
 

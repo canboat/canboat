@@ -3389,12 +3389,46 @@
         ]
       },
       {
+<<<<<<< HEAD
         "Name":"SEASTAR_HELM_COMMAND",
         "MaxValue":15,
         "EnumValues":[
           {"Name":"No command", "Value":0},
           {"Name":"Power down", "Value":1},
           {"Name":"Reset", "Value":2}
+=======
+        "Name":"MARETRON_PRODUCT_CODE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"SSC200", "Value":434},
+          {"Name":"SSC300", "Value":2686}
+        ]
+      },
+      {
+        "Name":"MARETRON_SOFTWARE_CODE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Version 1", "Value":1}
+        ]
+      },
+      {
+        "Name":"MARETRON_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Deviation calibration", "Value":80}
+        ]
+      },
+      {
+        "Name":"MARETRON_STATUS_DEVIATION",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Started", "Value":1},
+          {"Name":"Completed successfully", "Value":2},
+          {"Name":"Failed to complete", "Value":3},
+          {"Name":"Turning too fast", "Value":4},
+          {"Name":"Turning too slow", "Value":5},
+          {"Name":"Invalid movement", "Value":6}
+>>>>>>> 3856601 (Fix #571: Maretron PGN 126720 field decoding improvements)
         ]
       }
     ],
@@ -15557,6 +15591,122 @@
       },
       {
         "PGN":126720,
+        "Id":"maretronDeviationCalibrationResponse",
+        "Description":"Maretron: Deviation Calibration Response",
+        "URL":"https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":7,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"productCode",
+            "Name":"Product code",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_PRODUCT_CODE"
+          },
+          {
+            "Order":5,
+            "Id":"softwareCode",
+            "Name":"Software code",
+            "Description":"Version 1",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":1,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_SOFTWARE_CODE"
+          },
+          {
+            "Order":6,
+            "Id":"command",
+            "Name":"Command",
+            "Description":"Deviation calibration",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Match":80,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_COMMAND"
+          },
+          {
+            "Order":7,
+            "Id":"status",
+            "Name":"Status",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_STATUS_DEVIATION"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
         "Id":"maretronSlaveResponse",
         "Description":"Maretron: Slave Response",
         "Type":"Fast",
@@ -15614,7 +15764,6 @@
             "Order":4,
             "Id":"productCode",
             "Name":"Product code",
-            "Description":"0x1b2=SSC200",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -15641,7 +15790,6 @@
             "Order":6,
             "Id":"command",
             "Name":"Command",
-            "Description":"0x50=Deviation calibration result",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
