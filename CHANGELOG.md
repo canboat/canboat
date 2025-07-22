@@ -26,6 +26,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #553: INDUSTRY_CODE 4 lookup value should be "Marine Industry", not "Marine".
 - #566: Manufacturer fields for proprietary PGNs should not have pk attribute set"
 - #541: add some primary key indicators
+- #575: fix Maretron lookup field lengths
 
 ### Added
 

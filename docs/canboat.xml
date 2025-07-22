@@ -2559,11 +2559,11 @@ limitations under the License.
       <EnumPair Value='4' Name='5 nm' />
       <EnumPair Value='5' Name='6 nm' />
     </LookupEnumeration>
-    <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='255'>
+    <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='65535'>
       <EnumPair Value='434' Name='SSC200' />
       <EnumPair Value='2686' Name='SSC300' />
     </LookupEnumeration>
-    <LookupEnumeration Name='MARETRON_SOFTWARE_CODE' MaxValue='255'>
+    <LookupEnumeration Name='MARETRON_SOFTWARE_CODE' MaxValue='65535'>
       <EnumPair Value='1' Name='Version 1' />
     </LookupEnumeration>
     <LookupEnumeration Name='MARETRON_COMMAND' MaxValue='255'>

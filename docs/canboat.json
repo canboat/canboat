@@ -3414,7 +3414,7 @@
       },
       {
         "Name":"MARETRON_PRODUCT_CODE",
-        "MaxValue":255,
+        "MaxValue":65535,
         "EnumValues":[
           {"Name":"SSC200", "Value":434},
           {"Name":"SSC300", "Value":2686}
@@ -3422,7 +3422,7 @@
       },
       {
         "Name":"MARETRON_SOFTWARE_CODE",
-        "MaxValue":255,
+        "MaxValue":65535,
         "EnumValues":[
           {"Name":"Version 1", "Value":1}
         ]
