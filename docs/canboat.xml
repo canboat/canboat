@@ -2538,16 +2538,20 @@ limitations under the License.
       <EnumPair Value='5' Name='6 nm' />
     </LookupEnumeration>
 <<<<<<< HEAD
+<<<<<<< HEAD
     <LookupEnumeration Name='SEASTAR_HELM_COMMAND' MaxValue='15'>
       <EnumPair Value='0' Name='No command' />
       <EnumPair Value='1' Name='Power down' />
       <EnumPair Value='2' Name='Reset' />
 =======
     <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='255'>
+=======
+    <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='65535'>
+>>>>>>> 0f1e142 (Fix #575: fix Maretron lookup field lengths)
       <EnumPair Value='434' Name='SSC200' />
       <EnumPair Value='2686' Name='SSC300' />
     </LookupEnumeration>
-    <LookupEnumeration Name='MARETRON_SOFTWARE_CODE' MaxValue='255'>
+    <LookupEnumeration Name='MARETRON_SOFTWARE_CODE' MaxValue='65535'>
       <EnumPair Value='1' Name='Version 1' />
     </LookupEnumeration>
     <LookupEnumeration Name='MARETRON_COMMAND' MaxValue='255'>

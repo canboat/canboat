@@ -23,6 +23,13 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #554: Fix print of geo positions in DMS format
 - #562: Revert kWh -> J change; kWh is the underlying resolution so a more precise translation of the data.
 - #560: MissingEnumeration NoCompanyFields should be MissingCompanyFields.
+<<<<<<< HEAD
+=======
+- #553: INDUSTRY_CODE 4 lookup value should be "Marine Industry", not "Marine".
+- #566: Manufacturer fields for proprietary PGNs should not have pk attribute set"
+- #541: add some primary key indicators
+- #575: fix Maretron lookup field lengths
+>>>>>>> 0f1e142 (Fix #575: fix Maretron lookup field lengths)
 
 ### Added
 
