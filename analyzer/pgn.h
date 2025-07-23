@@ -1105,7 +1105,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("Max packets", BYTES(1), "Number of frames that can be sent before another CTS is required"),
       SIMPLE_DESC_FIELD("Next SID", BYTES(1), "Number of next frame to be transmitted"),
       RESERVED_FIELD(BYTES(2)),
-      PGN_FIELD("PGN", NULL),
+      PGN_FIELD("PGN Data", NULL),
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",

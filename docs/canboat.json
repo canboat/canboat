@@ -7,21 +7,21 @@
     "Version":"6.0.0-alpha",
     "Copyright":"CANboat version v6.0.0-alpha\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
-    {
+      {
         "Name":"ELECTRICAL_CURRENT",
-      "Description":"Electrical current",
-      "URL":"https://en.wikipedia.org/wiki/Electric_current",
-      "UnitDescription":"Ampere",
-      "Unit":"A"
+        "Description":"Electrical current",
+        "URL":"https://en.wikipedia.org/wiki/Electric_current",
+        "UnitDescription":"Ampere",
+        "Unit":"A"
       },
-    {
+      {
         "Name":"ELECTRICAL_CHARGE",
       "Description":"Electrical charge",
       "URL":"https://en.wikipedia.org/wiki/Electric_charge",
       "UnitDescription":"Coulomb",
       "Unit":"C"
       },
-    {
+      {
         "Name":"ELECTRICAL_ENERGY",
       "Description":"Electrical energy",
       "Comment":"The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is equivalent to 3.6e6 J (Joules).",
@@ -29,7 +29,7 @@
       "UnitDescription":"Kilo Watt Hour",
       "Unit":"kWh"
       },
-    {
+      {
         "Name":"ELECTRICAL_POWER",
       "Description":"Electrical power",
       "Comment":"The amount of energy transferred or converted per unit time.",
@@ -37,7 +37,7 @@
       "UnitDescription":"Watt",
       "Unit":"W"
       },
-    {
+      {
         "Name":"ELECTRICAL_APPARENT_POWER",
       "Description":"AC apparent power",
       "Comment":"The amount of power transferred where the current and voltage are in phase.",
@@ -45,7 +45,7 @@
       "UnitDescription":"Volt Ampere",
       "Unit":"VA"
       },
-    {
+      {
         "Name":"ELECTRICAL_REACTIVE_POWER",
       "Description":"AC reactive power",
       "Comment":"The amount of power transferred where the current and voltage are not in phase.",
@@ -53,14 +53,14 @@
       "UnitDescription":"Volt Ampere Reactive",
       "Unit":"VAR"
       },
-    {
+      {
         "Name":"POTENTIAL_DIFFERENCE",
       "Description":"Potential difference",
       "URL":"https://en.wikipedia.org/wiki/Voltage",
       "UnitDescription":"Volt",
       "Unit":"V"
       },
-    {
+      {
         "Name":"POWER_FACTOR",
       "Description":"Power Factor",
       "Comment":"Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the circuit. If less than one, the voltage and current are not in phase.",
@@ -68,7 +68,7 @@
       "UnitDescription":"Cos(Phi)",
       "Unit":"Cos Phi"
       },
-    {
+      {
         "Name":"LENGTH",
       "Description":"Length",
       "Comment":"The physical size in one dimension of an object.",
@@ -76,7 +76,7 @@
       "UnitDescription":"Meter",
       "Unit":"m"
       },
-    {
+      {
         "Name":"DISTANCE",
       "Description":"Distance",
       "Comment":"The amount of separation between two objects.",
@@ -84,7 +84,7 @@
       "UnitDescription":"meter",
       "Unit":"m"
       },
-    {
+      {
         "Name":"SPEED",
       "Description":"Speed",
       "Comment":"The velocity, or length per unit of time.",
@@ -92,7 +92,7 @@
       "UnitDescription":"meter per second",
       "Unit":"m/s"
       },
-    {
+      {
         "Name":"ANGLE",
       "Description":"Angle",
       "Comment":"All standardized PGNs seen so far all use radians, but some manufacturer specific PGNs use degrees (deg).",
@@ -100,7 +100,7 @@
       "UnitDescription":"radian",
       "Unit":"rad"
       },
-    {
+      {
         "Name":"ANGULAR_VELOCITY",
       "Description":"Angular velocity",
       "Comment":"The speed at which a measured angle changes",
@@ -108,7 +108,7 @@
       "UnitDescription":"radians per second",
       "Unit":"rad/s"
       },
-    {
+      {
         "Name":"VOLUME",
       "Description":"Volume",
       "Comment":"A measure of occupied three-dimensional space.",
@@ -116,7 +116,7 @@
       "UnitDescription":"liter",
       "Unit":"L"
       },
-    {
+      {
         "Name":"VOLUMETRIC_FLOW",
       "Description":"Volumetric flow",
       "Comment":"The volume of fluid which passes per unit time.",
@@ -124,21 +124,21 @@
       "UnitDescription":"liter per hour",
       "Unit":"L/h"
       },
-    {
+      {
         "Name":"MAGNETIC_FIELD",
       "Description":"Magnetic field",
       "URL":"https://en.wikipedia.org/wiki/Magnetic_field",
       "UnitDescription":"Tesla",
       "Unit":"T"
       },
-    {
+      {
         "Name":"FREQUENCY",
       "Description":"Frequency",
       "URL":"https://en.wikipedia.org/wiki/Radio_frequency",
       "UnitDescription":"Hertz",
       "Unit":"Hz"
       },
-    {
+      {
         "Name":"DATE",
       "Description":"Date",
       "Comment":"A calendar date is a reference to a particular day in time, in NMEA 2000 expressed as the number of days since 1970-01-01 (UNIX epoch).",
@@ -146,7 +146,7 @@
       "UnitDescription":"days",
       "Unit":"d"
       },
-    {
+      {
         "Name":"TIME",
       "Description":"Time",
       "Comment":"Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)",
@@ -154,13 +154,13 @@
       "UnitDescription":"Second",
       "Unit":"s"
       },
-    {
+      {
         "Name":"DURATION",
       "Description":"Duration of an event or interval between two points in time",
       "UnitDescription":"Second",
       "Unit":"s"
       },
-    {
+      {
         "Name":"GEOGRAPHICAL_LATITUDE",
       "Description":"Geographical latitude",
       "Comment":"Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.",
@@ -168,7 +168,7 @@
       "UnitDescription":"degree",
       "Unit":"deg"
       },
-    {
+      {
         "Name":"GEOGRAPHICAL_LONGITUDE",
       "Description":"Geographical longitude",
       "Comment":"Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.",
@@ -176,21 +176,21 @@
       "UnitDescription":"degree",
       "Unit":"deg"
       },
-    {
+      {
         "Name":"TEMPERATURE",
       "Description":"Temperature",
       "URL":"https://en.wikipedia.org/wiki/Temperature",
       "UnitDescription":"Kelvin",
       "Unit":"K"
       },
-    {
+      {
         "Name":"PRESSURE",
       "Description":"Pressure",
       "URL":"https://en.wikipedia.org/wiki/Pressure",
       "UnitDescription":"Pascal",
       "Unit":"Pa"
       },
-    {
+      {
         "Name":"PRESSURE_RATE",
       "Description":"Pressure rate",
       "Comment":"How the pressure changes over time.",
@@ -198,21 +198,21 @@
       "UnitDescription":"Pascal per hour",
       "Unit":"Pa/hr"
       },
-    {
+      {
         "Name":"CONCENTRATION",
       "Description":"Concentration of one substance in another, in this marine context usually the amount of salts in water",
       "URL":"https://www.engineeringtoolbox.com/water-salinity-d_1251.html",
       "UnitDescription":"parts per million",
       "Unit":"ppm"
       },
-    {
+      {
         "Name":"SIGNAL_STRENGTH",
       "Description":"Signal strength expressed in dB with respect to 1 uV/m",
       "URL":"https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
       "UnitDescription":"decibel",
       "Unit":"dB"
       },
-    {
+      {
         "Name":"SIGNAL_TO_NOISE_RATIO",
       "Description":"Signal-to-noise ratio",
       "URL":"https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
@@ -221,75 +221,75 @@
       }
     ],
     "FieldTypes":[
-    {
+      {
         "Name":"NUMBER",
       "Description":"Number",
       "EncodingDescription":"Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
       "URL":"https://en.wikipedia.org/wiki/Binary_number"
       },
-    {
+      {
         "Name":"FLOAT",
       "Description":"32 bit IEEE-754 floating point number",
       "URL":"https://en.wikipedia.org/wiki/IEEE_754",
       "Bits":32,
       "Signed":true
       },
-    {
+      {
         "Name":"DECIMAL",
       "Description":"A unsigned numeric value represented with 2 decimal digits per byte",
       "EncodingDescription":"Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.",
       "URL":"https://en.wikipedia.org/wiki/Binary-coded_decimal",
       "Signed":false
       },
-    {
+      {
         "Name":"LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning",
       "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. ",
       "Signed":false
       },
-    {
+      {
         "Name":"INDIRECT_LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
       "EncodingDescription":"Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.",
       "Signed":false
       },
-    {
+      {
         "Name":"BITLOOKUP",
       "Description":"Number value where each bit value encodes for a distinct meaning",
       "EncodingDescription":"Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation."
       },
-    {
+      {
         "Name":"DYNAMIC_FIELD_KEY",
       "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
       "EncodingDescription":"Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
       "Comment":"These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes",
       "Signed":false
       },
-    {
+      {
         "Name":"DYNAMIC_FIELD_LENGTH",
       "Description":"Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
       "Signed":false
       },
-    {
+      {
         "Name":"DYNAMIC_FIELD_VALUE",
       "Description":"Variable field whose type and length is dynamic",
       "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value."
       },
-    {
+      {
         "Name":"TIME",
       "Description":"Time",
       "URL":"https://en.wikipedia.org/wiki/Time",
       "Unit":"s"
       },
-    {
+      {
         "Name":"DURATION",
       "Description":"Duration",
       "Unit":"s"
       },
-    {
+      {
         "Name":"DATE",
       "Description":"Date",
       "EncodingDescription":"The date, in days since 1 January 1970.",
@@ -298,54 +298,54 @@
       "Unit":"d",
       "Signed":false
       },
-    {
-        "Name":"PGN",
+      {
+        "Name":"PGN Data",
       "Description":"Parameter Group Number",
       "EncodingDescription":"A 24 bit number referring to a PGN"
       },
-    {
+      {
         "Name":"ISO_NAME",
       "Description":"ISO NAME field",
       "EncodingDescription":"A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.",
       "Bits":64
       },
-    {
+      {
         "Name":"STRING_FIX",
       "Description":"A fixed length string containing single byte codepoints.",
       "EncodingDescription":"The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.",
       "Comment":"It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported."
       },
-    {
+      {
         "Name":"STRING_LZ",
       "Description":"A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
       "EncodingDescription":"The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
       "Comment":"This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.",
       "VariableSize":true
       },
-    {
+      {
         "Name":"STRING_LAU",
       "Description":"A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
       "EncodingDescription":"The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
       "VariableSize":true
       },
-    {
+      {
         "Name":"BINARY",
       "Description":"Binary field",
       "EncodingDescription":"Unspecified content consisting of any number of bits."
       },
-    {
+      {
         "Name":"RESERVED",
       "Description":"Reserved field",
       "EncodingDescription":"All reserved bits shall be 1",
       "Comment":"NMEA reserved for future expansion and/or to align next data on byte boundary"
       },
-    {
+      {
         "Name":"SPARE",
       "Description":"Spare field",
       "EncodingDescription":"All spare bits shall be 0",
       "Comment":"This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard."
       },
-    {
+      {
         "Name":"MMSI",
       "Description":"MMSI",
       "EncodingDescription":"The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.",
@@ -353,13 +353,13 @@
       "Bits":32,
       "Signed":false
       },
-    {
+      {
         "Name":"VARIABLE",
       "Description":"Variable",
       "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable.",
       "VariableSize":true
       },
-    {
+      {
         "Name":"FIELD_INDEX",
       "Description":"Field Index",
       "EncodingDescription":"Index of the specified field in the PGN referenced.",
@@ -3993,8 +3993,8 @@
           },
           {
             "Order":4,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Parameter Group Number of requested information",
             "BitLength":24,
             "BitOffset":40,
@@ -4020,8 +4020,8 @@
         "Fields":[
           {
             "Order":1,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":0,
             "BitStart":0,
@@ -4142,8 +4142,8 @@
           },
           {
             "Order":5,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
@@ -4222,8 +4222,8 @@
           },
           {
             "Order":5,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
@@ -4302,8 +4302,8 @@
           },
           {
             "Order":5,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
@@ -4382,8 +4382,8 @@
           },
           {
             "Order":5,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
@@ -4444,8 +4444,8 @@
           },
           {
             "Order":4,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
@@ -10905,8 +10905,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Requested PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11020,8 +11020,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11128,8 +11128,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11234,8 +11234,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11389,8 +11389,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11551,8 +11551,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11713,8 +11713,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "Description":"Commanded PGN",
             "BitLength":24,
             "BitOffset":8,
@@ -11867,8 +11867,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":8,
             "BitStart":0,
@@ -34051,8 +34051,8 @@
           },
           {
             "Order":2,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":8,
             "BitStart":0,
@@ -34208,8 +34208,8 @@
           },
           {
             "Order":6,
-            "Id":"pgn",
-            "Name":"PGN",
+            "Id":"pgnData",
+            "Name":"PGN Data",
             "BitLength":24,
             "BitOffset":88,
             "BitStart":0,
