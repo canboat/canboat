@@ -2444,16 +2444,9 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(419),
-<<<<<<< HEAD
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 28, FUSION_MESSAGE_ID),
-      UINT8_FIELD("Unknown"),
-      LOOKUP_FIELD("Power", 8, FUSION_POWER_STATE),
-      END_OF_FIELDS}}    
-=======
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(2), 28, FUSION_MESSAGE_ID),
       LOOKUP_FIELD("Power", BYTES(1), FUSION_POWER_STATE),
       END_OF_FIELDS}}
->>>>>>> 6105279 (fix fusion power)
 
     /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,

@@ -3389,14 +3389,15 @@
         ]
       },
       {
-<<<<<<< HEAD
         "Name":"SEASTAR_HELM_COMMAND",
         "MaxValue":15,
         "EnumValues":[
           {"Name":"No command", "Value":0},
           {"Name":"Power down", "Value":1},
           {"Name":"Reset", "Value":2}
-=======
+        ]
+      },
+      {
         "Name":"MARETRON_PRODUCT_CODE",
         "MaxValue":65535,
         "EnumValues":[
@@ -3428,7 +3429,6 @@
           {"Name":"Turning too fast", "Value":4},
           {"Name":"Turning too slow", "Value":5},
           {"Name":"Invalid movement", "Value":6}
->>>>>>> 3856601 (Fix #571: Maretron PGN 126720 field decoding improvements)
         ]
       }
     ],
@@ -5190,7 +5190,7 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"OTENTIAL_DIFFERENCE"
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           },
           {
             "Order":2,
@@ -15616,7 +15616,8 @@
             "RangeMin":0,
             "RangeMax":2044,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
+            "LookupEnumeration":"MANUFACTURER_CODE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":2,
@@ -15642,7 +15643,8 @@
             "RangeMin":0,
             "RangeMax":6,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
+            "LookupEnumeration":"INDUSTRY_CODE",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":4,

@@ -22,9 +22,7 @@ limitations under the License.
 
 -->
 <?xml-stylesheet type="text/xsl" href="canboat.xsl"?>
-<PGNDefinitions 
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<PGNDefinitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <SchemaVersion>2.3.0</SchemaVersion>
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
@@ -2537,17 +2535,12 @@ limitations under the License.
       <EnumPair Value='4' Name='5 nm' />
       <EnumPair Value='5' Name='6 nm' />
     </LookupEnumeration>
-<<<<<<< HEAD
-<<<<<<< HEAD
     <LookupEnumeration Name='SEASTAR_HELM_COMMAND' MaxValue='15'>
       <EnumPair Value='0' Name='No command' />
       <EnumPair Value='1' Name='Power down' />
       <EnumPair Value='2' Name='Reset' />
-=======
-    <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='255'>
-=======
+    </LookupEnumeration>
     <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='65535'>
->>>>>>> 0f1e142 (Fix #575: fix Maretron lookup field lengths)
       <EnumPair Value='434' Name='SSC200' />
       <EnumPair Value='2686' Name='SSC300' />
     </LookupEnumeration>
@@ -2564,7 +2557,6 @@ limitations under the License.
       <EnumPair Value='4' Name='Turning too fast' />
       <EnumPair Value='5' Name='Turning too slow' />
       <EnumPair Value='6' Name='Invalid movement' />
->>>>>>> 3856601 (Fix #571: Maretron PGN 126720 field decoding improvements)
     </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
@@ -4458,7 +4450,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>OTENTIAL_DIFFERENCE</PhysicalQuantity>
+          <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -15102,6 +15094,7 @@ limitations under the License.
           <RangeMax>2044</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>2</Order>
@@ -15128,6 +15121,7 @@ limitations under the License.
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>4</Order>
