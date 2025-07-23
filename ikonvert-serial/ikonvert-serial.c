@@ -792,6 +792,7 @@ static bool processReadBuffer(StringBuffer *in, int out)
         {
           msg.len = 0;
         }
+        ret = true; // Got some actual N2K message from iKonvert, meaning it is still working so return true.
       }
       else
       {
@@ -814,7 +815,6 @@ static bool processReadBuffer(StringBuffer *in, int out)
         }
 
         sbEmpty(&dataBuffer);
-        ret = true;
       }
     }
     else
