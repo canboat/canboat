@@ -40,7 +40,7 @@ tests:  compile
 	$(MAKE) -C analyzer tests
 	$(MAKE) -C n2kd tests
 
-generated: tests
+generated: 
 	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
 

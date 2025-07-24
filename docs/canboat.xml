@@ -381,7 +381,7 @@ limitations under the License.
       <EnumPair Value='1' Name='Highway' />
       <EnumPair Value='2' Name='Agriculture' />
       <EnumPair Value='3' Name='Construction' />
-      <EnumPair Value='4' Name='Marine' />
+      <EnumPair Value='4' Name='Marine Industry' />
       <EnumPair Value='5' Name='Industrial' />
     </LookupEnumeration>
     <LookupEnumeration Name='MANUFACTURER_CODE' MaxValue='2047'>
