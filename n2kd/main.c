@@ -60,8 +60,12 @@ struct sockaddr_in udpWildcardAddress;
 #define SENSOR_TIMEOUT (120)       /* Timeout when PGN messages expire (no longer retransmitted) */
 #define AIS_TIMEOUT (3600)         /* AIS messages expiration is much longer */
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
-#define CLAIM_TIMEOUT (8640000)    /* .. as are address claims and device names */
-#define PROD_INFO_TIMEOUT (60)     /* How often we ask for product information */
+#define CLAIM_TIMEOUT (120)        /* Two minutes no claim -> broken */
+#define CLAIM_REQUEST_TIMEOUT (60) /* How often we ask for claim and prod information */
+
+#define PRN_CLAIM (60928)
+#define PRN_PROD_INFO (126996)
+#define PRN_CONFIG_INFO (126998)
 
 static void closeStream(int i);
 
@@ -181,7 +185,7 @@ StringBuffer tcpMessage;  /* Buffer for sending to TCP clients */
 StringBuffer outMessage;  /* Buffer for sending to stdout */
 StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 
-uint64_t lastRequestForProdInfo[256]; /* Timestamps of last request for product info */
+uint64_t lastRequestForProdInfo; /* Timestamp of last request for product info */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
@@ -206,7 +210,7 @@ typedef struct
 {
   uint8_t  m_src;
   uint32_t m_interval; // Interval to previous m_last
-  uint64_t m_time;     // Message valid until this time
+  uint64_t m_valid;     // Message valid until this time
   uint64_t m_last;     // When received
   uint32_t m_count;    // How many times received
   char    *m_key2;
@@ -440,7 +444,7 @@ static char *getFullStateJSON(StreamType stream, int64_t now)
         {
           Message *m = &pgn->p_message[s];
 
-          if (m->m_time >= now)
+          if (m->m_valid >= now || pgn->p_prn == PRN_PROD_INFO)
           {
             sbAppendFormat(&state, "  ,\"%u%s%s\":%s", m->m_src, m->m_key2 ? "_" : "", m->m_key2 ? m->m_key2 : "", m->m_text);
           }
@@ -818,39 +822,21 @@ static void writeAllClients(void)
 #endif
 }
 
-static void checkSrcIsKnown(int src, int64_t now)
+static void requestAddressClaimAndProductInfo(int64_t now)
 {
-  static const int PRODUCT_INFO_IDX = PrnToIdx(126996);
-  int              i;
-  Pgn             *pgn = pgnIdx[PRODUCT_INFO_IDX];
-
-  if (src == 0 || now > lastRequestForProdInfo[src] + UINT64_C(1000) * PROD_INFO_TIMEOUT)
+  if (now < lastRequestForProdInfo + UINT64_C(1000) * CLAIM_REQUEST_TIMEOUT)
   {
     return;
   }
-  lastRequestForProdInfo[src] = now;
-
-  if (pgn != NULL)
-  {
-    for (i = 0; i < pgn->p_maxSrc; i++)
-    {
-      if (pgn->p_message[i].m_src == src && pgn->p_message[i].m_time >= now)
-      {
-        // Yes, we have product information for this source
-        return;
-      }
-    }
-  }
-
-  // Oops, no product info for this source
-  logDebug("New device src=%d seen\n", src);
+  lastRequestForProdInfo = now;
 
   if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_STREAM)
   {
     char         strTmp[DATE_LENGTH];
     StringBuffer msg = sbNew;
 
-    sbAppendFormat(&msg, "%s,6,59904,0,%d,3,14,f0,01\n", fmtNow(strTmp), src);
+    sbAppendFormat(&msg, "%s,6,59904,0,255,3,14,f0,01\n", fmtNow(strTmp));
+    sbAppendFormat(&msg, "%s,6,59904,0,255,3,00,ee,00\n", fmtNow(strTmp));
     safeWriteBuffer(stdoutfd, &msg);
     sbClean(&msg);
   }
@@ -933,7 +919,7 @@ static bool storeMessage(char *line, size_t len)
   }
 
   valid = SENSOR_TIMEOUT;
-  if (prn != 60928)
+  if (prn != PRN_CLAIM)
   {
     /* Look for a secondary key */
     for (k = 0; k < ARRAYSIZE(secondaryKeyList); k++)
@@ -1065,7 +1051,7 @@ static bool storeMessage(char *line, size_t len)
   {
     for (i = 0; i < pgn->p_maxSrc; i++)
     {
-      if (pgn->p_message[i].m_time < now)
+      if (pgn->p_message[i].m_valid < now)
       {
         pgn->p_message[i].m_src = (uint8_t) src;
         if (pgn->p_message[i].m_key2)
@@ -1119,7 +1105,7 @@ static bool storeMessage(char *line, size_t len)
   m->m_text[len + 1] = 0;
 
   // Overrule timeout of valid pgn for some specific PGNs
-  if (prn == 60928 || prn == 126996)
+  if (prn == PRN_CLAIM || prn == PRN_PROD_INFO || prn == PRN_CONFIG_INFO)
   {
     valid = CLAIM_TIMEOUT;
   }
@@ -1133,7 +1119,7 @@ static bool storeMessage(char *line, size_t len)
   {
     free(key2);
   }
-  m->m_time = now + valid * INT64_C(1000);
+  m->m_valid = now + valid * INT64_C(1000);
   if (m->m_last > 0)
   {
     m->m_interval = (uint32_t) (now - m->m_last);
@@ -1141,10 +1127,7 @@ static bool storeMessage(char *line, size_t len)
   m->m_last = now;
   m->m_count++;
 
-  if (prn != 126996)
-  {
-    checkSrcIsKnown(src, now);
-  }
+  requestAddressClaimAndProductInfo(now);
   return true;
 }
 
