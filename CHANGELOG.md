@@ -8,16 +8,21 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [v6.1.0]
+
 ### Minor schema change
 
-The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' because there are two lookups that use four bytes, the maximum unsigned value of that is not a valid int.
+The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' because there
+are two lookups that use four bytes, the maximum unsigned value of that is not a valid int.
 
 ### Fixed
 
-- #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
+- ikonvert-serial: reset connection when no actual PGNs are received
 - n2kd: Fix secondary key determination when multiple { } values are present
 - n2kd: Fix secondary key determination for PGN 60928
 - n2kd: Do not request product information for a stuck device whenever it sends a PGN
+- n2kd: simplify product info and address claim requests
+- #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
 - #564: PGN 128520 field 'Track Status' is not a bit lookup
 - #563: PGN 65240 field 'Manufacturer Code' should not have a unit
 - #554: Fix print of geo positions in DMS format
@@ -27,6 +32,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #566: Manufacturer fields for proprietary PGNs should not have pk attribute set"
 - #541: add some primary key indicators
 - #575: fix Maretron lookup field lengths
+- #578: Add Seatalk1: Pilot Hull Type
 
 ### Added
 
@@ -34,8 +40,7 @@ The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' beca
 - #556: Fusion updates
 - #558: Fusion updates
 - #571: Maretron PGN 126720 field decoding improvements
-
-
+- #577: Run tests for canboatjs, ts-pgns and related Signal K projects
 
 ## [v6.0.1]
 
@@ -841,7 +846,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.0.1..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.0..HEAD
+[6.1.0]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.0
 [6.0.1]: https://github.com/canboat/canboat/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0
 [5.1.3]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.3
