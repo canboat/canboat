@@ -2285,6 +2285,18 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Seatalk1: Pilot Hull Type",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_FIELD(PK("Proprietary ID"), BYTES(2), 5740, "0x166C"),
+      MATCH_FIELD("command", BYTES(1), 80, "0x50"),
+      LOOKUP_FIELD("Hull Type", BYTES(1), SEATALK_PILOT_HULL_TYPE),
+      BINARY_FIELD("Unknown", BYTES(7), NULL),
+      END_OF_FIELDS}}
+
+    ,
     {"Fusion: Media Control",
      126720,
      PACKET_COMPLETE,

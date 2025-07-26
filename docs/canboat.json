@@ -1484,6 +1484,18 @@
         ]
       },
       {
+        "Name":"SEATALK_PILOT_HULL_TYPE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Sail", "Value":0},
+          {"Name":"Sail (slow turn)", "Value":1},
+          {"Name":"Sail Catamaran", "Value":2},
+          {"Name":"Power (slow turn)", "Value":3},
+          {"Name":"Power (fast turn)", "Value":5},
+          {"Name":"Power", "Value":8}
+        ]
+      },
+      {
         "Name":"ENTERTAINMENT_ZONE",
         "MaxValue":255,
         "EnumValues":[
@@ -12038,6 +12050,116 @@
             "Name":"Unknown 2",
             "BitLength":80,
             "BitOffset":88,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"seatalk1PilotHullType",
+        "Description":"Seatalk1: Pilot Hull Type",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":7,
+        "Length":13,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Raymarine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1851,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"0x166C",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":5740,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"command",
+            "Name":"command",
+            "Description":"0x50",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":80,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"hullType",
+            "Name":"Hull Type",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_PILOT_HULL_TYPE"
+          },
+          {
+            "Order":7,
+            "Id":"unknown",
+            "Name":"Unknown",
+            "BitLength":56,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"

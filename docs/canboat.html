@@ -2767,6 +2767,40 @@ limitations under the License.
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>10</td><td>Unknown 2</td><td/><td/><td>80 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
+            - Seatalk1: Pilot Hull Type</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>5740</td></tr><tr><td>command</td><td>80</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            13
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>5740:
+                  0x166C</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>80:
+                  0x50</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Hull Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE</a></td><td/></tr><tr><td>7</td><td>Unknown</td><td/><td/><td>56 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
             - Fusion: Media Control</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>3</td></tr></table></p><p/><p>
@@ -15291,7 +15325,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Instrument</td></tr><tr><td>1</td><td>Autopilot</td></tr><tr><td>2</td><td>Radar</td></tr><tr><td>3</td><td>Chart Plotter</td></tr><tr><td>4</td><td>AIS</td></tr></table><h3 id="lookup-SEATALK_PILOT_MODE">SEATALK_PILOT_MODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>64</td><td>Standby</td></tr><tr><td>66</td><td>Auto</td></tr><tr><td>70</td><td>Wind</td></tr><tr><td>74</td><td>Track</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>64</td><td>Standby</td></tr><tr><td>66</td><td>Auto</td></tr><tr><td>70</td><td>Wind</td></tr><tr><td>74</td><td>Track</td></tr></table><h3 id="lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Sail</td></tr><tr><td>1</td><td>Sail (slow turn)</td></tr><tr><td>2</td><td>Sail Catamaran</td></tr><tr><td>3</td><td>Power (slow turn)</td></tr><tr><td>5</td><td>Power (fast turn)</td></tr><tr><td>8</td><td>Power</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>All zones</td></tr><tr><td>1</td><td>Zone 1</td></tr><tr><td>2</td><td>Zone 2</td></tr><tr><td>3</td><td>Zone 3</td></tr><tr><td>4</td><td>Zone 4</td></tr></table><h3 id="lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE
         (0 - 255)
