@@ -2291,24 +2291,51 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1851),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 108, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 20495, SEATALK_COMMAND),
-      LOOKUP_FIELD("Hull Type", BYTES(1), SEATALK_PILOT_HULL_TYPE),
-      BINARY_FIELD("Unknown 2", BYTES(7), NULL),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 20502, SEATALK_COMMAND),
+      LOOKUP_FIELD("Hull Type", BYTES(2), SEATALK_PILOT_HULL_TYPE),
       END_OF_FIELDS}}
 
-    /*
-  ,
-  {"Seatalk1: Set Pilot Hull Type",
-   126720,
-   PACKET_INCOMPLETE,
-   PACKET_FAST,
-   {COMPANY(1851),
-    MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 108, SEATALK_MESSAGE_ID),
-    MATCH_FIELD("command", BYTES(2), 20502, "Set Hull Type"),
-    LOOKUP_FIELD("Hull Type", BYTES(1), SEATALK_PILOT_HULL_TYPE),
-    BINARY_FIELD("Unknown 2", BYTES(7), NULL),
-    END_OF_FIELDS}}
-*/
+          ,
+    {"Seatalk1: Device Identification",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 36993, SEATALK_COMMAND),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
+      END_OF_FIELDS}}
+
+    ,
+    {"Seatalk1: Display Brightness",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command1"), BYTES(2), 12, SEATALK_COMMAND),
+      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
+      MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
+      PERCENTAGE_U8_FIELD("Brightness"),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
+      END_OF_FIELDS}}
+
+    ,
+    {"Seatalk1: Display Color",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command1"), BYTES(2), 12, SEATALK_COMMAND),
+      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
+      MATCH_FIELD("Command", BYTES(1), 1, "Color"),
+      LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR),
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
+      END_OF_FIELDS}}
 
     ,
     {"Fusion: Media Control",
@@ -2409,48 +2436,6 @@ Pgn pgnList[] = {
       BINARY_FIELD("Unknown data", BYTES(14), NULL),
       // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
       // FF FF FF FF FF | 42 00 F8 02 05])
-      END_OF_FIELDS}}
-
-    ,
-    {"Seatalk1: Device Identification",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1851),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 36993, SEATALK_COMMAND),
-      RESERVED_FIELD(BYTES(1)),
-      LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
-      END_OF_FIELDS}}
-
-    ,
-    {"Seatalk1: Display Brightness",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1851),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command1"), BYTES(2), 12, SEATALK_COMMAND),
-      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
-      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
-      MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
-      PERCENTAGE_U8_FIELD("Brightness"),
-      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
-      END_OF_FIELDS}}
-
-    ,
-    {"Seatalk1: Display Color",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1851),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command1"), BYTES(2), 12, SEATALK_COMMAND),
-      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
-      BINARY_FIELD("Unknown 1", BYTES(1), NULL),
-      MATCH_FIELD("Command", BYTES(1), 1, "Color"),
-      LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR),
-      BINARY_FIELD("Unknown 2", BYTES(1), NULL),
       END_OF_FIELDS}}
 
     ,
