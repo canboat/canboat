@@ -1128,6 +1128,17 @@ limitations under the License.
       <EnumPair Value='105' Name='Enhanced geographic area' />
       <EnumPair Value='106' Name='Number of persons on board' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SEATALK_MESSAGE_ID' MaxValue='255'>
+      <EnumPair Value='240' Name='Seatalk' />
+      <EnumPair Value='140' Name='Display' />
+      <EnumPair Value='108' Name='Pilot Configuration' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SEATALK_COMMAND' MaxValue='255'>
+      <EnumPair Value='33921' Name='Pilot Mode' />
+      <EnumPair Value='20495' Name='Hull Type' />
+      <EnumPair Value='34433' Name='Keystroke' />
+      <EnumPair Value='36993' Name='Device Identification' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SEATALK_ALARM_STATUS' MaxValue='255'>
       <EnumPair Value='0' Name='Alarm condition not met' />
       <EnumPair Value='1' Name='Alarm condition met and not silenced' />
@@ -11328,120 +11339,6 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
-      <Id>seatalk1PilotHullType</Id>
-      <Description>Seatalk1: Pilot Hull Type</Description>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <FieldCount>7</FieldCount>
-      <Length>13</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Raymarine</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1851</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2044</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>0x166C</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>108</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>command</Id>
-          <Name>command</Name>
-          <Description>20495</Description>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>20495</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>hullType</Id>
-          <Name>Hull Type</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SEATALK_PILOT_HULL_TYPE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>unknown2</Id>
-          <Name>Unknown 2</Name>
-          <BitLength>56</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>126720</PGN>
       <Id>seatalk1PilotMode</Id>
       <Description>Seatalk1: Pilot Mode</Description>
       <Type>Fast</Type>
@@ -11501,7 +11398,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>0x81f0</Description>
+          <Description>Seatalk</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -11510,14 +11407,15 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>command</Id>
           <Name>command</Name>
-          <Description>0x84</Description>
+          <Description>Pilot Mode</Description>
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -11526,7 +11424,9 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -11581,6 +11481,123 @@ limitations under the License.
           <Name>Unknown 2</Name>
           <BitLength>80</BitLength>
           <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>seatalk1PilotHullType</Id>
+      <Description>Seatalk1: Pilot Hull Type</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>13</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Raymarine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1851</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Pilot Configuration</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>108</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>command</Name>
+          <Description>Hull Type</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>20495</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>hullType</Id>
+          <Name>Hull Type</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_PILOT_HULL_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>unknown2</Id>
+          <Name>Unknown 2</Name>
+          <BitLength>56</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -12373,7 +12390,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>9</FieldCount>
-      <Length>21</Length>
+      <Length>22</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12421,7 +12438,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>0x81f0</Description>
+          <Description>Seatalk</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -12430,30 +12447,33 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>command</Id>
           <Name>command</Name>
-          <Description>0x86</Description>
-          <BitLength>8</BitLength>
+          <Description>Keystroke</Description>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>34433</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>device</Id>
           <Name>device</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12466,7 +12486,7 @@ limitations under the License.
           <Id>key</Id>
           <Name>key</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12481,7 +12501,7 @@ limitations under the License.
           <Name>keyInverted</Name>
           <Description>Bit negated version of key</Description>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12494,7 +12514,7 @@ limitations under the License.
           <Id>unknownData</Id>
           <Name>Unknown data</Name>
           <BitLength>112</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -12562,7 +12582,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>0x81f0</Description>
+          <Description>Seatalk</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -12571,14 +12591,15 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>command</Id>
           <Name>command</Name>
-          <Description>0x90</Description>
+          <Description>Device Identification</Description>
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -12587,7 +12608,9 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -12628,7 +12651,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>9</Length>
+      <Length>10</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12676,7 +12699,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>0x0c8c</Description>
+          <Description>Display</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -12685,30 +12708,33 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>command1</Id>
           <Name>command1</Name>
-          <Description>0x90</Description>
-          <BitLength>8</BitLength>
+          <Description></Description>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>12</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>group</Id>
           <Name>Group</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12722,7 +12748,7 @@ limitations under the License.
           <Id>unknown1</Id>
           <Name>Unknown 1</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -12733,7 +12759,7 @@ limitations under the License.
           <Name>Command</Name>
           <Description>Brightness</Description>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
           <Resolution>1</Resolution>
@@ -12747,7 +12773,7 @@ limitations under the License.
           <Id>brightness</Id>
           <Name>Brightness</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>1</Resolution>
@@ -12761,7 +12787,7 @@ limitations under the License.
           <Id>unknown2</Id>
           <Name>Unknown 2</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -12781,7 +12807,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>9</Length>
+      <Length>10</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -12829,7 +12855,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>proprietaryId</Id>
           <Name>Proprietary ID</Name>
-          <Description>0x0c8c</Description>
+          <Description>Display</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -12838,30 +12864,33 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_MESSAGE_ID</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>command1</Id>
           <Name>command1</Name>
-          <Description>0x0c</Description>
-          <BitLength>8</BitLength>
+          <Description></Description>
+          <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>12</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>group</Id>
           <Name>Group</Name>
           <BitLength>8</BitLength>
-          <BitOffset>32</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12875,7 +12904,7 @@ limitations under the License.
           <Id>unknown1</Id>
           <Name>Unknown 1</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -12886,7 +12915,7 @@ limitations under the License.
           <Name>Command</Name>
           <Description>Color</Description>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
           <Resolution>1</Resolution>
@@ -12900,7 +12929,7 @@ limitations under the License.
           <Id>color</Id>
           <Name>Color</Name>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12914,7 +12943,7 @@ limitations under the License.
           <Id>unknown2</Id>
           <Name>Unknown 2</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
