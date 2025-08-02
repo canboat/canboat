@@ -11725,7 +11725,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>10</Length>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11791,14 +11791,14 @@ limitations under the License.
           <Id>command1</Id>
           <Name>command1</Name>
           <Description>Settings</Description>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>12</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>36993</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
@@ -11808,7 +11808,7 @@ limitations under the License.
           <Id>group</Id>
           <Name>Group</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -11822,7 +11822,7 @@ limitations under the License.
           <Id>unknown1</Id>
           <Name>Unknown 1</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -11833,7 +11833,7 @@ limitations under the License.
           <Name>Command</Name>
           <Description>Brightness</Description>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Match>0</Match>
           <Resolution>1</Resolution>
@@ -11847,7 +11847,7 @@ limitations under the License.
           <Id>brightness</Id>
           <Name>Brightness</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>1</Resolution>
@@ -11861,7 +11861,7 @@ limitations under the License.
           <Id>unknown2</Id>
           <Name>Unknown 2</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -11881,7 +11881,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>10</Length>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -11947,14 +11947,14 @@ limitations under the License.
           <Id>command1</Id>
           <Name>command1</Name>
           <Description>Settings</Description>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Match>12</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>36993</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
@@ -11964,7 +11964,7 @@ limitations under the License.
           <Id>group</Id>
           <Name>Group</Name>
           <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -11978,7 +11978,7 @@ limitations under the License.
           <Id>unknown1</Id>
           <Name>Unknown 1</Name>
           <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -11989,7 +11989,7 @@ limitations under the License.
           <Name>Command</Name>
           <Description>Color</Description>
           <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Match>1</Match>
           <Resolution>1</Resolution>
@@ -12003,7 +12003,7 @@ limitations under the License.
           <Id>color</Id>
           <Name>Color</Name>
           <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -12017,7 +12017,7 @@ limitations under the License.
           <Id>unknown2</Id>
           <Name>Unknown 2</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
