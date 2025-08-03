@@ -2286,7 +2286,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Seatalk: Pilot Hull Type",
+    {"Seatalk1: Pilot Hull Type",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -2296,6 +2296,20 @@ Pgn pgnList[] = {
       BINARY_FIELD("Unknown", BYTES(1), NULL),
       LOOKUP_FIELD("Hull Type", BYTES(2), SEATALK_PILOT_HULL_TYPE),
       BINARY_FIELD("Unknown 2", BYTES(7), NULL),
+      END_OF_FIELDS}}
+
+    ,
+    {"Seatalk: Pilot Auto Turn",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 108, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 38, SEATALK_COMMAND),
+      BINARY_FIELD("Unknown", BYTES(1), NULL),
+      LOOKUP_FIELD("Enabled", BYTES(1), YES_NO),
+      LOOKUP_FIELD("Unknown 2", BYTES(1), YES_NO),
+      BINARY_FIELD("Unknown 3", BYTES(2), NULL),
       END_OF_FIELDS}}
 
     ,
@@ -2341,7 +2355,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Unknown 2", BYTES(1), NULL),
       END_OF_FIELDS}}
 
-          /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
+    /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
     ,
     {"Seatalk1: Keystroke",
      126720,
