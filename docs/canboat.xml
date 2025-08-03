@@ -1139,9 +1139,68 @@ limitations under the License.
       <EnumPair Value='12' Name='Settings' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK1_COMMAND' MaxValue='255'>
-      <EnumPair Value='132' Name='Pilot Mode' />
+      <EnumPair Value='0' Name='Depth Below Transducer' />
+      <EnumPair Value='1' Name='Equipment ID' />
+      <EnumPair Value='5' Name='Engine RPM and PITCH' />
+      <EnumPair Value='16' Name='Apparent Wind Angle' />
+      <EnumPair Value='17' Name='Apparent Wind Speed' />
+      <EnumPair Value='32' Name='Speed through water' />
+      <EnumPair Value='33' Name='Trip Mileage' />
+      <EnumPair Value='34' Name='Total Mileage' />
+      <EnumPair Value='35' Name='Water temperature (ST50)' />
+      <EnumPair Value='36' Name='Display units for Mileage &amp; Speed' />
+      <EnumPair Value='37' Name='Total &amp; Trip Log' />
+      <EnumPair Value='38' Name='Speed through water (with average)' />
+      <EnumPair Value='39' Name='Water temperature' />
+      <EnumPair Value='48' Name='Set lamp Intensity' />
+      <EnumPair Value='54' Name='Cancel MOB (Man Over Board) condition' />
+      <EnumPair Value='56' Name='Codelock data' />
+      <EnumPair Value='80' Name='LAT position' />
+      <EnumPair Value='81' Name='LON position' />
+      <EnumPair Value='82' Name='Speed over Ground' />
+      <EnumPair Value='83' Name='Course over Ground (COG)' />
+      <EnumPair Value='84' Name='GMT-time' />
+      <EnumPair Value='85' Name='TRACK keystroke on GPS unit' />
+      <EnumPair Value='86' Name='Date' />
+      <EnumPair Value='87' Name='Sat Info' />
+      <EnumPair Value='88' Name='LAT/LON (raw unfiltered)' />
+      <EnumPair Value='89' Name='Set Count Down Timer' />
+      <EnumPair Value='97' Name='Issued by E-80 multifunction display at initialization' />
+      <EnumPair Value='101' Name='Select Fathom display units for depth display' />
+      <EnumPair Value='102' Name='Wind alarm' />
+      <EnumPair Value='104' Name='Alarm acknowledgment keystroke' />
+      <EnumPair Value='108' Name='Second equipment-ID datagram' />
+      <EnumPair Value='110' Name='MOB (Man Over Board)' />
+      <EnumPair Value='112' Name='Keystroke on Raymarine A25006 ST60 Maxiview Remote Control' />
+      <EnumPair Value='128' Name='Set Lamp Intensity' />
+      <EnumPair Value='129' Name='Sent by course computer during setup' />
+      <EnumPair Value='130' Name='Target waypoint name' />
+      <EnumPair Value='131' Name='Sent by course computer' />
+      <EnumPair Value='132' Name='Compass heading Autopilot course and Rudder position' />
+      <EnumPair Value='133' Name='Navigation to waypoint information' />
       <EnumPair Value='134' Name='Keystroke' />
-      <EnumPair Value='144' Name='Device Identification' />
+      <EnumPair Value='135' Name='Set Response level' />
+      <EnumPair Value='136' Name='Autopilot Parameter' />
+      <EnumPair Value='137' Name='Compass heading sent by ST40 compass instrument' />
+      <EnumPair Value='144' Name='Device Indentification' />
+      <EnumPair Value='145' Name='Set Rudder gain' />
+      <EnumPair Value='146' Name='Set Autopilot Parameter' />
+      <EnumPair Value='147' Name='Enter AP-Setup' />
+      <EnumPair Value='149' Name='Replaces command 84 while autopilot is in value setting mode' />
+      <EnumPair Value='153' Name='Compass variation' />
+      <EnumPair Value='154' Name='Version String' />
+      <EnumPair Value='156' Name='Compass heading and Rudder position' />
+      <EnumPair Value='158' Name='Waypoint definition' />
+      <EnumPair Value='161' Name='Destination Waypoint Info' />
+      <EnumPair Value='162' Name='Arrival Info' />
+      <EnumPair Value='164' Name='Broadcast query/response to identify devices' />
+      <EnumPair Value='165' Name='GPS and DGPS Info' />
+      <EnumPair Value='167' Name='Unknown meaning' />
+      <EnumPair Value='168' Name='Alarm ON/OFF for Guard' />
+      <EnumPair Value='171' Name='Alarm ON/OFF for Guard' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SEATALK1_ATT' MaxValue='255'>
+      <EnumPair Value='0' Name='Depth Below Transducer' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK_ALARM_STATUS' MaxValue='255'>
       <EnumPair Value='0' Name='Alarm condition not met' />
@@ -11436,7 +11495,7 @@ limitations under the License.
           <Order>6</Order>
           <Id>seatalk1Command</Id>
           <Name>Seatalk1 Command</Name>
-          <Description></Description>
+          <Description>Compass heading Autopilot course and Rudder position</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -11446,7 +11505,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <LookupEnumeration>SEATALK1_COMMAND</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -11713,7 +11772,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>command</Id>
           <Name>command</Name>
-          <Description></Description>
+          <Description>Seatalk1</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -11723,14 +11782,14 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SEATALK1_COMMAND</LookupEnumeration>
+          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
           <Id>seatalk1Command</Id>
           <Name>Seatalk1 Command</Name>
-          <Description></Description>
+          <Description>Device Indentification</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -11740,7 +11799,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SEATALK_COMMAND</LookupEnumeration>
+          <LookupEnumeration>SEATALK1_COMMAND</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
