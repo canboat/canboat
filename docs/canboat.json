@@ -1345,7 +1345,7 @@
         "Name":"SEATALK_MESSAGE_ID",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"Seatalk", "Value":240},
+          {"Name":"Seatalk 1 Encoded", "Value":240},
           {"Name":"Display", "Value":140},
           {"Name":"Pilot Configuration", "Value":108}
         ]
@@ -1354,11 +1354,18 @@
         "Name":"SEATALK_COMMAND",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"Pilot Mode", "Value":33921},
-          {"Name":"Keystroke", "Value":34433},
-          {"Name":"Device Identification", "Value":36993},
-          {"Name":"Hull Type", "Value":20502},
+          {"Name":"Seatalk1", "Value":129},
+          {"Name":"Hull Type", "Value":22},
           {"Name":"Settings", "Value":12}
+        ]
+      },
+      {
+        "Name":"SEATALK1_COMMAND",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Pilot Mode", "Value":132},
+          {"Name":"Keystroke", "Value":134},
+          {"Name":"Device Identification", "Value":144}
         ]
       },
       {
@@ -11941,7 +11948,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":10,
+        "FieldCount":11,
         "Length":21,
         "Fields":[
           {
@@ -11990,7 +11997,7 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Seatalk",
+            "Description":"Seatalk 1 Encoded",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -12007,21 +12014,38 @@
             "Order":5,
             "Id":"command",
             "Name":"command",
-            "Description":"Pilot Mode",
-            "BitLength":16,
+            "Description":"Seatalk1",
+            "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
-            "Match":33921,
+            "Match":129,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_COMMAND",
             "PartOfPrimaryKey":true
           },
           {
             "Order":6,
+            "Id":"seatalk1Command",
+            "Name":"Seatalk1 Command",
+            "Description":null,
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":132,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":7,
             "Id":"unknown1",
             "Name":"Unknown 1",
             "BitLength":24,
@@ -12031,7 +12055,7 @@
             "FieldType":"BINARY"
           },
           {
-            "Order":7,
+            "Order":8,
             "Id":"pilotMode",
             "Name":"Pilot Mode",
             "BitLength":8,
@@ -12045,7 +12069,7 @@
             "LookupEnumeration":"SEATALK_PILOT_MODE"
           },
           {
-            "Order":8,
+            "Order":9,
             "Id":"subMode",
             "Name":"Sub Mode",
             "BitLength":8,
@@ -12058,7 +12082,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":9,
+            "Order":10,
             "Id":"pilotModeData",
             "Name":"Pilot Mode Data",
             "BitLength":8,
@@ -12068,7 +12092,7 @@
             "FieldType":"BINARY"
           },
           {
-            "Order":10,
+            "Order":11,
             "Id":"unknown2",
             "Name":"Unknown 2",
             "BitLength":80,
@@ -12081,14 +12105,14 @@
       },
       {
         "PGN":126720,
-        "Id":"seatalk1PilotHullType",
-        "Description":"Seatalk1: Pilot Hull Type",
+        "Id":"seatalkPilotHullType",
+        "Description":"Seatalk: Pilot Hull Type",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":6,
-        "Length":7,
+        "FieldCount":8,
+        "Length":14,
         "Fields":[
           {
             "Order":1,
@@ -12154,20 +12178,30 @@
             "Id":"command",
             "Name":"command",
             "Description":"Hull Type",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
-            "Match":20502,
+            "Match":22,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_COMMAND",
             "PartOfPrimaryKey":true
           },
           {
             "Order":6,
+            "Id":"unknown",
+            "Name":"Unknown",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          },
+          {
+            "Order":7,
             "Id":"hullType",
             "Name":"Hull Type",
             "BitLength":16,
@@ -12179,6 +12213,16 @@
             "RangeMax":65532,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_PILOT_HULL_TYPE"
+          },
+          {
+            "Order":8,
+            "Id":"unknown2",
+            "Name":"Unknown 2",
+            "BitLength":56,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -12190,7 +12234,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":7,
+        "FieldCount":8,
         "Length":7,
         "Fields":[
           {
@@ -12239,7 +12283,7 @@
             "Order":4,
             "Id":"proprietaryId",
             "Name":"Proprietary ID",
-            "Description":"Seatalk",
+            "Description":"Seatalk 1 Encoded",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -12256,22 +12300,39 @@
             "Order":5,
             "Id":"command",
             "Name":"command",
-            "Description":"Device Identification",
-            "BitLength":16,
+            "Description":null,
+            "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
-            "Match":36993,
+            "Match":129,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK1_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"seatalk1Command",
+            "Name":"Seatalk1 Command",
+            "Description":null,
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":144,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_COMMAND",
             "PartOfPrimaryKey":true
           },
           {
-            "Order":6,
-            "Id":"reserved6",
+            "Order":7,
+            "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":40,
@@ -12280,7 +12341,7 @@
             "FieldType":"RESERVED"
           },
           {
-            "Order":7,
+            "Order":8,
             "Id":"device",
             "Name":"device",
             "BitLength":8,
@@ -12377,7 +12438,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":36993,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_COMMAND",
             "PartOfPrimaryKey":true
@@ -12529,7 +12590,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":36993,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_COMMAND",
             "PartOfPrimaryKey":true
@@ -12592,6 +12653,163 @@
             "Id":"unknown2",
             "Name":"Unknown 2",
             "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"seatalk1Keystroke",
+        "Description":"Seatalk1: Keystroke",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":10,
+        "Length":22,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Raymarine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1851,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"Seatalk 1 Encoded",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":240,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_MESSAGE_ID",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"command",
+            "Name":"command",
+            "Description":"Seatalk1",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Match":129,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":6,
+            "Id":"seatalk1Command",
+            "Name":"Seatalk1 Command",
+            "Description":"Keystroke",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":134,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK1_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":7,
+            "Id":"device",
+            "Name":"device",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"key",
+            "Name":"key",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SEATALK_KEYSTROKE"
+          },
+          {
+            "Order":9,
+            "Id":"keyinverted",
+            "Name":"keyInverted",
+            "Description":"Bit negated version of key",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"unknownData",
+            "Name":"Unknown data",
+            "BitLength":112,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
@@ -13358,146 +13576,6 @@
             "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_POWER_STATE"
-          }
-        ]
-      },
-      {
-        "PGN":126720,
-        "Id":"seatalk1Keystroke",
-        "Description":"Seatalk1: Keystroke",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":9,
-        "Length":22,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Raymarine",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":1851,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"proprietaryId",
-            "Name":"Proprietary ID",
-            "Description":"Seatalk",
-            "BitLength":8,
-            "BitOffset":16,
-            "BitStart":0,
-            "Match":240,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"SEATALK_MESSAGE_ID",
-            "PartOfPrimaryKey":true
-          },
-          {
-            "Order":5,
-            "Id":"command",
-            "Name":"command",
-            "Description":"Keystroke",
-            "BitLength":16,
-            "BitOffset":24,
-            "BitStart":0,
-            "Match":34433,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65532,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"SEATALK_COMMAND",
-            "PartOfPrimaryKey":true
-          },
-          {
-            "Order":6,
-            "Id":"device",
-            "Name":"device",
-            "BitLength":8,
-            "BitOffset":40,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":7,
-            "Id":"key",
-            "Name":"key",
-            "BitLength":8,
-            "BitOffset":48,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"SEATALK_KEYSTROKE"
-          },
-          {
-            "Order":8,
-            "Id":"keyinverted",
-            "Name":"keyInverted",
-            "Description":"Bit negated version of key",
-            "BitLength":8,
-            "BitOffset":56,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":9,
-            "Id":"unknownData",
-            "Name":"Unknown data",
-            "BitLength":112,
-            "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"BINARY"
           }
         ]
       },

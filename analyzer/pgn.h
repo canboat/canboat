@@ -2276,7 +2276,8 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1851),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 33921, SEATALK_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 129, SEATALK_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("Seatalk1 Command"), BYTES(1), 132, SEATALK_COMMAND),
       BINARY_FIELD("Unknown 1", BYTES(3), NULL),
       LOOKUP_FIELD("Pilot Mode", BYTES(1), SEATALK_PILOT_MODE),
       UINT8_FIELD("Sub Mode"),
@@ -2285,24 +2286,27 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Seatalk1: Pilot Hull Type",
+    {"Seatalk: Pilot Hull Type",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 108, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 20502, SEATALK_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 22, SEATALK_COMMAND),
+      BINARY_FIELD("Unknown", BYTES(1), NULL),
       LOOKUP_FIELD("Hull Type", BYTES(2), SEATALK_PILOT_HULL_TYPE),
+      BINARY_FIELD("Unknown 2", BYTES(7), NULL),
       END_OF_FIELDS}}
 
-          ,
+    ,
     {"Seatalk1: Device Identification",
      126720,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1851),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 36993, SEATALK_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 129, SEATALK1_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("Seatalk1 Command"), BYTES(1), 144, SEATALK_COMMAND),
       RESERVED_FIELD(BYTES(1)),
       LOOKUP_FIELD("device", BYTES(1), SEATALK_DEVICE_ID),
       END_OF_FIELDS}}
@@ -2335,6 +2339,24 @@ Pgn pgnList[] = {
       MATCH_FIELD("Command", BYTES(1), 1, "Color"),
       LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR),
       BINARY_FIELD("Unknown 2", BYTES(1), NULL),
+      END_OF_FIELDS}}
+
+          /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
+    ,
+    {"Seatalk1: Keystroke",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 129, SEATALK_COMMAND),
+      MATCH_LOOKUP_FIELD(PK("Seatalk1 Command"), BYTES(1), 134, SEATALK1_COMMAND),
+      UINT8_FIELD("device"),
+      LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
+      UINT8_DESC_FIELD("keyInverted", "Bit negated version of key"),
+      BINARY_FIELD("Unknown data", BYTES(14), NULL),
+      // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
+      // FF FF FF FF FF | 42 00 F8 02 05])
       END_OF_FIELDS}}
 
     ,
@@ -2419,23 +2441,6 @@ Pgn pgnList[] = {
      {COMPANY(419),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(2), 28, FUSION_MESSAGE_ID),
       LOOKUP_FIELD("Power", BYTES(1), FUSION_POWER_STATE),
-      END_OF_FIELDS}}
-
-    /* Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm */
-    ,
-    {"Seatalk1: Keystroke",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1851),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 240, SEATALK_MESSAGE_ID),
-      MATCH_LOOKUP_FIELD(PK("command"), BYTES(2), 34433, SEATALK_COMMAND),
-      UINT8_FIELD("device"),
-      LOOKUP_FIELD("key", BYTES(1), SEATALK_KEYSTROKE),
-      UINT8_DESC_FIELD("keyInverted", "Bit negated version of key"),
-      BINARY_FIELD("Unknown data", BYTES(14), NULL),
-      // xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
-      // FF FF FF FF FF | 42 00 F8 02 05])
       END_OF_FIELDS}}
 
     ,
