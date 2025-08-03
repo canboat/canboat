@@ -2294,8 +2294,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 108, SEATALK_MESSAGE_ID),
       MATCH_LOOKUP_FIELD(PK("command"), BYTES(1), 22, SEATALK_COMMAND),
       BINARY_FIELD("Unknown", BYTES(1), NULL),
-      LOOKUP_FIELD("Hull Type", BYTES(2), SEATALK_PILOT_HULL_TYPE),
-      BINARY_FIELD("Unknown 2", BYTES(7), NULL),
+      LOOKUP_FIELD("Hull Type", BYTES(1), SEATALK_PILOT_HULL_TYPE),
+      BINARY_FIELD("Unknown 2", BYTES(8), NULL),
       END_OF_FIELDS}}
 
     ,

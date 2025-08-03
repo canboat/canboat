@@ -2800,10 +2800,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Unknown</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Hull Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Hull Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE</a></td><td/></tr><tr><td>8</td><td>Unknown 2</td><td/><td/><td>56 bits
+                      <a href="#lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE</a></td><td/></tr><tr><td>8</td><td>Unknown 2</td><td/><td/><td>64 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk: Pilot Auto Turn</h3><p>
@@ -15394,7 +15394,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>64</td><td>Standby</td></tr><tr><td>66</td><td>Auto</td></tr><tr><td>70</td><td>Wind</td></tr><tr><td>74</td><td>Track</td></tr></table><h3 id="lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>20992</td><td>Sail</td></tr><tr><td>20993</td><td>Sail (slow turn)</td></tr><tr><td>20994</td><td>Sail Catamaran</td></tr><tr><td>20995</td><td>Power (slow turn)</td></tr><tr><td>20996</td><td>Power (fast turn)</td></tr><tr><td>21000</td><td>Power</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Sail</td></tr><tr><td>1</td><td>Sail (slow turn)</td></tr><tr><td>2</td><td>Sail Catamaran</td></tr><tr><td>3</td><td>Power (slow turn)</td></tr><tr><td>4</td><td>Power (fast turn)</td></tr><tr><td>8</td><td>Power</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>All zones</td></tr><tr><td>1</td><td>Zone 1</td></tr><tr><td>2</td><td>Zone 2</td></tr><tr><td>3</td><td>Zone 3</td></tr><tr><td>4</td><td>Zone 4</td></tr></table><h3 id="lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE
         (0 - 255)

@@ -1578,12 +1578,12 @@
         "Name":"SEATALK_PILOT_HULL_TYPE",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"Sail", "Value":20992},
-          {"Name":"Sail (slow turn)", "Value":20993},
-          {"Name":"Sail Catamaran", "Value":20994},
-          {"Name":"Power (slow turn)", "Value":20995},
-          {"Name":"Power (fast turn)", "Value":20996},
-          {"Name":"Power", "Value":21000}
+          {"Name":"Sail", "Value":0},
+          {"Name":"Sail (slow turn)", "Value":1},
+          {"Name":"Sail Catamaran", "Value":2},
+          {"Name":"Power (slow turn)", "Value":3},
+          {"Name":"Power (fast turn)", "Value":4},
+          {"Name":"Power", "Value":8}
         ]
       },
       {
@@ -12268,13 +12268,13 @@
             "Order":7,
             "Id":"hullType",
             "Name":"Hull Type",
-            "BitLength":16,
+            "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":252,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_PILOT_HULL_TYPE"
           },
@@ -12282,8 +12282,8 @@
             "Order":8,
             "Id":"unknown2",
             "Name":"Unknown 2",
-            "BitLength":56,
-            "BitOffset":56,
+            "BitLength":64,
+            "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"

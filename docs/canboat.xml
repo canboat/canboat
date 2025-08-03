@@ -1330,12 +1330,12 @@ limitations under the License.
       <EnumPair Value='74' Name='Track' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK_PILOT_HULL_TYPE' MaxValue='255'>
-      <EnumPair Value='20992' Name='Sail' />
-      <EnumPair Value='20993' Name='Sail (slow turn)' />
-      <EnumPair Value='20994' Name='Sail Catamaran' />
-      <EnumPair Value='20995' Name='Power (slow turn)' />
-      <EnumPair Value='20996' Name='Power (fast turn)' />
-      <EnumPair Value='21000' Name='Power' />
+      <EnumPair Value='0' Name='Sail' />
+      <EnumPair Value='1' Name='Sail (slow turn)' />
+      <EnumPair Value='2' Name='Sail Catamaran' />
+      <EnumPair Value='3' Name='Power (slow turn)' />
+      <EnumPair Value='4' Name='Power (fast turn)' />
+      <EnumPair Value='8' Name='Power' />
     </LookupEnumeration>
     <LookupEnumeration Name='ENTERTAINMENT_ZONE' MaxValue='255'>
       <EnumPair Value='0' Name='All zones' />
@@ -11673,13 +11673,13 @@ limitations under the License.
           <Order>7</Order>
           <Id>hullType</Id>
           <Name>Hull Type</Name>
-          <BitLength>16</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SEATALK_PILOT_HULL_TYPE</LookupEnumeration>
         </Field>
@@ -11687,8 +11687,8 @@ limitations under the License.
           <Order>8</Order>
           <Id>unknown2</Id>
           <Name>Unknown 2</Name>
-          <BitLength>56</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitLength>64</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
