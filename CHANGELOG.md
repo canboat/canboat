@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- #579: Reworked the PGN 126720 Raymarine specific PGNs
+
 ## [v6.1.0]
 
 ### Minor schema change
