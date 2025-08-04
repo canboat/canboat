@@ -8,6 +8,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [v6.1.1]
+
 ### Added
 
 - #579: Reworked the PGN 126720 Raymarine specific PGNs
@@ -850,7 +852,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.0..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.1..HEAD
+[6.1.1]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.1
 [6.1.0]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.0
 [6.0.1]: https://github.com/canboat/canboat/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0
