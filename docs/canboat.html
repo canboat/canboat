@@ -2730,13 +2730,167 @@ limitations under the License.
             PGN 126720
             - Seatalk1: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>33264</td></tr><tr><td>command</td><td>132</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>240</td></tr><tr><td>command</td><td>129</td></tr><tr><td>Seatalk1 Command</td><td>132</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             21
+            bytes long and contains 11 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>240:
+                  Seatalk 1 Encoded</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>129:
+                  Seatalk1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Seatalk1 Command</td><td>132:
+                  Compass heading Autopilot course and Rudder position</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK1_COMMAND">SEATALK1_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown 1</td><td/><td/><td>24 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Pilot Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_PILOT_MODE">SEATALK_PILOT_MODE</a></td><td/></tr><tr><td>9</td><td>Sub Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Pilot Mode Data</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>11</td><td>Unknown 2</td><td/><td/><td>80 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk1: Pilot Hull Type</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>108</td></tr><tr><td>command</td><td>22</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            14
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>108:
+                  Pilot Configuration</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>22:
+                  Hull Type</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Unknown</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Hull Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE</a></td><td/></tr><tr><td>8</td><td>Unknown 2</td><td/><td/><td>64 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk: Pilot Auto Turn</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>108</td></tr><tr><td>command</td><td>38</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            9
+            bytes long and contains 9 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>108:
+                  Pilot Configuration</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>38:
+                  Auto Turn</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Unknown</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Enabled</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>8</td><td>Unknown 2</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>9</td><td>Unknown 3</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk1: Device Identification</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>240</td></tr><tr><td>command</td><td>129</td></tr><tr><td>Seatalk1 Command</td><td>144</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            7
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>240:
+                  Seatalk 1 Encoded</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>129:
+                  Seatalk1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Seatalk1 Command</td><td>144:
+                  Device Indentification</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK1_COMMAND">SEATALK1_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_DEVICE_ID">SEATALK_DEVICE_ID</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk1: Display Brightness</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>140</td></tr><tr><td>command1</td><td>12</td></tr><tr><td>Command</td><td>0</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            9
             bytes long and contains 10 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
@@ -2748,35 +2902,38 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>33264:
-                  0x81f0</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>132:
-                  0x84</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Unknown 1</td><td/><td/><td>24 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Pilot Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>140:
+                  Display</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SEATALK_PILOT_MODE">SEATALK_PILOT_MODE</a></td><td/></tr><tr><td>8</td><td>Sub Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command1</td><td>12:
+                  Settings</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Unknown 1</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Command</td><td>0:
+                  Brightness</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Pilot Mode Data</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>10</td><td>Unknown 2</td><td/><td/><td>80 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Brightness</td><td/><td>%<div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Unknown 2</td><td/><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
-            - Seatalk1: Pilot Hull Type</h3><p>
+            - Seatalk1: Display Color</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>5740</td></tr><tr><td>command</td><td>80</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>140</td></tr><tr><td>command1</td><td>12</td></tr><tr><td>Command</td><td>1</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            13
-            bytes long and contains 7 fields.
+            9
+            bytes long and contains 10 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
                   Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -2787,18 +2944,70 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>5740:
-                  0x166C</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>80:
-                  0x50</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Hull Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>140:
+                  Display</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE</a></td><td/></tr><tr><td>7</td><td>Unknown</td><td/><td/><td>56 bits
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command1</td><td>12:
+                  Settings</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Unknown 1</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>8</td><td>Command</td><td>1:
+                  Color</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Color</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_DISPLAY_COLOR">SEATALK_DISPLAY_COLOR</a></td><td/></tr><tr><td>10</td><td>Unknown 2</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Seatalk1: Keystroke</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>240</td></tr><tr><td>command</td><td>129</td></tr><tr><td>Seatalk1 Command</td><td>134</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            22
+            bytes long and contains 10 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
+                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>240:
+                  Seatalk 1 Encoded</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>129:
+                  Seatalk1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_COMMAND">SEATALK_COMMAND</a></td><td>true</td></tr><tr><td>6</td><td>Seatalk1 Command</td><td>134:
+                  Keystroke</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK1_COMMAND">SEATALK1_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>key</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SEATALK_KEYSTROKE">SEATALK_KEYSTROKE</a></td><td/></tr><tr><td>9</td><td>keyInverted</td><td>Bit negated version of key</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Unknown data</td><td/><td/><td>112 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Fusion: Media Control</h3><p>
@@ -3050,156 +3259,6 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-FUSION_POWER_STATE">FUSION_POWER_STATE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
-            - Seatalk1: Keystroke</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>33264</td></tr><tr><td>command</td><td>134</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            22
-            bytes long and contains 9 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
-                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>33264:
-                  0x81f0</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>134:
-                  0x86</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>key</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SEATALK_KEYSTROKE">SEATALK_KEYSTROKE</a></td><td/></tr><tr><td>8</td><td>keyInverted</td><td>Bit negated version of key</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Unknown data</td><td/><td/><td>112 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
-            - Seatalk1: Device Identification</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>33264</td></tr><tr><td>command</td><td>144</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            7
-            bytes long and contains 7 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
-                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>33264:
-                  0x81f0</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>command</td><td>144:
-                  0x90</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SEATALK_DEVICE_ID">SEATALK_DEVICE_ID</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
-            - Seatalk1: Display Brightness</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>3212</td></tr><tr><td>Command</td><td>0</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            9
-            bytes long and contains 9 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
-                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>3212:
-                  0x0c8c</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td><td/></tr><tr><td>6</td><td>Unknown 1</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Command</td><td>0:
-                  Brightness</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Brightness</td><td/><td>%<div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Unknown 2</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
-            - Seatalk1: Display Color</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1851</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>3212</td></tr><tr><td>Command</td><td>1</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            9
-            bytes long and contains 9 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1851:
-                  Raymarine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>3212:
-                  0x0c8c</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SEATALK_NETWORK_GROUP">SEATALK_NETWORK_GROUP</a></td><td/></tr><tr><td>6</td><td>Unknown 1</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Command</td><td>1:
-                  Color</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Color</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SEATALK_DISPLAY_COLOR">SEATALK_DISPLAY_COLOR</a></td><td/></tr><tr><td>9</td><td>Unknown 2</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Airmar: Attitude Offset</h3><p>
               This PGN description applies when the following field(s) match:
@@ -15317,7 +15376,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>100</td><td>No reason given</td></tr><tr><td>101</td><td>Congestion at MSC</td></tr><tr><td>102</td><td>Busy</td></tr><tr><td>103</td><td>Queue indication</td></tr><tr><td>104</td><td>Station barred</td></tr><tr><td>105</td><td>No operator available</td></tr><tr><td>106</td><td>Operator temporarily unavailable</td></tr><tr><td>107</td><td>Equipment disabled</td></tr><tr><td>108</td><td>Unable to use proposed channel</td></tr><tr><td>109</td><td>Unable to use proposed mode</td></tr><tr><td>110</td><td>Ships and aircraft of States not parties to an armed conflict</td></tr><tr><td>111</td><td>Medical transports</td></tr><tr><td>112</td><td>Pay phone/public call office</td></tr><tr><td>113</td><td>Fax/data</td></tr><tr><td>126</td><td>No information</td></tr></table><h3 id="lookup-DSC_EXPANSION_DATA">DSC_EXPANSION_DATA
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>100</td><td>Enhanced position</td></tr><tr><td>101</td><td>Source and datum of position</td></tr><tr><td>102</td><td>SOG</td></tr><tr><td>103</td><td>COG</td></tr><tr><td>104</td><td>Additional station identification</td></tr><tr><td>105</td><td>Enhanced geographic area</td></tr><tr><td>106</td><td>Number of persons on board</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>100</td><td>Enhanced position</td></tr><tr><td>101</td><td>Source and datum of position</td></tr><tr><td>102</td><td>SOG</td></tr><tr><td>103</td><td>COG</td></tr><tr><td>104</td><td>Additional station identification</td></tr><tr><td>105</td><td>Enhanced geographic area</td></tr><tr><td>106</td><td>Number of persons on board</td></tr></table><h3 id="lookup-SEATALK_MESSAGE_ID">SEATALK_MESSAGE_ID
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>240</td><td>Seatalk 1 Encoded</td></tr><tr><td>140</td><td>Display</td></tr><tr><td>108</td><td>Pilot Configuration</td></tr></table><h3 id="lookup-SEATALK_COMMAND">SEATALK_COMMAND
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>129</td><td>Seatalk1</td></tr><tr><td>22</td><td>Hull Type</td></tr><tr><td>38</td><td>Auto Turn</td></tr><tr><td>12</td><td>Settings</td></tr></table><h3 id="lookup-SEATALK1_COMMAND">SEATALK1_COMMAND
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr><tr><td>1</td><td>Equipment ID</td></tr><tr><td>5</td><td>Engine RPM and PITCH</td></tr><tr><td>16</td><td>Apparent Wind Angle</td></tr><tr><td>17</td><td>Apparent Wind Speed</td></tr><tr><td>32</td><td>Speed through water</td></tr><tr><td>33</td><td>Trip Mileage</td></tr><tr><td>34</td><td>Total Mileage</td></tr><tr><td>35</td><td>Water temperature (ST50)</td></tr><tr><td>36</td><td>Display units for Mileage &amp; Speed</td></tr><tr><td>37</td><td>Total &amp; Trip Log</td></tr><tr><td>38</td><td>Speed through water (with average)</td></tr><tr><td>39</td><td>Water temperature</td></tr><tr><td>48</td><td>Set lamp Intensity</td></tr><tr><td>54</td><td>Cancel MOB (Man Over Board) condition</td></tr><tr><td>56</td><td>Codelock data</td></tr><tr><td>80</td><td>LAT position</td></tr><tr><td>81</td><td>LON position</td></tr><tr><td>82</td><td>Speed over Ground</td></tr><tr><td>83</td><td>Course over Ground (COG)</td></tr><tr><td>84</td><td>GMT-time</td></tr><tr><td>85</td><td>TRACK keystroke on GPS unit</td></tr><tr><td>86</td><td>Date</td></tr><tr><td>87</td><td>Sat Info</td></tr><tr><td>88</td><td>LAT/LON (raw unfiltered)</td></tr><tr><td>89</td><td>Set Count Down Timer</td></tr><tr><td>97</td><td>Issued by E-80 multifunction display at initialization</td></tr><tr><td>101</td><td>Select Fathom display units for depth display</td></tr><tr><td>102</td><td>Wind alarm</td></tr><tr><td>104</td><td>Alarm acknowledgment keystroke</td></tr><tr><td>108</td><td>Second equipment-ID datagram</td></tr><tr><td>110</td><td>MOB (Man Over Board)</td></tr><tr><td>112</td><td>Keystroke on Raymarine A25006 ST60 Maxiview Remote Control</td></tr><tr><td>128</td><td>Set Lamp Intensity</td></tr><tr><td>129</td><td>Sent by course computer during setup</td></tr><tr><td>130</td><td>Target waypoint name</td></tr><tr><td>131</td><td>Sent by course computer</td></tr><tr><td>132</td><td>Compass heading Autopilot course and Rudder position</td></tr><tr><td>133</td><td>Navigation to waypoint information</td></tr><tr><td>134</td><td>Keystroke</td></tr><tr><td>135</td><td>Set Response level</td></tr><tr><td>136</td><td>Autopilot Parameter</td></tr><tr><td>137</td><td>Compass heading sent by ST40 compass instrument</td></tr><tr><td>144</td><td>Device Indentification</td></tr><tr><td>145</td><td>Set Rudder gain</td></tr><tr><td>146</td><td>Set Autopilot Parameter</td></tr><tr><td>147</td><td>Enter AP-Setup</td></tr><tr><td>149</td><td>Replaces command 84 while autopilot is in value setting mode</td></tr><tr><td>153</td><td>Compass variation</td></tr><tr><td>154</td><td>Version String</td></tr><tr><td>156</td><td>Compass heading and Rudder position</td></tr><tr><td>158</td><td>Waypoint definition</td></tr><tr><td>161</td><td>Destination Waypoint Info</td></tr><tr><td>162</td><td>Arrival Info</td></tr><tr><td>164</td><td>Broadcast query/response to identify devices</td></tr><tr><td>165</td><td>GPS and DGPS Info</td></tr><tr><td>167</td><td>Unknown meaning</td></tr><tr><td>168</td><td>Alarm ON/OFF for Guard</td></tr><tr><td>171</td><td>Alarm ON/OFF for Guard</td></tr></table><h3 id="lookup-SEATALK1_ATT">SEATALK1_ATT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Alarm condition not met</td></tr><tr><td>1</td><td>Alarm condition met and not silenced</td></tr><tr><td>2</td><td>Alarm condition met and silenced</td></tr></table><h3 id="lookup-SEATALK_ALARM_ID">SEATALK_ALARM_ID
         (0 - 255)
@@ -15327,7 +15394,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>64</td><td>Standby</td></tr><tr><td>66</td><td>Auto</td></tr><tr><td>70</td><td>Wind</td></tr><tr><td>74</td><td>Track</td></tr></table><h3 id="lookup-SEATALK_PILOT_HULL_TYPE">SEATALK_PILOT_HULL_TYPE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Sail</td></tr><tr><td>1</td><td>Sail (slow turn)</td></tr><tr><td>2</td><td>Sail Catamaran</td></tr><tr><td>3</td><td>Power (slow turn)</td></tr><tr><td>5</td><td>Power (fast turn)</td></tr><tr><td>8</td><td>Power</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Sail</td></tr><tr><td>1</td><td>Sail (slow turn)</td></tr><tr><td>2</td><td>Sail Catamaran</td></tr><tr><td>3</td><td>Power (slow turn)</td></tr><tr><td>4</td><td>Power (fast turn)</td></tr><tr><td>8</td><td>Power</td></tr></table><h3 id="lookup-ENTERTAINMENT_ZONE">ENTERTAINMENT_ZONE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>All zones</td></tr><tr><td>1</td><td>Zone 1</td></tr><tr><td>2</td><td>Zone 2</td></tr><tr><td>3</td><td>Zone 3</td></tr><tr><td>4</td><td>Zone 4</td></tr></table><h3 id="lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE
         (0 - 255)
