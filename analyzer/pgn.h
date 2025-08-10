@@ -46,6 +46,8 @@ typedef void (*BitPairCallback)(size_t value, const char *name);
 typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
 typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft, const LookupInfo *lookup);
 
+#define PRN_IS_PROPRIETARY(n) ((n >= 65280 && n <= 65535) || (n >= 126720 && n <= 126975) || (n >= 130816 && n <= 131071))
+
 typedef enum LookupType
 {
   LOOKUP_TYPE_NONE,
@@ -964,11 +966,11 @@ const Pgn *searchForUnknownPgn(int pgnId);
 const Pgn *endPgn(const Pgn *first);
 
 const Pgn *getMatchingPgn(int pgnId, const uint8_t *dataStart, int length);
+const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length);
 
 bool printPgn(const RawMessage *msg, const uint8_t *dataStart, int length, bool showData, bool showJson);
 void checkPgnList(void);
 
-const Field *getField(uint32_t pgn, uint32_t field);
 bool         extractNumber(const Field   *field,
                            const uint8_t *data,
                            size_t         dataLen,
@@ -6553,6 +6555,18 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Furuno: Status and Version Report",
+     130816,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      MATCH_FIELD(PK("Proprietary ID"), BYTES(1), 0, "Version Report"),
+      UINT8_FIELD("A"),
+      STRINGLAU_FIELD("Status"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"Simrad: Text Message",
      130816,
      PACKET_INCOMPLETE,
@@ -6591,6 +6605,24 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("Firmware version", BYTES(10)),
       STRING_FIX_FIELD("Firmware date", BYTES(32)),
       STRING_FIX_FIELD("Firmware time", BYTES(32)),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Furuno: SV disable",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      BINARY_FIELD("F4", BYTES(1), "Unknown"),
+      BINARY_FIELD("F5", BYTES(1), "Unknown"),
+      BINARY_FIELD("F6", BYTES(1), "Unknown"),
+      BINARY_FIELD("F7", BYTES(1), "Unknown"),
+      BINARY_FIELD("F8", BYTES(2), "Unknown"),
+      BITLOOKUP_FIELD("GPS disable", BYTES(4), DISABLED_SATELLITES),
+      BITLOOKUP_FIELD("GLONASS disable", BYTES(4), DISABLED_SATELLITES),
+      BITLOOKUP_FIELD("Galileo disable", BYTES(5), DISABLED_SATELLITES),
+      BITLOOKUP_FIELD("QZSS disable", BYTES(3), DISABLED_SATELLITES),
       END_OF_FIELDS},
      .priority = 7}
 

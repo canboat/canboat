@@ -890,7 +890,8 @@ static void showBytesOrBits(const uint8_t *data, size_t startBit, size_t bits)
   }
 }
 
-static uint32_t g_refPgn = 0; // Remember this over the entire set of fields
+static uint32_t g_refPrn = 0; // Remember this over the entire set of fields
+static const Pgn * g_refPgn = 0; // Remember this over the entire set of fields
 
 static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
 {
@@ -901,7 +902,8 @@ static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *da
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
     logDebug("Reference PGN = %" PRId64 "\n", value);
-    g_refPgn = value;
+    g_refPrn = value;
+    g_refPgn = NULL;
     return;
   }
 
@@ -967,12 +969,11 @@ static bool printField(const Field   *field,
            fieldName,
            *bits,
            field->proprietary,
-           g_refPgn);
+           g_refPrn);
 
   if (field->proprietary)
   {
-    if ((g_refPgn >= 65280 && g_refPgn <= 65535) || (g_refPgn >= 126720 && g_refPgn <= 126975)
-        || (g_refPgn >= 130816 && g_refPgn <= 131071))
+    if (PRN_IS_PROPRIETARY(g_refPrn))
     {
       // proprietary, allow field
     }
@@ -1298,6 +1299,14 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   return r;
 }
 
+/*
+ * Variable fields only occur in PGN 126208, where they refer
+ * to a field in a different PGN definition.
+ *
+ * The PGN that they refer to is already in g_refPrn,
+ * but this may have to be refined for proprietary PGNs or PGNs with
+ * other match fields.
+ */
 extern bool fieldPrintVariable(const Field   *field,
                                const char    *fieldName,
                                const uint8_t *data,
@@ -1305,19 +1314,32 @@ extern bool fieldPrintVariable(const Field   *field,
                                size_t         startBit,
                                size_t        *bits)
 {
-  const Field *refField;
   bool         r;
 
-  refField = getField(g_refPgn, data[startBit / 8 - 1] - 1);
-  if (refField)
+  if (g_refPrn != 0)
   {
-    logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPgn, refField->name);
-    r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
-    *bits = (*bits + 7) & ~0x07; // round to bytes
-    return r;
+    if (g_refPgn == NULL)
+    {
+      const uint8_t * variableFields = data + startBit / 8 - 2;
+      size_t variableLen = data + dataLen - variableFields;
+      g_refPgn = getMatchingPgnByParameters(g_refPrn, variableFields, variableLen);
+    }
+    if (g_refPgn != NULL)
+    {
+      int field = data[startBit / 8 - 1] - 1;
+      const Field *refField = &g_refPgn->fieldList[field];
+
+      if (refField)
+      {
+        logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPrn, refField->name);
+        r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
+        *bits = (*bits + 7) & ~0x07; // round to bytes
+        return r;
+      }
+    }
   }
 
-  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, g_refPgn, data[-1]);
+  logError("Field %s: cannot derive variable length for PGN %d field # %d\n", fieldName, g_refPrn, data[-1]);
   *bits = 8; /* Gotta assume something */
   return false;
 }

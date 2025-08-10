@@ -176,6 +176,108 @@ const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
   return searchForUnknownPgn(pgnId);
 }
 
+/*
+ * Return the best PGN for this prn, based on the PRN and possibly the ISO request/command
+ * style data containing fields in the requested PGN.
+ *
+ * Note that CompanyId and IndustryCode are just normal "match" parameters, so do not
+ * need to be treated really differently.
+ */
+const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length)
+{
+  const Pgn *pgn = searchForPgn(pgnId);
+  int        prn;
+  int        d;
+
+  if (pgn == NULL)
+  {
+    return pgn;
+  }
+
+  if (PRN_IS_PROPRIETARY(pgnId))
+  {
+    // For proprietary PGNs we need to do more work, skip through the list until we
+    // get to the correct company
+    //
+    // Data should be at least:
+    // [0]    = # of fields, at least 2
+    // [1]    = 0x01 = field 1 = Company Id
+    // [2..3] = company id
+    // [4]    = 0x03 = field 3 = Industry Code
+    // [5]    = industry code
+    //
+    if (length < 6 || data[0] < 2 || data[1] != 0x01 || data[4] != 3)
+    {
+      logError("PGN %u: refers to proprietary PGN but does not contain Company and Industry field values\n", pgnId);
+      return NULL;
+    }
+  }
+
+  if (!pgn->hasMatchFields)
+  {
+    logDebug("getMatchingPgnByParameters: PGN %u has no match fields, returning '%s'\n", pgnId, pgn->description);
+    return pgn;
+  }
+
+  // Here if we have a PGN but it must be matched to the list of match fields.
+  // This might end up without a solution, in that case return NULL.
+
+  for (prn = pgn->pgn; pgn->pgn == prn; pgn++)
+  {
+    bool matchedFixedField = true;
+
+    logDebug("getMatchingPgnByParameters: PGN %u parameters %d try match with manufacturer specific '%s'\n", prn, data[0], pgn->description);
+
+    // Iterate over fields in the data[0,length> parameter list
+    // and try to find a matching list where all match parameters are found;
+    // we can stop after the first non-match parameter.
+    for (d = 1; d < length;)
+    {
+      int index = data[d++] - 1;
+
+      logDebug("getMatchingPgnByParameters: offset %d parameter #%d\n", d, index);
+      if (index >= pgn->fieldCount)
+      {
+        matchedFixedField = false;
+        break;
+      }
+
+      const Field *field = &pgn->fieldList[index];
+      int          bits  = field->size;
+      int          bytes = (bits + 7) >> 3;
+
+      logDebug("getMatchingPgnByParameters: parameter #%d = '%s' length %d\n", index, field->description, bytes);
+      if (field->unit != NULL && field->unit[0] == '=')
+      {
+        int64_t value, desiredValue;
+        int64_t maxValue;
+
+        desiredValue  = strtol(field->unit + 1, 0, 10);
+        if (!extractNumber(field, data, length, d << 3, field->size, &value, &maxValue) || value != desiredValue)
+        {
+          logDebug("getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
+                   prn,
+                   field->name,
+                   value,
+                   desiredValue);
+          matchedFixedField = false;
+          break;
+        }
+        logDebug(
+            "getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
+      }
+      d += bytes;
+    }
+    if (matchedFixedField)
+    {
+      logDebug("getMatchingPgnByParameters: PGN %u selected manufacturer specific '%s'\n", prn, pgn->description);
+      return pgn;
+    }
+  }
+
+  return NULL;
+}
+
 void checkPgnList(void)
 {
   size_t i;
@@ -234,23 +336,6 @@ void checkPgnList(void)
       exit(2);
     }
   }
-}
-
-const Field *getField(uint32_t pgnId, uint32_t field)
-{
-  const Pgn *pgn = searchForPgn(pgnId);
-
-  if (!pgn)
-  {
-    logDebug("PGN %u is unknown\n", pgnId);
-    return 0;
-  }
-  if (field < pgn->fieldCount)
-  {
-    return pgn->fieldList + field;
-  }
-  logDebug("PGN %u does not have field %u\n", pgnId, field);
-  return 0;
 }
 
 static char *camelize(const char *str, bool upperCamelCase, int order)
