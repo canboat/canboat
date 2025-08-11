@@ -2,7 +2,7 @@
 # Makefile for dbc-exporter
 #
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 VENV=$(TARGETDIR)/venv
@@ -10,12 +10,12 @@ VENV=$(TARGETDIR)/venv
 
 all: pgns.dbc
 
-pgns.dbc: dbc-exporter ../analyzer/pgns.json
-	"$(VENV)/bin/canboat-dbc-exporter" ../analyzer/pgns.json pgns.dbc
+pgns.dbc: dbc-exporter ../docs/canboat.json
+	"$(VENV)/bin/canboat-dbc-exporter" ../docs/canboat.json pgns.dbc
 	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer pgns.dbc
 
 dbc-exporter: $(VENV)
-	"$(VENV)/bin/python3" setup.py install
+	"$(VENV)/bin/pip" install .
 
 $(VENV):
 	python3 -m venv "$(VENV)"

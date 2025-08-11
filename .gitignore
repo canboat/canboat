@@ -1,5 +1,6 @@
 rel/
 .*.swp
+.DS_Store
 
 # Python specific files (related to dbc-exporter)
 venv/

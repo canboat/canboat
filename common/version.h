@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -18,4 +18,5 @@ limitations under the License.
 
 */
 
-#define VERSION "4.9.2"
+#define VERSION "6.1.1"
+#define SCHEMA_VERSION "2.3.0"

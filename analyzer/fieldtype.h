@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -27,24 +27,128 @@ limitations under the License.
 
 #include "common.h"
 
-typedef bool (*FieldPrintFunctionType)(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+typedef bool (*FieldPrintFunctionType)(const Field   *field,
+                                       const char    *fieldName,
+                                       const uint8_t *data,
+                                       size_t         dataLen,
+                                       size_t         startBit,
+                                       size_t        *bits);
 
-extern bool fieldPrintBinary(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintBitLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintDate(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintDecimal(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintFloat(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintLatLon(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintLookup(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintMMSI(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintNumber(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintReserved(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintSpare(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringFix(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringLAU(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintStringLZ(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintTime(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
-extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits);
+extern bool fieldPrintBinary(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits);
+extern bool fieldPrintBitLookup(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits);
+extern bool fieldPrintDate(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits);
+extern bool fieldPrintDecimal(const Field   *field,
+                              const char    *fieldName,
+                              const uint8_t *data,
+                              size_t         dataLen,
+                              size_t         startBit,
+                              size_t        *bits);
+extern bool fieldPrintFloat(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits);
+extern bool fieldPrintLatLon(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits);
+extern bool fieldPrintLookup(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits);
+extern bool fieldPrintMMSI(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits);
+extern bool fieldPrintNumber(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits);
+extern bool fieldPrintReserved(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits);
+extern bool fieldPrintSpare(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits);
+extern bool fieldPrintStringFix(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits);
+extern bool fieldPrintStringLAU(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits);
+extern bool fieldPrintStringLZ(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits);
+extern bool fieldPrintTime(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits);
+extern bool fieldPrintVariable(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits);
+extern bool fieldPrintPGN(const Field   *field,
+                          const char    *fieldName,
+                          const uint8_t *data,
+                          size_t         dataLen,
+                          size_t         startBit,
+                          size_t        *bits);
+extern bool fieldPrintKeyValue(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits);
+extern bool fieldPrintName(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits);
+extern void fixupUnit(Field *f);
 
 typedef enum Bool
 {
@@ -206,16 +310,29 @@ static const PhysicalQuantity TIME
        .abbreviation = "s",
        .unit         = "Second"};
 
+static const PhysicalQuantity DURATION = {.name         = "DURATION",
+                                          .description  = "Duration of an event or interval between two points in time",
+                                          .abbreviation = "s",
+                                          .unit         = "Second"};
+
 static const PhysicalQuantity MAGNETIC_FIELD = {.name         = "MAGNETIC_FIELD",
                                                 .description  = "Magnetic field",
                                                 .unit         = "Tesla",
                                                 .abbreviation = "T",
                                                 .url          = "https://en.wikipedia.org/wiki/Magnetic_field"};
 
-static const PhysicalQuantity GEO_COORDINATE
-    = {.name         = "GEOGRAPHICAL_COORDINATE",
-       .description  = "Geographical coordinate",
-       .comment      = "Latitude or longitude. Combined they form a unique point on earth, when height is disregarded.",
+static const PhysicalQuantity GEO_LATITUDE
+    = {.name        = "GEOGRAPHICAL_LATITUDE",
+       .description = "Geographical latitude",
+       .comment = "Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.",
+       .abbreviation = "deg",
+       .unit         = "degree",
+       .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
+
+static const PhysicalQuantity GEO_LONGITUDE
+    = {.name        = "GEOGRAPHICAL_LONGITUDE",
+       .description = "Geographical longitude",
+       .comment = "Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.",
        .abbreviation = "deg",
        .unit         = "degree",
        .url          = "https://en.wikipedia.org/wiki/Geographic_coordinate_system"};
@@ -246,6 +363,12 @@ static const PhysicalQuantity CONCENTRATION
        .unit         = "parts per million",
        .abbreviation = "ppm"};
 
+static const PhysicalQuantity SIGNAL_STRENGTH = {.name        = "SIGNAL_STRENGTH",
+                                                 .description = "Signal strength expressed in dB with respect to 1 uV/m",
+                                                 .url = "https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
+                                                 .abbreviation = "dB",
+                                                 .unit         = "decibel"};
+
 static const PhysicalQuantity SIGNAL_TO_NOISE_RATIO = {.name         = "SIGNAL_TO_NOISE_RATIO",
                                                        .description  = "Signal-to-noise ratio",
                                                        .url          = "https://en.wikipedia.org/wiki/Signal-to-noise_ratio",
@@ -271,11 +394,14 @@ const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                         &FREQUENCY,
                                                         &DATE,
                                                         &TIME,
-                                                        &GEO_COORDINATE,
+                                                        &DURATION,
+                                                        &GEO_LATITUDE,
+                                                        &GEO_LONGITUDE,
                                                         &TEMPERATURE,
                                                         &PRESSURE,
                                                         &PRESSURE_RATE,
                                                         &CONCENTRATION,
+                                                        &SIGNAL_STRENGTH,
                                                         &SIGNAL_TO_NOISE_RATIO,
                                                         NULL};
 
@@ -326,13 +452,15 @@ FieldType fieldTypeList[] = {
     {.name        = "NUMBER",
      .description = "Number",
      .encodingDescription
-     = "Binary numbers are little endian. Number fields that use two or three bits use one special encoding, for the maximum "
-       "value.  When present, this means that the field is not present. Number fields that use four bits or more use two special "
-       "encodings. The maximum positive value means that the field is not present. The maximum positive value minus 1 means that "
-       "the field has an error. For instance, a broken sensor. For signed numbers the maximum values are the maximum positive "
-       "value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
-     .url = "https://en.wikipedia.org/wiki/Binary_number",
-     .pf  = fieldPrintNumber},
+     = "Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to "
+       "represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus "
+       "one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields "
+       "that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers "
+       "the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum "
+       "negative value.",
+     .url    = "https://en.wikipedia.org/wiki/Binary_number",
+     .v1Type = "Number",
+     .pf     = fieldPrintNumber},
 
     {.name          = "INTEGER",
      .description   = "Signed integral number",
@@ -440,7 +568,11 @@ FieldType fieldTypeList[] = {
      .description         = "Number value where each value encodes for a distinct meaning",
      .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
-                "occurs that has no corresponding textual explanation.",
+                "occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) "
+                "and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a "
+                "lookup key/value pair for the maximum possible "
+                "value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify "
+                "four actual valid values. This makes it impossible to send an unknown value for these fields. ",
      .hasSign = False,
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},
@@ -461,7 +593,30 @@ FieldType fieldTypeList[] = {
                             "any combination of bits set.",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
                 "occurs that has no corresponding textual explanation.",
-     .pf      = fieldPrintBitLookup},
+     .pf      = fieldPrintBitLookup,
+     .v1Type  = "Bitfield"},
+
+    {.name        = "DYNAMIC_FIELD_KEY",
+     .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable "
+                    "field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is "
+                    "no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
+     .encodingDescription = "Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
+     .comment = "These values have been determined by reverse engineering, given the known values it is anticipated that there are "
+                "unkown enumeration values and some known values have incorrect datatypes",
+     .hasSign = False,
+     .pf      = fieldPrintLookup},
+
+    {.name        = "DYNAMIC_FIELD_LENGTH",
+     .description = "Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
+     .hasSign     = False,
+     .pf          = fieldPrintNumber},
+
+    {.name        = "DYNAMIC_FIELD_VALUE",
+     .description = "Variable field whose type and length is dynamic",
+     .encodingDescription
+     = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
+       "the preceding length field or the length determined by the lookup value.",
+     .pf = fieldPrintKeyValue},
 
     {.name          = "MANUFACTURER",
      .description   = "Manufacturer",
@@ -476,6 +631,20 @@ FieldType fieldTypeList[] = {
 
     // Specific typed numeric fields
 
+    {.name = "FIX16_1", .description = "Fixed point signed with 1 digit resolution", .resolution = 0.1, .baseFieldType = "FIX16"},
+
+    {.name = "FIX32_2", .description = "Fixed point signed with 2 digits resolution", .resolution = 0.01, .baseFieldType = "FIX32"},
+
+    {.name          = "UFIX32_2",
+     .description   = "Fixed point unsigned with 2 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX32"},
+
+    {.name          = "UFIX16_3",
+     .description   = "Fixed point unsigned with 3 digits resolution",
+     .resolution    = 0.001,
+     .baseFieldType = "UFIX16"},
+
     {.name          = "DILUTION_OF_PRECISION_FIX16",
      .description   = "Dilution of precision",
      .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
@@ -487,6 +656,13 @@ FieldType fieldTypeList[] = {
      .url           = "https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)",
      .resolution    = 0.01,
      .baseFieldType = "UFIX16"},
+
+    {.name          = "SIGNALSTRENGTH_FIX32",
+     .description   = "Signal strength expressed in dB with respect to 1 uV/m",
+     .url           = "https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
+     .resolution    = 0.01,
+     .physical      = &SIGNAL_STRENGTH,
+     .baseFieldType = "FIX32"},
 
     {.name          = "SIGNALTONOISERATIO_FIX16",
      .description   = "Signal-to-noise ratio",
@@ -513,23 +689,54 @@ FieldType fieldTypeList[] = {
 
     {.name = "ANGLE_UFIX16", .description = "Angle", .resolution = 0.0001, .physical = &ANGLE, .baseFieldType = "UFIX16"},
 
-    {.name        = "GEO_FIX32",
-     .description = "Geographical latitude or longitude",
+    {.name        = "GEO_DELTA_FIX24",
+     .description = "Geographical latitude or longitude delta",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or about 1 "
+       "mm when we refer to an Earth position",
+     .resolution    = 1.0e-5 / 3600.,
+     .pf            = fieldPrintNumber,
+     .baseFieldType = "FIX24",
+     .v1Type        = "Lat/Lon"},
+
+    {.name        = "GEO_LAT_FIX32",
+     .description = "Geographical latitude",
      .encodingDescription
      = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
        "cm when we refer to an Earth position",
      .resolution    = 1.0e-7,
-     .physical      = &GEO_COORDINATE,
+     .physical      = &GEO_LATITUDE,
      .pf            = fieldPrintLatLon,
      .baseFieldType = "FIX32",
      .v1Type        = "Lat/Lon"},
 
-    {.name                = "GEO_FIX64",
+    {.name        = "GEO_LON_FIX32",
+     .description = "Geographical longitude",
+     .encodingDescription
+     = "The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 "
+       "cm when we refer to an Earth position",
+     .resolution    = 1.0e-7,
+     .physical      = &GEO_LONGITUDE,
+     .pf            = fieldPrintLatLon,
+     .baseFieldType = "FIX32",
+     .v1Type        = "Lat/Lon"},
+
+    {.name                = "GEO_LON_FIX64",
      .description         = "Geographical latitude or longitude, high resolution",
      .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
                             "refer to an Earth position",
      .resolution          = 1.0e-16,
-     .physical            = &GEO_COORDINATE,
+     .physical            = &GEO_LONGITUDE,
+     .pf                  = fieldPrintLatLon,
+     .baseFieldType       = "FIX64",
+     .v1Type              = "Lat/Lon"},
+
+    {.name                = "GEO_LAT_FIX64",
+     .description         = "Geographical latitude or longitude, high resolution",
+     .encodingDescription = "The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we "
+                            "refer to an Earth position",
+     .resolution          = 1.0e-16,
+     .physical            = &GEO_LATITUDE,
      .pf                  = fieldPrintLatLon,
      .baseFieldType       = "FIX64",
      .v1Type              = "Lat/Lon"},
@@ -613,6 +820,14 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16",
      .v1Type        = "Temperature"},
 
+    {.name          = "TEMPERATURE_UINT8_OFFSET", /* used by PGN 65262 & 65270 */
+     .description   = "Temperature",
+     .offset        = 233, /* offset to degrees Kelvin */
+     .resolution    = 1,
+     .physical      = &TEMPERATURE,
+     .baseFieldType = "UINT8",
+     .v1Type        = "Temperature"},
+
     {.name                = "TEMPERATURE_HIGH",
      .description         = "Temperature, high range",
      .encodingDescription = "This has a higher range but lower resolution than TEMPERATURE",
@@ -652,99 +867,129 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
-    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime},
+    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime, .v1Type = "Time"},
 
-    {.name                = "TIME_UFIX32",
-     .description         = "Time",
-     .encodingDescription = "When indicating a wall clock time, this is the amount of time passed since midnight",
-     .size                = 32,
-     .hasSign             = False,
-     .resolution          = 0.0001,
-     .baseFieldType       = "TIME"},
+    {.name = "DURATION", .description = "Duration", .physical = &DURATION, .pf = fieldPrintTime, .v1Type = "Time"},
 
-    {.name          = "TIME_UFIX16_S",
-     .description   = "Time delta, 16 bits with 1 second resolution",
+    {.name          = "DURATION_UFIX32",
+     .description   = "Duration",
+     .size          = 32,
+     .hasSign       = False,
+     .resolution    = 0.0001,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX16_S",
+     .description   = "Time duration, 16 bits with 1 second resolution",
      .resolution    = 1,
      .size          = 16,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX8_5MS",
-     .description   = "Time delta, 8 bits with 5 millisecond resolution",
+    {.name          = "DURATION_UFIX8_5MS",
+     .description   = "Time duration, 8 bits with 5 millisecond resolution",
      .resolution    = 0.005,
      .size          = 8,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX8_P12S",
-     .description   = "Time delta, 8 bits with 2^12 second resolution",
+    {.name          = "DURATION_UFIX8_P12S",
+     .description   = "Time duration, 8 bits with 2^12 second resolution",
      .resolution    = POW2(12),
      .size          = 8,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX16_MS",
-     .description   = "Time delta, 16 bits with millisecond resolution",
+    {.name          = "DURATION_UFIX8_MIN",
+     .description   = "Time duration, 8 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 8,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX4_MIN",
+     .description   = "Time duration, 4 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 4,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX16_MS",
+     .description   = "Time duration, 16 bits with millisecond resolution",
      .resolution    = 0.001,
      .size          = 16,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX16_CS",
-     .description   = "Time delta, 16 bits with centisecond resolution",
+    {.name          = "DURATION_UFIX16_CS",
+     .description   = "Time duration, 16 bits with centisecond resolution",
      .resolution    = 0.01,
      .size          = 16,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX16_MIN",
-     .description   = "Time delta, 16 bits with minute resolution",
+    {.name          = "DURATION_UFIX16_DS",
+     .description   = "Time duration, 16 bits with decisecond resolution",
+     .resolution    = 0.1,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX16_MIN",
+     .description   = "Time duration, 16 bits with minute resolution",
      .resolution    = 60,
      .size          = 16,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX24_MS",
-     .description   = "Time delta, 24 bits with millisecond resolution",
+    {.name          = "DURATION_UFIX24_MS",
+     .description   = "Time duration, 24 bits with millisecond resolution",
      .resolution    = 0.001,
      .size          = 24,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX32_S",
-     .description   = "Time delta, 32 bits with second resolution",
+    {.name          = "DURATION_UFIX32_S",
+     .description   = "Time duration, 32 bits with second resolution",
      .resolution    = 1,
      .size          = 32,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_UFIX32_MS",
-     .description   = "Time delta, 32 bits with millisecond resolution",
+    {.name          = "DURATION_UFIX32_MS",
+     .description   = "Time duration, 32 bits with millisecond resolution",
      .resolution    = 0.001,
      .size          = 32,
      .hasSign       = False,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_FIX32_MS",
-     .description   = "Time delta",
+    {.name          = "DURATION_FIX32_MS",
+     .description   = "Time duration",
      .resolution    = 0.001,
      .size          = 32,
      .hasSign       = True,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_FIX16_5CS",
-     .description   = "Time delta, 5 centisecond resolution",
+    {.name          = "DURATION_FIX32_NANO_S",
+     .description   = "Time duration",
+     .resolution    = 1e-9,
+     .size          = 32,
+     .hasSign       = True,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_FIX16_5CS",
+     .description   = "Time duration, 5 centisecond resolution",
      .resolution    = 0.05,
      .size          = 16,
      .hasSign       = True,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION"},
 
-    {.name          = "TIME_FIX16_MIN",
-     .description   = "Time delta, minute resolution",
+    {.name          = "DURATION_FIX16_MIN",
+     .description   = "Time duration, minute resolution",
      .resolution    = 60,
      .size          = 16,
      .hasSign       = True,
-     .baseFieldType = "TIME"},
+     .baseFieldType = "DURATION",
+     .v1Type        = "Integer"},
 
     {.name                = "DATE",
      .description         = "Date",
@@ -752,11 +997,24 @@ FieldType fieldTypeList[] = {
      .physical            = &DATE,
      .size                = 16,
      .hasSign             = False,
-     .pf                  = fieldPrintDate},
+     .pf                  = fieldPrintDate,
+     .v1Type              = "Date"},
+
+    {.name          = "VOLTAGE_UFIX16_1MV",
+     .description   = "Voltage",
+     .resolution    = 0.001,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
 
     {.name          = "VOLTAGE_UFIX16_10MV",
      .description   = "Voltage",
      .resolution    = 0.01,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_UFIX16_50MV",
+     .description   = "Voltage",
+     .resolution    = 0.05,
      .physical      = &POTENTIAL_DIFFERENCE,
      .baseFieldType = "UFIX16"},
 
@@ -766,11 +1024,11 @@ FieldType fieldTypeList[] = {
      .physical      = &POTENTIAL_DIFFERENCE,
      .baseFieldType = "UFIX16"},
 
-    {.name          = "VOLTAGE_UFIX16_200MV",
+    {.name          = "VOLTAGE_UFIX8_200MV",
      .description   = "Voltage",
      .resolution    = 0.2,
      .physical      = &POTENTIAL_DIFFERENCE,
-     .baseFieldType = "UFIX16"},
+     .baseFieldType = "UFIX8"},
 
     {.name          = "VOLTAGE_UFIX16_V",
      .description   = "Voltage",
@@ -879,6 +1137,12 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "FIX32"},
 
+    {.name          = "POWER_UINT8",
+     .description   = "Electrical power, either DC or AC Real power, in Watts",
+     .physical      = &ELECTRICAL_POWER,
+     .resolution    = 1,
+     .baseFieldType = "UINT8"},
+
     {.name          = "POWER_UINT16",
      .description   = "Electrical power, either DC or AC Real power, in Watts",
      .physical      = &ELECTRICAL_POWER,
@@ -920,13 +1184,22 @@ FieldType fieldTypeList[] = {
 
     {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
 
+    {.name = "PERCENTAGE_UINT8_HIGHRES", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
+
     {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .baseFieldType = "INT8"},
 
-    {.name          = "PERCENTAGE_UFIX16",
-     .description   = "Percentage, unsigned high range",
-     .resolution    = 0.004,
+    {.name          = "PERCENTAGE_FIX16",
+     .description   = "Percentage, high precision",
      .unit          = "%",
-     .baseFieldType = "UFIX16"},
+     .resolution    = RES_PERCENTAGE,
+     .baseFieldType = "FIX16"},
+
+    {.name                = "PERCENTAGE_FIX16_D",
+     .description         = "Percentage, promille range",
+     .encodingDescription = "Percentage in promille (1/10 %)",
+     .resolution          = 0.1,
+     .unit                = "%",
+     .baseFieldType       = "FIX16"},
 
     {.name                = "ROTATION_FIX16",
      .description         = "Rotational speed",
@@ -952,11 +1225,31 @@ FieldType fieldTypeList[] = {
      .physical            = &ANGULAR_VELOCITY,
      .baseFieldType       = "UFIX16"},
 
+    {.name                = "ROTATION_UFIX16_RPM_HIGHRES",
+     .description         = "Rotational speed, RPM",
+     .encodingDescription = "Angular rotation in 0.125 rpm",
+     .resolution          = 0.125,
+     .unit                = "rpm",
+     .physical            = &ANGULAR_VELOCITY,
+     .baseFieldType       = "UFIX16"},
+
     {.name          = "PRESSURE_UFIX16_HPA",
      .description   = "Pressure, 16 bit unsigned in hectopascal resolution",
      .resolution    = 100,
      .physical      = &PRESSURE,
      .baseFieldType = "UFIX16"},
+
+    {.name          = "PRESSURE_UINT8_2KPA",
+     .description   = "Pressure, 8 bit unsigned in 2 kilopascal resolution",
+     .resolution    = 2000,
+     .physical      = &PRESSURE,
+     .baseFieldType = "UINT8"},
+
+    {.name          = "PRESSURE_UINT8_KPA",
+     .description   = "Pressure, 8 bit unsigned in .5 kilopascal resolution",
+     .resolution    = 500,
+     .physical      = &PRESSURE,
+     .baseFieldType = "UINT8"},
 
     {.name          = "PRESSURE_UFIX16_KPA",
      .description   = "Pressure, 16 bit unsigned in kilopascal resolution.",
@@ -965,8 +1258,8 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UFIX16"},
 
     {.name          = "PRESSURE_RATE_FIX16_PA",
-     .description   = "Pressure change rate, 16 bit signed in pascal resolution.",
-     .resolution    = 1,
+     .description   = "Pressure change rate, 16 bit signed in decapascal resolution.",
+     .resolution    = 10,
      .physical      = &PRESSURE_RATE,
      .baseFieldType = "FIX16"},
 
@@ -997,28 +1290,34 @@ FieldType fieldTypeList[] = {
      .baseFieldType       = "UFIX16"},
 
     {.name          = "SPEED_FIX16_MM",
-     .description   = "Speed, with millimeter resolution",
+     .description   = "Speed, with millimeter per second resolution",
      .resolution    = 0.001,
      .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_FIX16_CM",
-     .description   = "Speed, with centimeter resolution",
+     .description   = "Speed, with centimeter per second resolution",
      .resolution    = 0.01,
      .physical      = &SPEED,
      .baseFieldType = "FIX16"},
 
     {.name          = "SPEED_UFIX16_CM",
-     .description   = "Speed, unsigned, with centimeter resolution",
+     .description   = "Speed, unsigned, with centimeter per second resolution",
      .resolution    = 0.01,
      .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
 
     {.name          = "SPEED_UFIX16_DM",
-     .description   = "Speed, unsigned, with decimeter resolution",
+     .description   = "Speed, unsigned, with decimeter per second resolution",
      .resolution    = 0.1,
      .physical      = &SPEED,
      .baseFieldType = "UFIX16"},
+
+    {.name          = "SPEED_FIX16_DMM",
+     .description   = "Speed, with 0.1 millimeter per second resolution",
+     .resolution    = 0.0001,
+     .physical      = &SPEED,
+     .baseFieldType = "FIX16"},
 
     {.name          = "DISTANCE_FIX16_M",
      .description   = "Distance, with meter resolution",
@@ -1038,9 +1337,27 @@ FieldType fieldTypeList[] = {
      .physical      = &DISTANCE,
      .baseFieldType = "FIX16"},
 
+    {.name          = "DISTANCE_FIX24_MM",
+     .description   = "Distance, with millimeter resolution",
+     .resolution    = 0.001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX24"},
+
     {.name          = "DISTANCE_FIX32_MM",
      .description   = "Distance, high range, with millimeter resolution",
      .resolution    = 0.001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX32"},
+
+    {.name          = "DISTANCE_FIX32_DMM",
+     .description   = "Distance, high range, with 0.1 millimeter resolution",
+     .resolution    = 0.0001,
+     .physical      = &DISTANCE,
+     .baseFieldType = "FIX32"},
+
+    {.name          = "DISTANCE_FIX32_MMM",
+     .description   = "Distance, high range, with 0.01 millimeter resolution",
+     .resolution    = 0.00001,
      .physical      = &DISTANCE,
      .baseFieldType = "FIX32"},
 
@@ -1065,7 +1382,20 @@ FieldType fieldTypeList[] = {
      .comment       = "Devices that support multiple sensors TODO",
      .baseFieldType = "UINT8"},
 
-    {.name = "PGN", .description = "PRN number", .resolution = 1, .baseFieldType = "UINT24"},
+    {.name                = "PGN",
+     .description         = "Parameter Group Number",
+     .resolution          = 1,
+     .pf                  = fieldPrintPGN,
+     .encodingDescription = "A 24 bit number referring to a PGN"},
+
+    {.name                = "ISO_NAME",
+     .description         = "ISO NAME field",
+     .resolution          = 1,
+     .size                = 64,
+     .hasSign             = false,
+     .pf                  = fieldPrintName,
+     .encodingDescription = "A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of "
+                            "PGN 60928 to explain the subfields."},
 
     {.name          = "POWER_FACTOR_UFIX16",
      .description   = "Power Factor",
@@ -1109,25 +1439,22 @@ FieldType fieldTypeList[] = {
     {.name        = "STRING_LZ",
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
      .encodingDescription = "The length of the string is determined by a starting length byte. It also contains a terminating "
-                            "zero byte. The length byte includes the zero byte but not itself.",
+                            "zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
      .comment
-     = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
-       "are supported.",
+     = "This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of "
+       "the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.",
      .variableSize = True,
      .pf           = fieldPrintStringLZ,
-     .v1Type       = "String with start/stop byte"},
+     .v1Type       = "ASCII string starting with length byte"},
 
     {.name = "STRING_LAU",
      .description
      = "A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
-     .encodingDescription
-     = "The length of the string is determined by a starting length byte. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
-     .comment
-     = "It is unclear what character sets are allowed/supported. For single byte, assume ASCII. For UNICODE, assume UTF-16, "
-       "but this has not been seen in the wild yet.",
-     .variableSize = True,
-     .pf           = fieldPrintStringLAU,
-     .v1Type       = "ASCII or UNICODE string starting with length and control byte"},
+     .encodingDescription = "The length of the string is determined by a starting length byte. This count includes the length and "
+                            "type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
+     .variableSize        = True,
+     .pf                  = fieldPrintStringLAU,
+     .v1Type              = "ASCII or UTF16 string starting with length and control byte"},
 
     // Others
     {.name                = "BINARY",
@@ -1151,11 +1478,11 @@ FieldType fieldTypeList[] = {
 
     {.name        = "MMSI",
      .description = "MMSI",
-     .resolution    = 1,
-     .size          = 32,
-     .hasSign       = False,
-     .rangeMin      = 2000000, // Minimal valid MMSI is coastal station (00) MID (2xx)
-     .rangeMax      = 999999999,
+     .resolution  = 1,
+     .size        = 32,
+     .hasSign     = False,
+     .rangeMin    = 2000000, // Minimal valid MMSI is coastal station (00) MID (2xx)
+     .rangeMax    = 999999999,
      .encodingDescription
      = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. "
        "The first three or four digits are special, see the USCG link for a detailed explanation.",
@@ -1166,16 +1493,28 @@ FieldType fieldTypeList[] = {
      .description = "Variable",
      .encodingDescription
      = "The definition of the field is that of the reference PGN and reference field, this is totally variable.",
-     .pf = fieldPrintVariable}};
+     .variableSize = True,
+     .pf           = fieldPrintVariable},
+
+    {.name                = "FIELD_INDEX",
+     .description         = "Field Index",
+     .resolution          = 1,
+     .size                = 8,
+     .hasSign             = False,
+     .rangeMin            = 1, // Minimum field index (.Order)
+     .rangeMax            = 253,
+     .encodingDescription = "Index of the specified field in the PGN referenced.",
+     .pf                  = fieldPrintNumber}};
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 
 #else
-extern FieldType                     fieldTypeList[];
-extern const size_t                  fieldTypeCount;
+extern FieldType    fieldTypeList[];
+extern const size_t fieldTypeCount;
 #endif // FIELDTYPE_GLOBALS
 
 extern FieldType *getFieldType(const char *name);
 extern void       fillFieldType(bool doUnitFixup);
+extern void       fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft);
 
 #endif // FIELD_H_INCLUDED

@@ -1,0 +1,80 @@
+name: Upload release assets
+
+# this flow will be run only when new tags are pushed that match our pattern
+on:
+  push:
+    tags:
+      - "v[0-9]+.[0-9]+.[0-9]+"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
+
+      - name: make
+        run: make tests
+
+      - name: Version in common/version.h must match release tag
+        run: |
+          export CANBOAT_VERSION=$(sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+          echo "Checking if docs/canboat.json contains \"CANboat version v${CANBOAT_VERSION}\""
+          grep -q "CANboat version v${CANBOAT_VERSION}" docs/canboat.json
+          echo "Checking if docs/canboat.json contains version \"Version\":\"${CANBOAT_VERSION}\""
+          grep -q "\"Version\":\"${CANBOAT_VERSION}\"" docs/canboat.json
+          echo "Checking if docs/canboat.xml contains \"CANboat version v${CANBOAT_VERSION}\""
+          grep -q "CANboat version v${CANBOAT_VERSION}" docs/canboat.xml
+          echo "Checking if docs/canboat.xml contains \"<Version>${CANBOAT_VERSION}</Version>\""
+          grep -q "<Version>${CANBOAT_VERSION}</Version>" docs/canboat.xml
+          export SCHEMA_VERSION=$(sed -En 's/.*\ SCHEMA_VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+          echo "Checking if docs/canboat.xsd contains \"xs:version=\"${SCHEMA_VERSION}\""
+          grep -q "xs:schema version=\"${SCHEMA_VERSION}\"" docs/canboat.xsd
+          echo "Checking if docs/canboat.json contains version \"SchemaVersion\":\"${SCHEMA_VERSION}\""
+          grep -q "\"SchemaVersion\":\"${SCHEMA_VERSION}\"" docs/canboat.json
+          echo "Github tag should match version in common/version.h"
+          test "${GITHUB_REF##*/}" == "v${CANBOAT_VERSION}"
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            docs/canboat.json
+            docs/canboat.xml
+            docs/canboat.xsd
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+        run:
+          shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+            packages: make gcc-core zip
+            hardlinks: 1
+
+      - name: make
+        run: make -C /cygdrive/d/a/canboat/canboat
+
+      - name: zip
+        run: |
+          cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
+          zip 
+          zip "../canboat-windows-x86_64-${GITHUB_REF##*/}.zip" *.exe *.dll
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            rel/*.zip

@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -54,6 +54,18 @@ limitations under the License.
 */
 
 #ifdef EXPLAIN
+#define LOOKUP_PAIR_FUNCTION function.pairEnumerator
+#define LOOKUP_BIT_FUNCTION function.bitEnumerator
+#define LOOKUP_TRIPLET_FUNCTION function.tripletEnumerator
+#define LOOKUP_FIELDTYPE_FUNCTION function.fieldtypeEnumerator
+#else
+#define LOOKUP_PAIR_FUNCTION function.pair
+#define LOOKUP_BIT_FUNCTION function.pair
+#define LOOKUP_TRIPLET_FUNCTION function.triplet
+#define LOOKUP_FIELDTYPE_FUNCTION function.pair
+#endif
+
+#ifdef EXPLAIN
 
 // Generate functions that are usable as callbacks that will loop over all
 // possible values.
@@ -72,6 +84,20 @@ limitations under the License.
   void lookup##type(EnumTripletCallback cb) \
   {
 #define LOOKUP_TRIPLET(type, n1, n2, str) (cb)(n1, n2, str);
+
+#define LOOKUP_TYPE_FIELDTYPE(type, length)   \
+  void lookup##type(EnumFieldtypeCallback cb) \
+  {
+#define LOOKUP_FIELDTYPE(ftype, n, str, ft) (cb)(n, str, ft, NULL);
+#define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
+  {                                                              \
+    static LookupInfo l;                                         \
+    l.name                   = xstr(ln);                         \
+    l.size                   = bits;                             \
+    l.type                   = LOOKUP_TYPE_##lt;                 \
+    l.LOOKUP_##lt##_FUNCTION = lookup##ln;                       \
+    (cb)(n, str, ft, &l);                                        \
+  }
 
 #define LOOKUP_END }
 
@@ -116,6 +142,37 @@ limitations under the License.
 #define LOOKUP_TRIPLET(type, n1, n2, str) \
   case n1 * 256 + n2:                     \
     return str;
+
+#define LOOKUP_TYPE_FIELDTYPE(type, length) \
+  const char *lookup##type(size_t val)      \
+  {                                         \
+    switch (val)                            \
+    {
+#define LOOKUP_FIELDTYPE(ftype, n, str, ft)                  \
+  case n: {                                                  \
+    static Field f;                                          \
+    if (f.name == NULL)                                      \
+    {                                                        \
+      fillFieldTypeLookupField(&f, xstr(ftype), n, str, ft); \
+    }                                                        \
+    g_ftf = &f;                                              \
+    return str;                                              \
+  }
+#define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
+  case n: {                                                      \
+    static Field f;                                              \
+    if (f.name == NULL)                                          \
+    {                                                            \
+      f.lookup.name                   = xstr(ln);                \
+      f.size                          = bits;                    \
+      f.lookup.size                   = bits;                    \
+      f.lookup.type                   = LOOKUP_TYPE_##lt;        \
+      f.lookup.LOOKUP_##lt##_FUNCTION = lookup##ln;              \
+      fillFieldTypeLookupField(&f, xstr(ftype), n, str, ft);     \
+    }                                                            \
+    g_ftf = &f;                                                  \
+    return str;                                                  \
+  }
 
 #define LOOKUP_END \
   }                \
@@ -169,4 +226,3 @@ void fillLookups(void)
     }
   }
 }
-

@@ -1,5 +1,5 @@
 #
-# (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 
@@ -16,15 +16,14 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-OS=$(shell uname)
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 SOCKETCAN_WRITER=$(TARGETDIR)/socketcan-writer
 
-ifeq ($(OS),Linux)
+ifneq (,$(findstring linux,$(PLATFORM)))
 TARGETS=$(SOCKETCAN_WRITER)
 else
 TARGETS=

@@ -6,6 +6,326 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [Unreleased]
+
+## [v6.1.1]
+
+### Added
+
+- #579: Reworked the PGN 126720 Raymarine specific PGNs
+
+## [v6.1.0]
+
+### Minor schema change
+
+The XML schema has promoted LookupEnumeration MaxValue from 'int' to 'long' because there
+are two lookups that use four bytes, the maximum unsigned value of that is not a valid int.
+
+### Fixed
+
+- ikonvert-serial: reset connection when no actual PGNs are received
+- n2kd: Fix secondary key determination when multiple { } values are present
+- n2kd: Fix secondary key determination for PGN 60928
+- n2kd: Do not request product information for a stuck device whenever it sends a PGN
+- n2kd: simplify product info and address claim requests
+- #550: FUSION_REPEAT_STATUS and FUSION_SETTING Lookup Enumerations have MaxValue of 0
+- #564: PGN 128520 field 'Track Status' is not a bit lookup
+- #563: PGN 65240 field 'Manufacturer Code' should not have a unit
+- #554: Fix print of geo positions in DMS format
+- #562: Revert kWh -> J change; kWh is the underlying resolution so a more precise translation of the data.
+- #560: MissingEnumeration NoCompanyFields should be MissingCompanyFields.
+- #553: INDUSTRY_CODE 4 lookup value should be "Marine Industry", not "Marine".
+- #566: Manufacturer fields for proprietary PGNs should not have pk attribute set"
+- #541: add some primary key indicators
+- #575: fix Maretron lookup field lengths
+- #578: Add Seatalk1: Pilot Hull Type
+
+### Added
+
+- #555: Add Magenta colour to SIMNET_MODE_COLOR.
+- #556: Fusion updates
+- #558: Fusion updates
+- #571: Maretron PGN 126720 field decoding improvements
+- #577: Run tests for canboatjs, ts-pgns and related Signal K projects
+
+## [v6.0.1]
+
+### Fixed
+
+- undo incomplete primary key update to n2kd making it not use any key.
+
+## [v6.0.0]
+
+### Explicity garantuee on Id values
+
+PGN field names have been left the same as in v5.1.3, and only two fallback PGN ids have been changed.
+
+From this point forward, we will garantuee that the <Id> values do not change.
+We shall be making improvements to the <Name> values.
+
+Therefore, all downstream consumers are urged to make sure they match on PGN Id and field Id, not name.
+
+### Changed
+
+This is a major upgrade because the old v1 xml and json files are no longer being
+supplied.
+
+This is a minor upgrade because there is a new interesting field added to the XML,
+`PartOfPrimaryKey` which is a boolean attribute; any field carrying this (have the
+field present with a `true` value) contributes to the _Primary key_ of the data --
+e.g. any message with a different primary key is from a different source. Fields
+like `Source Id`, `Message Id` or `Instance` will have this set to true.
+
+Also, in n2kd `-json -nv` mode and in text mode all fields that refer to a PGN will explain
+the meaning of the PGN value (if it is not a proprietary PGN number.)
+
+Also, in n2kd `json -nv` mode any NAME fields that occur (so far, only in the Alerts PGNs)
+will contain in the `name:` attribute a recursive expansion of the fields contained
+in that single NAME field. These subfields are the same fields as described in PGN
+60928 (Address Claim.)
+
+Further possibly breaking changes in the definitions:
+
+  * PhysicalQuantity:
+    * GEOGRAPHICAL_COORDINATE has been split into GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
+    * SIGNAL_STRENGTH has been added.
+    * DURATION has been added.
+  * FieldType
+    * PGN, ISO_NAME, DURATION have been added. They are specialisations of NUMBER, BINARY and TIME, which is what they were before.
+    * Navico specific: fieldtype FIELDTYPE_LOOKUP is now named DYNAMIC_FIELD_LOOKUP. KEY_VALUE is now named DYNAMIC_FIELD_VALUE.
+      Fieldtype DYNAMIC_FIELD_LENGTH has been added.
+  * PGN
+    * Fusion PGNs have been reworked.
+    * PrimaryKey attribute has been added.
+    * Many missing attributes such as priority have been added.
+    * Fields have moved from being a plain NUMBER to LOOKUP because the lookup values are now known.
+  * PGN names
+    * PGN fallback 59392 is now correctly named 0xe8000xee00StandardizedSingleFrameAddressed instead 
+      of 0xe8000xeeffStandardizedSingleFrameAddressed (note the ff -> 00 change).
+    * PGN fallback 126720 is now correctly named 0x1ef000ManufacturerProprietaryFastPacketAddressed
+      instead of 0x1ef000x1efffManufacturerProprietaryFastPacketAddressed.
+  * PGN fields
+    * Fusion PGNs have been reworked.
+    
+### Fixed
+
+- Updated copyrights to 2025.
+- Updated URLs to refer to web archive where needed and available (not all...)
+- #475: FieldType VARIABLE should have the VariableSize attribute set to True.
+- #474: PGN updates
+- #473: PGN 129546 field lengths and types
+- #472: PGN 127488 field Tilt/Trim is a percentage field
+- #478: Make analyzer/pgn.xml+json obsolete
+- #483: PGN 127506 field ripple voltage is 1 mV precision
+- #489: Raymarine sends C style strings in `STRING_FIXED` fields
+- #493: Remove Fallback filter from canboat.json
+- #486: Missing identity designation in the canboat schema
+- #500: PGN 129540 parameter Range residuals has incorrect resolution and unit
+- #506: 0x1ED00 and 0x1EE00 are not single frame but fast packet
+- #504: Document handling of max and two bit numbers
+- #496: Show bitoffset for first variable length field
+- #498: Document new findings regarding STRING_LZ fields.
+- #499: DataTransmitOffset is in centiseconds, not millis.
+- #508: Offset for Peukert coefficient is wrong.
+- #509: Fix fusion transport lookup
+- #514: Fix lookup for OFF_ON fields that control a setting (PGN 127502.)
+- #522: Fix PGNs 130064-130074
+- #521: Navico PGN 130817 contains unknown data, not product information.
+- #517: PGN 130323 field Mode should be lookup RESIDUAL_MODE.
+- #518: PGN 127510 + 127511 revised field lengths and lookups
+- #525: Sync with latest publicly known sources
+- #529: FIELDTYPE_LOOKUP -> DYNAMIC_FIELD_LOOKUP, KEY_VALUE -> DYNAMIC_FIELD_VALUE
+- #533: Lookup SERIAL_BIT_RATE fixed, SIMNET_KEY_VALUE 11524 data type fixed
+- #539: PGN 130565 field 8 repeats as well
+- #541: Check primary key fields
+
+### Added
+
+- #488: Added Raymarine PGNS 130848 and 130918
+- #481: Add manufacturer code for Revatek
+- #482: Add PGNs 127747-127749.
+- Updated manufacturer codes to refer to all companies known in Oct 2024.
+- #501: Split TIME into TIME and DURATION.
+- #503: Introduce PGN field type.
+- #502: Introduce ISO_NAME fieldtype.
+- #515: Rework Fusion PGNs.
+- #523: Add support for .EBL file reading to actisense-serial.
+- #530: Split GEOGRAPHICAL_COORDINATE into GEOGRAPHICAL_LATITUDE and GEOGRAPHICAL_LONGITUDE.
+- #532: Add RMC sentence to n2kd nmea0183 output
+- #535: Improve makefiles for cross compilation
+
+### [5.1.3]
+
+No functional changes, release because v5.1.2 was released incompletely.
+
+### [5.1.2]
+
+### Fixed
+
+- #454: Fix 129538
+- #469: Fix compiler warnings
+- #461: fix 128520 and 130821 max string length
+- #452: Add define to compile replay binary on strict linux systems
+- #450: Maretron 130836 Switch Counter Status field lengths incorrect
+- #468: Remove Unicode characters in canboat.json and canboat.xml
+- #467: dbc-exporter build fails on newer python installations
+- #466: RangeMax is incorrect for DECIMAL fields
+- #465: Document obsoleteness of pgns.xml and pgns.json
+- #463: Fast packet with size 223 (32 frames) doesn't assemble properly on 32 bit platform
+- #464: PGN 127508 Voltage should be signed
+
+### Added
+
+- #356: Add GNSS type to PGN 129810
+
+## [5.1.1]
+
+- #451: candump2analyzer format 3 does not handle CRLF line endings correctly.
+
+## [5.1.0] 
+
+### Fixed
+
+- #439: Improve PGN 65379 Raymarine 
+- #442: Fix PGN 129799 Radio Frequency/Mode/Power field lengths and types.
+- #423: Add support for Garmin Backlight level + day/night mode.
+- #428: PGN 127509 is FAST, not SINGLE.
+- #436: Fix length of field in PGN 65379 (Seatalk Pilot Mode).
+
+### Added
+
+- #444: Add analyzer2csv program and analyzer `-debugdata`.
+- #445: Add default priority to explanations.
+- #448: Add analyzer format `PLAIN_MIX_FAST`.
+- #430: Add J1939 PGNs and `analyzer-j1939` and `analyzer-explain-j1939`.
+
+## [5.0.3]
+
+### Added
+
+- #425: PGN 65293: Diverse Yacht Services: Load Cell
+- Raymarine Seatalk1 Brightness and Color
+
+### Fixed
+
+- ikonvert-serial timestamps are now ignoring time from ikonvert itself.
+
+## [5.0.2]
+
+### Fixed
+
+- Print raw negative times correctly (broken in 5.0.0).
+
+### Added
+
+- #420: Fusion track album ID lookup added
+- Simnet 130845 multi-key/value pair PGN analysis
+
+## [5.0.1]
+
+### Added
+
+- A new 'replay' binary has been added for help on MS Windows without Perl.
+
+## [5.0.0]
+
+Note: Changes to XML v2 (canboat.xml, canboat.xsd, canboat.xsl) so this will
+constitute a new major release. The changes are small, the schema for canboat.xsd
+has been bumped to 2.1. The differences are:
+  - Dynamic field types, where a (repeating) set of fields defines a varying 
+    field, can now have a 'lookup' as well. 
+  - Some fields have changed from signed to unsigned.
+
+To see the changes, use:
+
+    git diff v4.12.0 docs/canboat.xml
+    git diff v4.12.0 docs/canboat.xsd
+
+### Added
+
+- #413: docs: RangeMax for ENTERTAINMENT_PLAY_STATUS_BITFIELD is incorrect
+- #309: Simrad Autopilot work (phase 1)
+- #401, #407: Added 7 new device function values to PGN 65240 and 60928.
+- #398: Add SIMNET_AP_EVENTS codes for B&G H5000 start features
+- Add command to request PGN transmit rate change
+- candump2analyzer: add support for Navico TCP candump
+- n2kd: Add status port to show counts and intervals of received PGNs
+
+### Fixed
+
+- #414: Matched fields should show name, not bare value in explanation.
+- #404: analyzer/canboat.xml: remove useless duplicate values from lookups.
+- #403: analyzer: unsigned fields with offset / PGN 127513 peukert exponent was wrong.
+- #411: analyzer: fix formatted printing of negative time offset values.
+- #410: analyzer: make -raw produce standard raw format.
+- ikonvert-serial: Improve iKonvert reset handling
+- Remove unicode characters from source
+- n2kd: write complete JSON state (use multiple blocking writes if necessary)
+- #408: n2k_monitor: avoid n2kd monitor forking every 30s
+
+
+## [4.12.0]
+
+### Fixed
+
+- #396: Add missing Fusion message ID loopup value
+- #395: Altitude in PGN 129798 (SAR AIS) should be 32 bits
+- #394: v1 type for `STRING_LZ` is incorrect
+
+### Added
+
+## [4.11.1]
+
+### Fixed
+- #384: Updated lengths and lookup for lighting PGNs.
+
+### Added
+
+## [4.11.0]
+
+### Fixed
+- End all logAbort messages with a newline.
+- #389: Missing fieldtypes in v1 pgns.xml
+- #391: Incorrect field sizes for PGN 129285.
+- #393: Make sure single frame PGNs are 8 bytes and all PGNs fill the last byte.
+        This actually found a few small bugs in PGNs:
+        PGN 128778: Field length for Controller Voltage was incorrect.
+        PGN 126802 Airmar 34: Field names were copy/pasted and thus incorrect.
+        PGN 129803: Field names changed (but this PGN is not seen yet) to match ITU.
+- #387: analyzer: Don't crash when presented with PGN of 0.
+
+### Added
+- #385: Allow analyzer to read mixed `RAWFORMAT_PLAIN` and `RAWFORMAT_FAST` input.
+        A new `-format <fmt>` option has been added, this new mode is only enabled when
+        `-format PLAIN_OR_FAST` is selected.
+
+## [4.10.1]
+
+### Fixed
+- #383: Add NMEA 2000 v3.002 PGNs.
+- #376: Added Type field to PGN 130571.
+- #377: Ensure PGNs are correct framing type (packet type) and fix PGN 130824 B&G Wind Data.
+- #365: Produce a `canboat.html` file
+
+### Changed
+- #366: PGN 127500 field lengths and framing type changed
+
+## [4.10.0]
+
+### Fixed
+- Fix #358: Repair heading and temperature lookups in NMEA0183.
+- Fixed lookup types in PGN 130573 and PGN 130579.
+- Fix #373: Repair `analyzer -nv` and `analyzer -debug` output.
+
+### Changed
+
+- #270: Added SchemaVersion element to the XSD and generated XML/JSON
+  files, and removed the old Version attribute.
+
+### Added
+
+- #372: Add support for Actisense N2K ASCII protocol to analyzer.
+
 ## [4.9.2]
 
 ### Fixed
@@ -532,7 +852,23 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v4.9.2...HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.1..HEAD
+[6.1.1]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.1
+[6.1.0]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.0
+[6.0.1]: https://github.com/canboat/canboat/compare/v6.0.0...v6.0.1
+[6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0
+[5.1.3]: https://github.com/canboat/canboat/compare/v5.1.1...v5.1.3
+[5.1.1]: https://github.com/canboat/canboat/compare/v5.1.0...v5.1.1
+[5.1.0]: https://github.com/canboat/canboat/compare/v5.0.3...v5.1.0
+[5.0.3]: https://github.com/canboat/canboat/compare/v5.0.2...v5.0.3
+[5.0.2]: https://github.com/canboat/canboat/compare/v5.0.1...v5.0.2
+[5.0.1]: https://github.com/canboat/canboat/compare/v5.0.0...v5.0.1
+[5.0.0]: https://github.com/canboat/canboat/compare/v4.12.0...v5.0.0
+[4.12.0]: https://github.com/canboat/canboat/compare/v4.11.1...v4.12.0
+[4.11.1]: https://github.com/canboat/canboat/compare/v4.11.0...v4.11.1
+[4.11.0]: https://github.com/canboat/canboat/compare/v4.10.1...v4.11.0
+[4.10.1]: https://github.com/canboat/canboat/compare/v4.10.0...v4.10.1
+[4.10.0]: https://github.com/canboat/canboat/compare/v4.9.2...v4.10.0
 [4.9.2]: https://github.com/canboat/canboat/compare/v4.9.1...v4.9.2
 [4.9.1]: https://github.com/canboat/canboat/compare/v4.9.0...v4.9.1
 [4.9.0]: https://github.com/canboat/canboat/compare/v4.8.1...v4.9.0

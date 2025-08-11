@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -81,7 +81,7 @@ static void fillMaxRangeLookup(size_t n, const char *s)
 
 static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup)
 {
-  uint64_t specialvalues = (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
+  uint64_t specialvalues = (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
   uint32_t highbit       = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
   double   r;
@@ -114,23 +114,21 @@ static double getMaxRange(const char *name, uint32_t size, double resolution, bo
   return r;
 }
 
-static void fixupUnit(Field *f)
+void fixupUnit(Field *f)
 {
   if (showSI)
   {
-    if (strcmp(f->unit, "kWh") == 0)
+    if (strcmp(f->unit, "rad") == 0)
     {
-      f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ.
-      f->rangeMin *= 3.6e6;
-      f->rangeMax *= 3.6e6;
-      f->unit = "J";
-    }
-    else if (strcmp(f->unit, "Ah") == 0)
-    {
-      f->resolution *= 3600.0; // 1 Ah = 3600 C.
-      f->rangeMin *= 3600.0;
-      f->rangeMax *= 3600.0;
-      f->unit = "C";
+      if (f->hasSign)
+      {
+        f->rangeMin = max(f->rangeMin, -3.1415926);
+        f->rangeMax = min(f->rangeMax, 3.1415926);
+      }
+      else
+      {
+        f->rangeMax = min(f->rangeMax, 2 * 3.1415926);
+      }
     }
 
     // Many more to follow, but pgn.h is not yet complete enough...
@@ -168,6 +166,7 @@ static void fixupUnit(Field *f)
       f->resolution *= RadianToDegree;
       f->rangeMin *= RadianToDegree;
       f->rangeMax *= RadianToDegree;
+      f->rangeMax  = max(f->rangeMax, 360);
       f->unit      = "deg";
       f->precision = 1;
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
@@ -182,6 +181,13 @@ static void fixupUnit(Field *f)
     }
   }
 }
+
+#ifndef EXPLAIN
+static LookupInfo fieldtypeEnums[] = {
+#define LOOKUP_TYPE_FIELDTYPE(type, length) {.name = xstr(type), .size = length, .function.pair = lookup##type},
+#include "lookup.h"
+};
+#endif
 
 extern void fillFieldType(bool doUnitFixup)
 {
@@ -199,6 +205,7 @@ extern void fillFieldType(bool doUnitFixup)
       if (ft->unit == NULL)
       {
         ft->unit = ft->physical->abbreviation;
+        logDebug("Fieldtype '%s' inherits unit '%s' from physical type '%s'\n", ft->name, STRNULL(ft->unit), ft->physical->name);
       }
       if (ft->url == NULL)
       {
@@ -237,13 +244,20 @@ extern void fillFieldType(bool doUnitFixup)
       {
         ft->hasSign = base->hasSign;
       }
+      if (ft->unit == NULL && base->unit != NULL)
+      {
+        ft->unit = base->unit;
+        logDebug("Fieldtype '%s' inherits unit '%s' from base type '%s'\n", ft->name, ft->unit, base->name);
+      }
       if (ft->size == 0 && base->size != 0)
       {
         ft->size = base->size;
+        logDebug("Fieldtype '%s' inherits size %u from base type '%s'\n", ft->name, ft->size, base->name);
       }
       if (ft->resolution == 0.0 && base->resolution != 0.0)
       {
         ft->resolution = base->resolution;
+        logDebug("Fieldtype '%s' inherits resolution %g from base type '%s'\n", ft->name, ft->resolution, base->name);
       }
       else if (ft->resolution != 0.0 && base->resolution != 0.0 && ft->resolution != base->resolution)
       {
@@ -369,6 +383,8 @@ extern void fillFieldType(bool doUnitFixup)
         pgnList[i].hasMatchFields = true;
       }
 
+      logDebug("%s size=%u res=%g sign=%u rangeMax=%g\n", f->name, f->size, f->resolution, ft->hasSign, f->rangeMax);
+
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
         f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
@@ -406,8 +422,49 @@ extern void fillFieldType(bool doUnitFixup)
       exit(2);
     }
     pgnList[i].fieldCount = j;
-    logDebug("PGN %u has %u fields\n", pgnList[i].pgn, j);
+    logDebug("PGN %u '%s' has %u fields\n", pgnList[i].pgn, pname, j);
   }
 
+#ifndef EXPLAIN
+  for (size_t i = 0; i < ARRAY_SIZE(fieldtypeEnums); i++)
+  {
+    uint32_t maxValue = (1 << fieldtypeEnums[i].size) - 1;
+
+    for (size_t j = 0; j < maxValue; j++)
+    {
+      /* DISCARD */ (fieldtypeEnums[i].function.pair)(j); // Initialize all internal fields on init
+    }
+  }
+#endif
+
   logDebug("Filled all fieldtypes\n");
+}
+
+extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft)
+{
+  f->ft = getFieldType(ft);
+  if (f->ft == NULL)
+  {
+    logAbort("LookupFieldType %s(%d) contains an invalid fieldtype '%s'\n", lookup, key, ft);
+  }
+  f->unit       = f->ft->unit;
+  f->resolution = f->ft->resolution;
+  f->hasSign    = f->ft->hasSign == True;
+  if (f->size == 0)
+  {
+    f->size = f->ft->size;
+  }
+  f->name = str;
+  if (f->unit != NULL)
+  {
+    fixupUnit(f);
+  }
+
+  logDebug("fillFieldTypeLookupField(Field, lookup='%s', key=%zu, str='%s', ft='%s' unit='%s' bits=%u\n",
+           lookup,
+           key,
+           str,
+           ft,
+           STRNULL(f->unit),
+           f->size);
 }

@@ -1,0 +1,68 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: make
+        run: make
+
+      - name: make generated
+        run: make generated
+
+  build-armv7-musl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: Install QEMU and build tools for ARMv7 musl
+        run: |
+          sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf make autoconf
+
+      - name: Setup musl cross compiler
+        run: |
+          export TARGET=armv7l-linux-musleabihf
+          mkdir $HOME/musl && cd $_
+          wget https://keversoft.com/downloads/${TARGET}-cross.tgz
+          tar xvf ${TARGET}-cross.tgz
+
+      - name: Build for ARMv7 musl
+        run: |
+          export TARGET=armv7l-linux-musleabihf
+          export BUILDDIR=rel/$TARGET
+          export PATH=$PATH:$HOME/musl/${TARGET}-cross/bin
+          export CC=$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc
+          ls -l $CC
+          make
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+        run:
+          shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+            packages: make gcc-core
+            hardlinks: 1
+
+      - name: make
+        run: make -C /cygdrive/d/a/canboat/canboat

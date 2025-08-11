@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -29,11 +29,14 @@ static LogLevel logLevel = LOGLEVEL_INFO;
 static char *progName;
 static char  fixedTimestamp[DATE_LENGTH];
 
-#ifndef WIN32
-
 uint64_t getNow(void)
 {
   struct timeval tv;
+
+  if (*fixedTimestamp != '\0')
+  {
+    return UINT64_C(1672527600000); // 2023-01-01 00:00
+  }
 
   if (gettimeofday(&tv, (void *) 0) == 0)
   {
@@ -45,57 +48,38 @@ uint64_t getNow(void)
   return 0L;
 }
 
-void storeTimestamp(char str[DATE_LENGTH], uint64_t when)
+const char *fmtTimestamp(char str[DATE_LENGTH], uint64_t when)
 {
-  time_t    t;
-  struct tm tm;
-  int       msec;
-  size_t    len;
-
-  t    = when / 1000L;
-  msec = when % 1000L;
-  gmtime_r(&t, &tm);
-  strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
-  len = strlen(str);
-  snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", msec);
-}
-
-const char *now(char str[DATE_LENGTH])
-{
-  uint64_t now = getNow();
-
   if (fixedTimestamp[0] != '\0')
   {
     return (const char *) fixedTimestamp;
   }
-
-  storeTimestamp(str, now);
-  return (const char *) str;
-}
-
-#else
-
-const char *now(char str[DATE_LENGTH])
-{
-  struct _timeb timebuffer;
-  struct tm     tm;
-  size_t        len;
-
-  if (fixedTimestamp[0] != '\0')
+  else
   {
-    return (const char *) fixedTimestamp;
+    time_t    t;
+    struct tm tm;
+    int       msec;
+    size_t    len;
+
+    if (when == UINT64_C(0))
+    {
+      when = getNow();
+    }
+
+    t    = when / 1000L;
+    msec = when % 1000L;
+    gmtime_r(&t, &tm);
+    strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
+    len = strlen(str);
+    snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", msec);
+    return str;
   }
-
-  _ftime_s(&timebuffer);
-  gmtime_s(&tm, &timebuffer.time);
-  strftime(str, DATE_LENGTH - 5, "%Y-%m-%dT%H:%M:%S", &tm);
-  len = strlen(str);
-  snprintf(str + len, DATE_LENGTH - len, ".%3.3dZ", timebuffer.millitm);
-
-  return (const char *) str;
 }
 
-#endif
+const char *fmtNow(char str[DATE_LENGTH])
+{
+  return fmtTimestamp(str, UINT64_C(0));
+}
 
 static int logBase(LogLevel level, const char *format, va_list ap)
 {
@@ -106,7 +90,7 @@ static int logBase(LogLevel level, const char *format, va_list ap)
     return 0;
   }
 
-  fprintf(stderr, "%s %s [%s] ", logLevels[level], now(strTmp), progName);
+  fprintf(stderr, "%s %s [%s] ", logLevels[level], fmtNow(strTmp), progName);
 
   return vfprintf(stderr, format, ap);
 }
@@ -326,6 +310,11 @@ void sbAppendString(StringBuffer *sb, const char *string)
   sbAppendData(sb, string, len);
 }
 
+void sbAppendChar(StringBuffer *sb, const char c)
+{
+  sbAppendData(sb, &c, sizeof(c));
+}
+
 void sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap)
 {
   int     n;
@@ -391,6 +380,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
     loc = strstr(loc, fieldName);
     if (!loc)
     {
+      logDebug("getJSONValue('%s','%s',...) => name not found\n", message, fieldName);
       return false;
     }
     if (loc[-1] == '"' && loc[fieldLen] == '"' && loc[fieldLen + 1] == ':')
@@ -403,24 +393,32 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
   /* field has been found */
   loc += fieldLen + 2;
 
-  while (isspace(*loc))
+  while (isspace((unsigned char) *loc))
   {
     loc++;
   }
 
+  if (*loc == '{')
+  {
+    /* It is a nested value like "field" : {"value":0,"name":"Under way using engine"} */
+    return getJSONLookupValue(message, fieldName, value, len);
+  }
+
   if (strncmp(loc, "null", 4) == 0)
   {
+    logDebug("getJSONValue('%s','%s',...) => value null\n", message, fieldName);
     return false;
   }
 
   if (*loc != '"')
   {
-    while ((isdigit(*loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
+    while ((isdigit((unsigned char) *loc) || *loc == '.' || *loc == '-' || *loc == 'E' || *loc == 'e' || *loc == '+') && len > 1)
     {
       *value++ = *loc++;
       len--;
     }
     *value = 0;
+    logDebug("getJSONValue('%s','%s',...) => valid number\n", message, fieldName);
     return true;
   }
 
@@ -478,6 +476,7 @@ bool getJSONValue(const char *message, const char *fieldName, char *value, size_
     len--;
   }
   *value = 0;
+  logDebug("getJSONValue('%s','%s',...) => valid string\n", message, fieldName);
   return true;
 }
 
@@ -508,7 +507,7 @@ static bool getJSONLookupList(const char *message, const char *fieldName, char *
   /* field has been found */
   loc += fieldLen + 2;
 
-  while (isspace(*loc))
+  while (isspace((unsigned char) *loc))
   {
     loc++;
   }
@@ -547,6 +546,7 @@ bool getJSONLookupName(const char *message, const char *fieldName, char *value, 
 
   if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)))
   {
+    logDebug("getJSONLookupList('%s','%s'...) = '%s'\n", message, fieldName, buffer);
     return getJSONValue(buffer, "name", value, len);
   }
   return false;
@@ -555,16 +555,18 @@ bool getJSONLookupName(const char *message, const char *fieldName, char *value, 
 /*
  * Retrieve a value out of a JSON styled message.
  */
-bool getJSONLookupValue(const char *message, const char *fieldName, int64_t *value)
+bool getJSONLookupValue(const char *message, const char *fieldName, char *value, size_t len)
 {
-  char buffer[128];
+  char buffer[256];
 
-  if (getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", buffer, sizeof(buffer))
-      && sscanf(buffer, "%" PRId64, value) == 1)
-  {
-    return true;
-  }
-  return false;
+  return getJSONLookupList(message, fieldName, buffer, sizeof(buffer)) && getJSONValue(buffer, "value", value, len);
+}
+
+bool getJSONInt64(const char *message, const char *fieldName, int64_t *value)
+{
+  char buffer[16];
+
+  return getJSONValue(message, fieldName, buffer, sizeof buffer) && sscanf(buffer, "%" PRId64, value) == 1;
 }
 
 char *sbSearchChar(const StringBuffer *const in, char c)
@@ -751,7 +753,7 @@ static void resolve_address(const char *url, char **host, const char **service)
 
 SOCKET open_socket_stream(const char *url)
 {
-  int             sockfd = INVALID_SOCKET;
+  SOCKET          sockfd = INVALID_SOCKET;
   int             n;
   struct addrinfo hints, *res, *addr;
   char           *host;
@@ -799,7 +801,7 @@ SOCKET open_socket_stream(const char *url)
 
 uint8_t scanNibble(char c)
 {
-  if (isdigit(c))
+  if (isdigit((unsigned char) c))
   {
     return c - '0';
   }
@@ -839,7 +841,7 @@ int scanHex(char **p, uint8_t *m)
   return 0;
 }
 
-int isReady(int fd1, int fd2, int fd3, int timeout)
+int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout)
 {
   fd_set         fds;
   fd_set         fdw;
@@ -899,7 +901,7 @@ int isReady(int fd1, int fd2, int fd3, int timeout)
  * cater for this.
  *
  */
-int writeSerial(int handle, const uint8_t *data, size_t len)
+int writeSerial(SOCKET handle, const uint8_t *data, size_t len)
 {
   int     retryCount = 5;
   ssize_t written;

@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -25,13 +25,13 @@ limitations under the License.
 #include "nmea0183.h"
 
 extern uint16_t port;
-extern char *   srcFilter;
+extern char    *srcFilter;
 extern bool     rateLimit;
 extern uint32_t protocol;
 extern int      debug;
 extern bool     unitSI;
 
-extern int64_t epoch(void);
+extern uint64_t epoch(void);
 
 typedef enum
 {

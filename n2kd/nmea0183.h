@@ -5,7 +5,7 @@ Convert JSON encoded NMEA2000 PGNs to NMEA0183.
 At this moment it only supports what one of the authors needed: sensor data
 other than GPS and AIS: depth, heading, wind.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -31,7 +31,7 @@ limitations under the License.
  * NMEA 0183 uses various units, including metric derived and colonial.
  */
 #define SPEED_M_S_TO_KNOTS(s) (s * 1.94384)
-#define SPEED_M_S_TO_KMH(s) ((s) *3.6)
+#define SPEED_M_S_TO_KMH(s) ((s) * 3.6)
 #define DIST_M_TO_KM(d) ((d) / 1000.0)
 #define DIST_M_TO_NM(d) ((d) / 1852.0)
 
@@ -39,7 +39,7 @@ limitations under the License.
 // DST800 shows value in Celcius, but I (Kees) really doubt this.
 // By checking for a 'ridiculous' value in kelvin, we can have our cake and eat it.
 // Anything below 173 deg K is assumed to be really in Celcius.
-#define TEMP_K_TO_C(t) (((t) < 173.15) ? (t) : ((t) -273.15))
+#define TEMP_K_TO_C(t) (((t) < 173.15) ? (t) : ((t) - 273.15))
 
 extern void convertJSONToNMEA0183(StringBuffer *msg183, const char *msg);
 extern void nmea0183CreateMessage(StringBuffer *msg183, int src, const char *format, ...);

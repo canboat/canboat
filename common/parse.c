@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -89,13 +89,13 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
              &junk);
   if (r < 5)
   {
-    logError("Error reading message, scanned %u from %s", r, msg);
+    logError("Error reading message, scanned %zu from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
   }
 
-  if (len > 9)
+  if (len > 8)
   {
     // This is not PLAIN format but FAST format */
     return -1;
@@ -131,11 +131,10 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   memcpy(m->timestamp, msg, p - msg);
   m->timestamp[p - msg] = 0;
 
-  /* Moronic Windows does not support %hh<type> so we use intermediate variables */
   r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
   {
-    logError("Error reading message, scanned %u from %s", r, msg);
+    logError("Error reading message, scanned %zu from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -144,7 +143,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   p = findOccurrence(p, ',', 6);
   if (!p)
   {
-    logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
+    logError("Error reading message, cannot find sixth comma in %s", msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
     return 2;
@@ -160,7 +159,7 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
     }
     if (i < len)
     {
-      if (*p != ',' && !isspace(*p))
+      if (*p != ',' && !isspace((unsigned char) *p))
       {
         logError("Error reading message, scanned %zu bytes from %s", p - msg, msg);
         if (!showJson)
@@ -403,7 +402,7 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   {
     return -1;
   }
-  tiden = time(NULL);
+  tiden = (time_t) (getNow() / UINT64_C(1000));
   localtime_r(&tiden, &tm);
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
   sprintf(m->timestamp + strlen(m->timestamp), "%s", token);
@@ -499,3 +498,140 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   logError("Unable to parse incoming message '%s', r = %d\n", sbGet(in), r);
   return false;
 }
+
+int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
+{
+  char         *nexttoken;
+  char         *p;
+  char         *token;
+  int           i;
+  int           r;
+  static time_t tiden = 0;
+  struct tm     tm;
+  time_t        now;
+  unsigned int  millis = 0;
+  unsigned int  secs;
+  unsigned long n;
+
+  // parse timestamp. Actisense doesn't give us date so let's figure it out ourself
+  token = strtok_r(msg, " ", &nexttoken);
+  if (!token || token[0] != 'A')
+  {
+    logError("No message or does not start with 'A'\n");
+    return -1;
+  }
+  token++;
+
+  r = sscanf(token, "%u.%u", &secs, &millis);
+  if (r < 1)
+  {
+    return -1;
+  }
+
+  if (tiden == 0)
+  {
+    tiden = (time_t) (getNow() / UINT64_C(1000)) - secs;
+  }
+  now = tiden + secs;
+
+  localtime_r(&now, &tm);
+  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
+  sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", millis);
+
+  // parse <SRC><DST><P>
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    return -1;
+  }
+  n       = strtoul(token, NULL, 16);
+  m->prio = n & 0xf;
+  m->dst  = (n >> 4) & 0xff;
+  m->src  = (n >> 12) & 0xff;
+
+  // parse <PGN>
+  token = strtok_r(NULL, " ", &nexttoken);
+  if (!token)
+  {
+    logError("Incomplete message\n");
+    if (!showJson)
+      fprintf(stdout, "%s", msg);
+    return -1;
+  }
+  m->pgn = strtoul(token, NULL, 16);
+
+  // parse DATA
+  p = nexttoken;
+  for (i = 0; i < FASTPACKET_MAX_SIZE; i++)
+  {
+    if (*p == '\0' || isspace((unsigned char) *p))
+    {
+      break;
+    }
+    if (scanHex(&p, &m->data[i]))
+    {
+      logError("Error reading message, scanned %zu bytes from %s/%s, index %u", p - msg, msg, p, i);
+      if (!showJson)
+        fprintf(stdout, "%s", msg);
+      return 2;
+    }
+  }
+  m->len = i;
+
+  return 0;
+}
+
+bool parseTimestamp(const char *msg, uint64_t *when)
+{
+  struct tm t;
+  time_t    epoch;
+  int       year  = 0;
+  int       month = 0;
+  int       day   = 0;
+  int       hour  = 0;
+  int       min   = 0;
+  int       sec   = 0;
+  int       milli = 0;
+  char     *p;
+
+  p = strstr(msg, "Z,");
+  if (p)
+  {
+    if (sscanf(msg, "%d-%d-%dT%d:%d:%d.%dZ", &year, &month, &day, &hour, &min, &sec, &milli) < 6)
+    {
+      logDebug("Unable to parse timestamp '%s'\n", msg);
+      return false;
+    }
+    t.tm_year  = year - 1900;
+    t.tm_mon   = month - 1;
+    t.tm_mday  = day;
+    t.tm_hour  = hour;
+    t.tm_min   = min;
+    t.tm_sec   = sec;
+    t.tm_isdst = -1;
+    epoch      = timegm(&t);
+  }
+  else
+  {
+    if (sscanf(msg, "%d-%d-%d %d:%d:%d.%d", &year, &month, &day, &hour, &min, &sec, &milli) < 6)
+    {
+      logDebug("Unable to parse timestamp '%s'\n", msg);
+      return false;
+    }
+    t.tm_year  = year - 1900;
+    t.tm_mon   = month - 1;
+    t.tm_mday  = day;
+    t.tm_hour  = hour;
+    t.tm_min   = min;
+    t.tm_sec   = sec;
+    t.tm_isdst = -1;
+    epoch      = mktime(&t);
+  }
+
+  logDebug("parseTimestamp '%s' => %d-%d-%d %d:%d:%d.%03d\n", msg, year, month, day, hour, min, sec, milli);
+
+  *when = epoch * UINT64_C(1000) + milli;
+
+  return true;
+}
+

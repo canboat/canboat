@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -21,17 +21,12 @@ limitations under the License.
 #ifndef COMMON_H_INCLUDED
 #define COMMON_H_INCLUDED
 
-#include "license.h"
-
-#ifdef WIN32
-#define _CRT_SECURE_NO_WARNINGS
-#endif
-
 #include <ctype.h>
 #include <errno.h>
 #include <fcntl.h>
 #include <inttypes.h>
 #include <stdarg.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -40,11 +35,12 @@ limitations under the License.
 #include <time.h>
 #include <unistd.h>
 
+#include "license.h"
+
 #ifndef WIN32
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <netinet/in.h>
-#include <stdbool.h>
 #include <stdint.h>
 #include <sys/ioctl.h>
 #include <sys/select.h>
@@ -56,27 +52,10 @@ limitations under the License.
 #define HAS_SYSLOG
 typedef int SOCKET;
 #else
-#include <winsock2.h>
-
-#include "winport.h"
-#endif
-
-#ifdef WIN32
-typedef unsigned char      uint8_t;
-typedef unsigned short int uint16_t;
-typedef unsigned int       uint32_t;
-typedef signed int         int32_t;
-typedef __int64            int64_t;
-typedef unsigned __int64   uint64_t;
-#define UINT64_C(x) ((uint64_t) (x))
-#define INT64_C(x) ((int64_t) (x))
-#define PRId64 "I64d"
-#define PRIu64 "I64u"
-#define PRIx64 "I64x"
-#define PRIX64 "I64X"
-#define strcasecmp _stricmp
-#define UINT16_MAX (0xffff)
-#define UINT32_MAX (0xffffffff)
+#define _CRT_SECURE_NO_WARNINGS
+#include <ws2tcpip.h>
+// Must come after ws2tcpip.h
+#include <windows.h>
 #endif
 
 #ifndef CB_MAX
@@ -97,6 +76,10 @@ typedef unsigned __int64   uint64_t;
 #define STDIN (0)
 #define STDOUT (1)
 #define STDERR (2)
+
+// Macro expansion trickery
+#define EMPTY()
+#define DEFER(x) x EMPTY()
 
 typedef enum LogLevel
 {
@@ -136,6 +119,7 @@ void  sbAppendEncodeBase64(StringBuffer *sb, const uint8_t *data, size_t len, en
 void  sbAppendDecodeHex(StringBuffer *sb, const char *data, size_t len);                                     // hex to binary
 void  sbAppendDecodeBase64(StringBuffer *sb, const char *data, size_t len, enum Base64Encoding encoding);    // base64 to binary
 void  sbAppendData(StringBuffer *sb, const void *data, size_t len);
+void  sbAppendChar(StringBuffer *sb, const char c);
 void  sbAppendString(StringBuffer *sb, const char *string);
 void  sbAppendFormat(StringBuffer *const sb, const char *const format, ...);
 void  sbAppendFormatV(StringBuffer *const sb, const char *const format, va_list ap);
@@ -172,18 +156,20 @@ char *sbSearchChar(const StringBuffer *const sb, char c);
     (sb)->len   = 0;    \
   }
 
-bool         getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
-bool         getJSONLookupValue(const char *message, const char *fieldName, int64_t *value);
-bool         getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len);
+bool getJSONValue(const char *message, const char *fieldName, char *value, size_t len);
+bool getJSONLookupValue(const char *message, const char *fieldName, char *value, size_t len);
+bool getJSONLookupName(const char *message, const char *fieldName, char *value, size_t len);
+bool getJSONInt64(const char *message, const char *fieldName, int64_t *value);
+
 void         getISO11783BitsFromCanId(unsigned int id, unsigned int *prio, unsigned int *pgn, unsigned int *src, unsigned int *dst);
 unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsigned int src, unsigned int dst);
 
 SOCKET open_socket_stream(const char *url);
 
 #define DATE_LENGTH 60
-const char *now(char str[DATE_LENGTH]);
+const char *fmtNow(char str[DATE_LENGTH]);
+const char *fmtTimestamp(char str[DATE_LENGTH], uint64_t timestamp);
 uint64_t    getNow(void);
-void        storeTimestamp(char str[DATE_LENGTH], uint64_t when);
 
 uint8_t scanNibble(char c);
 int     scanHex(char **p, uint8_t *m);
@@ -198,9 +184,9 @@ enum ReadyDescriptor
 /*
  * Wait for R/W fd1, Read fd2 or Write fd3
  */
-int isReady(int fd1, int fd2, int fd3, int timeout);
+int isReady(SOCKET fd1, SOCKET fd2, SOCKET fd3, int timeout);
 
-int writeSerial(int handle, const uint8_t *data, size_t len);
+int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
 
 #define UINT16_OUT_OF_RANGE (MAX_UINT16 - 1)
 #define UINT16_UNKNOWN (MAX_UINT16)
@@ -212,6 +198,10 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
 // C stringify operations with macro names
 #define xstr(s) str(s)
 #define str(s) #s
+
+// Bitfield operations and tests
+
+#define bit(a, b) (((a) & (b)) != 0)
 
 /*
  * Notes on the NMEA 2000 packet structure
@@ -263,7 +253,7 @@ int writeSerial(int handle, const uint8_t *data, size_t len);
    || ((n) >= 0x1FF00 && (n) <= 0x1FFFF) /* PDU2 (nonaddressed) fast-packet */  \
   )
 
-#define ALLOW_PGN_FAST_PACKET(n) ((n) >= 0x10000 && (n) < CANBOAT_PGN_START)
+#define ALLOW_PGN_FAST_PACKET(n) (((n) >= 0x10000 && (n) < 0x1FFFF) || (n) >= CANBOAT_PGN_START)
 #define ALLOW_PGN_SINGLE_FRAME(n) ((n) < 0x10000 || (n) >= 0x1F000)
 
 #define MAP_PGN_TO_CONTINUOUS_RANGE(n) ((n) - (0xE800))

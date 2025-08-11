@@ -1,0 +1,261 @@
+name: Test canboatjs, ts-pgns and related Signal K projects
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  repository_dispatch:
+    types: [trigger-workflow]
+  workflow_dispatch:
+    inputs:
+      canboatjs-branch:
+        description: 'Branch to get canboatjs from'
+        default: 'master'
+        required: true
+      ts-pgns-branch:
+        description: 'Branch to get ts-pgns from'
+        default: 'main'
+        required: true        
+
+jobs:
+  build_and_test:
+    name: 'Build & Test'
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: checkout canboat repo
+      uses: actions/checkout@v4
+      with:
+        path: ./canboat
+        
+    - name: update & install tools
+      run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+      working-directory: ./canboat
+
+    - name: make canboat
+      run: |
+        make
+        make generated
+      working-directory: ./canboat
+
+    - name: Checkout canboatjs
+      uses: actions/checkout@v4
+      with:
+        repository: canboat/canboatjs
+        path: ./canboatjs
+        ref: ${{ github.event.inputs.canboatjs-branch }}
+  
+    - name: Checkout ts-pgns
+      uses: actions/checkout@v4
+      with:
+        repository: canboat/ts-pgns
+        path: ./ts-pgns
+        ref: ${{ github.event.inputs.ts-pgns-branch }}
+  
+    - name: Use Node.js 22.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: '22.x'
+        
+    - name: Build & Test ts-pgns
+      run: |
+        cp ../canboat/docs/canboat.json .
+        npm install
+        npm run build
+        npm run generate
+        npm run build
+        npm test
+        npm link
+      working-directory: ./ts-pgns
+
+    - name: Build & Test canboatjs
+      id: test_canboatjs
+      run: |
+        npm install
+        npm link @canboat/ts-pgns
+        npm run build
+        npm link
+        npm test
+      working-directory: ./canboatjs
+
+    - name: Checkout n2k-signalk
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: SignalK/n2k-signalk
+        path: ./n2k-signalk
+
+    - name: Build & Test n2k-signalk
+      id: test_n2k_signalk
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+        npm test
+      working-directory: ./n2k-signalk
+
+    - name: Checkout signalk-to-nmea2000
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: SignalK/signalk-to-nmea2000
+        ref: typescript
+        path: ./signalk-to-nmea2000
+
+    - name: Build & Test signalk-to-nmea2000
+      id: test_signalk_to_nmea2000
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+        npm test
+      working-directory: ./signalk-to-nmea2000
+
+    - name: Checkout signalk-n2k-switching
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-n2k-switching
+        path: ./signalk-n2k-switching
+
+    - name: Build signalk-n2k-switching
+      id: test_signalk_n2k_switching
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-n2k-switching
+
+    - name: Checkout signalk-n2k-displays
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-n2k-displays
+        ref: ts-pgns
+        path: ./signalk-n2k-displays
+
+    - name: Build signalk-n2k-displays
+      id: test_signalk_n2k_displays
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-n2k-displays
+
+    - name: Checkout signalk-n2k-switching-emulator
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-n2k-switching-emulator
+        ref: main
+        path: ./signalk-n2k-switching-emulator
+
+    - name: Build signalk-n2k-switching-emulator
+      id: test_signalk_n2k_switching_emulator
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-n2k-switching-emulator
+
+    - name: Checkout signalk-alarm-silencer
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-alarm-silencer
+        ref: ts-pgns
+        path: ./signalk-alarm-silencer
+
+    - name: Build signalk-alarm-silencer
+      id: test_signalk_alarm_silencer
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-alarm-silencer
+
+    - name: Checkout signalk-fusion-stereo
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-fusion-stereo
+        ref: master
+        path: ./signalk-fusion-stereo
+
+    - name: Build signalk-fusion-stereo
+      id: test_signalk_fusion_stereo
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-fusion-stereo
+
+    - name: Checkout signalk-yd-alarm-button
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-yd-alarm-button
+        ref: ts-pgns
+        path: ./signalk-yd-alarm-button
+
+    - name: Build signalk-yd-alarm-button
+      id: test_signalk_yd_alarm_button
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+      working-directory: ./signalk-yd-alarm-button
+
+    - name: Checkout signalk-n2kais-to-nmea0183
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: sbender9/signalk-n2kais-to-nmea0183
+        path: ./signalk-n2kais-to-nmea0183
+
+    - name: Build signalk-n2kais-to-nmea0183
+      id: test_signalk_n2kais_to_nmea0183
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/canboatjs
+        npm link @canboat/ts-pgns
+        npm run build
+        npm test
+      working-directory: ./signalk-n2kais-to-nmea0183
+
+    - name: Checkout signalk-autopilot
+      if: always()
+      uses: actions/checkout@v4
+      with:
+        repository: SignalK/signalk-autopilot
+        path: ./signalk-autopilot
+
+    - name: Build signalk-autopilot
+      id: test_signalk_autopilot
+      if: always()
+      run: |
+        npm install
+        npm link @canboat/ts-pgns
+        #npm run build
+        #npm test
+      working-directory: ./signalk-autopilot
+
+

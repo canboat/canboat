@@ -1,0 +1,83 @@
+
+# Set timezone to GMT+00:00, dd/mm/yyyy
+2023-06-09T18:12:51.545Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,29,00,00,01,00,00,ff,ff
+# Set timezone to GMT+01:00, dd/mm/yyyy
+2023-06-09T18:13:54.344Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,29,00,00,01,3c,00,ff,ff
+# Set timezone to GMT+13:00, dd/mm/yyyy
+2023-06-09T18:14:31.867Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,29,00,00,01,0c,03,ff,ff
+# Set timezone to GMT-00:15, dd/mm/yyyy
+2023-06-09T18:15:29.919Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,29,00,00,01,f1,ff,ff,ff
+# Set timezone to GMT-02:00, dd/mm/yyyy
+2023-06-09T18:15:38.552Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,29,00,00,01,88,ff,ff,ff
+# Set time display to 12 hour mode
+2023-06-09T18:15:51.402Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,29,14,00,01,01,ff,ff,ff
+# Set time display to 24 hour mode
+2023-06-09T18:17:01.202Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,29,14,00,01,00,ff,ff,ff
+# Set time display to MM/dd/yyyy
+2023-06-09T18:21:18.730Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,28,14,00,01,01,ff,ff,ff
+# Set time display to dd/MM/yyyy
+2023-06-09T18:21:53.164Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,28,14,00,01,02,ff,ff,ff
+
+# Set backlight to Max (daylight, group default)
+2023-06-10T14:58:40.349Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,ff,12,00,01,63,ff,ff,ff
+# Set backlight to 90%
+2023-06-10T15:04:29.828Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,ff,12,00,01,58,ff,ff,ff
+# Set backlight to 20%
+2023-06-10T15:05:08.477Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,ff,12,00,01,0b,ff,ff,ff
+# Set backlight to min (10%)
+2023-06-10T15:05:07.548Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,ff,12,00,01,00,ff,ff,ff
+# Set backlight to 90% (lighting group 1)
+2023-06-10T15:06:51.804Z,3,130845,7,255,14,41,9f,ff,ff,02,ff,ff,12,00,01,58,ff,ff,ff
+# Set backlight to 90% (lighting group 2)
+2023-06-10T15:07:44.712Z,3,130845,7,255,14,41,9f,ff,ff,03,ff,ff,12,00,01,58,ff,ff,ff
+# Set backlight to 90% (lighting group 6)
+2023-06-10T15:08:08.001Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,ff,12,00,01,58,ff,ff,ff
+# Set night mode
+2023-06-10T15:13:02.832Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,ff,26,00,01,04,ff,ff,ff
+# Set day mode
+2023-06-10T15:08:43.841Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,ff,26,00,01,02,ff,ff,ff
+# Set night mode color red
+2023-06-10T15:11:25.056Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,ac,00,01,00,ff,ff,ff
+# Set night mode color green
+2023-06-10T15:09:48.592Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,ac,00,01,01,ff,ff,ff
+# Set night mode color blue
+2023-06-10T15:10:43.123Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,ac,00,01,02,ff,ff,ff
+# Set night mode color white
+2023-06-10T15:11:06.186Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,ac,00,01,03,ff,ff,ff
+# Set day mode color normal
+2023-06-10T15:13:50.416Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,d7,00,01,00,ff,ff,ff
+# Set day mode color inverted
+2023-06-10T15:13:29.131Z,3,130845,7,255,14,41,9f,ff,ff,07,ff,2f,d7,00,01,01,ff,ff,ff
+
+# Alarm: "No GPS fix" enabled
+2023-06-12T14:57:14.042Z,3,130846,7,255,19,41,9f,ff,ff,01,ff,ff,15,80,01,08,15,00,00,00,00,04,50,01
+# Alarm: "No GPS fix" disabled
+2023-06-12T14:58:27.443Z,3,130846,7,255,19,41,9f,ff,ff,01,ff,ff,15,80,01,08,14,00,00,00,00,04,50,01
+# Alarm: "Shallow water" enabled (2.0m)
+2023-06-12T15:04:27.633Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,c8,00,ff,ff
+# Alarm: "Shallow water" enabled (5.0m)
+2023-06-12T15:04:27.633Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,f4,01,ff,ff
+# Alarm: "Shallow water" disabled (2.0m)
+2023-06-12T15:05:37.393Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,02,00,01,00,00,ff,ff
+# Alarm: "Deep water" enabled (30.48m)
+2023-06-12T15:06:44.647Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,e8,0b,ff,ff
+# Alarm: "Deep water" enabled (5m)
+2023-06-12T15:06:44.647Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,f4,01,ff,ff
+# Alarm: "Deep water" disabled (30.5m)
+2023-06-12T15:07:15.009Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,01,00,01,00,00,ff,ff
+# Alarm: "Anchor depth" enabled 
+2023-06-12T15:09:26.023Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,07,00,01,00,ff,ff,ff
+# Alarm: "Anchor depth" disabled (strange, is the same?)
+2023-06-12T15:09:27.531Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,08,07,00,01,00,ff,ff,ff
+# Alarm: "Low boat speed" enabled
+2023-06-12T15:13:47.170Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,01,01,ff,ff
+# Alarm: "Low boat speed" disabled
+2023-06-12T15:13:48.709Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,05,02,00,01,00,00,ff,ff
+# Alarm: "True wind high" enabled (30 kn) 0x0607 = 15.43 m/s = 29.99 kn 
+2023-06-12T15:20:33.153Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,07,06,ff,ff
+# Alarm: "True wind high" disabled
+2023-06-12T15:20:34.558Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,01,00,01,00,00,ff,ff
+# Alarm: "True wind low" enabled (5 kn) 0x101 = 2.57 m/s = 4.99 kn
+2023-06-12T15:24:23.723Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,01,01,ff,ff
+# Alarm: "True wind low" disabled
+2023-06-12T15:24:24.856Z,3,130845,7,255,14,41,9f,ff,ff,01,ff,04,02,00,01,00,00,ff,ff

@@ -1,5 +1,5 @@
 #
-# (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 
@@ -35,7 +35,7 @@ if (sys.argv[1] == '--line-by-line'):
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
 checkRange = False
-allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'VARIABLE', 'STRING_LAU', 'STRING_LZ', 'STRING_FIX' }
+allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'STRING_LZ', 'STRING_FIX' }
 
 if (sys.argv[1] == '--range'):
     checkRange = True
@@ -43,6 +43,8 @@ if (sys.argv[1] == '--range'):
 else:
     file = open(sys.argv[1])
 data = json.loads(file.read())
+file.close()
+
 pgns = data["PGNs"]
 pMap = {}
 for pgn in pgns:
@@ -74,13 +76,28 @@ for pgn in pgns:
                     res = 1
                 else:
                     ft = field['FieldType']
-                    if (not 'RangeMax' in field and not ft in allowedNoRange):
+                    if (not 'RangeMax' in field and not ft in allowedNoRange and not 'BitLengthVariable' in field):
                         print("ERROR: PGN", prn, "'" +  desc + "' field " , order , fid , "has no rangeMax")
                         print(field)
                         res = 1
 
-file.close()
 
 if (res == 0):
+    s1 = json.dumps(data, indent = 2)
+    s2 = json.dumps(data, indent = 2, ensure_ascii = False)
+    if (s1 != s2):
+        s1 = s1.splitlines()
+        s2 = s2.splitlines()
+        print("ERROR: JSON contains non-ASCII characters")
+        i = 0
+        while (i < len(s1)):
+            if (s1[i] != s2[i]):
+                print(str(i) + " < " + s1[i])
+                print(str(i) + " > " + s2[i])
+            i = i + 1
+        res = 1
+    
+if (res == 0):
     print("JSON in", sys.argv[1], "seems valid.")
+
 exit(res)

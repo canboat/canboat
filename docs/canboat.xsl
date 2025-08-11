@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns="http://www.w3.org/1999/xhtml" version="1.0" exclude-result-prefixes="xs">
 
   <xsl:key name="Missing" match="/PGNDefinitions/MissingEnumerations/MissingAttribute" use="@Name" />
@@ -158,6 +157,9 @@
 
             <xsl:call-template name="HandleRepeatingFields"/>
 
+            <xsl:if test="Priority">
+              The default priority (as observed in the field) is <xsl:value-of select="Priority"/>.
+            </xsl:if>
             <xsl:if test="TransmissionInterval">
               It is normally transmitted every <xsl:value-of select="TransmissionInterval"/> milliseconds.
             </xsl:if>
@@ -173,6 +175,7 @@
               <th> Description </th>
               <th> Unit </th>
               <th> Type </th>
+              <th> PartOfPrimaryKey </th>
             </tr>
             <xsl:for-each select="Fields/*">
               <xsl:variable name="resolution" select="Resolution"/>
@@ -288,6 +291,16 @@
                         <xsl:value-of select="LookupBitEnumeration"/>
                       </a>
                     </xsl:when>
+                    <xsl:when test="LookupFieldTypeEnumeration">
+                      lookup
+                      <a>
+                        <xsl:attribute name="href">
+                          <xsl:value-of select="concat('#lookup-', LookupFieldTypeEnumeration)"/>
+                        </xsl:attribute>
+                        <xsl:value-of select="LookupFieldTypeEnumeration"/>
+                      </a>
+                      that defines the next variable field's type.
+                    </xsl:when>
                     <xsl:otherwise>
                       <xsl:if test="Signed = 'true'">
                         signed
@@ -310,6 +323,7 @@
                     </xsl:otherwise>
                   </xsl:choose>
                 </td>
+                <td> <xsl:value-of select="PartOfPrimaryKey"/> </td>
               </tr>
             </xsl:for-each>
           </table>
@@ -413,6 +427,102 @@
             </td>
             <td>
               <xsl:value-of select="@Name"/>
+            </td>
+          </tr>
+        </xsl:for-each>
+      </table>
+    </xsl:for-each>
+  </xsl:template>
+
+  <xsl:template name="lookupfieldtype-list">
+    <h2 id='lookupfieldtype-enumerations'>Lookup with FieldType enumerations</h2>
+    <xsl:for-each select="/PGNDefinitions/LookupFieldTypeEnumerations/*">
+      <h3>
+        <xsl:attribute name="id">
+          <xsl:value-of select="concat('lookup-', @Name)"/>
+        </xsl:attribute>
+        <xsl:value-of select="@Name"/>
+        (0 - <xsl:value-of select="@MaxValue"/>)
+      </h3>
+      <table>
+        <tr>
+          <th>Value</th>
+          <th>Description</th>
+          <th>Unit</th>
+          <th>Type</th>
+        </tr>
+        <xsl:for-each select="EnumFieldType">
+          <tr>
+            <td>
+              <xsl:value-of select="@Value"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Name"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Resolution"/>
+              <xsl:text> </xsl:text>
+              <xsl:value-of select="@Unit"/>
+            </td>
+            <td>
+              <xsl:value-of select="@Bits"/> bits 
+              <xsl:choose>
+                <xsl:when test="LookupEnumeration">
+                  lookup
+                  <a>
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="concat('#lookup-', LookupEnumeration)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="LookupEnumeration"/>
+                  </a>
+                </xsl:when>
+                <xsl:when test="LookupIndirectEnumeration">
+                  indirect lookup
+                  <a>
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="concat('#indirect-lookup-', LookupIndirectEnumeration)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="LookupIndirectEnumeration"/>
+                  </a>
+                  where the first column is the value from field 
+                    <xsl:variable name="val1Order" select="LookupIndirectEnumerationFieldOrder"/>
+                    <xsl:value-of select="$val1Order"/>
+                    ("<xsl:value-of select="../Field[Order = $val1Order]/Name"/>")
+                </xsl:when>
+                <xsl:when test="LookupBitEnumeration">
+                  bitfield
+                  <a>
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="concat('#lookupbit-', LookupBitEnumeration)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="LookupBitEnumeration"/>
+                  </a>
+                </xsl:when>
+                <xsl:when test="LookupFieldTypeEnumeration">
+                  lookup
+                  <a>
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="concat('#lookup-', LookupFieldTypeEnumeration)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="LookupFieldTypeEnumeration"/>
+                  </a>
+                  that defines the next variable field's type.
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:if test="@Signed = 'true'">
+                    signed
+                  </xsl:if>
+                  <xsl:if test="@Signed = 'false'">
+                    unsigned
+                  </xsl:if>
+                  <a>
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="concat('#ft-', @FieldType)"/>
+                    </xsl:attribute>
+                    <xsl:value-of select="@FieldType"/>
+                  </a>
+                </xsl:otherwise>
+              </xsl:choose>
             </td>
           </tr>
         </xsl:for-each>
@@ -551,7 +661,7 @@
       <body>
 
         <div id="sidenav" class="sidenav">
-          <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#215;</a>
+          <a class="closebtn" onclick="closeNav(event)">&#215;</a>
           <a href="#main">Top</a>
           <a href="#pgn-list">PGN list</a>
           <a href="#physical-quantities">Physical Quantities</a>
@@ -559,11 +669,12 @@
           <a href="#lookup-enumerations">Lookup enumerations</a>
           <a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a>
           <a href="#bitfield-enumerations">Bitfield enumerations</a>
+          <a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a>
           <a href="#notes">Notes</a>
         </div>
 
         <div id="sidenav-closed" class="sidenav">
-          <a href="javascript:void(0)" onclick="openNav()" id="hamburger">
+          <a onclick="openNav(event)" id="hamburger">
             <span/>
             <span/>
             <span/>
@@ -707,7 +818,7 @@
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
-              <tr><td><a href="#pgn-65536">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized (protocol)</td><td>Single frame</td></tr>
+              <tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized (protocol)</td><td>Fast packet</td></tr>
               <tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Fast packet</td></tr>
               <tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Mixed single/fast</td></tr>
               <tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Fast packet</td></tr>
@@ -731,7 +842,7 @@
             protocol byte and seven data bytes. Up to 32 packets can be used for a single message so the total maxing data length
             is 6 + 31 * 7 = 223 bytes.
             The first byte in all frames contains a sequence counter in the high 3 bits and a frame counter in the lower 5 bits.
-            The second byte in the first frame contains the total number of frames that will be sent.
+            The second byte in the first frame contains the total number of bytes in all packets that will be sent (excluding the single header byte in each of the following packets).
             As there is no way to acknowledge or deny reception, if a message is missed the receiver will have to wait for the next
             transmission of the message.
           </p>
@@ -748,6 +859,7 @@
           <xsl:call-template name="lookup-list"/>
           <xsl:call-template name="indirect-lookup-list"/>
           <xsl:call-template name="lookupbit-list"/>
+          <xsl:call-template name="lookupfieldtype-list"/>
 
           <h2 id='notes'>Notes</h2>
           <h3 id='offset'>Excess-K offset</h3>

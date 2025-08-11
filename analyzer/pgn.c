@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -28,7 +28,7 @@ limitations under the License.
  * Return the first Pgn entry for which the pgn is found.
  * There can be multiple (with differing 'match' fields).
  */
-Pgn *searchForPgn(int pgn)
+const Pgn *searchForPgn(int pgn)
 {
   size_t start = 0;
   size_t end   = pgnListSize;
@@ -56,6 +56,10 @@ Pgn *searchForPgn(int pgn)
     }
     if (pgn < pgnList[mid].pgn)
     {
+      if (mid == 0)
+      {
+        return NULL;
+      }
       end = mid - 1;
     }
     else
@@ -70,7 +74,7 @@ Pgn *searchForPgn(int pgn)
  * Return the last Pgn entry for which fallback == true && prn is smaller than requested.
  * This is slower, but is not used often.
  */
-Pgn *searchForUnknownPgn(int pgnId)
+const Pgn *searchForUnknownPgn(int pgnId)
 {
   Pgn *fallback = pgnList;
   Pgn *pgn;
@@ -81,7 +85,7 @@ Pgn *searchForUnknownPgn(int pgnId)
     {
       fallback = pgn;
     }
-    if (pgn->pgn > pgnId)
+    if (pgn->pgn >= pgnId)
     {
       break;
     }
@@ -99,11 +103,11 @@ Pgn *searchForUnknownPgn(int pgnId)
  * If all else fails, return an 'fallback' match-all PGN that
  * matches the fast/single frame, PDU1/PDU2 and proprietary/generic range.
  */
-Pgn *getMatchingPgn(int pgnId, uint8_t *data, int length)
+const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
 {
-  Pgn *pgn = searchForPgn(pgnId);
-  int  prn;
-  int  i;
+  const Pgn *pgn = searchForPgn(pgnId);
+  int        prn;
+  int        i;
 
   if (pgn == NULL)
   {
@@ -175,34 +179,66 @@ Pgn *getMatchingPgn(int pgnId, uint8_t *data, int length)
 void checkPgnList(void)
 {
   size_t i;
-  int    prn = 0;
+  int    prev_prn = 0;
 
   for (i = 0; i < pgnListSize; i++)
   {
-    Pgn *pgn;
+    int        pgnRangeIndex = 0;
+    int        prn           = pgnList[i].pgn;
+    const Pgn *pgn;
 
-    if (pgnList[i].pgn < prn)
+    if (prn < prev_prn)
     {
-      logError("Internal error: PGN %d is not sorted correctly\n", pgnList[i].pgn);
+      logError("Internal error: PGN %d is not sorted correctly\n", prn);
       exit(2);
     }
-    if (pgnList[i].pgn == prn || pgnList[i].fallback)
+
+    if (prn < ACTISENSE_BEM)
+    {
+      while (prn > pgnRange[pgnRangeIndex].pgnEnd && pgnRangeIndex < pgnRangeSize)
+      {
+        pgnRangeIndex++;
+      }
+      if (prn < pgnRange[pgnRangeIndex].pgnStart || prn > pgnRange[pgnRangeIndex].pgnEnd)
+      {
+        logError("Internal error: PGN %d is not part of a valid PRN range\n", prn);
+        exit(2);
+      }
+      if (pgnRange[pgnRangeIndex].pgnStep == 256 && (prn & 0xff) != 0)
+      {
+        logError("Internal error: PGN %d (0x%x) is PDU1 and must have a PGN ending in 0x00\n", prn, prn);
+        exit(2);
+      }
+      if (!(pgnRange[pgnRangeIndex].type == pgnList[i].type || pgnRange[pgnRangeIndex].type == PACKET_MIXED
+            || pgnList[i].type == PACKET_ISO_TP))
+      {
+        logError("Internal error: PGN %d (0x%x) is in range 0x%x-0x%x and must have packet type %s\n",
+                 prn,
+                 prn,
+                 pgnRange[pgnRangeIndex].pgnStart,
+                 pgnRange[pgnRangeIndex].pgnEnd,
+                 PACKET_TYPE_STR[pgnRange[pgnRangeIndex].type]);
+        exit(2);
+      }
+    }
+
+    if (prn == prev_prn || pgnList[i].fallback)
     {
       continue;
     }
-    prn = pgnList[i].pgn;
-    pgn = searchForPgn(prn);
+    prev_prn = prn;
+    pgn      = searchForPgn(prev_prn);
     if (pgn != &pgnList[i])
     {
-      logError("Internal error: PGN %d is not found correctly\n", prn);
+      logError("Internal error: PGN %d is not found correctly\n", prev_prn);
       exit(2);
     }
   }
 }
 
-Field *getField(uint32_t pgnId, uint32_t field)
+const Field *getField(uint32_t pgnId, uint32_t field)
 {
-  Pgn *pgn = searchForPgn(pgnId);
+  const Pgn *pgn = searchForPgn(pgnId);
 
   if (!pgn)
   {
@@ -215,143 +251,6 @@ Field *getField(uint32_t pgnId, uint32_t field)
   }
   logDebug("PGN %u does not have field %u\n", pgnId, field);
   return 0;
-}
-
-/*
- *
- * This is perhaps as good a place as any to explain how CAN messages are layed out by the
- * NMEA. Basically, it's a mess once the bytes are recomposed into bytes (the on-the-wire
- * format is fine).
- *
- * For fields that are aligned on bytes there isn't much of an issue, they appear in our
- * buffers in standard Intel 'least endian' format.
- * For instance the MMSI # 244050447 is, in hex: 0x0E8BEA0F. This will be found in the CAN data as:
- * byte x+0: 0x0F
- * byte x+1: 0xEA
- * byte x+2: 0x8B
- * byte x+3: 0x0e
- *
- * To gather together we loop over the bytes, and keep increasing the magnitude of what we are
- * adding:
- *    for (i = 0, magnitude = 0; i < 4; i++)
- *    {
- *      value += data[i] << magnitude;
- *      magnitude += 8;
- *    }
- *
- * However, when there are two bit fields after each other, lets say A of 2 and then B of 6 bits:
- * then that is layed out MSB first, so the bit mask is 0b11000000 for the first
- * field and 0b00111111 for the second field.
- *
- * This means that if we have a bit field that crosses a byte boundary and does not start on
- * a byte boundary, the bit masks are like this (for a 16 bit field starting at the 3rd bit):
- *
- * 0b00111111 0b11111111 0b11000000
- *     ------   --------   --
- *     000000   11110000   11
- *     543210   32109876   54
- *
- * So we are forced to mask bits 0 and 1 of the first byte. Since we need to process the previous
- * field first, we cannot repeatedly shift bits out of the byte: if we shift left we get the first
- * field first, but in MSB order. We need bit values in LSB order, as the next byte will be more
- * significant. But we can't shift right as that will give us bits in LSB order but then we get the
- * two fields in the wrong order...
- *
- * So for that reason we explicitly test, per byte, how many bits we need and how many we have already
- * used.
- *
- */
-
-bool extractNumber(const Field *field,
-                   uint8_t     *data,
-                   size_t       dataLen,
-                   size_t       startBit,
-                   size_t       bits,
-                   int64_t     *value,
-                   int64_t     *maxValue)
-{
-  const bool  hasSign = field ? field->hasSign : false;
-  const char *name    = field ? field->name : "<bits>";
-
-  size_t   firstBit;
-  size_t   bitsRemaining = bits;
-  size_t   magnitude     = 0;
-  size_t   bitsInThisByte;
-  uint64_t bitMask;
-  uint64_t allOnes;
-  uint64_t valueInThisByte;
-  uint64_t maxv;
-
-  logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
-
-  if (!adjustDataLenStart(&data, &dataLen, &startBit))
-  {
-    return false;
-  }
-
-  firstBit = startBit;
-  *value   = 0;
-  maxv     = 0;
-
-  while (bitsRemaining > 0 && dataLen > 0)
-  {
-    bitsInThisByte = min(8 - firstBit, bitsRemaining);
-    allOnes        = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
-
-    // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
-    // field as MSB.
-    // Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
-    bitMask         = allOnes << firstBit;
-    valueInThisByte = (*data & bitMask) >> firstBit;
-
-    *value |= valueInThisByte << magnitude;
-    maxv |= allOnes << magnitude;
-
-    magnitude += bitsInThisByte;
-    bitsRemaining -= bitsInThisByte;
-    firstBit += bitsInThisByte;
-    if (firstBit >= 8)
-    {
-      firstBit -= 8;
-      data++;
-      dataLen--;
-    }
-  }
-  if (bitsRemaining > 0)
-  {
-    logDebug("Insufficient length in PGN to fill field '%s'\n", name);
-    return false;
-  }
-
-  if (hasSign)
-  {
-    maxv >>= 1;
-
-    if (field && field->offset) /* J1939 Excess-K notation */
-    {
-      *value += field->offset;
-    }
-    else
-    {
-      bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
-
-      if (negative)
-      {
-        /* Sign extend value for cases where bits < 64 */
-        /* Assume we have bits = 16 and value = -2 then we do: */
-        /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
-        /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
-        /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
-        *value |= ~maxv;
-      }
-    }
-  }
-
-  *maxValue = (int64_t) maxv;
-
-  logDebug("extractNumber <%s> startBit=%zu bits=%zu value=%" PRId64 " max=%" PRId64 "\n", name, startBit, bits, *value, *maxValue);
-
-  return true;
 }
 
 static char *camelize(const char *str, bool upperCamelCase, int order)
@@ -369,7 +268,7 @@ static char *camelize(const char *str, bool upperCamelCase, int order)
 
   for (; *s; s++)
   {
-    if (isalpha(*s) || isdigit(*s))
+    if (isalpha((unsigned char) *s) || isdigit((unsigned char) *s))
     {
       if (lastIsAlpha)
       {
@@ -412,7 +311,16 @@ void camelCase(bool upperCamelCase)
     {
       const char *name = pgnList[i].fieldList[j].name;
 
-      pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      if (pgnList[i].fieldList[j].camelName == NULL)
+      {
+        pgnList[i].fieldList[j].camelName = camelize(name, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      }
+      else if (upperCamelCase)
+      {
+        pgnList[i].fieldList[j].camelName
+            = camelize(pgnList[i].fieldList[j].camelName, upperCamelCase, haveEarlierSpareOrReserved ? j + 1 : 0);
+      }
+
       if (strcmp(name, "Reserved") == 0 || strcmp(name, "Spare") == 0)
       {
         haveEarlierSpareOrReserved = true;

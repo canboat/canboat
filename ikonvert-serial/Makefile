@@ -1,5 +1,5 @@
 #
-# (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 
@@ -16,7 +16,7 @@
 # limitations under the License.
 # 
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 COMMONDIR=../common

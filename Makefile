@@ -1,7 +1,7 @@
 #
 # Makefile for all UNIX style platforms including Cygwin
 #
-# (C) 2009-2017, Kees Verruijt, Harlingen, The Netherlands
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands
 #
 # $Id:$
 #
@@ -15,9 +15,8 @@ SYSCONFDIR= /etc
 DATAROOTDIR ?= $(PREFIX)/share
 MANDIR= $(DATAROOTDIR)/man
 
-PLATFORM=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-OS=$(shell uname -o 2>&1)
-SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial
+PLATFORM ?= $(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial replay
 
 BUILDDIR ?= ./rel/$(PLATFORM)
 
@@ -32,7 +31,7 @@ ROOT_MOD=0644
 
 all:	bin compile
 	@echo "The binaries are now built and are in $(BUILDDIR)"
-	@echo "Use 'make generated' to recreate generated XML, JSON and DBC files."
+	@echo "Use 'make generated' to recreate generated XML, HTML, JSON and DBC files."
 
 compile: bin
 	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
@@ -45,10 +44,30 @@ generated: tests
 	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
 
+# Builder image can be removed with `docker image rm canboat-builder`
+docker-build: ## runs `make clean generated` in `ubuntu:22.04` Docker image
+	@docker build -t canboat-builder .
+	@docker run -it --rm -v $(shell pwd):/project canboat-builder clean generated
+
 bin:	$(BUILDDIR)
 
-$(BUILDDIR):
-	$(MKDIR) -p $(BUILDDIR)
+CYGWIN_DLL=$(BUILDDIR)/cygwin1.dll
+
+$(CYGWIN_DLL): $(BUILDDIR)
+	cp /usr/bin/cygwin1.dll $(CYGWIN_DLL)
+
+CYGWIN=$(findstring cygwin,$(PLATFORM))
+
+ifneq (,$(CYGWIN))
+bin:	$(CYGWIN_DLL)
+	@echo "Building in $(BUILDDIR) for '$(CYGWIN)' with $(CYGWIN_DLL)"
+else
+bin:
+	@echo "Building in $(BUILDDIR)"
+endif
+
+$(BUILDDIR): 
+	$(MKDIR) $(BUILDDIR)
 
 man1: man/man1
 
@@ -70,7 +89,22 @@ endif
 format:
 	for file in */*.c */*.h; do clang-format -i $$file; done
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile
+release:
+	$(MAKE) clean generated
+	git diff --exit-code
+	git tag v`sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h`
+	git push --tags
+
+copyright:
+	$(MAKE) clean
+	rm -rf rel/
+	./util/update-copyright.sh
+
+aarch64-linux-musl:
+	./cross-compile.sh aarch64-linux-musl
+
+
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated compile copyright aarch64-linux-musl openwrt
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

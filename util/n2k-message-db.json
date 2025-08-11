@@ -10,6 +10,12 @@
   , "data": "pack('V', $name & xfffffff) . pack('V', $name >> 32) . pack('C', $address)"
   , "description": "Request a particular device to change its network address"
   }
+, "request_interval":
+  { "args": "pgn,interval"
+  , "pgn" :  126208
+  , "data": "pack('C', 0) . pack('VX', $pgn) . pack('V', $interval) . pack('S', 0) . pack('C', 0)"
+  , "description": "Request a particular device to change its network address"
+  }
 , "setvolume":
   { "args": "zone,level"
   , "pgn" : 130816

@@ -3,7 +3,7 @@ Read and write to a Digital Yacht iKonvert over its serial device.
 This can be a serial version connected to an actual serial port
 or an USB version connected to the virtual serial port.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -53,6 +53,7 @@ static bool isSerialDevice;
 static bool hexMode;
 static int  sendInitState;
 static int  sequentialStatusMessages;
+static int  debugReset = -1;
 
 int baudRate = B230400;
 int speed    = 230400;
@@ -65,12 +66,12 @@ StringBuffer dataBuffer;  // Temporary buffer during parse or generate
 StringBuffer txList;      // TX list to send to iKonvert
 StringBuffer rxList;      // RX list to send to iKonvert
 
-uint64_t lastNow;      // Epoch time of last timestamp
-uint64_t lastTS;       // Last timestamp received from iKonvert. Beware roll-around, max value is 999999
+uint64_t lastNow; // Epoch time of last timestamp
 
 static void processInBuffer(StringBuffer *in, StringBuffer *out);
-static void processReadBuffer(StringBuffer *in, int out);
+static bool processReadBuffer(StringBuffer *in, int out);
 static void initializeDevice(void);
+static void sendNextInitCommand(void);
 
 int main(int argc, char **argv)
 {
@@ -79,78 +80,80 @@ int main(int argc, char **argv)
   char          *name   = argv[0];
   char          *device = 0;
   struct stat    statbuf;
+  int            ac = argc;
+  char         **av = argv;
 
-  setProgName(argv[0]);
-  while (argc > 1)
+  setProgName(av[0]);
+  while (ac > 1)
   {
-    if (strcasecmp(argv[1], "-version") == 0)
+    if (strcasecmp(av[1], "-version") == 0)
     {
       printf("%s\n", VERSION);
       exit(0);
     }
-    else if (strcasecmp(argv[1], "-w") == 0)
+    else if (strcasecmp(av[1], "-w") == 0)
     {
       writeonly = true;
     }
-    else if (strcasecmp(argv[1], "-p") == 0)
+    else if (strcasecmp(av[1], "-p") == 0)
     {
       passthru = true;
     }
-    else if (strcasecmp(argv[1], "-r") == 0)
+    else if (strcasecmp(av[1], "-r") == 0)
     {
       readonly = true;
     }
-    else if (strcasecmp(argv[1], "-v") == 0)
+    else if (strcasecmp(av[1], "-v") == 0)
     {
       verbose = true;
     }
-    else if (strcasecmp(argv[1], "-x") == 0)
+    else if (strcasecmp(av[1], "-x") == 0)
     {
       hexMode = true;
     }
-    else if (strcasecmp(argv[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
+    else if (strcasecmp(av[1], "--rate-limit-off") == 0 || strcasecmp(argv[1], "-l") == 0)
     {
       rate_limit_off = true;
     }
-    else if (strcasecmp(argv[1], "-rx") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-rx") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
+      ac--;
+      av++;
       if (sbGetLength(&rxList) > 0)
       {
         sbAppendString(&rxList, ",");
       }
-      sbAppendFormat(&rxList, "%s", argv[1]);
+      sbAppendFormat(&rxList, "%s", av[1]);
     }
-    else if (strcasecmp(argv[1], "-tx") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-tx") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
+      ac--;
+      av++;
       if (sbGetLength(&txList) > 0)
       {
         sbAppendString(&txList, ",");
       }
-      sbAppendFormat(&txList, "%s", argv[1]);
+      sbAppendFormat(&txList, "%s", av[1]);
     }
-    else if (strcasecmp(argv[1], "-t") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-t") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      timeout = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      timeout = strtol(av[1], 0, 10);
       logDebug("timeout set to %ld seconds\n", timeout);
     }
-    else if (strcasecmp(argv[1], "-reset") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-reset") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      resetTimeout = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      resetTimeout = strtol(av[1], 0, 10);
       logDebug("reset timeout set to %ld seconds\n", resetTimeout);
     }
-    else if (strcasecmp(argv[1], "-s") == 0 && argc > 2)
+    else if (strcasecmp(av[1], "-s") == 0 && ac > 2)
     {
-      argc--;
-      argv++;
-      speed = strtol(argv[1], 0, 10);
+      ac--;
+      av++;
+      speed = strtol(av[1], 0, 10);
       switch (speed)
       {
         case 38400:
@@ -181,21 +184,21 @@ int main(int argc, char **argv)
       }
       logDebug("speed set to %d (%d) baud\n", speed, baudRate);
     }
-    else if (strcasecmp(argv[1], "-d") == 0)
+    else if (strcasecmp(av[1], "-d") == 0)
     {
       setLogLevel(LOGLEVEL_DEBUG);
     }
     else if (!device)
     {
-      device = argv[1];
+      device = av[1];
     }
     else
     {
       device = 0;
       break;
     }
-    argc--;
-    argv++;
+    ac--;
+    av++;
   }
 
   if (!device)
@@ -206,7 +209,7 @@ int main(int argc, char **argv)
             "Options:\n"
             "  -w                    writeonly mode, data from device is not sent to stdout\n"
             "  -r                    readonly mode, data from stdin is not sent to device\n"
-            "  -p                    passthru mode, data from stdin is sent to stdout\n"
+            "  -p                    passthru mode, data from stdin is also sent to stdout\n"
             "  -v                    verbose\n"
             "  -d                    debug\n"
             "  -rx <list>            Set PGN receive list\n"
@@ -288,8 +291,10 @@ int main(int argc, char **argv)
 
   for (;;)
   {
-    uint8_t data[128];
+    uint8_t data[1024];
     ssize_t r;
+    bool    receivedSomething = false;
+
     int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
     int     inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
 
@@ -310,7 +315,7 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on device");
+        logAbort("EOF on device\n");
       }
     }
 
@@ -328,7 +333,7 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on stdin");
+        logAbort("EOF on stdin\n");
       }
     }
 
@@ -345,14 +350,14 @@ int main(int argc, char **argv)
       }
       if (r == 0)
       {
-        logAbort("EOF on stdout");
+        logAbort("EOF on stdout\n");
       }
     }
 
     if (sbGetLength(&readBuffer) > 0)
     {
       logDebug("readBuffer len=%zu\n", sbGetLength(&readBuffer));
-      processReadBuffer(&readBuffer, STDOUT);
+      receivedSomething = processReadBuffer(&readBuffer, STDOUT);
     }
 
     // The isReady() function already aborted the program
@@ -365,14 +370,21 @@ int main(int argc, char **argv)
     {
       uint64_t now = getNow();
 
-      if (lastNow == 0)
+      if (debugReset > 0)
+      {
+        debugReset--;
+      }
+
+      if (lastNow == 0 || receivedSomething)
       {
         lastNow = now;
       }
-      if (lastNow < now - 1000 * resetTimeout)
+      if (lastNow < now - 1000 * resetTimeout || debugReset == 0)
       {
-        lastNow = now;
-        initializeDevice();
+        close(handle);
+        logError("Last received N2K data %"PRIu64" ms ago.\n", now - lastNow);
+        logError("Restart process to reset device\n");
+        execvp(argv[0], argv);
       }
     }
   }
@@ -435,24 +447,13 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
   }
 }
 
-static void computeIKonvertTime(RawMessage *msg, unsigned int t1, unsigned int t2)
+/**
+ * We used to trust the iKonvert timestamp, but it has been observed that its clock can be quite
+ * fast, e.g. the results are unreliable, so its much better to use the local clock.
+ */
+static void computeIKonvertTime(RawMessage *msg)
 {
-  uint64_t ts = t1 * 1000 + t2;
-
-  if (ts < lastTS) // Ooops, roll-around. Reset!
-  {
-    lastNow = 0;
-  }
-  if (lastNow == 0)
-  {
-    lastNow = getNow();
-    lastTS  = ts;
-  }
-  logDebug("computeIKonvertTime(%u, %u) -> ts=%llu lastTS=%llu lastNow = %llu\n", t1, t2, ts, lastTS, lastNow);
-  // Compute the difference between lastTS and ts
-  lastNow += ts - lastTS;
-  lastTS = ts;
-  storeTimestamp(msg->timestamp, lastNow);
+  fmtTimestamp(msg->timestamp, UINT64_C(0));
 }
 
 static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
@@ -491,7 +492,7 @@ static bool parseIKonvertFormat(StringBuffer *in, RawMessage *msg)
   msg->len = CB_MIN(sbGetLength(&dataBuffer), FASTPACKET_MAX_SIZE);
   memcpy(msg->data, sbGet(&dataBuffer), msg->len);
   sbEmpty(&dataBuffer);
-  computeIKonvertTime(msg, t1, t2);
+  computeIKonvertTime(msg);
   return true;
 }
 
@@ -500,6 +501,7 @@ static void initializeDevice(void)
   if (isSerialDevice)
   {
     sendInitState = SEND_ALL_INIT_MESSAGES;
+    sendNextInitCommand();
   }
   else
   {
@@ -667,7 +669,7 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     n2k->prio = 7;
     n2k->src  = 0;
     n2k->dst  = 255;
-    storeTimestamp(n2k->timestamp, getNow());
+    fmtTimestamp(n2k->timestamp, UINT64_C(0));
 
     int load, errors, count, uptime, addr, rejected;
 
@@ -684,10 +686,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &errors, -1))
     {
-      n2k->data[1] = (uint8_t)(errors >> 0);
-      n2k->data[2] = (uint8_t)(errors >> 8);
-      n2k->data[3] = (uint8_t)(errors >> 16);
-      n2k->data[4] = (uint8_t)(errors >> 24);
+      n2k->data[1] = (uint8_t) (errors >> 0);
+      n2k->data[2] = (uint8_t) (errors >> 8);
+      n2k->data[3] = (uint8_t) (errors >> 16);
+      n2k->data[4] = (uint8_t) (errors >> 24);
       if (verbose)
       {
         logInfo("CAN Bus errors %d\n", errors);
@@ -703,10 +705,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &uptime, 0) && uptime != 0)
     {
-      n2k->data[6] = (uint8_t)(uptime >> 0);
-      n2k->data[7] = (uint8_t)(uptime >> 8);
-      n2k->data[8] = (uint8_t)(uptime >> 16);
-      n2k->data[9] = (uint8_t)(uptime >> 24);
+      n2k->data[6] = (uint8_t) (uptime >> 0);
+      n2k->data[7] = (uint8_t) (uptime >> 8);
+      n2k->data[8] = (uint8_t) (uptime >> 16);
+      n2k->data[9] = (uint8_t) (uptime >> 24);
       if (verbose)
       {
         logInfo("iKonvert uptime %ds\n", uptime);
@@ -722,10 +724,10 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     }
     if (parseInt(&msg, &rejected, 0) && rejected != 0)
     {
-      n2k->data[11] = (uint8_t)(rejected >> 0);
-      n2k->data[12] = (uint8_t)(rejected >> 8);
-      n2k->data[13] = (uint8_t)(rejected >> 16);
-      n2k->data[14] = (uint8_t)(rejected >> 24);
+      n2k->data[11] = (uint8_t) (rejected >> 0);
+      n2k->data[12] = (uint8_t) (rejected >> 8);
+      n2k->data[13] = (uint8_t) (rejected >> 16);
+      n2k->data[14] = (uint8_t) (rejected >> 24);
       if (verbose)
       {
         logInfo("iKonvert rejected %d TX message requests\n", rejected);
@@ -743,12 +745,13 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
   return false;
 }
 
-static void processReadBuffer(StringBuffer *in, int out)
+static bool processReadBuffer(StringBuffer *in, int out)
 {
   RawMessage  msg;
   char       *p;
   const char *w;
   bool        allowInit = true;
+  bool        ret = false;
 
   logDebug("processReadBuffer len=%zu\n", sbGetLength(in));
   while ((p = sbSearchChar(in, '\n')) != 0)
@@ -789,6 +792,7 @@ static void processReadBuffer(StringBuffer *in, int out)
         {
           msg.len = 0;
         }
+        ret = true; // Got some actual N2K message from iKonvert, meaning it is still working so return true.
       }
       else
       {
@@ -824,4 +828,6 @@ static void processReadBuffer(StringBuffer *in, int out)
     // Remove any gibberish from buffer
     sbEmpty(in);
   }
+
+  return ret;
 }

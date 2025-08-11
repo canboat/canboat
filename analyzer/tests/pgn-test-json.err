@@ -1,3 +1,3 @@
 INFO pgn-test [analyzer] Timestamp fixed
-INFO pgn-test [analyzer] Detected normal format with all frames on one line
+INFO pgn-test [analyzer] Detected FAST format with all frames on one line
 ERROR pgn-test [analyzer] PGN 129540 has 2 missing fields in repeating set

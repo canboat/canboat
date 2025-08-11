@@ -1,10 +1,11 @@
-<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+<xs:schema version="2.3.0"
+           attributeFormDefault="unqualified"
+           elementFormDefault="qualified"
+           xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
-CANboat version v2.0.0
-
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+CANboat version v6.1.1 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
@@ -23,6 +24,17 @@ limitations under the License.
 </xs:documentation>
 
     </xs:annotation>
+
+    <xs:key name="PhysicalQuantity">
+      <xs:selector xpath="./PhysicalQuantities/PhysicalQuantity"/>
+      <xs:field xpath="@Name"/>
+    </xs:key>
+
+    <xs:keyref name="PhysicalQuantityRef" refer="PhysicalQuantity">
+      <xs:selector xpath="./PGNS/PGNInfo/Fields/Field"/>
+      <xs:field xpath="@PhysicalQuantity"/>
+    </xs:keyref>
+
   </xs:element>
 
   <xs:complexType name="PGNDefinitions">
@@ -41,11 +53,20 @@ limitations under the License.
 
           This has as children some basic string elements followed by
           the different complex types that we use to define the PGNs:
-          Physical Quantities, Field Types, and three types of enumerations:
-          Missing, Lookup and LookupBit.
+          Physical Quantities, Field Types, and five types of enumerations:
+          Missing, Lookup, LookupIndirect, LookupBit and LookupFieldtype.
           The last element is the list of PGNs themselves.
         </xs:documentation>
       </xs:annotation>
+      <xs:element type="xs:string" name="SchemaVersion">
+        <xs:annotation>
+          <xs:documentation>
+            This is the version of the schema that the XML instance
+            document uses.  The version of the schema is found in the
+            version attribute in the xs:schema top-level element.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:string" name="Comment"/>
       <xs:element type="xs:string" name="CreatorCode"/>
       <xs:element type="xs:string" name="License"/>
@@ -57,15 +78,15 @@ limitations under the License.
       <xs:element type="LookupEnumerations" name="LookupEnumerations"/>
       <xs:element type="LookupIndirectEnumerations" name="LookupIndirectEnumerations"/>
       <xs:element type="LookupBitEnumerations" name="LookupBitEnumerations"/>
+      <xs:element type="LookupFieldTypeEnumerations" name="LookupFieldTypeEnumerations"/>
       <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
-    <xs:attribute type="xs:float" name="Version"/>
   </xs:complexType>
 
   <xs:complexType name="EnumPair">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value" />
+        <xs:attribute type="xs:unsignedShort" name="Value" />
         <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
@@ -84,7 +105,7 @@ limitations under the License.
       <xs:element type="EnumPair" name="EnumPair" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
     <xs:attribute type="xs:string" name="Name"/>
-    <xs:attribute type="xs:int" name="MaxValue"/>
+    <xs:attribute type="xs:long" name="MaxValue"/>
   </xs:complexType>
 
   <xs:complexType name="LookupEnumerations">
@@ -96,8 +117,8 @@ limitations under the License.
   <xs:complexType name="EnumTriplet">
     <xs:simpleContent>
       <xs:extension base="xs:string">
-        <xs:attribute type="xs:short" name="Value1" />
-        <xs:attribute type="xs:short" name="Value2" />
+        <xs:attribute type="xs:unsignedShort" name="Value1" />
+        <xs:attribute type="xs:unsignedShort" name="Value2" />
         <xs:attribute type="xs:string" name="Name" />
       </xs:extension>
     </xs:simpleContent>
@@ -154,6 +175,75 @@ limitations under the License.
   <xs:complexType name="LookupBitEnumerations">
     <xs:sequence>
       <xs:element type="LookupBitEnumeration" name="LookupBitEnumeration" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="EnumFieldType">
+    <xs:sequence>
+      <xs:element type="xs:string" name="LookupEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning derived from 
+            the lookup table mentioned here. It requires an additional first
+            value derived from the field indicated by LookupIndirectEnumerationField..
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is INDIRECT_LOOKUP, the field value has meaning that
+            also depends on the value of the field mentioned by order in this element.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="LookupBitEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is BITLOOKUP, the field value has to be interpreted as
+            a number of bits, with each bit forming a flag whose meaning is given in the lookup table.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute type="xs:unsignedShort" name="Value" />
+    <xs:attribute type="xs:string" name="Name" />
+    <xs:attribute type="xs:string" name="FieldType" use="optional" />
+    <xs:attribute type="xs:boolean" name="Signed" use="optional" />
+    <xs:attribute type="xs:float" name="Resolution" use="optional" />
+    <xs:attribute type="xs:string" name="Unit" use="optional" />
+    <xs:attribute type="xs:unsignedShort" name="Bits" use="optional" />
+  </xs:complexType>
+
+  <xs:complexType name="LookupFieldTypeEnumeration">
+    <xs:annotation>
+      <xs:documentation>
+        The LookupFieldTypeEnumeration is a list of EnumFieldType elements with a name.
+        This allows the PGN field to refer to this when it contains a lookup
+        field, for instance 0 = No, 1 = Yes. The special null-like values
+        for Unknown and Error are not placed in this list.
+        This is different from a LookupEnumeration in that it also defines
+        a set of field attributes for a following variable field.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:sequence>
+      <xs:element type="EnumFieldType" name="EnumFieldType" maxOccurs="unbounded" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute type="xs:string" name="Name"/>
+    <xs:attribute type="xs:int" name="MaxValue"/>
+  </xs:complexType>
+
+  <xs:complexType name="LookupFieldTypeEnumerations">
+    <xs:sequence>
+      <xs:element type="LookupFieldTypeEnumeration" name="LookupFieldTypeEnumeration" maxOccurs="unbounded" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -215,7 +305,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="Bits" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="Bits" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             The number of bits that this field takes up in the PGN, if this
@@ -314,7 +404,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="BitLength" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="BitLength" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             If present, the field has a fixed length and this element gives
@@ -322,7 +412,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="BitOffset" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="BitOffset" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             If present, the field is preceded by no other fields or only fixed
@@ -472,6 +562,28 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:string" name="LookupFieldTypeEnumeration" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            When the FieldType is LOOKUP_FIELDTYPE, the field value has meaning derived from 
+            the lookup table mentioned here. It also defines the field type of a
+            following variable field.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:boolean" name="PartOfPrimaryKey" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            If present and set to true, this field serves as a component of the primary key for the PGN.
+            It uniquely identifies records in conjunction with other key fields.
+            Pure simplistic analyzers or software that just passes this data on can ignore this field.
+            Software that stores data organised by source can store data indexed by all primary key
+            fields. In other words: if a PGN repeats but it contains a different value in the primary
+            key fields, it is for a different object. The prime example is AIS, where a different source
+            MMSI means it is from a different ship. 
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
     </xs:sequence>
   </xs:complexType>
   <xs:complexType name="Fields">
@@ -510,6 +622,7 @@ limitations under the License.
       <xs:element type="xs:int" name="PGN"/>
       <xs:element type="xs:string" name="Id"/>
       <xs:element type="xs:string" name="Description"/>
+      <xs:element type="xs:unsignedShort" name="Priority" minOccurs="0"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="URL" minOccurs="0"/>
       <xs:element type="xs:string" name="Type">
@@ -545,9 +658,9 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="FieldCount"/>
-      <xs:element type="xs:short" name="MinLength" minOccurs="0"/>
-      <xs:element type="xs:short" name="Length" minOccurs="0"/>
+      <xs:element type="xs:unsignedShort" name="FieldCount"/>
+      <xs:element type="xs:unsignedShort" name="MinLength" minOccurs="0"/>
+      <xs:element type="xs:unsignedShort" name="Length" minOccurs="0"/>
       <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -616,7 +729,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:short" name="TransmissionInterval" minOccurs="0">
+      <xs:element type="xs:unsignedShort" name="TransmissionInterval" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             When present, it reports the typical interval, in milliseconds, that the PGN repeats.

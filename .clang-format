@@ -30,7 +30,6 @@ BreakBeforeBinaryOperators:                     'true'
 BreakBeforeTernaryOperators:                    'true'
 BreakConstructorInitializersBeforeComma:        'true'
 IndentCaseLabels:                               'true'
-KeepEmptyLinesAtTheStartOfBlocks:               'false'
 BraceWrapping: {
   AfterClass:                                   'true'
   AfterControlStatement:                        'true'

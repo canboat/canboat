@@ -2,7 +2,7 @@
 
 Reads raw n2k ASCII data from stdin and writes it to a Linux SocketCAN device (e.g. can0).
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -79,8 +79,10 @@ int main(int argc, char **argv)
       milliSecond = strptime(m.timestamp, "%Y-%m-%dT%H:%M:%S", &ctime);
       if ((milliSecond != NULL) && (milliSecond - m.timestamp >= 19)) // convert in tm struct => OK
       {
+        int usec;
+
         frameTime.tv_sec  = mktime(&ctime);
-        frameTime.tv_usec = (sscanf(milliSecond, ".%3ld", &frameTime.tv_usec) == 1) ? frameTime.tv_usec * 1000 : 0;
+        frameTime.tv_usec = (sscanf(milliSecond, ".%3d", &usec) == 1) ? usec * 1000 : 0;
         usWait
             = ((prevFrameTime.tv_sec == 0) && (prevFrameTime.tv_usec == 0)) ? 0 : time_diff(prevFrameTime, frameTime, m.timestamp);
         prevFrameTime = frameTime;

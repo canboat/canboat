@@ -1,3 +1,9 @@
+# 
+# Capture from Suster Anna, in PLAIN_MIX_FAST format.
+#
+# This means that fast PGNS are represented both on one line
+# and on multiple lines. 
+#
 2020-08-22T13:52:36.949Z,2,65280,29,255,8,13,99,04,05,00,00,02,00
 2020-08-22T13:52:36.950Z,2,130306,33,255,8,b7,3a,04,28,9e,fa,ff,ff
 2020-08-22T13:52:36.950Z,5,130310,17,255,8,ff,ff,ff,ff,ff,ff,ff,ff

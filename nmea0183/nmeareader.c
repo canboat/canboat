@@ -1,6 +1,6 @@
 /*
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
   int            handle;
   struct termios attr;
-  char *         device = 0;
+  char          *device = 0;
   struct stat    statbuf;
 
   setProgName(argv[0]);

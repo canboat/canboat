@@ -23,7 +23,7 @@
 # Leave out ACTISENSE_SECONDARY if you have only one Actisense gateway.
 # Leave MONITOR set to false for now; its contents have not been open sourced yet.
 #
-# (C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 
@@ -96,13 +96,13 @@ my $child;
 my $stop = 0;
 my $last_monitor = 0;
 
+use POSIX();
 if ($MONITOR ne "true" && $MONITOR ne "yes")
 {
   # Disable the monitoring part. This is not open source yet, so disable it by default.
-  $last_monitor = LONG_MAX;
+  $last_monitor = POSIX::LONG_MAX;
 }
 
-use POSIX();
 
 sub logText($)
 {
@@ -251,6 +251,7 @@ for (;;)
         open STDOUT, '>>', $MONITOR_LOGFILE or die "Can't write to $MONITOR_LOGFILE $!";
         open STDERR, '>&STDOUT' or die "Can't dup stdout: $!";
         exec 'php5', '/usr/local/bin/n2k.php', '-monitor';
+	die "unable to exec monitor"
       }
       if (!$monitor)
       {

@@ -2,7 +2,7 @@
 
 Analyzes NMEA 2000 PGNs.
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
@@ -69,9 +69,18 @@ LookupInfo tripletEnums[] = {
 #include "lookup.h"
 };
 
-static void explain(void);
-static void explainXML(bool, bool, bool);
-static void printXML(int indent, const char *element, const char *p);
+LookupInfo fieldtypeEnums[] = {
+#define LOOKUP_TYPE_FIELDTYPE(type, length) {.name = xstr(type), .size = length, .function.fieldtypeEnumerator = lookup##type},
+#include "lookup.h"
+};
+
+static void        explain(void);
+static void        explainXML(bool, bool, bool);
+static void        printXML(int indent, const char *element, const char *p);
+static void        printXMLUnsigned(int indent, const char *element, const unsigned int p);
+static const char *getV1Type(const FieldType *ft, const char *fieldName);
+static const char *getV2Type(const FieldType *ft);
+static void        explainFieldtypeXMLv1(size_t n, const char *s, const char *fts, const LookupInfo *lookup);
 
 static void usage(char **argv, char **av)
 {
@@ -154,7 +163,7 @@ int main(int argc, char **argv)
   }
 
   fillLookups();
-  fillFieldType(false);
+  fillFieldType(true);
 
   if (doExplain)
   {
@@ -204,7 +213,18 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
     }
   }
 
+  if (length % 8 != 0)
+  {
+    logAbort("PGN %u '%s' has a length of %u bits that does not fill bytes exactly\n", pgn->pgn, pgn->description, length);
+  }
+
   length /= 8; // Bits to bytes
+
+  if (pgn->type == PACKET_SINGLE && length != 8 && pgn->pgn != 59904)
+  {
+    logAbort("PGN %u '%s' has a length %u bytes but a single-frame PGN should be 8 bytes\n", pgn->pgn, pgn->description, length);
+  }
+
   logDebug("PGN %u len=%u\n", pgn->pgn, length);
   return length;
 }
@@ -234,6 +254,18 @@ static void explainBitText(size_t n, const char *s)
   printf("                  Bit: %zu=%s\n", n, s);
 }
 
+static void explainFieldtypeText(size_t n, const char *s, const char *ft, const LookupInfo *lookup)
+{
+  if (lookup != NULL)
+  {
+    printf("                  Lookup: %zu=%s, fieldType '%s', lookup '%s'\n", n, s, ft, lookup->name);
+  }
+  else
+  {
+    printf("                  Lookup: %zu=%s, fieldType '%s'\n", n, s, ft);
+  }
+}
+
 static void explainPairXMLv1(size_t n, const char *s)
 {
   printf("            <EnumPair Value='%zu' Name='", n);
@@ -246,6 +278,101 @@ static void explainBitXMLv1(size_t n, const char *s)
   printf("            <EnumPair Bit='%zu' Name='", n);
   printXML(0, 0, s);
   printf("' />\n");
+}
+
+static void explainLookupFunction(const LookupInfo *lookup)
+{
+  switch (lookup->type)
+  {
+    case LOOKUP_TYPE_BIT: {
+      if (doV1)
+      {
+        printf("          <EnumBitValues>\n");
+        (lookup->function.bitEnumerator)(explainBitXMLv1);
+        printf("          </EnumBitValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupBitEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_PAIR: {
+      if (doV1)
+      {
+        printf("          <EnumValues>\n");
+        (lookup->function.pairEnumerator)(explainPairXMLv1);
+        printf("          </EnumValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_TRIPLET: {
+      if (!doV1)
+      {
+        printXML(10, "LookupIndirectEnumeration", lookup->name);
+        printXMLUnsigned(10, "LookupIndirectEnumerationFieldOrder", lookup->val1Order);
+      }
+      break;
+    }
+
+    case LOOKUP_TYPE_FIELDTYPE: {
+      if (doV1)
+      {
+        printf("          <EnumFieldTypeValues>\n");
+        (lookup->function.fieldtypeEnumerator)(explainFieldtypeXMLv1);
+        printf("          </EnumFieldTypeValues>\n");
+      }
+      else
+      {
+        printXML(10, "LookupFieldTypeEnumeration", lookup->name);
+      }
+      break;
+    }
+
+    default:
+      break;
+  }
+}
+
+static void explainFieldtypeXMLv1(size_t n, const char *s, const char *fts, const LookupInfo *lookup)
+{
+  FieldType *ft = getFieldType(fts);
+
+  printf("            <EnumFieldType Value='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("'");
+
+  if (ft != NULL)
+  {
+    printf(" FieldType='%s'", getV1Type(ft, NULL));
+    if (ft->hasSign != Null)
+    {
+      printf(" Signed='%s'\n", ft->hasSign == True ? "true" : "false");
+    }
+    if (ft->resolution != 0.0)
+    {
+      printf(" Resolution='%g'", ft->resolution);
+    }
+    if (ft->unit != NULL)
+    {
+      printf(" Unit='%s'", ft->unit);
+    }
+    if (lookup != NULL && lookup->size != 0)
+    {
+      printf(" Bits='%zu'", lookup->size);
+    }
+    else if (ft->size != 0)
+    {
+      printf(" Bits='%u'", ft->size);
+    }
+  }
+  printf("/>\n");
 }
 
 static void explainPairXMLv2(size_t n, const char *s)
@@ -267,6 +394,50 @@ static void explainTripletXML2(size_t n1, size_t n2, const char *s)
   printf("      <EnumTriplet Value1='%zu' Value2='%zu' Name='", n1, n2);
   printXML(0, 0, s);
   printf("' />\n");
+}
+
+static void explainFieldtypeXMLv2(size_t n, const char *s, const char *fts, const LookupInfo *lookup)
+{
+  FieldType *ft = getFieldType(fts);
+
+  printf("      <EnumFieldType Value='%zu' Name='", n);
+  printXML(0, 0, s);
+  printf("'");
+
+  if (ft != NULL)
+  {
+    printf(" FieldType='%s'", getV2Type(ft));
+    if (ft->hasSign != Null)
+    {
+      printf(" Signed='%s'\n", ft->hasSign == True ? "true" : "false");
+    }
+    if (ft->resolution != 0.0)
+    {
+      printf(" Resolution='%g'", ft->resolution);
+    }
+    if (ft->unit != NULL)
+    {
+      printf(" Unit='%s'", ft->unit);
+    }
+    if (lookup != NULL && lookup->size != 0)
+    {
+      printf(" Bits='%zu'", lookup->size);
+    }
+    else if (ft->size != 0)
+    {
+      printf(" Bits='%u'", ft->size);
+    }
+  }
+  if (lookup != NULL)
+  {
+    printf(">\n");
+    explainLookupFunction(lookup);
+    printf("      </EnumFieldType>\n");
+  }
+  else
+  {
+    printf("/>\n");
+  }
 }
 
 static void explainPGN(Pgn pgn)
@@ -337,6 +508,10 @@ static void explainPGN(Pgn pgn)
   {
     printf("     The PGN is transmitted on-demand or when data is available\n");
   }
+  if (pgn.priority != 0)
+  {
+    printf("     The default priority is %u\n", pgn.priority);
+  }
 
   for (i = 0; i < ARRAY_SIZE(pgn.fieldList) && pgn.fieldList[i].name; i++)
   {
@@ -371,7 +546,18 @@ static void explainPGN(Pgn pgn)
     printf("                  Signed: %s\n", (f.hasSign) ? "true" : "false");
     if (f.offset != 0)
     {
-      printf("                  Offset: %d\n", f.offset);
+      if (f.resolution == 1.0 || f.resolution == 0.0)
+      {
+        printf("                  Offset: %d\n", f.offset);
+      }
+      else
+      {
+        printf("                  Offset: %" PRId64 "\n", (int64_t) (f.offset * f.resolution));
+      }
+    }
+    if (f.partOfPrimaryKey)
+    {
+      printf("                  Part Of Primary Key: true\n");
     }
 
     if (f.lookup.function.pairEnumerator != NULL)
@@ -382,27 +568,38 @@ static void explainPGN(Pgn pgn)
           printf("                  Enumeration: %s\n", f.lookup.name);
           if (!(f.unit && f.unit[0] == '='))
           {
-            uint32_t maxValue = (1 << f.size) - 1;
-            printf("                  Range: 0..%u\n", maxValue);
+            uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
+            printf("                  Range: 0..%" PRIu64 "\n", maxValue);
             (f.lookup.function.pairEnumerator)(explainPairText);
           }
           break;
         }
 
         case LOOKUP_TYPE_TRIPLET: {
-          uint32_t maxValue = (1 << f.size) - 1;
+          uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
           printf("                  IndirectEnumeration: %s\n", f.lookup.name);
-          printf("                  Range: 0..%u\n", maxValue);
+          printf("                  Range: 0..%" PRIu64 "\n", maxValue);
           (f.lookup.function.tripletEnumerator)(explainTripletText);
           break;
         }
 
         case LOOKUP_TYPE_BIT: {
-          uint32_t maxValue = f.size;
+          uint64_t maxValue = f.size;
 
           printf("                  BitEnumeration: %s\n", f.lookup.name);
-          printf("                  BitRange: 0..%u\n", maxValue);
+          printf("                  BitRange: 0..%" PRIu64 "\n", maxValue);
           (f.lookup.function.bitEnumerator)(explainBitText);
+          break;
+        }
+
+        case LOOKUP_TYPE_FIELDTYPE: {
+          printf("                  Enumeration: %s\n", f.lookup.name);
+          if (!(f.unit && f.unit[0] == '='))
+          {
+            uint64_t maxValue = (UINT64_C(1) << f.size) - 1;
+            printf("                  Range: 0..%" PRIu64 "\n", maxValue);
+            (f.lookup.function.fieldtypeEnumerator)(explainFieldtypeText);
+          }
           break;
         }
 
@@ -474,15 +671,15 @@ static void printXMLUnsigned(int indent, const char *element, const unsigned int
   printf("<%s>%u</%s>\n", element, p, element);
 }
 
-static const char *getV1Type(Field *f)
+static const char *getV1Type(const FieldType *ft, const char *fieldName)
 {
-  for (FieldType *ft = f->ft; ft != NULL; ft = ft->baseFieldTypePtr)
+  for (; ft != NULL; ft = ft->baseFieldTypePtr)
   {
     if (ft->v1Type != NULL)
     {
       if (strcmp(ft->v1Type, "Lat/Lon") == 0)
       {
-        if (strstr(f->name, "ongitude") != NULL)
+        if (fieldName != NULL && strstr(fieldName, "ongitude") != NULL)
         {
           return "Longitude";
         }
@@ -494,9 +691,9 @@ static const char *getV1Type(Field *f)
   return NULL;
 }
 
-static const char *getV2Type(Field *f)
+static const char *getV2Type(const FieldType *ft)
 {
-  for (FieldType *ft = f->ft; ft != NULL; ft = ft->baseFieldTypePtr)
+  for (; ft != NULL; ft = ft->baseFieldTypePtr)
   {
     if (ft->baseFieldTypePtr == NULL)
     {
@@ -526,10 +723,14 @@ static void explainPGNXML(Pgn pgn)
   printXML(6, "Description", pgn.description);
   if (!doV1)
   {
+    if (pgn.priority != 0)
+    {
+      printf("    <Priority>%u</Priority>\n", pgn.priority);
+    }
     printXML(6, "Explanation", pgn.explanation);
     printXML(6, "URL", pgn.url);
   }
-  printXML(6, "Type", (pgn.type == PACKET_ISO11783 ? "ISO" : (pgn.type == PACKET_FAST ? "Fast" : "Single")));
+  printXML(6, "Type", PACKET_TYPE_STR[pgn.type]);
   printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
   if (pgn.fallback)
   {
@@ -540,29 +741,33 @@ static void explainPGNXML(Pgn pgn)
   {
     printf("      <Missing>\n");
 
-    if ((pgn.complete & PACKET_FIELDS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_FIELDS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Fields");
     }
-    if ((pgn.complete & PACKET_FIELD_LENGTHS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_FIELD_LENGTHS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "FieldLengths");
     }
-    if ((pgn.complete & PACKET_RESOLUTION_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_RESOLUTION_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Resolution");
     }
-    if ((pgn.complete & PACKET_LOOKUPS_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_LOOKUPS_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Lookups");
     }
-    if ((pgn.complete & PACKET_NOT_SEEN) != 0)
+    if (bit(pgn.complete, PACKET_NOT_SEEN))
     {
       printXML(8, "MissingAttribute", "SampleData");
     }
-    if ((pgn.complete & PACKET_INTERVAL_UNKNOWN) != 0)
+    if (bit(pgn.complete, PACKET_INTERVAL_UNKNOWN))
     {
       printXML(8, "MissingAttribute", "Interval");
+    }
+    if (bit(pgn.complete, PACKET_MISSING_COMPANY_FIELDS))
+    {
+      printXML(8, "MissingAttribute", "MissingCompanyFields");
     }
 
     printf("      </Missing>\n");
@@ -633,11 +838,6 @@ static void explainPGNXML(Pgn pgn)
       printXML(10, "Id", f.camelName);
       printXML(10, "Name", f.name);
 
-      if (f.size == LEN_VARIABLE)
-      {
-        showBitOffset = false;
-      }
-
       if (f.description && f.description[0] && f.description[0] != ',')
       {
         printXML(10, "Description", f.description);
@@ -690,7 +890,7 @@ static void explainPGNXML(Pgn pgn)
 
       if (doV1)
       {
-        const char *s = getV1Type(&f);
+        const char *s = getV1Type(f.ft, f.name);
 
         if (s != NULL)
         {
@@ -714,19 +914,23 @@ static void explainPGNXML(Pgn pgn)
 
       if (f.offset != 0)
       {
-        printf("          <Offset>%d</Offset>\n", f.offset);
+        if (f.resolution == 1.0 || f.resolution == 0.0)
+        {
+          printf("          <Offset>%d</Offset>\n", f.offset);
+        }
+        else
+        {
+          printf("          <Offset>%" PRId64 "</Offset>\n", (int64_t) (f.offset * f.resolution));
+        }
       }
 
       if (!isnan(f.rangeMin))
       {
-        printf("          <RangeMin>%.16g</RangeMin>\n", f.rangeMin);
+        printf("          <RangeMin>%.15g</RangeMin>\n", f.rangeMin);
       }
-      else if (!doV1 && f.lookup.function.pairEnumerator != 0)
+      else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        if (!(f.unit && f.unit[0] == '='))
-        {
-          printf("          <RangeMin>%.16g</RangeMin>\n", 0.0);
-        }
+        printf("          <RangeMin>%.15g</RangeMin>\n", 0.0);
       }
 
       if (!isnan(f.rangeMax))
@@ -738,70 +942,40 @@ static void explainPGNXML(Pgn pgn)
         }
         else
         {
-          printf("          <RangeMax>%.16g</RangeMax>\n", f.rangeMax);
+          printf("          <RangeMax>%.15g</RangeMax>\n", f.rangeMax);
         }
       }
       else if (!doV1 && f.lookup.function.pairEnumerator != NULL && !(f.unit && f.unit[0] == '='))
       {
-        printf("          <RangeMax>%.16g</RangeMax>\n", (double) ((1 << f.size) - 1));
+        logDebug("PGN %u '%s' unit='%s' size=%u\n -> rangeMax %.15g\n",
+                 pgn.pgn,
+                 f.name,
+                 STRNULL(f.unit),
+                 f.size,
+                 (double) ((UINT64_C(1) << f.size) - 1));
+        printf("          <RangeMax>%.15g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
       }
 
       if (!doV1)
       {
-        printXML(10, "FieldType", getV2Type(&f));
+        printXML(10, "FieldType", getV2Type(f.ft));
         if (ft->physical != NULL)
         {
           printXML(10, "PhysicalQuantity", ft->physical->name);
         }
       }
 
-      if (f.lookup.function.pairEnumerator != NULL)
+      if (f.lookup.function.pairEnumerator != NULL && (!doV1 || f.unit == NULL || f.unit[0] != '='))
       {
-        switch (f.lookup.type)
-        {
-          case LOOKUP_TYPE_BIT: {
-            if (doV1)
-            {
-              printf("          <EnumBitValues>\n");
-              (f.lookup.function.bitEnumerator)(explainBitXMLv1);
-              printf("          </EnumBitValues>\n");
-            }
-            else
-            {
-              printXML(10, "LookupBitEnumeration", f.lookup.name);
-            }
-            break;
-          }
-
-          case LOOKUP_TYPE_PAIR: {
-            if (doV1 && !(f.unit && f.unit[0] == '='))
-            {
-              printf("          <EnumValues>\n");
-              (f.lookup.function.pairEnumerator)(explainPairXMLv1);
-              printf("          </EnumValues>\n");
-            }
-            else if (!doV1)
-            {
-              printXML(10, "LookupEnumeration", f.lookup.name);
-            }
-            break;
-          }
-
-          case LOOKUP_TYPE_TRIPLET: {
-            if (!doV1)
-            {
-              printXML(10, "LookupIndirectEnumeration", f.lookup.name);
-              printXMLUnsigned(10, "LookupIndirectEnumerationFieldOrder", f.lookup.val1Order);
-            }
-            break;
-          }
-
-          default:
-            break;
-        }
+        explainLookupFunction(&f.lookup);
       }
 
-      if ((ft != NULL && ft->variableSize) || f.proprietary)
+      if (!doV1 && f.partOfPrimaryKey)
+      {
+        printXML(10, "PartOfPrimaryKey", "true");
+      }
+
+      if ((ft != NULL && ft->variableSize) || f.proprietary || f.size == LEN_VARIABLE)
       {
         showBitOffset = false; // From here on there is no good bitoffset to be printed
       }
@@ -855,7 +1029,11 @@ static void explainMissingXML(void)
          "One or more of the lookup fields contain missing or incorrect values");
   printf(
       "    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "SampleData", "The PGN has not been seen in any logfiles yet");
-  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The transmission interval is not known");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n", "Interval", "The default transmission interval is not known");
+  printf("    <MissingAttribute Name=\"%s\">%s</MissingAttribute>\n",
+         "MissingCompanyFields",
+         "The manufacturer specific PGN seems to not contain the mandatory Company and Industry fields; this is likely a bug or at "
+         "least incompatibility in the device");
 
   printf("  </MissingEnumerations>\n");
 }
@@ -932,7 +1110,14 @@ static void explainFieldTypesXML(void)
     }
     if (ft->offset != 0)
     {
-      printf("      <Offset>%d</Offset>\n", ft->offset);
+      if (ft->resolution == 1.0 || ft->resolution == 0.0)
+      {
+        printf("      <Offset>%d</Offset>\n", ft->offset);
+      }
+      else
+      {
+        printf("      <Offset>%" PRId64 "</Offset>\n", (int64_t) (ft->offset * ft->resolution));
+      }
     }
     if (ft->variableSize != Null)
     {
@@ -948,16 +1133,16 @@ static void explainFieldTypesXML(void)
     }
     if (ft->resolution != 1.0 && ft->resolution != 0.0)
     {
-      printf("      <Resolution>%.16g</Resolution>\n", ft->resolution);
+      printf("      <Resolution>%.15g</Resolution>\n", ft->resolution);
     }
 
     if (!isnan(ft->rangeMin))
     {
-      printf("      <RangeMin>%.16g</RangeMin>\n", ft->rangeMin);
+      printf("      <RangeMin>%.15g</RangeMin>\n", ft->rangeMin);
     }
     if (!isnan(ft->rangeMax))
     {
-      printf("      <RangeMax>%.16g</RangeMax>\n", ft->rangeMax);
+      printf("      <RangeMax>%.15g</RangeMax>\n", ft->rangeMax);
     }
 
     printf("    </FieldType>\n");
@@ -969,16 +1154,40 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
 {
   int i;
 
-  printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-         "<!--\n" COPYRIGHT "\n-->\n");
+  printf("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
+  if (doV1)
+  {
+    printf("<!-- WARNING WARNING WARNING\n"
+           "     THIS FILE IS OBSOLETE AND WILL BE REMOVED IN THE NEXT MAJOR RELEASE!!!\n"
+           "     Please use docs/canboat.xml which is a much more complete format.\n"
+           "-->\n");
+  }
+  printf("<!--\n" COPYRIGHT "\n-->\n");
   if (!doV1)
   {
     printf("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
   }
-  printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
-         "Version=\"0.1\">\n"
-         "  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n"
-         "  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
+  if (!doV1)
+  {
+    printf(
+        "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n"
+        "  <SchemaVersion>" SCHEMA_VERSION "</SchemaVersion>\n");
+  }
+  else
+  {
+    printf("<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" "
+           "Version=\"0.1\">\n");
+  }
+  if (doV1)
+  {
+    printf("  <Comment>WARNING: DO NOT USE THIS FILE. IT IS INCLUDED FOR HISTORICAL DOWNSTREAM PROJECTS. See "
+           "https://github.com/canboat/canboat for the full source code and the recommended new file to use.</Comment>\n");
+  }
+  else
+  {
+    printf("  <Comment>See https://github.com/canboat/canboat for the full source code</Comment>\n");
+  }
+  printf("  <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>\n"
          "  <License>Apache License Version 2.0</License>\n"
          "  <Version>" VERSION "</Version>\n");
   if (!doV1)
@@ -995,9 +1204,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(lookupEnums); i++)
     {
-      uint32_t maxValue = (1 << lookupEnums[i].size) - 1;
+      uint64_t maxValue = (UINT64_C(1) << lookupEnums[i].size) - 1;
 
-      printf("    <LookupEnumeration Name='%s' MaxValue='%u'>\n", lookupEnums[i].name, maxValue);
+      printf("    <LookupEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", lookupEnums[i].name, maxValue);
       (lookupEnums[i].function.pairEnumerator)(explainPairXMLv2);
       printf("    </LookupEnumeration>\n");
     }
@@ -1006,9 +1215,9 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupIndirectEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(tripletEnums); i++)
     {
-      uint32_t maxValue = (1 << tripletEnums[i].size) - 1;
+      uint64_t maxValue = (UINT64_C(1) << tripletEnums[i].size) - 1;
 
-      printf("    <LookupIndirectEnumeration Name='%s' MaxValue='%u'>\n", tripletEnums[i].name, maxValue);
+      printf("    <LookupIndirectEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", tripletEnums[i].name, maxValue);
       (tripletEnums[i].function.tripletEnumerator)(explainTripletXML2);
       printf("    </LookupIndirectEnumeration>\n");
     }
@@ -1017,12 +1226,23 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
     printf("  <LookupBitEnumerations>\n");
     for (i = 0; i < ARRAY_SIZE(bitfieldEnums); i++)
     {
-      uint32_t maxValue = bitfieldEnums[i].size - 1;
-      printf("    <LookupBitEnumeration Name='%s' MaxValue='%u'>\n", bitfieldEnums[i].name, maxValue);
+      uint64_t maxValue = bitfieldEnums[i].size - 1;
+      printf("    <LookupBitEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", bitfieldEnums[i].name, maxValue);
       (bitfieldEnums[i].function.bitEnumerator)(explainBitXMLv2);
       printf("    </LookupBitEnumeration>\n");
     }
     printf("  </LookupBitEnumerations>\n");
+
+    printf("  <LookupFieldTypeEnumerations>\n");
+    for (i = 0; i < ARRAY_SIZE(fieldtypeEnums); i++)
+    {
+      uint64_t maxValue = (UINT64_C(1) << fieldtypeEnums[i].size) - 1;
+
+      printf("    <LookupFieldTypeEnumeration Name='%s' MaxValue='%" PRIu64 "'>\n", fieldtypeEnums[i].name, maxValue);
+      (fieldtypeEnums[i].function.fieldtypeEnumerator)(explainFieldtypeXMLv2);
+      printf("    </LookupFieldTypeEnumeration>\n");
+    }
+    printf("  </LookupFieldTypeEnumerations>\n");
   }
 
   printf("  <PGNs>\n");
@@ -1040,7 +1260,17 @@ static void explainXML(bool normal, bool actisense, bool ikonvert)
          "</PGNDefinitions>\n");
 }
 
-extern bool fieldPrintVariable(Field *field, char *fieldName, uint8_t *data, size_t dataLen, size_t startBit, size_t *bits)
+extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool showData, bool showJson, size_t *variableFields)
+{
+  return false;
+}
+
+extern bool fieldPrintVariable(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
 {
   return false;
 }

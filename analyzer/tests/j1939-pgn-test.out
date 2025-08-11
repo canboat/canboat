@@ -1,0 +1,853 @@
+2023-12-10-18:58:21.487 6   0 255  60928 ISO Address Claim:  Unique Number = 1962638; Manufacturer Code = Yamaha Marine; Device Instance Lower = 0; Device Instance Upper = 0; Device Function = Engine Controller; Device Class = Propulsion; System Instance = 0; Industry Group = Marine; Arbitrary address capable = 0
+2023-12-10-18:58:21.487 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 1.000 bar
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.487 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.487 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.488 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.488 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 113.2 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 10.70 V
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.488 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.488 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.488 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.980 bar
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.488 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 214.9 rpm
+2023-12-10-18:58:21.489 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 222.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 226.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 230.5 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 230.5 rpm
+2023-12-10-18:58:21.489 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 230.5 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 230.5 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 230.5 rpm
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 265.6 rpm
+2023-12-10-18:58:21.489 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.489 3   0 255  61444 ECU #1:  Engine RPM = 265.6 rpm
+2023-12-10-18:58:21.490 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1148.5 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.490 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.940 bar
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1851.6 rpm
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 2101.6 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 2183.6 rpm
+2023-12-10-18:58:21.490 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1984.4 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1824.2 rpm
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1644.5 rpm
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1515.6 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1609.4 rpm
+2023-12-10-18:58:21.490 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1586.0 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1562.5 rpm
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1617.2 rpm
+2023-12-10-18:58:21.490 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1472.6 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.490 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1308.6 rpm
+2023-12-10-18:58:21.490 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.490 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 12.05 V
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.490 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.490 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.491 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.491 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.491 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1476.6 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.491 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.540 bar
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1457.0 rpm
+2023-12-10-18:58:21.491 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1472.6 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1488.2 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1523.5 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.491 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1425.8 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.491 3   0 255  61444 ECU #1:  Engine RPM = 1461.0 rpm
+2023-12-10-18:58:21.491 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.492 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1441.4 rpm
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1461.0 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1461.0 rpm
+2023-12-10-18:58:21.492 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1484.4 rpm
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1484.4 rpm
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1480.5 rpm
+2023-12-10-18:58:21.492 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1476.6 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1500.0 rpm
+2023-12-10-18:58:21.492 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.492 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.492 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.492 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1457.0 rpm
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1461.0 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.493 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.493 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.493 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1480.5 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1507.9 rpm
+2023-12-10-18:58:21.493 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 12.80 V
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1488.2 rpm
+2023-12-10-18:58:21.493 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.493 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.493 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.493 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.493 3   0 255  61444 ECU #1:  Engine RPM = 1468.8 rpm
+2023-12-10-18:58:21.493 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1464.9 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1468.8 rpm
+2023-12-10-18:58:21.494 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1472.6 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.494 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.494 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.494 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.494 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.494 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.494 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.495 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.495 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.495 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.495 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.495 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.495 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.495 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.495 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.496 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 12.95 V
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.496 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.496 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.496 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.496 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.496 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.496 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.496 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.496 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.497 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1425.8 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.497 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1441.4 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.497 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.497 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.497 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.497 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.497 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.498 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.498 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1441.4 rpm
+2023-12-10-18:58:21.498 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.498 6   0 255  65266 Fuel Economy:  Throttle Position = 6.8 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.498 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.498 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 12.95 V
+2023-12-10-18:58:21.498 3   0 255  61444 ECU #1:  Engine RPM = 1425.8 rpm
+2023-12-10-18:58:21.499 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1484.4 rpm
+2023-12-10-18:58:21.499 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1472.6 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1457.0 rpm
+2023-12-10-18:58:21.499 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1425.8 rpm
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1425.8 rpm
+2023-12-10-18:58:21.499 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.499 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.499 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1445.4 rpm
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.499 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.499 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.499 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.500 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.500 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1433.6 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.500 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.500 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.500 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.500 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.500 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.501 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.501 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.501 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1421.9 rpm
+2023-12-10-18:58:21.501 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 13.00 V
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.501 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.501 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.501 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1437.5 rpm
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1449.2 rpm
+2023-12-10-18:58:21.501 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.501 3   0 255  61444 ECU #1:  Engine RPM = 1461.0 rpm
+2023-12-10-18:58:21.502 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1441.4 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.502 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.502 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1453.1 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.502 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1312.5 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.502 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1429.8 rpm
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.502 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.502 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.502 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1418.0 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.503 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.503 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.503 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.503 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.503 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1398.5 rpm
+2023-12-10-18:58:21.503 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.503 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.503 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.504 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 12.95 V
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.504 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.504 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.504 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.504 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.504 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.504 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.504 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.504 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.505 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.505 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.505 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1414.1 rpm
+2023-12-10-18:58:21.505 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1304.8 rpm
+2023-12-10-18:58:21.505 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.505 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.505 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.505 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.506 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.506 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.506 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.506 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 13.05 V
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.506 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.506 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.506 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.506 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.506 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.507 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.507 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.507 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.507 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1332.0 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1394.5 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.507 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.507 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.507 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.507 3   0 255  61444 ECU #1:  Engine RPM = 1300.8 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.508 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.508 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.508 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1328.1 rpm
+2023-12-10-18:58:21.508 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.508 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.508 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.508 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.509 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1300.8 rpm
+2023-12-10-18:58:21.509 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 13.05 V
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1277.4 rpm
+2023-12-10-18:58:21.509 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1312.5 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.509 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.509 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.509 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1296.9 rpm
+2023-12-10-18:58:21.509 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.509 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.509 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.509 3   0 255  61444 ECU #1:  Engine RPM = 1324.2 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.510 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.510 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1386.8 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.510 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1406.2 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1238.2 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1261.8 rpm
+2023-12-10-18:58:21.510 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1261.8 rpm
+2023-12-10-18:58:21.510 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1293.0 rpm
+2023-12-10-18:58:21.510 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 19.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.510 3   0 255  61444 ECU #1:  Engine RPM = 1296.9 rpm
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1332.0 rpm
+2023-12-10-18:58:21.511 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1410.1 rpm
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1402.4 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.511 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.511 6   0 255  65262 Engine Temp #1:  Engine Coolant Temp = 20.85 C
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1324.2 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.511 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1324.2 rpm
+2023-12-10-18:58:21.511 6   0 255  65271 Vehicle Electrical Power:  Battery Voltage = 13.10 V
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1324.2 rpm
+2023-12-10-18:58:21.511 6   0 255  65269 Ambient Conditions:  Barometric Pressure = 1.015 bar
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1363.2 rpm
+2023-12-10-18:58:21.511 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.511 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.511 6   0 255  65226 Active Trouble Codes:  Malfunction Lamp Status = 00; Red Stop Lamp Status = 00; Amber Warning Lamp Status = 00; Protect Lamp Status = 00; SPN = 00 00 00; FMI = 00; CM = 00; OC = 00
+2023-12-10-18:58:21.511 3   0 255  61444 ECU #1:  Engine RPM = 1359.4 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1332.0 rpm
+2023-12-10-18:58:21.512 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1378.9 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1390.6 rpm
+2023-12-10-18:58:21.512 6   0 255  65270 Inlet/Exhaust Conditions:  Intake Manifold Temp = 20.85 C; Air Inlet Pressure = 0.520 bar
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1355.5 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1347.6 rpm
+2023-12-10-18:58:21.512 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1332.0 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1332.0 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1336.0 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1339.9 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1343.8 rpm
+2023-12-10-18:58:21.512 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1371.1 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1375.0 rpm
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1382.9 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1367.2 rpm
+2023-12-10-18:58:21.512 6   0 255  65266 Fuel Economy:  Throttle Position = 6.4 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1351.6 rpm
+2023-12-10-18:58:21.512 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.512 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.513 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.513 3   0 255  61444 ECU #1:  Engine RPM = 1320.4 rpm
+2023-12-10-18:58:21.513 3   0 255  61443 ECU #2:  Reserved = FC; Throttle Lever = 0.0 %
+2023-12-10-18:58:21.513 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm
+2023-12-10-18:58:21.513 6   0 255  65266 Fuel Economy:  Throttle Position = 6.0 %
+2023-12-10-18:58:21.513 3   0 255  61444 ECU #1:  Engine RPM = 1316.4 rpm

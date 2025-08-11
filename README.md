@@ -15,9 +15,15 @@ To use the programs included in this project you may need a supported CAN interf
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
-where you can find instructions on how to build the programs on your own computer and how to start 
-extending the PGN database.
-Short build instructions are also found in [BUILDING.md].
+## Building, Development and Testing
+
+In [Wiki](https://github.com/canboat/canboat/wiki) you can find instructions on how to build the programs on your own computer 
+and how to start extending the PGN database. Short instructions are also found in [BUILDING.md](./BUILDING.md).
+
+## Using the definitions in your own project
+
+If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json). The older versions in `analyzer/pgn.{xml,json}` should not be used, they are only present for historical
+reasons as there are some downstream projects that use these. These will be removed in v6.
 
 ## Version history
 
@@ -29,7 +35,7 @@ See [Changelog](CHANGELOG.md).
 
 ---
 
-(C) 2009-2021, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
