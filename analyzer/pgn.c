@@ -194,7 +194,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
     return pgn;
   }
 
-  if (PRN_IS_PROPRIETARY(pgnId))
+  if (IS_PGN_PROPRIETARY(pgnId))
   {
     // For proprietary PGNs we need to do more work, skip through the list until we
     // get to the correct company

@@ -804,6 +804,7 @@ const Pgn *searchForUnknownPgn(int pgnId);
 const Pgn *endPgn(const Pgn *first);
 
 const Pgn *getMatchingPgn(int pgnId, const uint8_t *dataStart, int length);
+const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length);
 
 bool printPgn(const RawMessage *msg, const uint8_t *dataStart, int length, bool showData, bool showJson);
 void checkPgnList(void);

@@ -70,6 +70,7 @@ typedef struct
   uint32_t allFrames; // Bit is one when frame needs to be present
   int      pgn;
   int      src;
+  uint8_t  seq;
   bool     used;
 } Packet;
 
@@ -92,6 +93,7 @@ GeoFormats showGeo       = GEO_DD;
 char *sep = " ";
 char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 
+int    onlyPgnList[16];
 int    onlyPgn  = 0;
 int    onlySrc  = -1;
 int    onlyDst  = -1;
@@ -105,6 +107,7 @@ static uint16_t currentDate = UINT16_MAX;
 static uint32_t currentTime = UINT32_MAX;
 
 static enum RawFormats detectFormat(const char *msg);
+static bool            isMsgAllowed(const RawMessage *msg);
 static void            printCanFormat(RawMessage *msg);
 static bool            printField(const Field   *field,
                                   const char    *fieldName,
@@ -324,10 +327,18 @@ int main(int argc, char **argv)
 
     else
     {
-      onlyPgn = strtol(av[1], 0, 10);
-      if (onlyPgn > 0)
+      int prn = strtol(av[1], 0, 10);
+      if (prn > 0 && onlyPgn < ARRAY_SIZE(onlyPgnList))
       {
-        logInfo("Only logging PGN %d\n", onlyPgn);
+        onlyPgnList[onlyPgn++] = prn;
+        if (onlyPgn == 1)
+        {
+          logInfo("Only logging PGN %d\n", prn);
+        }
+        else
+        {
+          logInfo("and PGN %d\n", prn);
+        }
       }
       else
       {
@@ -335,6 +346,7 @@ int main(int argc, char **argv)
       }
     }
   }
+
 
   if (!showJson)
   {
@@ -383,6 +395,8 @@ int main(int argc, char **argv)
         continue;
       }
     }
+
+    logDebug("IN: %s\n", msg);
 
     switch (format)
     {
@@ -453,8 +467,11 @@ int main(int argc, char **argv)
 
     if (r == 0)
     {
-      printCanFormat(&m);
-      printCanRaw(&m);
+      if (isMsgAllowed(&m))
+      {
+        printCanFormat(&m);
+        printCanRaw(&m);
+      }
     }
     else
     {
@@ -558,23 +575,34 @@ static enum RawFormats detectFormat(const char *const msg)
   return RAWFORMAT_UNKNOWN;
 }
 
+static bool isMsgAllowed(const RawMessage *msg)
+{
+  if (onlySrc >= 0 && onlySrc != msg->src)
+  {
+    return false;
+  }
+  if (onlyDst >= 0 && onlyDst != msg->dst)
+  {
+    return false;
+  }
+  if (onlyPgn > 0)
+  {
+    for (int i = 0; i < onlyPgn; i++)
+    {
+      if (onlyPgnList[i] == msg->pgn)
+      {
+        return true;
+      }
+    }
+    return false;
+  }
+  return true;
+}
+
 static void printCanRaw(const RawMessage *msg)
 {
   size_t i;
   FILE  *f = stdout;
-
-  if (onlySrc >= 0 && onlySrc != msg->src)
-  {
-    return;
-  }
-  if (onlyDst >= 0 && onlyDst != msg->dst)
-  {
-    return;
-  }
-  if (onlyPgn > 0 && onlyPgn != msg->pgn)
-  {
-    return;
-  }
 
   if (showJson)
   {
@@ -705,19 +733,6 @@ static void printCanFormat(RawMessage *msg)
   size_t     buffer;
   Packet    *p;
 
-  if (onlySrc >= 0 && onlySrc != msg->src)
-  {
-    return;
-  }
-  if (onlyDst >= 0 && onlyDst != msg->dst)
-  {
-    return;
-  }
-  if (onlyPgn > 0 && onlyPgn != msg->pgn)
-  {
-    return;
-  }
-
   pgn = searchForPgn(msg->pgn);
   if (multiPackets == MULTIPACKETS_SEPARATE && pgn == NULL)
   {
@@ -734,11 +749,14 @@ static void printCanFormat(RawMessage *msg)
   // We only get here if we know for sure that the PGN is fast-packet
   // Possibly it is of unknown length when the PGN is unknown.
 
+  uint32_t frame    = msg->data[0] & 0x1f;
+  uint32_t seq      = msg->data[0] & 0xe0;
+
   for (buffer = 0; buffer < REASSEMBLY_BUFFER_SIZE; buffer++)
   {
     p = &reassemblyBuffer[buffer];
 
-    if (p->used && p->pgn == msg->pgn && p->src == msg->src)
+    if (p->used && p->pgn == msg->pgn && p->src == msg->src && p->seq == seq)
     {
       // Found existing slot
       break;
@@ -764,12 +782,11 @@ static void printCanFormat(RawMessage *msg)
     p->src    = msg->src;
     p->pgn    = msg->pgn;
     p->frames = 0;
+    p->seq    = seq;
   }
 
   {
     // YDWG can receive frames out of order, so handle this.
-    uint32_t frame    = msg->data[0] & 0x1f;
-    uint32_t seq      = msg->data[0] & 0xe0;
     size_t   idx      = (frame == 0) ? 0 : FASTPACKET_BUCKET_0_SIZE + (frame - 1) * FASTPACKET_BUCKET_N_SIZE;
     size_t   frameLen = (frame == 0) ? FASTPACKET_BUCKET_0_SIZE : FASTPACKET_BUCKET_N_SIZE;
     size_t   msgIdx   = (frame == 0) ? FASTPACKET_BUCKET_0_OFFSET : FASTPACKET_BUCKET_N_OFFSET;
@@ -973,7 +990,7 @@ static bool printField(const Field   *field,
 
   if (field->proprietary)
   {
-    if (PRN_IS_PROPRIETARY(g_refPrn))
+    if (IS_PGN_PROPRIETARY(g_refPrn))
     {
       // proprietary, allow field
     }

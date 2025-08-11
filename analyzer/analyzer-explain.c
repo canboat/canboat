@@ -46,9 +46,6 @@ bool  doV1 = false;
 char *sep  = " ";
 char  closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 
-int    onlyPgn  = 0;
-int    onlySrc  = -1;
-int    clockSrc = -1;
 size_t heapSize = 0;
 
 int g_variableFieldRepeat[2]; // Actual number of repetitions

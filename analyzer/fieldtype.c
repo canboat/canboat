@@ -152,12 +152,11 @@ void fixupUnit(Field *f)
       f->unit      = "bar";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
-    else if (strcmp(f->unit, "K") == 0)
+    else if (strcmp(f->unit, "K") == 0 && !f->hasSign)
     {
       f->unitOffset = -273.15;
       f->rangeMin += -273.15;
       f->rangeMax += -275.15;
-      f->precision = 2;
       f->unit      = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }

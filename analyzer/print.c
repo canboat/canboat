@@ -1148,7 +1148,7 @@ extern bool fieldPrintTime(const Field   *field,
     {
       mprintf("%s%" PRId64 ",\"name\":", sign, value);
     }
-    if (fraction != 0)
+    if (digits > 0)
     {
       mprintf("\"%s%02u:%02u:%02u.%0*u\"", sign, hours, minutes, seconds, digits, fraction);
     }

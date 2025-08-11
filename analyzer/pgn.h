@@ -46,7 +46,6 @@ typedef void (*BitPairCallback)(size_t value, const char *name);
 typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
 typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft, const LookupInfo *lookup);
 
-#define PRN_IS_PROPRIETARY(n) ((n >= 65280 && n <= 65535) || (n >= 126720 && n <= 126975) || (n >= 130816 && n <= 131071))
 
 typedef enum LookupType
 {
@@ -637,9 +636,6 @@ typedef struct
 
 #define TEMPERATURE_U24_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 0.001, .unit = "K", .fieldType = "TEMPERATURE_UFIX24"}
-
-#define TEMPERATURE_DELTA_FIX16_FIELD(nam, desc) \
-  {.name = nam, .size = BYTES(2), .resolution = 0.001, .unit = "K", .hasSign = true, .fieldType = "FIX16", .description = desc}
 
 #define VOLUMETRIC_FLOW_FIELD(nam) \
   {.name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "L/h", .hasSign = true, .fieldType = "VOLUMETRIC_FLOW"}
@@ -2563,7 +2559,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 42, AIRMAR_COMMAND),
       LOOKUP_FIELD(PK("Temperature instance"), 2, AIRMAR_TEMPERATURE_INSTANCE),
       RESERVED_FIELD(6),
-      TEMPERATURE_DELTA_FIX16_FIELD("Temperature offset", "actual range is -9.999 to +9.999 K"),
+  {.name = "Temperature offset", .size = BYTES(2), .resolution = 0.001, .unit = "K", .hasSign = true, .fieldType = "FIX16",
+  .rangeMin = -9.999, .rangeMax = 9.999 },
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -6606,18 +6603,19 @@ Pgn pgnList[] = {
       STRING_FIX_FIELD("Firmware date", BYTES(32)),
       STRING_FIX_FIELD("Firmware time", BYTES(32)),
       END_OF_FIELDS},
+     .interval = UINT16_MAX,
      .priority = 7}
 
     ,
-    {"Furuno: SV disable",
+    {"Furuno: SV control",
      130817,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1855),
       BINARY_FIELD("F4", BYTES(1), "Unknown"),
       BINARY_FIELD("F5", BYTES(1), "Unknown"),
-      BINARY_FIELD("F6", BYTES(1), "Unknown"),
-      BINARY_FIELD("F7", BYTES(1), "Unknown"),
+      LOOKUP_FIELD("SBAS mode", BYTES(1), AUTOMATIC_MANUAL),
+      LOOKUP_FIELD("SBAS satellite", BYTES(1), SBAS_SV),
       BINARY_FIELD("F8", BYTES(2), "Unknown"),
       BITLOOKUP_FIELD("GPS disable", BYTES(4), DISABLED_SATELLITES),
       BITLOOKUP_FIELD("GLONASS disable", BYTES(4), DISABLED_SATELLITES),
@@ -6632,6 +6630,30 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857), UINT16_FIELD("Version"), UINT16_FIELD("Sequence"), BINARY_FIELD("Data", BYTES(217), NULL), END_OF_FIELDS},
+     .priority = 7}
+
+    ,
+    {"Furuno: Sensor settings",
+     130818,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+     DURATION_UFIX16_DS_FIELD("Rotation smoothing", NULL),
+     ANGLE_FIX16_DDEG_FIELD("Heading offset", NULL),
+     ANGLE_FIX16_DDEG_FIELD("Pitch offset", NULL),
+     ANGLE_FIX16_DDEG_FIELD("Roll offset", NULL),
+     UINT8_FIELD("F8"),
+     UINT8_FIELD("F9"),
+     DURATION_FIX32_MS_FIELD("SOG and COG smoothing", NULL),
+     DURATION_FIX32_MS_FIELD("3 Axis speed smoothing", NULL),
+     UINT16_FIELD("FC"),
+     {.name = "3 axis offset", .size = BYTES(2), .resolution = 1/3125., .unit = "%", .hasSign = true, .fieldType = "FIX16",
+     .rangeMin = -12.5, .rangeMax = 12.5},
+     {.name = "Air pressure offset", .size = BYTES(2), .resolution = 10., .unit = "Pa", .hasSign = true, .fieldType = "FIX16",
+     .rangeMin = -99.9, .rangeMax = 99.9},
+     {.name = "Air temperature offset", .size = BYTES(2), .resolution = 0.1, .unit = "K", .hasSign = true, .fieldType = "FIX16",
+     .rangeMin = -99.9, .rangeMax = 99.9},
+     END_OF_FIELDS},
      .priority = 7}
 
     ,
