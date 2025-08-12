@@ -2920,6 +2920,7 @@ Pgn pgnList[] = {
        "of this PGN provide information which can be used to distinguish short duration disturbances from permanent failures. See "
        "ISO 11898 -1 Sections 6.12, 6.13, 6.14, 13.1.1, 13.1.4, 13.1.4.3 and Figure 16 ( node status transition diagram) for "
        "additional context.",
+     .interval = 60000,
      .priority = 7,
      .url      = "https://web.archive.org/web/20170609023206/http://www.nmea.org/Assets/"
                  "20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf"}
@@ -5662,7 +5663,10 @@ Pgn pgnList[] = {
       TEMPERATURE_U24_FIELD("Temperature"),
       TEMPERATURE_HIGH_FIELD("Set Temperature"),
       END_OF_FIELDS},
-     .priority = 5}
+     .priority = 5,
+     .interval = 2000,
+     .url      = "https://web.archive.org/web/20220516160001/https://www.nmea.org/Assets/"
+                 "nmea%202000%20pgn%20130316%20corrigenda%20nmd%20version%202.100%20feb%202015.pdf"}
 
     ,
     {"Tide Station Data",
@@ -6106,6 +6110,8 @@ Pgn pgnList[] = {
      .repeatingField1 = 2,
      .repeatingCount1 = 2,
      .repeatingStart1 = 4,
+     .priority        = 6,
+     .interval        = 500,
      .url             = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
                         "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
 
