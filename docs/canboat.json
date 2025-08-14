@@ -41273,15 +41273,53 @@
         "Fallback":true,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":1,
-        "Length":223,
+        "FieldCount":4,
+        "Length":225,
         "Fields":[
           {
             "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
             "Id":"data",
             "Name":"Data",
             "BitLength":1784,
-            "BitOffset":0,
+            "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
