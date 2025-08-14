@@ -6633,7 +6633,7 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Furuno: Sensor settings",
+    {"Furuno: Sensor setup",
      130818,
      PACKET_INCOMPLETE,
      PACKET_FAST,
