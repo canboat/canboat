@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- #581: Added Simarine as manufacturer ID
+
 ## [v6.1.1]
 
 ### Added
