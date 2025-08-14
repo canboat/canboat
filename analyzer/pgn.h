@@ -6276,7 +6276,7 @@ Pgn pgnList[] = {
      130816,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), NULL), END_OF_FIELDS},
      .fallback = true,
      .explanation
      = "This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00 to "
