@@ -12,9 +12,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 - #582: Updated interval, priority, and url for PGNs 126993, 130316, and 130574
 - Do not overwrite config files with `make install`.
+- Print unsigned and signed temperature fields with the proper sign and precision.
 
 ### Added
 
+- Furuno PGN 130817 and PGN 130818 (SCX-20)
 - #584: Add Manufacturer Code and Industry Code to 130816 Fallback
 - #581: Add manufacturer code for Simarine 
 
