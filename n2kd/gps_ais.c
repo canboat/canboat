@@ -53,6 +53,27 @@ static void removeChar(char *str, char garbage)
   *dst = 0;
 }
 
+static void removeFromEnd(char *str, char garbage)
+{
+  char *end;
+
+  for (end = str + strlen(str); end > str; end--)
+  {
+    if (end[-1] != garbage)
+    {
+      break;
+    }
+  }
+  *end = 0;
+}
+
+static void cleanupTimeString(char *timeString)
+{
+  removeChar(timeString, ':');
+  removeFromEnd(timeString, '0');
+  removeFromEnd(timeString, '.');
+}
+
 static double convert2kCoordinateToNMEA0183(const char *coordinateString, const char *hemispheres, char *hemisphere)
 {
   double coordinate = strtod(coordinateString, 0);
@@ -244,9 +265,7 @@ extern void nmea0183GLL(StringBuffer *msg183, int src, const char *msg)
 
     if (getJSONLookupName(msg, "Time", timeString, sizeof(timeString)))
     {
-      logDebug("Got time string '%s'\n", timeString);
-      removeChar(timeString, ':');
-      logDebug("Cleaned time string '%s'\n", timeString);
+      cleanupTimeString(timeString);
     }
 
     if (g_sog_cog_ts >= getNow() - 1000)
