@@ -80,8 +80,8 @@ clean:
 	-rm -R -f man $(BUILDDIR)
 
 install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in $(BUILDDIR)/* util/* */*_monitor; do if [ -x $$i ]; then f=`basename $$i`; echo $$f; rm -f $(DESTDIR)$(BINDIR)/$$f; cp $$i $(DESTDIR)$(BINDIR); fi; done
-	for i in config/*; do install -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); done
+	for i in $(BUILDDIR)/* util/* */*_monitor; do install -m $(ROOT_MOD) -b $$i $(DESTDIR)$(BINDIR); done
+	for i in config/*; do f=`basename $$i`; if [ ! -f "$(DESTDIR)/$(CONFDIR)/$$f" ]; then install -b -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); fi; done
 ifeq ($(notdir $(HELP2MAN)),help2man)
 	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
 endif
