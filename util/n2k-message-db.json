@@ -14,7 +14,7 @@
   { "args": "pgn,interval"
   , "pgn" :  126208
   , "data": "pack('C', 0) . pack('VX', $pgn) . pack('V', $interval) . pack('S', 0) . pack('C', 0)"
-  , "description": "Request a particular device to change its network address"
+  , "description": "Request a particular device to change the interval at which it sends a PGN"
   }
 , "setvolume":
   { "args": "zone,level"
