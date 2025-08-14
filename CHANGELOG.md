@@ -8,9 +8,14 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+
+- #582: Updated interval, priority, and url for PGNs 126993, 130316, and 130574
+
 ### Added
 
-- #581: Added Simarine as manufacturer ID
+- #584: Add Manufacturer Code and Industry Code to 130816 Fallback
+- #581: Add manufacturer code for Simarine 
 
 ## [v6.1.1]
 
