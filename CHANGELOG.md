@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 - #582: Updated interval, priority, and url for PGNs 126993, 130316, and 130574
+- Do not overwrite config files with `make install`.
 
 ### Added
 
