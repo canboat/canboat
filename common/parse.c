@@ -634,4 +634,3 @@ bool parseTimestamp(const char *msg, uint64_t *when)
 
   return true;
 }
-

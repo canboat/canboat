@@ -210,7 +210,7 @@ typedef struct
 {
   uint8_t  m_src;
   uint32_t m_interval; // Interval to previous m_last
-  uint64_t m_valid;     // Message valid until this time
+  uint64_t m_valid;    // Message valid until this time
   uint64_t m_last;     // When received
   uint32_t m_count;    // How many times received
   char    *m_key2;

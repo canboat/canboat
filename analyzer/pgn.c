@@ -226,7 +226,10 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
   {
     bool matchedFixedField = true;
 
-    logDebug("getMatchingPgnByParameters: PGN %u parameters %d try match with manufacturer specific '%s'\n", prn, data[0], pgn->description);
+    logDebug("getMatchingPgnByParameters: PGN %u parameters %d try match with manufacturer specific '%s'\n",
+             prn,
+             data[0],
+             pgn->description);
 
     // Iterate over fields in the data[0,length> parameter list
     // and try to find a matching list where all match parameters are found;
@@ -252,7 +255,7 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
         int64_t value, desiredValue;
         int64_t maxValue;
 
-        desiredValue  = strtol(field->unit + 1, 0, 10);
+        desiredValue = strtol(field->unit + 1, 0, 10);
         if (!extractNumber(field, data, length, d << 3, field->size, &value, &maxValue) || value != desiredValue)
         {
           logDebug("getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
@@ -263,8 +266,11 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
           matchedFixedField = false;
           break;
         }
-        logDebug(
-            "getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n", prn, field->name, value, desiredValue);
+        logDebug("getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " matches %" PRId64 "\n",
+                 prn,
+                 field->name,
+                 value,
+                 desiredValue);
       }
       d += bytes;
     }

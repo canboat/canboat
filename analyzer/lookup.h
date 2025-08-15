@@ -1063,7 +1063,6 @@ LOOKUP_TYPE(SEATALK1_ATT, BYTES(1))
 LOOKUP(SEATALK1_ATT, 0, "Depth Below Transducer")
 LOOKUP_END
 
-
 LOOKUP_TYPE(SEATALK_ALARM_STATUS, BYTES(1))
 LOOKUP(SEATALK_ALARM_STATUS, 0, "Alarm condition not met")
 LOOKUP(SEATALK_ALARM_STATUS, 1, "Alarm condition met and not silenced")
@@ -3079,7 +3078,6 @@ LOOKUP(SBAS_SV, 16, "136")
 LOOKUP(SBAS_SV, 17, "137")
 LOOKUP(SBAS_SV, 18, "138")
 LOOKUP_END
-
 
 // Keep this at the end, so a next include does not need to do this
 #undef LOOKUP_TYPE

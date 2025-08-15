@@ -347,7 +347,6 @@ int main(int argc, char **argv)
     }
   }
 
-
   if (!showJson)
   {
     logInfo("N2K packet analyzer\n" COPYRIGHT);
@@ -749,8 +748,8 @@ static void printCanFormat(RawMessage *msg)
   // We only get here if we know for sure that the PGN is fast-packet
   // Possibly it is of unknown length when the PGN is unknown.
 
-  uint32_t frame    = msg->data[0] & 0x1f;
-  uint32_t seq      = msg->data[0] & 0xe0;
+  uint32_t frame = msg->data[0] & 0x1f;
+  uint32_t seq   = msg->data[0] & 0xe0;
 
   for (buffer = 0; buffer < REASSEMBLY_BUFFER_SIZE; buffer++)
   {
@@ -787,9 +786,9 @@ static void printCanFormat(RawMessage *msg)
 
   {
     // YDWG can receive frames out of order, so handle this.
-    size_t   idx      = (frame == 0) ? 0 : FASTPACKET_BUCKET_0_SIZE + (frame - 1) * FASTPACKET_BUCKET_N_SIZE;
-    size_t   frameLen = (frame == 0) ? FASTPACKET_BUCKET_0_SIZE : FASTPACKET_BUCKET_N_SIZE;
-    size_t   msgIdx   = (frame == 0) ? FASTPACKET_BUCKET_0_OFFSET : FASTPACKET_BUCKET_N_OFFSET;
+    size_t idx      = (frame == 0) ? 0 : FASTPACKET_BUCKET_0_SIZE + (frame - 1) * FASTPACKET_BUCKET_N_SIZE;
+    size_t frameLen = (frame == 0) ? FASTPACKET_BUCKET_0_SIZE : FASTPACKET_BUCKET_N_SIZE;
+    size_t msgIdx   = (frame == 0) ? FASTPACKET_BUCKET_0_OFFSET : FASTPACKET_BUCKET_N_OFFSET;
 
     if ((p->frames & (1 << frame)) != 0)
     {
@@ -907,8 +906,8 @@ static void showBytesOrBits(const uint8_t *data, size_t startBit, size_t bits)
   }
 }
 
-static uint32_t g_refPrn = 0; // Remember this over the entire set of fields
-static const Pgn * g_refPgn = 0; // Remember this over the entire set of fields
+static uint32_t   g_refPrn = 0; // Remember this over the entire set of fields
+static const Pgn *g_refPgn = 0; // Remember this over the entire set of fields
 
 static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
 {
@@ -1331,19 +1330,19 @@ extern bool fieldPrintVariable(const Field   *field,
                                size_t         startBit,
                                size_t        *bits)
 {
-  bool         r;
+  bool r;
 
   if (g_refPrn != 0)
   {
     if (g_refPgn == NULL)
     {
-      const uint8_t * variableFields = data + startBit / 8 - 2;
-      size_t variableLen = data + dataLen - variableFields;
-      g_refPgn = getMatchingPgnByParameters(g_refPrn, variableFields, variableLen);
+      const uint8_t *variableFields = data + startBit / 8 - 2;
+      size_t         variableLen    = data + dataLen - variableFields;
+      g_refPgn                      = getMatchingPgnByParameters(g_refPrn, variableFields, variableLen);
     }
     if (g_refPgn != NULL)
     {
-      int field = data[startBit / 8 - 1] - 1;
+      int          field    = data[startBit / 8 - 1] - 1;
       const Field *refField = &g_refPgn->fieldList[field];
 
       if (refField)

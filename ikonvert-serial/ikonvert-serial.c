@@ -295,8 +295,8 @@ int main(int argc, char **argv)
     ssize_t r;
     bool    receivedSomething = false;
 
-    int     writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
-    int     inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
+    int writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
+    int inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
 
     int rd = isReady(handle, inHandle, writeHandle, timeout);
 
@@ -382,7 +382,7 @@ int main(int argc, char **argv)
       if (lastNow < now - 1000 * resetTimeout || debugReset == 0)
       {
         close(handle);
-        logError("Last received N2K data %"PRIu64" ms ago.\n", now - lastNow);
+        logError("Last received N2K data %" PRIu64 " ms ago.\n", now - lastNow);
         logError("Restart process to reset device\n");
         execvp(argv[0], argv);
       }
@@ -751,7 +751,7 @@ static bool processReadBuffer(StringBuffer *in, int out)
   char       *p;
   const char *w;
   bool        allowInit = true;
-  bool        ret = false;
+  bool        ret       = false;
 
   logDebug("processReadBuffer len=%zu\n", sbGetLength(in));
   while ((p = sbSearchChar(in, '\n')) != 0)

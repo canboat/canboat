@@ -46,7 +46,6 @@ typedef void (*BitPairCallback)(size_t value, const char *name);
 typedef void (*EnumTripletCallback)(size_t value1, size_t value2, const char *name);
 typedef void (*EnumFieldtypeCallback)(size_t value, const char *name, const char *ft, const LookupInfo *lookup);
 
-
 typedef enum LookupType
 {
   LOOKUP_TYPE_NONE,
@@ -967,14 +966,14 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
 bool printPgn(const RawMessage *msg, const uint8_t *dataStart, int length, bool showData, bool showJson);
 void checkPgnList(void);
 
-bool         extractNumber(const Field   *field,
-                           const uint8_t *data,
-                           size_t         dataLen,
-                           size_t         startBit,
-                           size_t         bits,
-                           int64_t       *value,
-                           int64_t       *maxValue);
-bool         extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value);
+bool extractNumber(const Field   *field,
+                   const uint8_t *data,
+                   size_t         dataLen,
+                   size_t         startBit,
+                   size_t         bits,
+                   int64_t       *value,
+                   int64_t       *maxValue);
+bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value);
 
 void camelCase(bool upperCamelCase);
 
@@ -2559,8 +2558,14 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 42, AIRMAR_COMMAND),
       LOOKUP_FIELD(PK("Temperature instance"), 2, AIRMAR_TEMPERATURE_INSTANCE),
       RESERVED_FIELD(6),
-  {.name = "Temperature offset", .size = BYTES(2), .resolution = 0.001, .unit = "K", .hasSign = true, .fieldType = "FIX16",
-  .rangeMin = -9.999, .rangeMax = 9.999 },
+      {.name       = "Temperature offset",
+       .size       = BYTES(2),
+       .resolution = 0.001,
+       .unit       = "K",
+       .hasSign    = true,
+       .fieldType  = "FIX16",
+       .rangeMin   = -9.999,
+       .rangeMax   = 9.999},
       END_OF_FIELDS},
      .interval = UINT16_MAX,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
@@ -6638,22 +6643,40 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1855),
-     DURATION_UFIX16_DS_FIELD("Rotation smoothing", NULL),
-     ANGLE_FIX16_DDEG_FIELD("Heading offset", NULL),
-     ANGLE_FIX16_DDEG_FIELD("Pitch offset", NULL),
-     ANGLE_FIX16_DDEG_FIELD("Roll offset", NULL),
-     UINT8_FIELD("F8"),
-     UINT8_FIELD("F9"),
-     DURATION_FIX32_MS_FIELD("SOG and COG smoothing", NULL),
-     DURATION_FIX32_MS_FIELD("3 Axis speed smoothing", NULL),
-     UINT16_FIELD("FC"),
-     {.name = "3 axis offset", .size = BYTES(2), .resolution = 1/3125., .unit = "%", .hasSign = true, .fieldType = "FIX16",
-     .rangeMin = -12.5, .rangeMax = 12.5},
-     {.name = "Air pressure offset", .size = BYTES(2), .resolution = 10., .unit = "Pa", .hasSign = true, .fieldType = "FIX16",
-     .rangeMin = -99.9, .rangeMax = 99.9},
-     {.name = "Air temperature offset", .size = BYTES(2), .resolution = 0.1, .unit = "K", .hasSign = true, .fieldType = "FIX16",
-     .rangeMin = -99.9, .rangeMax = 99.9},
-     END_OF_FIELDS},
+      DURATION_UFIX16_DS_FIELD("Rotation smoothing", NULL),
+      ANGLE_FIX16_DDEG_FIELD("Heading offset", NULL),
+      ANGLE_FIX16_DDEG_FIELD("Pitch offset", NULL),
+      ANGLE_FIX16_DDEG_FIELD("Roll offset", NULL),
+      UINT8_FIELD("F8"),
+      UINT8_FIELD("F9"),
+      DURATION_FIX32_MS_FIELD("SOG and COG smoothing", NULL),
+      DURATION_FIX32_MS_FIELD("3 Axis speed smoothing", NULL),
+      UINT16_FIELD("FC"),
+      {.name       = "3 axis offset",
+       .size       = BYTES(2),
+       .resolution = 1 / 3125.,
+       .unit       = "%",
+       .hasSign    = true,
+       .fieldType  = "FIX16",
+       .rangeMin   = -12.5,
+       .rangeMax   = 12.5},
+      {.name       = "Air pressure offset",
+       .size       = BYTES(2),
+       .resolution = 10.,
+       .unit       = "Pa",
+       .hasSign    = true,
+       .fieldType  = "FIX16",
+       .rangeMin   = -99.9,
+       .rangeMax   = 99.9},
+      {.name       = "Air temperature offset",
+       .size       = BYTES(2),
+       .resolution = 0.1,
+       .unit       = "K",
+       .hasSign    = true,
+       .fieldType  = "FIX16",
+       .rangeMin   = -99.9,
+       .rangeMax   = 99.9},
+      END_OF_FIELDS},
      .priority = 7}
 
     ,

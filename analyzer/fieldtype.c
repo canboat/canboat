@@ -157,7 +157,7 @@ void fixupUnit(Field *f)
       f->unitOffset = -273.15;
       f->rangeMin += -273.15;
       f->rangeMax += -275.15;
-      f->unit      = "C";
+      f->unit = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
     else if (strcmp(f->unit, "rad") == 0)
