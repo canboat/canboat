@@ -28,6 +28,7 @@ CONFDIR=$(SYSCONFDIR)/default
 ROOT_UID=0
 ROOT_GID=0
 ROOT_MOD=0644
+EXEC_MOD=0755
 
 all:	bin compile
 	@echo "The binaries are now built and are in $(BUILDDIR)"
@@ -80,7 +81,7 @@ clean:
 	-rm -R -f man $(BUILDDIR)
 
 install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in $(BUILDDIR)/* util/* */*_monitor; do install -m $(ROOT_MOD) -b $$i $(DESTDIR)$(BINDIR); done
+	for i in $(BUILDDIR)/* util/* */*_monitor; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR); done
 	for i in config/*; do f=`basename $$i`; if [ ! -f "$(DESTDIR)/$(CONFDIR)/$$f" ]; then install -b -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); fi; done
 ifeq ($(notdir $(HELP2MAN)),help2man)
 	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
