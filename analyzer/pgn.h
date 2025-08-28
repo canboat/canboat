@@ -1236,6 +1236,39 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(358), UINT16_FIELD("Register Id"), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
 
+    ,
+    {"Seatalk: Display Brightness (i70s)",
+     61439,                         // 0xEFFF (addressed, fast-packet)
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1851),               // Raymarine
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
+      MATCH_LOOKUP_FIELD(PK("command1"), BYTES(1), 12, SEATALK_COMMAND),
+      LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+      BINARY_FIELD("Unknown 1", BYTES(1), NULL),        // observed constant 0x04 in your logs
+      MATCH_FIELD("Command", BYTES(1), 0, "Brightness"),
+      // Second FP frame starts here:
+      UINT8_FIELD("Brightness (raw)"),                  // 0x00..~0x4D (device-defined scale) - check if can be replaced with PERCENTAGE_U8_FIELD
+      BINARY_FIELD("Unknown 2", BYTES(1), NULL),        // observed 0x00
+      BINARY_FIELD("Reserved", BYTES(4), NULL),         // observed 0xFF 0xFF 0xFF 0xFF
+      END_OF_FIELDS } }
+
+    ,
+    {"Seatalk: Display Color (i70s)",
+     61439,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(1851),
+       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 140, SEATALK_MESSAGE_ID),
+       MATCH_LOOKUP_FIELD(PK("command1"), BYTES(1), 12, SEATALK_COMMAND),
+       LOOKUP_FIELD("Group", BYTES(1), SEATALK_NETWORK_GROUP),
+       BINARY_FIELD("Unknown 1", BYTES(1), NULL),        // observed 0x04
+       MATCH_FIELD("Command", BYTES(1), 1, "Color"),
+       LOOKUP_FIELD("Color", BYTES(1), SEATALK_DISPLAY_COLOR), // 0x01=Day1, 0x02=Day2, 0x03=Invert, 0x04=Red/Black
+       BINARY_FIELD("Unknown 2", BYTES(1), NULL),        // observed 0x00
+       BINARY_FIELD("Reserved", BYTES(4), NULL),         // observed 0xFF 0xFF 0xFF 0xFF
+       END_OF_FIELDS } }      
+
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
