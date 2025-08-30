@@ -1338,6 +1338,10 @@ limitations under the License.
       <EnumPair Value='4' Name='Power (fast turn)' />
       <EnumPair Value='8' Name='Power' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SEATALK_SHARED' MaxValue='255'>
+      <EnumPair Value='1' Name='Shared' />
+      <EnumPair Value='2' Name='Not Shared' />
+    </LookupEnumeration>
     <LookupEnumeration Name='ENTERTAINMENT_ZONE' MaxValue='255'>
       <EnumPair Value='0' Name='All zones' />
       <EnumPair Value='1' Name='Zone 1' />
@@ -2661,6 +2665,31 @@ limitations under the License.
       <EnumPair Value='5' Name='Turning too slow' />
       <EnumPair Value='6' Name='Invalid movement' />
     </LookupEnumeration>
+    <LookupEnumeration Name='AUTOMATIC_MANUAL' MaxValue='255'>
+      <EnumPair Value='0' Name='Automatic' />
+      <EnumPair Value='1' Name='Manual' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SBAS_SV' MaxValue='255'>
+      <EnumPair Value='0' Name='120' />
+      <EnumPair Value='1' Name='121' />
+      <EnumPair Value='2' Name='122' />
+      <EnumPair Value='3' Name='123' />
+      <EnumPair Value='4' Name='124' />
+      <EnumPair Value='5' Name='125' />
+      <EnumPair Value='6' Name='126' />
+      <EnumPair Value='7' Name='127' />
+      <EnumPair Value='8' Name='128' />
+      <EnumPair Value='9' Name='129' />
+      <EnumPair Value='10' Name='130' />
+      <EnumPair Value='11' Name='131' />
+      <EnumPair Value='12' Name='132' />
+      <EnumPair Value='13' Name='133' />
+      <EnumPair Value='14' Name='134' />
+      <EnumPair Value='15' Name='135' />
+      <EnumPair Value='16' Name='136' />
+      <EnumPair Value='17' Name='137' />
+      <EnumPair Value='18' Name='138' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
@@ -2932,6 +2961,48 @@ limitations under the License.
     <LookupBitEnumeration Name='WP_CRITICAL_PARAMETERS' MaxValue='7'>
       <BitPair Bit='0' Name='Navigation Method' />
       <BitPair Bit='1' Name='XTE Limit' />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name='DISABLED_SATELLITES' MaxValue='39'>
+      <BitPair Bit='0' Name='Disable SV #1' />
+      <BitPair Bit='1' Name='Disable SV #2' />
+      <BitPair Bit='2' Name='Disable SV #3' />
+      <BitPair Bit='3' Name='Disable SV #4' />
+      <BitPair Bit='4' Name='Disable SV #5' />
+      <BitPair Bit='5' Name='Disable SV #6' />
+      <BitPair Bit='6' Name='Disable SV #7' />
+      <BitPair Bit='7' Name='Disable SV #8' />
+      <BitPair Bit='8' Name='Disable SV #9' />
+      <BitPair Bit='9' Name='Disable SV #10' />
+      <BitPair Bit='10' Name='Disable SV #11' />
+      <BitPair Bit='11' Name='Disable SV #12' />
+      <BitPair Bit='12' Name='Disable SV #13' />
+      <BitPair Bit='13' Name='Disable SV #14' />
+      <BitPair Bit='14' Name='Disable SV #15' />
+      <BitPair Bit='15' Name='Disable SV #16' />
+      <BitPair Bit='16' Name='Disable SV #17' />
+      <BitPair Bit='17' Name='Disable SV #18' />
+      <BitPair Bit='18' Name='Disable SV #19' />
+      <BitPair Bit='19' Name='Disable SV #20' />
+      <BitPair Bit='20' Name='Disable SV #21' />
+      <BitPair Bit='21' Name='Disable SV #22' />
+      <BitPair Bit='22' Name='Disable SV #23' />
+      <BitPair Bit='23' Name='Disable SV #24' />
+      <BitPair Bit='24' Name='Disable SV #25' />
+      <BitPair Bit='25' Name='Disable SV #26' />
+      <BitPair Bit='26' Name='Disable SV #27' />
+      <BitPair Bit='27' Name='Disable SV #28' />
+      <BitPair Bit='28' Name='Disable SV #29' />
+      <BitPair Bit='29' Name='Disable SV #30' />
+      <BitPair Bit='30' Name='Disable SV #31' />
+      <BitPair Bit='31' Name='Disable SV #32' />
+      <BitPair Bit='32' Name='Disable SV #33' />
+      <BitPair Bit='33' Name='Disable SV #34' />
+      <BitPair Bit='34' Name='Disable SV #35' />
+      <BitPair Bit='35' Name='Disable SV #36' />
+      <BitPair Bit='36' Name='Disable SV #37' />
+      <BitPair Bit='37' Name='Disable SV #38' />
+      <BitPair Bit='38' Name='Disable SV #39' />
+      <BitPair Bit='39' Name='Disable SV #40' />
     </LookupBitEnumeration>
   </LookupBitEnumerations>
   <LookupFieldTypeEnumerations>
@@ -12078,13 +12149,17 @@ limitations under the License.
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown1</Id>
-          <Name>Unknown 1</Name>
+          <Id>shared</Id>
+          <Name>Shared</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SEATALK_SHARED</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -14102,15 +14177,14 @@ limitations under the License.
           <Order>7</Order>
           <Id>temperatureOffset</Id>
           <Name>Temperature offset</Name>
-          <Description>actual range is -9.999 to +9.999 K</Description>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>K</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
-          <RangeMax>32.764</RangeMax>
+          <RangeMin>-9.999</RangeMin>
+          <RangeMax>9.999</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -43426,6 +43500,104 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130816</PGN>
+      <Id>furunoStatusAndVersionReport</Id>
+      <Description>Furuno: Status and Version Report</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <MinLength>4</MinLength>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Version Report</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>0</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_LAU</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130816</PGN>
       <Id>simradTextMessage</Id>
       <Description>Simrad: Text Message</Description>
     <Priority>7</Priority>
@@ -43721,10 +43893,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>11</FieldCount>
       <Length>113</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -43859,6 +44031,179 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>furunoSvControl</Id>
+      <Description>Furuno: SV control</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>12</FieldCount>
+      <Length>24</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>f4</Id>
+          <Name>F4</Name>
+          <Description>Unknown</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>f5</Id>
+          <Name>F5</Name>
+          <Description>Unknown</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>sbasMode</Id>
+          <Name>SBAS mode</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AUTOMATIC_MANUAL</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>sbasSatellite</Id>
+          <Name>SBAS satellite</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SBAS_SV</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>f8</Id>
+          <Name>F8</Name>
+          <Description>Unknown</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>gpsDisable</Id>
+          <Name>GPS disable</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967295</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>DISABLED_SATELLITES</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>glonassDisable</Id>
+          <Name>GLONASS disable</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967295</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>DISABLED_SATELLITES</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>galileoDisable</Id>
+          <Name>Galileo disable</Name>
+          <BitLength>40</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1099511627775</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>DISABLED_SATELLITES</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>qzssDisable</Id>
+          <Name>QZSS disable</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>168</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>16777215</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>DISABLED_SATELLITES</LookupBitEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130818</PGN>
       <Id>simnetReprogramData</Id>
       <Description>Simnet: Reprogram Data</Description>
@@ -43951,6 +44296,237 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130818</PGN>
+      <Id>furunoSensorSetup</Id>
+      <Description>Furuno: Sensor setup</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>15</FieldCount>
+      <Length>28</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>rotationSmoothing</Id>
+          <Name>Rotation smoothing</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>s</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>headingOffset</Id>
+          <Name>Heading offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>pitchOffset</Id>
+          <Name>Pitch offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>rollOffset</Id>
+          <Name>Roll offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>deg</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3276.7</RangeMin>
+          <RangeMax>3276.4</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>f8</Id>
+          <Name>F8</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>f9</Id>
+          <Name>F9</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>sogAndCogSmoothing</Id>
+          <Name>SOG and COG smoothing</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>s</Unit>
+          <Resolution>0.001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483.647</RangeMin>
+          <RangeMax>2147483.644</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>3AxisSpeedSmoothing</Id>
+          <Name>3 Axis speed smoothing</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>s</Unit>
+          <Resolution>0.001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-2147483.647</RangeMin>
+          <RangeMax>2147483.644</RangeMax>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>fc</Id>
+          <Name>FC</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>160</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>3AxisOffset</Id>
+          <Name>3 axis offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>176</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.00032</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-12.5</RangeMin>
+          <RangeMax>12.5</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>airPressureOffset</Id>
+          <Name>Air pressure offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>10</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-99.9</RangeMin>
+          <RangeMax>99.9</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>airTemperatureOffset</Id>
+          <Name>Air temperature offset</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>K</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-99.9</RangeMin>
+          <RangeMax>99.9</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

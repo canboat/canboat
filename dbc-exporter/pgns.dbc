@@ -1390,10 +1390,6 @@ BO_ 2583567102 PGN_130586_zoneConfiguration: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583626494 PGN_130818_simnetReprogramData: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2583626750 PGN_130819_simnetRequestReprogra: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1788,7 +1784,6 @@ CM_ BO_ 2583566334 "Available Audio EQ presets";
 CM_ BO_ 2583566590 "Available Bluetooth addresses";
 CM_ BO_ 2583566846 "Bluetooth source status";
 CM_ BO_ 2583567102 "Zone Configuration";
-CM_ BO_ 2583626494 "Simnet: Reprogram Data";
 CM_ BO_ 2583626750 "Simnet: Request Reprogram";
 CM_ BO_ 2583627518 "Navico: Unknown 1";
 CM_ BO_ 2583627774 "Maretron: Proprietary Temperature High Range";
