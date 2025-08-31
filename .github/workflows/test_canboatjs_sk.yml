@@ -138,7 +138,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: sbender9/signalk-n2k-displays
-        ref: ts-pgns
         path: ./signalk-n2k-displays
 
     - name: Build signalk-n2k-displays
