@@ -1202,6 +1202,11 @@ LOOKUP(SEATALK_PILOT_HULL_TYPE, 4, "Power (fast turn)")
 LOOKUP(SEATALK_PILOT_HULL_TYPE, 8, "Power")
 LOOKUP_END
 
+LOOKUP_TYPE(SEATALK_SHARED, BYTES(1))
+LOOKUP(SEATALK_SHARED, 1, "Shared")
+LOOKUP(SEATALK_SHARED, 2, "Not Shared")
+LOOKUP_END
+
 // Entertainment PGNs new circa 2016
 // https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
 
