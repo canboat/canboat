@@ -10,7 +10,15 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+### Added
+
+## [6.1.2]
+
+### Fixed
+
+- #590: Remove `analyzer/package.json`.
 - #582: Updated interval, priority, and url for PGNs 126993, 130316, and 130574
+- #588: Fix executable permissions in `make install`.
 - Do not overwrite config files with `make install`.
 - Print unsigned and signed temperature fields with the proper sign and precision.
 
@@ -19,6 +27,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Furuno PGN 130817 and PGN 130818 (SCX-20)
 - #584: Add Manufacturer Code and Industry Code to 130816 Fallback
 - #581: Add manufacturer code for Simarine 
+- #589: Update Seatalk1: Display Brightness, Shared
 
 ## [v6.1.1]
 
@@ -864,8 +873,9 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.1..HEAD
-[6.1.1]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.1
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.2..HEAD
+[6.1.2]: https://github.com/canboat/canboat/compare/v6.1.1...v6.1.2
+[6.1.1]: https://github.com/canboat/canboat/compare/v6.1.0...v6.1.1
 [6.1.0]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.0
 [6.0.1]: https://github.com/canboat/canboat/compare/v6.0.0...v6.0.1
 [6.0.0]: https://github.com/canboat/canboat/compare/v5.1.3...v6.0.0

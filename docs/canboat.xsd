@@ -5,7 +5,7 @@
   <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
-CANboat version v6.1.1 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+CANboat version v6.1.2 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
