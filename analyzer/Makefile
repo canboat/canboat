@@ -31,7 +31,6 @@ XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
 CSV_XSLFILE=./canboat-csv.xsl
-NPMFILE=package.json
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
 COMMONDIR=../common
@@ -77,16 +76,13 @@ $(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
 	python3 validate-json.py --range $(@)
 
-$(NPMFILE): ../common/version.h $(ANALYZER) fixup-version.py
-	python3 fixup-version.py $(ANALYZER) $(NPMFILE)
-
 validation: $(ANALYZER_EXPLAIN) $(XML2FILE) $(NMEA_XMLFILE) $(CSV_XSLFILE)
 	xsltproc $(CSV_XSLFILE) $(XML2FILE) > /tmp/canboat.csv
 	xsltproc $(CSV_XSLFILE) $(NMEA_XMLFILE) > /tmp/nmea.csv
 	python3 validate-csv.py /tmp/canboat.csv /tmp/nmea.csv
 	
 
-generated: validation $(JSON2FILE) $(NPMFILE) $(HTML2FILE) 
+generated: validation $(JSON2FILE) $(HTML2FILE) 
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
