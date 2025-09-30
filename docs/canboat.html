@@ -14877,16 +14877,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
             PGN 130850
-            - Simnet: AP Command</h3><p>
+            - Simnet: Command AP Standby</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>6</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             11
-            bytes long and contains 11 fields.
+            bytes long and contains 12 fields.
 
             
               The default priority (as observed in the field) is 2.
@@ -14907,31 +14907,32 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>AP status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS</a></td><td/></tr><tr><td>8</td><td>AP Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Direction</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                      lookup
-                      <a href="#lookup-SIMNET_DIRECTION">SIMNET_DIRECTION</a></td><td/></tr><tr><td>11</td><td>Angle</td><td>Commanded angle change</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>6:
+                  Standby</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
             PGN 130850
-            - Simnet: Event Command: AP command</h3><p>
+            - Simnet: Command AP NoDrift</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>2</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>12</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            12
-            bytes long and contains 11 fields.
+            11
+            bytes long and contains 12 fields.
 
             
               The default priority (as observed in the field) is 2.
@@ -14944,32 +14945,266 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>2:
-                  AP command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Unused A</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Controlling Device</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Event</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>12:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>8</td><td>Unused B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Direction</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+            PGN 130850
+            - Simnet: Command AP Wind</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>15</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DIRECTION">SIMNET_DIRECTION</a></td><td/></tr><tr><td>10</td><td>Angle</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Unused C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>15:
+                  Wind mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+            PGN 130850
+            - Simnet: Command AP Nav</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>10</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>10:
+                  Nav mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+            PGN 130850
+            - Simnet: Command AP Heading</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>9</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>9:
+                  Heading mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+            PGN 130850
+            - Simnet: Command AP Tack</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>17</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 13 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>17:
+                  Tack</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Unknown B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>13</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
+            PGN 130850
+            - Simnet: Command AP Change Course</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>26</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>26:
+                  Change course</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Unknown A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Direction</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DIRECTION">SIMNET_DIRECTION</a></td><td/></tr><tr><td>11</td><td>Ammount</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_HEADING_AMMOUNT">SIMNET_HEADING_AMMOUNT</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
             PGN 130850
             - Simnet: Alarm</h3><p>
               This PGN description applies when the following field(s) match:
@@ -15745,11 +15980,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>10% (Min)</td></tr><tr><td>1</td><td>Day mode</td></tr><tr><td>4</td><td>Night mode</td></tr><tr><td>11</td><td>20%</td></tr><tr><td>22</td><td>30%</td></tr><tr><td>33</td><td>40%</td></tr><tr><td>44</td><td>50%</td></tr><tr><td>55</td><td>60%</td></tr><tr><td>66</td><td>70%</td></tr><tr><td>77</td><td>80%</td></tr><tr><td>88</td><td>90%</td></tr><tr><td>99</td><td>100% (Max)</td></tr></table><h3 id="lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>6</td><td>Standby</td></tr><tr><td>9</td><td>Auto mode</td></tr><tr><td>10</td><td>Nav mode</td></tr><tr><td>13</td><td>Non Follow Up mode</td></tr><tr><td>14</td><td>Follow Up mode</td></tr><tr><td>15</td><td>Wind mode</td></tr><tr><td>18</td><td>Square (Turn)</td></tr><tr><td>19</td><td>C-Turn</td></tr><tr><td>20</td><td>U-Turn</td></tr><tr><td>21</td><td>Spiral (Turn)</td></tr><tr><td>22</td><td>Zig Zag (Turn)</td></tr><tr><td>23</td><td>Lazy-S (Turn)</td></tr><tr><td>24</td><td>Depth (Turn)</td></tr><tr><td>26</td><td>Change course</td></tr><tr><td>61</td><td>Timer sync</td></tr><tr><td>112</td><td>Ping port end</td></tr><tr><td>113</td><td>Ping starboard end</td></tr></table><h3 id="lookup-SIMNET_DIRECTION">SIMNET_DIRECTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>6</td><td>Standby</td></tr><tr><td>9</td><td>Heading mode</td></tr><tr><td>10</td><td>Nav mode</td></tr><tr><td>13</td><td>Non Follow Up mode</td></tr><tr><td>14</td><td>Follow Up mode</td></tr><tr><td>15</td><td>Wind mode</td></tr><tr><td>17</td><td>Tack</td></tr><tr><td>18</td><td>Square (Turn)</td></tr><tr><td>19</td><td>C-Turn</td></tr><tr><td>20</td><td>U-Turn</td></tr><tr><td>21</td><td>Spiral (Turn)</td></tr><tr><td>22</td><td>Zig Zag (Turn)</td></tr><tr><td>23</td><td>Lazy-S (Turn)</td></tr><tr><td>24</td><td>Depth (Turn)</td></tr><tr><td>26</td><td>Change course</td></tr><tr><td>61</td><td>Timer sync</td></tr><tr><td>112</td><td>Ping port end</td></tr><tr><td>113</td><td>Ping starboard end</td></tr></table><h3 id="lookup-SIMNET_DIRECTION">SIMNET_DIRECTION
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Port</td></tr><tr><td>3</td><td>Starboard</td></tr><tr><td>4</td><td>Left rudder (port)</td></tr><tr><td>5</td><td>Right rudder (starboard)</td></tr></table><h3 id="lookup-SIMNET_ALARM">SIMNET_ALARM
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Port</td></tr><tr><td>3</td><td>Starboard</td></tr><tr><td>4</td><td>Left rudder (port)</td></tr><tr><td>5</td><td>Right rudder (starboard)</td></tr></table><h3 id="lookup-SIMNET_HEADING_AMMOUNT">SIMNET_HEADING_AMMOUNT
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>57</td><td>Low boat speed</td></tr><tr><td>58</td><td>Wind data missing</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1745</td><td>Ten Degrees</td></tr><tr><td>174</td><td>One Degree</td></tr></table><h3 id="lookup-SIMNET_ALARM">SIMNET_ALARM
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>57</td><td>Low boat speed</td></tr><tr><td>58</td><td>Nav data missing</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Set Source</td></tr><tr><td>3</td><td>Media Command</td></tr><tr><td>5</td><td>Tuner Command</td></tr><tr><td>6</td><td>Marine Tuner Command</td></tr><tr><td>7</td><td>Set Marine Tuner Squelch</td></tr><tr><td>8</td><td>Set Marine Tuner Scan Mode</td></tr><tr><td>9</td><td>Menu Action</td></tr><tr><td>10</td><td>Request Menu Count</td></tr><tr><td>11</td><td>Request Menu Item</td></tr><tr><td>12</td><td>Request Menu Lock ID</td></tr><tr><td>13</td><td>Set Aux Gain</td></tr><tr><td>15</td><td>Set Settings</td></tr><tr><td>16</td><td>DAB Updtate Command</td></tr><tr><td>17</td><td>Set Mute</td></tr><tr><td>18</td><td>Set Balance</td></tr><tr><td>19</td><td>Set Low Pass Filer</td></tr><tr><td>20</td><td>Set Sublevel</td></tr><tr><td>22</td><td>Set Equalizer</td></tr><tr><td>23</td><td>Set Volume Limit</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>27</td><td>Set Line Level Control</td></tr><tr><td>28</td><td>Power</td></tr><tr><td>29</td><td>Set Device Name</td></tr><tr><td>30</td><td>Send Sirius Command</td></tr><tr><td>31</td><td>Set Sirius Parental</td></tr><tr><td>33</td><td>Send Factory Reset Command</td></tr><tr><td>34</td><td>Set Zone Name</td></tr><tr><td>35</td><td>Send Dvd Command</td></tr><tr><td>36</td><td>Dvd Press Ir Key</td></tr><tr><td>39</td><td>Send Select Sirius Team</td></tr><tr><td>40</td><td>Send Select Sirius Artist</td></tr><tr><td>41</td><td>Send Sirius Sport Alert User Action</td></tr><tr><td>45</td><td>Send Sirius Artist Song User Action</td></tr><tr><td>50</td><td>Send Multiroom Command</td></tr><tr><td>51</td><td>Get Multiroom Device Record</td></tr><tr><td>52</td><td>Scan Multirooom Devices</td></tr><tr><td>53</td><td>Send File Transfer</td></tr><tr><td>54</td><td>Set Loud</td></tr><tr><td>56</td><td>Fapi Set Source Multiroom Enabled</td></tr><tr><td>57</td><td>Request Head Unit Dsp Settings</td></tr><tr><td>64</td><td>Send Transfer Status</td></tr><tr><td>65</td><td>Fapi Get Server Info</td></tr><tr><td>69</td><td>Fapi Set Source Enabled</td></tr><tr><td>70</td><td>Fapi Set Source Name</td></tr><tr><td>73</td><td>Send External Amp Gain</td></tr><tr><td>74</td><td>Send Internal Amp Gain</td></tr><tr><td>75</td><td>Send Mono</td></tr></table><h3 id="lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS
         (0 - 65535)
