@@ -2027,6 +2027,7 @@ limitations under the License.
       <EnumPair Value='6' Name='Standby' />
       <EnumPair Value='9' Name='Heading mode' />
       <EnumPair Value='10' Name='Nav mode' />
+      <EnumPair Value='12' Name='No Drift mode' />
       <EnumPair Value='13' Name='Non Follow Up mode' />
       <EnumPair Value='14' Name='Follow Up mode' />
       <EnumPair Value='15' Name='Wind mode' />
@@ -52865,7 +52866,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>event</Id>
           <Name>Event</Name>
-          <Description></Description>
+          <Description>No Drift mode</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>

@@ -7599,7 +7599,7 @@ Pgn pgnList[] = {
      .priority = 2}
 
 */
-
+    ,
     {"Simnet: Command AP Standby",
      130850,
      PACKET_INCOMPLETE,
