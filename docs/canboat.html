@@ -14879,7 +14879,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Standby</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>6</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>6</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -14907,11 +14907,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>6:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>6:
                   Standby</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -14925,7 +14925,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP NoDrift</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>12</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>12</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -14953,11 +14953,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>12:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>12:
                   No Drift mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -14971,7 +14971,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Wind</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>15</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>15</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -14999,11 +14999,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>15:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>15:
                   Wind mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -15017,7 +15017,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Nav</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>10</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>10</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -15045,11 +15045,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>10:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>10:
                   Nav mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -15063,7 +15063,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Heading</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>9</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>9</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -15091,11 +15091,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>9:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>9:
                   Heading mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -15109,7 +15109,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Tack</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>17</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>17</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -15137,11 +15137,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>17:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>17:
                   Tack</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -15158,7 +15158,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130850
             - Simnet: Command AP Change Course</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>10</td></tr><tr><td>Event</td><td>26</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>26</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -15186,11 +15186,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>10:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>26:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>26:
                   Change course</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -15206,9 +15206,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-SIMNET_HEADING_AMMOUNT">SIMNET_HEADING_AMMOUNT</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130850">0x1FF22:
             PGN 130850
-            - Simnet: Command AP Follow Up Mode</h3><p>
+            - Simnet: Command AP Follow Up</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Unknown</td><td>2</td></tr><tr><td>Event</td><td>14</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>2</td></tr><tr><td>Event</td><td>14</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -15236,11 +15236,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Unknown</td><td>2:
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>2:
                   Follow Up</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Event</td><td>14:
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>14:
                   Follow Up mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -16031,7 +16031,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Port</td></tr><tr><td>3</td><td>Starboard</td></tr><tr><td>4</td><td>Left rudder (port)</td></tr><tr><td>5</td><td>Right rudder (starboard)</td></tr></table><h3 id="lookup-SIMNET_HEADING_AMMOUNT">SIMNET_HEADING_AMMOUNT
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1745</td><td>Ten Degrees</td></tr><tr><td>174</td><td>One Degree</td></tr></table><h3 id="lookup-SIMNET_ALARM">SIMNET_ALARM
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1745</td><td>Ten Degrees</td></tr><tr><td>174</td><td>One Degree</td></tr></table><h3 id="lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Follow Up</td></tr><tr><td>10</td><td>AP Command</td></tr></table><h3 id="lookup-SIMNET_ALARM">SIMNET_ALARM
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>57</td><td>Low boat speed</td></tr><tr><td>58</td><td>Nav data missing</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 65535)

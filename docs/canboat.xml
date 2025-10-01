@@ -2055,6 +2055,10 @@ limitations under the License.
       <EnumPair Value='1745' Name='Ten Degrees' />
       <EnumPair Value='174' Name='One Degree' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_AP_COMMAND_TYPE' MaxValue='255'>
+      <EnumPair Value='2' Name='Follow Up' />
+      <EnumPair Value='10' Name='AP Command' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_ALARM' MaxValue='255'>
       <EnumPair Value='57' Name='Low boat speed' />
       <EnumPair Value='58' Name='Nav data missing' />
@@ -52675,8 +52679,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -52686,7 +52690,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -52850,8 +52855,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -52861,7 +52866,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53025,8 +53031,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53036,7 +53042,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53200,8 +53207,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53211,7 +53218,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53375,8 +53383,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53386,7 +53394,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53550,8 +53559,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53561,7 +53570,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53738,8 +53748,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53749,7 +53759,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -53822,8 +53833,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130850</PGN>
-      <Id>simnetCommandApFollowUpMode</Id>
-      <Description>Simnet: Command AP Follow Up Mode</Description>
+      <Id>simnetCommandApFollowUp</Id>
+      <Description>Simnet: Command AP Follow Up</Description>
     <Priority>2</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -53921,8 +53932,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
           <Description>Follow Up</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
@@ -53932,7 +53943,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
