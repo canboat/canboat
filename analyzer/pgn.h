@@ -7617,7 +7617,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP NoDrift",
      130850,
      PACKET_INCOMPLETE,
@@ -7635,7 +7635,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP Wind",
      130850,
      PACKET_INCOMPLETE,
@@ -7653,7 +7653,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP Nav",
      130850,
      PACKET_INCOMPLETE,
@@ -7671,7 +7671,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP Heading",
      130850,
      PACKET_INCOMPLETE,
@@ -7689,7 +7689,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP Tack",
      130850,
      PACKET_INCOMPLETE,
@@ -7708,7 +7708,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2}
 
-,
+    ,
     {"Simnet: Command AP Change Course",
      130850,
      PACKET_INCOMPLETE,
@@ -7725,8 +7725,27 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 2}
-    ,
 
+     ,
+    {"Simnet: Command AP Follow Up Mode",
+     130850,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
+      MATCH_FIELD("Unknown", BYTES(1), 2, "Follow Up"),
+      MATCH_LOOKUP_FIELD("Event", BYTES(1), 14, SIMNET_AP_EVENTS),
+      SIMPLE_FIELD("Unknown B", BYTES(1)),
+      RESERVED_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .priority = 2}
+
+    ,
     {"Simnet: Alarm",
      130850,
      PACKET_INCOMPLETE,
