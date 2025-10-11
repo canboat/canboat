@@ -22,6 +22,12 @@
   , "data": "'\\013\\099\\xff\\018\\00'. pack('X1', $zone) . pack('X1', $level)"
   , "description": "Set audio volume"
   }
+, "environment":
+  { "args": "instance,temperature,temperature_source,humidity,humidity_source,pressure"
+  , "pgn": 130311
+  , "data": "pack('C', $instance) . pack('C', $temperature_source + $humidity_source * 64) . pack('S', (273.15 + $temperature) * 100.0) . pack('S', $humidity * 100.0) . pack('S', $pressure)"
+  , "description": "Environmental parameters"
+  }
 , "battery_status":
   { "args": "instance,voltage,current,temperature,sid"
   , "pgn": 127508
