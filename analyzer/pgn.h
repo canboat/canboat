@@ -7740,7 +7740,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 26, SIMNET_AP_EVENTS),
       SIMPLE_FIELD("Unknown", BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      LOOKUP_FIELD("Amount", BYTES(2), SIMNET_HEADING_AMOUNT),
+      ANGLE_U16_FIELD("Angle", "Absolute change in desired attitude, generally 1 or 10 degrees"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 2}
