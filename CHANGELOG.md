@@ -12,6 +12,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+## [6.1.3]
+
+### Fixed
+
+- #593: Improve Simnet Autopilot support
+
 ## [6.1.2]
 
 ### Fixed
@@ -873,7 +879,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.2..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.3..HEAD
+[6.1.3]: https://github.com/canboat/canboat/compare/v6.1.2...v6.1.3
 [6.1.2]: https://github.com/canboat/canboat/compare/v6.1.1...v6.1.2
 [6.1.1]: https://github.com/canboat/canboat/compare/v6.1.0...v6.1.1
 [6.1.0]: https://github.com/canboat/canboat/compare/v6.0.1...v6.1.0

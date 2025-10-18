@@ -4,8 +4,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"6.1.2",
-    "Copyright":"CANboat version v6.1.2\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"6.1.3",
+    "Copyright":"CANboat version v6.1.3\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -2713,7 +2713,7 @@
         "MaxValue":255,
         "EnumValues":[
           {"Name":"Low boat speed", "Value":57},
-          {"Name":"No Autopilot", "Value":56},
+          {"Name":"No autopilot computer", "Value":56},
           {"Name":"Nav data missing", "Value":58}
         ]
       },
