@@ -1615,6 +1615,20 @@ Pgn pgnList[] = {
      .priority = 2}
 
     ,
+    {"Maretron: Keel Position",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Number of Channels",
+     65282,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Maretron: Proprietary DC Breaker Current",
      65284,
      PACKET_COMPLETE,
@@ -1648,6 +1662,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Maretron: Universal Configuration SF",
+     65285,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Chetco: Dimmer",
      65286,
      PACKET_INCOMPLETE_LOOKUP,
@@ -1668,6 +1689,13 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(135), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
      .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+
+    ,
+    {"Maretron: Fluid Flow Rate",
+     65286,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Access Level",
@@ -1692,6 +1720,13 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Trip Volume",
+     65287,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Seatalk: Alarm",
      65288,
      PACKET_INCOMPLETE,
@@ -1705,11 +1740,25 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7},
 
+    {"Maretron: 4-20 mA",
+     65288,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Trim Tab Sensor Calibration",
      65289,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: 0-10 V",
+     65289,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: Paddle Wheel Speed Configuration",
@@ -1719,11 +1768,32 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Rotational Rate",
+     65290,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Resistance",
+     65291,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Clear Fluid Level Warnings",
      65292,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Automation Function Master",
+     65292,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: LGC-2000 Configuration",
@@ -2675,6 +2745,18 @@ Pgn pgnList[] = {
       UINT16_FIELD("Software code"),
       UINT8_FIELD("Command"),
       UINT8_FIELD("Status"),
+      END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Proprietary Configuration",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137),
+      LOOKUP_FIELD("Product code", BYTES(2), MARETRON_PRODUCT_CODE),
+      UINT16_FIELD("Software code"),
+      LOOKUP_FIELD("Opcode", BYTES(1), MARETRON_OPCODE),
+      BINARY_FIELD("Payload", BYTES(223), ""),
       END_OF_FIELDS}}
 
     ,
@@ -6630,6 +6712,13 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Maretron: Annunciator Capabilities",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Reprogram Data",
      130818,
      PACKET_INCOMPLETE,
@@ -6680,12 +6769,26 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Maretron: Label",
+     130818,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Request Reprogram",
      130819,
      PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS},
      .priority = 7}
+
+    ,
+    {"Maretron: Alert Transmission",
+     130819,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: Reprogram Status",
@@ -7188,6 +7291,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+    ,
+    {"Maretron: Alert Response",
+     130820,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
@@ -7219,12 +7329,26 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Maretron: Alert Text",
+     130821,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Navico: Unknown 1",
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275), BINARY_FIELD("Data", BYTES(231), NULL), END_OF_FIELDS},
      .priority = 3}
+
+    ,
+    {"Maretron: Alert Control",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary Temperature High Range",
@@ -7273,11 +7397,25 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Maretron: Data Instance Channel Correlation",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Navico: Unknown 2",
      130825,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Switch Indicator Status",
+     130826,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     /* Uwe Lovas has seen this from EP-70R */
     ,
@@ -7298,6 +7436,13 @@ Pgn pgnList[] = {
     {"Simnet: Set Serial Number", 130828, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Universal Configuration FP",
+     130831,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Suzuki: Engine and Storage Device Config",
      130831,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -7305,11 +7450,25 @@ Pgn pgnList[] = {
      {COMPANY(586), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Alert Operating Mode",
+     130832,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Fuel Used - High Resolution",
      130832,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Vessel Data Recorder Status",
+     130833,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"B&G: User and Remote rename",
@@ -7326,11 +7485,25 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Maretron: SMS Status",
+     130834,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Engine and Tank Configuration",
      130834,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: SMS Text Message",
+     130835,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: Set Engine and Tank Configuration",
@@ -7403,6 +7576,13 @@ Pgn pgnList[] = {
      .interval = 15000}
 
     ,
+    {"Maretron: BNWAS",
+     130838,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Fluid Level Warning", 130838, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
@@ -7413,12 +7593,26 @@ Pgn pgnList[] = {
      {COMPANY(1857), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Generic Sensor",
+     130840,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Data User Group Configuration",
      130840,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS},
      .priority = 3}
+
+    ,
+    {"Maretron: CAN Frame Forwarding",
+     130841,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: AIS Class B static data (msg 24 Part A)",
@@ -7475,6 +7669,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Maretron: Windlass Operating Status",
+     130843,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Furuno: Heel Angle, Roll Information",
      130843,
      PACKET_INCOMPLETE,
@@ -7493,6 +7694,20 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Windlass Control Command",
+     130844,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: DC Energy",
+     130845,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
@@ -7530,6 +7745,13 @@ Pgn pgnList[] = {
       DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
+
+    ,
+    {"Maretron: Battery Amp Hour Record",
+     130846,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
