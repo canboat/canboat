@@ -102,7 +102,6 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: SignalK/signalk-to-nmea2000
-        ref: typescript
         path: ./signalk-to-nmea2000
 
     - name: Build & Test signalk-to-nmea2000
