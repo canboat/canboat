@@ -12,6 +12,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+## [6.1.5]
+
+### Fixed
+
+- #599: Update generated files not updated in 6.1.4
+
 ## [6.1.4]
 
 ### Added
@@ -885,7 +891,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.4..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.5..HEAD
+[6.1.5]: https://github.com/canboat/canboat/compare/v6.1.4...v6.1.5
 [6.1.4]: https://github.com/canboat/canboat/compare/v6.1.3...v6.1.4
 [6.1.3]: https://github.com/canboat/canboat/compare/v6.1.2...v6.1.3
 [6.1.2]: https://github.com/canboat/canboat/compare/v6.1.1...v6.1.2

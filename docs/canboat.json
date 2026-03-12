@@ -4,8 +4,8 @@
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
-    "Version":"6.1.3",
-    "Copyright":"CANboat version v6.1.3\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
+    "Version":"6.1.5",
+    "Copyright":"CANboat version v6.1.5\n\n(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\nThis file is part of CANboat.\n\nLicensed under the Apache License, Version 2.0 (the \"License\");\nyou may not use this file except in compliance with the License.\nYou may obtain a copy of the License at\n\n    http://www.apache.org/licenses/LICENSE-2.0\n\nUnless required by applicable law or agreed to in writing, software\ndistributed under the License is distributed on an \"AS IS\" BASIS,\nWITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\nSee the License for the specific language governing permissions and\nlimitations under the License.\n\n\n",
     "PhysicalQuantities":[
     {
         "Name":"ELECTRICAL_CURRENT",
@@ -1085,7 +1085,8 @@
           {"Name":"WMM 2005", "Value":5},
           {"Name":"WMM 2010", "Value":6},
           {"Name":"WMM 2015", "Value":7},
-          {"Name":"WMM 2020", "Value":8}
+          {"Name":"WMM 2020", "Value":8},
+          {"Name":"WMM 2025", "Value":9}
         ]
       },
       {
@@ -3541,7 +3542,43 @@
         "MaxValue":65535,
         "EnumValues":[
           {"Name":"SSC200", "Value":434},
-          {"Name":"SSC300", "Value":2686}
+          {"Name":"SSC300", "Value":2686},
+          {"Name":"TLA100", "Value":2781},
+          {"Name":"NBE100", "Value":3979},
+          {"Name":"RIM100", "Value":4078},
+          {"Name":"ALM100", "Value":8165},
+          {"Name":"TMP100", "Value":20067},
+          {"Name":"DCR100", "Value":22585},
+          {"Name":"SIM100", "Value":23603},
+          {"Name":"ACM100", "Value":26493}
+        ]
+      },
+      {
+        "Name":"MARETRON_OPCODE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Read All", "Value":0},
+          {"Name":"Write Register", "Value":1},
+          {"Name":"Read Config", "Value":2},
+          {"Name":"Write Config", "Value":3},
+          {"Name":"Calibrate", "Value":4},
+          {"Name":"Clear Calibration", "Value":5},
+          {"Name":"Status", "Value":6},
+          {"Name":"Clear Status", "Value":7},
+          {"Name":"Reset Factory Default", "Value":8},
+          {"Name":"Debug", "Value":9},
+          {"Name":"Write Instance", "Value":16},
+          {"Name":"Read Instance", "Value":17},
+          {"Name":"Write Label", "Value":32},
+          {"Name":"Read Label", "Value":33},
+          {"Name":"Write Switch Config", "Value":48},
+          {"Name":"Read Switch Config", "Value":49},
+          {"Name":"Write Alert Config", "Value":64},
+          {"Name":"Read Alert Config", "Value":65},
+          {"Name":"Write Channel Config", "Value":80},
+          {"Name":"Read Channel Config", "Value":81},
+          {"Name":"Read Channel Config Extended", "Value":86},
+          {"Name":"Write Channel Config Extended", "Value":87}
         ]
       },
       {
@@ -7473,6 +7510,136 @@
         ]
       },
       {
+        "PGN":65280,
+        "Id":"maretronKeelPosition",
+        "Description":"Maretron: Keel Position",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65282,
+        "Id":"maretronNumberOfChannels",
+        "Description":"Maretron: Number of Channels",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65284,
         "Id":"maretronProprietaryDcBreakerCurrent",
         "Description":"Maretron: Proprietary DC Breaker Current",
@@ -7757,6 +7924,71 @@
         ]
       },
       {
+        "PGN":65285,
+        "Id":"maretronUniversalConfigurationSf",
+        "Description":"Maretron: Universal Configuration SF",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65286,
         "Id":"chetcoDimmer",
         "Description":"Chetco: Dimmer",
@@ -7957,6 +8189,71 @@
         ]
       },
       {
+        "PGN":65286,
+        "Id":"maretronFluidFlowRate",
+        "Description":"Maretron: Fluid Flow Rate",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65287,
         "Id":"airmarAccessLevel",
         "Description":"Airmar: Access Level",
@@ -8129,6 +8426,71 @@
         ]
       },
       {
+        "PGN":65287,
+        "Id":"maretronTripVolume",
+        "Description":"Maretron: Trip Volume",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65288,
         "Id":"seatalkAlarm",
         "Description":"Seatalk: Alarm",
@@ -8247,6 +8609,71 @@
         ]
       },
       {
+        "PGN":65288,
+        "Id":"maretron420Ma",
+        "Description":"Maretron: 4-20 mA",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65289,
         "Id":"simnetTrimTabSensorCalibration",
         "Description":"Simnet: Trim Tab Sensor Calibration",
@@ -8308,6 +8735,71 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65289,
+        "Id":"maretron010V",
+        "Description":"Maretron: 0-10 V",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -8377,6 +8869,136 @@
         ]
       },
       {
+        "PGN":65290,
+        "Id":"maretronRotationalRate",
+        "Description":"Maretron: Rotational Rate",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65291,
+        "Id":"maretronResistance",
+        "Description":"Maretron: Resistance",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65292,
         "Id":"simnetClearFluidLevelWarnings",
         "Description":"Simnet: Clear Fluid Level Warnings",
@@ -8438,6 +9060,71 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65292,
+        "Id":"maretronAutomationFunctionMaster",
+        "Description":"Maretron: Automation Function Master",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -15646,6 +16333,112 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"maretronProprietaryConfiguration",
+        "Description":"Maretron: Proprietary Configuration",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":7,
+        "Length":230,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"productCode",
+            "Name":"Product code",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_PRODUCT_CODE"
+          },
+          {
+            "Order":5,
+            "Id":"softwareCode",
+            "Name":"Software code",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"opcode",
+            "Name":"Opcode",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MARETRON_OPCODE"
+          },
+          {
+            "Order":7,
+            "Id":"payload",
+            "Name":"Payload",
+            "BitLength":1784,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -44429,6 +45222,71 @@
         ]
       },
       {
+        "PGN":130817,
+        "Id":"maretronAnnunciatorCapabilities",
+        "Description":"Maretron: Annunciator Capabilities",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130818,
         "Id":"simnetReprogramData",
         "Description":"Simnet: Reprogram Data",
@@ -44748,6 +45606,71 @@
         ]
       },
       {
+        "PGN":130818,
+        "Id":"maretronLabel",
+        "Description":"Maretron: Label",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130819,
         "Id":"simnetRequestReprogram",
         "Description":"Simnet: Request Reprogram",
@@ -44800,6 +45723,71 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130819,
+        "Id":"maretronAlertTransmission",
+        "Description":"Maretron: Alert Transmission",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -49161,6 +50149,71 @@
         ]
       },
       {
+        "PGN":130820,
+        "Id":"maretronAlertResponse",
+        "Description":"Maretron: Alert Response",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130821,
         "Id":"navicoAsciiData",
         "Description":"Navico: ASCII Data",
@@ -49425,6 +50478,71 @@
         ]
       },
       {
+        "PGN":130821,
+        "Id":"maretronAlertText",
+        "Description":"Maretron: Alert Text",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130822,
         "Id":"navicoUnknown1",
         "Description":"Navico: Unknown 1",
@@ -49483,6 +50601,71 @@
             "Id":"data",
             "Name":"Data",
             "BitLength":1848,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130822,
+        "Id":"maretronAlertControl",
+        "Description":"Maretron: Alert Control",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -49840,6 +51023,71 @@
       },
       {
         "PGN":130825,
+        "Id":"maretronDataInstanceChannelCorrelation",
+        "Description":"Maretron: Data Instance Channel Correlation",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130825,
         "Id":"navicoUnknown2",
         "Description":"Navico: Unknown 2",
         "Type":"Fast",
@@ -49896,6 +51144,71 @@
             "Id":"data",
             "Name":"Data",
             "BitLength":80,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130826,
+        "Id":"maretronSwitchIndicatorStatus",
+        "Description":"Maretron: Switch Indicator Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
@@ -50093,6 +51406,71 @@
       },
       {
         "PGN":130831,
+        "Id":"maretronUniversalConfigurationFp",
+        "Description":"Maretron: Universal Configuration FP",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130831,
         "Id":"suzukiEngineAndStorageDeviceConfig",
         "Description":"Suzuki: Engine and Storage Device Config",
         "Type":"Fast",
@@ -50148,6 +51526,71 @@
       },
       {
         "PGN":130832,
+        "Id":"maretronAlertOperatingMode",
+        "Description":"Maretron: Alert Operating Mode",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130832,
         "Id":"simnetFuelUsedHighResolution",
         "Description":"Simnet: Fuel Used - High Resolution",
         "Type":"Fast",
@@ -50198,6 +51641,71 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130833,
+        "Id":"maretronVesselDataRecorderStatus",
+        "Description":"Maretron: Vessel Data Recorder Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -50329,6 +51837,71 @@
       },
       {
         "PGN":130834,
+        "Id":"maretronSmsStatus",
+        "Description":"Maretron: SMS Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130834,
         "Id":"simnetEngineAndTankConfiguration",
         "Description":"Simnet: Engine and Tank Configuration",
         "Type":"Fast",
@@ -50379,6 +51952,71 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130835,
+        "Id":"maretronSmsTextMessage",
+        "Description":"Maretron: SMS Text Message",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -51027,6 +52665,71 @@
       },
       {
         "PGN":130838,
+        "Id":"maretronBnwas",
+        "Description":"Maretron: BNWAS",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130838,
         "Id":"simnetFluidLevelWarning",
         "Description":"Simnet: Fluid Level Warning",
         "Type":"Fast",
@@ -51137,6 +52840,71 @@
       },
       {
         "PGN":130840,
+        "Id":"maretronGenericSensor",
+        "Description":"Maretron: Generic Sensor",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130840,
         "Id":"simnetDataUserGroupConfiguration",
         "Description":"Simnet: Data User Group Configuration",
         "Priority":3,
@@ -51188,6 +52956,71 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130841,
+        "Id":"maretronCanFrameForwarding",
+        "Description":"Maretron: CAN Frame Forwarding",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -51750,6 +53583,71 @@
       },
       {
         "PGN":130843,
+        "Id":"maretronWindlassOperatingStatus",
+        "Description":"Maretron: Windlass Operating Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130843,
         "Id":"furunoHeelAngleRollInformation",
         "Description":"Furuno: Heel Angle, Roll Information",
         "Type":"Fast",
@@ -51926,6 +53824,136 @@
             "RangeMax":6,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130844,
+        "Id":"maretronWindlassControlCommand",
+        "Description":"Maretron: Windlass Control Command",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130845,
+        "Id":"maretronDcEnergy",
+        "Description":"Maretron: DC Energy",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -52299,6 +54327,71 @@
             "BitOffset":88,
             "BitStart":0,
             "FieldType":"DYNAMIC_FIELD_VALUE"
+          }
+        ]
+      },
+      {
+        "PGN":130846,
+        "Id":"maretronBatteryAmpHourRecord",
+        "Description":"Maretron: Battery Amp Hour Record",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
