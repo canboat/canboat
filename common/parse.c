@@ -509,7 +509,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   static time_t tiden = 0;
   struct tm     tm;
   time_t        now;
-  unsigned int  millis = 0;
+  unsigned int  millis = 0, hh = 0, mm = 0, ss = 0;
   unsigned int  secs;
   unsigned long n;
 
@@ -522,11 +522,12 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   }
   token++;
 
-  r = sscanf(token, "%u.%u", &secs, &millis);
-  if (r < 1)
+  r = sscanf(token, "%2u%2u%2u.%u", &hh, &mm, &ss, &millis);
+  if (r < 3)
   {
     return -1;
   }
+  secs = hh * 3600 + mm * 60 + ss;
 
   if (tiden == 0)
   {

@@ -10,6 +10,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- #592: Actisense timestamp parsing incorrect
+
 ### Added
 
 ## [6.1.6]

@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 tests
 
 all:	tests
 
@@ -125,4 +125,12 @@ test12:
 	diff $(TEMPDIR)/dms-format.out dms-format.out
 	diff $(TEMPDIR)/dms-format.err dms-format.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12
+#
+# This tests that analyzer correctly formats seconds in Actisense N2K format
+#
+test13:	
+	$(ANALYZER) -q < actisense-format.in > $(TEMPDIR)/actisense-format.out -fixtime pgn-test 2>> $(TEMPDIR)/actisense-format.err
+	diff $(TEMPDIR)/actisense-format.out actisense-format.out
+	diff $(TEMPDIR)/actisense-format.err actisense-format.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13
