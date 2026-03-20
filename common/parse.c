@@ -506,11 +506,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   char         *token;
   int           i;
   int           r;
-  static time_t tiden = 0;
-  struct tm     tm;
-  time_t        now;
   unsigned int  millis = 0, hh = 0, mm = 0, ss = 0;
-  unsigned int  secs;
   unsigned long n;
 
   // parse timestamp. Actisense doesn't give us date so let's figure it out ourself
@@ -527,17 +523,8 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
   {
     return -1;
   }
-  secs = hh * 3600 + mm * 60 + ss;
 
-  if (tiden == 0)
-  {
-    tiden = (time_t) (getNow() / UINT64_C(1000)) - secs;
-  }
-  now = tiden + secs;
-
-  localtime_r(&now, &tm);
-  strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT%H:%M:%S", &tm);
-  sprintf(m->timestamp + strlen(m->timestamp), ",%3.3u", millis);
+  snprintf(m->timestamp, sizeof(m->timestamp), "%02u:%02u:%02u,%3.3u", hh, mm, ss, millis);
 
   // parse <SRC><DST><P>
   token = strtok_r(NULL, " ", &nexttoken);
