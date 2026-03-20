@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v6.1.5
+CANboat version v6.1.6
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -27,8 +27,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>6.1.5</Version>
-  <Copyright>CANboat version v6.1.5
+  <Version>6.1.6</Version>
+  <Copyright>CANboat version v6.1.6
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -4005,7 +4005,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
+          <RangeMax>7</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -4019,7 +4019,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>29</RangeMax>
+          <RangeMax>31</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -6509,7 +6509,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
+          <RangeMax>7</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -6523,7 +6523,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>29</RangeMax>
+          <RangeMax>31</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>

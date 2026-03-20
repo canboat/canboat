@@ -18,5 +18,5 @@ limitations under the License.
 
 */
 
-#define VERSION "6.1.5"
+#define VERSION "6.1.6"
 #define SCHEMA_VERSION "2.3.0"

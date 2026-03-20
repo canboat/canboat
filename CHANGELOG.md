@@ -12,6 +12,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+## [6.1.6]
+
+### Fixed
+
+- #600: use full RangeMax for PGN 60928 device instance fields
+
 ## [6.1.5]
 
 ### Fixed
@@ -892,6 +898,7 @@ iptee:
 ## Versions
 
 [Unreleased]: https://github.com/canboat/canboat/compare/v6.1.5..HEAD
+[6.1.6]: https://github.com/canboat/canboat/compare/v6.1.5...v6.1.6
 [6.1.5]: https://github.com/canboat/canboat/compare/v6.1.4...v6.1.5
 [6.1.4]: https://github.com/canboat/canboat/compare/v6.1.3...v6.1.4
 [6.1.3]: https://github.com/canboat/canboat/compare/v6.1.2...v6.1.3
