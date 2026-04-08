@@ -32,6 +32,8 @@ See [Changelog](CHANGELOG.md).
 ## Related Projects
 
 - [canboatjs](https://github.com/canboat/canboatjs) Pure JavaScript NMEA 2000 decoder and encoder
+- [nmea2000](https://github.com/tomer-w/nmea2000) Pure Python NMEA 2000 decoder and encoder library based on canboat
+- [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) Expose NMEA2000 PGNs as Home Assistant devices and entities
 
 ---
 
