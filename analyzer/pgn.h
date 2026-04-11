@@ -1236,6 +1236,25 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(358), UINT16_FIELD("Register Id"), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
 
+    ,
+    {"Carling: Breaker Command",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(176),
+      MATCH_FIELD(PK("Message Type"), BYTES(1), 2, "Breaker Command"),
+      UINT8_FIELD("Breaker Mapping 1"),
+      UINT8_FIELD("Breaker Mapping 2"),
+      RESERVED_FIELD(5),
+      SIMPLE_FIELD("Breaker Mapping 3", 3),
+      UINT8_FIELD("Breaker Command"),
+      UINT8_FIELD("Dim Value"),
+      END_OF_FIELDS},
+     .priority    = 2,
+     .explanation = "Addresses up to 19 breakers on a Carling digital switching panel via three bitmap fields. "
+                    "Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, "
+                    "and 17 to 19 in Breaker Mapping 3."}
+
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
@@ -1624,9 +1643,14 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Number of Channels",
      65282,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      PGN_FIELD("PGN", "PGN for which the number of channels is reported"),
+      UINT8_FIELD("Number of Channels"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .priority = 6}
 
     ,
     {"Maretron: Proprietary DC Breaker Current",
@@ -1693,9 +1717,16 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Fluid Flow Rate",
      65286,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Flow Rate Instance")),
+      LOOKUP_FIELD("Fluid Type", 4, TANK_TYPE),
+      RESERVED_FIELD(4),
+      SIMPLE_SIGNED_FIELD("Fluid Flow Rate", BYTES(3)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Airmar: Access Level",
@@ -1722,9 +1753,16 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Trip Volume",
      65287,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Volume Instance")),
+      LOOKUP_FIELD("Fluid Type", 4, TANK_TYPE),
+      RESERVED_FIELD(4),
+      SIMPLE_FIELD("Trip Volume", BYTES(3)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Seatalk: Alarm",
@@ -1742,9 +1780,15 @@ Pgn pgnList[] = {
 
     {"Maretron: 4-20 mA",
      65288,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Data Instance")),
+      UINT16_FIELD("4-20 mA Data"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Simnet: Trim Tab Sensor Calibration",
@@ -1756,9 +1800,15 @@ Pgn pgnList[] = {
     ,
     {"Maretron: 0-10 V",
      65289,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Data Instance")),
+      UINT16_FIELD("0-10 V Data"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Simnet: Paddle Wheel Speed Configuration",
@@ -1770,16 +1820,28 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Rotational Rate",
      65290,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Data Instance")),
+      SIMPLE_SIGNED_FIELD("Rotational Rate", BYTES(2)),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Maretron: Resistance",
      65291,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SID"),
+      UINT8_FIELD(PK("Data Instance")),
+      UINT16_FIELD("Resistance"),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Simnet: Clear Fluid Level Warnings",
@@ -6771,9 +6833,16 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Label",
      130818,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD(PK("Instance")),
+      UINT8_FIELD("Data Source"),
+      UINT8_FIELD("Data Indicator"),
+      STRINGLAU_FIELD("Label"),
+      UINT8_FIELD("Hardware Channel"),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Simnet: Request Reprogram",
@@ -6788,7 +6857,19 @@ Pgn pgnList[] = {
      130819,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
+      UINT8_FIELD(PK("Data Source Instance")),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      BINARY_FIELD("Maretron Extension", BYTES(16), "Maretron-specific payload following the standard Alert identity header."),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Simnet: Reprogram Status",
@@ -7399,9 +7480,16 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Data Instance Channel Correlation",
      130825,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      PGN_FIELD("PGN", "PGN for which the correlation is reported"),
+      UINT8_FIELD(PK("Hardware Channel")),
+      UINT8_FIELD("Instance"),
+      UINT8_FIELD("Data Source"),
+      UINT8_FIELD("Data Indicator"),
+      END_OF_FIELDS},
+     .priority = 6}
 
     ,
     {"Navico: Unknown 2",
@@ -7413,9 +7501,20 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Switch Indicator Status",
      130826,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD(PK("Indicator Bank Instance")),
+      UINT8_FIELD("Number of Status Fields"),
+      UINT8_FIELD("Indicator Status"),
+      END_OF_FIELDS},
+     .priority        = 2,
+     .repeatingField1 = 5,
+     .repeatingCount1 = 1,
+     .repeatingStart1 = 6,
+     .explanation     = "Broadcast by Maretron switching devices alongside PGN 127501. "
+                        "Each indicator status byte carries the state of one switch channel, "
+                        "encoded as 0 = Off, 1 = On, 2 = Tripped, 3 = Unknown."}
 
     /* Uwe Lovas has seen this from EP-70R */
     ,
@@ -7434,6 +7533,22 @@ Pgn pgnList[] = {
 
     ,
     {"Simnet: Set Serial Number", 130828, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
+
+    ,
+    {"Maretron: Dometic HVAC Status",
+     130830,
+     PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {COMPANY(137),
+      TEMPERATURE_FIELD("Additional Sensor Temperature"),
+      UINT32_FIELD("CAN ID"),
+      UINT8_FIELD("State"),
+      UINT8_FIELD("Hardware Status"),
+      UINT8_FIELD("Faults"),
+      VOLTAGE_U16_V_FIELD("Line Voltage"),
+      CURRENT_UFIX16_A_FIELD("Compressor Current"),
+      END_OF_FIELDS},
+     .priority = 5}
 
     ,
     {"Maretron: Universal Configuration FP",
