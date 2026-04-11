@@ -7454,16 +7454,16 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Annunciator",
      130824,
-     PACKET_COMPLETE,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(137),
-      UINT8_FIELD(PK("Annunciator Instance")),
-      UINT8_FIELD("Annunciator Volume"),
-      UINT16_FIELD("Annunciator Tone"),
-      UINT8_FIELD("Alert Source Instance"),
-      UINT16_FIELD("Alert Id"),
+      UINT8_FIELD("Field 4"),
+      UINT8_FIELD("Field 5"),
+      UINT16_FIELD("Field 6"),
+      UINT8_FIELD("Field 7"),
+      UINT16_FIELD("Field 8"),
       END_OF_FIELDS},
-     .priority = 2}
+     .priority = 7}
 
     ,
     {"Maretron: Data Instance Channel Correlation",
