@@ -1236,6 +1236,25 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {COMPANY(358), UINT16_FIELD("Register Id"), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
 
+    ,
+    {"Carling: Breaker Command",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(176),
+      MATCH_FIELD(PK("Message Type"), BYTES(1), 2, "Breaker Command"),
+      UINT8_FIELD("Breaker Mapping 1"),
+      UINT8_FIELD("Breaker Mapping 2"),
+      RESERVED_FIELD(5),
+      SIMPLE_FIELD("Breaker Mapping 3", 3),
+      UINT8_FIELD("Breaker Command"),
+      UINT8_FIELD("Dim Value"),
+      END_OF_FIELDS},
+     .priority    = 2,
+     .explanation = "Addresses up to 19 breakers on a Carling digital switching panel via three bitmap fields. "
+                    "Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, "
+                    "and 17 to 19 in Breaker Mapping 3."}
+
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
