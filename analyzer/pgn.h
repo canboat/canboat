@@ -6857,7 +6857,19 @@ Pgn pgnList[] = {
      130819,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
+      UINT8_FIELD(PK("Data Source Instance")),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      BINARY_FIELD("Maretron Extension", BYTES(16), "Maretron-specific payload following the standard Alert identity header."),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Simnet: Reprogram Status",
