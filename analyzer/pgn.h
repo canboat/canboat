@@ -7377,7 +7377,21 @@ Pgn pgnList[] = {
      130820,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
+      UINT8_FIELD(PK("Data Source Instance")),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      ISO_NAME_FIELD("Acknowledge Source Network ID NAME"),
+      LOOKUP_FIELD("Response Command", 2, ALERT_RESPONSE_COMMAND),
+      RESERVED_FIELD(6),
+      END_OF_FIELDS},
+     .priority = 7}
 
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
@@ -7414,7 +7428,21 @@ Pgn pgnList[] = {
      130821,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
+      UINT8_FIELD(PK("Data Source Instance")),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      LOOKUP_FIELD("Language ID", BYTES(1), ALERT_LANGUAGE_ID),
+      STRINGLAU_FIELD("Alert Text Description"),
+      STRINGLAU_FIELD("Alert Location Text Description"),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Navico: Unknown 1",
@@ -7429,7 +7457,19 @@ Pgn pgnList[] = {
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT16_FIELD("Alert ID"),
+      ISO_NAME_FIELD("Data Source Network ID NAME"),
+      UINT8_FIELD(PK("Data Source Instance")),
+      UINT8_FIELD("Data Source Index-Source"),
+      UINT8_FIELD("Alert Occurrence Number"),
+      BINARY_FIELD("Maretron Extension", BYTES(16), "Maretron-specific payload following the standard Alert identity header."),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Maretron: Proprietary Temperature High Range",
