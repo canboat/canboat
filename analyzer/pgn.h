@@ -6048,6 +6048,41 @@ Pgn pgnList[] = {
      .interval = 1000}
 
     ,
+    {"HVAC Status",
+     130329,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {UINT8_FIELD(PK("HVAC Identifier")),
+      UINT8_FIELD("Location"),
+      SIMPLE_FIELD("Operating Mode", 4),
+      SIMPLE_FIELD("Control Operating State", 4),
+      LOOKUP_FIELD("Power", 2, OFF_ON),
+      SIMPLE_FIELD("Fan Speed Mode Changeable", 2),
+      SIMPLE_FIELD("Fan Speed Mode", 2),
+      SIMPLE_FIELD("Fan Operation Mode", 2),
+      UINT8_FIELD("Fan Speed Available"),
+      UINT8_FIELD("Fan Speed"),
+      UINT8_FIELD("Setpoint Type"),
+      TEMPERATURE_FIELD("Lower Temperature Setpoint"),
+      TEMPERATURE_FIELD("Upper Temperature Setpoint"),
+      SIMPLE_SIGNED_FIELD("Lower Humidity Setpoint", BYTES(1)),
+      SIMPLE_SIGNED_FIELD("Upper Humidity Setpoint", BYTES(1)),
+      SIMPLE_FIELD("Auxiliary Heat Control Supported", 4),
+      SIMPLE_FIELD("Auxiliary Heat Automatic Mode", 2),
+      SIMPLE_FIELD("Auxiliary Heat State", 2),
+      TEMPERATURE_FIELD("Current Temperature"),
+      SIMPLE_SIGNED_FIELD("Current Humidity", BYTES(1)),
+      UINT16_FIELD("Supported Modes"),
+      TEMPERATURE_FIELD("Sea Water Temperature"),
+      TEMPERATURE_FIELD("Loop Temperature"),
+      TEMPERATURE_FIELD("Evaporator Temperature"),
+      TEMPERATURE_FIELD("Inlet Temperature"),
+      SIMPLE_SIGNED_FIELD("Inlet Humidity", BYTES(1)),
+      END_OF_FIELDS},
+     .priority = 6,
+     .interval = 5000}
+
+    ,
     {"Lighting System Settings",
      130330,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -6897,7 +6932,15 @@ Pgn pgnList[] = {
      130817,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD(PK("Annunciator Instance")),
+      UINT8_FIELD("Number of Tones"),
+      UINT16_FIELD("Tone"),
+      END_OF_FIELDS},
+     .priority        = 6,
+     .repeatingField1 = 5,
+     .repeatingCount1 = 1,
+     .repeatingStart1 = 6}
 
     ,
     {"Simnet: Reprogram Data",
@@ -7694,6 +7737,24 @@ Pgn pgnList[] = {
     {"Simnet: Set Serial Number", 130828, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Dometic HVAC Control Status",
+     130828,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137),
+      UINT32_FIELD("CAN ID"),
+      UINT8_FIELD("Configuration/Mode"),
+      UINT8_FIELD("Status"),
+      UINT8_FIELD("Fan Mode/Speed"),
+      UINT8_FIELD("Setpoint Temperature"),
+      UINT8_FIELD("Ambient Temperature"),
+      UINT8_FIELD("Outdoor Temperature"),
+      UINT8_FIELD("Fault Status"),
+      UINT8_FIELD("Additional Sensor Temperature"),
+      END_OF_FIELDS},
+     .priority = 2}
+
+    ,
     {"Maretron: Dometic HVAC Status",
      130830,
      PACKET_RESOLUTION_UNKNOWN,
@@ -7724,11 +7785,21 @@ Pgn pgnList[] = {
      {COMPANY(586), END_OF_FIELDS}}
 
     ,
-    {"Maretron: Alert Operating Mode",
+    {"Maretron: Vessel Operating Mode",
      130832,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("Alert System"),
+      UINT8_FIELD("Alert Sub-System"),
+      UINT8_FIELD(PK("Alert System Instance")),
+      UINT8_FIELD("Operating Mode"),
+      SIMPLE_FIELD("Generating Global Alerts", 1),
+      SIMPLE_FIELD("User Changed", 1),
+      SIMPLE_FIELD("In Independent Mode", 1),
+      RESERVED_FIELD(5),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Simnet: Fuel Used - High Resolution",
@@ -7740,9 +7811,14 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Vessel Data Recorder Status",
      130833,
-     PACKET_INCOMPLETE,
+     PACKET_RESOLUTION_UNKNOWN,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("VDR Recording Status"),
+      SIMPLE_FIELD("Memory Capacity", BYTES(8)),
+      SIMPLE_FIELD("Memory Used", BYTES(8)),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"B&G: User and Remote rename",
@@ -7763,7 +7839,15 @@ Pgn pgnList[] = {
      130834,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("SIM Card Status"),
+      UINT8_FIELD("GSM Band"),
+      UINT8_FIELD("Signal Strength"),
+      UINT8_FIELD("Bit Error Rate"),
+      STRINGLAU_FIELD("SIM Card Phone Number"),
+      STRINGLAU_FIELD("Network Operator Name"),
+      END_OF_FIELDS},
+     .priority = 6}
 
     ,
     {"Simnet: Engine and Tank Configuration",
@@ -7777,7 +7861,12 @@ Pgn pgnList[] = {
      130835,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD("Message Type"),
+      STRINGLAU_FIELD("Phone Number"),
+      STRINGLAU_FIELD("Message"),
+      END_OF_FIELDS},
+     .priority = 6}
 
     ,
     {"Simnet: Set Engine and Tank Configuration",
