@@ -1022,6 +1022,27 @@ Pgn pgnList[] = {
                     "address, and to respond with device information (NAME) requested by the ISO Request or Complex Request Group "
                     "Function. This PGN contains several fields that are requestable, either independently or in any combination."}
 
+    ,
+    {"Electronic Transmission Controller 1",
+     61142,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {SIMPLE_FIELD("Transmission Driveline Engaged", 2),
+      SIMPLE_FIELD("Torque Converter Lockup Engaged", 2),
+      SIMPLE_FIELD("Transmission Shift in Progress", 2),
+      SIMPLE_FIELD("Torque Converter Lockup Transition in Progress", 2),
+      ROTATION_UFIX16_RPM_FIELD("Transmission Output Shaft Speed", NULL),
+      UINT8_FIELD("Percent Clutch Slip"),
+      LOOKUP_FIELD("Engine Momentary Overspeed Enable", 2, YES_NO),
+      LOOKUP_FIELD("Progressive Shift Disable", 2, YES_NO),
+      RESERVED_FIELD(4),
+      SIMPLE_FIELD("Transmission Input Shaft Speed", BYTES(2)),
+      UINT8_FIELD("Source Address of Controlling Device for Transmission Control"),
+      END_OF_FIELDS},
+     .explanation = "J1939 ETC1 - Electronic Transmission Controller 1. "
+                    "Reports transmission status including driveline engagement, torque converter lockup, "
+                    "output/input shaft speeds, and clutch slip."}
+
     /* PDU1 (addressed) single-frame PGN range 0EF00 to 0xEFFF (61184 - 61439) */
 
     ,
