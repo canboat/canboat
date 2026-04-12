@@ -1641,7 +1641,7 @@ Pgn pgnList[] = {
      {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65281",
      65281,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1661,7 +1661,7 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65283",
      65283,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1888,49 +1888,49 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65294",
      65294,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65295",
      65295,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65296",
      65296,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65297",
      65297,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65299",
      65299,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65300",
      65300,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65301",
      65301,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -1953,7 +1953,7 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65304",
      65304,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -2031,14 +2031,14 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65306",
      65306,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65308",
      65308,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -2058,14 +2058,14 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65310",
      65310,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65311",
      65311,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
@@ -2080,21 +2080,21 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65314",
      65314,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65316",
      65316,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary",
+    {"BEP Marine: Proprietary PGN 65325",
      65325,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
