@@ -7760,13 +7760,13 @@ Pgn pgnList[] = {
      PACKET_RESOLUTION_UNKNOWN,
      PACKET_FAST,
      {COMPANY(137),
-      TEMPERATURE_FIELD("Additional Sensor Temperature"),
+      UINT8_FIELD("Additional Sensor Temperature"),
       UINT32_FIELD("CAN ID"),
       UINT8_FIELD("State"),
       UINT8_FIELD("Hardware Status"),
       UINT8_FIELD("Faults"),
-      VOLTAGE_U16_V_FIELD("Line Voltage"),
-      CURRENT_UFIX16_A_FIELD("Compressor Current"),
+      UINT8_FIELD("Line Voltage"),
+      UINT8_FIELD("Compressor Current"),
       END_OF_FIELDS},
      .priority = 5}
 
