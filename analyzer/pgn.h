@@ -1634,11 +1634,32 @@ Pgn pgnList[] = {
      .priority = 2}
 
     ,
+    {"Honda: Engine Data",
+     65280,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(175), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yanmar: Engine Data A",
+     65280,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Maretron: Keel Position",
      65280,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yanmar: Engine Data B",
+     65281,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65281",
@@ -1678,6 +1699,13 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .priority = 6}
+
+    ,
+    {"Honda: Engine Alerts",
+     65284,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(175), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Boot State Acknowledgment",
@@ -1916,11 +1944,32 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Suzuki: Engine Data A",
+     65298,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Suzuki: Engine Data B",
+     65299,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: Proprietary PGN 65299",
      65299,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Suzuki: Engine Data C",
+     65300,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65300",
@@ -1951,6 +2000,20 @@ Pgn pgnList[] = {
      .explanation = "Seen as sent by AC-42 only so far.",
      .priority    = 7}
 
+
+    ,
+    {"Suzuki: Engine Data D",
+     65303,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Suzuki: Engine Data E",
+     65304,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65304",
@@ -2087,6 +2150,13 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Suzuki: Troll Mode Control",
+     65315,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: Proprietary PGN 65316",
      65316,
      PACKET_INCOMPLETE,
@@ -2099,6 +2169,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+    ,
+    {"Yanmar: Engine Data C",
+     65332,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
     ,
     {"Simnet: AP Unknown 2",
      65340,
@@ -2140,6 +2217,27 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS}},
 
+    {"Yanmar: Engine Data D",
+     65346,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yanmar: Engine Data E",
+     65348,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yanmar: Engine Data F",
+     65349,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Magnetic Field",
      65350,
      PACKET_INCOMPLETE | PACKET_MISSING_COMPANY_FIELDS,
@@ -6907,6 +7005,13 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Honda: Engine Status",
+     130816,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(175), END_OF_FIELDS}}
+
+    ,
     {"Navico: Unknown",
      130817,
      PACKET_INCOMPLETE,
@@ -7813,6 +7918,13 @@ Pgn pgnList[] = {
      .priority = 5}
 
     ,
+    {"Suzuki: Engine Data",
+     130830,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(586), END_OF_FIELDS}}
+
+    ,
     {"Maretron: Universal Configuration FP",
      130831,
      PACKET_INCOMPLETE,
@@ -7955,6 +8067,13 @@ Pgn pgnList[] = {
      .interval = 15000}
 
     ,
+    {"Suzuki: Engine Sensor Data",
+     130837,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(586), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Fuel Flow Turbine Configuration",
      130837,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -7986,6 +8105,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
+    {"Suzuki: Fuel Management",
+     130838,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(586), END_OF_FIELDS}}
 
     ,
     {"Simnet: Fluid Level Warning", 130838, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
