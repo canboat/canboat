@@ -1930,6 +1930,20 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Carling: Switchboard Status",
+     65300,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(176),
+      UINT8_FIELD(PK("Message Type")),
+      BINARY_FIELD("Data", BYTES(5), "Payload varies by Message Type."),
+      END_OF_FIELDS},
+     .explanation = "Multi-purpose Carling digital switching PGN with 16+ message types: "
+                    "box status, breaker status, configuration, power information, "
+                    "AC GenII status, uptime reports, and solenoid profiles. "
+                    "The Message Type field selects the variant."}
+
+    ,
     {"BEP Marine: Proprietary PGN 65301",
      65301,
      PACKET_INCOMPLETE,
@@ -8020,6 +8034,27 @@ Pgn pgnList[] = {
      {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
+    {"Maretron: Windlass Operating Status",
+     130842,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(137),
+      SIMPLE_FIELD("Windlass Operating Events", 6),
+      SIMPLE_FIELD("Windlass Instance", 4),
+      SIMPLE_FIELD("Windlass Direction Control", 4),
+      UINT8_FIELD("Speed Control"),
+      LOOKUP_FIELD("Power Enable", 2, OFF_ON),
+      LOOKUP_FIELD("Mechanical Enable", 2, OFF_ON),
+      LOOKUP_FIELD("Anchor Docking Control", 2, OFF_ON),
+      LOOKUP_FIELD("Deck and Anchor Wash", 2, OFF_ON),
+      LOOKUP_FIELD("Anchor Light", 2, OFF_ON),
+      LOOKUP_FIELD("Auxiliary A Control", 2, OFF_ON),
+      LOOKUP_FIELD("Auxiliary B Control", 2, OFF_ON),
+      LOOKUP_FIELD("Auxiliary C Control", 2, OFF_ON),
+      LOOKUP_FIELD("Auxiliary D Control", 2, OFF_ON),
+      END_OF_FIELDS}}
+
+    ,
     {"Simnet: AIS Class B static data (msg 24 Part A)",
      130842,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -8074,7 +8109,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Maretron: Windlass Operating Status",
+    {"Maretron: Windlass Control Command",
      130843,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -8101,11 +8136,11 @@ Pgn pgnList[] = {
      {COMPANY(1857), END_OF_FIELDS}}
 
     ,
-    {"Maretron: Windlass Control Command",
+    {"Carling: Proprietary",
      130844,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(176), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Maretron: DC Energy",
@@ -8526,6 +8561,21 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7,
      .interval = 1000}
+
+    ,
+    {"Carling: Breaker Status and Configuration",
+     130921,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(176),
+      UINT8_FIELD(PK("Message Type")),
+      BINARY_FIELD("Data", BYTES(219), "Payload varies by Message Type."),
+      END_OF_FIELDS},
+     .explanation = "Multi-purpose Carling digital switching fast-packet PGN with 8+ message types: "
+                    "breaker status with electrical values, breaker configuration, "
+                    "discrete I/O configuration, solenoid drive sequence, "
+                    "system alarm and alert messages. "
+                    "The Message Type field selects the variant."}
 
     ,
     {"Airmar: POST",
