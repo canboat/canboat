@@ -1655,6 +1655,13 @@ Pgn pgnList[] = {
      {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Mercury: Engine Data",
+     65280,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Yanmar: Engine Data B",
      65281,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -2155,6 +2162,12 @@ Pgn pgnList[] = {
      {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS},
      .priority = 7}
 
+    ,
+    {"Navico: Proprietary",
+     65313,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65314",
@@ -2178,11 +2191,33 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Navico: Proprietary 2",
+     65317,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: Proprietary PGN 65325",
      65325,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data A",
+     65329,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(198), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"B&G: Proprietary",
+     65330,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(381), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
     ,
     {"Yanmar: Engine Data C",
      65332,
@@ -2219,6 +2254,13 @@ Pgn pgnList[] = {
       ANGLE_U16_FIELD("Angle", NULL),
       END_OF_FIELDS},
      .priority = 6}
+
+    ,
+    {"Yamaha: Engine Data B",
+     65344,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(198), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Seatalk: Pilot Wind Datum",
@@ -2397,6 +2439,20 @@ Pgn pgnList[] = {
      .interval    = 1000,
      .explanation = "Seen as sent by AC-42 only so far.",
      .priority    = 6}
+
+    ,
+    {"Yamaha: Engine Data C",
+     65424,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(198), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data D",
+     65472,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(198), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
@@ -7916,6 +7972,13 @@ Pgn pgnList[] = {
      .priority = 2}
 
     ,
+    {"Mercury: Engine Status",
+     130829,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(144), END_OF_FIELDS}}
+
+    ,
     {"Maretron: Dometic HVAC Status",
      130830,
      PACKET_RESOLUTION_UNKNOWN,
@@ -8351,6 +8414,13 @@ Pgn pgnList[] = {
      .priority = 7,
      .interval = 1000}
 
+    ,
+    {"Navico: Proprietary FP",
+     130849,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275), END_OF_FIELDS}}
+
 /*    ,
     {"Simnet: AP Command",
      130850,
@@ -8614,6 +8684,13 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Navico: Proprietary 2 FP",
+     130852,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275), END_OF_FIELDS}}
+
+    ,
     {"Simnet: Alarm Message",
      130856,
      PACKET_INCOMPLETE,
@@ -8643,6 +8720,13 @@ Pgn pgnList[] = {
      .interval    = 1000,
      .priority    = 7,
      .explanation = "Seen as sent by AC-42 and H5000 AP only so far."}
+
+    ,
+    {"Simrad: Engine Data",
+     130861,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(1857), END_OF_FIELDS}}
 
     ,
     {"Airmar: Additional Weather Data",
@@ -8720,6 +8804,55 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7,
      .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+
+    ,
+    {"Yamaha: Engine Data",
+     130945,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 2",
+     130946,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 3",
+     130947,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 4",
+     130951,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 5",
+     131008,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 6",
+     131011,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
+
+    ,
+    {"Yamaha: Engine Data 7",
+     131012,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(198), END_OF_FIELDS}}
 
     ,
     {"Actisense: Operating mode",
