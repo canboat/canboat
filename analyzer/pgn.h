@@ -2964,6 +2964,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Lumishore: Proprietary",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(798), BINARY_FIELD("Data", BYTES(223), ""), END_OF_FIELDS}}
+
+    ,
     {"Garmin: Day Mode",
      126720,
      PACKET_INCOMPLETE,
@@ -6906,6 +6913,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130816",
+     130816,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Navico: Unknown",
      130817,
@@ -6965,6 +6979,13 @@ Pgn pgnList[] = {
      .repeatingCount1 = 1,
      .repeatingStart1 = 6}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130817",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Simnet: Reprogram Data",
      130818,
@@ -7029,6 +7050,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130818",
+     130818,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Simnet: Request Reprogram",
      130819,
@@ -7075,6 +7103,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 3}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130819",
+     130819,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Simnet: Reprogram Status",
      130820,
@@ -7597,6 +7632,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130820",
+     130820,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
@@ -7648,6 +7690,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130821",
+     130821,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Navico: Unknown 1",
      130822,
@@ -7675,6 +7724,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 7}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130822",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Maretron: Proprietary Temperature High Range",
      130823,
@@ -7742,6 +7798,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130825",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
     {"Maretron: Switch Indicator Status",
      130826,
@@ -7760,6 +7823,13 @@ Pgn pgnList[] = {
                         "Each indicator status byte carries the state of one switch channel, "
                         "encoded as 0 = Off, 1 = On, 2 = Tripped, 3 = Unknown."}
 
+
+    ,
+    {"BEP Marine: Proprietary PGN 130826",
+     130826,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     /* Uwe Lovas has seen this from EP-70R */
     ,
     {"Lowrance: unknown",
