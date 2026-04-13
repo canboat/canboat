@@ -2658,15 +2658,34 @@ limitations under the License.
     </LookupEnumeration>
     <LookupEnumeration Name='MARETRON_PRODUCT_CODE' MaxValue='65535'>
       <EnumPair Value='434' Name='SSC200' />
+      <EnumPair Value='1047' Name='SMS100' />
+      <EnumPair Value='1151' Name='MBB200C' />
+      <EnumPair Value='1534' Name='DST110' />
+      <EnumPair Value='1776' Name='GPS100' />
+      <EnumPair Value='2606' Name='CLM100' />
       <EnumPair Value='2686' Name='SSC300' />
       <EnumPair Value='2781' Name='TLA100' />
+      <EnumPair Value='3373' Name='GPS200' />
+      <EnumPair Value='3563' Name='DST100' />
+      <EnumPair Value='3637' Name='FFM100' />
       <EnumPair Value='3979' Name='NBE100' />
+      <EnumPair Value='4018' Name='RAA100' />
       <EnumPair Value='4078' Name='RIM100' />
+      <EnumPair Value='4319' Name='J2K100' />
       <EnumPair Value='8165' Name='ALM100' />
+      <EnumPair Value='9339' Name='IPG100' />
+      <EnumPair Value='9375' Name='DCM100' />
+      <EnumPair Value='9845' Name='EMS100' />
+      <EnumPair Value='12337' Name='CLMD16' />
+      <EnumPair Value='16434' Name='DSM250' />
       <EnumPair Value='20067' Name='TMP100' />
+      <EnumPair Value='20298' Name='DSM150' />
+      <EnumPair Value='21703' Name='FPM100' />
       <EnumPair Value='22585' Name='DCR100' />
       <EnumPair Value='23603' Name='SIM100' />
       <EnumPair Value='26493' Name='ACM100' />
+      <EnumPair Value='27244' Name='MBB300C' />
+      <EnumPair Value='28077' Name='MConnect' />
     </LookupEnumeration>
     <LookupEnumeration Name='MARETRON_OPCODE' MaxValue='255'>
       <EnumPair Value='0' Name='Read All' />
