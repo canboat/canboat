@@ -56905,8 +56905,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>annunciatorInstance</Id>
-          <Name>Annunciator Instance</Name>
+          <Id>field4</Id>
+          <Name>Field 4</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -56918,8 +56918,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>annunciatorVolume</Id>
-          <Name>Annunciator Volume</Name>
+          <Id>field5</Id>
+          <Name>Field 5</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -56931,8 +56931,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>annunciatorTone</Id>
-          <Name>Annunciator Tone</Name>
+          <Id>field6</Id>
+          <Name>Field 6</Name>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -56944,8 +56944,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>alertSourceInstance</Id>
-          <Name>Alert Source Instance</Name>
+          <Id>field7</Id>
+          <Name>Field 7</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -56957,8 +56957,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>alertId</Id>
-          <Name>Alert Id</Name>
+          <Id>field8</Id>
+          <Name>Field 8</Name>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
