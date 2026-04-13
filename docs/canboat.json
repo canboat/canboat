@@ -8825,7 +8825,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":8,
@@ -8930,10 +8930,10 @@
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.0001,
             "Signed":true,
-            "RangeMin":-8388607,
-            "RangeMax":8388604,
+            "RangeMin":-838.8607,
+            "RangeMax":838.8604,
             "FieldType":"NUMBER"
           }
         ]
@@ -9117,7 +9117,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":8,
@@ -9222,10 +9222,10 @@
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.001,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777212,
+            "RangeMax":16777.212,
             "FieldType":"NUMBER"
           }
         ]
@@ -9355,7 +9355,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9526,7 +9526,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9607,10 +9607,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.000244141,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":15.9990234375,
             "FieldType":"NUMBER"
           },
           {
@@ -9697,7 +9697,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9778,10 +9778,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.25,
             "Signed":true,
-            "RangeMin":-32767,
-            "RangeMax":32764,
+            "RangeMin":-8191.75,
+            "RangeMax":8191,
             "FieldType":"NUMBER"
           },
           {
@@ -9803,7 +9803,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9884,10 +9884,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":655.32,
             "FieldType":"NUMBER"
           },
           {
@@ -55488,8 +55488,8 @@
           },
           {
             "Order":4,
-            "Id":"field4",
-            "Name":"Field 4",
+            "Id":"annunciatorInstance",
+            "Name":"Annunciator Instance",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -55501,8 +55501,8 @@
           },
           {
             "Order":5,
-            "Id":"field5",
-            "Name":"Field 5",
+            "Id":"annunciatorVolume",
+            "Name":"Annunciator Volume",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -55514,8 +55514,8 @@
           },
           {
             "Order":6,
-            "Id":"field6",
-            "Name":"Field 6",
+            "Id":"annunciatorTone",
+            "Name":"Annunciator Tone",
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
@@ -55527,8 +55527,8 @@
           },
           {
             "Order":7,
-            "Id":"field7",
-            "Name":"Field 7",
+            "Id":"alertSourceInstance",
+            "Name":"Alert Source Instance",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
@@ -55540,8 +55540,8 @@
           },
           {
             "Order":8,
-            "Id":"field8",
-            "Name":"Field 8",
+            "Id":"alertId",
+            "Name":"Alert Id",
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,

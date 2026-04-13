@@ -8140,6 +8140,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -8246,10 +8248,10 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-8388607</RangeMin>
-          <RangeMax>8388604</RangeMax>
+          <RangeMin>-838.8607</RangeMin>
+          <RangeMax>838.8604</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -8439,6 +8441,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -8545,10 +8549,10 @@ limitations under the License.
           <BitLength>24</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>16777212</RangeMax>
+          <RangeMax>16777.212</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -8683,6 +8687,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -8860,6 +8866,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -8942,10 +8950,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Resolution>0.000244141</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>15.9990234375</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -9037,6 +9045,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -9119,10 +9129,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Resolution>0.25</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32764</RangeMax>
+          <RangeMin>-8191.75</RangeMin>
+          <RangeMax>8191</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -9145,6 +9155,8 @@ limitations under the License.
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
@@ -9227,10 +9239,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Resolution>0.01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>655.32</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -55589,8 +55601,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>field4</Id>
-          <Name>Field 4</Name>
+          <Id>annunciatorInstance</Id>
+          <Name>Annunciator Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -55602,8 +55614,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>field5</Id>
-          <Name>Field 5</Name>
+          <Id>annunciatorVolume</Id>
+          <Name>Annunciator Volume</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -55615,8 +55627,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>field6</Id>
-          <Name>Field 6</Name>
+          <Id>annunciatorTone</Id>
+          <Name>Annunciator Tone</Name>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -55628,8 +55640,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>field7</Id>
-          <Name>Field 7</Name>
+          <Id>alertSourceInstance</Id>
+          <Name>Alert Source Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -55641,8 +55653,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>field8</Id>
-          <Name>Field 8</Name>
+          <Id>alertId</Id>
+          <Name>Alert Id</Name>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
