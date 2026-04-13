@@ -1708,6 +1708,13 @@ Pgn pgnList[] = {
      {COMPANY(175), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"BEP Marine: CZone Circuit Status",
+     65284,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Airmar: Boot State Acknowledgment",
      65285,
      PACKET_COMPLETE,
@@ -2397,6 +2404,20 @@ Pgn pgnList[] = {
      .interval    = 1000,
      .explanation = "Seen as sent by AC-42 only so far.",
      .priority    = 6}
+
+    ,
+    {"Navico: Naviop Switch Status",
+     65440,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Navico: Naviop Switch Control",
+     65441,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Simnet: Autopilot Mode", 65480, PACKET_INCOMPLETE, PACKET_SINGLE, {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
@@ -7229,6 +7250,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+    ,
+    {"BEP Marine: CZone Configuration",
+     130820,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(295), END_OF_FIELDS}}
+
     ,
     {"Simnet: Reprogram Status",
      130820,
