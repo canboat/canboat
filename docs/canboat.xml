@@ -48980,6 +48980,245 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130816</PGN>
+      <Id>seaRecoveryWatermakerStatus</Id>
+      <Description>Sea Recovery: Watermaker Status</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>17</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Sea Recovery</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>285</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>watermakerInstance</Id>
+          <Name>Watermaker Instance</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>operationState</Id>
+          <Name>Operation State</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>prefilterPressure</Id>
+          <Name>Prefilter Pressure</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>postfilterPressure</Id>
+          <Name>Postfilter Pressure</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>operationPressure</Id>
+          <Name>Operation Pressure</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>productFlow</Id>
+          <Name>Product Flow</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32764</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>prefilterPressureStatus</Id>
+          <Name>Prefilter Pressure Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>postfilterPressureStatus</Id>
+          <Name>Postfilter Pressure Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>98</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>operationPressureStatus</Id>
+          <Name>Operation Pressure Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>100</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>productSalinityStatus</Id>
+          <Name>Product Salinity Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>102</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>filterStatus</Id>
+          <Name>Filter Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>systemStatus</Id>
+          <Name>System Status</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>106</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>reserved17</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>108</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130817</PGN>
       <Id>navicoUnknown</Id>
       <Description>Navico: Unknown</Description>
@@ -50107,6 +50346,144 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130818</PGN>
+      <Id>webastoStatus2</Id>
+      <Description>Webasto: Status 2</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>9</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Webasto</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>540</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>canAddress</Id>
+          <Name>CAN Address</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>deviceId</Id>
+          <Name>Device ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>systemError</Id>
+          <Name>System Error</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>systemStatus</Id>
+          <Name>System Status</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>freshAirBlowerSpeed</Id>
+          <Name>Fresh Air Blower Speed</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>vSeriesOutput</Id>
+          <Name>V-Series Output</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
