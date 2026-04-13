@@ -1321,7 +1321,7 @@ Pgn pgnList[] = {
     ,
     {"Utility Total AC Energy",
      65005,
-     PACKET_RESOLUTION_UNKNOWN,
+     PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {ENERGY_UINT32_FIELD("Total Energy Export"), ENERGY_UINT32_FIELD("Total Energy Import"), END_OF_FIELDS},
      .priority = 3}
@@ -1457,7 +1457,7 @@ Pgn pgnList[] = {
     ,
     {"Generator Total AC Energy",
      65018,
-     PACKET_RESOLUTION_UNKNOWN,
+     PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {ENERGY_UINT32_FIELD("Total Energy Export"), ENERGY_UINT32_FIELD("Total Energy Import"), END_OF_FIELDS},
      .priority = 3}
@@ -3255,7 +3255,7 @@ Pgn pgnList[] = {
     ,
     {"Alert Threshold",
      126987,
-     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_INCOMPLETE | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
       LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
@@ -3279,7 +3279,7 @@ Pgn pgnList[] = {
     ,
     {"Alert Value",
      126988,
-     PACKET_RESOLUTION_UNKNOWN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_INCOMPLETE | PACKET_INTERVAL_UNKNOWN,
      PACKET_FAST,
      {LOOKUP_FIELD("Alert Type", 4, ALERT_TYPE),
       LOOKUP_FIELD("Alert Category", 4, ALERT_CATEGORY),
@@ -8077,7 +8077,7 @@ Pgn pgnList[] = {
     ,
     {"Maretron: Vessel Data Recorder Status",
      130833,
-     PACKET_RESOLUTION_UNKNOWN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(137),
       UINT8_FIELD("VDR Recording Status"),
@@ -8240,7 +8240,11 @@ Pgn pgnList[] = {
      130840,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(137),
+      UINT8_FIELD(PK("Data Instance")),
+      UINT16_FIELD("Data Format"),
+      BINARY_FIELD("Value", BYTES(4), ""),
+      END_OF_FIELDS}}
 
     ,
     {"Simnet: Data User Group Configuration",

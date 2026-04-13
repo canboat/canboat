@@ -5772,7 +5772,7 @@
         "Priority":3,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":2,
         "Length":8,
@@ -6566,7 +6566,7 @@
         "Priority":3,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":2,
         "Length":8,
@@ -10314,6 +10314,87 @@
             "Name":"Data",
             "BitLength":48,
             "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65300,
+        "Id":"carlingSwitchboardStatus",
+        "Description":"Carling: Switchboard Status",
+        "Explanation":"Multi-purpose Carling digital switching PGN with 16+ message types: box status, breaker status, configuration, power information, AC GenII status, uptime reports, and solenoid profiles. The Message Type field selects the variant.",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":5,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":176,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageType",
+            "Name":"Message Type",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"data",
+            "Name":"Data",
+            "Description":"Payload varies by Message Type.",
+            "BitLength":40,
+            "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -19794,7 +19875,7 @@
         "Description":"Alert Threshold",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":14,
         "MinLength":17,
@@ -19995,7 +20076,7 @@
         "Description":"Alert Value",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":13,
         "MinLength":17,
@@ -55372,7 +55453,7 @@
         "Priority":7,
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
         "Length":19,
@@ -56676,8 +56757,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":4,
-        "Length":223,
+        "FieldCount":6,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -56723,10 +56804,37 @@
           },
           {
             "Order":4,
-            "Id":"data",
-            "Name":"Data",
-            "BitLength":1768,
+            "Id":"dataInstance",
+            "Name":"Data Instance",
+            "BitLength":8,
             "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"dataFormat",
+            "Name":"Data Format",
+            "BitLength":16,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"value",
+            "Name":"Value",
+            "BitLength":32,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -56851,6 +56959,239 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130842,
+        "Id":"maretronWindlassOperatingStatus",
+        "Description":"Maretron: Windlass Operating Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":16,
+        "Length":7,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"windlassOperatingEvents",
+            "Name":"Windlass Operating Events",
+            "BitLength":6,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":61,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"windlassInstance",
+            "Name":"Windlass Instance",
+            "BitLength":4,
+            "BitOffset":22,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"windlassDirectionControl",
+            "Name":"Windlass Direction Control",
+            "BitLength":4,
+            "BitOffset":26,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"speedControl",
+            "Name":"Speed Control",
+            "BitLength":8,
+            "BitOffset":30,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"powerEnable",
+            "Name":"Power Enable",
+            "BitLength":2,
+            "BitOffset":38,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":9,
+            "Id":"mechanicalEnable",
+            "Name":"Mechanical Enable",
+            "BitLength":2,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":10,
+            "Id":"anchorDockingControl",
+            "Name":"Anchor Docking Control",
+            "BitLength":2,
+            "BitOffset":42,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":11,
+            "Id":"deckAndAnchorWash",
+            "Name":"Deck and Anchor Wash",
+            "BitLength":2,
+            "BitOffset":44,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":12,
+            "Id":"anchorLight",
+            "Name":"Anchor Light",
+            "BitLength":2,
+            "BitOffset":46,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":13,
+            "Id":"auxiliaryAControl",
+            "Name":"Auxiliary A Control",
+            "BitLength":2,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":14,
+            "Id":"auxiliaryBControl",
+            "Name":"Auxiliary B Control",
+            "BitLength":2,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":15,
+            "Id":"auxiliaryCControl",
+            "Name":"Auxiliary C Control",
+            "BitLength":2,
+            "BitOffset":52,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":16,
+            "Id":"auxiliaryDControl",
+            "Name":"Auxiliary D Control",
+            "BitLength":2,
+            "BitOffset":54,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           }
         ]
       },
@@ -57413,8 +57754,8 @@
       },
       {
         "PGN":130843,
-        "Id":"maretronWindlassOperatingStatus",
-        "Description":"Maretron: Windlass Operating Status",
+        "Id":"maretronWindlassControlCommand",
+        "Description":"Maretron: Windlass Control Command",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -57659,8 +58000,8 @@
       },
       {
         "PGN":130844,
-        "Id":"maretronWindlassControlCommand",
-        "Description":"Maretron: Windlass Control Command",
+        "Id":"carlingProprietary",
+        "Description":"Carling: Proprietary",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -57672,11 +58013,11 @@
             "Order":1,
             "Id":"manufacturerCode",
             "Name":"Manufacturer Code",
-            "Description":"Maretron",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Match":137,
+            "Match":176,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -61262,6 +61603,87 @@
             "RangeMax":6.2831852,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ANGLE"
+          }
+        ]
+      },
+      {
+        "PGN":130921,
+        "Id":"carlingBreakerStatusAndConfiguration",
+        "Description":"Carling: Breaker Status and Configuration",
+        "Explanation":"Multi-purpose Carling digital switching fast-packet PGN with 8+ message types: breaker status with electrical values, breaker configuration, discrete I/O configuration, solenoid drive sequence, system alarm and alert messages. The Message Type field selects the variant.",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":5,
+        "Length":222,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":176,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageType",
+            "Name":"Message Type",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"data",
+            "Name":"Data",
+            "Description":"Payload varies by Message Type.",
+            "BitLength":1752,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
