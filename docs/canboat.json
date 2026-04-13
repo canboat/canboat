@@ -3542,15 +3542,34 @@
         "MaxValue":65535,
         "EnumValues":[
           {"Name":"SSC200", "Value":434},
+          {"Name":"SMS100", "Value":1047},
+          {"Name":"MBB200C", "Value":1151},
+          {"Name":"DST110", "Value":1534},
+          {"Name":"GPS100", "Value":1776},
+          {"Name":"CLM100", "Value":2606},
           {"Name":"SSC300", "Value":2686},
           {"Name":"TLA100", "Value":2781},
+          {"Name":"GPS200", "Value":3373},
+          {"Name":"DST100", "Value":3563},
+          {"Name":"FFM100", "Value":3637},
           {"Name":"NBE100", "Value":3979},
+          {"Name":"RAA100", "Value":4018},
           {"Name":"RIM100", "Value":4078},
+          {"Name":"J2K100", "Value":4319},
           {"Name":"ALM100", "Value":8165},
+          {"Name":"IPG100", "Value":9339},
+          {"Name":"DCM100", "Value":9375},
+          {"Name":"EMS100", "Value":9845},
+          {"Name":"CLMD16", "Value":12337},
+          {"Name":"DSM250", "Value":16434},
           {"Name":"TMP100", "Value":20067},
+          {"Name":"DSM150", "Value":20298},
+          {"Name":"FPM100", "Value":21703},
           {"Name":"DCR100", "Value":22585},
           {"Name":"SIM100", "Value":23603},
-          {"Name":"ACM100", "Value":26493}
+          {"Name":"ACM100", "Value":26493},
+          {"Name":"MBB300C", "Value":27244},
+          {"Name":"MConnect", "Value":28077}
         ]
       },
       {
@@ -5772,7 +5791,7 @@
         "Priority":3,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":2,
         "Length":8,
@@ -6566,7 +6585,7 @@
         "Priority":3,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":2,
         "Length":8,
@@ -7659,6 +7678,136 @@
       },
       {
         "PGN":65280,
+        "Id":"hondaEngineData",
+        "Description":"Honda: Engine Data",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Honda Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":175,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65280,
+        "Id":"yanmarEngineDataA",
+        "Description":"Yanmar: Engine Data A",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65280,
         "Id":"maretronKeelPosition",
         "Description":"Maretron: Keel Position",
         "Type":"Single",
@@ -7677,6 +7826,136 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65280,
+        "Id":"mercuryEngineData",
+        "Description":"Mercury: Engine Data",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mercury Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":144,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65281,
+        "Id":"yanmarEngineDataB",
+        "Description":"Yanmar: Engine Data B",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -8034,9 +8313,9 @@
             "BitStart":0,
             "Unit":"A",
             "Resolution":0.1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6553.2,
+            "Signed":true,
+            "RangeMin":-3276.7,
+            "RangeMax":3276.4,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"ELECTRICAL_CURRENT"
           },
@@ -8049,6 +8328,71 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65284,
+        "Id":"hondaEngineAlerts",
+        "Description":"Honda: Engine Alerts",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Honda Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":175,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -8565,7 +8909,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":8,
@@ -8670,10 +9014,10 @@
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.0001,
             "Signed":true,
-            "RangeMin":-8388607,
-            "RangeMax":8388604,
+            "RangeMin":-838.8607,
+            "RangeMax":838.8604,
             "FieldType":"NUMBER"
           }
         ]
@@ -8857,7 +9201,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":8,
@@ -8962,10 +9306,10 @@
             "BitLength":24,
             "BitOffset":40,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.001,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":16777212,
+            "RangeMax":16777.212,
             "FieldType":"NUMBER"
           }
         ]
@@ -9095,7 +9439,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9266,7 +9610,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9347,10 +9691,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.000244141,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":15.9990234375,
             "FieldType":"NUMBER"
           },
           {
@@ -9437,7 +9781,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9518,10 +9862,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.25,
             "Signed":true,
-            "RangeMin":-32767,
-            "RangeMax":32764,
+            "RangeMin":-8191.75,
+            "RangeMax":8191,
             "FieldType":"NUMBER"
           },
           {
@@ -9543,7 +9887,7 @@
         "Priority":5,
         "Type":"Single",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -9624,10 +9968,10 @@
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
-            "Resolution":1,
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":655.32,
             "FieldType":"NUMBER"
           },
           {
@@ -10191,6 +10535,136 @@
         ]
       },
       {
+        "PGN":65298,
+        "Id":"suzukiEngineDataA",
+        "Description":"Suzuki: Engine Data A",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65299,
+        "Id":"suzukiEngineDataB",
+        "Description":"Suzuki: Engine Data B",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65299,
         "Id":"bepMarineProprietaryPgn65299",
         "Description":"BEP Marine: Proprietary PGN 65299",
@@ -10210,6 +10684,71 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65300,
+        "Id":"suzukiEngineDataC",
+        "Description":"Suzuki: Engine Data C",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -10314,6 +10853,87 @@
             "Name":"Data",
             "BitLength":48,
             "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65300,
+        "Id":"carlingSwitchboardStatus",
+        "Description":"Carling: Switchboard Status",
+        "Explanation":"Multi-purpose Carling digital switching PGN with 16+ message types: box status, breaker status, configuration, power information, AC GenII status, uptime reports, and solenoid profiles. The Message Type field selects the variant.",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":5,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":176,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageType",
+            "Name":"Message Type",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"data",
+            "Name":"Data",
+            "Description":"Payload varies by Message Type.",
+            "BitLength":40,
+            "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -10502,6 +11122,136 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65303,
+        "Id":"suzukiEngineDataD",
+        "Description":"Suzuki: Engine Data D",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65304,
+        "Id":"suzukiEngineDataE",
+        "Description":"Suzuki: Engine Data E",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -11539,6 +12289,71 @@
         ]
       },
       {
+        "PGN":65313,
+        "Id":"navicoProprietary",
+        "Description":"Navico: Proprietary",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Navico",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65314,
         "Id":"bepMarineProprietaryPgn65314",
         "Description":"BEP Marine: Proprietary PGN 65314",
@@ -11558,6 +12373,71 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65315,
+        "Id":"suzukiTrollModeControl",
+        "Description":"Suzuki: Troll Mode Control",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -11669,6 +12549,71 @@
         ]
       },
       {
+        "PGN":65317,
+        "Id":"navicoProprietary2",
+        "Description":"Navico: Proprietary 2",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Navico",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65325,
         "Id":"bepMarineProprietaryPgn65325",
         "Description":"BEP Marine: Proprietary PGN 65325",
@@ -11688,6 +12633,201 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65329,
+        "Id":"yamahaEngineDataA",
+        "Description":"Yamaha: Engine Data A",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65330,
+        "Id":"bGProprietary",
+        "Description":"B&G: Proprietary",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"B & G",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":381,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65332,
+        "Id":"yanmarEngineDataC",
+        "Description":"Yanmar: Engine Data C",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -11972,6 +13112,71 @@
         ]
       },
       {
+        "PGN":65344,
+        "Id":"yamahaEngineDataB",
+        "Description":"Yamaha: Engine Data B",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65345,
         "Id":"seatalkPilotWindDatum",
         "Description":"Seatalk: Pilot Wind Datum",
@@ -12063,6 +13268,201 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":65346,
+        "Id":"yanmarEngineDataD",
+        "Description":"Yanmar: Engine Data D",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65348,
+        "Id":"yanmarEngineDataE",
+        "Description":"Yanmar: Engine Data E",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65349,
+        "Id":"yanmarEngineDataF",
+        "Description":"Yanmar: Engine Data F",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Yanmar Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":172,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -12813,6 +14213,140 @@
         ]
       },
       {
+        "PGN":65403,
+        "Id":"lumishoreLightStatus",
+        "Description":"Lumishore: Light Status",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":9,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Lumishore",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":798,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"zoneIndex",
+            "Name":"Zone Index",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"red",
+            "Name":"Red",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"green",
+            "Name":"Green",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"blue",
+            "Name":"Blue",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"coldWhite",
+            "Name":"Cold White",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"warmWhite",
+            "Name":"Warm White",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
         "PGN":65408,
         "Id":"airmarDepthQualityFactor",
         "Description":"Airmar: Depth Quality Factor",
@@ -13259,6 +14793,71 @@
         ]
       },
       {
+        "PGN":65424,
+        "Id":"yamahaEngineDataC",
+        "Description":"Yamaha: Engine Data C",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":65440,
         "Id":"navicoNaviopSwitchStatus",
         "Description":"Navico: Naviop Switch Status",
@@ -13343,6 +14942,71 @@
             "BitOffset":0,
             "BitStart":0,
             "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":48,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":65472,
+        "Id":"yamahaEngineDataD",
+        "Description":"Yamaha: Engine Data D",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":4,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -18440,6 +20104,71 @@
       },
       {
         "PGN":126720,
+        "Id":"lumishoreProprietary",
+        "Description":"Lumishore: Proprietary",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":225,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Lumishore",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":798,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1784,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
         "Id":"garminDayMode",
         "Description":"Garmin: Day Mode",
         "Type":"Fast",
@@ -19794,7 +21523,7 @@
         "Description":"Alert Threshold",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":14,
         "MinLength":17,
@@ -19995,7 +21724,7 @@
         "Description":"Alert Value",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":13,
         "MinLength":17,
@@ -21786,7 +23515,7 @@
         "Explanation":"This PGN is used to report status of Electric Drive Status control and can be used with Command Group Function (PGN Electric propulsion motor status) to command equipment. ",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":12,
@@ -21910,7 +23639,7 @@
         "Explanation":"This PGN is used to provide electric propulsion motor status and relevant data.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
         "Length":15,
@@ -22174,7 +23903,7 @@
         "Explanation":"This PGN is used to provide information about electric motor specifications and ratings.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":13,
         "Length":28,
@@ -22373,7 +24102,7 @@
         "Explanation":"This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and has not been observed yet; field lengths and precisions are guesses.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":16,
         "Length":21,
@@ -24661,9 +26390,7 @@
         "Description":"Charger Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":11,
         "Length":8,
         "TransmissionIrregular":true,
@@ -24828,9 +26555,7 @@
         "Description":"Inverter Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":8,
         "Length":8,
         "TransmissionIrregular":true,
@@ -25024,9 +26749,7 @@
         "Description":"Battery Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":10,
         "Length":8,
         "TransmissionIrregular":true,
@@ -26056,7 +27779,7 @@
         "Explanation":"This PGN is used to provide the Electric Propulsion Drive System Status.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -26164,7 +27887,7 @@
         "Explanation":"Electric Energy Storage Status message provides important energy storage information global at a rapid update rate.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -28141,7 +29864,7 @@
         "Explanation":"Actuator is a broad description of any device that embodies moving an object between two fixed limits, such as raising or lowering an outboard engine assembly. In the context of this PGN, the word \"Device\" refers to the object being moved. In the case of multiple Actuators per controller, the Actuator Identifier field specifies which Actuator the PGN message is intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated systems and retrofit systems where it is impractical for the installer to enter the Maximum Travel distance of the device.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
         "Length":8,
@@ -30906,9 +32629,7 @@
         "Description":"Set & Drift, Rapid Update",
         "Priority":3,
         "Type":"Single",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":6,
         "Length":8,
         "TransmissionInterval":1000,
@@ -30998,9 +32719,7 @@
         "Description":"Navigation - Route / Time to+from Mark",
         "Priority":3,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":5,
         "Length":10,
         "TransmissionInterval":1000,
@@ -31228,9 +32947,7 @@
         "Description":"GNSS Control Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":11,
         "Length":16,
         "TransmissionIrregular":true,
@@ -33230,9 +34947,7 @@
         "Priority":7,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":14,
         "Length":24,
         "TransmissionIrregular":true,
@@ -37433,7 +39148,7 @@
         "Description":"Label",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "MinLength":9,
@@ -41043,7 +42758,7 @@
         "Explanation":"This PGN provides a lighting controller settings and number of supported capabilities.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":12,
         "MinLength":12,
@@ -41276,7 +42991,7 @@
         "Explanation":"This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled by a Scene. This PGN is only sent upon request.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":14,
         "MinLength":13,
@@ -41443,7 +43158,7 @@
         "Explanation":"A Lighting Scene is a sequence of zone program configurations.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":12,
         "MinLength":3,
@@ -41592,7 +43307,7 @@
         "Explanation":"This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual device connected to a lighting controller or physical device on the network.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":18,
         "MinLength":20,
@@ -41808,7 +43523,7 @@
         "Explanation":"This PGN allows for enumeration of the lighting devices on the controller.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":5,
         "MinLength":6,
@@ -41890,7 +43605,7 @@
         "Explanation":"Sequences could be 1 to (PGN Lighting - System Configuration) Max Color Sequence Color Count colors.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "MinLength":2,
@@ -42011,7 +43726,7 @@
         "Explanation":"This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor program.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":5,
         "MinLength":2,
@@ -43419,9 +45134,7 @@
         "Description":"Small Craft Status",
         "Priority":2,
         "Type":"Single",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":3,
         "Length":8,
         "TransmissionInterval":200,
@@ -43472,9 +45185,7 @@
         "Description":"Direction Data",
         "Priority":3,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":10,
         "Length":14,
         "TransmissionInterval":1000,
@@ -47152,6 +48863,360 @@
         ]
       },
       {
+        "PGN":130816,
+        "Id":"bepMarineProprietaryPgn130816",
+        "Description":"BEP Marine: Proprietary PGN 130816",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130816,
+        "Id":"hondaEngineStatus",
+        "Description":"Honda: Engine Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Honda Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":175,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130816,
+        "Id":"seaRecoveryWatermakerStatus",
+        "Description":"Sea Recovery: Watermaker Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":17,
+        "Length":14,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Sea Recovery",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":285,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"watermakerInstance",
+            "Name":"Watermaker Instance",
+            "BitLength":4,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"operationState",
+            "Name":"Operation State",
+            "BitLength":4,
+            "BitOffset":28,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"prefilterPressure",
+            "Name":"Prefilter Pressure",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"postfilterPressure",
+            "Name":"Postfilter Pressure",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"operationPressure",
+            "Name":"Operation Pressure",
+            "BitLength":16,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"productFlow",
+            "Name":"Product Flow",
+            "BitLength":16,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-32767,
+            "RangeMax":32764,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"prefilterPressureStatus",
+            "Name":"Prefilter Pressure Status",
+            "BitLength":2,
+            "BitOffset":96,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":12,
+            "Id":"postfilterPressureStatus",
+            "Name":"Postfilter Pressure Status",
+            "BitLength":2,
+            "BitOffset":98,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"operationPressureStatus",
+            "Name":"Operation Pressure Status",
+            "BitLength":2,
+            "BitOffset":100,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":14,
+            "Id":"productSalinityStatus",
+            "Name":"Product Salinity Status",
+            "BitLength":2,
+            "BitOffset":102,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":15,
+            "Id":"filterStatus",
+            "Name":"Filter Status",
+            "BitLength":2,
+            "BitOffset":104,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":16,
+            "Id":"systemStatus",
+            "Name":"System Status",
+            "BitLength":2,
+            "BitOffset":106,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":17,
+            "Id":"reserved17",
+            "Name":"Reserved",
+            "BitLength":4,
+            "BitOffset":108,
+            "BitStart":4,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
         "PGN":130817,
         "Id":"navicoUnknown",
         "Description":"Navico: Unknown",
@@ -47686,6 +49751,71 @@
         ]
       },
       {
+        "PGN":130817,
+        "Id":"bepMarineProprietaryPgn130817",
+        "Description":"BEP Marine: Proprietary PGN 130817",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130818,
         "Id":"simnetReprogramData",
         "Description":"Simnet: Reprogram Data",
@@ -48121,6 +50251,204 @@
         ]
       },
       {
+        "PGN":130818,
+        "Id":"bepMarineProprietaryPgn130818",
+        "Description":"BEP Marine: Proprietary PGN 130818",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130818,
+        "Id":"webastoStatus2",
+        "Description":"Webasto: Status 2",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":9,
+        "Length":14,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Webasto",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":540,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"canAddress",
+            "Name":"CAN Address",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"deviceId",
+            "Name":"Device ID",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"systemError",
+            "Name":"System Error",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"systemStatus",
+            "Name":"System Status",
+            "BitLength":32,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"freshAirBlowerSpeed",
+            "Name":"Fresh Air Blower Speed",
+            "BitLength":8,
+            "BitOffset":96,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"vSeriesOutput",
+            "Name":"V-Series Output",
+            "BitLength":8,
+            "BitOffset":104,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
         "PGN":130819,
         "Id":"simnetRequestReprogram",
         "Description":"Simnet: Request Reprogram",
@@ -48542,6 +50870,71 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130819,
+        "Id":"bepMarineProprietaryPgn130819",
+        "Description":"BEP Marine: Proprietary PGN 130819",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -53169,6 +55562,71 @@
         ]
       },
       {
+        "PGN":130820,
+        "Id":"bepMarineProprietaryPgn130820",
+        "Description":"BEP Marine: Proprietary PGN 130820",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130821,
         "Id":"navicoAsciiData",
         "Description":"Navico: ASCII Data",
@@ -53638,6 +56096,71 @@
         ]
       },
       {
+        "PGN":130821,
+        "Id":"bepMarineProprietaryPgn130821",
+        "Description":"BEP Marine: Proprietary PGN 130821",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130822,
         "Id":"navicoUnknown1",
         "Description":"Navico: Unknown 1",
@@ -53883,6 +56406,71 @@
             "Description":"Maretron-specific payload following the standard Alert identity header.",
             "BitLength":128,
             "BitOffset":144,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130822,
+        "Id":"bepMarineProprietaryPgn130822",
+        "Description":"BEP Marine: Proprietary PGN 130822",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -54425,6 +57013,71 @@
         ]
       },
       {
+        "PGN":130825,
+        "Id":"bepMarineProprietaryPgn130825",
+        "Description":"BEP Marine: Proprietary PGN 130825",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
         "PGN":130826,
         "Id":"maretronSwitchIndicatorStatus",
         "Description":"Maretron: Switch Indicator Status",
@@ -54521,6 +57174,71 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130826,
+        "Id":"bepMarineProprietaryPgn130826",
+        "Description":"BEP Marine: Proprietary PGN 130826",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"BEP Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":295,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
           }
         ]
       },
@@ -54886,13 +57604,68 @@
         ]
       },
       {
+        "PGN":130829,
+        "Id":"mercuryEngineStatus",
+        "Description":"Mercury: Engine Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mercury Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":144,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
         "PGN":130830,
         "Id":"maretronDometicHvacStatus",
         "Description":"Maretron: Dometic HVAC Status",
         "Priority":5,
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
         "Length":12,
@@ -55029,6 +57802,61 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130830,
+        "Id":"suzukiEngineData",
+        "Description":"Suzuki: Engine Data",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -55372,7 +58200,7 @@
         "Priority":7,
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Resolution","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
         "Length":19,
@@ -56259,6 +59087,61 @@
       },
       {
         "PGN":130837,
+        "Id":"suzukiEngineSensorData",
+        "Description":"Suzuki: Engine Sensor Data",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130837,
         "Id":"simnetFuelFlowTurbineConfiguration",
         "Description":"Simnet: Fuel Flow Turbine Configuration",
         "Type":"Fast",
@@ -56560,6 +59443,61 @@
       },
       {
         "PGN":130838,
+        "Id":"suzukiFuelManagement",
+        "Description":"Suzuki: Fuel Management",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Suzuki Motor Corporation",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":586,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130838,
         "Id":"simnetFluidLevelWarning",
         "Description":"Simnet: Fluid Level Warning",
         "Type":"Fast",
@@ -56676,8 +59614,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":4,
-        "Length":223,
+        "FieldCount":6,
+        "Length":9,
         "Fields":[
           {
             "Order":1,
@@ -56723,10 +59661,37 @@
           },
           {
             "Order":4,
-            "Id":"data",
-            "Name":"Data",
-            "BitLength":1768,
+            "Id":"dataInstance",
+            "Name":"Data Instance",
+            "BitLength":8,
             "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"dataFormat",
+            "Name":"Data Format",
+            "BitLength":16,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"value",
+            "Name":"Value",
+            "BitLength":32,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
@@ -56851,6 +59816,239 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130842,
+        "Id":"maretronWindlassOperatingStatus",
+        "Description":"Maretron: Windlass Operating Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":16,
+        "Length":7,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Maretron",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":137,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"windlassOperatingEvents",
+            "Name":"Windlass Operating Events",
+            "BitLength":6,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":61,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":5,
+            "Id":"windlassInstance",
+            "Name":"Windlass Instance",
+            "BitLength":4,
+            "BitOffset":22,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"windlassDirectionControl",
+            "Name":"Windlass Direction Control",
+            "BitLength":4,
+            "BitOffset":26,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"speedControl",
+            "Name":"Speed Control",
+            "BitLength":8,
+            "BitOffset":30,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"powerEnable",
+            "Name":"Power Enable",
+            "BitLength":2,
+            "BitOffset":38,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":9,
+            "Id":"mechanicalEnable",
+            "Name":"Mechanical Enable",
+            "BitLength":2,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":10,
+            "Id":"anchorDockingControl",
+            "Name":"Anchor Docking Control",
+            "BitLength":2,
+            "BitOffset":42,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":11,
+            "Id":"deckAndAnchorWash",
+            "Name":"Deck and Anchor Wash",
+            "BitLength":2,
+            "BitOffset":44,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":12,
+            "Id":"anchorLight",
+            "Name":"Anchor Light",
+            "BitLength":2,
+            "BitOffset":46,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":13,
+            "Id":"auxiliaryAControl",
+            "Name":"Auxiliary A Control",
+            "BitLength":2,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":14,
+            "Id":"auxiliaryBControl",
+            "Name":"Auxiliary B Control",
+            "BitLength":2,
+            "BitOffset":50,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":15,
+            "Id":"auxiliaryCControl",
+            "Name":"Auxiliary C Control",
+            "BitLength":2,
+            "BitOffset":52,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
+          },
+          {
+            "Order":16,
+            "Id":"auxiliaryDControl",
+            "Name":"Auxiliary D Control",
+            "BitLength":2,
+            "BitOffset":54,
+            "BitStart":6,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"OFF_ON"
           }
         ]
       },
@@ -57413,8 +60611,8 @@
       },
       {
         "PGN":130843,
-        "Id":"maretronWindlassOperatingStatus",
-        "Description":"Maretron: Windlass Operating Status",
+        "Id":"maretronWindlassControlCommand",
+        "Description":"Maretron: Windlass Control Command",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -57659,8 +60857,8 @@
       },
       {
         "PGN":130844,
-        "Id":"maretronWindlassControlCommand",
-        "Description":"Maretron: Windlass Control Command",
+        "Id":"carlingProprietary",
+        "Description":"Carling: Proprietary",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -57672,11 +60870,11 @@
             "Order":1,
             "Id":"manufacturerCode",
             "Name":"Manufacturer Code",
-            "Description":"Maretron",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
             "BitLength":11,
             "BitOffset":0,
             "BitStart":0,
-            "Match":137,
+            "Match":176,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -58532,6 +61730,61 @@
             "RangeMax":42949672.92,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"LENGTH"
+          }
+        ]
+      },
+      {
+        "PGN":130849,
+        "Id":"navicoProprietaryFp",
+        "Description":"Navico: Proprietary FP",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Navico",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       },
@@ -60638,6 +63891,61 @@
         ]
       },
       {
+        "PGN":130852,
+        "Id":"navicoProprietary2Fp",
+        "Description":"Navico: Proprietary 2 FP",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Navico",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":275,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
         "PGN":130856,
         "Id":"simnetAlarmMessage",
         "Description":"Simnet: Alarm Message",
@@ -60879,6 +64187,61 @@
         ]
       },
       {
+        "PGN":130861,
+        "Id":"simradEngineData",
+        "Description":"Simrad: Engine Data",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Simrad",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":1857,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
         "PGN":130880,
         "Id":"airmarAdditionalWeatherData",
         "Description":"Airmar: Additional Weather Data",
@@ -61107,6 +64470,1035 @@
         ]
       },
       {
+        "PGN":130900,
+        "Id":"xantrexAcStatus",
+        "Description":"Xantrex: AC Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":15,
+        "Length":20,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Xantrex Technology Inc.",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":168,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"acInstance",
+            "Name":"AC Instance",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"numberOfLines",
+            "Name":"Number of Lines",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"line",
+            "Name":"Line",
+            "BitLength":2,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"acceptability",
+            "Name":"Acceptability",
+            "BitLength":2,
+            "BitOffset":34,
+            "BitStart":2,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"waveform",
+            "Name":"Waveform",
+            "BitLength":3,
+            "BitOffset":36,
+            "BitStart":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"reserved9",
+            "Name":"Reserved",
+            "BitLength":1,
+            "BitOffset":39,
+            "BitStart":7,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":10,
+            "Id":"voltage",
+            "Name":"Voltage",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":11,
+            "Id":"current",
+            "Name":"Current",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Unit":"A",
+            "Resolution":0.1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6553.2,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ELECTRICAL_CURRENT"
+          },
+          {
+            "Order":12,
+            "Id":"frequency",
+            "Name":"Frequency",
+            "BitLength":16,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"realPower",
+            "Name":"Real Power",
+            "Description":"W",
+            "BitLength":32,
+            "BitOffset":88,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-2147483647,
+            "RangeMax":2147483644,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":14,
+            "Id":"reactivePower",
+            "Name":"Reactive Power",
+            "Description":"VAR",
+            "BitLength":32,
+            "BitOffset":120,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-2147483647,
+            "RangeMax":2147483644,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":15,
+            "Id":"powerFactor",
+            "Name":"Power Factor",
+            "BitLength":8,
+            "BitOffset":152,
+            "BitStart":0,
+            "Unit":"%",
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":124,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130910,
+        "Id":"xantrexDcSourceConfigurationStatus",
+        "Description":"Xantrex: DC Source Configuration Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":12,
+        "Length":19,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Xantrex Technology Inc.",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":168,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"dcSourceInstance",
+            "Name":"DC Source Instance",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"dcUvShutdownLevel",
+            "Name":"DC UV Shutdown Level",
+            "BitLength":16,
+            "BitOffset":24,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":6,
+            "Id":"dcUvWarningLevel",
+            "Name":"DC UV Warning Level",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":7,
+            "Id":"dcUvShutdownDelay",
+            "Name":"DC UV Shutdown Delay",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":8,
+            "Id":"dcUvRecoverLevel",
+            "Name":"DC UV Recover Level",
+            "BitLength":16,
+            "BitOffset":72,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":9,
+            "Id":"dcOvShutdownLevel",
+            "Name":"DC OV Shutdown Level",
+            "BitLength":16,
+            "BitOffset":88,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":10,
+            "Id":"dcOvWarningLevel",
+            "Name":"DC OV Warning Level",
+            "BitLength":16,
+            "BitOffset":104,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":11,
+            "Id":"dcOvShutdownDelay",
+            "Name":"DC OV Shutdown Delay",
+            "BitLength":16,
+            "BitOffset":120,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":12,
+            "Id":"dcOvRecoverLevel",
+            "Name":"DC OV Recover Level",
+            "BitLength":16,
+            "BitOffset":136,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          }
+        ]
+      },
+      {
+        "PGN":130911,
+        "Id":"xantrexAcOutputConfigurationStatus",
+        "Description":"Xantrex: AC Output Configuration Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":12,
+        "Length":17,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Xantrex Technology Inc.",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":168,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"acSourceInstance",
+            "Name":"AC Source Instance",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"numberOfLines",
+            "Name":"Number of Lines",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"line",
+            "Name":"Line",
+            "BitLength":2,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":34,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":8,
+            "Id":"voltage",
+            "Name":"Voltage",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":9,
+            "Id":"frequency",
+            "Name":"Frequency",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"powerLimit",
+            "Name":"Power Limit",
+            "BitLength":32,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"ovFaultLevel",
+            "Name":"OV Fault Level",
+            "BitLength":16,
+            "BitOffset":104,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":12,
+            "Id":"uvFaultLevel",
+            "Name":"UV Fault Level",
+            "BitLength":16,
+            "BitOffset":120,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          }
+        ]
+      },
+      {
+        "PGN":130912,
+        "Id":"xantrexChargerConfigurationStatus",
+        "Description":"Xantrex: Charger Configuration Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":14,
+        "Length":24,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Xantrex Technology Inc.",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":168,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"chargeInstance",
+            "Name":"Charge Instance",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"batteryInstance",
+            "Name":"Battery Instance",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"bulkVoltage",
+            "Name":"Bulk Voltage",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":7,
+            "Id":"bulkTime",
+            "Name":"Bulk Time",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"absorptionVoltage",
+            "Name":"Absorption Voltage",
+            "BitLength":16,
+            "BitOffset":64,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":9,
+            "Id":"absorptionTime",
+            "Name":"Absorption Time",
+            "BitLength":16,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"floatVoltage",
+            "Name":"Float Voltage",
+            "BitLength":16,
+            "BitOffset":96,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":11,
+            "Id":"floatTime",
+            "Name":"Float Time",
+            "BitLength":16,
+            "BitOffset":112,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":12,
+            "Id":"equalizationVoltage",
+            "Name":"Equalization Voltage",
+            "BitLength":16,
+            "BitOffset":128,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":13,
+            "Id":"genericChargeVoltage",
+            "Name":"Generic Charge Voltage",
+            "BitLength":16,
+            "BitOffset":144,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":14,
+            "Id":"genericChargeCurrent",
+            "Name":"Generic Charge Current",
+            "BitLength":32,
+            "BitOffset":160,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130913,
+        "Id":"xantrexAcInputConfigurationStatus",
+        "Description":"Xantrex: AC Input Configuration Status",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":17,
+        "Length":27,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Xantrex Technology Inc.",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":168,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"acSourceInstance",
+            "Name":"AC Source Instance",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"numberOfLines",
+            "Name":"Number of Lines",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"line",
+            "Name":"Line",
+            "BitLength":2,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":34,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":8,
+            "Id":"breakerSize",
+            "Name":"Breaker Size",
+            "BitLength":16,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"acLostLevel",
+            "Name":"AC Lost Level",
+            "BitLength":16,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"acUvLevel",
+            "Name":"AC UV Level",
+            "BitLength":16,
+            "BitOffset":72,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":11,
+            "Id":"acUvWarningLevel",
+            "Name":"AC UV Warning Level",
+            "BitLength":16,
+            "BitOffset":88,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":12,
+            "Id":"acUvDelay",
+            "Name":"AC UV Delay",
+            "BitLength":16,
+            "BitOffset":104,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":13,
+            "Id":"acOvLevel",
+            "Name":"AC OV Level",
+            "BitLength":16,
+            "BitOffset":120,
+            "BitStart":0,
+            "Unit":"V",
+            "Resolution":0.01,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":655.32,
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
+          },
+          {
+            "Order":14,
+            "Id":"acOvWarningLevel",
+            "Name":"AC OV Warning Level",
+            "BitLength":16,
+            "BitOffset":136,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":15,
+            "Id":"acOvDelay",
+            "Name":"AC OV Delay",
+            "BitLength":16,
+            "BitOffset":152,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":16,
+            "Id":"acUfLevel",
+            "Name":"AC UF Level",
+            "BitLength":16,
+            "BitOffset":168,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":17,
+            "Id":"acOfLevel",
+            "Name":"AC OF Level",
+            "BitLength":32,
+            "BitOffset":184,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
         "PGN":130918,
         "Id":"seatalkRouteInformation",
         "Description":"SeaTalk: Route Information",
@@ -61266,6 +65658,260 @@
         ]
       },
       {
+        "PGN":130921,
+        "Id":"carlingBreakerStatusAndConfiguration",
+        "Description":"Carling: Breaker Status and Configuration",
+        "Explanation":"Multi-purpose Carling digital switching fast-packet PGN with 8+ message types: breaker status with electrical values, breaker configuration, discrete I/O configuration, solenoid drive sequence, system alarm and alert messages. The Message Type field selects the variant.",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":5,
+        "Length":222,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Carling Technologies Inc. (Moritz Aerospace)",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":176,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageType",
+            "Name":"Message Type",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"data",
+            "Name":"Data",
+            "Description":"Payload varies by Message Type.",
+            "BitLength":1752,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":130939,
+        "Id":"lumishoreLightControl",
+        "Description":"Lumishore: Light Control",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":12,
+        "Length":11,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Lumishore",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":798,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"zoneIndex",
+            "Name":"Zone Index",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"red",
+            "Name":"Red",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"green",
+            "Name":"Green",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"blue",
+            "Name":"Blue",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":8,
+            "Id":"coldWhite",
+            "Name":"Cold White",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"warmWhite",
+            "Name":"Warm White",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":10,
+            "Id":"intensity",
+            "Name":"Intensity",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":11,
+            "Id":"onOff",
+            "Name":"On/Off",
+            "BitLength":8,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":12,
+            "Id":"status",
+            "Name":"Status",
+            "BitLength":8,
+            "BitOffset":80,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
         "PGN":130944,
         "Id":"airmarPost",
         "Description":"Airmar: POST",
@@ -61385,6 +66031,391 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130945,
+        "Id":"yamahaEngineData",
+        "Description":"Yamaha: Engine Data",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130946,
+        "Id":"yamahaEngineData2",
+        "Description":"Yamaha: Engine Data 2",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130947,
+        "Id":"yamahaEngineData3",
+        "Description":"Yamaha: Engine Data 3",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":130951,
+        "Id":"yamahaEngineData4",
+        "Description":"Yamaha: Engine Data 4",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":131008,
+        "Id":"yamahaEngineData5",
+        "Description":"Yamaha: Engine Data 5",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":131011,
+        "Id":"yamahaEngineData6",
+        "Description":"Yamaha: Engine Data 6",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          }
+        ]
+      },
+      {
+        "PGN":131012,
+        "Id":"yamahaEngineData7",
+        "Description":"Yamaha: Engine Data 7",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":3,
+        "Length":2,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
           }
         ]
       }
