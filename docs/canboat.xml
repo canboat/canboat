@@ -23221,10 +23221,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
@@ -23350,10 +23349,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
@@ -23619,10 +23617,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>13</FieldCount>
@@ -23823,10 +23820,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>16</FieldCount>
@@ -26118,10 +26114,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Charger Configuration Status</Description>
     <Priority>6</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>11</FieldCount>
       <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -26286,10 +26279,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Inverter Configuration Status</Description>
     <Priority>6</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>8</FieldCount>
       <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -26484,10 +26474,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Battery Configuration Status</Description>
     <Priority>6</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>10</FieldCount>
       <Length>8</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -27533,10 +27520,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
@@ -27646,10 +27632,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>7</FieldCount>
@@ -29650,10 +29635,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
@@ -32422,10 +32406,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Set &amp; Drift, Rapid Update</Description>
     <Priority>3</Priority>
       <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>6</FieldCount>
       <Length>8</Length>
       <TransmissionInterval>1000</TransmissionInterval>
@@ -32515,10 +32496,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Navigation - Route / Time to+from Mark</Description>
     <Priority>3</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>5</FieldCount>
       <Length>10</Length>
       <TransmissionInterval>1000</TransmissionInterval>
@@ -32748,10 +32726,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>GNSS Control Status</Description>
     <Priority>6</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>11</FieldCount>
       <Length>16</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -34755,10 +34730,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     <Priority>7</Priority>
       <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>14</FieldCount>
       <Length>24</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
@@ -38987,7 +38959,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
@@ -42612,7 +42583,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>12</FieldCount>
@@ -42850,10 +42820,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
       </Missing>
       <FieldCount>14</FieldCount>
       <MinLength>13</MinLength>
@@ -43021,10 +42990,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>12</FieldCount>
@@ -43175,10 +43143,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>18</FieldCount>
@@ -43396,10 +43363,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
@@ -43483,10 +43449,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
@@ -43609,10 +43574,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Lookups</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
@@ -45051,10 +45015,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Small Craft Status</Description>
     <Priority>2</Priority>
       <Type>Single</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>3</FieldCount>
       <Length>8</Length>
       <TransmissionInterval>200</TransmissionInterval>
@@ -45105,10 +45066,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Direction Data</Description>
     <Priority>3</Priority>
       <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>SampleData</MissingAttribute>
-      </Missing>
+      <Complete>true</Complete>
       <FieldCount>10</FieldCount>
       <Length>14</Length>
       <TransmissionInterval>1000</TransmissionInterval>

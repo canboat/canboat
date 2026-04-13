@@ -23496,7 +23496,7 @@
         "Explanation":"This PGN is used to report status of Electric Drive Status control and can be used with Command Group Function (PGN Electric propulsion motor status) to command equipment. ",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "Length":12,
@@ -23620,7 +23620,7 @@
         "Explanation":"This PGN is used to provide electric propulsion motor status and relevant data.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
         "Length":15,
@@ -23884,7 +23884,7 @@
         "Explanation":"This PGN is used to provide information about electric motor specifications and ratings.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":13,
         "Length":28,
@@ -24083,7 +24083,7 @@
         "Explanation":"This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and has not been observed yet; field lengths and precisions are guesses.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":16,
         "Length":21,
@@ -26371,9 +26371,7 @@
         "Description":"Charger Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":11,
         "Length":8,
         "TransmissionIrregular":true,
@@ -26538,9 +26536,7 @@
         "Description":"Inverter Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":8,
         "Length":8,
         "TransmissionIrregular":true,
@@ -26734,9 +26730,7 @@
         "Description":"Battery Configuration Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":10,
         "Length":8,
         "TransmissionIrregular":true,
@@ -27766,7 +27760,7 @@
         "Explanation":"This PGN is used to provide the Electric Propulsion Drive System Status.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -27874,7 +27868,7 @@
         "Explanation":"Electric Energy Storage Status message provides important energy storage information global at a rapid update rate.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":7,
         "Length":8,
@@ -29851,7 +29845,7 @@
         "Explanation":"Actuator is a broad description of any device that embodies moving an object between two fixed limits, such as raising or lowering an outboard engine assembly. In the context of this PGN, the word \"Device\" refers to the object being moved. In the case of multiple Actuators per controller, the Actuator Identifier field specifies which Actuator the PGN message is intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated systems and retrofit systems where it is impractical for the installer to enter the Maximum Travel distance of the device.",
         "Type":"Single",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
         "Length":8,
@@ -32616,9 +32610,7 @@
         "Description":"Set & Drift, Rapid Update",
         "Priority":3,
         "Type":"Single",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":6,
         "Length":8,
         "TransmissionInterval":1000,
@@ -32708,9 +32700,7 @@
         "Description":"Navigation - Route / Time to+from Mark",
         "Priority":3,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":5,
         "Length":10,
         "TransmissionInterval":1000,
@@ -32938,9 +32928,7 @@
         "Description":"GNSS Control Status",
         "Priority":6,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":11,
         "Length":16,
         "TransmissionIrregular":true,
@@ -34940,9 +34928,7 @@
         "Priority":7,
         "URL":"https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":14,
         "Length":24,
         "TransmissionIrregular":true,
@@ -39143,7 +39129,7 @@
         "Description":"Label",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "MinLength":9,
@@ -42753,7 +42739,7 @@
         "Explanation":"This PGN provides a lighting controller settings and number of supported capabilities.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":12,
         "MinLength":12,
@@ -42986,7 +42972,7 @@
         "Explanation":"This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled by a Scene. This PGN is only sent upon request.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData"
+        "Missing":["Fields","FieldLengths","Resolution"
         ],
         "FieldCount":14,
         "MinLength":13,
@@ -43153,7 +43139,7 @@
         "Explanation":"A Lighting Scene is a sequence of zone program configurations.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":12,
         "MinLength":3,
@@ -43302,7 +43288,7 @@
         "Explanation":"This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual device connected to a lighting controller or physical device on the network.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":18,
         "MinLength":20,
@@ -43518,7 +43504,7 @@
         "Explanation":"This PGN allows for enumeration of the lighting devices on the controller.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":5,
         "MinLength":6,
@@ -43600,7 +43586,7 @@
         "Explanation":"Sequences could be 1 to (PGN Lighting - System Configuration) Max Color Sequence Color Count colors.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":8,
         "MinLength":2,
@@ -43721,7 +43707,7 @@
         "Explanation":"This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor program.",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["FieldLengths","Resolution","Lookups","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":5,
         "MinLength":2,
@@ -45129,9 +45115,7 @@
         "Description":"Small Craft Status",
         "Priority":2,
         "Type":"Single",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":3,
         "Length":8,
         "TransmissionInterval":200,
@@ -45182,9 +45166,7 @@
         "Description":"Direction Data",
         "Priority":3,
         "Type":"Fast",
-        "Complete":false,
-        "Missing":["SampleData"
-        ],
+        "Complete":true,
         "FieldCount":10,
         "Length":14,
         "TransmissionInterval":1000,
