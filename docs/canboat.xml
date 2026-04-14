@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-CANboat version v6.1.6
+CANboat version v6.1.7
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -27,8 +27,8 @@ limitations under the License.
   <Comment>See https://github.com/canboat/canboat for the full source code</Comment>
   <CreatorCode>Canboat NMEA2000 Analyzer</CreatorCode>
   <License>Apache License Version 2.0</License>
-  <Version>6.1.6</Version>
-  <Copyright>CANboat version v6.1.6
+  <Version>6.1.7</Version>
+  <Copyright>CANboat version v6.1.7
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -3150,13 +3150,13 @@ limitations under the License.
  Resolution='0.01' Unit='K' Bits='16'/>
       <EnumFieldType Value='29' Name='Outside Temperature' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='K' Bits='16'/>
-      <EnumFieldType Value='30' Name='Water Temperature' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='30' Name='Outside Temperature' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='K' Bits='16'/>
       <EnumFieldType Value='31' Name='Water Temperature' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='K' Bits='16'/>
       <EnumFieldType Value='50' Name='Tacking Performance' FieldType='NUMBER' Signed='true'
  Resolution='0.1' Unit='%' Bits='16'/>
-      <EnumFieldType Value='52' Name='Attitude Roll' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='52' Name='Magnetic Variation' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='53' Name='Optimum Wind Angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
@@ -3174,21 +3174,23 @@ limitations under the License.
  Resolution='0.001' Bits='32'/>
       <EnumFieldType Value='65' Name='Water Speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='73' Name='Current Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='77' Name='Wind Speed Apparent' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='79' Name='Wind Speed Apparent' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='79' Name='Wind Speed True' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='80' Name='Average True Wind Direction' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='81' Name='Wind Angle Apparent' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='81' Name='Wind Angle True' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='83' Name='Target TWA' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='85' Name='Wind Speed True' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='86' Name='Wind Speed True' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='86' Name='Water Temperature' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='89' Name='Wind Angle True' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='89' Name='True Wind Direction' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='100' Name='Unknown' FieldType='NUMBER' Signed='true'
  Bits='16'/>
@@ -3222,7 +3224,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='131' Name='Current Drift' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='132' Name='Current Set' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='132' Name='Current Drift' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='135' Name='Barometric Pressure' FieldType='NUMBER' Signed='false'
  Resolution='100' Unit='Pa' Bits='16'/>
@@ -3230,7 +3232,7 @@ limitations under the License.
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='154' Name='Heading on Opposite Tack' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='155' Name='Attitude Pitch' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='155' Name='Attitude Roll' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='156' Name='Mast Angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
@@ -3260,7 +3262,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='233' Name='Course Over Ground' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='235' Name='Speed Over Ground' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='235' Name='Water Speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='239' Name='Remote 0' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='16'/>

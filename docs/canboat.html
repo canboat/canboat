@@ -1,8 +1,8 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
             The CANBoat project PGN documentation version
-            6.1.6.
-          </p><h3>Copyright</h3><p class="xs">CANboat version v6.1.6
+            6.1.7.
+          </p><h3>Copyright</h3><p class="xs">CANboat version v6.1.7
 
 (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
@@ -19910,7 +19910,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>29</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Water Temperature</td><td>0.01 K</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>30</td><td>Outside Temperature</td><td>0.01 K</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>31</td><td>Water Temperature</td><td>0.01 K</td><td>16 bits 
@@ -19919,7 +19919,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>50</td><td>Tacking Performance</td><td>0.1 %</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Attitude Roll</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>52</td><td>Magnetic Variation</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>53</td><td>Optimum Wind Angle</td><td>0.0001 rad</td><td>16 bits 
@@ -19946,16 +19946,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>65</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>73</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
+              
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>77</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed Apparent</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>80</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle Apparent</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>83</td><td>Target TWA</td><td>0.0001 rad</td><td>16 bits 
@@ -19964,10 +19967,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>85</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>86</td><td>Water Temperature</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Unknown</td><td> </td><td>16 bits 
@@ -20018,7 +20021,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>131</td><td>Current Drift</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>132</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>132</td><td>Current Drift</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>135</td><td>Barometric Pressure</td><td>100 Pa</td><td>16 bits 
@@ -20030,7 +20033,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>154</td><td>Heading on Opposite Tack</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Pitch</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>155</td><td>Attitude Roll</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>156</td><td>Mast Angle</td><td>0.0001 rad</td><td>16 bits 
@@ -20075,7 +20078,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>233</td><td>Course Over Ground</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Speed Over Ground</td><td>0.01 m/s</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>235</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>239</td><td>Remote 0</td><td>0.001 </td><td>16 bits 

@@ -8,11 +8,49 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- PGN 130845: B&G improvements
+- 19 Maretron product codes from MConnect (SMS100, MBB200C, DST110, GPS100, CLM100, GPS200, DST100, FFM100, RAA100, J2K100, IPG100, DCM100, EMS100, CLMD16, DSM250, DSM150, FPM100, MBB300C, MConnect)
+- Sea Recovery Watermaker PGN 130816 and Webasto Status 2 PGN 130818
+- Xantrex proprietary PGNs 130900, 130910-130913 (AC/DC status and configuration)
+- Lumishore proprietary PGNs 65403 and 130939 (light status and control)
+- Mercury Marine proprietary PGNs 65280 and 130829
+- Yamaha proprietary PGNs (65329, 65344, 65424, 65472, 130945-130947, 130951, 131008, 131011-131012)
+- Navico proprietary PGNs (65313, 65317, 130849, 130852)
+- Navico Naviop switch PGNs 65440 and 65441
+- B&G proprietary PGN 65330
+- Simrad proprietary PGN 130861
+- Suzuki proprietary PGNs (65298-65300, 65303-65304, 65315, 130830, 130837-130838)
+- Yanmar proprietary PGNs (65280-65281, 65332, 65346, 65348-65349)
+- Honda Marine proprietary PGNs (65280, 65284, 130816)
+- Carling switchboard PGNs 65300 and 130921
+- Carling Breaker Command PGN 61184
+- Carling DC Configuration Command PGN 126720
+- BEP Marine / CZone single-frame PGN stubs (65281, 65283, 65294-65297, 65299-65301, 65304, 65306, 65308, 65310-65311, 65314, 65316, 65325)
+- BEP Marine / CZone fast-packet PGN stubs (130816-130826)
+- BEP CZone Circuit Status PGN 65284 and Configuration PGN 130820
+- Lumishore PGN 126720 stub
+- Webasto HVAC Command PGN 130819
+- HVAC Status PGN 130329 (26 fields)
+- Maretron Dometic HVAC Status PGN 130828
+- J1939 Electronic Transmission Controller 1 PGN 61142
+- Maretron Alert family: PGN 130819 Alert Transmission, 130820 Alert Response, 130821 Alert Text, 130822 Alert Control identity headers
+- Maretron proprietary PGN field layouts (65282, 65286-65291, 130818, 130824-130826, 130830, 130843)
+- Maretron Windlass Operating Status PGN 130842
+- PGN 130824 B&G: new lookup key 0x49 (Current Set)
+- Related projects in README
+
 ### Fixed
 
 - #592: Actisense timestamp parsing incorrect
-
-### Added
+- PGN 130824 B&G: corrected 9 mislabeled key-value lookup names based on firmware analysis (0x1e Outside Temperature, 0x34 Magnetic Variation, 0x4f Wind Speed True, 0x51 Wind Angle True, 0x56 Water Temperature, 0x59 True Wind Direction, 0x84 Current Drift, 0x9b Attitude Roll, 0xeb Water Speed)
+- Status flags updated for 24 standard PGNs confirmed by MConnect (13 PACKET_PDF_ONLY to PACKET_INCOMPLETE, 9 PACKET_NOT_SEEN to PACKET_COMPLETE)
+- Resolved PACKET_RESOLUTION_UNKNOWN for multiple PGNs via Maretron MConnect protocol definitions
+- Maretron proprietary PGN field resolutions and names (65286-65291)
+- Maretron Windlass PGN assignments corrected (130842-130844)
+- PGN 130830: corrected field sizes for Maretron Dometic HVAC Status (16-bit to 8-bit)
+- BEP Marine proprietary PGN stubs given unique names to avoid duplicate Ids
 
 ## [6.1.6]
 
