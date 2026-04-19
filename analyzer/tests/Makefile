@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 tests
 
 all:	tests
 
@@ -133,4 +133,12 @@ test13:
 	diff $(TEMPDIR)/actisense-format.out actisense-format.out
 	diff $(TEMPDIR)/actisense-format.err actisense-format.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13
+#
+# This tests that PGN 60928 ISO Address Claim preserves full-range device instance values
+#
+test14:
+	$(ANALYZER) -json -nv < pgn-60928.in > $(TEMPDIR)/pgn-60928-nv.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-60928-nv.err
+	diff $(TEMPDIR)/pgn-60928-nv.out pgn-60928-nv.out
+	diff $(TEMPDIR)/pgn-60928-nv.err pgn-60928-nv.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14
