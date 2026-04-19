@@ -1802,8 +1802,10 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Alarm Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Alarm Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS</a></td><td/></tr><tr><td>6</td><td>Alarm ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -3232,8 +3234,10 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Heading Magnetic</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
@@ -3264,8 +3268,10 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Target Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Target Heading True</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Target Heading Magnetic</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
@@ -7449,8 +7455,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 8 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Connection Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Connection Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Operating State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -7480,8 +7488,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             8
             bytes long and contains 5 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td/><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Connection Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Connection Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>DC Voltage</td><td/><td>0.1 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
