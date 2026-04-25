@@ -1,4 +1,4 @@
 00:01:59,990 7 204 255  65379 Seatalk: Pilot Mode:  Manufacturer Code = Raymarine; Industry Code = Marine Industry; Pilot Mode = Standby; Sub Mode = 00 00; Pilot Mode Data = 02
-00:01:59,991 7 204 255  65359 Seatalk: Pilot Heading:  Manufacturer Code = Raymarine; Industry Code = Marine Industry; SID = FF; Heading True = Unknown; Heading Magnetic = 278.7 deg
+00:01:59,991 7 204 255  65359 Seatalk: Pilot Heading:  Manufacturer Code = Raymarine; Industry Code = Marine Industry; SID = Unknown; Heading True = Unknown; Heading Magnetic = 278.7 deg
 00:02:00,004 2 150 255 129026 COG & SOG, Rapid Update:  SID = Unknown; COG Reference = True; COG = 71.6 deg; SOG = 0.01 m/s
 00:02:00,005 2 150 255 129025 Position, Rapid Update:  Latitude = 52.6357536; Longitude =  5.0588996

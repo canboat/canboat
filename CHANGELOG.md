@@ -51,6 +51,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Maretron Windlass PGN assignments corrected (130842-130844)
 - PGN 130830: corrected field sizes for Maretron Dometic HVAC Status (16-bit to 8-bit)
 - BEP Marine proprietary PGN stubs given unique names to avoid duplicate Ids
+- SID field changed from BINARY_FIELD to UINT8_FIELD on 5 PGNs (127750 Converter Status, 127751 DC Voltage/Current, 65288 Seatalk: Alarm, 65359 Seatalk: Pilot Heading, 65360 Seatalk: Pilot Locked Heading).
 
 ## [6.1.6]
 

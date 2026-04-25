@@ -9377,7 +9377,10 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -13611,7 +13614,10 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -13717,7 +13723,10 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
@@ -27471,7 +27480,10 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
           },
           {
             "Order":2,
@@ -27587,7 +27599,10 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
           },
           {
             "Order":2,
