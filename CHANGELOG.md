@@ -10,6 +10,13 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- #620: fix: change SID fields from BINARY to UINT8.
+- #619: Added previously unknown `SEATALK_COMMAND` values.
+
+## [6.1.7]
+
+### Added
+
 - PGN 130845: B&G improvements
 - 19 Maretron product codes from MConnect (SMS100, MBB200C, DST110, GPS100, CLM100, GPS200, DST100, FFM100, RAA100, J2K100, IPG100, DCM100, EMS100, CLMD16, DSM250, DSM150, FPM100, MBB300C, MConnect)
 - Sea Recovery Watermaker PGN 130816 and Webasto Status 2 PGN 130818
@@ -938,7 +945,8 @@ iptee:
 
 ## Versions
 
-[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.5..HEAD
+[Unreleased]: https://github.com/canboat/canboat/compare/v6.1.7..HEAD
+[6.1.7]: https://github.com/canboat/canboat/compare/v6.1.6...v6.1.7
 [6.1.6]: https://github.com/canboat/canboat/compare/v6.1.5...v6.1.6
 [6.1.5]: https://github.com/canboat/canboat/compare/v6.1.4...v6.1.5
 [6.1.4]: https://github.com/canboat/canboat/compare/v6.1.3...v6.1.4

@@ -1140,6 +1140,28 @@ limitations under the License.
       <EnumPair Value='22' Name='Hull Type' />
       <EnumPair Value='38' Name='Auto Turn' />
       <EnumPair Value='12' Name='Settings' />
+      <EnumPair Value='2' Name='Rudder Limit' />
+      <EnumPair Value='3' Name='Rudder Damping' />
+      <EnumPair Value='4' Name='Rudder Offset' />
+      <EnumPair Value='6' Name='Reverse Rudder Reference' />
+      <EnumPair Value='8' Name='Cruise Speed' />
+      <EnumPair Value='11' Name='Power Steer Mode' />
+      <EnumPair Value='15' Name='Wind Type' />
+      <EnumPair Value='17' Name='Auto Turn' />
+      <EnumPair Value='18' Name='Calibration Lock' />
+      <EnumPair Value='20' Name='Gybe Inhibit' />
+      <EnumPair Value='21' Name='Compass Offset' />
+      <EnumPair Value='23' Name='Drive Type' />
+      <EnumPair Value='25' Name='Response Level' />
+      <EnumPair Value='26' Name='Max Compass Deviation' />
+      <EnumPair Value='27' Name='Hard Over Time' />
+      <EnumPair Value='29' Name='Debug Level' />
+      <EnumPair Value='33' Name='Compass Lock' />
+      <EnumPair Value='34' Name='Speed Input' />
+      <EnumPair Value='35' Name='Compass Linearisation Progress' />
+      <EnumPair Value='36' Name='ACU Debug Level' />
+      <EnumPair Value='37' Name='Wind Shift Alarm' />
+      <EnumPair Value='39' Name='Auto Turn Timeout' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK1_COMMAND' MaxValue='255'>
       <EnumPair Value='0' Name='Depth Below Transducer' />
