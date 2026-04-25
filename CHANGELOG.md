@@ -8,8 +8,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [6.1.8]
+
 ### Added
 
+- #621: Add "Signal K" as a Manufacturer
 - #620: fix: change SID fields from BINARY to UINT8.
 - #619: Added previously unknown `SEATALK_COMMAND` values.
 
