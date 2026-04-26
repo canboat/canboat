@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+
+- extractNumberNotEmpty: skip sentinel stripping when a field's explicit `.rangeMax` exactly matches the bit-size maximum, completing the #600 fix for PGN 60928 device instance fields.
+
 ## [6.1.8]
 
 ### Added

@@ -411,7 +411,21 @@ static bool extractNumberNotEmpty(const Field   *field,
 
   g_previousFieldValue = *value;
 
-  if (*value > *maxValue - reserved)
+  /* If the explicit rangeMax converts exactly to the raw bit-size maximum,
+   * every bit pattern is valid (e.g. ISO Address Claim device instance
+   * fields); use it as the threshold to disable sentinel stripping. Require
+   * an exact match so display caps (radians clamped to 360 deg) don't qualify. */
+  int64_t threshold = *maxValue - reserved;
+  if (field != NULL && field->rangeMax > 0 && field->resolution > 0.0)
+  {
+    int64_t range_max_raw = (int64_t) (field->rangeMax / field->resolution + 0.5);
+    if (range_max_raw == *maxValue)
+    {
+      threshold = range_max_raw;
+    }
+  }
+
+  if (*value > threshold)
   {
     printEmpty(fieldName, *value - *maxValue);
     return false;
