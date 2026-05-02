@@ -12,7 +12,7 @@ Why does this file exist, and why not put this in __main__?
   - When you import __main__ it will get executed again (as a module) because
     there's no ``dbc_exporter.__main__`` in ``sys.modules``.
 
-  Also see (1) from http://click.pocoo.org/5/setuptools/#setuptools-integration
+  Also see (1) from https://pocoo-click.readthedocs.io/en/latest/setuptools/#setuptools-integration
 """
 import argparse
 import logging

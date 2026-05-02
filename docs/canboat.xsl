@@ -706,7 +706,7 @@
             called an iPhone, I started reverse engineering the protocol. At the time there was limited info available.
             This has improved over time; interestingly even the NMEA leaks a lot of information that is publicly available.
             For instance the list of PGNs and the field <i>names</i> are available at
-            <a href="http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf">http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf</a>.
+            <a href="https://web.archive.org/web/20250810000005/web.nmea.org/External/WCPages/WCWebContent/webcontentpage.aspx?ContentID=189">https://web.nmea.org/External/WCPages/WCWebContent/webcontentpage.aspx?ContentID=189</a>.
           </p>
           <p>
             This document will provide a human readable explanation of everything we (as there are now over 20 contributors) have 
