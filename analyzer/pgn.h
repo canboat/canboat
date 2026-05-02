@@ -2718,9 +2718,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      { COMPANY(229),
       MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 1900, "Garmin ATT transport"),
-      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, NULL),
-      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, NULL),
-      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 67, NULL),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, "1"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 67, "ID"),
       UINT32_FIELD("COG Source Flags"),
       END_OF_FIELDS } }
 
@@ -2731,9 +2731,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      { COMPANY(229),
       MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 1900, "Garmin ATT transport"),
-      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, NULL),
-      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, NULL),
-      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 65, NULL),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, "1"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 65, "ID"),
       UINT32_FIELD("Device Flags"),
       END_OF_FIELDS } }
 
@@ -2744,9 +2744,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      { COMPANY(229),
       MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 1900, "Garmin ATT transport"),
-      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, NULL),
-      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, NULL),
-      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 40, NULL),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, "1"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 40, "ID"),
       UINT8_FIELD("Calibration Matrix Present"),
       END_OF_FIELDS } }
 
@@ -2757,9 +2757,9 @@ Pgn pgnList[] = {
      PACKET_FAST,
      { COMPANY(229),
       MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 1900, "Garmin ATT transport"),
-      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, NULL),
-      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, NULL),
-      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 52, NULL),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 2, "1"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("ATT Message ID"), BYTES(2), 52, "ID"),
       UINT8_FIELD("Set North State"),
       END_OF_FIELDS } }
 
