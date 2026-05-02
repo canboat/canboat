@@ -429,7 +429,7 @@ LOOKUP(SHIP_TYPE, 94, "Other (hazard cat OS)")
 LOOKUP(SHIP_TYPE, 99, "Other (no additional information)")
 LOOKUP_END
 
-/* http://www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf */
+/* https://web.archive.org/web/20190531120557/www.nmea.org/Assets/20120726%20nmea%202000%20class%20&%20function%20codes%20v%202.00.pdf */
 LOOKUP_TYPE(DEVICE_CLASS, BITS(7))
 LOOKUP(DEVICE_CLASS, 0, "Reserved for 2000 Use")
 LOOKUP(DEVICE_CLASS, 10, "System tools")
@@ -692,7 +692,7 @@ LOOKUP(ENGINE_INSTANCE, 0, "Single Engine or Dual Engine Port")
 LOOKUP(ENGINE_INSTANCE, 1, "Dual Engine Starboard")
 LOOKUP_END
 
-// http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+// https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
 LOOKUP_TYPE_BITFIELD(ENGINE_STATUS_1, BYTES(2))
 LOOKUP_BITFIELD(ENGINE_STATUS_1, 0, "Check Engine")
 LOOKUP_BITFIELD(ENGINE_STATUS_1, 1, "Over Temperature")
@@ -1232,7 +1232,7 @@ LOOKUP(SEATALK_SHARED, 2, "Not Shared")
 LOOKUP_END
 
 // Entertainment PGNs new circa 2016
-// https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
+// https://web.archive.org/web/20190921134227/www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
 
 LOOKUP_TYPE(ENTERTAINMENT_ZONE, BYTES(1))
 LOOKUP(ENTERTAINMENT_ZONE, 0, "All zones")

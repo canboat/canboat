@@ -1007,12 +1007,12 @@ Pgn pgnList[] = {
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /************ Protocol PGNs ************/
-    /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
-    /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf */
-    /* http://www.nmea.org/Assets/pgn059392.pdf */
-    /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
-    /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-    /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
+    /* https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
+    /* https://web.archive.org/web/20061221093749/www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf */
+    /* https://web.archive.org/web/20150910070054/www.nmea.org/Assets/pgn059392.pdf */
+    /* https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
+    /* https://web.archive.org/web/20240802130644/www.furunousa.com/-/media/sites/furuno/document_library/documents/manuals/public_manuals/gp330b_nmea_pgns.pdf */
+    /* https://web.archive.org/web/20150910070107/www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
     ,
     {"ISO Acknowledgement",
      59392,
@@ -1042,7 +1042,7 @@ Pgn pgnList[] = {
                     "supports the requested PGN."}
 
     /* For a good explanation of ISO 11783 Transport Protocol (as used in J1939) see
-     * http://www.simmasoftware.com/j1939-presentation.pdf
+     * https://web.archive.org/web/20220207184927/www.simmasoftware.com/j1939-presentation.pdf
      *
      * First: Transmit a RTS message to the specific address that says:
      *   1. I'm about to send the following PGN in multiple packets.
@@ -1269,6 +1269,7 @@ Pgn pgnList[] = {
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
+    /* https://web.archive.org/web/20230512042813/www.maretron.com/support/manuals/ACM100UM_1.3.pdf */
 
     ,
     {"Bus #1 Phase C Basic AC Quantities",
@@ -1727,7 +1728,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(135), LOOKUP_FIELD("Boot State", 3, BOOT_STATE), RESERVED_FIELD(45), END_OF_FIELDS},
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
      .priority = 5}
 
     ,
@@ -1768,7 +1769,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(135), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS},
-     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Maretron: Fluid Flow Rate",
@@ -1797,7 +1798,7 @@ Pgn pgnList[] = {
           "Access Seed/Key",
           "When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208."),
       END_OF_FIELDS},
-     .url = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Simnet: Configure Temperature Sensor",
@@ -2412,7 +2413,7 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Depth Quality Factor", 4, AIRMAR_DEPTH_QUALITY_FACTOR),
       RESERVED_FIELD(36),
       END_OF_FIELDS},
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
      .priority = 7}
 
     ,
@@ -2426,7 +2427,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of pulses received"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
      .priority = 7}
 
     ,
@@ -2441,7 +2442,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
      .priority = 7}
 
     ,
@@ -2920,7 +2921,7 @@ Pgn pgnList[] = {
       ANGLE_I16_FIELD("Roll offset", "Positive: sensor tilted to port, negative: sensor tilted to starboard"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Calibrate Compass",
@@ -2945,7 +2946,7 @@ Pgn pgnList[] = {
           "default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: True Wind Options",
@@ -2958,7 +2959,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(22),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf"}
+     .url      = "https://web.archive.org/web/20231224200258/www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf"}
 
     ,
     {"Airmar: Simulate Mode",
@@ -2971,7 +2972,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(22),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Calibrate Depth",
@@ -2984,7 +2985,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(8),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Calibrate Speed",
@@ -3001,7 +3002,7 @@ Pgn pgnList[] = {
      .repeatingCount1 = 2,
      .repeatingStart1 = 6,
      .interval        = UINT16_MAX,
-     .url             = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url             = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Calibrate Temperature",
@@ -3022,7 +3023,7 @@ Pgn pgnList[] = {
        .rangeMax   = 9.999},
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Speed Filter None",
@@ -3037,7 +3038,7 @@ Pgn pgnList[] = {
                                "Interval of time between successive samples of the paddlewheel pulse accumulator"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Speed Filter IIR",
@@ -3053,7 +3054,7 @@ Pgn pgnList[] = {
       DURATION_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Temperature Filter None",
@@ -3068,7 +3069,7 @@ Pgn pgnList[] = {
                                "Interval of time between successive samples of the water temperature thermistor"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Temperature Filter IIR",
@@ -3084,7 +3085,7 @@ Pgn pgnList[] = {
       DURATION_UFIX16_CS_FIELD("Filter duration", "Duration of filter, must be bigger than the sample interval"),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: NMEA 2000 options",
@@ -3097,7 +3098,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(22),
       END_OF_FIELDS},
      .interval = UINT16_MAX,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Airmar: Addressable Multi-Frame",
@@ -3369,7 +3370,7 @@ Pgn pgnList[] = {
      .repeatingCount1 = 3,
      .repeatingStart1 = 11}
 
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
+    /* https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
     {"System Time",
      126992,
@@ -3389,7 +3390,7 @@ Pgn pgnList[] = {
      .explanation = "The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide "
                     "synchronism for measurement data."}
 
-    /* http://www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
+    /* https://web.archive.org/web/20170609023206/www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf */
     /* http://www.nmea.org/Assets/20190624%20NMEA%20Heartbeat%20Information%20Amendment%20AT%2020190623HB.pdf */
     ,
     {"Heartbeat",
@@ -3461,11 +3462,11 @@ Pgn pgnList[] = {
                     "device and installation notes (e.g., calibration data)."}
 
     /************ PERIODIC DATA PGNs **************/
-    /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
-    /* http://www.maretron.com/support/manuals/USB100UM_1.2.pdf */
-    /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
+    /* https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
+    /* https://web.archive.org/web/20070709202204/www.maretron.com/support/manuals/USB100UM_1.2.pdf */
+    /* https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
 
-    /* http://www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf
+    /* https://web.archive.org/web/20190921125506/www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf
      */
     ,
     {"Man Overboard Notification",
@@ -3545,7 +3546,7 @@ Pgn pgnList[] = {
      .interval = 250,
      .priority = 2}
 
-    /* http://www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
+    /* https://web.archive.org/web/20150702022039/www.maretron.com/support/manuals/RAA100UM_1.0.pdf */
     ,
     {"Rudder",
      127245,
@@ -3562,7 +3563,7 @@ Pgn pgnList[] = {
      .priority = 2}
 
     /* NMEA + Simrad AT10 */
-    /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
+    /* https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
     /* molly_rose_E80start.kees */
     ,
     {"Vessel Heading",
@@ -3579,7 +3580,7 @@ Pgn pgnList[] = {
      .interval = 100,
      .priority = 2}
 
-    /* http://www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
+    /* https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf */
     /* Lengths observed from Simrad RC42 */
     ,
     {"Rate of Turn",
@@ -3613,7 +3614,7 @@ Pgn pgnList[] = {
      .priority = 3}
 
     /* NMEA + Simrad AT10 */
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
+    /* https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
     {"Magnetic Variation",
      127258,
@@ -3630,9 +3631,9 @@ Pgn pgnList[] = {
      .priority = 7}
 
     /* Engine group PGNs all derived PGN Numbers from              */
-    /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
-    /* http://www.floscan.com/html/blue/NMEA2000.php               */
-    /* http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf */
+    /* https://web.archive.org/web/20061221093749/www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf  */
+    /* https://web.archive.org/web/20240122163152/www.floscan.com/html/blue/NMEA2000.php               */
+    /* https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf */
     ,
     {"Engine Parameters, Rapid Update",
      127488,
@@ -3647,7 +3648,7 @@ Pgn pgnList[] = {
      .interval = 100,
      .priority = 2}
 
-    // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+    // https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
     // samples/susteranna-actisense-serial.raw:
     //   2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f
     ,
@@ -3982,7 +3983,7 @@ Pgn pgnList[] = {
      .priority = 6,
      .interval = 1500}
 
-    // http://www.osukl.com/wp-content/uploads/2015/04/3155-UM.pdf
+    // https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
     ,
     {"Charger Status",
      127507,
@@ -4330,7 +4331,7 @@ Pgn pgnList[] = {
       DURATION_UFIX16_MIN_FIELD("Operating Time", NULL),
       END_OF_FIELDS}}
 
-    /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
+    /* https://web.archive.org/web/20070107131536/www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
     {"Speed",
      128259,
@@ -4346,7 +4347,7 @@ Pgn pgnList[] = {
      .priority = 2,
      .interval = 1000}
 
-    /* http://www.maretron.com/support/manuals/DST100UM_1.2.pdf */
+    /* https://web.archive.org/web/20070107131536/www.maretron.com/support/manuals/DST100UM_1.2.pdf */
     ,
     {"Water Depth",
      128267,
@@ -4360,7 +4361,7 @@ Pgn pgnList[] = {
      .priority = 3,
      .interval = 1000}
 
-    /* http://www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
+    /* https://web.archive.org/web/20220705131506/www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf */
     ,
     {"Distance Log",
      128275,
@@ -4571,7 +4572,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2,
      .interval = 250,
-     .url      = "http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf"}
+     .url      = "https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf"}
 
     ,
     {"Position Delta, Rapid Update",
@@ -4602,7 +4603,7 @@ Pgn pgnList[] = {
      .priority = 2,
      .interval = 100}
 
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
+    /* https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
     {"GNSS Position Data",
      129029,
@@ -4671,7 +4672,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
      .priority = 4,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4706,7 +4707,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(15),
       END_OF_FIELDS},
      .priority = 4,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4743,7 +4744,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(5),
       END_OF_FIELDS},
      .priority = 4,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4776,7 +4777,7 @@ Pgn pgnList[] = {
       STRINGLAU_FIELD("AtoN Name"),
       END_OF_FIELDS},
      .priority = 4,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -4946,7 +4947,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 6}
 
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
+    /* https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     /* Haven't seen this yet (no way to send PGN 059904 yet) so lengths unknown */
     ,
     {"GNSS Control Status",
@@ -4968,7 +4969,7 @@ Pgn pgnList[] = {
      .priority = 6,
      .interval = UINT16_MAX}
 
-    /* http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
+    /* https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf */
     ,
     {"GNSS DOPs",
      129539,
@@ -5048,7 +5049,7 @@ Pgn pgnList[] = {
       SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "s/s", "'a f1' in table 20-VI in ICD-GPS-200"),
       RESERVED_FIELD(2),
       END_OF_FIELDS},
-     .url      = "https://www.gps.gov/technical/icwg/ICD-GPS-200C.pdf",
+     .url      = "https://web.archive.org/web/20250720113839/www.gps.gov/technical/icwg/ICD-GPS-200C.pdf",
      .priority = 6,
      .interval = UINT16_MAX}
 
@@ -5223,7 +5224,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .priority = 6,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5249,10 +5250,10 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("GNSS type", 4, POSITION_FIX_DEVICE),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
-    /* http://www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
+    /* https://web.archive.org/web/20100527193521/www.navcen.uscg.gov/enav/ais/AIS_messages.htm */
     ,
     {"AIS Class A Static and Voyage Related Data",
      129794,
@@ -5281,7 +5282,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(3),
       END_OF_FIELDS},
      .priority = 6,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5302,7 +5303,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Number of Bits in Binary Data Field"),
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .priority = 5,
      .interval = UINT16_MAX}
 
@@ -5322,7 +5323,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       END_OF_FIELDS},
      .priority        = 7,
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url             = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 3,
@@ -5343,7 +5344,7 @@ Pgn pgnList[] = {
       BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
       END_OF_FIELDS},
      .priority = 5,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5374,7 +5375,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       END_OF_FIELDS},
      .priority = 4,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5416,7 +5417,7 @@ Pgn pgnList[] = {
       MMSI_FIELD("Destination ID"),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5486,7 +5487,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("SID"),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5510,7 +5511,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(4),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5530,7 +5531,7 @@ Pgn pgnList[] = {
       UINT16_FIELD("Increment"),
       END_OF_FIELDS},
      .priority        = 7,
-     .url             = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url             = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval        = UINT16_MAX,
      .repeatingField1 = 255,
      .repeatingCount1 = 4,
@@ -5566,7 +5567,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(1),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5595,10 +5596,9 @@ Pgn pgnList[] = {
       RESERVED_FIELD(2),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
-    /* http://www.nmea.org/Assets/2000_20150328%20dsc%20technical%20corrigendum%20database%20version%202.100.pdf */
     /* https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf
      */
     /* This is like the worst PGN ever.
@@ -5698,7 +5698,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
      .priority = 6,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -5725,7 +5725,7 @@ Pgn pgnList[] = {
       UINT8_FIELD("Sequence ID"),
       END_OF_FIELDS},
      .priority = 6,
-     .url      = "https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
+     .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
     ,
@@ -6058,7 +6058,7 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 2,
      .interval = 100,
-     .url      = "http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/"}
+     .url      = "https://web.archive.org/web/20181024132013/www.maretron.com/support/manuals/WSO100UM_1.0.pdf#page=15"}
 
     /* Water temperature, Transducer Measurement */
     ,
@@ -6473,7 +6473,7 @@ Pgn pgnList[] = {
      .explanation = "This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom "
                     "vendor program."}
 
-    /* http://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+    /* https://web.archive.org/web/20200918142919/www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
 
     This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN
     126208 is used perform the following: start/stop a production, start/stop rinse or flush operation, start/stop low and high
@@ -8891,7 +8891,7 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("True Windchill Temperature"),
       TEMPERATURE_FIELD("Dewpoint"),
       END_OF_FIELDS},
-     .url = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
+     .url = "https://web.archive.org/web/20231224200258/airmartechnology.com/uploads/installguide/PB200UserManual.pdf"}
 
     ,
     {"Airmar: Heater Control",
@@ -8904,7 +8904,7 @@ Pgn pgnList[] = {
       TEMPERATURE_FIELD("Air Temperature"),
       TEMPERATURE_FIELD("Dewpoint"),
       END_OF_FIELDS},
-     .url = "http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
+     .url = "https://web.archive.org/web/20231224200258/airmartechnology.com/uploads/installguide/PB2000UserManual.pdf"}
 
     ,
     {"Xantrex: AC Status",
@@ -9067,7 +9067,7 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Test result", "Values other than 0 are failure codes"),
       END_OF_FIELDS},
      .priority = 7,
-     .url      = "http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
+     .url      = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"}
 
     ,
     {"Yamaha: Engine Data",

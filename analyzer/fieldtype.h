@@ -1414,7 +1414,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "These encode various almanac parameters consisting of differing sizes and sign. They are all using an "
                             "interesting resolution/scale, which is always a number of bits that the value is shifted left or "
                             "right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
-     .url                 = "https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
+     .url                 = "https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
      .baseFieldType       = "SIGNED_FIXED_POINT_NUMBER"},
 
     {.name                = "UNSIGNED_ALMANAC_PARAMETER",
@@ -1422,7 +1422,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "These encode various almanac parameters consisting of differing sizes and sign. They are all using an "
                             "interesting resolution/scale, which is always a number of bits that the value is shifted left or "
                             "right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
-     .url                 = "https://www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
+     .url                 = "https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
      .baseFieldType       = "UNSIGNED_FIXED_POINT_NUMBER"},
 
     // Stringy types
