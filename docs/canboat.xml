@@ -413,18 +413,18 @@ limitations under the License.
       <EnumPair Value='193' Name='Nobletec' />
       <EnumPair Value='198' Name='Mystic Valley Communications' />
       <EnumPair Value='199' Name='Actia' />
-      <EnumPair Value='200' Name='Honda Marine' />
+      <EnumPair Value='200' Name='Honda Marine 2' />
       <EnumPair Value='201' Name='Disenos Y Technologia' />
       <EnumPair Value='211' Name='Digital Switching Systems' />
       <EnumPair Value='215' Name='Xintex/Atena' />
       <EnumPair Value='224' Name='EMMI NETWORK S.L.' />
-      <EnumPair Value='225' Name='Honda Marine' />
+      <EnumPair Value='225' Name='Honda Marine 3' />
       <EnumPair Value='228' Name='ZF' />
       <EnumPair Value='229' Name='Garmin' />
       <EnumPair Value='233' Name='Yacht Monitoring Solutions' />
       <EnumPair Value='235' Name='Sailormade Marine Telemetry/Tetra Technology LTD' />
       <EnumPair Value='243' Name='Eride' />
-      <EnumPair Value='250' Name='Honda Marine' />
+      <EnumPair Value='250' Name='Honda Marine 4' />
       <EnumPair Value='257' Name='Honda Motor Company LTD' />
       <EnumPair Value='272' Name='Groco' />
       <EnumPair Value='273' Name='Actisense' />
@@ -433,7 +433,7 @@ limitations under the License.
       <EnumPair Value='283' Name='Hamilton Jet' />
       <EnumPair Value='285' Name='Sea Recovery' />
       <EnumPair Value='286' Name='Coelmo SRL Italy' />
-      <EnumPair Value='295' Name='BEP Marine' />
+      <EnumPair Value='295' Name='BEP Marine 2' />
       <EnumPair Value='304' Name='Empir Bus' />
       <EnumPair Value='305' Name='NovAtel' />
       <EnumPair Value='306' Name='Sleipner Motor AS' />
@@ -478,7 +478,7 @@ limitations under the License.
       <EnumPair Value='470' Name='SI-TEX Marine Electronics' />
       <EnumPair Value='471' Name='Sea Cross Marine AB' />
       <EnumPair Value='475' Name='GME aka Standard Communications Pty LTD' />
-      <EnumPair Value='476' Name='Humminbird Marine Electronics' />
+      <EnumPair Value='476' Name='Humminbird Marine Electronics 2' />
       <EnumPair Value='478' Name='Ocean Sat BV' />
       <EnumPair Value='481' Name='Chetco Digitial Instruments' />
       <EnumPair Value='493' Name='Watcheye' />
@@ -511,7 +511,7 @@ limitations under the License.
       <EnumPair Value='637' Name='Bavaria Yacts' />
       <EnumPair Value='641' Name='Diverse Yacht Services' />
       <EnumPair Value='644' Name='Wema U.S.A dba KUS' />
-      <EnumPair Value='645' Name='Garmin' />
+      <EnumPair Value='645' Name='Garmin 2' />
       <EnumPair Value='658' Name='Shenzhen Jiuzhou Himunication' />
       <EnumPair Value='688' Name='Rockford Corp' />
       <EnumPair Value='699' Name='Harman International' />
@@ -7336,7 +7336,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7498,7 +7498,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7747,7 +7747,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -9699,7 +9699,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -9768,7 +9768,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -9837,7 +9837,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -9906,7 +9906,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -10115,7 +10115,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -10254,7 +10254,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -10408,7 +10408,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -10740,7 +10740,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11322,7 +11322,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11391,7 +11391,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11571,7 +11571,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11640,7 +11640,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -11874,7 +11874,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -12013,7 +12013,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -12152,7 +12152,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -48928,7 +48928,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -49845,7 +49845,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -50358,7 +50358,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -51001,7 +51001,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -51071,7 +51071,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -55746,7 +55746,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -56296,7 +56296,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -56625,7 +56625,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -57240,7 +57240,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -57410,7 +57410,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
