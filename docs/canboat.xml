@@ -7248,6 +7248,212 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65280</PGN>
+      <Id>bepMarineCzoneCircuitControl</Id>
+      <Description>BEP Marine: CZone Circuit Control</Description>
+    <Priority>3</Priority>
+      <Explanation>CZone circuit control command from a plotter (or other commander) to CZone modules. The plotter broadcasts; each module independently checks whether the 16-bit Circuit ID matches one of its own. Observed wire patterns: byte 6 = 0xF1 for ON commands, 0xF2 for OFF: Level Or Value = 1 (ON) or 2 (OFF) with Command Active and several flag bits asserted. The seven Unknown bits in bytes 6-7 have not yet been mapped to specific actions (likely candidates: dim direction, momentary vs latched, transient vs persistent, dim ramp-rate select, source priority).</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md</URL>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>14</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>BEP Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>295</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>circuitId</Id>
+          <Name>Circuit ID</Name>
+          <Description>Low 16 bits of the .zcf-stored 32-bit circuit ID</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>fieldB</Id>
+          <Name>Field B</Name>
+          <Description>Purpose unknown; observed 0x0000 in all known traffic</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>levelOrValue</Id>
+          <Name>Level Or Value</Name>
+          <Description>0x1 for ON, 0x2 for OFF; possibly a control mode</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>unknownA</Id>
+          <Name>Unknown A</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>commandActive</Id>
+          <Name>Command Active</Name>
+          <Description>Receiver ignores frame if zero</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>53</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknownB</Id>
+          <Name>Unknown B</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>54</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>unknownC</Id>
+          <Name>Unknown C</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>unknownD</Id>
+          <Name>Unknown D</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>57</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>unknownE</Id>
+          <Name>Unknown E</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>59</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>unknownF</Id>
+          <Name>Unknown F</Name>
+          <BitLength>1</BitLength>
+          <BitOffset>60</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>reserved14</Id>
+          <Name>Reserved</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>61</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65281</PGN>
       <Id>yanmarEngineDataB</Id>
       <Description>Yanmar: Engine Data B</Description>
@@ -7731,16 +7937,17 @@ limitations under the License.
       <PGN>65284</PGN>
       <Id>bepMarineCzoneCircuitStatus</Id>
       <Description>BEP Marine: CZone Circuit Status</Description>
+      <Explanation>Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks every module to report; the bitmap bytes are then unused.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -7787,10 +7994,38 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>dipswitch</Id>
+          <Name>Dipswitch</Name>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Observed 0x0F for circuit-state reports</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>bitmap</Id>
+          <Name>Bitmap</Name>
+          <Description>32-bit bitmap of circuits, LSB-first; bit n set =&gt; circuit at slot n is ON</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -9265,6 +9500,123 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65290</PGN>
+      <Id>bepMarineCzoneModuleAnnounce</Id>
+      <Description>BEP Marine: CZone Module Announce</Description>
+      <Explanation>CZone module's 'I'm here' announce. A module sends one shortly after coming online. The plotter uses it to populate its list of CZone-recognised modules. The 20-bit Unique field should be stable across restarts of the same module so the plotter's 'have I seen this before' logic stays consistent. Field B (18 bits) and Field C (2 bits) have not been observed populated; semantics unknown. The Dipswitch byte order on the wire is direct (no bit-reverse): the binary string '00011000' shown in the CZone Configuration Tool corresponds to byte value 0x18 = 24.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65290.md</URL>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>BEP Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>295</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>unique</Id>
+          <Name>Unique</Name>
+          <Description>Stable identifier set by the module; opaque to the plotter</Description>
+          <BitLength>20</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1048572</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>fieldB</Id>
+          <Name>Field B</Name>
+          <Description>Purpose unknown; observed = 0 in YDAB-01</Description>
+          <BitLength>18</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>262140</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>fieldC</Id>
+          <Name>Field C</Name>
+          <Description>Purpose unknown; observed = 0 in YDAB-01</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>54</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>dipswitch</Id>
+          <Name>Dipswitch</Name>
+          <Description>8-bit dipswitch this module is claiming</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -48911,18 +49263,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130816</PGN>
-      <Id>bepMarineProprietaryPgn130816</Id>
-      <Description>BEP Marine: Proprietary PGN 130816</Description>
+      <Id>bepMarineCzoneZcfBusDistribution</Id>
+      <Description>BEP Marine: CZone .zcf Bus Distribution</Description>
+      <Explanation>Channel the plotter uses to push a .zcf configuration file over the bus. Each fast-packet sequence carries one chunk; a complete .zcf reassembles by concatenating the Data portion of all chunks in Chunk Index order. Each non-terminal chunk carries exactly 200 bytes of .zcf data; the terminal chunk is the first one with Data length &lt; 200, followed by a final chunk with Data length == 0 marking transfer end. Receivers should key state by source address; back-to-back transfers from the same source are observed.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>223</Length>
+      <FieldCount>7</FieldCount>
+      <MinLength>23</MinLength>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -48968,10 +49319,50 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>chunkIndex</Id>
+          <Name>Chunk Index</Name>
+          <Description>0-based index of this chunk in the transfer</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>flag</Id>
+          <Name>Flag</Name>
+          <Description>Observed = 0x01; meaning unknown (possibly transfer mode / direction)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>144</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1768</BitLength>
-          <BitOffset>16</BitOffset>
+          <Description>Up to 200 bytes of .zcf data; terminator chunk has 0 bytes</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>6</BitLengthField>
+          <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -49828,8 +50219,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130817</PGN>
-      <Id>bepMarineProprietaryPgn130817</Id>
-      <Description>BEP Marine: Proprietary PGN 130817</Description>
+      <Id>bepMarineCzoneStatusExtended</Id>
+      <Description>BEP Marine: CZone Status Extended</Description>
+      <Explanation>Periodic extended-status frame from a CZone module. Real CZone modules use it to report per-circuit measurements (e.g. breaker current); the YDAB-01 sends a stub form for module-presence purposes only. Each per-circuit record is 3 bytes: byte 0 = circuit_id (8-bit), byte 1 = value low, byte 2 = bits 0..1 are value high (10-bit magnitude total) + bit 2 = sign (set =&gt; positive) + bit 3 = per-frame flag (only meaningful with N&gt;=6 records) + bits 4..7 = unknown. Value is most plausibly current in 0.1 A units, but unverified. Periodic at ~2 s intervals.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -49838,8 +50231,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>223</Length>
+      <FieldCount>6</FieldCount>
+      <MinLength>4</MinLength>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -49885,10 +50278,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>1768</BitLength>
+          <Id>page</Id>
+          <Name>Page</Name>
+          <Description>Observed = 0x01; possibly a status-page selector</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>dipswitch</Id>
+          <Name>Dipswitch</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>records</Id>
+          <Name>Records</Name>
+          <Description>N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>5</BitLengthField>
+          <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -51053,19 +51475,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>bepMarineCzoneConfiguration</Id>
-      <Description>BEP Marine: CZone Configuration</Description>
+      <Id>bepMarineCzoneEnumerationReply</Id>
+      <Description>BEP Marine: CZone Enumeration Reply</Description>
+      <Explanation>Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance matching a 65299 query echoes the query's Query Type and Index back, then appends a label string. The same PGN pair is used for at least 'System Name Query/Reply' and 'Circuit Label Enumeration/Response'; Query Type distinguishes the sub-protocol. The label as transmitted has a trailing NUL byte; the encoding (ASCII vs UTF-8) is not yet confirmed. Replies are correlated to queries by an internal counter that is part of the per-request state the plotter tracks; whether that counter is also echoed on the wire is not yet pinned down.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>6</FieldCount>
+      <MinLength>5</MinLength>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -51108,6 +51531,46 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>queryType</Id>
+          <Name>Query Type</Name>
+          <Description>Echoes the Query Type byte from the triggering PGN 65299</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>index</Id>
+          <Name>Index</Name>
+          <Description>Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>label</Id>
+          <Name>Label</Name>
+          <Description>Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitLengthField>5</BitLengthField>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
