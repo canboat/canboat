@@ -13806,8 +13806,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            
-              at least 23
+            223
             bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
@@ -13826,10 +13825,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>144 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Data</td><td>Up to 200 bytes of .zcf data; terminator chunk has 0 bytes</td><td/><td>
-                    Field 6 defines the 
-                  
-                    Variable length
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Data</td><td>Up to 200 bytes of .zcf data; terminator chunk has 0 bytes</td><td/><td>1600 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
               <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md</a></p><h3 id="pgn-130816">0x1FF00:
@@ -14093,8 +14089,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            
-              at least 4
+            28
             bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
@@ -14112,10 +14107,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Dipswitch</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Records</td><td>N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8</td><td/><td>
-                    Field 5 defines the 
-                  
-                    Variable length
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Records</td><td>N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8</td><td/><td>192 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
               <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md</a></p><h3 id="pgn-130818">0x1FF02:
@@ -14468,8 +14460,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            
-              at least 5
+            222
             bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
@@ -14487,10 +14478,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Index</td><td>Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Label</td><td>Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed</td><td/><td>
-                    Field 5 defines the 
-                  
-                    Variable length
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Label</td><td>Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed</td><td/><td>1736 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
               <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md</a></p><h3 id="pgn-130820">0x1FF04:
