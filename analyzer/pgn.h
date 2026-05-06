@@ -7183,7 +7183,7 @@ Pgn pgnList[] = {
       UINT16_DESC_FIELD("Chunk Index", "0-based index of this chunk in the transfer"),
       UINT8_DESC_FIELD("Flag", "Observed = 0x01; meaning unknown (possibly transfer mode / direction)"),
       RESERVED_FIELD(BYTES(18)),
-      BINARY_FIELD("Data", LEN_VARIABLE, "Up to 200 bytes of .zcf data; terminator chunk has 0 bytes"),
+      BINARY_FIELD("Data", BYTES(200), "Up to 200 bytes of .zcf data; terminator chunk has 0 bytes"),
       END_OF_FIELDS},
      .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md",
      .explanation = "Channel the plotter uses to push a .zcf configuration file over the bus. Each fast-packet "
@@ -7289,7 +7289,7 @@ Pgn pgnList[] = {
      {COMPANY(295),
       UINT8_DESC_FIELD("Page", "Observed = 0x01; possibly a status-page selector"),
       UINT8_FIELD("Dipswitch"),
-      BINARY_FIELD("Records", LEN_VARIABLE, "N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8"),
+      BINARY_FIELD("Records", BYTES(24), "N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8"),
       END_OF_FIELDS},
      .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md",
      .explanation = "Periodic extended-status frame from a CZone module. Real CZone modules use it to report per-circuit "
@@ -7444,7 +7444,7 @@ Pgn pgnList[] = {
      {COMPANY(295),
       UINT8_DESC_FIELD("Query Type", "Echoes the Query Type byte from the triggering PGN 65299"),
       UINT16_DESC_FIELD("Index", "Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair"),
-      BINARY_FIELD("Label", LEN_VARIABLE, "Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed"),
+      BINARY_FIELD("Label", BYTES(217), "Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed"),
       END_OF_FIELDS},
      .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md",
      .explanation = "Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance "

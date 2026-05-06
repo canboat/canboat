@@ -49257,7 +49257,7 @@
         "Missing":["Interval"
         ],
         "FieldCount":7,
-        "MinLength":23,
+        "Length":223,
         "Fields":[
           {
             "Order":1,
@@ -49344,8 +49344,7 @@
             "Id":"data",
             "Name":"Data",
             "Description":"Up to 200 bytes of .zcf data; terminator chunk has 0 bytes",
-            "BitLengthVariable":true,
-            "BitLengthField":6,
+            "BitLength":1600,
             "BitOffset":184,
             "BitStart":0,
             "Resolution":1,
@@ -50187,7 +50186,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
-        "MinLength":4,
+        "Length":28,
         "Fields":[
           {
             "Order":1,
@@ -50263,8 +50262,7 @@
             "Id":"records",
             "Name":"Records",
             "Description":"N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8",
-            "BitLengthVariable":true,
-            "BitLengthField":5,
+            "BitLength":192,
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
@@ -51406,7 +51404,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":6,
-        "MinLength":5,
+        "Length":222,
         "Fields":[
           {
             "Order":1,
@@ -51483,8 +51481,7 @@
             "Id":"label",
             "Name":"Label",
             "Description":"Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed",
-            "BitLengthVariable":true,
-            "BitLengthField":5,
+            "BitLength":1736,
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
