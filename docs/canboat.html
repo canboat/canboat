@@ -1338,7 +1338,7 @@ limitations under the License.
             
               The default priority (as observed in the field) is 3.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
-                  BEP Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
@@ -1454,18 +1454,18 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>16 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65283">0xFF03:
-            PGN 65283
-            - BEP Marine: Proprietary PGN 65283</h3><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65282">0xFF02:
+            PGN 65282
+            - BEP Marine: CZone Alarm Event</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / channel index, an alarm-state polarity flag, or a frame counter).</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 4 fields.
+            bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
                   BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -1476,8 +1476,81 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65284">0xFF04:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Dipswitch</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md</a></p><h3 id="pgn-65283">0xFF03:
+            PGN 65283
+            - BEP Marine: CZone Channel State</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode and a 4-bit Value; the reporting module emits this periodically or on state change so other devices on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context (likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been verified against captures with known channel states.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 18 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
+                  BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Dipswitch</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Channel 0 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Channel 1 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Channel 2 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Channel 3 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Channel 4 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Channel 5 Mode</td><td>Likely circuit type / fault state; per-bit semantics unverified</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Channel 0 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Channel 1 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Channel 2 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Channel 3 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>15</td><td>Channel 4 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Channel 5 Value</td><td>4-bit per-channel value; likely dim level (0..15) or state code</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Flag</td><td>Single boolean flag; purpose unverified</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>18</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md</a></p><h3 id="pgn-65284">0xFF04:
             PGN 65284
             - Maretron: Proprietary DC Breaker Current</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2042,7 +2115,7 @@ limitations under the License.
             bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
-                  BEP Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
                       <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits

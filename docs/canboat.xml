@@ -7269,7 +7269,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
@@ -7686,9 +7686,11 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
-      <PGN>65283</PGN>
-      <Id>bepMarineProprietaryPgn65283</Id>
-      <Description>BEP Marine: Proprietary PGN 65283</Description>
+      <PGN>65282</PGN>
+      <Id>bepMarineCzoneAlarmEvent</Id>
+      <Description>BEP Marine: CZone Alarm Event</Description>
+      <Explanation>CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / channel index, an alarm-state polarity flag, or a frame counter).</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -7697,7 +7699,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -7744,13 +7746,302 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>dipswitch</Id>
+          <Name>Dipswitch</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65283</PGN>
+      <Id>bepMarineCzoneChannelState</Id>
+      <Description>BEP Marine: CZone Channel State</Description>
+      <Explanation>Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode and a 4-bit Value; the reporting module emits this periodically or on state change so other devices on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context (likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been verified against captures with known channel states.</Explanation>
+      <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md</URL>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>18</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>BEP Marine 2</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>295</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>dipswitch</Id>
+          <Name>Dipswitch</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>channel0Mode</Id>
+          <Name>Channel 0 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>channel1Mode</Id>
+          <Name>Channel 1 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>channel2Mode</Id>
+          <Name>Channel 2 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>channel3Mode</Id>
+          <Name>Channel 3 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>channel4Mode</Id>
+          <Name>Channel 4 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>channel5Mode</Id>
+          <Name>Channel 5 Mode</Name>
+          <Description>Likely circuit type / fault state; per-bit semantics unverified</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>channel0Value</Id>
+          <Name>Channel 0 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>channel1Value</Id>
+          <Name>Channel 1 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>channel2Value</Id>
+          <Name>Channel 2 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>44</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>channel3Value</Id>
+          <Name>Channel 3 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>channel4Value</Id>
+          <Name>Channel 4 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>channel5Value</Id>
+          <Name>Channel 5 Value</Name>
+          <Description>4-bit per-channel value; likely dim level (0..15) or state code</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>flag</Id>
+          <Name>Flag</Name>
+          <Description>Single boolean flag; purpose unverified</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>60</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>18</Order>
+          <Id>reserved18</Id>
+          <Name>Reserved</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>61</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -9524,7 +9815,7 @@ limitations under the License.
           <Order>1</Order>
           <Id>manufacturerCode</Id>
           <Name>Manufacturer Code</Name>
-          <Description>BEP Marine</Description>
+          <Description>BEP Marine 2</Description>
           <BitLength>11</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>

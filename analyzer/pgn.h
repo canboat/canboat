@@ -1714,13 +1714,52 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 6}
 
+    ,
+    {"BEP Marine: CZone Alarm Event",
+     65282,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(295),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("Dipswitch"),
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md",
+     .explanation = "CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm "
+                    "condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before "
+                    "raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone "
+                    "library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm "
+                    "classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / "
+                    "channel index, an alarm-state polarity flag, or a frame counter)."}
 
     ,
-    {"BEP Marine: Proprietary PGN 65283",
+    {"BEP Marine: CZone Channel State",
      65283,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_FIELD("Dipswitch"),
+      SIMPLE_DESC_FIELD("Channel 0 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 1 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 2 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 3 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 4 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 5 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 0 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 1 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 2 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 3 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 4 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 5 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Flag", 1, "Single boolean flag; purpose unverified"),
+      RESERVED_FIELD(3),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md",
+     .explanation = "Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode "
+                    "and a 4-bit Value; the reporting module emits this periodically or on state change so other devices "
+                    "on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context "
+                    "(likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been "
+                    "verified against captures with known channel states."}
     ,
     {"Maretron: Proprietary DC Breaker Current",
      65284,
