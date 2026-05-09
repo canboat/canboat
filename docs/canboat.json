@@ -13097,6 +13097,116 @@
         ]
       },
       {
+        "PGN":65314,
+        "Id":"yamahaGearStatus",
+        "Description":"Yamaha: Gear Status",
+        "URL":"https://github.com/canboat/canboat/issues/603",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":8,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Mystic Valley Communications",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":198,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"reserved4",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":5,
+            "Id":"reserved5",
+            "Name":"Reserved",
+            "BitLength":1,
+            "BitOffset":40,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":6,
+            "Id":"neutral",
+            "Name":"Neutral",
+            "BitLength":1,
+            "BitOffset":41,
+            "BitStart":1,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":1,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"YES_NO"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":42,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":8,
+            "Id":"reserved8",
+            "Name":"Reserved",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
         "PGN":65315,
         "Id":"suzukiTrollModeControl",
         "Description":"Suzuki: Troll Mode Control",

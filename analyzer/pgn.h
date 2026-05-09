@@ -2278,6 +2278,20 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Yamaha: Gear Status",
+     65314,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(198),
+      RESERVED_FIELD(BYTES(3)),
+      RESERVED_FIELD(1),
+      LOOKUP_FIELD("Neutral", 1, YES_NO),
+      RESERVED_FIELD(6),
+      RESERVED_FIELD(BYTES(2)),
+      END_OF_FIELDS},
+     .url = "https://github.com/canboat/canboat/issues/603"}
+
+    ,
     {"Suzuki: Troll Mode Control",
      65315,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
