@@ -968,3 +968,38 @@ bool parseConst(const char **msg, const char *str)
   }
   return false;
 }
+
+void emitCanboatStartupRecord(const char *source, const char *device)
+{
+  char     dateStr[DATE_LENGTH];
+  char     line[600];
+  char    *p = line;
+  uint8_t  data[66];
+  int      major = 0, minor = 0, patch = 0;
+  uint16_t ver;
+
+  memset(data, 0, sizeof(data));
+
+  sscanf(VERSION, "%d.%d.%d", &major, &minor, &patch);
+  ver = (uint16_t)(major * 1000 + minor * 100 + patch);
+  data[0] = (uint8_t)(ver & 0xff);
+  data[1] = (uint8_t)(ver >> 8);
+
+  if (source)
+  {
+    strncpy((char *) &data[2], source, 32);
+  }
+  if (device)
+  {
+    strncpy((char *) &data[34], device, 32);
+  }
+
+  p += snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, UINT64_C(0)), 7, CANBOAT_BEM, 0, 255, 66);
+  for (size_t i = 0; i < 66; i++)
+  {
+    p += snprintf(p, line + sizeof(line) - p, ",%02x", data[i]);
+  }
+
+  puts(line);
+  fflush(stdout);
+}

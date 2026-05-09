@@ -9390,6 +9390,16 @@ Pgn pgnList[] = {
       {.name = "Uptime", .size = BYTES(4), .resolution = 1, .unit = "s", .fieldType = "DURATION_UFIX32_S"},
       UINT8_FIELD("Gateway address"),
       UINT32_FIELD("Rejected TX requests"),
+      END_OF_FIELDS}}
+
+    ,
+    {"CANboat: Startup",
+     CANBOAT_BEM,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {VERSION_FIELD("Version"),
+      STRING_FIX_FIELD("Source", BYTES(32)),
+      STRING_FIX_FIELD("Device", BYTES(32)),
       END_OF_FIELDS}}};
 
 const size_t pgnListSize  = ARRAY_SIZE(pgnList);

@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Added
 
 - #573: actisense-serial and ikonvert-serial now emit a `# format=FAST` header so the analyzer auto-detects the format correctly even when the first message is a short PGN.
+- #381: Serial tools emit a CANboat Startup virtual PGN record with software version, source tool name, and device path.
 - #603: Yamaha Gear Status PGN 65314 with Neutral indicator field.
 - #624: Garmin SteadyCast AHRS ATT proprietary PGNs (126720): COG Source Valid Flag, Device Flags, Non-default Calibration Matrix Present, Set North State.
 - #628: Decode six CZone (BEP Marine) proprietary PGNs: Circuit Control (65280), Alarm Event (65282), Channel State (65283), Circuit Status (65284), Module Announce (65290), Configuration Transfer (130816), Circuit Readings (130817), Enumeration Reply (130820).

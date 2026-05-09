@@ -169,6 +169,8 @@ unsigned int getCanIdFromISO11783Bits(unsigned int prio, unsigned int pgn, unsig
 
 SOCKET open_socket_stream(const char *url);
 
+void emitCanboatStartupRecord(const char *source, const char *device);
+
 #define DATE_LENGTH 60
 const char *fmtNow(char str[DATE_LENGTH]);
 const char *fmtTimestamp(char str[DATE_LENGTH], uint64_t timestamp);
@@ -279,8 +281,9 @@ void logAbort(const char *format, ...);
  * These need unique fake PGNs.
  */
 #define CANBOAT_PGN_START 0x40000
-#define CANBOAT_PGN_END 0x401FF
+#define CANBOAT_PGN_END 0x402FF
 #define ACTISENSE_BEM 0x40000 /* Actisense specific fake PGNs */
 #define IKONVERT_BEM 0x40100  /* iKonvert specific fake PGNs */
+#define CANBOAT_BEM 0x40200   /* CANboat tool specific fake PGNs */
 
 #endif

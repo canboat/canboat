@@ -215,7 +215,7 @@ int main(int argc, char **argv)
   }
 
   fputs(CANBOAT_FORMAT_FAST_HEADER, stdout);
-  fflush(stdout);
+  emitCanboatStartupRecord("actisense-serial", device);
 
   logDebug("Opening %s\n", device);
   if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)

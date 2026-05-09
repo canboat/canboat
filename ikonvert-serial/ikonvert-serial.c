@@ -290,7 +290,7 @@ int main(int argc, char **argv)
   }
 
   fputs(CANBOAT_FORMAT_FAST_HEADER, stdout);
-  fflush(stdout);
+  emitCanboatStartupRecord("ikonvert-serial", device);
 
   for (;;)
   {
