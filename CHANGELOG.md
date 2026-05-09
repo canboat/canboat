@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Fixed
+
+- #623: Fix analyzer reading uninitialized stack memory from short fast-packet first frames.
+
 ## [6.1.8]
 
 ### Added

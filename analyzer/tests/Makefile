@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 tests
 
 all:	tests
 
@@ -133,4 +133,12 @@ test13:
 	diff $(TEMPDIR)/actisense-format.out actisense-format.out
 	diff $(TEMPDIR)/actisense-format.err actisense-format.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13
+#
+# This tests that short fast-packet first frames don't read uninitialized memory (issue #623)
+#
+test14:
+	$(ANALYZER) < short-frame.in > $(TEMPDIR)/short-frame.out -debug -q -fixtime short-frame 2> $(TEMPDIR)/short-frame.err
+	diff $(TEMPDIR)/short-frame.out short-frame.out
+	diff $(TEMPDIR)/short-frame.err short-frame.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14
