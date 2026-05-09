@@ -798,11 +798,31 @@ static void printCanFormat(RawMessage *msg)
 
     if (frame == 0 && p->frames == 0)
     {
-      p->size      = msg->data[1];
+      p->size = msg->data[1];
+      if (p->size > FASTPACKET_MAX_SIZE)
+      {
+        p->size = FASTPACKET_MAX_SIZE;
+      }
       p->allFrames = (uint32_t) ((UINT64_C(1) << (1 + (p->size / 7))) - 1);
     }
 
-    memcpy(&p->data[idx], &msg->data[msgIdx], frameLen);
+    if (msg->len > msgIdx)
+    {
+      size_t available = msg->len - msgIdx;
+      if (available < frameLen)
+      {
+        memcpy(&p->data[idx], &msg->data[msgIdx], available);
+        memset(&p->data[idx + available], 0xff, frameLen - available);
+      }
+      else
+      {
+        memcpy(&p->data[idx], &msg->data[msgIdx], frameLen);
+      }
+    }
+    else
+    {
+      memset(&p->data[idx], 0xff, frameLen);
+    }
     p->frames |= 1 << frame;
 
     logDebug("Using buffer %u for reassembly of PGN %u: size %zu frame %u sequence %u idx=%zu frames=%x mask=%x\n",

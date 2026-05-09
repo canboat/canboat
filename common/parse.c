@@ -66,8 +66,11 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
   }
   p--; // Back to comma
 
-  memcpy(m->timestamp, msg, p - msg);
-  m->timestamp[p - msg] = 0;
+  {
+    size_t tsLen = CB_MIN((size_t)(p - msg), sizeof(m->timestamp) - 1);
+    memcpy(m->timestamp, msg, tsLen);
+    m->timestamp[tsLen] = 0;
+  }
 
   /* Moronic Windows does not support %hh<type> so we use intermediate variables */
   r = sscanf(p,
@@ -128,8 +131,11 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
   }
   p--; // Back to comma
 
-  memcpy(m->timestamp, msg, p - msg);
-  m->timestamp[p - msg] = 0;
+  {
+    size_t tsLen = CB_MIN((size_t)(p - msg), sizeof(m->timestamp) - 1);
+    memcpy(m->timestamp, msg, tsLen);
+    m->timestamp[tsLen] = 0;
+  }
 
   r = sscanf(p, ",%u,%u,%u,%u,%u ", &prio, &pgn, &src, &dst, &len);
   if (r < 5)
@@ -137,6 +143,12 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
     logError("Error reading message, scanned %zu from %s", r, msg);
     if (!showJson)
       fprintf(stdout, "%s", msg);
+    return 2;
+  }
+
+  if (len > FASTPACKET_MAX_SIZE)
+  {
+    logError("Message size %u exceeds maximum %u: %s", len, FASTPACKET_MAX_SIZE, msg);
     return 2;
   }
 
@@ -206,7 +218,7 @@ int parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson)
   getISO11783BitsFromCanId(id, &prio, &pgn, &src, &dst);
 
   p++;
-  len = strlen(p) / 2;
+  len = CB_MIN(strlen(p) / 2, FASTPACKET_MAX_SIZE);
   for (i = 0; i < len; i++)
   {
     if (scanHex(&p, &m->data[i]))
@@ -260,7 +272,7 @@ int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
 
   p = msg + STRSIZE("$PCDIN,01FD07,089C77D!,03,"); // Fixed length where data bytes start;
 
-  for (i = 0; *p != '*'; i++)
+  for (i = 0; *p != '*' && i < FASTPACKET_MAX_SIZE; i++)
   {
     if (scanHex(&p, &m->data[i]))
     {
@@ -271,7 +283,7 @@ int parseRawFormatChetco(char *msg, RawMessage *m, bool showJson)
     }
   }
 
-  return setParsedValues(m, 0, pgn, 255, src, i + 1);
+  return setParsedValues(m, 0, pgn, 255, src, i);
 }
 
 /*
@@ -345,6 +357,12 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
   }
   p += consumed;
 
+  if (count > FASTPACKET_MAX_SIZE)
+  {
+    logError("Garmin CSV message Size %u exceeds maximum %u: %s", count, FASTPACKET_MAX_SIZE, msg);
+    return 2;
+  }
+
   for (i = 0; *p && i < count; i++)
   {
     if (scanHex(&p, &m->data[i]))
@@ -356,7 +374,7 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
     }
   }
 
-  return setParsedValues(m, prio, pgn, dst, src, i + 1);
+  return setParsedValues(m, prio, pgn, dst, src, i);
 }
 
 /* Yacht Digital, YDWG-02
@@ -405,7 +423,7 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   tiden = (time_t) (getNow() / UINT64_C(1000));
   localtime_r(&tiden, &tm);
   strftime(m->timestamp, sizeof(m->timestamp), "%Y-%m-%dT", &tm);
-  sprintf(m->timestamp + strlen(m->timestamp), "%s", token);
+  snprintf(m->timestamp + strlen(m->timestamp), sizeof(m->timestamp) - strlen(m->timestamp), "%s", token);
 
   // parse direction, not really used in analyzer
   token = strtok_r(NULL, " ", &nexttoken);
@@ -427,12 +445,12 @@ int parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson)
   i = 0;
   while ((token = strtok_r(NULL, " ", &nexttoken)) != 0)
   {
-    m->data[i] = strtoul(token, NULL, 16);
-    i++;
-    if (i > FASTPACKET_MAX_SIZE)
+    if (i >= FASTPACKET_MAX_SIZE)
     {
       return -1;
     }
+    m->data[i] = strtoul(token, NULL, 16);
+    i++;
   }
 
   return setParsedValues(m, prio, pgn, dst, src, i);
@@ -470,7 +488,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   {
     // now store the timestamp, unchanged
     memset(msg->timestamp, 0, sizeof msg->timestamp);
-    memcpy(msg->timestamp, sbGet(in), CB_MAX(p - sbGet(in), sizeof msg->timestamp - 1));
+    memcpy(msg->timestamp, sbGet(in), CB_MIN(p - sbGet(in), sizeof msg->timestamp - 1));
 
     msg->prio = prio;
     msg->pgn  = pgn;
