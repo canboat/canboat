@@ -9387,7 +9387,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("CAN network load"),
       UINT32_FIELD("Errors"),
       UINT8_FIELD("Device count"),
-      TIME_FIELD("Uptime"),
+      {.name = "Uptime", .size = BYTES(4), .resolution = 1, .unit = "s", .fieldType = "DURATION_UFIX32_S"},
       UINT8_FIELD("Gateway address"),
       UINT32_FIELD("Rejected TX requests"),
       END_OF_FIELDS}}};

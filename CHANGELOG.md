@@ -18,6 +18,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Fixed
 
+- Fix iKonvert uptime field using wrong type (TIME with 0.0001s resolution instead of DURATION with 1s resolution).
 - #623: Fix analyzer reading uninitialized stack memory from short fast-packet first frames.
 - #630: Fix stack buffer overflow in Garmin CSV parser when Size exceeds FASTPACKET_MAX_SIZE.
 - Harden all input parsers against buffer overflows from untrusted input lengths.
