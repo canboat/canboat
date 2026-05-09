@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Added
 
 - #624: Garmin SteadyCast AHRS ATT proprietary PGNs (126720): COG Source Valid Flag, Device Flags, Non-default Calibration Matrix Present, Set North State.
+- #628: Decode six CZone (BEP Marine) proprietary PGNs: Circuit Control (65280), Alarm Event (65282), Channel State (65283), Circuit Status (65284), Module Announce (65290), Configuration Transfer (130816), Circuit Readings (130817), Enumeration Reply (130820).
 
 ### Fixed
 
@@ -18,6 +19,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #630: Fix stack buffer overflow in Garmin CSV parser when Size exceeds FASTPACKET_MAX_SIZE.
 - Harden all input parsers against buffer overflows from untrusted input lengths.
 - #622: extractNumberNotEmpty: skip sentinel stripping when a field's explicit `.rangeMax` exactly matches the bit-size maximum, completing the #600 fix for PGN 60928 device instance fields.
+- #626: Fix NULL function pointer crash in analyzer-explain XML output for MATCH_FIELD entries without a lookup.
+- #625: Update stale external documentation URLs to current or web archive snapshots.
 
 ## [6.1.8]
 
