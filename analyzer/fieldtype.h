@@ -363,6 +363,23 @@ static const PhysicalQuantity CONCENTRATION
        .unit         = "parts per million",
        .abbreviation = "ppm"};
 
+static const PhysicalQuantity DIMENSIONLESS_RATIO
+    = {.name         = "DIMENSIONLESS_RATIO",
+       .description  = "Dimensionless ratio",
+       .comment      = "A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, "
+                       "eccentricity (m/m), clock drift (s/s), and similar.",
+       .unit         = "ratio",
+       .abbreviation = "ratio",
+       .url          = "https://en.wikipedia.org/wiki/Dimensionless_quantity"};
+
+static const PhysicalQuantity SQUARE_ROOT_LENGTH
+    = {.name         = "SQUARE_ROOT_LENGTH",
+       .description  = "Square root of length",
+       .comment      = "Used in GPS/GNSS almanac data for the square root of the semi-major axis of satellite orbits.",
+       .abbreviation = "sqrt(m)",
+       .unit         = "sqrt(m)",
+       .url          = "https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes"};
+
 static const PhysicalQuantity SIGNAL_STRENGTH = {.name        = "SIGNAL_STRENGTH",
                                                  .description = "Signal strength expressed in dB with respect to 1 uV/m",
                                                  .url = "https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
@@ -401,6 +418,8 @@ const PhysicalQuantity *const PhysicalQuantityList[] = {&ELECTRICAL_CURRENT,
                                                         &PRESSURE,
                                                         &PRESSURE_RATE,
                                                         &CONCENTRATION,
+                                                        &DIMENSIONLESS_RATIO,
+                                                        &SQUARE_ROOT_LENGTH,
                                                         &SIGNAL_STRENGTH,
                                                         &SIGNAL_TO_NOISE_RATIO,
                                                         NULL};
@@ -555,6 +574,24 @@ FieldType fieldTypeList[] = {
      .hasSign     = True,
      .url         = "https://en.wikipedia.org/wiki/IEEE_754",
      .pf          = fieldPrintFloat},
+
+    {.name          = "FLOAT_RAD",
+     .description   = "32 bit IEEE-754 floating point angle in radians",
+     .unit          = "rad",
+     .physical      = &ANGLE,
+     .baseFieldType = "FLOAT"},
+
+    {.name          = "FLOAT_PPM",
+     .description   = "32 bit IEEE-754 floating point concentration in ppm",
+     .unit          = "ppm",
+     .physical      = &CONCENTRATION,
+     .baseFieldType = "FLOAT"},
+
+    {.name          = "FLOAT_PPT",
+     .description   = "32 bit IEEE-754 floating point concentration in ppt",
+     .unit          = "ppt",
+     .physical      = &CONCENTRATION,
+     .baseFieldType = "FLOAT"},
 
     {.name                = "DECIMAL",
      .description         = "A unsigned numeric value represented with 2 decimal digits per byte",
@@ -1182,16 +1219,17 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "UINT32"},
 
-    {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
+    {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "UINT8"},
 
-    {.name = "PERCENTAGE_UINT8_HIGHRES", .description = "Percentage, unsigned", .unit = "%", .baseFieldType = "UINT8"},
+    {.name = "PERCENTAGE_UINT8_HIGHRES", .description = "Percentage, unsigned", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "UINT8"},
 
-    {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .baseFieldType = "INT8"},
+    {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "INT8"},
 
     {.name          = "PERCENTAGE_FIX16",
      .description   = "Percentage, high precision",
      .unit          = "%",
      .resolution    = RES_PERCENTAGE,
+     .physical      = &DIMENSIONLESS_RATIO,
      .baseFieldType = "FIX16"},
 
     {.name                = "PERCENTAGE_FIX16_D",
@@ -1199,6 +1237,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "Percentage in promille (1/10 %)",
      .resolution          = 0.1,
      .unit                = "%",
+     .physical            = &DIMENSIONLESS_RATIO,
      .baseFieldType       = "FIX16"},
 
     {.name                = "ROTATION_FIX16",
@@ -1424,6 +1463,48 @@ FieldType fieldTypeList[] = {
                             "right. This is reflected by resolution field containing some factor of 2^n or 2^-n.",
      .url                 = "https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf",
      .baseFieldType       = "UNSIGNED_FIXED_POINT_NUMBER"},
+
+    {.name          = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE",
+     .description   = "Almanac parameter in semi-circles, signed",
+     .unit          = "semi-circle",
+     .physical      = &ANGLE,
+     .baseFieldType = "SIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S",
+     .description   = "Almanac parameter in semi-circles/s, signed",
+     .unit          = "semi-circle/s",
+     .physical      = &ANGULAR_VELOCITY,
+     .baseFieldType = "SIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "SIGNED_ALMANAC_PARAMETER_RATIO",
+     .description   = "Almanac parameter, dimensionless ratio, signed",
+     .unit          = "s/s",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "SIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "SIGNED_ALMANAC_PARAMETER_DURATION",
+     .description   = "Almanac parameter in seconds, signed",
+     .unit          = "s",
+     .physical      = &DURATION,
+     .baseFieldType = "SIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "UNSIGNED_ALMANAC_PARAMETER_RATIO",
+     .description   = "Almanac parameter, dimensionless ratio, unsigned",
+     .unit          = "m/m",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "UNSIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "UNSIGNED_ALMANAC_PARAMETER_DURATION",
+     .description   = "Almanac parameter in seconds, unsigned",
+     .unit          = "s",
+     .physical      = &DURATION,
+     .baseFieldType = "UNSIGNED_ALMANAC_PARAMETER"},
+
+    {.name          = "UNSIGNED_ALMANAC_PARAMETER_SQRT_M",
+     .description   = "Almanac parameter, square root of meters, unsigned",
+     .unit          = "sqrt(m)",
+     .physical      = &SQUARE_ROOT_LENGTH,
+     .baseFieldType = "UNSIGNED_ALMANAC_PARAMETER"},
 
     // Stringy types
     {.name                = "STRING_FIX",

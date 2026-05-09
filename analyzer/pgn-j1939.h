@@ -234,23 +234,21 @@ typedef struct
 
 // A whole bunch of different NUMBER fields, with variing resolutions
 
-#define UNSIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, unt, desc) \
-  {.name        = nam,                                             \
-   .size        = len,                                             \
-   .resolution  = res,                                             \
-   .hasSign     = false,                                           \
-   .unit        = unt,                                             \
-   .description = desc,                                            \
-   .fieldType   = "UNSIGNED_ALMANAC_PARAMETER"}
+#define UNSIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, ft, desc) \
+  {.name        = nam,                                            \
+   .size        = len,                                            \
+   .resolution  = res,                                            \
+   .hasSign     = false,                                          \
+   .description = desc,                                           \
+   .fieldType   = ft}
 
-#define SIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, unt, desc) \
-  {.name        = nam,                                           \
-   .size        = len,                                           \
-   .resolution  = res,                                           \
-   .hasSign     = true,                                          \
-   .unit        = unt,                                           \
-   .description = desc,                                          \
-   .fieldType   = "SIGNED_ALMANAC_PARAMETER"}
+#define SIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, ft, desc) \
+  {.name        = nam,                                          \
+   .size        = len,                                          \
+   .resolution  = res,                                          \
+   .hasSign     = true,                                         \
+   .description = desc,                                         \
+   .fieldType   = ft}
 
 #define DILUTION_OF_PRECISION_UFIX16_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.01, .fieldType = "DILUTION_OF_PRECISION_UFIX16", .description = desc}
@@ -706,12 +704,11 @@ typedef struct
 #define ANGLE_FIX16_DDEG_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.1, .hasSign = true, .unit = "deg", .fieldType = "ANGLE_FIX16_DDEG"}
 
-#define FLOAT_FIELD(nam, unt, desc) \
+#define FLOAT_FIELD(nam, ft, desc) \
   {.name        = nam,              \
    .size        = BYTES(4),         \
    .hasSign     = true,             \
-   .unit        = unt,              \
-   .fieldType   = "FLOAT",          \
+   .fieldType   = ft,               \
    .description = desc,             \
    .resolution  = 1,                \
    .rangeMin    = -1 * FLT_MAX,     \

@@ -222,6 +222,20 @@ limitations under the License.
       <UnitDescription>parts per million</UnitDescription>
       <Unit>ppm</Unit>
     </PhysicalQuantity>
+    <PhysicalQuantity Name="DIMENSIONLESS_RATIO">
+      <Description>Dimensionless ratio</Description>
+      <Comment>A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity (m/m), clock drift (s/s), and similar.</Comment>
+      <URL>https://en.wikipedia.org/wiki/Dimensionless_quantity</URL>
+      <UnitDescription>ratio</UnitDescription>
+      <Unit>ratio</Unit>
+    </PhysicalQuantity>
+    <PhysicalQuantity Name="SQUARE_ROOT_LENGTH">
+      <Description>Square root of length</Description>
+      <Comment>Used in GPS/GNSS almanac data for the square root of the semi-major axis of satellite orbits.</Comment>
+      <URL>https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes</URL>
+      <UnitDescription>sqrt(m)</UnitDescription>
+      <Unit>sqrt(m)</Unit>
+    </PhysicalQuantity>
     <PhysicalQuantity Name="SIGNAL_STRENGTH">
       <Description>Signal strength expressed in dB with respect to 1 uV/m</Description>
       <URL>https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications</URL>
@@ -12168,6 +12182,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -12182,6 +12197,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -12415,6 +12431,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -13723,6 +13740,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -17750,6 +17768,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -24220,6 +24239,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -24428,6 +24448,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -24442,6 +24463,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -24616,6 +24638,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -26881,6 +26904,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-131.068</RangeMin>
           <RangeMax>131.056</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -26975,6 +26999,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -26989,6 +27014,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -27416,6 +27442,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -27819,6 +27846,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -27847,6 +27875,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -29065,6 +29094,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33067,6 +33097,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.1415926</RangeMin>
           <RangeMax>3.1415926</RangeMax>
           <FieldType>FLOAT</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -33082,6 +33113,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.1415926</RangeMin>
           <RangeMax>3.1415926</RangeMax>
           <FieldType>FLOAT</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -33097,6 +33129,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.1415926</RangeMin>
           <RangeMax>3.1415926</RangeMax>
           <FieldType>FLOAT</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -33111,6 +33144,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.40282346638529e+38</RangeMin>
           <RangeMax>3.40282346638529e+38</RangeMax>
           <FieldType>FLOAT</FieldType>
+          <PhysicalQuantity>CONCENTRATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -34461,6 +34495,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>0.0312480926513672</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -34476,6 +34511,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1032192</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -34491,6 +34527,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.0624980926513672</RangeMin>
           <RangeMax>0.0624923706054688</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -34506,6 +34543,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-1.19205651571974e-07</RangeMin>
           <RangeMax>1.19194737635553e-07</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGULAR_VELOCITY</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -34521,6 +34559,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>8191.998046875</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>SQUARE_ROOT_LENGTH</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -34536,6 +34575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
@@ -34551,6 +34591,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
@@ -34566,6 +34607,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>12</Order>
@@ -34581,6 +34623,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-0.000975608825683594</RangeMin>
           <RangeMax>0.000972747802734375</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>13</Order>
@@ -34596,6 +34639,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.72165231965482e-09</RangeMin>
           <RangeMax>3.71073838323355e-09</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -34938,6 +34982,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -34952,6 +34997,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -42004,6 +42050,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-131.068</RangeMin>
           <RangeMax>131.056</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -42183,6 +42230,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-131.068</RangeMin>
           <RangeMax>131.056</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -42197,6 +42245,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-131.068</RangeMin>
           <RangeMax>131.056</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -42726,6 +42775,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-3.40282346638529e+38</RangeMin>
           <RangeMax>3.40282346638529e+38</RangeMax>
           <FieldType>FLOAT</FieldType>
+          <PhysicalQuantity>CONCENTRATION</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -45412,6 +45462,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>14</Order>
@@ -46271,6 +46322,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>2</Order>
@@ -46285,6 +46337,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -46846,6 +46899,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -47094,6 +47148,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -47219,6 +47274,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>3</Order>
@@ -47233,6 +47289,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -47247,6 +47304,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
@@ -47261,6 +47319,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -47275,6 +47334,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>
@@ -47289,6 +47349,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>8</Order>
@@ -47303,6 +47364,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
@@ -66451,6 +66513,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>-127</RangeMin>
           <RangeMax>124</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>

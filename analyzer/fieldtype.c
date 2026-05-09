@@ -211,6 +211,10 @@ extern void fillFieldType(bool doUnitFixup)
         ft->url = ft->physical->url;
       }
     }
+    else if (ft->unit != NULL)
+    {
+      logAbort("FieldType '%s' has unit '%s' but no physical quantity\n", ft->name, ft->unit);
+    }
   }
 
   // Percolate fields from base to derived field

@@ -283,23 +283,21 @@ typedef struct
 
 // A whole bunch of different NUMBER fields, with variing resolutions
 
-#define UNSIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, unt, desc) \
-  {.name        = nam,                                             \
-   .size        = len,                                             \
-   .resolution  = res,                                             \
-   .hasSign     = false,                                           \
-   .unit        = unt,                                             \
-   .description = desc,                                            \
-   .fieldType   = "UNSIGNED_ALMANAC_PARAMETER"}
+#define UNSIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, ft, desc) \
+  {.name        = nam,                                            \
+   .size        = len,                                            \
+   .resolution  = res,                                            \
+   .hasSign     = false,                                          \
+   .description = desc,                                           \
+   .fieldType   = ft}
 
-#define SIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, unt, desc) \
-  {.name        = nam,                                           \
-   .size        = len,                                           \
-   .resolution  = res,                                           \
-   .hasSign     = true,                                          \
-   .unit        = unt,                                           \
-   .description = desc,                                          \
-   .fieldType   = "SIGNED_ALMANAC_PARAMETER"}
+#define SIGNED_ALMANAC_PARAMETER_FIELD(nam, len, res, ft, desc) \
+  {.name        = nam,                                          \
+   .size        = len,                                          \
+   .resolution  = res,                                          \
+   .hasSign     = true,                                         \
+   .description = desc,                                         \
+   .fieldType   = ft}
 
 #define DILUTION_OF_PRECISION_UFIX16_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.01, .fieldType = "DILUTION_OF_PRECISION_UFIX16", .description = desc}
@@ -863,12 +861,11 @@ typedef struct
 #define ANGLE_FIX16_DDEG_FIELD(nam, desc) \
   {.name = nam, .size = BYTES(2), .resolution = 0.1, .hasSign = true, .unit = "deg", .fieldType = "ANGLE_FIX16_DDEG"}
 
-#define FLOAT_FIELD(nam, unt, desc) \
+#define FLOAT_FIELD(nam, ft, desc) \
   {.name        = nam,              \
    .size        = BYTES(4),         \
    .hasSign     = true,             \
-   .unit        = unt,              \
-   .fieldType   = "FLOAT",          \
+   .fieldType   = ft,               \
    .description = desc,             \
    .resolution  = 1,                \
    .rangeMin    = -1 * FLT_MAX,     \
@@ -4960,22 +4957,22 @@ Pgn pgnList[] = {
       DISTANCE_FIX32_CM_FIELD("Delta Z", "Delta shift in Z axis from WGS 84"),
       FLOAT_FIELD(
           "Rotation in X",
-          "rad",
+          "FLOAT_RAD",
           "Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
       FLOAT_FIELD(
           "Rotation in Y",
-          "rad",
+          "FLOAT_RAD",
           "Rotational shift in Y axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
       FLOAT_FIELD(
           "Rotation in Z",
-          "rad",
+          "FLOAT_RAD",
           "Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking along the "
           "positive axis towards the origin, counter-clockwise rotations are positive."),
-      FLOAT_FIELD("Scale", "ppm", NULL),
+      FLOAT_FIELD("Scale", "FLOAT_PPM", NULL),
       DISTANCE_FIX32_CM_FIELD("Ellipsoid Semi-major Axis", "Semi-major axis (a) of the User Datum ellipsoid"),
-      FLOAT_FIELD("Ellipsoid Flattening Inverse", NULL, "Flattening (1/f) of the User Datum ellipsoid"),
+      FLOAT_FIELD("Ellipsoid Flattening Inverse", "FLOAT", "Flattening (1/f) of the User Datum ellipsoid"),
       STRING_FIX_DESC_FIELD("Datum Name",
                             BYTES(4),
                             "4 character code from IHO Publication S-60,Appendices B and C."
@@ -5166,36 +5163,36 @@ Pgn pgnList[] = {
      {UINT8_FIELD("PRN"),
       UINT16_FIELD("GPS Week number"),
       BINARY_FIELD("SV Health Bits", BYTES(1), NULL),
-      UNSIGNED_ALMANAC_PARAMETER_FIELD("Eccentricity", BYTES(2), POW2NEG(21), "m/m", "'e' in table 20-VI in ICD-GPS-200"),
-      UNSIGNED_ALMANAC_PARAMETER_FIELD("Almanac Reference Time", BYTES(1), POW2(12), "s", "'t oa' in table 20-VI in ICD-GPS-200"),
+      UNSIGNED_ALMANAC_PARAMETER_FIELD("Eccentricity", BYTES(2), POW2NEG(21), "UNSIGNED_ALMANAC_PARAMETER_RATIO", "'e' in table 20-VI in ICD-GPS-200"),
+      UNSIGNED_ALMANAC_PARAMETER_FIELD("Almanac Reference Time", BYTES(1), POW2(12), "UNSIGNED_ALMANAC_PARAMETER_DURATION", "'t oa' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Inclination Angle",
                                      BYTES(2),
                                      POW2NEG(19),
-                                     "semi-circle",
+                                     "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE",
                                      "'delta i' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Rate of Right Ascension",
                                      BYTES(2),
                                      POW2NEG(38),
-                                     "semi-circle/s",
+                                     "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S",
                                      "'OMEGADOT' in table 20-VI in ICD-GPS-200"),
       UNSIGNED_ALMANAC_PARAMETER_FIELD("Root of Semi-major Axis",
                                        BYTES(3),
                                        POW2NEG(11),
-                                       "sqrt(m)",
+                                       "UNSIGNED_ALMANAC_PARAMETER_SQRT_M",
                                        "'(A)^0.5' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Argument of Perigee",
                                      BYTES(3),
                                      POW2NEG(23),
-                                     "semi-circle",
+                                     "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE",
                                      "'(OMEGA)0' in table 20-VI in ICD-GPS-200"),
       SIGNED_ALMANAC_PARAMETER_FIELD("Longitude of Ascension Node",
                                      BYTES(3),
                                      POW2NEG(23),
-                                     "semi-circle",
+                                     "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE",
                                      "'small-omega' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Mean Anomaly", BYTES(3), POW2NEG(23), "semi-circle", "'M 0' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 1", 11, POW2NEG(20), "s", "'a f0' in table 20-VI in ICD-GPS-200"),
-      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "s/s", "'a f1' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Mean Anomaly", BYTES(3), POW2NEG(23), "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", "'M 0' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 1", 11, POW2NEG(20), "SIGNED_ALMANAC_PARAMETER_DURATION", "'a f0' in table 20-VI in ICD-GPS-200"),
+      SIGNED_ALMANAC_PARAMETER_FIELD("Clock Parameter 2", 11, POW2NEG(38), "SIGNED_ALMANAC_PARAMETER_RATIO", "'a f1' in table 20-VI in ICD-GPS-200"),
       RESERVED_FIELD(2),
       END_OF_FIELDS},
      .url      = "https://web.archive.org/web/20250720113839/www.gps.gov/technical/icwg/ICD-GPS-200C.pdf",
@@ -6348,7 +6345,7 @@ Pgn pgnList[] = {
       TIME_FIELD("Measurement Time"),
       LATITUDE_I32_FIELD("Station Latitude"),
       LONGITUDE_I32_FIELD("Station Longitude"),
-      FLOAT_FIELD("Salinity", "ppt", NULL),
+      FLOAT_FIELD("Salinity", "FLOAT_PPT", NULL),
       TEMPERATURE_FIELD("Water Temperature"),
       STRINGLAU_FIELD("Station ID"),
       STRINGLAU_FIELD("Station Name"),

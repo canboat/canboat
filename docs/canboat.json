@@ -206,6 +206,22 @@
       "Unit":"ppm"
       },
     {
+        "Name":"DIMENSIONLESS_RATIO",
+      "Description":"Dimensionless ratio",
+      "Comment":"A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity (m/m), clock drift (s/s), and similar.",
+      "URL":"https://en.wikipedia.org/wiki/Dimensionless_quantity",
+      "UnitDescription":"ratio",
+      "Unit":"ratio"
+      },
+    {
+        "Name":"SQUARE_ROOT_LENGTH",
+      "Description":"Square root of length",
+      "Comment":"Used in GPS/GNSS almanac data for the square root of the semi-major axis of satellite orbits.",
+      "URL":"https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes",
+      "UnitDescription":"sqrt(m)",
+      "Unit":"sqrt(m)"
+      },
+    {
         "Name":"SIGNAL_STRENGTH",
       "Description":"Signal strength expressed in dB with respect to 1 uV/m",
       "URL":"https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications",
@@ -12696,7 +12712,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -12710,7 +12727,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":7,
@@ -12933,7 +12951,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -14163,7 +14182,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -18084,7 +18104,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":10,
@@ -24467,7 +24488,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":5,
@@ -24675,7 +24697,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":14,
@@ -24689,7 +24712,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           }
         ]
       },
@@ -24855,7 +24879,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -27109,7 +27134,8 @@
             "Signed":true,
             "RangeMin":-131.068,
             "RangeMax":131.056,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":4,
@@ -27203,7 +27229,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":5,
@@ -27217,7 +27244,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -27644,7 +27672,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -28046,7 +28075,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":9,
@@ -28074,7 +28104,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           }
         ]
       },
@@ -29268,7 +29299,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":7,
@@ -33242,7 +33274,8 @@
             "Signed":true,
             "RangeMin":-3.1415926,
             "RangeMax":3.1415926,
-            "FieldType":"FLOAT"
+            "FieldType":"FLOAT",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":5,
@@ -33257,7 +33290,8 @@
             "Signed":true,
             "RangeMin":-3.1415926,
             "RangeMax":3.1415926,
-            "FieldType":"FLOAT"
+            "FieldType":"FLOAT",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":6,
@@ -33272,7 +33306,8 @@
             "Signed":true,
             "RangeMin":-3.1415926,
             "RangeMax":3.1415926,
-            "FieldType":"FLOAT"
+            "FieldType":"FLOAT",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":7,
@@ -33286,7 +33321,8 @@
             "Signed":true,
             "RangeMin":-3.40282346638529e+38,
             "RangeMax":3.40282346638529e+38,
-            "FieldType":"FLOAT"
+            "FieldType":"FLOAT",
+            "PhysicalQuantity":"CONCENTRATION"
           },
           {
             "Order":8,
@@ -34633,7 +34669,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":0.0312480926513672,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":5,
@@ -34648,7 +34685,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":1032192,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":6,
@@ -34663,7 +34701,8 @@
             "Signed":true,
             "RangeMin":-0.0624980926513672,
             "RangeMax":0.0624923706054688,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":7,
@@ -34678,7 +34717,8 @@
             "Signed":true,
             "RangeMin":-1.19205651571974e-07,
             "RangeMax":1.19194737635553e-07,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGULAR_VELOCITY"
           },
           {
             "Order":8,
@@ -34693,7 +34733,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":8191.998046875,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"SQUARE_ROOT_LENGTH"
           },
           {
             "Order":9,
@@ -34708,7 +34749,8 @@
             "Signed":true,
             "RangeMin":-0.99999988079071,
             "RangeMax":0.999999523162842,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":10,
@@ -34723,7 +34765,8 @@
             "Signed":true,
             "RangeMin":-0.99999988079071,
             "RangeMax":0.999999523162842,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":11,
@@ -34738,7 +34781,8 @@
             "Signed":true,
             "RangeMin":-0.99999988079071,
             "RangeMax":0.999999523162842,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"ANGLE"
           },
           {
             "Order":12,
@@ -34753,7 +34797,8 @@
             "Signed":true,
             "RangeMin":-0.000975608825683594,
             "RangeMax":0.000972747802734375,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DURATION"
           },
           {
             "Order":13,
@@ -34768,7 +34813,8 @@
             "Signed":true,
             "RangeMin":-3.72165231965482e-09,
             "RangeMax":3.71073838323355e-09,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":14,
@@ -35108,7 +35154,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -35122,7 +35169,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":4,
@@ -42142,7 +42190,8 @@
             "Signed":true,
             "RangeMin":-131.068,
             "RangeMax":131.056,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -42321,7 +42370,8 @@
             "Signed":true,
             "RangeMin":-131.068,
             "RangeMax":131.056,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":5,
@@ -42335,7 +42385,8 @@
             "Signed":true,
             "RangeMin":-131.068,
             "RangeMax":131.056,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -42863,7 +42914,8 @@
             "Signed":true,
             "RangeMin":-3.40282346638529e+38,
             "RangeMax":3.40282346638529e+38,
-            "FieldType":"FLOAT"
+            "FieldType":"FLOAT",
+            "PhysicalQuantity":"CONCENTRATION"
           },
           {
             "Order":8,
@@ -45507,7 +45559,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":14,
@@ -46342,7 +46395,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":2,
@@ -46356,7 +46410,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -46905,7 +46960,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -47148,7 +47204,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           }
         ]
       },
@@ -47267,7 +47324,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":3,
@@ -47281,7 +47339,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":4,
@@ -47295,7 +47354,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":5,
@@ -47309,7 +47369,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":6,
@@ -47323,7 +47384,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":7,
@@ -47337,7 +47399,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":8,
@@ -47351,7 +47414,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           },
           {
             "Order":9,
@@ -65984,7 +66048,8 @@
             "Signed":true,
             "RangeMin":-127,
             "RangeMax":124,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"DIMENSIONLESS_RATIO"
           }
         ]
       },

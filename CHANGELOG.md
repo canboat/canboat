@@ -12,6 +12,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 - #624: Garmin SteadyCast AHRS ATT proprietary PGNs (126720): COG Source Valid Flag, Device Flags, Non-default Calibration Matrix Present, Set North State.
 - #628: Decode six CZone (BEP Marine) proprietary PGNs: Circuit Control (65280), Alarm Event (65282), Channel State (65283), Circuit Status (65284), Module Announce (65290), Configuration Transfer (130816), Circuit Readings (130817), Enumeration Reply (130820).
+- #565: Add PhysicalQuantity for all units: new DIMENSIONLESS_RATIO (for %, m/m, s/s) and SQUARE_ROOT_LENGTH (for sqrt(m)) physical quantities; map ppt/ppm to CONCENTRATION, semi-circle to ANGLE, semi-circle/s to ANGULAR_VELOCITY; enforce that all FieldTypes with a unit must reference a PhysicalQuantity.
 
 ### Fixed
 
