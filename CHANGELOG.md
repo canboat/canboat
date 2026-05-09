@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- #624: Garmin SteadyCast AHRS ATT proprietary PGNs (126720): COG Source Valid Flag, Device Flags, Non-default Calibration Matrix Present, Set North State.
+
 ### Fixed
 
 - #623: Fix analyzer reading uninitialized stack memory from short fast-packet first frames.
