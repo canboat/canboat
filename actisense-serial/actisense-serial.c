@@ -214,6 +214,9 @@ int main(int argc, char **argv)
     exit(1);
   }
 
+  fputs(CANBOAT_FORMAT_FAST_HEADER, stdout);
+  fflush(stdout);
+
   logDebug("Opening %s\n", device);
   if (strncmp(device, "tcp:", STRSIZE("tcp:")) == 0)
   {

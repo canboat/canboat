@@ -69,6 +69,9 @@ typedef int SOCKET;
 #define STRSIZE(x) (sizeof(x) - 1)
 #define STRNULL(x) ((x != NULL) ? (x) : "NULL")
 
+#define CANBOAT_FORMAT_HEADER_PREFIX "# format="
+#define CANBOAT_FORMAT_FAST_HEADER "# format=FAST\n"
+
 #ifndef INVALID_SOCKET
 #define INVALID_SOCKET (-1)
 #endif

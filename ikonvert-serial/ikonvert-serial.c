@@ -289,6 +289,9 @@ int main(int argc, char **argv)
     initializeDevice();
   }
 
+  fputs(CANBOAT_FORMAT_FAST_HEADER, stdout);
+  fflush(stdout);
+
   for (;;)
   {
     uint8_t data[1024];

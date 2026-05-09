@@ -380,6 +380,24 @@ int main(int argc, char **argv)
         {
           showBuffers();
         }
+        else if (format == RAWFORMAT_UNKNOWN && strncmp(msg, CANBOAT_FORMAT_HEADER_PREFIX, STRSIZE(CANBOAT_FORMAT_HEADER_PREFIX)) == 0)
+        {
+          const char *fmt = msg + STRSIZE(CANBOAT_FORMAT_HEADER_PREFIX);
+          for (size_t i = 1; i < ARRAY_SIZE(RAW_FORMAT_STR); i++)
+          {
+            if (strncasecmp(fmt, RAW_FORMAT_STR[i], strlen(RAW_FORMAT_STR[i])) == 0)
+            {
+              format = (enum RawFormats) i;
+              if (format != RAWFORMAT_PLAIN && format != RAWFORMAT_PLAIN_OR_FAST && format != RAWFORMAT_PLAIN_MIX_FAST
+                  && format != RAWFORMAT_YDWG02)
+              {
+                multiPackets = MULTIPACKETS_COALESCED;
+              }
+              logInfo("Format set to %s by header\n", RAW_FORMAT_STR[i]);
+              break;
+            }
+          }
+        }
       }
 
       continue;
