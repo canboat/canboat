@@ -13,6 +13,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - #623: Fix analyzer reading uninitialized stack memory from short fast-packet first frames.
 - #630: Fix stack buffer overflow in Garmin CSV parser when Size exceeds FASTPACKET_MAX_SIZE.
 - Harden all input parsers against buffer overflows from untrusted input lengths.
+- #622: extractNumberNotEmpty: skip sentinel stripping when a field's explicit `.rangeMax` exactly matches the bit-size maximum, completing the #600 fix for PGN 60928 device instance fields.
 
 ## [6.1.8]
 
