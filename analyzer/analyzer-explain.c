@@ -839,7 +839,7 @@ static void explainPGNXML(Pgn pgn)
       {
         printXML(10, "Description", f.description);
       }
-      else if (f.unit && f.unit[0] == '=')
+      else if (f.unit && f.unit[0] == '=' && f.lookup.function.pairEnumerator != NULL)
       {
         g_lookupValue = (size_t) strtol(f.unit + 1, 0, 10);
         printf("          <Description>");
