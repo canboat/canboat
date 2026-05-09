@@ -851,12 +851,12 @@ Pgn pgnList[] = {
                     "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     /************ Protocol PGNs ************/
-    /* http://www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
-    /* http://www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf */
-    /* http://www.nmea.org/Assets/pgn059392.pdf */
-    /* http://www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
-    /* http://www.furunousa.com/Furuno/Doc/0/8JT2BMDDIB249FCNUK64DKLV67/GP330B%20NMEA%20PGNs.pdf */
-    /* http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
+    /* https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
+    /* https://web.archive.org/web/20061221093749/www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf */
+    /* https://web.archive.org/web/20150910070054/www.nmea.org/Assets/pgn059392.pdf */
+    /* https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf */
+    /* https://web.archive.org/web/20240802130644/www.furunousa.com/-/media/sites/furuno/document_library/documents/manuals/public_manuals/gp330b_nmea_pgns.pdf */
+    /* https://web.archive.org/web/20150910070107/www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf */
     ,
     {"ISO Acknowledgement",
      59392,
@@ -884,7 +884,7 @@ Pgn pgnList[] = {
                     "supports the requested PGN."}
 
     /* For a good explanation of ISO 11783 Transport Protocol (as used in J1939) see
-     * http://www.simmasoftware.com/j1939-presentation.pdf
+     * https://web.archive.org/web/20220207184927/www.simmasoftware.com/j1939-presentation.pdf
      *
      * First: Transmit a RTS message to the specific address that says:
      *   1. I'm about to send the following PGN in multiple packets.
@@ -1089,6 +1089,7 @@ Pgn pgnList[] = {
      {RESERVED_FIELD(BYTES(3)), ROTATION_UFIX16_RPM_HIGHRES_FIELD("Engine RPM", NULL), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS}}
 
     /* Maretron ACM 100 manual documents PGN 65001-65030 */
+    /* https://web.archive.org/web/20230512042813/www.maretron.com/support/manuals/ACM100UM_1.3.pdf */
 
     ,
     {"Bus #1 Phase C Basic AC Quantities",

@@ -207,7 +207,7 @@ int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
  * Notes on the NMEA 2000 packet structure
  * ---------------------------------------
  *
- * http://www.nmea.org/Assets/pgn059392.pdf tells us that:
+ * https://web.archive.org/web/20150910070054/www.nmea.org/Assets/pgn059392.pdf tells us that:
  * - All messages shall set the reserved bit in the CAN ID field to zero on transmit.
  * - Data field reserve bits or reserve bytes shall be filled with ones. i.e. a reserve
  *   byte will be set to a hex value of FF, a single reservie bit would be set to a value of 1.

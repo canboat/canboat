@@ -7802,7 +7802,7 @@ limitations under the License.
       <Id>airmarBootStateAcknowledgment</Id>
       <Description>Airmar: Boot State Acknowledgment</Description>
     <Priority>5</Priority>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8187,7 +8187,7 @@ limitations under the License.
       <PGN>65286</PGN>
       <Id>airmarBootStateRequest</Id>
       <Description>Airmar: Boot State Request</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -8378,7 +8378,7 @@ limitations under the License.
       <PGN>65287</PGN>
       <Id>airmarAccessLevel</Id>
       <Description>Airmar: Access Level</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -13955,7 +13955,7 @@ limitations under the License.
       <Id>airmarDepthQualityFactor</Id>
       <Description>Airmar: Depth Quality Factor</Description>
     <Priority>7</Priority>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -14053,7 +14053,7 @@ limitations under the License.
       <Id>airmarSpeedPulseCount</Id>
       <Description>Airmar: Speed Pulse Count</Description>
     <Priority>7</Priority>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -14162,7 +14162,7 @@ limitations under the License.
       <Id>airmarDeviceInformation</Id>
       <Description>Airmar: Device Information</Description>
     <Priority>7</Priority>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -17678,7 +17678,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarAttitudeOffset</Id>
       <Description>Airmar: Attitude Offset</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -17798,7 +17798,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateCompass</Id>
       <Description>Airmar: Calibrate Compass</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -18049,7 +18049,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTrueWindOptions</Id>
       <Description>Airmar: True Wind Options</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf</URL>
+      <URL>https://web.archive.org/web/20231224200258/www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -18151,7 +18151,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSimulateMode</Id>
       <Description>Airmar: Simulate Mode</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -18247,7 +18247,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateDepth</Id>
       <Description>Airmar: Calibrate Depth</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -18345,7 +18345,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateSpeed</Id>
       <Description>Airmar: Calibrate Speed</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -18464,7 +18464,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarCalibrateTemperature</Id>
       <Description>Airmar: Calibrate Temperature</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -18575,7 +18575,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSpeedFilterNone</Id>
       <Description>Airmar: Speed Filter None</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -18688,7 +18688,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarSpeedFilterIir</Id>
       <Description>Airmar: Speed Filter IIR</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -18817,7 +18817,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTemperatureFilterNone</Id>
       <Description>Airmar: Temperature Filter None</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -18930,7 +18930,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarTemperatureFilterIir</Id>
       <Description>Airmar: Temperature Filter IIR</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -19059,7 +19059,7 @@ limitations under the License.
       <PGN>126720</PGN>
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -29827,7 +29827,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>cogSogRapidUpdate</Id>
       <Description>COG &amp; SOG, Rapid Update</Description>
     <Priority>2</Priority>
-      <URL>http://www.maretron.com/support/manuals/GPS100UM_1.2.pdf</URL>
+      <URL>https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>6</FieldCount>
@@ -30431,7 +30431,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
     <Priority>4</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>20</FieldCount>
@@ -30717,7 +30717,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBPositionReport</Id>
       <Description>AIS Class B Position Report</Description>
     <Priority>4</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>23</FieldCount>
@@ -31045,7 +31045,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBExtendedPositionReport</Id>
       <Description>AIS Class B Extended Position Report</Description>
     <Priority>4</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -31420,7 +31420,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisAidsToNavigationAtonReport</Id>
       <Description>AIS Aids to Navigation (AtoN) Report</Description>
     <Priority>4</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>23</FieldCount>
@@ -33222,7 +33222,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>gpsAlmanacData</Id>
       <Description>GPS Almanac Data</Description>
     <Priority>6</Priority>
-      <URL>https://www.gps.gov/technical/icwg/ICD-GPS-200C.pdf</URL>
+      <URL>https://web.archive.org/web/20250720113839/www.gps.gov/technical/icwg/ICD-GPS-200C.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -34621,7 +34621,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisDgnssBroadcastBinaryMessage</Id>
       <Description>AIS DGNSS Broadcast Binary Message</Description>
     <Priority>6</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -34787,7 +34787,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisUtcAndDateReport</Id>
       <Description>AIS UTC and Date Report</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>14</FieldCount>
@@ -34990,7 +34990,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassAStaticAndVoyageRelatedData</Id>
       <Description>AIS Class A Static and Voyage Related Data</Description>
     <Priority>6</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>21</FieldCount>
@@ -35281,7 +35281,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisAddressedBinaryMessage</Id>
       <Description>AIS Addressed Binary Message</Description>
     <Priority>5</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>12</FieldCount>
@@ -35446,7 +35446,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisAcknowledge</Id>
       <Description>AIS Acknowledge</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>9</FieldCount>
@@ -35575,7 +35575,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisBinaryBroadcastMessage</Id>
       <Description>AIS Binary Broadcast Message</Description>
     <Priority>5</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>8</FieldCount>
@@ -35689,7 +35689,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisSarAircraftPositionReport</Id>
       <Description>AIS SAR Aircraft Position Report</Description>
     <Priority>4</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36033,7 +36033,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisUtcDateInquiry</Id>
       <Description>AIS UTC/Date Inquiry</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36395,7 +36395,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisInterrogation</Id>
       <Description>AIS Interrogation</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36683,7 +36683,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisAssignmentModeCommand</Id>
       <Description>AIS Assignment Mode Command</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -36880,7 +36880,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisDataLinkManagementMessage</Id>
       <Description>AIS Data Link Management Message</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -37031,7 +37031,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisChannelManagement</Id>
       <Description>AIS Channel Management</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -37344,7 +37344,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBGroupAssignment</Id>
       <Description>AIS Class B Group Assignment</Description>
     <Priority>7</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -38147,7 +38147,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
     <Priority>6</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>7</FieldCount>
@@ -38249,7 +38249,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
     <Priority>6</Priority>
-      <URL>https://www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
+      <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>17</FieldCount>
@@ -40584,7 +40584,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>windData</Id>
       <Description>Wind Data</Description>
     <Priority>2</Priority>
-      <URL>http://askjackrabbit.typepad.com/ask_jack_rabbit/page/7/</URL>
+      <URL>https://web.archive.org/web/20181024132013/www.maretron.com/support/manuals/WSO100UM_1.0.pdf#page=15</URL>
       <Type>Single</Type>
       <Complete>true</Complete>
       <FieldCount>5</FieldCount>
@@ -64712,7 +64712,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130880</PGN>
       <Id>airmarAdditionalWeatherData</Id>
       <Description>Airmar: Additional Weather Data</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
+      <URL>https://web.archive.org/web/20231224200258/airmartechnology.com/uploads/installguide/PB200UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -64831,7 +64831,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130881</PGN>
       <Id>airmarHeaterControl</Id>
       <Description>Airmar: Heater Control</Description>
-      <URL>http://www.airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
+      <URL>https://web.archive.org/web/20231224200258/airmartechnology.com/uploads/installguide/PB2000UserManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -66431,7 +66431,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>airmarPost</Id>
       <Description>Airmar: POST</Description>
     <Priority>7</Priority>
-      <URL>http://www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
