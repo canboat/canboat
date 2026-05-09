@@ -1663,6 +1663,33 @@ Pgn pgnList[] = {
      {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"BEP Marine: CZone Circuit Control",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(295),
+      UINT16_DESC_FIELD("Circuit ID", "Low 16 bits of the .zcf-stored 32-bit circuit ID"),
+      UINT16_DESC_FIELD("Field B", "Purpose unknown; observed 0x0000 in all known traffic"),
+      SIMPLE_DESC_FIELD("Level Or Value", 4, "0x1 for ON, 0x2 for OFF; possibly a control mode"),
+      SIMPLE_FIELD("Unknown A", 1),
+      SIMPLE_DESC_FIELD("Command Active", 1, "Receiver ignores frame if zero"),
+      SIMPLE_FIELD("Unknown B", 2),
+      SIMPLE_FIELD("Unknown C", 1),
+      SIMPLE_FIELD("Unknown D", 2),
+      SIMPLE_FIELD("Unknown E", 1),
+      SIMPLE_FIELD("Unknown F", 1),
+      RESERVED_FIELD(3),
+      END_OF_FIELDS},
+     .priority    = 3,
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md",
+     .explanation = "CZone circuit control command from a plotter (or other commander) to CZone modules. The plotter "
+                    "broadcasts; each module independently checks whether the 16-bit Circuit ID matches one of its own. "
+                    "Observed wire patterns: byte 6 = 0xF1 for ON commands, 0xF2 for OFF: Level Or Value = 1 (ON) or "
+                    "2 (OFF) with Command Active and several flag bits asserted. The seven Unknown bits in bytes 6-7 "
+                    "have not yet been mapped to specific actions (likely candidates: dim direction, momentary vs "
+                    "latched, transient vs persistent, dim ramp-rate select, source priority)."}
+
+    ,
     {"Yanmar: Engine Data B",
      65281,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -1688,13 +1715,52 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority = 6}
 
+    ,
+    {"BEP Marine: CZone Alarm Event",
+     65282,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(295),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("Dipswitch"),
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md",
+     .explanation = "CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm "
+                    "condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before "
+                    "raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone "
+                    "library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm "
+                    "classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / "
+                    "channel index, an alarm-state polarity flag, or a frame counter)."}
 
     ,
-    {"BEP Marine: Proprietary PGN 65283",
+    {"BEP Marine: CZone Channel State",
      65283,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_FIELD("Dipswitch"),
+      SIMPLE_DESC_FIELD("Channel 0 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 1 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 2 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 3 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 4 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 5 Mode", 2, "Likely circuit type / fault state; per-bit semantics unverified"),
+      SIMPLE_DESC_FIELD("Channel 0 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 1 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 2 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 3 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 4 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Channel 5 Value", 4, "4-bit per-channel value; likely dim level (0..15) or state code"),
+      SIMPLE_DESC_FIELD("Flag", 1, "Single boolean flag; purpose unverified"),
+      RESERVED_FIELD(3),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md",
+     .explanation = "Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode "
+                    "and a 4-bit Value; the reporting module emits this periodically or on state change so other devices "
+                    "on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context "
+                    "(likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been "
+                    "verified against captures with known channel states."}
     ,
     {"Maretron: Proprietary DC Breaker Current",
      65284,
@@ -1718,9 +1784,20 @@ Pgn pgnList[] = {
     ,
     {"BEP Marine: CZone Circuit Status",
      65284,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_FIELD("Dipswitch"),
+      UINT8_DESC_FIELD("Type", "Observed 0x0F for circuit-state reports"),
+      BINARY_FIELD("Bitmap", BYTES(4), "32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON"),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md",
+     .explanation = "Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the "
+                    "module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival "
+                    "deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone "
+                    "panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence "
+                    "is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks "
+                    "every module to report; the bitmap bytes are then unused."}
 
     ,
     {"Airmar: Boot State Acknowledgment",
@@ -1886,6 +1963,25 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(2)),
       END_OF_FIELDS},
      .priority = 5}
+
+    ,
+    {"BEP Marine: CZone Module Announce",
+     65290,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(295),
+      SIMPLE_DESC_FIELD("Unique", 20, "Stable identifier set by the module; opaque to the plotter"),
+      SIMPLE_DESC_FIELD("Field B", 18, "Purpose unknown; observed = 0 in YDAB-01"),
+      SIMPLE_DESC_FIELD("Field C", 2, "Purpose unknown; observed = 0 in YDAB-01"),
+      UINT8_DESC_FIELD("Dipswitch", "8-bit dipswitch this module is claiming"),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65290.md",
+     .explanation = "CZone module's 'I'm here' announce. A module sends one shortly after coming online. The plotter "
+                    "uses it to populate its list of CZone-recognised modules. The 20-bit Unique field should be stable "
+                    "across restarts of the same module so the plotter's 'have I seen this before' logic stays "
+                    "consistent. Field B (18 bits) and Field C (2 bits) have not been observed populated; semantics "
+                    "unknown. The Dipswitch byte order on the wire is direct (no bit-reverse): the binary string "
+                    "'00011000' shown in the CZone Configuration Tool corresponds to byte value 0x18 = 24."}
 
     ,
     {"Maretron: Resistance",
@@ -7171,11 +7267,23 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary PGN 130816",
+    {"BEP Marine: CZone .zcf Bus Distribution",
      130816,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT16_DESC_FIELD("Chunk Index", "0-based index of this chunk in the transfer"),
+      UINT8_DESC_FIELD("Flag", "Observed = 0x01; meaning unknown (possibly transfer mode / direction)"),
+      RESERVED_FIELD(BYTES(18)),
+      BINARY_FIELD("Data", BYTES(200), "Up to 200 bytes of .zcf data; terminator chunk has 0 bytes"),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md",
+     .explanation = "Channel the plotter uses to push a .zcf configuration file over the bus. Each fast-packet "
+                    "sequence carries one chunk; a complete .zcf reassembles by concatenating the Data portion of all "
+                    "chunks in Chunk Index order. Each non-terminal chunk carries exactly 200 bytes of .zcf data; the "
+                    "terminal chunk is the first one with Data length < 200, followed by a final chunk with Data "
+                    "length == 0 marking transfer end. Receivers should key state by source address; back-to-back "
+                    "transfers from the same source are observed."}
     ,
     {"Honda: Engine Status",
      130816,
@@ -7266,11 +7374,22 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary PGN 130817",
+    {"BEP Marine: CZone Status Extended",
      130817,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_DESC_FIELD("Page", "Observed = 0x01; possibly a status-page selector"),
+      UINT8_FIELD("Dipswitch"),
+      BINARY_FIELD("Records", BYTES(24), "N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8"),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md",
+     .explanation = "Periodic extended-status frame from a CZone module. Real CZone modules use it to report per-circuit "
+                    "measurements (e.g. breaker current); the YDAB-01 sends a stub form for module-presence purposes "
+                    "only. Each per-circuit record is 3 bytes: byte 0 = circuit_id (8-bit), byte 1 = value low, byte 2 "
+                    "= bits 0..1 are value high (10-bit magnitude total) + bit 2 = sign (set => positive) + bit 3 = "
+                    "per-frame flag (only meaningful with N>=6 records) + bits 4..7 = unknown. Value is most plausibly "
+                    "current in 0.1 A units, but unverified. Periodic at ~2 s intervals."}
     ,
     {"Simnet: Reprogram Data",
      130818,
@@ -7410,11 +7529,23 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
-    {"BEP Marine: CZone Configuration",
+    {"BEP Marine: CZone Enumeration Reply",
      130820,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(295), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_DESC_FIELD("Query Type", "Echoes the Query Type byte from the triggering PGN 65299"),
+      UINT16_DESC_FIELD("Index", "Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair"),
+      BINARY_FIELD("Label", BYTES(217), "Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed"),
+      END_OF_FIELDS},
+     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md",
+     .explanation = "Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance "
+                    "matching a 65299 query echoes the query's Query Type and Index back, then appends a label string. "
+                    "The same PGN pair is used for at least 'System Name Query/Reply' and 'Circuit Label "
+                    "Enumeration/Response'; Query Type distinguishes the sub-protocol. The label as transmitted has a "
+                    "trailing NUL byte; the encoding (ASCII vs UTF-8) is not yet confirmed. Replies are correlated to "
+                    "queries by an internal counter that is part of the per-request state the plotter tracks; whether "
+                    "that counter is also echoed on the wire is not yet pinned down."}
 
     ,
     {"Simnet: Reprogram Status",
