@@ -11,6 +11,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 - #623: Fix analyzer reading uninitialized stack memory from short fast-packet first frames.
+- #630: Fix stack buffer overflow in Garmin CSV parser when Size exceeds FASTPACKET_MAX_SIZE.
 
 ## [6.1.8]
 

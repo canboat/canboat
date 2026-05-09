@@ -345,6 +345,12 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
   }
   p += consumed;
 
+  if (count > FASTPACKET_MAX_SIZE)
+  {
+    logError("Garmin CSV message Size %u exceeds maximum %u: %s", count, FASTPACKET_MAX_SIZE, msg);
+    return 2;
+  }
+
   for (i = 0; *p && i < count; i++)
   {
     if (scanHex(&p, &m->data[i]))
@@ -356,7 +362,7 @@ int parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolu
     }
   }
 
-  return setParsedValues(m, prio, pgn, dst, src, i + 1);
+  return setParsedValues(m, prio, pgn, dst, src, i);
 }
 
 /* Yacht Digital, YDWG-02
