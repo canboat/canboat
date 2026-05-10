@@ -8,6 +8,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [6.1.9]
+
 ### Added
 
 - #573: actisense-serial and ikonvert-serial now emit a `# format=FAST` header so the analyzer auto-detects the format correctly even when the first message is a short PGN.
