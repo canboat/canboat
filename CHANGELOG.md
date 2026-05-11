@@ -8,6 +8,14 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Changed
+
+- n2kd: Replace global broadcast of ISO Request for Address Claim and Product Information with per-device targeted requests, spaced 1 second apart, only for devices that haven't sent the info in 5 minutes.
+
+### Fixed
+
+- Fix strncpy truncation warning in emitCanboatStartupRecord.
+
 ## [6.1.9]
 
 ### Added
