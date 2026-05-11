@@ -62,10 +62,29 @@ struct sockaddr_in udpWildcardAddress;
 #define SONICHUB_TIMEOUT (8640000) /* SonicHub messages expiration is basically indefinite */
 #define CLAIM_TIMEOUT (120)        /* Two minutes no claim -> broken */
 #define CLAIM_REQUEST_TIMEOUT (60) /* How often we ask for claim and prod information */
+#define DEVICE_REQUEST_INTERVAL (UINT64_C(300000)) /* 5 minutes between requests per device */
+#define DEVICE_REQUEST_SPACING (UINT64_C(1000))    /* 1 second between individual requests */
 
 #define PRN_CLAIM (60928)
 #define PRN_PROD_INFO (126996)
 #define PRN_CONFIG_INFO (126998)
+
+#define MAX_DEVICES (254) /* Source addresses 0-253 */
+
+typedef struct
+{
+  bool     seen;
+  uint64_t lastClaimReceived;
+  uint64_t lastClaimRequested;
+  uint64_t lastProdInfoReceived;
+  uint64_t lastProdInfoRequested;
+} DeviceState;
+
+static DeviceState deviceState[MAX_DEVICES];
+static uint64_t    lastClaimRequestTime;
+static uint64_t    lastProdInfoRequestTime;
+static int         nextClaimDevice;
+static int         nextProdInfoDevice;
 
 static void closeStream(int i);
 
@@ -185,7 +204,7 @@ StringBuffer tcpMessage;  /* Buffer for sending to TCP clients */
 StringBuffer outMessage;  /* Buffer for sending to stdout */
 StringBuffer nmeaMessage; /* Buffer for sending to NMEA0183 TCP clients */
 
-uint64_t lastRequestForProdInfo; /* Timestamp of last request for product info */
+/* Device tracking is done via the deviceState[] array */
 
 #define MIN_PGN (59391)
 #define MAX_PGN (131000)
@@ -822,23 +841,93 @@ static void writeAllClients(void)
 #endif
 }
 
-static void requestAddressClaimAndProductInfo(int64_t now)
+static void sendISORequest(uint8_t dst, uint32_t pgn)
 {
-  if (now < lastRequestForProdInfo + UINT64_C(1000) * CLAIM_REQUEST_TIMEOUT)
+  char         strTmp[DATE_LENGTH];
+  StringBuffer msg = sbNew;
+
+  sbAppendFormat(&msg, "%s,6,59904,0,%u,3,%02x,%02x,%02x\n", fmtNow(strTmp), dst, pgn & 0xff, (pgn >> 8) & 0xff, (pgn >> 16) & 0xff);
+  safeWriteBuffer(stdoutfd, &msg);
+  sbClean(&msg);
+}
+
+static void noteDeviceSeen(uint8_t src, uint32_t prn, uint64_t now)
+{
+  if (src >= MAX_DEVICES)
   {
     return;
   }
-  lastRequestForProdInfo = now;
-
-  if (stream[stdoutfd].type == DATA_OUTPUT_COPY || stream[stdoutfd].type == DATA_OUTPUT_STREAM)
+  deviceState[src].seen = true;
+  if (prn == PRN_CLAIM)
   {
-    char         strTmp[DATE_LENGTH];
-    StringBuffer msg = sbNew;
+    deviceState[src].lastClaimReceived = now;
+  }
+  else if (prn == PRN_PROD_INFO)
+  {
+    deviceState[src].lastProdInfoReceived = now;
+  }
+}
 
-    sbAppendFormat(&msg, "%s,6,59904,0,255,3,14,f0,01\n", fmtNow(strTmp));
-    sbAppendFormat(&msg, "%s,6,59904,0,255,3,00,ee,00\n", fmtNow(strTmp));
-    safeWriteBuffer(stdoutfd, &msg);
-    sbClean(&msg);
+/*
+ * State engine: find the next device that needs a request.
+ * Returns the device source address, or -1 if no device needs a request right now.
+ * Advances the scan position for round-robin fairness.
+ */
+static int findNextDeviceNeedingRequest(uint64_t now, int *nextDevice, uint64_t *lastRequestTime, bool isClaim)
+{
+  if (now < *lastRequestTime + DEVICE_REQUEST_SPACING)
+  {
+    return -1;
+  }
+
+  for (int i = 0; i < MAX_DEVICES; i++)
+  {
+    int idx = (*nextDevice + i) % MAX_DEVICES;
+    if (!deviceState[idx].seen)
+    {
+      continue;
+    }
+
+    uint64_t lastReceived  = isClaim ? deviceState[idx].lastClaimReceived : deviceState[idx].lastProdInfoReceived;
+    uint64_t lastRequested = isClaim ? deviceState[idx].lastClaimRequested : deviceState[idx].lastProdInfoRequested;
+
+    /* Skip if device sent this info recently */
+    if (lastReceived > 0 && now < lastReceived + DEVICE_REQUEST_INTERVAL)
+    {
+      continue;
+    }
+    /* Skip if we already requested recently */
+    if (lastRequested > 0 && now < lastRequested + DEVICE_REQUEST_INTERVAL)
+    {
+      continue;
+    }
+
+    *nextDevice    = (idx + 1) % MAX_DEVICES;
+    *lastRequestTime = now;
+    return idx;
+  }
+  return -1;
+}
+
+static void requestAddressClaimAndProductInfo(uint64_t now)
+{
+  if (stream[stdoutfd].type != DATA_OUTPUT_COPY && stream[stdoutfd].type != DATA_OUTPUT_STREAM)
+  {
+    return;
+  }
+
+  int dev = findNextDeviceNeedingRequest(now, &nextClaimDevice, &lastClaimRequestTime, true);
+  if (dev >= 0)
+  {
+    deviceState[dev].lastClaimRequested = now;
+    sendISORequest((uint8_t) dev, PRN_CLAIM);
+  }
+
+  dev = findNextDeviceNeedingRequest(now, &nextProdInfoDevice, &lastProdInfoRequestTime, false);
+  if (dev >= 0)
+  {
+    deviceState[dev].lastProdInfoRequested = now;
+    sendISORequest((uint8_t) dev, PRN_PROD_INFO);
   }
 }
 
@@ -1127,7 +1216,7 @@ static bool storeMessage(char *line, size_t len)
   m->m_last = now;
   m->m_count++;
 
-  requestAddressClaimAndProductInfo(now);
+  noteDeviceSeen((uint8_t) src, (uint32_t) prn, now);
   return true;
 }
 
@@ -1255,6 +1344,7 @@ static void doServerWork(void)
     /* Do a range of non-blocking operations */
     checkReadEvents(); /* Process incoming requests on all clients */
     writeAllClients(); /* Check any timeouts on clients */
+    requestAddressClaimAndProductInfo(getNow());
   } while (!stop);
 }
 
