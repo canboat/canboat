@@ -8,6 +8,10 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+- Add maretron-ipg tool: bidirectional TCP client for Maretron IPG100 N2K-to-Ethernet gateway.
+
 ## [6.1.9]
 
 ### Added

@@ -16,7 +16,7 @@ DATAROOTDIR ?= $(PREFIX)/share
 MANDIR= $(DATAROOTDIR)/man
 
 PLATFORM ?= $(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial replay
+SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer ikonvert-serial maretron-ipg replay
 
 BUILDDIR ?= ./rel/$(PLATFORM)
 
