@@ -4168,7 +4168,7 @@
         {"name": "DR Distance", "value": 129, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "Leeway Angle", "value": 130, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Current Drift", "value": 131, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Current Drift", "value": 132, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
+        {"name": "Current Set", "value": 132, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Barometric Pressure", "value": 135, "FieldType": "NUMBER", "Resolution": 100, "Unit": "Pa", "Bits": "16"},
         {"name": "Distance to Start Line", "value": 152, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m", "Bits": "32"},
         {"name": "Heading on Opposite Tack", "value": 154, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
@@ -63274,7 +63274,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":11,
         "Fields":[
           {
@@ -63394,43 +63394,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -63446,7 +63423,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":11,
         "Fields":[
           {
@@ -63566,43 +63543,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -63618,7 +63572,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":11,
         "Fields":[
           {
@@ -63738,43 +63692,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -63790,7 +63721,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":11,
         "Fields":[
           {
@@ -63910,43 +63841,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -63962,7 +63870,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":11,
         "Fields":[
           {
@@ -64082,43 +63990,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -64134,7 +64019,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":13,
+        "FieldCount":11,
         "Length":12,
         "Fields":[
           {
@@ -64282,28 +64167,8 @@
             "Order":11,
             "Id":"reserved11",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":24,
             "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":13,
-            "Id":"reserved13",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":88,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -64319,7 +64184,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":13,
+        "FieldCount":10,
         "Length":12,
         "Fields":[
           {
@@ -64439,53 +64304,20 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":8,
+            "BitLength":32,
             "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":72,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":80,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":13,
-            "Id":"reserved13",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":88,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
@@ -64591,9 +64423,11 @@
             "Order":7,
             "Id":"commandType",
             "Name":"Command Type",
+            "Description":"AP Command",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
+            "Match":10,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
@@ -64619,16 +64453,13 @@
           },
           {
             "Order":9,
-            "Id":"unknown",
-            "Name":"Unknown",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,
@@ -64961,13 +64792,13 @@
           },
           {
             "Order":9,
-            "Id":"reserved9",
-            "Name":"Reserved",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":10,

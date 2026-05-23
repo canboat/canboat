@@ -3261,7 +3261,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='131' Name='Current Drift' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='132' Name='Current Drift' FieldType='NUMBER' Signed='true'
+      <EnumFieldType Value='132' Name='Current Set' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='135' Name='Barometric Pressure' FieldType='NUMBER' Signed='false'
  Resolution='100' Unit='Pa' Bits='16'/>
@@ -63671,7 +63671,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>11</Length>
       <Fields>
         <Field>
@@ -63791,43 +63791,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -63847,7 +63824,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>11</Length>
       <Fields>
         <Field>
@@ -63967,43 +63944,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -64023,7 +63977,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>11</Length>
       <Fields>
         <Field>
@@ -64143,43 +64097,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -64199,7 +64130,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>11</Length>
       <Fields>
         <Field>
@@ -64319,43 +64250,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -64375,7 +64283,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>11</Length>
       <Fields>
         <Field>
@@ -64495,43 +64403,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -64551,7 +64436,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
+      <FieldCount>11</FieldCount>
       <Length>12</Length>
       <Fields>
         <Field>
@@ -64699,28 +64584,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>reserved11</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>24</BitLength>
           <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>reserved13</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -64740,7 +64605,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>12</Length>
       <Fields>
         <Field>
@@ -64860,53 +64725,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>8</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>reserved11</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>80</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>reserved13</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
@@ -65016,9 +64848,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>7</Order>
           <Id>commandType</Id>
           <Name>Command Type</Name>
+          <Description>AP Command</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
+          <Match>10</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
@@ -65044,16 +64878,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>unknown</Id>
-          <Name>Unknown</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -65392,13 +65223,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved9</Id>
-          <Name>Reserved</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
