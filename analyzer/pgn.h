@@ -8815,10 +8815,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 6, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8833,10 +8831,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 12, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8851,10 +8847,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 15, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8869,10 +8863,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 10, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8887,10 +8879,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 9, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8907,9 +8897,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 17, SIMNET_AP_EVENTS),
       SIMPLE_FIELD("Unknown A", BYTES(1)),
       SIMPLE_FIELD("Unknown B", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8924,11 +8912,8 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 2, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 14, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      RESERVED_FIELD(BYTES(4)),
       END_OF_FIELDS},
      .priority = 2}
 
@@ -8941,9 +8926,9 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      LOOKUP_FIELD("Command Type", BYTES(1), SIMNET_AP_COMMAND_TYPE),
+      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 26, SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unknown", BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       ANGLE_U16_FIELD("Angle", "Absolute change in desired attitude, generally 1 or 10 degrees"),
       RESERVED_FIELD(BYTES(1)),
@@ -8980,7 +8965,7 @@ Pgn pgnList[] = {
       MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
       LOOKUP_FIELD("Command Type", BYTES(1), SIMNET_AP_COMMAND_TYPE),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),

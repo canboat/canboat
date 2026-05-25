@@ -987,11 +987,11 @@ void emitCanboatStartupRecord(const char *source, const char *device)
 
   if (source)
   {
-    strncpy((char *) &data[2], source, 32);
+    strncpy((char *) &data[2], source, 31);
   }
   if (device)
   {
-    strncpy((char *) &data[34], device, 32);
+    strncpy((char *) &data[34], device, 31);
   }
 
   p += snprintf(p, sizeof(line), "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, UINT64_C(0)), 7, CANBOAT_BEM, 0, 255, 66);
