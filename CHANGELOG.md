@@ -21,6 +21,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Fix strncpy truncation warning in emitCanboatStartupRecord.
 - n2kd: Fix `%1f` typo in the VHW (Water Speed) NMEA 0183 formatter. The format width specifier had no precision, so the knots field printed at the default precision of 6 (e.g. `0.000000` instead of `0.0`).
 - n2kd: Fix AIS `Communication State` (and other AIS BINARY-rendered fields) silently zeroing the 19-bit slot in AIVDM payloads. `aisInteger` previously called `atol("E4 10 01")` which stops at the first non-digit and returns 0 — losing the SOTDMA / ITDMA state on every type 1/2/3/4/9/18 sentence. It also returned just the first byte for `"56 00 02"`-style inputs whose first character is a digit. Now detects the space-separated hex-byte rendering and parses it little-endian, masking to the param's max.
+- analyzer: Fix `g_ftf` global state leaking across records when a `LOOKUP_TYPE_FIELDTYPE` lookup misses. The `LOOKUP_FIELDTYPE` macros only assign `g_ftf` on a matching `case`, so an unknown key (e.g. an unrecognised SIMNET_KEY_VALUE) left whatever the previous record's lookup wrote there — making the subsequent `DYNAMIC_FIELD_VALUE` decode an unrelated Value with a stale field type. Now reset `g_ftf` before each FIELDTYPE lookup so a miss is observable downstream and the Value falls through `fieldPrintKeyValue`'s `g_ftf == NULL` branch to an empty BINARY blob.
 
 ## [6.1.9]
 
