@@ -19,6 +19,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 - Fix strncpy truncation warning in emitCanboatStartupRecord.
+- n2kd: Fix `%1f` typo in the VHW (Water Speed) NMEA 0183 formatter. The format width specifier had no precision, so the knots field printed at the default precision of 6 (e.g. `0.000000` instead of `0.0`).
 
 ## [6.1.9]
 

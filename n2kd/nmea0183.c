@@ -384,7 +384,7 @@ static void nmea0183WaterSpeed(StringBuffer *msg183, int src, const char *msg)
 
   if (getJSONNumber(msg, "Speed Water Referenced", &speed, U_VELOCITY))
   {
-    nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%1f,N,%.1f,K", SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
+    nmea0183CreateMessage(msg183, src, "VHW,,T,,M,%.1f,N,%.1f,K", SPEED_M_S_TO_KNOTS(speed), SPEED_M_S_TO_KMH(speed));
   }
 }
 
