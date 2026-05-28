@@ -609,6 +609,63 @@ static long int aisInteger(const char *msg, const char *fieldName)
   {
     return paramRange[i].defValue;
   }
+  /* BINARY fields like "Communication State" come through here as a
+   * space-separated hex-byte string (e.g. "E4 10 01" or "56 00 02").
+   * atol(3) stops at the first non-digit / non-space and would
+   * silently return 0 or only the first decimal-looking byte, which
+   * left the AIS Comm-State slot effectively unpopulated. Detect the
+   * hex form by the embedded space and parse little-endian into the
+   * param's range. */
+  if (strchr(jsonString, ' ') != NULL || (!isdigit((unsigned char) jsonString[0]) && jsonString[0] != '-' && jsonString[0] != '+'))
+  {
+    uint64_t v       = 0;
+    int      shift   = 0;
+    int      n_bytes = 0;
+    char    *p;
+    bool     ok = true;
+
+    for (p = jsonString; *p != '\0' && shift < (int) sizeof(v) * 8; p++)
+    {
+      if (isspace((unsigned char) *p))
+      {
+        continue;
+      }
+      if (!isxdigit((unsigned char) p[0]) || !isxdigit((unsigned char) p[1]))
+      {
+        ok = false;
+        break;
+      }
+      char hi = p[0], lo = p[1];
+      int  bh = hi <= '9' ? hi - '0' : (hi | 0x20) - 'a' + 10;
+      int  bl = lo <= '9' ? lo - '0' : (lo | 0x20) - 'a' + 10;
+      v |= ((uint64_t) ((bh << 4) | bl)) << shift;
+      shift += 8;
+      n_bytes++;
+      p++;
+    }
+    if (ok && n_bytes > 0)
+    {
+      /* Mask down to the parameter's max width so an all-FF blob in
+       * a wider field doesn't blow past the AIS slot. */
+      if (paramRange[i].max > 0)
+      {
+        uint64_t mask = (uint64_t) paramRange[i].max;
+        mask |= mask >> 1;
+        mask |= mask >> 2;
+        mask |= mask >> 4;
+        mask |= mask >> 8;
+        mask |= mask >> 16;
+        mask |= mask >> 32;
+        v &= mask;
+      }
+      value = (long int) v;
+      if (value >= paramRange[i].min && value <= paramRange[i].max)
+      {
+        return value;
+      }
+      return paramRange[i].defValue;
+    }
+  }
   value = atol(jsonString);
   if (value >= paramRange[i].min && value <= paramRange[i].max)
   {
