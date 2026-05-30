@@ -289,6 +289,21 @@ int main(int argc, char **argv)
     initializeDevice();
   }
 
+  if (readonly)
+  {
+    // Defensive: pin fd 0 to /dev/null. The main loop already
+    // skips STDIN_FILENO in readonly mode (see inHandle gate),
+    // but this guards against any future code path that calls
+    // read(0,..) and against the kernel handing fd 0 to a
+    // subsequent open() if stdin were closed outright.
+    int devnull = open("/dev/null", O_RDONLY);
+    if (devnull >= 0)
+    {
+      dup2(devnull, STDIN_FILENO);
+      close(devnull);
+    }
+  }
+
   fputs(CANBOAT_FORMAT_FAST_HEADER, stdout);
   emitCanboatStartupRecord("ikonvert-serial", device);
 
@@ -299,7 +314,12 @@ int main(int argc, char **argv)
     bool    receivedSomething = false;
 
     int writeHandle = (sbGetLength(&writeBuffer) > 0) ? handle : INVALID_SOCKET;
-    int inHandle    = (sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
+    // -r mode: never poll stdin. We mustn't transmit user
+    // payloads to the bus and we don't want to drain stdin
+    // bytes that may be intended for something else. The init
+    // gate (sendInitState == 0) keeps stdin idle until the
+    // device handshake is complete.
+    int inHandle    = (!readonly && sendInitState == 0 && writeHandle == INVALID_SOCKET) ? STDIN : INVALID_SOCKET;
 
     int rd = isReady(handle, inHandle, writeHandle, timeout);
 
@@ -774,14 +794,13 @@ static bool processReadBuffer(StringBuffer *in, int out)
 
       logDebug("Received [%s]\n", w);
 
-      if (writeonly)
-      {
-        // ignore message
-      }
-      else if (parseIKonvertAsciiMessage(sbGet(in), &msg))
+      // ASCII control messages (TEXT, ACK, NAK, SHOW_*) drive
+      // the init state machine. Parse them unconditionally —
+      // including in -w mode — so the device handshake can
+      // complete and we ever leave N2NET_OFFLINE.
+      if (parseIKonvertAsciiMessage(sbGet(in), &msg))
       {
         logDebug("ASCII message [%s] handled\n", sbGet(in));
-        // great
         if (allowInit)
         {
           sendNextInitCommand();
@@ -796,6 +815,12 @@ static bool processReadBuffer(StringBuffer *in, int out)
           msg.len = 0;
         }
         ret = true; // Got some actual N2K message from iKonvert, meaning it is still working so return true.
+        if (writeonly)
+        {
+          // -w: drain & decode N2K data for liveness, but
+          // don't pass it through to stdout.
+          msg.len = 0;
+        }
       }
       else
       {
