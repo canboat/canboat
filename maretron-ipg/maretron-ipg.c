@@ -208,6 +208,23 @@ int main(int argc, char **argv)
 
   sendConnect();
 
+  if (readonly)
+  {
+    // Defensive: pin fd 0 to /dev/null so any stray read(0,..)
+    // gets immediate EOF. The main loop's inHandle gate
+    // already excludes STDIN_FILENO in readonly mode; this
+    // guards against any future code path that calls read on
+    // fd 0 and against the kernel handing fd 0 to a subsequent
+    // open() if stdin were closed outright. Matches the
+    // behaviour of actisense-serial and ikonvert-serial.
+    int devnull = open("/dev/null", O_RDONLY);
+    if (devnull >= 0)
+    {
+      dup2(devnull, STDIN_FILENO);
+      close(devnull);
+    }
+  }
+
   for (;;)
   {
     uint8_t data[1024];
