@@ -231,19 +231,42 @@ int main(int argc, char **argv)
   }
   else
   {
-    int oflag = O_NOCTTY | O_NONBLOCK;
+    int  oflag  = O_NOCTTY | O_NONBLOCK;
+    bool exists = (stat(device, &statbuf) == 0);
+    isFile      = exists && S_ISREG(statbuf.st_mode);
 
-    if (writeonly)
+    if (isFile || (!exists && writeonly))
     {
-      oflag |= O_WRONLY;
-      oflag |= O_CREAT;
-    }
-    else if (readonly)
-    {
-      oflag |= O_RDONLY;
+      // Regular file (replay) or non-existent path opened for
+      // capture (-w on a new file). The buffer-stall problem
+      // below doesn't apply to regular files, so keep the
+      // mode-specific flags here.
+      if (writeonly)
+      {
+        oflag |= O_WRONLY | O_CREAT;
+        isFile = true;
+      }
+      else if (readonly)
+      {
+        oflag |= O_RDONLY;
+      }
+      else
+      {
+        oflag |= O_RDWR;
+      }
     }
     else
     {
+      // Serial / character device. Always R/W:
+      //  -r mode still needs to write NGT_STARTUP_SEQ and the
+      //   20s ping so the NGT-1 stays in "emit all PGNs". Under
+      //   the old O_RDONLY those writes failed silently and we
+      //   only got away with it because the TX-list config is
+      //   persistent across power cycles.
+      //  -w mode without reading lets the device's output pile
+      //   up in the FTDI/USB RX buffer until bytes start
+      //   getting dropped (CLOCAL = no flow-control
+      //   backpressure). Open R/W and drain in the loop below.
       oflag |= O_RDWR;
     }
     handle = open(device, oflag, 0777);
@@ -253,11 +276,6 @@ int main(int argc, char **argv)
     {
       logAbort("Cannot open NGT-1-A device/file %s\n", device);
     }
-    if (fstat(handle, &statbuf) < 0)
-    {
-      logAbort("Cannot determine status of %s\n", device);
-    }
-    isFile = S_ISREG(statbuf.st_mode);
   }
 
   if (isFile)
@@ -295,7 +313,22 @@ int main(int argc, char **argv)
     sleep(2);
   }
 
-  if (!isFile)
+  if (readonly)
+  {
+    // Defensive: pin fd 0 to /dev/null. The main loop's isReady
+    // already skips STDIN_FILENO in readonly mode, but this
+    // guards against any future code path that calls read(0,..)
+    // and against the kernel handing fd 0 to a subsequent
+    // open() if stdin were closed outright.
+    int devnull = open("/dev/null", O_RDONLY);
+    if (devnull >= 0)
+    {
+      dup2(devnull, STDIN_FILENO);
+      close(devnull);
+    }
+  }
+
+  if (!isFile && !writeonly)
   {
     // Do not read anything until we have seen 10 messages on bus
     for (i = 0; i < 10;)
@@ -316,11 +349,30 @@ int main(int argc, char **argv)
   for (;;)
   {
     char msg[BUFFER_SIZE];
-    int  r = isReady(writeonly ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
+    // File-capture mode (-w to a regular file) has an O_WRONLY
+    // handle — don't poll it for read. Serial -w opens R/W and
+    // does need polling so we can drain the device's output.
+    int  r = isReady((writeonly && isFile) ? INVALID_SOCKET : handle,
+                     readonly ? INVALID_SOCKET : STDIN_FILENO,
+                     INVALID_SOCKET,
+                     timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
-      if (readNGT1(handle) <= 0)
+      if (writeonly)
+      {
+        // Drain & discard. We must read the device or its
+        // output backs up in the kernel buffer; we deliberately
+        // don't pass it through the NGT-1 framing parser (no
+        // stdout output in -w).
+        char    drain[BUFFER_SIZE];
+        ssize_t n = read(handle, drain, sizeof drain);
+        if (n == 0 || (n < 0 && errno != EAGAIN && errno != EWOULDBLOCK && errno != EINTR))
+        {
+          break;
+        }
+      }
+      else if (readNGT1(handle) <= 0)
       {
         break;
       }
