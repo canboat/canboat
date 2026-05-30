@@ -189,7 +189,7 @@ int main(int argc, char **argv)
             "Options:\n"
             "  -w      writeonly mode, no data is read from device\n"
             "  -r      readonly mode, no data is sent to device\n"
-            "  -p      passthru mode, data on stdin is sent to stdout but not to device\n"
+            "  -p      passthru mode, data on stdin is also sent to stdout (in addition to the device)\n"
             "  -v      verbose\n"
             "  -d      debug\n"
             "  -s <n>  set baudrate to 38400, 57600, 115200, 230400"
@@ -201,7 +201,7 @@ int main(int argc, char **argv)
 #endif
             "\n"
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
-            "  -o      output commands sent to stdin to the stdout \n"
+            "  -o      alias for -p (kept for backward compatibility; -p is preferred)\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
@@ -387,12 +387,13 @@ int main(int argc, char **argv)
 
     while (getInMsg(msg, sizeof(msg)))
     {
-      if (!passthru)
+      parseAndWriteIn(handle, msg);
+      if (passthru || outputCommands)
       {
-        parseAndWriteIn(handle, msg);
-      }
-      if (outputCommands)
-      {
+        // -p / -o: also echo the command line to stdout, in
+        // addition to encoding it for the device. Matches the
+        // ikonvert-serial / maretron-ipg -p semantics. -o is
+        // kept as an alias for backward compatibility.
         fprintf(stdout, "%s", msg);
         fflush(stdout);
       }

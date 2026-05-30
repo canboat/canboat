@@ -15,6 +15,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Changed
 
 - n2kd: Replace global broadcast of ISO Request for Address Claim and Product Information with per-device targeted requests, spaced 1 second apart, only for devices that haven't sent the info in 5 minutes.
+- **Breaking**: actisense-serial: `-p` (passthru) now matches the ikonvert-serial / maretron-ipg semantics — stdin lines are sent to the device *and* echoed to stdout, instead of being suppressed-from-device-but-not-echoed. The old behaviour ("skip device write") was a documentation/behaviour mismatch; the help text always claimed `-p` echoed to stdout but only `-o` actually did so. `-o` is kept as an alias for backward compatibility, but `-p` is now preferred and aligned across the three device readers. Users who relied on `-p` to suppress device writes should switch to `-r`.
 
 ### Fixed
 
