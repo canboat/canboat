@@ -2031,11 +2031,23 @@ Pgn pgnList[] = {
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary PGN 65295",
+    {"BEP Marine: CZone Alarm",
      65295,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_DESC_FIELD("Device ID", "Device / source module id"),
+      UINT8_DESC_FIELD("Channel", "Channel / alarm id low byte"),
+      LOOKUP_FIELD("Alarm Type", BYTES(2), CZONE_ALARM_TYPE),
+      SIMPLE_DESC_FIELD("Severity Code", 4, "Raw CZone severity code; values 1..5 map to internal severities 4..0"),
+      SIMPLE_DESC_FIELD("State Flag", 1, "State bit used by CZone to distinguish active vs cleared/acknowledged state"),
+      SIMPLE_DESC_FIELD("Ack Flag", 1, "Packed and transmitted by CZone, but receive-side action is not confirmed"),
+      RESERVED_FIELD(2),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .explanation = "CZone alarm/status/acknowledgement message. Payload byte 2 is the device/source module id, byte 3 "
+                    "is the channel/alarm id, bytes 4-5 are the little-endian alarm type, and byte 6 contains packed "
+                    "severity/state flags. Payload byte 7 is reserved."}
 
     ,
     {"BEP Marine: Proprietary PGN 65296",
