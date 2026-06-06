@@ -2078,11 +2078,17 @@ Pgn pgnList[] = {
      {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: Proprietary PGN 65299",
+    {"BEP Marine: CZone Alarm String Request",
      65299,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_DESC_FIELD("Device ID", "Device / destination module id associated with the alarm"),
+      UINT16_DESC_FIELD("Channel", "Channel / alarm id"),
+      BINARY_FIELD("Padding", BYTES(3), "Set to FF FF FF"),
+      END_OF_FIELDS},
+     .explanation = "CZone request for remote alarm string text. The request identifies the device and channel/alarm id; "
+                    "the remote device is expected to respond with the matching alarm string."}
 
     ,
     {"Suzuki: Engine Data C",
