@@ -7558,23 +7558,20 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
-    {"BEP Marine: CZone Enumeration Reply",
+    {"BEP Marine: CZone Alarm String Response",
      130820,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295),
-      UINT8_DESC_FIELD("Query Type", "Echoes the Query Type byte from the triggering PGN 65299"),
-      UINT16_DESC_FIELD("Index", "Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair"),
-      BINARY_FIELD("Label", BYTES(217), "Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed"),
+      UINT8_DESC_FIELD("Device ID", "Device / source module id, echoed from the triggering PGN 65299"),
+      UINT16_DESC_FIELD("Channel", "Channel / alarm id, echoed from the triggering PGN 65299"),
+      BINARY_FIELD("String", BYTES(217), "Variable-length NUL-terminated alarm string (up to 217 bytes); ASCII or UTF-8 not yet confirmed"),
       END_OF_FIELDS},
      .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md",
-     .explanation = "Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance "
-                    "matching a 65299 query echoes the query's Query Type and Index back, then appends a label string. "
-                    "The same PGN pair is used for at least 'System Name Query/Reply' and 'Circuit Label "
-                    "Enumeration/Response'; Query Type distinguishes the sub-protocol. The label as transmitted has a "
-                    "trailing NUL byte; the encoding (ASCII vs UTF-8) is not yet confirmed. Replies are correlated to "
-                    "queries by an internal counter that is part of the per-request state the plotter tracks; whether "
-                    "that counter is also echoed on the wire is not yet pinned down."}
+     .explanation = "Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed "
+                    "back from the request, followed by the matching alarm string text. The string is NUL-terminated; the "
+                    "encoding (ASCII vs UTF-8) is not "
+                    "yet confirmed."}
 
     ,
     {"Simnet: Reprogram Status",
