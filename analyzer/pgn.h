@@ -2119,11 +2119,17 @@ Pgn pgnList[] = {
                     "The Message Type field selects the variant."}
 
     ,
-    {"BEP Marine: Proprietary PGN 65301",
+    {"BEP Marine: CZone 65301",
      65301,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT8_DESC_FIELD("Field 1", "Pass-through byte; purpose unverified"),
+      SIMPLE_DESC_FIELD("Field 2", 5, "5-bit field; purpose unverified"),
+      SIMPLE_DESC_FIELD("Field 3", 3, "3-bit field; purpose unverified"),
+      BINARY_FIELD("Status Bitmap", BYTES(4), "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified."),
+      END_OF_FIELDS},
+     .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md"}
     ,
     {"Simnet: AP Unknown 1",
      65302,
@@ -7552,11 +7558,21 @@ Pgn pgnList[] = {
 
 
     ,
-    {"BEP Marine: Proprietary PGN 130819",
+    {"BEP Marine: CZone 130819",
      130819,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+     {COMPANY(295),
+      UINT16_DESC_FIELD("Field A", "uint16 LE; purpose unverified"),
+      UINT8_DESC_FIELD("Field B", "Pass-through byte; purpose unverified"),
+      UINT8_DESC_FIELD("Field C", "Pass-through byte; purpose unverified"),
+      UINT8_DESC_FIELD("Field D", "Pass-through byte; purpose unverified"),
+      UINT16_DESC_FIELD("Field E", "uint16 LE; purpose unverified"),
+      UINT32_DESC_FIELD("Field F", "uint32 LE; top byte always 0 (effectively 24-bit). Purpose unverified."),
+      UINT8_DESC_FIELD("Field G", "Pass-through byte; purpose unverified"),
+      UINT8_DESC_FIELD("Flag", "Boolean encoded as 0xFE = false, 0xFF = true; purpose unverified"),
+      END_OF_FIELDS},
+     .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130819.md"}
     ,
     {"BEP Marine: CZone Alarm String Response",
      130820,
