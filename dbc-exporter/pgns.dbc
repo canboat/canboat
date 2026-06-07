@@ -280,8 +280,11 @@ BO_ 2566853374 PGN_65298_suzukiEngineDataA: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2566854142 PGN_65301_bepMarineProprietaryPg: 8 Vector__XXX
- SG_ data : 16|48@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 2566854142 PGN_65301_bepMarineCzone65301: 8 Vector__XXX
+ SG_ statusBitmap : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ field3 : 29|3@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ field2 : 24|5@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ field1 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -1760,7 +1763,11 @@ CM_ SG_ 2566853118 manufacturerCode "BEP Marine 2";
 CM_ BO_ 2566853374 "Suzuki: Engine Data A";
 CM_ SG_ 2566853374 industryCode "Marine Industry";
 CM_ SG_ 2566853374 manufacturerCode "Suzuki Motor Corporation";
-CM_ BO_ 2566854142 "BEP Marine: Proprietary PGN 65301";
+CM_ BO_ 2566854142 "BEP Marine: CZone 65301";
+CM_ SG_ 2566854142 statusBitmap "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified.";
+CM_ SG_ 2566854142 field3 "3-bit field; purpose unverified";
+CM_ SG_ 2566854142 field2 "5-bit field; purpose unverified";
+CM_ SG_ 2566854142 field1 "Pass-through byte; purpose unverified";
 CM_ SG_ 2566854142 industryCode "Marine Industry";
 CM_ SG_ 2566854142 manufacturerCode "BEP Marine 2";
 CM_ BO_ 2566854398 "Simnet: AP Unknown 1";
@@ -2132,7 +2139,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2566852350 "PGN_65294_bepMarineProprietaryPgn6
 BA_ "SystemMessageLongSymbol" BO_ 2566852606 "PGN_65295_bepMarineProprietaryPgn65295";
 BA_ "SystemMessageLongSymbol" BO_ 2566852862 "PGN_65296_bepMarineProprietaryPgn65296";
 BA_ "SystemMessageLongSymbol" BO_ 2566853118 "PGN_65297_bepMarineProprietaryPgn65297";
-BA_ "SystemMessageLongSymbol" BO_ 2566854142 "PGN_65301_bepMarineProprietaryPgn65301";
 BA_ "SystemMessageLongSymbol" BO_ 2566855422 "PGN_65306_bepMarineProprietaryPgn65306";
 BA_ "SystemMessageLongSymbol" BO_ 2566855934 "PGN_65308_bepMarineProprietaryPgn65308";
 BA_ "SystemMessageLongSymbol" BO_ 2566856190 "PGN_65309_navicoWirelessBatteryStatus";

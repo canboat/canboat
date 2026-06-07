@@ -2506,7 +2506,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Data</td><td>Payload varies by Message Type.</td><td/><td>40 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65301">0xFF15:
             PGN 65301
-            - BEP Marine: Proprietary PGN 65301</h3><p>
+            - BEP Marine: CZone 65301</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -2515,7 +2515,7 @@ limitations under the License.
              single-frame 
             PGN is
             8
-            bytes long and contains 4 fields.
+            bytes long and contains 7 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
                   BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -2526,8 +2526,19 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65302">0xFF16:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Field 1</td><td>Pass-through byte; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Field 2</td><td>5-bit field; purpose unverified</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Field 3</td><td>3-bit field; purpose unverified</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Status Bitmap</td><td>32-bit bitmap, LSB-first; bit n set =&gt; item n active. Per-bit meaning unverified.</td><td/><td>32 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md</a></p><h3 id="pgn-65302">0xFF16:
             PGN 65302
             - Simnet: AP Unknown 1</h3><p>
               This PGN description applies when the following field(s) match:
@@ -14697,7 +14708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130819">0x1FF03:
             PGN 130819
-            - BEP Marine: Proprietary PGN 130819</h3><p>
+            - BEP Marine: CZone 130819</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -14705,8 +14716,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            223
-            bytes long and contains 4 fields.
+            15
+            bytes long and contains 11 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
                   BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -14717,8 +14728,33 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Field A</td><td>uint16 LE; purpose unverified</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Field B</td><td>Pass-through byte; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Field C</td><td>Pass-through byte; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Field D</td><td>Pass-through byte; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field E</td><td>uint16 LE; purpose unverified</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Field F</td><td>uint32 LE; top byte always 0 (effectively 24-bit). Purpose unverified.</td><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Field G</td><td>Pass-through byte; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Flag</td><td>Boolean encoded as 0xFE = false, 0xFF = true; purpose unverified</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130819.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130819.md</a></p><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - BEP Marine: CZone Enumeration Reply</h3><p>
               This PGN description applies when the following field(s) match:
