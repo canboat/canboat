@@ -52477,9 +52477,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130820</PGN>
-      <Id>bepMarineCzoneEnumerationReply</Id>
-      <Description>BEP Marine: CZone Enumeration Reply</Description>
-      <Explanation>Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance matching a 65299 query echoes the query's Query Type and Index back, then appends a label string. The same PGN pair is used for at least 'System Name Query/Reply' and 'Circuit Label Enumeration/Response'; Query Type distinguishes the sub-protocol. The label as transmitted has a trailing NUL byte; the encoding (ASCII vs UTF-8) is not yet confirmed. Replies are correlated to queries by an internal counter that is part of the per-request state the plotter tracks; whether that counter is also echoed on the wire is not yet pinned down.</Explanation>
+      <Id>bepMarineCzoneAlarmStringResponse</Id>
+      <Description>BEP Marine: CZone Alarm String Response</Description>
+      <Explanation>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.</Explanation>
       <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md</URL>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -52536,9 +52536,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>queryType</Id>
-          <Name>Query Type</Name>
-          <Description>Echoes the Query Type byte from the triggering PGN 65299</Description>
+          <Id>deviceId</Id>
+          <Name>Device ID</Name>
+          <Description>Device / source module id, echoed from the triggering PGN 65299</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -52550,9 +52550,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>index</Id>
-          <Name>Index</Name>
-          <Description>Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair</Description>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <Description>Channel / alarm id, echoed from the triggering PGN 65299</Description>
           <BitLength>16</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -52564,9 +52564,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>label</Id>
-          <Name>Label</Name>
-          <Description>Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed</Description>
+          <Id>string</Id>
+          <Name>String</Name>
+          <Description>Variable-length NUL-terminated alarm string (up to 217 bytes); ASCII or UTF-8 not yet confirmed</Description>
           <BitLength>1736</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>

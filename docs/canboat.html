@@ -14720,9 +14720,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
-            - BEP Marine: CZone Enumeration Reply</h3><p>
+            - BEP Marine: CZone Alarm String Response</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Reply form of PGN 65299 (CZone enumeration query). A device that holds a circuit / instance matching a 65299 query echoes the query's Query Type and Index back, then appends a label string. The same PGN pair is used for at least 'System Name Query/Reply' and 'Circuit Label Enumeration/Response'; Query Type distinguishes the sub-protocol. The label as transmitted has a trailing NUL byte; the encoding (ASCII vs UTF-8) is not yet confirmed. Replies are correlated to queries by an internal counter that is part of the per-request state the plotter tracks; whether that counter is also echoed on the wire is not yet pinned down.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -14740,13 +14740,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Query Type</td><td>Echoes the Query Type byte from the triggering PGN 65299</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Device ID</td><td>Device / source module id, echoed from the triggering PGN 65299</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Index</td><td>Echoes the Index field from the triggering PGN 65299; (instance, sub-instance) pair</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Channel</td><td>Channel / alarm id, echoed from the triggering PGN 65299</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Label</td><td>Variable-length label (up to 217 bytes); ASCII or UTF-8 not yet confirmed</td><td/><td>1736 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>String</td><td>Variable-length NUL-terminated alarm string (up to 217 bytes); ASCII or UTF-8 not yet confirmed</td><td/><td>1736 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
               <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md</a></p><h3 id="pgn-130820">0x1FF04:
