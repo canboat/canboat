@@ -691,6 +691,68 @@ limitations under the License.
       <EnumPair Value='1862' Name='Yamaha Marine' />
       <EnumPair Value='1863' Name='Faria Instruments' />
     </LookupEnumeration>
+    <LookupEnumeration Name='CZONE_ALARM_TYPE' MaxValue='65535'>
+      <EnumPair Value='1' Name='AC Voltage Error' />
+      <EnumPair Value='2' Name='AC Frequency Error' />
+      <EnumPair Value='3' Name='AC High Power' />
+      <EnumPair Value='4' Name='DC Low Voltage' />
+      <EnumPair Value='5' Name='DC Very Low Voltage' />
+      <EnumPair Value='6' Name='DC High Voltage' />
+      <EnumPair Value='7' Name='DC Low Battery Capacity' />
+      <EnumPair Value='10' Name='Out of Range' />
+      <EnumPair Value='11' Name='Low Run Current' />
+      <EnumPair Value='12' Name='Over Current' />
+      <EnumPair Value='13' Name='Short Circuit' />
+      <EnumPair Value='14' Name='Missing Commander' />
+      <EnumPair Value='15' Name='Reverse Current' />
+      <EnumPair Value='16' Name='Calibration Error' />
+      <EnumPair Value='17' Name='Missing Output' />
+      <EnumPair Value='18' Name='Systems On' />
+      <EnumPair Value='19' Name='AC Very High Power' />
+      <EnumPair Value='20' Name='AC Low Power' />
+      <EnumPair Value='21' Name='DC Very Low Battery Capacity' />
+      <EnumPair Value='22' Name='Battery Full' />
+      <EnumPair Value='23' Name='DC Load Shed Low' />
+      <EnumPair Value='24' Name='DC Load Shed Very Low' />
+      <EnumPair Value='25' Name='AC Load Shed Low' />
+      <EnumPair Value='26' Name='AC Load Shed Very Low' />
+      <EnumPair Value='27' Name='Reverse Polarity' />
+      <EnumPair Value='28' Name='Manual Override' />
+      <EnumPair Value='29' Name='Mastervolt' />
+      <EnumPair Value='30' Name='Hardware Fault' />
+      <EnumPair Value='31' Name='No AC Supply' />
+      <EnumPair Value='34' Name='PGN Switching On' />
+      <EnumPair Value='35' Name='Low Canbus Voltage' />
+      <EnumPair Value='36' Name='Blown Fuse' />
+      <EnumPair Value='37' Name='Manual Bypass' />
+      <EnumPair Value='38' Name='Generic Alarm' />
+      <EnumPair Value='39' Name='Battery Temperature Alarm' />
+      <EnumPair Value='40' Name='Temperature Sensor Error' />
+      <EnumPair Value='41' Name='AC IN Out Of Range' />
+      <EnumPair Value='42' Name='Device In Overload' />
+      <EnumPair Value='43' Name='High Temperature' />
+      <EnumPair Value='44' Name='Inverter/Charger Installation Error' />
+      <EnumPair Value='45' Name='Inverter Installation Error' />
+      <EnumPair Value='46' Name='Charger Installation Error' />
+      <EnumPair Value='47' Name='Cable Voltage Drop Too High' />
+      <EnumPair Value='48' Name='Shunt mistmatch' />
+      <EnumPair Value='49' Name='Cooling Fan Error' />
+      <EnumPair Value='50' Name='Mastershunt Fuse Blown' />
+      <EnumPair Value='51' Name='High Temperature' />
+      <EnumPair Value='52' Name='Over Pressure' />
+      <EnumPair Value='53' Name='Low Pressure' />
+      <EnumPair Value='54' Name='Rapid Deflation' />
+      <EnumPair Value='55' Name='Inverter/Charger Over Temperature' />
+      <EnumPair Value='56' Name='Confirm On' />
+      <EnumPair Value='57' Name='Battery Safety' />
+      <EnumPair Value='58' Name='Stop Charging' />
+      <EnumPair Value='59' Name='Check Battery Relay' />
+      <EnumPair Value='60' Name='Battery Hardware Failure' />
+      <EnumPair Value='61' Name='Battery Over Current' />
+      <EnumPair Value='62' Name='Battery Temperature Low' />
+      <EnumPair Value='63' Name='Battery Temperature High' />
+      <EnumPair Value='64' Name='Battery Last 100' />
+    </LookupEnumeration>
     <LookupEnumeration Name='AIS_MESSAGE_ID' MaxValue='63'>
       <EnumPair Value='1' Name='Scheduled Class A position report' />
       <EnumPair Value='2' Name='Assigned scheduled Class A position report' />
@@ -10408,8 +10470,9 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65295</PGN>
-      <Id>bepMarineProprietaryPgn65295</Id>
-      <Description>BEP Marine: Proprietary PGN 65295</Description>
+      <Id>bepMarineCzoneAlarm</Id>
+      <Description>BEP Marine: CZone Alarm</Description>
+      <Explanation>CZone alarm/status/acknowledgement message. Payload byte 2 is the device/source module id, byte 3 is the channel/alarm id, bytes 4-5 are the little-endian alarm type, and byte 6 contains packed severity/state flags. Payload byte 7 is reserved.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -10418,7 +10481,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>11</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -10465,13 +10528,107 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>deviceId</Id>
+          <Name>Device ID</Name>
+          <Description>Device / source module id</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <Description>Channel / alarm id low byte</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>alarmType</Id>
+          <Name>Alarm Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>CZONE_ALARM_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>severityCode</Id>
+          <Name>Severity Code</Name>
+          <Description>Raw CZone severity code; values 1..5 map to internal severities 4..0</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>stateFlag</Id>
+          <Name>State Flag</Name>
+          <Description>State bit used by CZone to distinguish active vs cleared/acknowledged state</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>ackFlag</Id>
+          <Name>Ack Flag</Name>
+          <Description>Packed and transmitted by CZone, but receive-side action is not confirmed</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>53</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>54</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>reserved11</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -10755,8 +10912,9 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65299</PGN>
-      <Id>bepMarineProprietaryPgn65299</Id>
-      <Description>BEP Marine: Proprietary PGN 65299</Description>
+      <Id>bepMarineCzoneAlarmStringRequest</Id>
+      <Description>BEP Marine: CZone Alarm String Request</Description>
+      <Explanation>CZone request for remote alarm string text. The request identifies the device and channel/alarm id; the remote device is expected to respond with the matching alarm string.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -10765,7 +10923,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -10812,10 +10970,39 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>deviceId</Id>
+          <Name>Device ID</Name>
+          <Description>Device / destination module id associated with the alarm</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <Description>Channel / alarm id</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>padding</Id>
+          <Name>Padding</Name>
+          <Description>Set to FF FF FF</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
