@@ -2114,17 +2114,25 @@ Pgn pgnList[] = {
                     "The Message Type field selects the variant."}
 
     ,
-    {"BEP Marine: CZone 65301",
+    {"BEP Marine: CZone Circuit Extended State",
      65301,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(295),
-      UINT8_DESC_FIELD("Field 1", "Pass-through byte; purpose unverified"),
-      SIMPLE_DESC_FIELD("Field 2", 5, "5-bit field; purpose unverified"),
-      SIMPLE_DESC_FIELD("Field 3", 3, "3-bit field; purpose unverified"),
-      BINARY_FIELD("Status Bitmap", BYTES(4), "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified."),
+      UINT8_DESC_FIELD("DIP Switch", "CZone module DIP-switch / module instance byte"),
+      LOOKUP_FIELD_DESC("Module Type", 5, CZONE_MODULE_TYPE, "Module-type/status-class selector"),
+      SIMPLE_DESC_FIELD("Page", 3, "Field/page value, used as high page bits for the channel number"),
+      BINARY_FIELD("Circuit Flags",
+                   BYTES(4),
+                   "32 LSB-first flags. Module types 8, 9, and 14 use a 32-channel/page direct state layout; "
+                   "module types 11, 16, and 17 use a 16-channel/page direct state layout; "
+                   "module types 28 and 31 use an 8-channel/page extended status layout; "
+                   "other module types use an 8-channel/page default layout."),
       END_OF_FIELDS},
-     .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md"}
+     .explanation = "CZone circuit extended state message. The message identifies the module by DIP switch, "
+                    "module type, and channel page, followed by 32 LSB-first circuit flags. The module type "
+                    "selects whether the flags describe 32, 16, or 8 channels per page and whether additional "
+                    "status banks are present."}
     ,
     {"Simnet: AP Unknown 1",
      65302,
