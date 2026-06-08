@@ -2136,14 +2136,14 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
-      UINT16_FIELD("C"),
-      UINT8_FIELD("D"),
+      UINT8_DESC_FIELD("Type", "Always 0x0A"),
+      UINT32_FIELD("Value"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval    = 1000,
-     .explanation = "Seen as sent by AC-42 only so far.",
+     .explanation = "Broadcast by the AC (AutoPilot Computer): a constant 0x0A followed by a single 32-bit "
+                    "value (purpose not yet identified) and a trailing 0xFF. Observed emitted by the AC-42; "
+                    "the newer NAC-3 does not emit it.",
      .priority    = 7}
 
 
@@ -2365,20 +2365,23 @@ Pgn pgnList[] = {
      {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"Simnet: AP Unknown 2",
+    {"Simnet: Autopilot Mode State",
      65340,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
+      LOOKUP_FIELD("Mode Class", BYTES(1), SIMNET_AUTOPILOT_MODE_CLASS),
+      LOOKUP_FIELD("Mode", BYTES(1), SIMNET_AUTOPILOT_MODE),
       UINT8_FIELD("C"),
       UINT8_FIELD("D"),
-      UINT8_FIELD("E"),
-      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("Flags"),
       END_OF_FIELDS},
      .interval    = 1000,
-     .explanation = "Seen as sent by AC-42 only so far.",
+     .explanation = "Autopilot mode/state broadcast by the AC (AutoPilot Computer). Field 1 is the "
+                    "standby/engaged class, field 2 the engaged mode. Observed emitted by the AC-42 (Standby = "
+                    "Mode Class 0 / Mode 0, Heading hold = Mode Class 16 / Mode 1); the newer NAC-3 does not "
+                    "emit this PGN and reports its mode/state on 65305 (Simnet: Pilot Mode) instead.",
      .priority    = 3}
 
     ,
@@ -2582,15 +2585,17 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
+      UINT16_FIELD("Value"),
       UINT8_FIELD("C"),
       UINT8_FIELD("D"),
-      UINT8_FIELD("E"),
+      SIMPLE_DESC_FIELD("Sub Index", 4, "Selects the reported variable (0 and 1 seen)"),
+      RESERVED_FIELD(4),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .interval    = 1000,
-     .explanation = "Seen as sent by AC-42 only so far.",
+     .explanation = "Broadcast by the AC (AutoPilot Computer): the low nibble of byte 6 is a sub-index "
+                    "selecting which internal variable is reported (sub-index 0 and 1 observed); the high nibble "
+                    "is always 0xF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.",
      .priority    = 6}
 
     ,
@@ -9047,6 +9052,48 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Simnet: AP command Reply: Change Course",
+     130851,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of the autopilot that ran the command"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
+      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      MATCH_LOOKUP_FIELD("Event", BYTES(1), 26, SIMNET_AP_EVENTS),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
+      ANGLE_U16_FIELD("Angle", "Absolute change in desired attitude, generally 1 or 10 degrees"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .explanation = "Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' "
+                    "that was addressed to it.",
+     .priority    = 7}
+
+    ,
+    {"Simnet: AP command Reply",
+     130851,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of the autopilot that ran the command"),
+      RESERVED_FIELD(BYTES(1)),
+      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
+      LOOKUP_FIELD("Command Type", BYTES(1), SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
+      SPARE_FIELD(BYTES(1)),
+      UINT8_FIELD("D"),
+      UINT16_FIELD("Value"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .explanation = "Reply emitted by the autopilot (NAC-3/AC-42) acknowledging an addressed 130850 'Simnet: AP "
+                    "command' by echoing it back, byte-for-byte. The autopilot sends exactly one per addressed "
+                    "command (Address = its own NMEA address), within ~20-70 ms; broadcast commands (Address "
+                    "0xFF) are not acknowledged.",
+     .priority    = 7}
+
+    ,
     {"Navico: Proprietary 2 FP",
      130852,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -9082,7 +9129,11 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = 1000,
      .priority    = 7,
-     .explanation = "Seen as sent by AC-42 and H5000 AP only so far."}
+     .explanation = "Extended autopilot status/telemetry broadcast by the AC (AutoPilot Computer): a sequence "
+                    "of 32-bit values, each 0x7FFFFFFF/0xFFFFFFFF when not available. Observed emitted by both "
+                    "the AC-42 and the NAC-3 (and reportedly the H5000 AP). Byte 2 (A) is 0xFF on the AC-42 but "
+                    "0 on the NAC-3; in NAC-3 captures field F is a slowly incrementing 32-bit counter. Physical "
+                    "meaning of the individual fields not yet identified."}
 
     ,
     {"Simrad: Engine Data",
