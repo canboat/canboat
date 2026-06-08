@@ -1,0 +1,23 @@
+# Normalize line endings so checkouts are byte-stable across platforms
+# (regardless of the host's core.autocrlf). Text source is stored and checked
+# out as LF; the exceptions below preserve files that are intentionally CRLF
+# or are binary captures that must not be touched.
+
+* text=auto eol=lf
+
+# Generated DBC database is written with CRLF on purpose by the build
+# (analyzer/fixup-version.py -w). Treat it as binary so git stores the bytes
+# verbatim and never normalizes the CRLF away, so `make generated` produces no
+# spurious diff.
+dbc-exporter/pgns.dbc -text
+
+# Raw NMEA 2000 captures and other evidence: keep the bytes exactly as
+# committed (several contain CR and some are effectively binary).
+samples/** -text
+
+# Test fixtures that intentionally contain CR bytes; normalizing them would
+# break the golden-file comparison.
+analyzer/tests/mixed-format.in    -text
+analyzer/tests/recombine-frames.in -text
+n2kd/tests/ais-lookup.out         -text
+n2kd/tests/nmea0183.out           -text
