@@ -1779,22 +1779,17 @@ Pgn pgnList[] = {
      {COMPANY(175), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: CZone Circuit Status",
+    {"BEP Marine: CZone Circuit State Bitmap",
      65284,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(295),
-      UINT8_FIELD("Dipswitch"),
-      UINT8_DESC_FIELD("Type", "Observed 0x0F for circuit-state reports"),
-      BINARY_FIELD("Bitmap", BYTES(4), "32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON"),
+      UINT8_FIELD("DIP Switch"),
+      LOOKUP_FIELD_DESC("Module Type", BYTES(1), CZONE_MODULE_TYPE, "CZone module type"),
+      BINARY_FIELD("Circuit Flags", BYTES(4), "32 circuit state flags, LSB-first"),
       END_OF_FIELDS},
-     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md",
-     .explanation = "Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the "
-                    "module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival "
-                    "deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone "
-                    "panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence "
-                    "is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks "
-                    "every module to report; the bitmap bytes are then unused."}
+     .explanation = "CZone circuit state bitmap. The message identifies the module by DIP switch and module type, "
+                    "followed by 32 circuit state flags."}
 
     ,
     {"Airmar: Boot State Acknowledgment",
