@@ -2337,6 +2337,23 @@ Pgn pgnList[] = {
      {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Simnet: AP Unknown 5",
+     65323,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Single-frame Simnet frame emitted by autopilot control heads (AP48, Triton2, ZEUS). The "
+                    "frame builder writes a fixed 0xFF, then two bytes A and B, then padding 0xFF; the meaning of "
+                    "A and B is not yet identified. The autopilot receives it. Observed in live captures.",
+     .priority    = 3}
+
+    ,
     {"BEP Marine: Proprietary PGN 65325",
      65325,
      PACKET_INCOMPLETE,
@@ -8767,6 +8784,19 @@ Pgn pgnList[] = {
 
     ,
     {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
+
+    ,
+    {"Navico: ASCII Identifier",
+     130847,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      STRINGLZ_FIELD("Identifier", LEN_VARIABLE),
+      END_OF_FIELDS},
+     .explanation = "A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). "
+                    "The frame builder writes a length byte followed by that many ASCII characters (per-device "
+                    "identifier text, e.g. a serial number). Observed in live captures.",
+     .priority    = 7}
 
     ,
     {"SeaTalk: Node Statistics",
