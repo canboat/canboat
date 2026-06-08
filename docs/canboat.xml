@@ -2073,6 +2073,18 @@ limitations under the License.
       <EnumPair Value='2' Name='Manual' />
       <EnumPair Value='16' Name='Automatic' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_AUTOPILOT_MODE_CLASS' MaxValue='255'>
+      <EnumPair Value='0' Name='Standby' />
+      <EnumPair Value='16' Name='Engaged' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_AUTOPILOT_MODE' MaxValue='255'>
+      <EnumPair Value='0' Name='Standby' />
+      <EnumPair Value='1' Name='Heading' />
+      <EnumPair Value='3' Name='Mode 4' />
+      <EnumPair Value='4' Name='Wind' />
+      <EnumPair Value='5' Name='Non-Follow-Up' />
+      <EnumPair Value='6' Name='Navigation' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
     </LookupEnumeration>
@@ -11351,7 +11363,7 @@ limitations under the License.
       <Id>simnetApUnknown1</Id>
       <Description>Simnet: AP Unknown 1</Description>
     <Priority>7</Priority>
-      <Explanation>Seen as sent by AC-42 only so far.</Explanation>
+      <Explanation>Broadcast by the AC (AutoPilot Computer): a constant 0x0A followed by a single 32-bit value (purpose not yet identified) and a trailing 0xFF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -11359,7 +11371,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>8</Length>
       <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
@@ -11407,8 +11419,9 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Always 0x0A</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -11420,46 +11433,20 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>32</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>4294967292</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>reserved8</Id>
+          <Id>reserved6</Id>
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
@@ -13420,10 +13407,10 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65340</PGN>
-      <Id>simnetApUnknown2</Id>
-      <Description>Simnet: AP Unknown 2</Description>
+      <Id>simnetAutopilotModeState</Id>
+      <Description>Simnet: Autopilot Mode State</Description>
     <Priority>3</Priority>
-      <Explanation>Seen as sent by AC-42 only so far.</Explanation>
+      <Explanation>Autopilot mode/state broadcast by the AC (AutoPilot Computer). Field 1 is the standby/engaged class, field 2 the engaged mode. Observed emitted by the AC-42 (Standby = Mode Class 0 / Mode 0, Heading hold = Mode Class 16 / Mode 1); the newer NAC-3 does not emit this PGN and reports its mode/state on 65305 (Simnet: Pilot Mode) instead.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -13479,8 +13466,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>modeClass</Id>
+          <Name>Mode Class</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -13488,12 +13475,13 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AUTOPILOT_MODE_CLASS</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>mode</Id>
+          <Name>Mode</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -13501,7 +13489,8 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AUTOPILOT_MODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
@@ -13531,26 +13520,26 @@ limitations under the License.
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>e</Id>
-          <Name>E</Name>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>flags</Id>
+          <Name>Flags</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>reserved9</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -15283,7 +15272,7 @@ limitations under the License.
       <Id>simnetApUnknown3</Id>
       <Description>Simnet: AP Unknown 3</Description>
     <Priority>6</Priority>
-      <Explanation>Seen as sent by AC-42 only so far.</Explanation>
+      <Explanation>Broadcast by the AC (AutoPilot Computer): the low nibble of byte 6 is a sub-index selecting which internal variable is reported (sub-index 0 and 1 observed); the high nibble is always 0xF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -15339,32 +15328,19 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>c</Id>
           <Name>C</Name>
           <BitLength>8</BitLength>
@@ -15377,7 +15353,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
+          <Order>6</Order>
           <Id>d</Id>
           <Name>D</Name>
           <BitLength>8</BitLength>
@@ -15390,17 +15366,28 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>8</BitLength>
+          <Order>7</Order>
+          <Id>subIndex</Id>
+          <Name>Sub Index</Name>
+          <Description>Selects the reported variable (0 and 1 seen)</Description>
+          <BitLength>4</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>13</RangeMax>
           <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>52</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
           <Order>9</Order>
@@ -65971,6 +65958,366 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130851</PGN>
+      <Id>simnetApCommandReplyChangeCourse</Id>
+      <Description>Simnet: AP command Reply: Change Course</Description>
+    <Priority>7</Priority>
+      <Explanation>Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to it.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>12</FieldCount>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of the autopilot that ran the command</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Autopilot</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>255</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
+          <Description>AP Command</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>10</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>event</Id>
+          <Name>Event</Name>
+          <Description>Change course</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>26</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_EVENTS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>direction</Id>
+          <Name>Direction</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DIRECTION</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>angle</Id>
+          <Name>Angle</Name>
+          <Description>Absolute change in desired attitude, generally 1 or 10 degrees</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6.2831852</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved12</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130851</PGN>
+      <Id>simnetApCommandReply</Id>
+      <Description>Simnet: AP command Reply</Description>
+    <Priority>7</Priority>
+      <Explanation>Reply emitted by the autopilot (NAC-3/AC-42) acknowledging an addressed 130850 'Simnet: AP command' by echoing it back, byte-for-byte. The autopilot sends exactly one per addressed command (Address = its own NMEA address), within ~20-70 ms; broadcast commands (Address 0xFF) are not acknowledged.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>12</FieldCount>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of the autopilot that ran the command</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Autopilot</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>255</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>event</Id>
+          <Name>Event</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_AP_EVENTS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved12</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130852</PGN>
       <Id>navicoProprietary2Fp</Id>
       <Description>Navico: Proprietary 2 FP</Description>
@@ -66143,7 +66490,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetApUnknown4</Id>
       <Description>Simnet: AP Unknown 4</Description>
     <Priority>7</Priority>
-      <Explanation>Seen as sent by AC-42 and H5000 AP only so far.</Explanation>
+      <Explanation>Extended autopilot status/telemetry broadcast by the AC (AutoPilot Computer): a sequence of 32-bit values, each 0x7FFFFFFF/0xFFFFFFFF when not available. Observed emitted by both the AC-42 and the NAC-3 (and reportedly the H5000 AP). Byte 2 (A) is 0xFF on the AC-42 but 0 on the NAC-3; in NAC-3 captures field F is a slowly incrementing 32-bit counter. Physical meaning of the individual fields not yet identified.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>

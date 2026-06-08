@@ -2567,14 +2567,14 @@ limitations under the License.
             PGN 65302
             - Simnet: AP Unknown 1</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Broadcast by the AC (AutoPilot Computer): a constant 0x0A followed by a single 32-bit value (purpose not yet identified) and a trailing 0xFF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 8 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -2589,19 +2589,13 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Type</td><td>Always 0x0A</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Value</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65303">0xFF17:
             PGN 65303
             - Suzuki: Engine Data D</h3><p>
@@ -3234,9 +3228,9 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65340">0xFF3C:
             PGN 65340
-            - Simnet: AP Unknown 2</h3><p>
+            - Simnet: Autopilot Mode State</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Autopilot mode/state broadcast by the AC (AutoPilot Computer). Field 1 is the standby/engaged class, field 2 the engaged mode. Observed emitted by the AC-42 (Standby = Mode Class 0 / Mode 0, Heading hold = Mode Class 16 / Mode 1); the newer NAC-3 does not emit this PGN and reports its mode/state on 65305 (Simnet: Pilot Mode) instead.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
@@ -3258,23 +3252,23 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Mode Class</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-SIMNET_AUTOPILOT_MODE_CLASS">SIMNET_AUTOPILOT_MODE_CLASS</a></td><td/></tr><tr><td>5</td><td>Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-SIMNET_AUTOPILOT_MODE">SIMNET_AUTOPILOT_MODE</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>9</td><td>Flags</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65341">0xFF3D:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65341">0xFF3D:
             PGN 65341
             - Simnet: Autopilot Angle</h3><p>
               This PGN description applies when the following field(s) match:
@@ -3803,7 +3797,7 @@ limitations under the License.
             PGN 65420
             - Simnet: AP Unknown 3</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 only so far.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Broadcast by the AC (AutoPilot Computer): the low nibble of byte 6 is a sub-index selecting which internal variable is reported (sub-index 0 and 1 observed); the high nibble is always 0xF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
@@ -3825,22 +3819,20 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Value</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Sub Index</td><td>Selects the reported variable (0 and 1 seen)</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>4 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65424">0xFF90:
             PGN 65424
             - Yamaha: Engine Data C</h3><p>
@@ -18849,7 +18841,101 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>G</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130852">0x1FF24:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130851">0x1FF23:
+            PGN 130851
+            - Simnet: AP command Reply: Change Course</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr><tr><td>Command Type</td><td>10</td></tr><tr><td>Event</td><td>26</td></tr></table></p><p>Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to it.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td>10:
+                  AP Command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td>26:
+                  Change course</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Direction</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DIRECTION">SIMNET_DIRECTION</a></td><td/></tr><tr><td>11</td><td>Angle</td><td>Absolute change in desired attitude, generally 1 or 10 degrees</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130851">0x1FF23:
+            PGN 130851
+            - Simnet: AP command Reply</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>255</td></tr></table></p><p>Reply emitted by the autopilot (NAC-3/AC-42) acknowledging an addressed 130850 'Simnet: AP command' by echoing it back, byte-for-byte. The autopilot sends exactly one per addressed command (Address = its own NMEA address), within ~20-70 ms; broadcast commands (Address 0xFF) are not acknowledged.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 12 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Proprietary ID</td><td>255:
+                  Autopilot</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND</a></td><td>true</td></tr><tr><td>7</td><td>Command Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_COMMAND_TYPE">SIMNET_AP_COMMAND_TYPE</a></td><td/></tr><tr><td>8</td><td>Event</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_AP_EVENTS">SIMNET_AP_EVENTS</a></td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Value</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130852">0x1FF24:
             PGN 130852
             - Navico: Proprietary 2 FP</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18909,7 +18995,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130860
             - Simnet: AP Unknown 4</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Seen as sent by AC-42 and H5000 AP only so far.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Extended autopilot status/telemetry broadcast by the AC (AutoPilot Computer): a sequence of 32-bit values, each 0x7FFFFFFF/0xFFFFFFFF when not available. Observed emitted by both the AC-42 and the NAC-3 (and reportedly the H5000 AP). Byte 2 (A) is 0xFF on the AC-42 but 0 on the NAC-3; in NAC-3 captures field F is a slowly incrementing 32-bit counter. Physical meaning of the individual fields not yet identified.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
@@ -20059,7 +20145,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Status</td></tr><tr><td>3</td><td>Send Status</td></tr><tr><td>10</td><td>Mode</td></tr><tr><td>11</td><td>Send Mode</td></tr><tr><td>23</td><td>Sailing Processor Status</td></tr></table><h3 id="lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Manual</td></tr><tr><td>16</td><td>Automatic</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Manual</td></tr><tr><td>16</td><td>Automatic</td></tr></table><h3 id="lookup-SIMNET_AUTOPILOT_MODE_CLASS">SIMNET_AUTOPILOT_MODE_CLASS
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standby</td></tr><tr><td>16</td><td>Engaged</td></tr></table><h3 id="lookup-SIMNET_AUTOPILOT_MODE">SIMNET_AUTOPILOT_MODE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standby</td></tr><tr><td>1</td><td>Heading</td></tr><tr><td>3</td><td>Mode 4</td></tr><tr><td>4</td><td>Wind</td></tr><tr><td>5</td><td>Non-Follow-Up</td></tr><tr><td>6</td><td>Navigation</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND
         (0 - 255)
