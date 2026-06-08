@@ -17703,19 +17703,21 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td/><td>32 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130840">0x1FF18:
             PGN 130840
-            - Simnet: Data User Group Configuration</h3><p>
+            - Simnet: Data Source Selection</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is selected for each data type across the instrument network. 'Data Type' identifies the quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. Emitted on change. The data-type ids were mapped from a live source-selection probe; see also the compact form in PGN 130822.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            17
+            bytes long and contains 11 fields.
 
             
               The default priority (as observed in the field) is 3.
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
                   Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -17725,7 +17727,23 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130841">0x1FF19:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Sequence</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>B</td><td>Usually 0x01</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data Type</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_DATA_SOURCE">SIMNET_DATA_SOURCE</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Source</td><td/><td><div class="xs">0 .. 1.84467440737096e+19</div></td><td>64 bits
+                  <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130841">0x1FF19:
             PGN 130841
             - Maretron: CAN Frame Forwarding</h3><p>
               This PGN description applies when the following field(s) match:
@@ -20210,7 +20228,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standby</td></tr><tr><td>16</td><td>Engaged</td></tr></table><h3 id="lookup-SIMNET_AUTOPILOT_MODE">SIMNET_AUTOPILOT_MODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standby</td></tr><tr><td>1</td><td>Heading</td></tr><tr><td>3</td><td>Mode 4</td></tr><tr><td>4</td><td>Wind</td></tr><tr><td>5</td><td>Non-Follow-Up</td></tr><tr><td>6</td><td>Navigation</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Standby</td></tr><tr><td>1</td><td>Heading</td></tr><tr><td>3</td><td>Mode 4</td></tr><tr><td>4</td><td>Wind</td></tr><tr><td>5</td><td>Non-Follow-Up</td></tr><tr><td>6</td><td>Navigation</td></tr></table><h3 id="lookup-SIMNET_DATA_SOURCE">SIMNET_DATA_SOURCE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>17</td><td>Rudder Feedback</td></tr><tr><td>19</td><td>Position</td></tr><tr><td>27</td><td>Heading</td></tr><tr><td>35</td><td>Depth</td></tr><tr><td>36</td><td>Boat Speed</td></tr><tr><td>42</td><td>Apparent Wind</td></tr><tr><td>43</td><td>Barometric Pressure</td></tr></table><h3 id="lookup-SIMNET_COMMAND">SIMNET_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>50</td><td>Text</td></tr></table><h3 id="lookup-SIMNET_EVENT_COMMAND">SIMNET_EVENT_COMMAND
         (0 - 255)

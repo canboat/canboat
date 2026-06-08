@@ -2118,6 +2118,18 @@ LOOKUP(SIMNET_AUTOPILOT_MODE, 5, "Non-Follow-Up")
 LOOKUP(SIMNET_AUTOPILOT_MODE, 6, "Navigation")
 LOOKUP_END
 
+// PGN 130840 (Data Source Selection) data-type id. Values confirmed by a live bus probe
+// (changing each source and reading the selected device's NMEA NAME); unmapped ids show numerically.
+LOOKUP_TYPE(SIMNET_DATA_SOURCE, BYTES(1))
+LOOKUP(SIMNET_DATA_SOURCE, 17, "Rudder Feedback")
+LOOKUP(SIMNET_DATA_SOURCE, 19, "Position")
+LOOKUP(SIMNET_DATA_SOURCE, 27, "Heading")
+LOOKUP(SIMNET_DATA_SOURCE, 35, "Depth")
+LOOKUP(SIMNET_DATA_SOURCE, 36, "Boat Speed")
+LOOKUP(SIMNET_DATA_SOURCE, 42, "Apparent Wind")
+LOOKUP(SIMNET_DATA_SOURCE, 43, "Barometric Pressure")
+LOOKUP_END
+
 LOOKUP_TYPE(SIMNET_COMMAND, BYTES(1))
 LOOKUP(SIMNET_COMMAND, 50, "Text")
 LOOKUP_END

@@ -8608,12 +8608,27 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Simnet: Data User Group Configuration",
+    {"Simnet: Data Source Selection",
      130840,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(1857), END_OF_FIELDS},
-     .priority = 3}
+     {COMPANY(1857),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("Sequence"),
+      UINT8_DESC_FIELD("B", "Usually 0x01"),
+      LOOKUP_FIELD("Data Type", BYTES(1), SIMNET_DATA_SOURCE),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("C"),
+      ISO_NAME_FIELD("Source"),
+      RESERVED_FIELD(BYTES(1)),
+      END_OF_FIELDS},
+     .interval    = UINT16_MAX,
+     .explanation = "Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is "
+                    "selected for each data type across the instrument network. 'Data Type' identifies the "
+                    "quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. "
+                    "Emitted on change. The data-type ids were mapped from a live source-selection probe; "
+                    "see also the compact form in PGN 130822.",
+     .priority    = 3}
 
     ,
     {"Maretron: CAN Frame Forwarding",
