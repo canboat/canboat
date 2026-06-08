@@ -877,11 +877,11 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
     return;
   }
 
-  sprintf(line, "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
+  snprintf(line, sizeof(line), "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
   {
-    sprintf(p, ",%02x", msg[i]);
+    snprintf(p, 4, ",%02x", msg[i]);
     p += 3;
   }
   *p++ = 0;
