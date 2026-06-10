@@ -7073,6 +7073,13 @@ Pgn pgnList[] = {
        "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
+    {"Mercury: Alarm",
+     130816,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"SonicHub: Init #2",
      130816,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -7411,6 +7418,13 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("System Status", 2),
       RESERVED_FIELD(4),
       END_OF_FIELDS}}
+
+    ,
+    {"Mercury: Vessel Configuration",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Navico: Unknown",
@@ -8185,6 +8199,13 @@ Pgn pgnList[] = {
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
+    {"Mercury: Pop-up",
+     130821,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Navico: ASCII Data",
      130821,
      PACKET_INCOMPLETE,
@@ -8240,6 +8261,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+    ,
+    {"Mercury: Proprietary PGN 130822",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
     ,
     {"Navico: Unknown 1",
      130822,
@@ -8415,6 +8443,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(144), END_OF_FIELDS}}
+
+    ,
+    {"Mercury: Propulsion Control Mode Status",
+     130830,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Maretron: Dometic HVAC Status",
