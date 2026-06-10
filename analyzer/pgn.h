@@ -1731,6 +1731,13 @@ Pgn pgnList[] = {
                     "channel index, an alarm-state polarity flag, or a frame counter)."}
 
     ,
+    {"Evinrude: Joystick Control Primary",
+     65283,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: CZone Channel State",
      65283,
      PACKET_INCOMPLETE,
@@ -1758,6 +1765,13 @@ Pgn pgnList[] = {
                     "on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context "
                     "(likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been "
                     "verified against captures with known channel states."}
+    ,
+    {"Evinrude: Joystick Control Secondary",
+     65284,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
     ,
     {"Maretron: Proprietary DC Breaker Current",
      65284,
@@ -1792,6 +1806,13 @@ Pgn pgnList[] = {
                     "followed by 32 circuit state flags."}
 
     ,
+    {"Evinrude: iDock Manifold Controller Feedback Port",
+     65285,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Airmar: Boot State Acknowledgment",
      65285,
      PACKET_COMPLETE,
@@ -1817,6 +1838,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Evinrude: iDock Manifold Controller Feedback Starboard",
+     65286,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Chetco: Dimmer",
@@ -1853,6 +1881,13 @@ Pgn pgnList[] = {
       {.name = "Fluid Flow Rate", .size = BYTES(3), .resolution = 0.0001, .hasSign = true, .fieldType = "INTEGER"},
       END_OF_FIELDS},
      .priority = 5}
+
+    ,
+    {"Evinrude: G4 Control Head State Message",
+     65287,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Access Level",
@@ -2066,6 +2101,13 @@ Pgn pgnList[] = {
      {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Evinrude: Throttle/Shift Control",
+     65299,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Suzuki: Engine Data B",
      65299,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -2270,11 +2312,25 @@ Pgn pgnList[] = {
 
 
     ,
+    {"Evinrude: Winterization",
+     65310,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: Proprietary PGN 65310",
      65310,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Evinrude: Engine Management Module",
+     65311,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65311",
