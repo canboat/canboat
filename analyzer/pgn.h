@@ -2128,6 +2128,13 @@ Pgn pgnList[] = {
                     "the remote device is expected to respond with the matching alarm string."}
 
     ,
+    {"Yanmar: Engine Status",
+     65300,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Suzuki: Engine Data C",
      65300,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
