@@ -1886,8 +1886,8 @@ Pgn pgnList[] = {
     {"Evinrude: G4 Control Head State Message",
      65287,
      PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(163), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Access Level",
