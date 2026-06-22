@@ -8,6 +8,16 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+### Added
+
+### Changed
+
+### Fixed
+
+- ikonvert-serial: always send a reset, so a previous run with a RX/TX list will not influence this run.
+- ikonvert-serial: the synthetic PGN 262400 from the ikonvert report will contain the proper source address
+  (whatever the iKonvert source address is, this is reported by the same PGN).
+
 ## [6.2.0]
 
 ### Added

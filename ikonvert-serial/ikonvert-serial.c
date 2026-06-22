@@ -545,13 +545,13 @@ static void sendNextInitCommand(void)
         break;
 
       case 12:
-        if (sbGetLength(&rxList) > 0 || sbGetLength(&txList) > 0)
-        {
-          sbAppendFormat(&writeBuffer, "%s\r\n", TX_RESET_MSG);
-          break;
-        }
-        sendInitState = 10;
-        // and fallthru
+        // Always issue N2NET_RESET so any RX/TX filter the device may
+        // have stored in NVRAM from a previous session is wiped before
+        // we (optionally) set our own. Adds one extra ACK round-trip
+        // to every startup, but keeps the post-init filter state
+        // predictable.
+        sbAppendFormat(&writeBuffer, "%s\r\n", TX_RESET_MSG);
+        break;
 
       case 10:
         if (sbGetLength(&rxList) > 0)
@@ -740,6 +740,11 @@ static bool parseIKonvertAsciiMessage(const char *msg, RawMessage *n2k)
     if (parseInt(&msg, &addr, 0) && addr != 0)
     {
       n2k->data[10] = (uint8_t) addr;
+      // Source = the gateway's claimed CAN address. Lets downstream
+      // tools attribute the network-status PGN to the iKonvert
+      // itself instead of bucketing every gateway's status into
+      // src=0.
+      n2k->src = (uint8_t) addr;
       if (verbose)
       {
         logInfo("iKonvert address %d\n", addr);
