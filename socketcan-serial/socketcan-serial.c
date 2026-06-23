@@ -120,6 +120,19 @@ static long     heartbeatInterval = HEARTBEAT_DEFAULT_INTERVAL; /* 0 disables */
 static uint8_t  heartbeatSeq      = 0;
 static uint64_t nextHeartbeat     = 0; /* ms; when to send the next heartbeat */
 
+/* Outbound buffer drained one frame per select() POLLOUT, so a burst of
+ * frames (fast-packet PGN, claim flurry, …) never blocks the main loop
+ * waiting for the kernel CAN qdisc to drain. The queue holds about 1s of
+ * bus time at 250 kbit/s with default txqueuelen, which is enough to
+ * survive realistic write bursts and still keep RX / claim timers
+ * responsive. */
+#define TX_BUFFER_CAPACITY 1024
+static struct can_frame txBuffer[TX_BUFFER_CAPACITY];
+static size_t           txHead       = 0; /* oldest unsent frame */
+static size_t           txTail       = 0; /* next free slot */
+static size_t           txCount      = 0;
+static size_t           txOverflowed = 0;
+
 /* PGNs we originate / consume, reported via PGN 126464 on request. */
 static const uint32_t txPgnList[] = {PGN_ISO_ACK, PGN_ISO_REQUEST, PGN_ISO_ADDRESS_CLAIM, PGN_GROUP_FUNCTION,
                                      PGN_PGN_LIST, PGN_HEARTBEAT, PGN_PRODUCT_INFO};
@@ -305,17 +318,22 @@ int main(int argc, char **argv)
 
   for (;;)
   {
-    fd_set         fds;
+    fd_set         rfds, wfds;
     struct timeval tv;
     uint64_t       now = getNow();
     int            r;
     int            maxfd = sock;
 
-    FD_ZERO(&fds);
-    FD_SET(sock, &fds);
+    FD_ZERO(&rfds);
+    FD_ZERO(&wfds);
+    FD_SET(sock, &rfds);
+    if (txCount > 0)
+    {
+      FD_SET(sock, &wfds);
+    }
     if (!readonly)
     {
-      FD_SET(STDIN_FILENO, &fds);
+      FD_SET(STDIN_FILENO, &rfds);
       if (STDIN_FILENO > maxfd)
       {
         maxfd = STDIN_FILENO;
@@ -323,7 +341,9 @@ int main(int argc, char **argv)
     }
 
     /* Wake at the soonest of: the claim deadline, the next heartbeat, or a
-     * 1s poll, so the timers advance even on an otherwise silent bus. */
+     * 1s poll, so the timers advance even on an otherwise silent bus.
+     * When the TX buffer is non-empty, also clamp to a short timeout as a
+     * safety net in case POLLOUT lags qdisc availability on some kernels. */
     uint64_t waitMs = 1000;
     if ((claimState == CLAIM_PENDING || claimState == CLAIM_SCANNING) && claimDeadline > now)
     {
@@ -333,10 +353,14 @@ int main(int argc, char **argv)
     {
       waitMs = (nextHeartbeat > now) ? nextHeartbeat - now : 0;
     }
+    if (txCount > 0 && waitMs > 5)
+    {
+      waitMs = 5;
+    }
     tv.tv_sec  = waitMs / 1000;
     tv.tv_usec = (waitMs % 1000) * 1000;
 
-    r = select(maxfd + 1, &fds, NULL, NULL, &tv);
+    r = select(maxfd + 1, &rfds, &wfds, NULL, &tv);
     if (r < 0)
     {
       if (errno == EINTR)
@@ -350,7 +374,15 @@ int main(int argc, char **argv)
       logAbort("Timeout %ld seconds; no data received\n", timeout);
     }
 
-    if (FD_ISSET(sock, &fds))
+    /* Drain one frame per writability wakeup (or per safety-net timeout)
+     * so a single producer can't monopolise the loop; RX, stdin and the
+     * claim timers stay responsive across long fast-packet bursts. */
+    if (txCount > 0)
+    {
+      txDrainOne(sock);
+    }
+
+    if (FD_ISSET(sock, &rfds))
     {
       lastFrame = getNow();
       if (readCan(sock) < 0)
@@ -425,6 +457,16 @@ static int openCanDevice(const char *device, int *canSocket)
   if (bind(sock, (struct sockaddr *) &addr, sizeof(addr)) < 0)
   {
     logError("bind: %s\n", strerror(errno));
+    return 1;
+  }
+
+  /* Non-blocking writes: a full netdev qdisc must not stall RX or the
+   * claim timers. The main loop buffers TX frames and drains them via
+   * POLLOUT instead of busy-waiting in write(). */
+  int flags = fcntl(sock, F_GETFL, 0);
+  if (flags < 0 || fcntl(sock, F_SETFL, flags | O_NONBLOCK) < 0)
+  {
+    logError("setting CAN socket non-blocking: %s\n", strerror(errno));
     return 1;
   }
 
@@ -759,35 +801,70 @@ static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t d
   }
 }
 
+/*
+ * Enqueue a CAN frame for asynchronous transmission. The main loop drains
+ * the buffer one frame at a time when select() reports POLLOUT on the CAN
+ * socket. We never write() inline because the netdev qdisc is shallow
+ * (txqueuelen often 10) and a single fast-packet PGN can easily exceed
+ * it — a blocking retry loop would stall RX and the claim timers for
+ * tens to hundreds of milliseconds per burst.
+ */
 static void sendCanFrame(int sock, uint32_t canId, const uint8_t *data, uint8_t len)
 {
-  struct can_frame frame;
-  int              retries = 50;
-
-  memset(&frame, 0, sizeof(frame));
-  frame.can_id  = canId | CAN_EFF_FLAG;
-  frame.can_dlc = len;
-  memcpy(frame.data, data, len);
-
-  /* The interface tx queue can be shorter than a fast packet (e.g. qlen 10
-   * vs 20 frames for Product Information). On a transient full queue the
-   * kernel returns ENOBUFS; back off briefly and retry so the multi-frame
-   * message is not truncated on the wire. */
-  for (;;)
+  (void) sock; /* the socket is drained by the main loop, not used here */
+  if (txCount == TX_BUFFER_CAPACITY)
   {
-    ssize_t n = write(sock, &frame, sizeof(frame));
-    if (n == (ssize_t) sizeof(frame))
+    /* Rate-limit the warning so a sustained overrun doesn't flood stderr. */
+    if (txOverflowed == 0)
     {
-      return;
+      logError("CAN TX buffer full (%d frames), dropping outbound frame\n", TX_BUFFER_CAPACITY);
     }
-    if (n < 0 && (errno == ENOBUFS || errno == EAGAIN || errno == EINTR) && retries-- > 0)
-    {
-      usleep(2000);
-      continue;
-    }
-    logError("write to CAN: %s\n", strerror(errno));
+    txOverflowed++;
     return;
   }
+  struct can_frame *slot = &txBuffer[txTail];
+  memset(slot, 0, sizeof(*slot));
+  slot->can_id  = canId | CAN_EFF_FLAG;
+  slot->can_dlc = len;
+  memcpy(slot->data, data, len);
+  txTail = (txTail + 1) % TX_BUFFER_CAPACITY;
+  txCount++;
+}
+
+/*
+ * Drain one frame from the TX buffer if the kernel has room. Returns true
+ * iff a frame was actually written; false on empty buffer or backpressure.
+ */
+static bool txDrainOne(int sock)
+{
+  if (txCount == 0)
+  {
+    return false;
+  }
+  const struct can_frame *f = &txBuffer[txHead];
+  ssize_t                 n = write(sock, f, sizeof(*f));
+  if (n == (ssize_t) sizeof(*f))
+  {
+    txHead = (txHead + 1) % TX_BUFFER_CAPACITY;
+    txCount--;
+    if (txOverflowed > 0 && txCount < TX_BUFFER_CAPACITY / 2)
+    {
+      logInfo("CAN TX buffer recovered (%zu frames had been dropped)\n", txOverflowed);
+      txOverflowed = 0;
+    }
+    return true;
+  }
+  if (n < 0 && (errno == EAGAIN || errno == ENOBUFS || errno == EINTR))
+  {
+    /* Backpressure — leave the frame queued; the next POLLOUT-driven
+     * wakeup or the safety-net select() timeout will retry. */
+    return false;
+  }
+  /* Hard error — drop the frame so the buffer can't get stuck. */
+  logError("write to CAN: %s (dropping frame)\n", strerror(errno));
+  txHead = (txHead + 1) % TX_BUFFER_CAPACITY;
+  txCount--;
+  return false;
 }
 
 static StringBuffer inBuffer;
