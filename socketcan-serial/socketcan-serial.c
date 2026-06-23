@@ -142,7 +142,7 @@ static void handleFrame(uint32_t canId, const uint8_t *data, uint8_t len, uint64
 static void emitMessage(uint64_t when, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len);
 static bool isFastPacket(uint32_t pgn);
 static void parseAndWriteIn(int sock, const char *cmd);
-static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, size_t len);
+static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, size_t len, bool echo);
 static void sendCanFrame(int sock, uint32_t canId, const uint8_t *data, uint8_t len);
 static bool readIn(void);
 static bool getInMsg(char *msg, size_t len);
@@ -695,14 +695,14 @@ static void parseAndWriteIn(int sock, const char *cmd)
     return; /* synthetic status PGNs are not for the bus */
   }
 
-  sendN2k(sock, m.prio, m.pgn, (uint8_t) address, m.dst, m.data, m.len);
+  sendN2k(sock, m.prio, m.pgn, (uint8_t) address, m.dst, m.data, m.len, false);
 }
 
 /*
  * Send an NMEA 2000 message, splitting into a fast packet when needed.
  * (Same wire layout as socketcan-writer.c.)
  */
-static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, size_t len)
+static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, size_t len, bool echo)
 {
   uint32_t canId = getCanIdFromISO11783Bits(prio, pgn, src, dst);
 
@@ -711,32 +711,41 @@ static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t d
   if (len <= 8 && !isFastPacket(pgn))
   {
     sendCanFrame(sock, canId, data, (uint8_t) len);
-    return;
+  }
+  else
+  {
+    size_t  remaining = len;
+    uint8_t index     = 0;
+    uint8_t frame[8];
+
+    while (remaining > 0)
+    {
+      size_t chunk;
+      frame[0] = index;
+      if (index == 0)
+      {
+        frame[1] = (uint8_t) len;
+        chunk    = CB_MIN(FASTPACKET_BUCKET_0_SIZE, remaining);
+        memcpy(frame + FASTPACKET_BUCKET_0_OFFSET, data, chunk);
+        sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_0_OFFSET + chunk));
+      }
+      else
+      {
+        chunk = CB_MIN(FASTPACKET_BUCKET_N_SIZE, remaining);
+        memcpy(frame + FASTPACKET_BUCKET_N_OFFSET, data + (len - remaining), chunk);
+        sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_N_OFFSET + chunk));
+      }
+      remaining -= chunk;
+      index++;
+    }
   }
 
-  size_t  remaining = len;
-  uint8_t index     = 0;
-  uint8_t frame[8];
-
-  while (remaining > 0)
+  /* Echo our own generated PGNs to stdout too, so a downstream consumer
+   * sees a complete picture of the bus including this node. The stdin
+   * bridge passes echo=false; its -p passthru handles echoing instead. */
+  if (echo && !writeonly)
   {
-    size_t chunk;
-    frame[0] = index;
-    if (index == 0)
-    {
-      frame[1] = (uint8_t) len;
-      chunk    = CB_MIN(FASTPACKET_BUCKET_0_SIZE, remaining);
-      memcpy(frame + FASTPACKET_BUCKET_0_OFFSET, data, chunk);
-      sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_0_OFFSET + chunk));
-    }
-    else
-    {
-      chunk = CB_MIN(FASTPACKET_BUCKET_N_SIZE, remaining);
-      memcpy(frame + FASTPACKET_BUCKET_N_OFFSET, data + (len - remaining), chunk);
-      sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_N_OFFSET + chunk));
-    }
-    remaining -= chunk;
-    index++;
+    emitMessage(getNow(), prio, pgn, src, dst, data, (uint8_t) len);
   }
 }
 
@@ -878,7 +887,7 @@ static void sendIsoRequest(int sock, uint8_t src, uint8_t dst, uint32_t pgn)
   data[0] = (uint8_t) pgn;
   data[1] = (uint8_t) (pgn >> 8);
   data[2] = (uint8_t) (pgn >> 16);
-  sendN2k(sock, 6, PGN_ISO_REQUEST, src, dst, data, sizeof(data));
+  sendN2k(sock, 6, PGN_ISO_REQUEST, src, dst, data, sizeof(data), true);
 }
 
 static void sendAddressClaim(int sock, uint8_t dst)
@@ -888,7 +897,7 @@ static void sendAddressClaim(int sock, uint8_t dst)
   {
     data[i] = (uint8_t) (deviceName >> (8 * i));
   }
-  sendN2k(sock, 6, PGN_ISO_ADDRESS_CLAIM, (uint8_t) address, dst, data, sizeof(data));
+  sendN2k(sock, 6, PGN_ISO_ADDRESS_CLAIM, (uint8_t) address, dst, data, sizeof(data), true);
 }
 
 static int pickFreeAddress(void)
@@ -1120,7 +1129,7 @@ static void sendHeartbeat(int sock)
   data[6] = 0xff;
   data[7] = 0xff;
 
-  sendN2k(sock, 7, PGN_HEARTBEAT, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data));
+  sendN2k(sock, 7, PGN_HEARTBEAT, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data), true);
 
   heartbeatSeq = (heartbeatSeq >= 252) ? 0 : heartbeatSeq + 1;
 }
@@ -1170,7 +1179,7 @@ static void sendProductInfo(int sock)
   data[132] = CERTIFICATION_LEVEL;
   data[133] = LOAD_EQUIVALENCY;
 
-  sendN2k(sock, 6, PGN_PRODUCT_INFO, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data));
+  sendN2k(sock, 6, PGN_PRODUCT_INFO, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data), true);
 }
 
 /*
@@ -1189,7 +1198,7 @@ static void sendOnePgnList(int sock, uint8_t dst, uint8_t functionCode, const ui
     data[n++] = (uint8_t) (list[i] >> 8);
     data[n++] = (uint8_t) (list[i] >> 16);
   }
-  sendN2k(sock, 6, PGN_PGN_LIST, (uint8_t) address, dst, data, n);
+  sendN2k(sock, 6, PGN_PGN_LIST, (uint8_t) address, dst, data, n, true);
 }
 
 static void sendPgnList(int sock, uint8_t dst)
@@ -1212,7 +1221,7 @@ static void sendIsoAck(int sock, uint8_t dst, uint8_t control, uint32_t pgn)
   data[6] = (uint8_t) (pgn >> 8);
   data[7] = (uint8_t) (pgn >> 16);
 
-  sendN2k(sock, 6, PGN_ISO_ACK, (uint8_t) address, dst, data, sizeof(data));
+  sendN2k(sock, 6, PGN_ISO_ACK, (uint8_t) address, dst, data, sizeof(data), true);
 }
 
 /* Acknowledge Group Function, PGN 126208 function 2. */
@@ -1227,5 +1236,5 @@ static void sendAckGroupFunction(int sock, uint8_t dst, uint32_t pgn, uint8_t pg
   data[4] = (uint8_t) ((pgnError & 0x0f) | ((paramError & 0x0f) << 4));
   data[5] = 0; /* Number of parameters */
 
-  sendN2k(sock, 6, PGN_GROUP_FUNCTION, (uint8_t) address, dst, data, sizeof(data));
+  sendN2k(sock, 6, PGN_GROUP_FUNCTION, (uint8_t) address, dst, data, sizeof(data), true);
 }

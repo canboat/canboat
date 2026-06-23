@@ -18,6 +18,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
   NAKs addressed requests for unsupported PGNs (PGN 59392); sends a Heartbeat (PGN 126993) at the default
   60000 ms interval once claimed (-hb to change, 0 disables); and honours a Request Group Function
   (PGN 126208) that changes or disables the heartbeat rate, replying with an Acknowledge Group Function.
+  The PGNs it generates itself (address claim, product info, PGN list, acknowledgements, heartbeat) are
+  also echoed to stdout (unless -w), so a downstream consumer sees a complete picture of the bus.
 - Simnet PGN 130840 Data Source Selection: replace the empty "Data User Group Configuration" stub with the
   Navico/Simrad source-selection broadcast (Manufacturer + sequence + Data Type + selected Source as 64-bit
   NMEA NAME). Adds SIMNET_DATA_SOURCE lookup with data-type ids confirmed by live bus probe: 17 Rudder
