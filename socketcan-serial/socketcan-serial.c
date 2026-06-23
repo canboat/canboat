@@ -161,6 +161,7 @@ static bool isFastPacket(uint32_t pgn);
 static void parseAndWriteIn(int sock, const char *cmd);
 static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t dst, const uint8_t *data, size_t len, bool echo);
 static void sendCanFrame(int sock, uint32_t canId, const uint8_t *data, uint8_t len);
+static bool txDrainOne(int sock);
 static bool readIn(void);
 static bool getInMsg(char *msg, size_t len);
 
@@ -390,7 +391,7 @@ int main(int argc, char **argv)
         break;
       }
     }
-    if (!readonly && FD_ISSET(STDIN_FILENO, &fds))
+    if (!readonly && FD_ISSET(STDIN_FILENO, &rfds))
     {
       char line[2000];
 
