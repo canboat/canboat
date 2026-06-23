@@ -153,6 +153,55 @@ typedef struct
 
 static FastPacket fastPackets[MAX_FASTPACKETS];
 
+/* Per-canId outbound fast-packet sequence counter. The upper 3 bits of
+ * every fast-packet `frame[0]` carry this value; a strict receiver
+ * uses it to distinguish back-to-back instances of the same PGN from
+ * continuations of an in-flight reassembly. Without it consecutive
+ * Product-Info responses (for example) all look like seq=0 first
+ * frames and can be folded into one corrupted reassembly. The number
+ * of distinct outbound fast-packet PGNs we emit is small (heartbeat
+ * Group-Function ACK, PGN List, Product Info), so a 16-slot linear-
+ * scan table is plenty. */
+#define TX_FAST_SEQ_SLOTS 16
+typedef struct
+{
+  bool     used;
+  uint32_t canId;
+  uint8_t  seq; /* next value to emit, 0..7 */
+} TxFastSeq;
+static TxFastSeq txFastSeq[TX_FAST_SEQ_SLOTS];
+
+static uint8_t getNextFastSeq(uint32_t canId)
+{
+  TxFastSeq *first_free = NULL;
+  for (size_t i = 0; i < TX_FAST_SEQ_SLOTS; i++)
+  {
+    TxFastSeq *slot = &txFastSeq[i];
+    if (slot->used && slot->canId == canId)
+    {
+      uint8_t s = slot->seq;
+      slot->seq = (uint8_t) ((s + 1) & 0x07);
+      return s;
+    }
+    if (!slot->used && first_free == NULL)
+    {
+      first_free = slot;
+    }
+  }
+  if (first_free)
+  {
+    first_free->used  = true;
+    first_free->canId = canId;
+    first_free->seq   = 1; /* we hand out 0 below, next will be 1 */
+    return 0;
+  }
+  /* Table full — should never happen with only a handful of outbound
+   * fast-packet PGNs, but fall back to seq 0 so we still emit a valid
+   * frame rather than crashing. */
+  logError("TxFastSeq table full, falling back to seq=0 for canId %08x\n", canId);
+  return 0;
+}
+
 static int  openCanDevice(const char *device, int *canSocket);
 static int  readCan(int sock);
 static void handleFrame(uint32_t canId, const uint8_t *data, uint8_t len, uint64_t when);
@@ -770,24 +819,30 @@ static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t d
     size_t  remaining = len;
     uint8_t index     = 0;
     uint8_t frame[8];
+    /* Per ISO 11783-3: every fast-packet CAN frame is exactly 8 bytes;
+     * the last chunk is padded with 0xff. The first byte is
+     * `(seq << 5) | index`, with `seq` incrementing per-canId per
+     * instance so consecutive first frames are distinguishable from
+     * continuations. */
+    uint8_t seq = getNextFastSeq(canId);
 
     while (remaining > 0)
     {
       size_t chunk;
-      frame[0] = index;
+      memset(frame, 0xff, sizeof(frame));
+      frame[0] = (uint8_t) ((seq << 5) | (index & 0x1f));
       if (index == 0)
       {
         frame[1] = (uint8_t) len;
         chunk    = CB_MIN(FASTPACKET_BUCKET_0_SIZE, remaining);
         memcpy(frame + FASTPACKET_BUCKET_0_OFFSET, data, chunk);
-        sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_0_OFFSET + chunk));
       }
       else
       {
         chunk = CB_MIN(FASTPACKET_BUCKET_N_SIZE, remaining);
         memcpy(frame + FASTPACKET_BUCKET_N_OFFSET, data + (len - remaining), chunk);
-        sendCanFrame(sock, canId, frame, (uint8_t) (FASTPACKET_BUCKET_N_OFFSET + chunk));
       }
+      sendCanFrame(sock, canId, frame, (uint8_t) sizeof(frame));
       remaining -= chunk;
       index++;
     }
