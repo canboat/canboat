@@ -102,7 +102,11 @@ static unsigned int    deviceFunction   = 130;  /* PC Gateway */
 static unsigned int    deviceClass      = 25;   /* Inter/Intranetwork Device */
 static unsigned int    industryGroup    = 4;    /* Marine */
 static unsigned int    deviceInstance   = 0;
-static unsigned int    systemInstance   = 0;
+/* Default System Instance to 15 (max). Real sensors leave this at 0, so
+ * a higher value pushes our NAME up in the ISO 11783-5 lower-NAME-wins
+ * arbitration order — we yield to any well-behaved device on the bus
+ * rather than steal addresses from real hardware. Override with -si. */
+static unsigned int    systemInstance   = 15;
 static bool            arbitraryCapable = true;
 static uint64_t        deviceName       = 0;
 static unsigned int    preferredAddress = 0;
@@ -228,6 +232,11 @@ int main(int argc, char **argv)
       argc--, argv++;
       heartbeatInterval = strtol(argv[1], 0, 10);
     }
+    else if (strcasecmp(argv[1], "-si") == 0 && argc > 2)
+    {
+      argc--, argv++;
+      systemInstance = (unsigned int) strtoul(argv[1], 0, 10) & 0x0f;
+    }
     else if (!device)
     {
       device = argv[1];
@@ -243,7 +252,7 @@ int main(int argc, char **argv)
   if (!device)
   {
     fprintf(stderr,
-            "Usage: %s [-w] [-r] [-p] [-v] [-d] [-n] [-t <n>] [-a <addr>] [-u <n>] [-m <n>] [-hb <ms>] <can-device>\n"
+            "Usage: %s [-w] [-r] [-p] [-v] [-d] [-n] [-t <n>] [-a <addr>] [-u <n>] [-m <n>] [-si <n>] [-hb <ms>] <can-device>\n"
             "\n"
             "Bridge a Linux SocketCAN interface to/from canboat FAST format.\n"
             "\n"
@@ -258,6 +267,7 @@ int main(int argc, char **argv)
             "  -a <addr> preferred source address to claim (default 0)\n"
             "  -u <n>    unique number for the ISO NAME (default derived from pid)\n"
             "  -m <n>    manufacturer code for the ISO NAME (default %u)\n"
+            "  -si <n>   ISO NAME System Instance, 0..15 (default 15 = yield to other devices)\n"
             "  -hb <ms>  heartbeat (PGN 126993) interval in ms, default %d, 0 disables\n"
             "\n"
             "  <can-device> is a SocketCAN interface name, e.g. can0 or nmea2000.\n"
