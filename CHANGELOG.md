@@ -10,6 +10,11 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
+- Add socketcan-serial tool: bridge a Linux SocketCAN interface to/from canboat FAST format. Reassembles
+  fast packets into whole PGNs (using a single/fast lookup table generated from canboat.json at build time
+  for the mixed 0x1F000-0x1FFFF range), claims an ISO source address (PGN 60928, scan-then-claim with
+  conflict back-off and ISO Request replies), and timestamps received frames with the kernel SO_TIMESTAMP.
+
 ### Changed
 
 ### Fixed
