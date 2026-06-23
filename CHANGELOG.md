@@ -12,10 +12,12 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 - Add socketcan-serial tool: bridge a Linux SocketCAN interface to/from canboat FAST format. Reassembles
   fast packets into whole PGNs (using a single/fast lookup table generated from canboat.json at build time
-  for the mixed 0x1F000-0x1FFFF range), claims an ISO source address (PGN 60928, scan-then-claim with
-  conflict back-off and ISO Request replies), sends a Heartbeat (PGN 126993) at the default 60000 ms
-  interval once claimed (-hb to change, 0 disables), and timestamps received frames with the kernel
-  SO_TIMESTAMP.
+  for the mixed 0x1F000-0x1FFFF range), and timestamps received frames with the kernel SO_TIMESTAMP. Acts
+  as a full ISO node: claims a source address (PGN 60928, scan-then-claim with conflict back-off);
+  announces and answers Product Information (PGN 126996) and the Transmit/Receive PGN List (PGN 126464);
+  NAKs addressed requests for unsupported PGNs (PGN 59392); sends a Heartbeat (PGN 126993) at the default
+  60000 ms interval once claimed (-hb to change, 0 disables); and honours a Request Group Function
+  (PGN 126208) that changes or disables the heartbeat rate, replying with an Acknowledge Group Function.
 - Simnet PGN 130840 Data Source Selection: replace the empty "Data User Group Configuration" stub with the
   Navico/Simrad source-selection broadcast (Manufacturer + sequence + Data Type + selected Source as 64-bit
   NMEA NAME). Adds SIMNET_DATA_SOURCE lookup with data-type ids confirmed by live bus probe: 17 Rudder

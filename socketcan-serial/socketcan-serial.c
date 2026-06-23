@@ -47,8 +47,25 @@ limitations under the License.
 #include "fastpacket-table.h"
 #include "parse.h"
 
-#define PGN_ISO_ADDRESS_CLAIM (60928)
+#define PGN_ISO_ACK (59392)
 #define PGN_ISO_REQUEST (59904)
+#define PGN_ISO_ADDRESS_CLAIM (60928)
+#define PGN_GROUP_FUNCTION (126208)
+#define PGN_PGN_LIST (126464)
+#define PGN_PRODUCT_INFO (126996)
+
+/* Product Information (PGN 126996) content. */
+#define N2K_DB_VERSION (2100)      /* NMEA 2000 database version 2.100 (0.001 res) */
+#define PRODUCT_CODE (1)
+#define CERTIFICATION_LEVEL (0)    /* Level A */
+#define LOAD_EQUIVALENCY (1)       /* 1 LEN = 50 mA */
+#define MODEL_ID "socketcan-serial"
+
+/* Group Function (PGN 126208) function codes and DURATION sentinels. */
+#define GROUP_FUNCTION_REQUEST (0)
+#define GROUP_FUNCTION_ACK (2)
+#define TX_INTERVAL_NO_CHANGE (0xffffffffUL)
+#define TX_INTERVAL_RESTORE_DEFAULT (0xfffffffeUL)
 
 #define N2K_ADDR_GLOBAL (255)
 #define N2K_ADDR_NULL (254) /* "cannot claim address" / no source */
@@ -99,6 +116,11 @@ static long     heartbeatInterval = HEARTBEAT_DEFAULT_INTERVAL; /* 0 disables */
 static uint8_t  heartbeatSeq      = 0;
 static uint64_t nextHeartbeat     = 0; /* ms; when to send the next heartbeat */
 
+/* PGNs we originate / consume, reported via PGN 126464 on request. */
+static const uint32_t txPgnList[] = {PGN_ISO_ACK, PGN_ISO_REQUEST, PGN_ISO_ADDRESS_CLAIM, PGN_GROUP_FUNCTION,
+                                     PGN_PGN_LIST, PGN_HEARTBEAT, PGN_PRODUCT_INFO};
+static const uint32_t rxPgnList[] = {PGN_ISO_REQUEST, PGN_ISO_ADDRESS_CLAIM, PGN_GROUP_FUNCTION};
+
 typedef struct
 {
   bool     used;
@@ -132,11 +154,16 @@ static void     beginAddressClaim(int sock);
 static void     sendAddressClaim(int sock, uint8_t dst);
 static void     sendIsoRequest(int sock, uint8_t src, uint8_t dst, uint32_t pgn);
 static void     handleAddressClaim(int sock, uint8_t src, const uint8_t *data, uint8_t len);
-static void     handleIsoRequest(int sock, uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len);
+static void     handleIsoRequest(uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len);
+static void     handleGroupFunction(uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len);
 static void     tickAddressClaim(int sock, uint64_t now);
 static int      pickFreeAddress(void);
 static uint64_t nameFromBytes(const uint8_t *data);
 static void     sendHeartbeat(int sock);
+static void     sendProductInfo(int sock);
+static void     sendPgnList(int sock, uint8_t dst);
+static void     sendIsoAck(int sock, uint8_t dst, uint8_t control, uint32_t pgn);
+static void     sendAckGroupFunction(int sock, uint8_t dst, uint32_t pgn, uint8_t pgnError, uint8_t paramError);
 
 int main(int argc, char **argv)
 {
@@ -480,28 +507,26 @@ static void handleFrame(uint32_t canId, const uint8_t *data, uint8_t len, uint64
 
   getISO11783BitsFromCanId(canId, &prio, &pgn, &src, &dst);
 
-  /* Act on the messages that drive the address-claim protocol before
-   * anything else, but still emit them to stdout like any other frame. */
+  /* Act on the single-frame messages that drive the address-claim
+   * protocol, but still emit them to stdout like any other frame. */
   if (claimState != CLAIM_DISABLED)
   {
     if (pgn == PGN_ISO_ADDRESS_CLAIM)
     {
-      handleAddressClaim(0 /* sock set below */, (uint8_t) src, data, len);
+      handleAddressClaim(0 /* uses claimSock */, (uint8_t) src, data, len);
     }
     else if (pgn == PGN_ISO_REQUEST)
     {
-      handleIsoRequest(0, (uint8_t) src, (uint8_t) dst, data, len);
+      handleIsoRequest((uint8_t) src, (uint8_t) dst, data, len);
     }
-  }
-
-  if (writeonly)
-  {
-    return;
   }
 
   if (!isFastPacket(pgn))
   {
-    emitMessage(when, (uint8_t) prio, pgn, (uint8_t) src, (uint8_t) dst, data, len);
+    if (!writeonly)
+    {
+      emitMessage(when, (uint8_t) prio, pgn, (uint8_t) src, (uint8_t) dst, data, len);
+    }
     return;
   }
 
@@ -595,7 +620,14 @@ static void handleFrame(uint32_t canId, const uint8_t *data, uint8_t len, uint64
 
   if (fp->fill >= fp->size)
   {
-    emitMessage(fp->when, (uint8_t) prio, pgn, (uint8_t) src, (uint8_t) dst, fp->data, fp->size);
+    if (!writeonly)
+    {
+      emitMessage(fp->when, (uint8_t) prio, pgn, (uint8_t) src, (uint8_t) dst, fp->data, fp->size);
+    }
+    if (claimState != CLAIM_DISABLED && pgn == PGN_GROUP_FUNCTION)
+    {
+      handleGroupFunction((uint8_t) src, (uint8_t) dst, fp->data, fp->size);
+    }
     fp->used = false;
   }
 }
@@ -674,7 +706,9 @@ static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t d
 {
   uint32_t canId = getCanIdFromISO11783Bits(prio, pgn, src, dst);
 
-  if (len <= 8)
+  /* Single-frame PGNs go out as one frame; fast-packet PGNs are always
+   * fast-framed even when short, since receivers key on the PGN type. */
+  if (len <= 8 && !isFastPacket(pgn))
   {
     sendCanFrame(sock, canId, data, (uint8_t) len);
     return;
@@ -709,15 +743,31 @@ static void sendN2k(int sock, uint8_t prio, uint32_t pgn, uint8_t src, uint8_t d
 static void sendCanFrame(int sock, uint32_t canId, const uint8_t *data, uint8_t len)
 {
   struct can_frame frame;
+  int              retries = 50;
 
   memset(&frame, 0, sizeof(frame));
   frame.can_id  = canId | CAN_EFF_FLAG;
   frame.can_dlc = len;
   memcpy(frame.data, data, len);
 
-  if (write(sock, &frame, sizeof(frame)) != (ssize_t) sizeof(frame))
+  /* The interface tx queue can be shorter than a fast packet (e.g. qlen 10
+   * vs 20 frames for Product Information). On a transient full queue the
+   * kernel returns ENOBUFS; back off briefly and retry so the multi-frame
+   * message is not truncated on the wire. */
+  for (;;)
   {
+    ssize_t n = write(sock, &frame, sizeof(frame));
+    if (n == (ssize_t) sizeof(frame))
+    {
+      return;
+    }
+    if (n < 0 && (errno == ENOBUFS || errno == EAGAIN || errno == EINTR) && retries-- > 0)
+    {
+      usleep(2000);
+      continue;
+    }
     logError("write to CAN: %s\n", strerror(errno));
+    return;
   }
 }
 
@@ -915,25 +965,119 @@ static void handleAddressClaim(int sock, uint8_t src, const uint8_t *data, uint8
   }
 }
 
-static void handleIsoRequest(int sock, uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len)
+static void handleIsoRequest(uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len)
 {
   uint32_t requested;
+  bool     addressed;
 
-  (void) sock;
-  (void) src;
   if (len < 3)
   {
     return;
   }
   requested = (uint32_t) data[0] | ((uint32_t) data[1] << 8) | ((uint32_t) data[2] << 16);
+  addressed = (dst == address);
+  if (!addressed && dst != N2K_ADDR_GLOBAL)
+  {
+    return; /* request is for some other node */
+  }
 
-  if (requested == PGN_ISO_ADDRESS_CLAIM && (dst == address || dst == N2K_ADDR_GLOBAL))
+  /* The address claim must be answerable even before we are fully claimed. */
+  if (requested == PGN_ISO_ADDRESS_CLAIM)
   {
     if (claimState == CLAIM_CLAIMED || claimState == CLAIM_PENDING)
     {
       sendAddressClaim(claimSock, N2K_ADDR_GLOBAL);
     }
+    return;
   }
+
+  /* Everything else needs a claimed address to answer from. */
+  if (claimState != CLAIM_CLAIMED)
+  {
+    return;
+  }
+
+  switch (requested)
+  {
+    case PGN_PRODUCT_INFO:
+      sendProductInfo(claimSock);
+      break;
+    case PGN_PGN_LIST:
+      sendPgnList(claimSock, src);
+      break;
+    case PGN_HEARTBEAT:
+      sendHeartbeat(claimSock);
+      break;
+    default:
+      /* ISO 11783-3: NAK an addressed request for a PGN we do not send;
+       * silently ignore an unsupported global request. */
+      if (addressed)
+      {
+        sendIsoAck(claimSock, src, 1 /* NAK */, requested);
+      }
+      break;
+  }
+}
+
+/*
+ * NMEA Request Group Function (PGN 126208, function 0). We only act on a
+ * request that targets our Heartbeat (PGN 126993): it sets the heartbeat
+ * transmission interval (or disables it), then we reply with an Acknowledge
+ * Group Function. "whatever of the two is normal": the Request form is what
+ * configures a PGN's transmission rate.
+ */
+static void handleGroupFunction(uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len)
+{
+  uint32_t targetPgn;
+  uint32_t interval;
+  uint8_t  paramError = 0; /* 0 = Acknowledge */
+
+  (void) dst;
+  if (len < 8 || data[0] != GROUP_FUNCTION_REQUEST)
+  {
+    return;
+  }
+  if (claimState != CLAIM_CLAIMED)
+  {
+    return;
+  }
+  targetPgn = (uint32_t) data[1] | ((uint32_t) data[2] << 8) | ((uint32_t) data[3] << 16);
+  if (targetPgn != PGN_HEARTBEAT)
+  {
+    return; /* not a PGN whose rate we control */
+  }
+
+  /* Transmission interval: 32-bit, 0.001s resolution => milliseconds. */
+  interval = (uint32_t) data[4] | ((uint32_t) data[5] << 8) | ((uint32_t) data[6] << 16) | ((uint32_t) data[7] << 24);
+
+  if (interval == TX_INTERVAL_NO_CHANGE)
+  {
+    /* leave the interval as-is */
+  }
+  else if (interval == TX_INTERVAL_RESTORE_DEFAULT)
+  {
+    heartbeatInterval = HEARTBEAT_DEFAULT_INTERVAL;
+    nextHeartbeat     = getNow() + (uint64_t) heartbeatInterval;
+    logInfo("Heartbeat interval restored to default %d ms\n", HEARTBEAT_DEFAULT_INTERVAL);
+  }
+  else if (interval == 0)
+  {
+    heartbeatInterval = 0; /* disable */
+    logInfo("Heartbeat disabled by group function\n");
+  }
+  else if (interval >= 1000 && interval <= 60000)
+  {
+    heartbeatInterval = (long) interval;
+    nextHeartbeat     = getNow() + (uint64_t) heartbeatInterval;
+    logInfo("Heartbeat interval set to %u ms by group function\n", interval);
+  }
+  else
+  {
+    paramError = 2; /* transmission interval too low/high */
+    logError("Requested heartbeat interval %u ms out of range\n", interval);
+  }
+
+  sendAckGroupFunction(claimSock, src, PGN_HEARTBEAT, 0 /* PGN ok */, paramError);
 }
 
 static void tickAddressClaim(int sock, uint64_t now)
@@ -948,6 +1092,7 @@ static void tickAddressClaim(int sock, uint64_t now)
   {
     claimState = CLAIM_CLAIMED;
     logInfo("Address %u claimed\n", address);
+    sendProductInfo(claimSock); /* announce ourselves once on the bus */
     if (heartbeatInterval > 0)
     {
       nextHeartbeat = now + (uint64_t) heartbeatInterval;
@@ -978,4 +1123,109 @@ static void sendHeartbeat(int sock)
   sendN2k(sock, 7, PGN_HEARTBEAT, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data));
 
   heartbeatSeq = (heartbeatSeq >= 252) ? 0 : heartbeatSeq + 1;
+}
+
+/* Copy a C string into a fixed-width NUL-padded STRING_FIX field. */
+static void putStringFix(uint8_t *dst, size_t width, const char *s)
+{
+  size_t n = strlen(s);
+  if (n > width)
+  {
+    n = width;
+  }
+  memset(dst, 0, width);
+  memcpy(dst, s, n);
+}
+
+/*
+ * Product Information, PGN 126996. Sent once when we claim an address and in
+ * reply to an ISO Request, so the node is identifiable on the network.
+ */
+static void sendProductInfo(int sock)
+{
+  static uint64_t lastSent = 0;
+  uint64_t        now = getNow();
+  uint8_t         data[134];
+  char            serial[32];
+
+  /* 126996 is broadcast (PDU2), so a single reply answers every requester.
+   * Collapse the discovery burst that several nodes make when we appear,
+   * which would otherwise overflow the small CAN TX queue. */
+  if (now - lastSent < 1000)
+  {
+    return;
+  }
+  lastSent = now;
+
+  memset(data, 0, sizeof(data));
+  data[0] = (uint8_t) N2K_DB_VERSION;
+  data[1] = (uint8_t) (N2K_DB_VERSION >> 8);
+  data[2] = (uint8_t) PRODUCT_CODE;
+  data[3] = (uint8_t) (PRODUCT_CODE >> 8);
+  putStringFix(data + 4, 32, MODEL_ID);
+  putStringFix(data + 36, 32, VERSION); /* software version code */
+  putStringFix(data + 68, 32, "");      /* model version */
+  snprintf(serial, sizeof(serial), "%u", uniqueNumber);
+  putStringFix(data + 100, 32, serial);
+  data[132] = CERTIFICATION_LEVEL;
+  data[133] = LOAD_EQUIVALENCY;
+
+  sendN2k(sock, 6, PGN_PRODUCT_INFO, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data));
+}
+
+/*
+ * PGN List (Transmit and Receive), PGN 126464. Sent in reply to an ISO
+ * Request for 126464: one message for the transmit list, one for receive.
+ */
+static void sendOnePgnList(int sock, uint8_t dst, uint8_t functionCode, const uint32_t *list, size_t count)
+{
+  uint8_t data[1 + 7 * 3];
+  size_t  n = 0;
+
+  data[n++] = functionCode;
+  for (size_t i = 0; i < count && n + 3 <= sizeof(data); i++)
+  {
+    data[n++] = (uint8_t) list[i];
+    data[n++] = (uint8_t) (list[i] >> 8);
+    data[n++] = (uint8_t) (list[i] >> 16);
+  }
+  sendN2k(sock, 6, PGN_PGN_LIST, (uint8_t) address, dst, data, n);
+}
+
+static void sendPgnList(int sock, uint8_t dst)
+{
+  sendOnePgnList(sock, dst, 0 /* Transmit PGN list */, txPgnList, ARRAY_SIZE(txPgnList));
+  sendOnePgnList(sock, dst, 1 /* Receive PGN list */, rxPgnList, ARRAY_SIZE(rxPgnList));
+}
+
+/* ISO Acknowledgement, PGN 59392. */
+static void sendIsoAck(int sock, uint8_t dst, uint8_t control, uint32_t pgn)
+{
+  uint8_t data[8];
+
+  data[0] = control;
+  data[1] = 0xff; /* Group Function: not applicable */
+  data[2] = 0xff; /* Reserved */
+  data[3] = 0xff;
+  data[4] = 0xff;
+  data[5] = (uint8_t) pgn;
+  data[6] = (uint8_t) (pgn >> 8);
+  data[7] = (uint8_t) (pgn >> 16);
+
+  sendN2k(sock, 6, PGN_ISO_ACK, (uint8_t) address, dst, data, sizeof(data));
+}
+
+/* Acknowledge Group Function, PGN 126208 function 2. */
+static void sendAckGroupFunction(int sock, uint8_t dst, uint32_t pgn, uint8_t pgnError, uint8_t paramError)
+{
+  uint8_t data[6];
+
+  data[0] = GROUP_FUNCTION_ACK;
+  data[1] = (uint8_t) pgn;
+  data[2] = (uint8_t) (pgn >> 8);
+  data[3] = (uint8_t) (pgn >> 16);
+  data[4] = (uint8_t) ((pgnError & 0x0f) | ((paramError & 0x0f) << 4));
+  data[5] = 0; /* Number of parameters */
+
+  sendN2k(sock, 6, PGN_GROUP_FUNCTION, (uint8_t) address, dst, data, sizeof(data));
 }
