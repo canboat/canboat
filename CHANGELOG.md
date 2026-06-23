@@ -14,6 +14,13 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
   fast packets into whole PGNs (using a single/fast lookup table generated from canboat.json at build time
   for the mixed 0x1F000-0x1FFFF range), claims an ISO source address (PGN 60928, scan-then-claim with
   conflict back-off and ISO Request replies), and timestamps received frames with the kernel SO_TIMESTAMP.
+- Simnet PGN 130840 Data Source Selection: replace the empty "Data User Group Configuration" stub with the
+  Navico/Simrad source-selection broadcast (Manufacturer + sequence + Data Type + selected Source as 64-bit
+  NMEA NAME). Adds SIMNET_DATA_SOURCE lookup with data-type ids confirmed by live bus probe: 17 Rudder
+  Feedback, 19 Position, 27 Heading, 35 Depth, 36 Boat Speed, 42 Apparent Wind, 43 Barometric Pressure.
+- Simnet/Navico PGNs 65323 and 130847 decoded from Triton2/AP48 firmware: 65323 (0xFF2B, Simrad) is a
+  single-frame message emitted by AP48/Triton2/ZEUS heads and received by the autopilot; 130847 (0x1FF1F,
+  Navico) is a length-prefixed ASCII identifier string emitted by Triton2/AP48/WS320.
 
 ### Changed
 
