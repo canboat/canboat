@@ -57,6 +57,9 @@ limitations under the License.
 #define ADDRESS_CLAIM_TIMEOUT (250)  /* ms to wait for a contender before we own the address */
 #define ADDRESS_SCAN_TIMEOUT (1000)  /* ms to listen for existing claims before picking an address */
 
+#define PGN_HEARTBEAT (126993)
+#define HEARTBEAT_DEFAULT_INTERVAL (60000) /* ms, the NMEA 2000 default heartbeat rate */
+
 #define MAX_FASTPACKETS (64)
 
 enum ClaimState
@@ -90,6 +93,11 @@ static unsigned int    address          = 0;
 static enum ClaimState claimState       = CLAIM_PENDING;
 static uint64_t        claimDeadline    = 0;        /* ms; end of contention window */
 static bool            addressUsed[N2K_MAX_ADDR + 1]; /* addresses seen claimed by others */
+
+/* Heartbeat (PGN 126993): emitted every heartbeatInterval ms once claimed. */
+static long     heartbeatInterval = HEARTBEAT_DEFAULT_INTERVAL; /* 0 disables */
+static uint8_t  heartbeatSeq      = 0;
+static uint64_t nextHeartbeat     = 0; /* ms; when to send the next heartbeat */
 
 typedef struct
 {
@@ -128,6 +136,7 @@ static void     handleIsoRequest(int sock, uint8_t src, uint8_t dst, const uint8
 static void     tickAddressClaim(int sock, uint64_t now);
 static int      pickFreeAddress(void);
 static uint64_t nameFromBytes(const uint8_t *data);
+static void     sendHeartbeat(int sock);
 
 int main(int argc, char **argv)
 {
@@ -187,6 +196,11 @@ int main(int argc, char **argv)
       argc--, argv++;
       manufacturerCode = (unsigned int) strtoul(argv[1], 0, 10);
     }
+    else if (strcasecmp(argv[1], "-hb") == 0 && argc > 2)
+    {
+      argc--, argv++;
+      heartbeatInterval = strtol(argv[1], 0, 10);
+    }
     else if (!device)
     {
       device = argv[1];
@@ -202,7 +216,7 @@ int main(int argc, char **argv)
   if (!device)
   {
     fprintf(stderr,
-            "Usage: %s [-w] [-r] [-p] [-v] [-d] [-n] [-t <n>] [-a <addr>] [-u <n>] [-m <n>] <can-device>\n"
+            "Usage: %s [-w] [-r] [-p] [-v] [-d] [-n] [-t <n>] [-a <addr>] [-u <n>] [-m <n>] [-hb <ms>] <can-device>\n"
             "\n"
             "Bridge a Linux SocketCAN interface to/from canboat FAST format.\n"
             "\n"
@@ -217,6 +231,7 @@ int main(int argc, char **argv)
             "  -a <addr> preferred source address to claim (default 0)\n"
             "  -u <n>    unique number for the ISO NAME (default derived from pid)\n"
             "  -m <n>    manufacturer code for the ISO NAME (default %u)\n"
+            "  -hb <ms>  heartbeat (PGN 126993) interval in ms, default %d, 0 disables\n"
             "\n"
             "  <can-device> is a SocketCAN interface name, e.g. can0 or nmea2000.\n"
             "\n"
@@ -224,6 +239,7 @@ int main(int argc, char **argv)
             "\n" COPYRIGHT,
             name,
             manufacturerCode,
+            HEARTBEAT_DEFAULT_INTERVAL,
             name);
     exit(1);
   }
@@ -248,6 +264,8 @@ int main(int argc, char **argv)
     startAddressClaim(sock);
   }
 
+  uint64_t lastFrame = getNow();
+
   for (;;)
   {
     fd_set         fds;
@@ -267,19 +285,19 @@ int main(int argc, char **argv)
       }
     }
 
-    /* Wake up at least once per claim deadline so the FSM can advance
-     * even on an otherwise silent bus. */
+    /* Wake at the soonest of: the claim deadline, the next heartbeat, or a
+     * 1s poll, so the timers advance even on an otherwise silent bus. */
+    uint64_t waitMs = 1000;
     if ((claimState == CLAIM_PENDING || claimState == CLAIM_SCANNING) && claimDeadline > now)
     {
-      uint64_t ms = claimDeadline - now;
-      tv.tv_sec   = ms / 1000;
-      tv.tv_usec  = (ms % 1000) * 1000;
+      waitMs = claimDeadline - now;
     }
-    else
+    else if (claimState == CLAIM_CLAIMED && heartbeatInterval > 0)
     {
-      tv.tv_sec  = timeout ? timeout : 1;
-      tv.tv_usec = 0;
+      waitMs = (nextHeartbeat > now) ? nextHeartbeat - now : 0;
     }
+    tv.tv_sec  = waitMs / 1000;
+    tv.tv_usec = (waitMs % 1000) * 1000;
 
     r = select(maxfd + 1, &fds, NULL, NULL, &tv);
     if (r < 0)
@@ -290,13 +308,14 @@ int main(int argc, char **argv)
       }
       logAbort("select failed: %s\n", strerror(errno));
     }
-    if (r == 0 && timeout && claimState != CLAIM_PENDING && claimState != CLAIM_SCANNING)
+    if (r == 0 && timeout && (getNow() - lastFrame) >= (uint64_t) timeout * 1000)
     {
       logAbort("Timeout %ld seconds; no data received\n", timeout);
     }
 
     if (FD_ISSET(sock, &fds))
     {
+      lastFrame = getNow();
       if (readCan(sock) < 0)
       {
         break;
@@ -328,6 +347,12 @@ int main(int argc, char **argv)
     }
 
     tickAddressClaim(sock, getNow());
+
+    if (claimState == CLAIM_CLAIMED && heartbeatInterval > 0 && getNow() >= nextHeartbeat)
+    {
+      sendHeartbeat(sock);
+      nextHeartbeat = getNow() + (uint64_t) heartbeatInterval;
+    }
   }
 
   close(sock);
@@ -923,5 +948,34 @@ static void tickAddressClaim(int sock, uint64_t now)
   {
     claimState = CLAIM_CLAIMED;
     logInfo("Address %u claimed\n", address);
+    if (heartbeatInterval > 0)
+    {
+      nextHeartbeat = now + (uint64_t) heartbeatInterval;
+    }
   }
+}
+
+/*
+ * NMEA 2000 Heartbeat, PGN 126993. Sent every heartbeatInterval ms once we
+ * own an address, so other nodes know we are alive.
+ */
+static void sendHeartbeat(int sock)
+{
+  uint8_t  data[8];
+  uint16_t offset = (uint16_t) (heartbeatInterval / 10); /* field resolution is 0.01s */
+
+  data[0] = (uint8_t) offset;
+  data[1] = (uint8_t) (offset >> 8);
+  data[2] = heartbeatSeq;
+  /* Controller 1 State = Error Active (0, normal), Controller 2 State = not
+   * available (3), Equipment Status = Operational (0), reserved bits = 1. */
+  data[3] = 0xCC;
+  data[4] = 0xff;
+  data[5] = 0xff;
+  data[6] = 0xff;
+  data[7] = 0xff;
+
+  sendN2k(sock, 7, PGN_HEARTBEAT, (uint8_t) address, N2K_ADDR_GLOBAL, data, sizeof(data));
+
+  heartbeatSeq = (heartbeatSeq >= 252) ? 0 : heartbeatSeq + 1;
 }
