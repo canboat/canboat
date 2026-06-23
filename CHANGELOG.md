@@ -35,6 +35,9 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - ikonvert-serial: always send a reset, so a previous run with a RX/TX list will not influence this run.
 - ikonvert-serial: the synthetic PGN 262400 from the ikonvert report will contain the proper source address
   (whatever the iKonvert source address is, this is reported by the same PGN).
+- analyzer: silence clang `-Wimplicit-const-int-float-conversion` warnings on macOS by making the
+  `ISO_NAME_FIELD` rangeMax conversion explicit (`(double) UINT64_MAX`). The value is only a non-NaN marker;
+  the explain/XML output already prints the exact integer for this field.
 
 ## [6.2.0]
 

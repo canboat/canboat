@@ -498,7 +498,7 @@ typedef struct
   {.name = nam, .size = BITS(2), .resolution = 1, .fieldType = "UNSIGNED_INTEGER", .hasSign = false, .rangeMin = 0, .rangeMax = 3}
 
 #define ISO_NAME_FIELD(nam) \
-  {.name = nam, .size = BYTES(8), .resolution = 1, .fieldType = "ISO_NAME", .hasSign = false, .rangeMin = 0, .rangeMax = UINT64_MAX}
+  {.name = nam, .size = BYTES(8), .resolution = 1, .fieldType = "ISO_NAME", .hasSign = false, .rangeMin = 0, .rangeMax = (double) UINT64_MAX}
 
 #define INSTANCE_FIELD \
   {.name = "Instance", .size = BYTES(1), .resolution = 1, .description = NULL, .partOfPrimaryKey = true, .fieldType = "UINT8"}
