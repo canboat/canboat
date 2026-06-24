@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 tests
 
 all:	tests
 
@@ -149,4 +149,14 @@ test15:
 	diff $(TEMPDIR)/short-frame.out short-frame.out
 	diff $(TEMPDIR)/short-frame.err short-frame.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15
+#
+# This tests that out-of-range PGNs don't read past the end of pgnList[] in the
+# searchForPgn() binary search (issue #644). The first PGN (393216) is the
+# FuzzingLabs PoC value; valid PGN 126992 at the end is a decoding control.
+#
+test16:
+	$(ANALYZER) < invalid-pgn-test.in > $(TEMPDIR)/invalid-pgn-test.out -debug -q -fixtime pgn-test 2> $(TEMPDIR)/invalid-pgn-test.err
+	diff $(TEMPDIR)/invalid-pgn-test.out invalid-pgn-test.out
+	diff $(TEMPDIR)/invalid-pgn-test.err invalid-pgn-test.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16

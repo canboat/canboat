@@ -1,0 +1,10 @@
+# Out-of-range / invalid PGNs must not walk off the end of pgnList[] (issue #644).
+# 393216 is the FuzzingLabs PoC value: larger than every entry in the PGN table,
+# which used to make searchForPgn() read pgnList[pgnListSize], one past the array.
+2011-11-24-22:42:04.388,2,393216,36,255,8,ff,ff,ff,ff,ff,ff,ff,ff
+# A few more PGNs past the end of the table, including the 0x3FFFF / 0x1FFFFFF extremes.
+2011-11-24-22:42:04.388,2,524287,36,255,8,ff,ff,ff,ff,ff,ff,ff,ff
+2011-11-24-22:42:04.388,2,1000000,36,255,8,ff,ff,ff,ff,ff,ff,ff,ff
+2011-11-24-22:42:04.388,2,16777215,36,255,8,ff,ff,ff,ff,ff,ff,ff,ff
+# A valid PGN (126992 System Time) as a control: lookups must still succeed.
+2011-11-24-22:42:04.388,3,126992,36,255,8,f0,01,00,d8,1c,3f,7d,7a
