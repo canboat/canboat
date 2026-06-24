@@ -44,7 +44,7 @@ The full list of understood formats:
 | `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
 | Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |
 | Actisense EBL | Actisense `.ebl` log files | _(binary)_ | `actisense-serial -r <file.ebl> \| analyzer` |
-| Actisense W2K-1 / OpenCPN JSON | W2K-1 gateway capture (OpenCPN) | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |
+| Actisense W2K-1 | W2K-1 gateway capture | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |
 | candump (Angstrom) | Linux can-utils | `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0` | `candump2analyzer <file> \| analyzer` |
 | candump (Debian) | Linux can-utils | `can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
 | candump log | Linux can-utils (`candump -l`) | `(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF` | `candump2analyzer <file> \| analyzer` |
