@@ -61,7 +61,7 @@ static int      outputCommands = 0;
 static bool     isFile;
 static bool     isRegularFile; // a real on-disk file (replay), not a serial/TCP device
 static bool     isEBL;
-static bool     isJson; // W2K-1 / OpenCPN JSON capture: one {"pgn":..,"payload":[..]} per line
+static bool     isJson; // W2K-1 JSON capture: one {"pgn":..,"payload":[..]} per line
 static uint64_t timestamp = 0;
 
 enum MSG_State
@@ -207,7 +207,7 @@ int main(int argc, char **argv)
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
             "  -o      alias for -p (kept for backward compatibility; -p is preferred)\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
-            "  an Actisense .ebl log, a W2K-1/OpenCPN JSON capture (auto-detected),\n"
+            "  an Actisense .ebl log, a W2K-1 JSON capture (auto-detected),\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
             "  Examples: %s /dev/ttyUSB0\n"
@@ -296,7 +296,7 @@ int main(int argc, char **argv)
     }
     else if (read(handle, &first, 1) == 1 && lseek(handle, 0, SEEK_SET) == 0 && first == '{')
     {
-      // W2K-1 / OpenCPN capture: one JSON object per line, each with a
+      // W2K-1 capture: one JSON object per line, each with a
       // "payload" array holding a de-framed Actisense N2K message
       // (command 0x93, length, then the BST body). Decoded via the same
       // n2kMessageReceived() path as the serial NGT-1 stream. See #635.
@@ -798,7 +798,7 @@ static int readNGT1(int handle)
 }
 
 /*
- * Decode one line of a W2K-1 / OpenCPN JSON capture, e.g.
+ * Decode one line of a W2K-1 JSON capture, e.g.
  *
  *   {"pgn":60928,"payload":[147,19,6,0,238,0,255,...]}
  *
@@ -856,7 +856,7 @@ static void w2kMessageReceived(const char *line)
 }
 
 /*
- * Read W2K-1 / OpenCPN JSON capture data, one JSON object per line.
+ * Read W2K-1 JSON capture data, one JSON object per line.
  */
 static int readW2K(int handle)
 {
