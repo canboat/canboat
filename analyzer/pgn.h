@@ -7580,6 +7580,23 @@ Pgn pgnList[] = {
 
 
     ,
+    {"Furuno: Dead Reckoning Configuration",
+     130819,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      SIMPLE_FIELD("F4", 4),
+      SIMPLE_FIELD("F5", 4),
+      SIMPLE_FIELD("F6", 4),
+      SIMPLE_FIELD("F7", 2),
+      SIMPLE_FIELD("F8", 2),
+      SIMPLE_DESC_FIELD("Dead reckoning time", 4, "0=5min, 1=4min, 2=3min, 3=2min, 4=1min (code = 5 - minutes)"),
+      SIMPLE_FIELD("F10", 4),
+      SIMPLE_FIELD("F11", BYTES(1)),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"BEP Marine: CZone 130819",
      130819,
      PACKET_INCOMPLETE,
@@ -8462,6 +8479,31 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    /* Furuno SCX-20 satellite-compass config group (130818/130819/130833/130834).
+     * The SC_Setting_Tool reads these by broadcasting a PGN 126208 Request, and writes a
+     * single setting with a PGN 126208 Command (Function Code 1) addressed to the device:
+     *   Command, target PGN, priority, #params, then for each param: <field number><value>.
+     * The value width is taken from the target PGN's field at that field number, so these
+     * field layouts must match for the command parameters to decode. E.g. to set Ship's Width
+     * to 9.0 m: Command -> 130833, params {1=1855 (mfr), 3=4 (industry), 8=90 (0.1 m)}.
+     * The device also broadcasts these PGNs as status with the same field order.
+     */
+    {"Furuno: Ship Parameters and Antenna Position",
+     130833,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      UINT8_FIELD("Equipment Identification"),
+      DISTANCE_FIX16_CM_FIELD("Antenna position X", "Athwartship offset"),
+      LENGTH_UFIX16_DM_FIELD("Antenna position Y"),
+      LENGTH_UFIX16_DM_FIELD("Antenna position Z"),
+      LENGTH_UFIX16_DM_FIELD("Ship's width"),
+      LENGTH_UFIX16_DM_FIELD("Ship's length"),
+      LENGTH_UFIX16_DM_FIELD("Ship's height"),
+      END_OF_FIELDS},
+     .priority = 7}
+
+    ,
     {"Maretron: SMS Status",
      130834,
      PACKET_INCOMPLETE,
@@ -8482,6 +8524,19 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
      PACKET_FAST,
      {COMPANY(1857), END_OF_FIELDS}}
+
+    ,
+    {"Furuno: Speed-calculation Position",
+     130834,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      UINT8_FIELD("Point index"),
+      RESERVED_FIELD(BYTES(2)),
+      LENGTH_UFIX16_DM_FIELD("Position Y"),
+      LENGTH_UFIX16_DM_FIELD("Position Z"),
+      END_OF_FIELDS},
+     .priority = 7}
 
     ,
     {"Maretron: SMS Text Message",
@@ -8725,12 +8780,12 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1855),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
-      ANGLE_I16_FIELD("Yaw", NULL),
-      ANGLE_I16_FIELD("Pitch", NULL),
-      ANGLE_I16_FIELD("Roll", NULL),
-      END_OF_FIELDS}}
+      ANGLE_I16_FIELD("Heel", "Live heel/roll; verified == PGN 127257 Roll"),
+      ANGLE_I16_FIELD("Field 4", NULL),
+      ANGLE_I16_FIELD("Field 6", NULL),
+      ANGLE_I16_FIELD("Field 8", NULL),
+      END_OF_FIELDS},
+     .interval = 100}
 
     ,
     {"Simnet: Sonar Status, Frequency and DSP Voltage",
@@ -8754,7 +8809,27 @@ Pgn pgnList[] = {
      {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
-    {"Furuno: Multi Sats In View Extended", 130845, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
+    {"Furuno: Multi Sats In View Extended",
+     130845,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      SIMPLE_FIELD("Report type", 4),
+      SIMPLE_FIELD("Antenna", 4),
+      SIMPLE_FIELD("Page type", 4),
+      SIMPLE_FIELD("Page", 4),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("Sats in View"),
+      UINT8_FIELD("Status"),
+      UINT8_DESC_FIELD("PRN", "1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou"),
+      ANGLE_I16_FIELD("Elevation", NULL),
+      ANGLE_I16_FIELD("Azimuth", NULL),
+      SIGNALTONOISERATIO_FIX16_FIELD("SNR", NULL),
+      DISTANCE_FIX32_MMM_FIELD("Range residual", NULL),
+      END_OF_FIELDS},
+     .repeatingField1 = 9,
+     .repeatingCount1 = 6,
+     .repeatingStart1 = 10}
 
     ,
     {"Simnet: Key Value",
@@ -8798,7 +8873,11 @@ Pgn pgnList[] = {
      {COMPANY(137), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
-    {"Furuno: Motion Sensor Status Extended", 130846, PACKET_INCOMPLETE, PACKET_FAST, {COMPANY(1855), END_OF_FIELDS}}
+    {"Furuno: Motion Sensor Status Extended",
+     130846,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855), UINT8_FIELD("Status"), BINARY_FIELD("Data", BYTES(25), NULL), END_OF_FIELDS}}
 
     ,
     {"Navico: ASCII Identifier",

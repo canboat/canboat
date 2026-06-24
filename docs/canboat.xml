@@ -52742,6 +52742,171 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130819</PGN>
+      <Id>furunoDeadReckoningConfiguration</Id>
+      <Description>Furuno: Dead Reckoning Configuration</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>f4</Id>
+          <Name>F4</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>f5</Id>
+          <Name>F5</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>f6</Id>
+          <Name>F6</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>f7</Id>
+          <Name>F7</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>f8</Id>
+          <Name>F8</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>deadReckoningTime</Id>
+          <Name>Dead reckoning time</Name>
+          <Description>0=5min, 1=4min, 2=3min, 3=2min, 4=1min (code = 5 - minutes)</Description>
+          <BitLength>4</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>f10</Id>
+          <Name>F10</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>36</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>f11</Id>
+          <Name>F11</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130819</PGN>
       <Id>bepMarineCzone130819</Id>
       <Description>BEP Marine: CZone 130819</Description>
       <URL>https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130819.md</URL>
@@ -60588,6 +60753,170 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130833</PGN>
+      <Id>furunoShipParametersAndAntennaPosition</Id>
+      <Description>Furuno: Ship Parameters and Antenna Position</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>15</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>equipmentIdentification</Id>
+          <Name>Equipment Identification</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>antennaPositionX</Id>
+          <Name>Antenna position X</Name>
+          <Description>Athwartship offset</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>antennaPositionY</Id>
+          <Name>Antenna position Y</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>antennaPositionZ</Id>
+          <Name>Antenna position Z</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>shipSWidth</Id>
+          <Name>Ship's width</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>shipSLength</Id>
+          <Name>Ship's length</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>shipSHeight</Id>
+          <Name>Ship's height</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130834</PGN>
       <Id>maretronSmsStatus</Id>
       <Description>Maretron: SMS Status</Description>
@@ -60772,6 +61101,119 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130834</PGN>
+      <Id>furunoSpeedCalculationPosition</Id>
+      <Description>Furuno: Speed-calculation Position</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>9</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Furuno</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1855</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>pointIndex</Id>
+          <Name>Point index</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>positionY</Id>
+          <Name>Position Y</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>positionZ</Id>
+          <Name>Position Z</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>LENGTH</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -63038,10 +63480,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
+      <FieldCount>7</FieldCount>
       <Length>10</Length>
+      <TransmissionInterval>100</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -63087,34 +63529,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
+          <Id>heel</Id>
+          <Name>Heel</Name>
+          <Description>Live heel/roll; verified == PGN 127257 Roll</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.1415926</RangeMin>
+          <RangeMax>3.1415926</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>yaw</Id>
-          <Name>Yaw</Name>
+          <Id>field4</Id>
+          <Name>Field 4</Name>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -63127,9 +63559,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>pitch</Id>
-          <Name>Pitch</Name>
+          <Order>6</Order>
+          <Id>field6</Id>
+          <Name>Field 6</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -63142,9 +63574,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <PhysicalQuantity>ANGLE</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>8</Order>
-          <Id>roll</Id>
-          <Name>Roll</Name>
+          <Order>7</Order>
+          <Id>field8</Id>
+          <Name>Field 8</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -63368,8 +63800,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>15</FieldCount>
+      <MinLength>6</MinLength>
+      <RepeatingFieldSet1Size>6</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>10</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>9</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -63412,6 +63847,168 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reportType</Id>
+          <Name>Report type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>antenna</Id>
+          <Name>Antenna</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>20</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>pageType</Id>
+          <Name>Page type</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>page</Id>
+          <Name>Page</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>reserved8</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>satsInView</Id>
+          <Name>Sats in View</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>prn</Id>
+          <Name>PRN</Name>
+          <Description>1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>elevation</Id>
+          <Name>Elevation</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.1415926</RangeMin>
+          <RangeMax>3.1415926</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>azimuth</Id>
+          <Name>Azimuth</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rad</Unit>
+          <Resolution>0.0001</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-3.1415926</RangeMin>
+          <RangeMax>3.1415926</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGLE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>snr</Id>
+          <Name>SNR</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>dB</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>SIGNAL_TO_NOISE_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>rangeResidual</Id>
+          <Name>Range residual</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>m</Unit>
+          <Resolution>1e-05</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-21474.83647</RangeMin>
+          <RangeMax>21474.83644</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DISTANCE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -63820,8 +64417,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>3</FieldCount>
-      <Length>2</Length>
+      <FieldCount>5</FieldCount>
+      <Length>28</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -63864,6 +64461,29 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMax>6</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>200</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

@@ -27,11 +27,23 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 - Simnet/Navico PGNs 65323 and 130847 decoded from Triton2/AP48 firmware: 65323 (0xFF2B, Simrad) is a
   single-frame message emitted by AP48/Triton2/ZEUS heads and received by the autopilot; 130847 (0x1FF1F,
   Navico) is a length-prefixed ASCII identifier string emitted by Triton2/AP48/WS320.
+- Furuno SCX-20 satellite compass: decode the proprietary config and satellite PGNs, verified against live
+  bus captures. PGN 130845 (Multi Sats In View Extended) now decodes the per-antenna satellites-in-view
+  records (report/antenna/page header, then repeating PRN/elevation/azimuth/SNR/range-residual; PRN ranges
+  noted in the field description, including Furuno's Galileo = PRN - 131). PGN 130846 (Motion Sensor Status
+  Extended) filled in (status + 25-byte data block). Added the Furuno (manufacturer 1855) variants of the
+  config target PGNs 130833 (Ship Parameters and Antenna Position), 130834 (Speed-calculation Position) and
+  130819 (Dead Reckoning Configuration); these are written by the SC_Setting_Tool via PGN 126208 Command
+  Group Function, and defining the manufacturer variants lets the Command decoder resolve each parameter's
+  value width. 130833 carries an inline comment documenting the 126208 field-addressed write mechanism.
 
 ### Changed
 
 ### Fixed
 
+- Furuno PGN 130843 (Heel Angle, Roll Information): the live heel angle was split across two mislabelled
+  `UINT8` fields and the trailing angles were mislabelled. Decode the first signed 16-bit value as a single
+  `Heel` angle (verified equal to PGN 127257 Roll over a live capture) and relabel the remaining fields.
 - ikonvert-serial: always send a reset, so a previous run with a RX/TX list will not influence this run.
 - ikonvert-serial: the synthetic PGN 262400 from the ikonvert report will contain the proper source address
   (whatever the iKonvert source address is, this is reported by the same PGN).

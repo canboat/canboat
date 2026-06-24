@@ -14759,6 +14759,54 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130819">0x1FF03:
             PGN 130819
+            - Furuno: Dead Reckoning Configuration</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1855</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            6
+            bytes long and contains 11 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
+                  Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>F4</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>F5</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>F6</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>F7</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>F8</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Dead reckoning time</td><td>0=5min, 1=4min, 2=3min, 3=2min, 4=1min (code = 5 - minutes)</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>F10</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>F11</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130819">0x1FF03:
+            PGN 130819
             - BEP Marine: CZone 130819</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
@@ -17275,7 +17323,52 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       lookup
                       <a href="#lookup-BANDG_DECIMALS">BANDG_DECIMALS</a></td><td/></tr><tr><td>8</td><td>Short name</td><td/><td> </td><td>64 bits
                   <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr><tr><td>9</td><td>Long name</td><td/><td> </td><td>128 bits
-                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><h3 id="pgn-130834">0x1FF12:
+                  <a href="#ft-STRING_FIX">STRING_FIX</a></td><td/></tr></table><h3 id="pgn-130833">0x1FF11:
+            PGN 130833
+            - Furuno: Ship Parameters and Antenna Position</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1855</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            15
+            bytes long and contains 10 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
+                  Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Equipment Identification</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Antenna position X</td><td>Athwartship offset</td><td>0.01 <a href="#pq-DISTANCE">m</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Antenna position Y</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Antenna position Z</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Ship's width</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Ship's length</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Ship's height</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130834">0x1FF12:
             PGN 130834
             - Maretron: SMS Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -17338,7 +17431,41 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130835">0x1FF13:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130834">0x1FF12:
+            PGN 130834
+            - Furuno: Speed-calculation Position</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1855</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            9
+            bytes long and contains 7 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
+                  Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Point index</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>16 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Position Y</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Position Z</td><td/><td>0.1 <a href="#pq-LENGTH">m</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130835">0x1FF13:
             PGN 130835
             - Maretron: SMS Text Message</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18004,13 +18131,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1855</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
              fast-packet 
             PGN is
             10
-            bytes long and contains 8 fields.
+            bytes long and contains 7 fields.
 
+            
+              It is normally transmitted every 100 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -18020,19 +18149,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Yaw</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Heel</td><td>Live heel/roll; verified == PGN 127257 Roll</td><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Pitch</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Field 4</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Roll</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Field 6</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Field 8</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
                   
                         signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130843">0x1FF1B:
@@ -18113,10 +18239,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            
+              at least 6
+            bytes long and contains 15 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
+            
+        The 6 fields starting at field 
+        10 
+        (with name "Status")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        9 
+        (with name "Sats in View".)
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
@@ -18125,7 +18259,41 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Report type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Antenna</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Page type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Page</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Sats in View</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">10<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>PRN</td><td>1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Elevation</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Azimuth</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">14<div>Set 1</div></td><td>SNR</td><td/><td>0.01 <a href="#pq-SIGNAL_TO_NOISE_RATIO">dB</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">15<div>Set 1</div></td><td>Range residual</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83647 .. 21474.83644</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
             PGN 130845
             - Simnet: Key Value</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18252,8 +18420,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            28
+            bytes long and contains 5 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -18264,7 +18432,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130847">0x1FF1F:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Data</td><td/><td/><td>200 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130847">0x1FF1F:
             PGN 130847
             - Navico: ASCII Identifier</h3><p>
               This PGN description applies when the following field(s) match:
