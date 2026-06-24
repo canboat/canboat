@@ -252,9 +252,8 @@
       },
     {
         "Name":"DECIMAL",
-      "Description":"A unsigned numeric value represented with 2 decimal digits per byte",
-      "EncodingDescription":"Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number with an odd number of digits will have 0 as the first digit in the first byte.",
-      "URL":"https://en.wikipedia.org/wiki/Binary-coded_decimal",
+      "Description":"An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)",
+      "EncodingDescription":"Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).",
       "Signed":false
       },
     {
@@ -4205,7 +4204,7 @@
         {"name": "Night mode", "value": 9983, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE"},
         {"name": "True wind shift", "value": 11524, "FieldType": "NUMBER", "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "AP low boat speed", "value": 22296, "FieldType": "NUMBER", "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
-        {"name": "Alert bits", "value": 32789, "FieldType": "BITLOOKUP", "Bits": "16", "LookupBitEnumeration": "SIMNET_ALERT_BITFIELD"},
+        {"name": "Alert bits", "value": 32789, "FieldType": "BITLOOKUP", "Bits": "64", "LookupBitEnumeration": "SIMNET_ALERT_BITFIELD"},
         {"name": "Night mode color", "value": 44079, "FieldType": "LOOKUP", "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE_COLOR"},
         {"name": "Day mode invert", "value": 55087, "FieldType": "NUMBER", "Bits": "8"}
         ]
