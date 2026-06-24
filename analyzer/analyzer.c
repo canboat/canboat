@@ -808,7 +808,7 @@ static void printCanFormat(RawMessage *msg)
     size_t frameLen = (frame == 0) ? FASTPACKET_BUCKET_0_SIZE : FASTPACKET_BUCKET_N_SIZE;
     size_t msgIdx   = (frame == 0) ? FASTPACKET_BUCKET_0_OFFSET : FASTPACKET_BUCKET_N_OFFSET;
 
-    if ((p->frames & (1 << frame)) != 0)
+    if ((p->frames & (UINT32_C(1) << frame)) != 0)
     {
       logError("Received incomplete fast packet PGN %u from source %u\n", msg->pgn, msg->src);
       p->frames = 0;
@@ -841,7 +841,7 @@ static void printCanFormat(RawMessage *msg)
     {
       memset(&p->data[idx], 0xff, frameLen);
     }
-    p->frames |= 1 << frame;
+    p->frames |= UINT32_C(1) << frame;
 
     logDebug("Using buffer %u for reassembly of PGN %u: size %zu frame %u sequence %u idx=%zu frames=%x mask=%x\n",
              buffer,
