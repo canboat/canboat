@@ -8,6 +8,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ## [Unreleased]
 
+## [6.2.1]
+
 ### Added
 
 - Add socketcan-serial tool: bridge a Linux SocketCAN interface to/from canboat FAST format. Reassembles
@@ -36,8 +38,20 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
   130819 (Dead Reckoning Configuration); these are written by the SC_Setting_Tool via PGN 126208 Command
   Group Function, and defining the manufacturer variants lets the Command decoder resolve each parameter's
   value width. 130833 carries an inline comment documenting the 126208 field-addressed write mechanism.
+- BEP Marine CZone proprietary PGNs: 65295 (CZone Alarm) and 65299 (CZone Alarm String Request). PGNs
+  65301 and 130819 now decode their proprietary field layouts (both round-trip byte-for-byte; neutral field
+  names are used where semantics are not yet known).
 
 ### Changed
+
+- Simnet/Simrad autopilot PGNs refined from live AC-42 and NAC-3 captures (plus their control heads).
+  65340 named "Autopilot Mode State" (was "AP Unknown 2") with standby/engaged class and engaged mode
+  decoded (adds SIMNET_AUTOPILOT_MODE_CLASS and SIMNET_AUTOPILOT_MODE lookups); 65302 ("AP Unknown 1")
+  structure fixed; 65420 ("AP Unknown 3") byte-6 sub-index noted; 130860 ("AP Unknown 4") AC-42/NAC-3
+  differences noted; and 130851 gains "AP command Reply"/"Change Course" variants for the autopilot's
+  addressed-reply form. Each explanation notes which autopilot computer emits the PGN.
+- BEP Marine PGN 130820 renamed from "CZone Enumeration Reply" to "CZone Alarm String Response" (the
+  response to a 65299 alarm string request) with Device ID / Channel / String fields aligned to the request.
 
 ### Fixed
 
