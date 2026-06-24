@@ -656,16 +656,10 @@ static bool readNGT1Byte(unsigned char c)
 {
   static enum MSG_State prev_state = MSG_MESSAGE;
   static enum MSG_State state      = MSG_START;
-  static bool           noEscape   = false;
   static unsigned char  buf[500];
   static unsigned char *head = buf;
 
   logDebug("readNGT1Byte isFile=%d isEBL=%d state=%d c=0x%02x\n", isFile, isEBL, state, c);
-
-  if (state == MSG_START && isFile && !isEBL && c == ESC)
-  {
-    noEscape = true;
-  }
 
   if (state == MSG_ESCAPE)
   {
@@ -691,7 +685,7 @@ static bool readNGT1Byte(unsigned char c)
       head  = buf;
       state = MSG_MESSAGE;
     }
-    else if ((c == DLE) || ((c == ESC) && isFile) || noEscape)
+    else if ((c == DLE) || ((c == ESC) && isEBL))
     {
       if (head < buf + sizeof(buf))
       {
@@ -707,7 +701,7 @@ static bool readNGT1Byte(unsigned char c)
   }
   else if (state == MSG_MESSAGE)
   {
-    if (c == DLE || (isFile && (c == ESC) && !noEscape))
+    if (c == DLE || ((c == ESC) && isEBL))
     {
       prev_state = state;
       state      = MSG_ESCAPE;
@@ -731,7 +725,7 @@ static bool readNGT1Byte(unsigned char c)
   }
   else
   {
-    if (c == DLE || (isFile && (c == ESC) && !noEscape))
+    if (c == DLE || ((c == ESC) && isEBL))
     {
       prev_state = state;
       state      = MSG_ESCAPE;
