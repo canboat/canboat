@@ -3226,7 +3226,7 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='22296' Name='AP low boat speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='32789' Name='Alert bits' FieldType='BITLOOKUP' Bits='16'>
+      <EnumFieldType Value='32789' Name='Alert bits' FieldType='BITLOOKUP' Bits='64'>
           <LookupBitEnumeration>SIMNET_ALERT_BITFIELD</LookupBitEnumeration>
       </EnumFieldType>
       <EnumFieldType Value='44079' Name='Night mode color' FieldType='LOOKUP' Signed='false'
