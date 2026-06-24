@@ -60,6 +60,7 @@ static long     timeout        = 0;
 static int      outputCommands = 0;
 static bool     isFile;
 static bool     isEBL;
+static bool     isJson; // W2K-1 / OpenCPN JSON capture: one {"pgn":..,"payload":[..]} per line
 static uint64_t timestamp = 0;
 
 enum MSG_State
@@ -78,6 +79,8 @@ static void parseAndWriteIn(int handle, const char *cmd);
 static void writeMessage(int handle, unsigned char command, const unsigned char *cmd, const size_t len, uint64_t when);
 static bool readNGT1Byte(unsigned char c);
 static int  readNGT1(int handle);
+static int  readW2K(int handle);
+static void w2kMessageReceived(const char *line);
 static void headerReceived(const unsigned char *msg, size_t msgLen);
 static void messageReceived(const unsigned char *msg, size_t msgLen);
 static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, unsigned char command);
@@ -203,6 +206,7 @@ int main(int argc, char **argv)
             "  -t <n>  timeout, if no message is received after <n> seconds the program quits\n"
             "  -o      alias for -p (kept for backward compatibility; -p is preferred)\n"
             "  <device> can be a serial device, a normal file containing a raw log,\n"
+            "  an Actisense .ebl log, a W2K-1/OpenCPN JSON capture (auto-detected),\n"
             "  or the address of a TCP server in the format tcp://<host>[:<port>]\n"
             "\n"
             "  Examples: %s /dev/ttyUSB0\n"
@@ -280,10 +284,21 @@ int main(int argc, char **argv)
 
   if (isFile)
   {
+    unsigned char first = 0;
+
     if (strncmp(device + strlen(device) - STRSIZE(".ebl"), ".ebl", STRSIZE(".ebl")) == 0)
     {
       isEBL = true;
       logDebug("EBL mode selected\n");
+    }
+    else if (read(handle, &first, 1) == 1 && lseek(handle, 0, SEEK_SET) == 0 && first == '{')
+    {
+      // W2K-1 / OpenCPN capture: one JSON object per line, each with a
+      // "payload" array holding a de-framed Actisense N2K message
+      // (command 0x93, length, then the BST body). Decoded via the same
+      // n2kMessageReceived() path as the serial NGT-1 stream. See #635.
+      isJson = true;
+      logDebug("W2K JSON mode selected\n");
     }
     else
     {
@@ -352,10 +367,8 @@ int main(int argc, char **argv)
     // File-capture mode (-w to a regular file) has an O_WRONLY
     // handle — don't poll it for read. Serial -w opens R/W and
     // does need polling so we can drain the device's output.
-    int  r = isReady((writeonly && isFile) ? INVALID_SOCKET : handle,
-                     readonly ? INVALID_SOCKET : STDIN_FILENO,
-                     INVALID_SOCKET,
-                     timeout);
+    int r = isReady(
+        (writeonly && isFile) ? INVALID_SOCKET : handle, readonly ? INVALID_SOCKET : STDIN_FILENO, INVALID_SOCKET, timeout);
 
     if ((r & FD1_ReadReady) > 0)
     {
@@ -372,7 +385,7 @@ int main(int argc, char **argv)
           break;
         }
       }
-      else if (readNGT1(handle) <= 0)
+      else if ((isJson ? readW2K(handle) : readNGT1(handle)) <= 0)
       {
         break;
       }
@@ -783,6 +796,110 @@ static int readNGT1(int handle)
       finish = readNGT1Byte(c);
     }
   } while (!finish);
+
+  return r;
+}
+
+/*
+ * Decode one line of a W2K-1 / OpenCPN JSON capture, e.g.
+ *
+ *   {"pgn":60928,"payload":[147,19,6,0,238,0,255,...]}
+ *
+ * The "payload" array is a de-framed Actisense N2K message: command byte
+ * (0x93 = N2K_MSG_RECEIVED), the BST length byte, then the message body
+ * (priority, PGN, dst, src, 4-byte timestamp, data length, data). The DLE
+ * framing and trailing checksum that a serial NGT-1 would add are absent,
+ * so we hand the body straight to n2kMessageReceived() rather than the
+ * checksum-validating messageReceived(). The body length byte is ignored
+ * for fast packets (it stays at 19); n2kMessageReceived() derives the real
+ * length from the data-length field, capped by the count we pass in.
+ */
+static void w2kMessageReceived(const char *line)
+{
+  unsigned char payload[FASTPACKET_MAX_SIZE + 16];
+  size_t        n = 0;
+  const char   *p;
+
+  p = strstr(line, "\"payload\"");
+  if (p != NULL)
+  {
+    p = strchr(p, '[');
+  }
+  if (p == NULL)
+  {
+    logError("W2K line without payload array: %s\n", line);
+    return;
+  }
+  p++;
+
+  while (*p != '\0' && *p != ']' && n < sizeof(payload))
+  {
+    char *end;
+    long  v = strtol(p, &end, 10);
+
+    if (end == p)
+    {
+      break;
+    }
+    payload[n++] = (unsigned char) v;
+    p            = end;
+    while (*p == ',' || *p == ' ')
+    {
+      p++;
+    }
+  }
+
+  if (n < 13 || payload[0] != N2K_MSG_RECEIVED)
+  {
+    logError("Ignoring W2K payload (%zu bytes, command %02x)\n", n, n > 0 ? payload[0] : 0);
+    return;
+  }
+
+  n2kMessageReceived(payload + 2, n - 2, payload[0]);
+}
+
+/*
+ * Read W2K-1 / OpenCPN JSON capture data, one JSON object per line.
+ */
+static int readW2K(int handle)
+{
+  static char   line[BUFFER_SIZE];
+  static size_t fill = 0;
+  unsigned char buf[BUFFER_SIZE];
+  ssize_t       r;
+  ssize_t       i;
+
+  r = read(handle, buf, sizeof(buf));
+  logDebug("W2K read = %d\n", (int) r);
+
+  if (r < 0 && errno == EAGAIN)
+  {
+    usleep(25000);
+    return 1;
+  }
+  if (r <= 0)
+  {
+    exit(0);
+  }
+
+  for (i = 0; i < r; i++)
+  {
+    unsigned char c = buf[i];
+
+    if (c == '\n' || fill >= sizeof(line) - 1)
+    {
+      line[fill] = '\0';
+      if (fill > 0)
+      {
+        w2kMessageReceived(line);
+      }
+      fill = 0;
+    }
+    else if (c != '\r')
+    {
+      line[fill++] = (char) c;
+    }
+  }
 
   return r;
 }

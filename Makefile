@@ -40,6 +40,7 @@ compile: bin
 tests:  compile
 	$(MAKE) -C analyzer tests
 	$(MAKE) -C n2kd tests
+	$(MAKE) -C actisense-serial/tests tests
 
 generated: tests
 	$(MAKE) -C analyzer generated
