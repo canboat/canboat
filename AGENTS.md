@@ -22,13 +22,14 @@ The flagship binary `analyzer` reads raw CAN-frame lines (from many gateway
 formats) on stdin, reassembles fast-packets, matches each PGN against the
 database compiled into the binary, and prints decoded fields as human-readable
 text or JSON. Around it sit gateway drivers (`actisense-serial`,
-`ikonvert-serial`, `maretron-ipg`, `nmea0183`), a relay/server daemon (`n2kd`),
-and format converters (`candump2analyzer`, `socketcan-writer`, `replay`, `ip`,
-`pcap2candump`, `analyzer2csv`, `group-function`).
+`ikonvert-serial`, `maretron-ipg`, `nmea0183`, `socketcan-serial`), a
+relay/server daemon (`n2kd`), and format converters (`candump2analyzer`,
+`socketcan-writer`, `replay`, `ip`, `pcap2candump`, `analyzer2csv`,
+`group-function`).
 
 License is **Apache-2.0**; every file carries the `(C) 2009-2025 Kees Verruijt`
-header. Current `VERSION` is `6.2.0`, `SCHEMA_VERSION` is `2.3.0`
-(`common/version.h`).
+header. The current `VERSION` and `SCHEMA_VERSION` are defined in
+`common/version.h` — the single source of truth; don't hard-code them elsewhere.
 
 ### This is a C project — not a JS/TS one
 
@@ -74,10 +75,8 @@ to the C headers in `analyzer/`, followed by `make generated`.
 | `config/` | config | Env snippets for the `n2kd` launcher. |
 | `.clang-format` | config | Google-based clang-format (IndentWidth 2, ColumnLimit 132). |
 
-**Already removed — do not look for them:** `analyzer/pgn.{xml,json}` no longer
-exist (removed in v6.0.0). The README still calls them "historical / slated for
-removal in v6" — that note is stale. Canonical definitions are
-`docs/canboat.xml` and `docs/canboat.json`.
+**Canonical definitions** are `docs/canboat.xml` and `docs/canboat.json` (both
+generated from the C headers).
 
 ---
 
@@ -134,7 +133,7 @@ Key facts:
 | `make -C analyzer tests` | Run analyzer golden tests directly (binary must already be built). |
 | `make -C analyzer generated` | Regenerate docs only (skip DBC). |
 | `make -C analyzer webserver` | Serve `docs/` locally on `:8080`. |
-| `rel/<platform>/analyzer -version` / `-schema-version` | Print `6.2.0` / `2.3.0`. |
+| `rel/<platform>/analyzer -version` / `-schema-version` | Print the `VERSION` / `SCHEMA_VERSION` from `common/version.h`. |
 
 `PLATFORM` defaults to `<os>-<arch>`; binaries land in `rel/<platform>/`
 (gitignored). The `analyzer` dir builds four binaries — `analyzer`,
@@ -320,8 +319,9 @@ missing repeating-field markers. A bad header edit makes **both** `analyzer` and
 - `common/` — shared C (`common.c`, `parse.c`, `utf.c`, `version.h`).
 - `n2kd/` — relay daemon + NMEA0183 conversion + `tests/`.
 - Gateway/converter dirs: `actisense-serial/`, `ikonvert-serial/`,
-  `maretron-ipg/`, `nmea0183/`, `ip/`, `group-function/`, `candump2analyzer/`,
-  `socketcan-writer/`, `replay/`, `analyzer2csv/`, `pcap2candump/`.
+  `maretron-ipg/`, `nmea0183/`, `socketcan-serial/`, `ip/`, `group-function/`,
+  `candump2analyzer/`, `socketcan-writer/`, `replay/`, `analyzer2csv/`,
+  `pcap2candump/`.
 - `docs/` — generation output **and** the published site
   (`https://canboat.github.io/canboat`).
 - `dbc-exporter/` — Python DBC exporter (venv-installed during generation).
@@ -340,7 +340,7 @@ missing repeating-field markers. A bad header edit makes **both** `analyzer` and
 - **Commit/PR style is mixed.** Newer database changes use Angular-ish
   `feat(<pgn>):` / `fix(<pgn>):`; older commits are plain imperative.
   Regen-only commits are conventionally `Update generated files`; releases are
-  bare `v6.2.0` tags. **Match surrounding style** — conventional-commit linting
+  bare `vX.Y.Z` tags. **Match surrounding style** — conventional-commit linting
   is not enforced here.
 - **Branch names DO use slashes** in this repo (e.g.
   `dirkwa/czone-65301-130819-fields`) — the opposite of the signalk-server
@@ -348,6 +348,11 @@ missing repeating-field markers. A bad header edit makes **both** `analyzer` and
 - **`CHANGELOG.md` is manually maintained** (Keep-a-Changelog + SemVer) — add an
   entry under `[Unreleased]` referencing the issue/PR. It is **not**
   CI-generated.
+- **Versioning follows [SemVer](https://semver.org/).** `VERSION` in
+  `common/version.h` is `MAJOR.MINOR.PATCH`. Changing an **existing** PGN or field
+  definition (renaming, re-typing, or re-interpreting a field) is a
+  consumer-visible change and bumps the **minor** version; a purely additive new
+  PGN/enum or a fix that doesn't alter existing output is a **patch**.
 - **Schema bumps:** bump `SCHEMA_VERSION` in `common/version.h` only when the
   database *schema* changes; bump `VERSION` for releases. Run `make generated`
   afterward so the new strings are stamped into `docs/*` + `pgns.dbc`.
@@ -371,6 +376,5 @@ missing repeating-field markers. A bad header edit makes **both** `analyzer` and
 
 **NEVER hand-edit:** `docs/canboat.xml`, `docs/canboat.html`,
 `docs/canboat.json`, `dbc-exporter/pgns.dbc` — regenerate them.
-**Do NOT look for:** `analyzer/pgn.{xml,json}` (removed in v6).
 **Wrong repo for:** TypeScript PGN types → `@canboat/ts-pgns`; the JS
 encoder/decoder → `canboatjs`.
