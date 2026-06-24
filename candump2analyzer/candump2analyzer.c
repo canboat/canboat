@@ -47,6 +47,13 @@ limitations under the License.
 #define FMT_3 3 // candump log ex:	"(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF"
 #define FMT_4 4 // tshark of pcap:10131  29.555750              ?              CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff
 #define FMT_5 5 // Navico port 8086: 0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d
+#define FMT_6 6 // PCAN-View v1.1: "     1)         2.7  Rx     09F11324  8  53 84 9E 01 00 FF FF FF"
+
+// PCAN-View per-message timestamps are relative offsets in ms; the
+// ;$STARTTIME= header gives the absolute start as an OLE Automation date
+// (days since 1899-12-30). 25569 is the day count from that epoch to the Unix
+// epoch (1970-01-01).
+#define OLE_EPOCH_TO_UNIX_DAYS 25569.0
 
 void gettimeval(struct timeval *tv, double sec)
 {
@@ -79,6 +86,7 @@ int main(int argc, char **argv)
   //
   int          format           = FMT_TBD;
   unsigned int candump_data_inc = CANDUMP_DATA_INC_3;
+  double       pcanStartTime    = 0.0; // FMT_6: Unix epoch seconds parsed from ;$STARTTIME=
 
   msg[sizeof(msg) - 1] = '\0'; // Make sure algorithm ends
   while (fgets(msg, sizeof(msg) - 1, infile))
@@ -91,7 +99,21 @@ int main(int argc, char **argv)
     {
       p++;
     }
-    if (*p == 0 || *p == '\r' || *p == '\n' || *p == '#')
+
+    // PCAN-View carries a ;$STARTTIME=<OLE date> header. Capture it so the
+    // relative per-message offsets can be turned into absolute timestamps.
+    if (strncmp(p, ";$STARTTIME=", STRSIZE(";$STARTTIME=")) == 0)
+    {
+      double ole;
+      if (sscanf(p + STRSIZE(";$STARTTIME="), "%lf", &ole) == 1)
+      {
+        pcanStartTime = (ole - OLE_EPOCH_TO_UNIX_DAYS) * 86400.0;
+      }
+      continue;
+    }
+
+    // Comment lines: '#' for most formats, ';' for PCAN-View.
+    if (*p == 0 || *p == '\r' || *p == '\n' || *p == '#' || *p == ';')
     {
       continue;
     }
@@ -111,6 +133,9 @@ int main(int argc, char **argv)
     double   currentTime    = 0.;
     uint32_t currentTimeInt = 0;
     uint8_t *u              = (uint8_t *) &canid;
+    char     pcanType[8]    = {0};  // FMT_6: "Rx" / "Tx"
+    int      pcanDataOff    = 0;    // FMT_6: offset within the line of the data bytes
+    char    *pcanData       = NULL; // FMT_6: pointer to the data bytes
 
     // Determine which candump format is being used.
     //
@@ -140,6 +165,13 @@ int main(int argc, char **argv)
       else if (sscanf(p, "%07x %02hhx %02hhx %02hhx %02hhx", &currentTimeInt, u, u + 1, u + 2, u + 3) == 5)
       {
         format = FMT_5;
+      }
+      else if (sscanf(p, "%*u)%lf %7s %x %u%n", &currentTime, pcanType, &canid, &size, &pcanDataOff) == 4
+               && (pcanType[0] == 'R' || pcanType[0] == 'T'))
+      {
+        format      = FMT_6;
+        currentTime = pcanStartTime + currentTime / 1000.0; // ms offset -> absolute seconds
+        pcanData    = p + pcanDataOff;
       }
       else
       {
@@ -182,6 +214,16 @@ int main(int argc, char **argv)
       {
         continue;
       }
+    }
+    else if (format == FMT_6)
+    {
+      if (sscanf(p, "%*u)%lf %7s %x %u%n", &currentTime, pcanType, &canid, &size, &pcanDataOff) != 4
+          || (pcanType[0] != 'R' && pcanType[0] != 'T'))
+      {
+        continue;
+      }
+      currentTime = pcanStartTime + currentTime / 1000.0; // ms offset -> absolute seconds
+      pcanData    = p + pcanDataOff;
     }
 
     // NMEA 2000 always uses 29-bit extended CAN identifiers. CAN 1.0 / 2.0A
@@ -247,6 +289,12 @@ int main(int argc, char **argv)
     {
       p = strstr(p, " ");
       p += sizeof("0e 1d ff 9d 08 00 00 00");
+      separator = ' ';
+    }
+    else if (format == FMT_6)
+    {
+      // pcanData points at the whitespace preceding the first data byte.
+      p         = pcanData;
       separator = ' ';
     }
     else if (format == FMT_4)
