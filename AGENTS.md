@@ -176,21 +176,32 @@ wired into any target.
 
 ---
 
-## 6. CI gates and downstream coupling
+## 6. Contribution flow, CI gates and downstream coupling
+
+> **`master` is protected — all changes land via pull request.** Direct pushes
+> to `master` are rejected (including for maintainers). The flow is:
+>
+> 1. Branch off `master` (slash-style names are fine, e.g. `feat/pgn-130824`).
+> 2. Make your change; if you touched any C header or `common/version.h`, run
+>    `make generated` and commit the regenerated `docs/*` + `dbc-exporter/pgns.dbc`
+>    **in the same PR**.
+> 3. Open a PR. CI must be green — this includes the `build-ubuntu` job's
+>    generated-files check (see below), the cross-builds, and the downstream
+>    canboatjs/Signal K integration job.
+> 4. Merge once required checks pass. Squash or merge-commit per maintainer
+>    preference; releases are still cut from `master` (`make release`).
 
 `.github/workflows/ci.yml` (every push + PR) builds on Ubuntu (`make` +
-`make generated`), an ARMv7-musl cross-build (build only), and Cygwin Windows
-(build only).
+`make generated` + a generated-files-up-to-date check), an ARMv7-musl
+cross-build (build only), and Cygwin Windows (build only).
 
-> **CI does NOT enforce that committed `docs/` match regenerated output.**
-> `make generated` regenerates files **in place** and never compares against
-> git. The only `git diff --exit-code` in the repo is in the `Makefile`'s
-> `release` target — a manual maintainer step no workflow invokes. So a
-> stale/divergent committed `docs/` **can pass CI**. The CI gate that exists is
-> that `make generated` must *succeed* (xmllint schema validation +
-> `validate-json --range`). **Lockstep is contributor discipline, not a
-> push-time CI guard — run `make generated` and check `git status` yourself
-> before committing.**
+> **CI enforces that committed generated files match regenerated output.**
+> The `build-ubuntu` job runs `make generated` and then `git diff --exit-code`;
+> if your commit's `docs/*` or `dbc-exporter/pgns.dbc` differ from a fresh
+> regeneration, **the job fails**. So you MUST run `make generated` and commit
+> the result whenever you touch `analyzer/*.h` or `common/version.h`. (The job
+> also still requires that `make generated` itself *succeeds* — xmllint schema
+> validation + `validate-json --range`.)
 
 `.github/workflows/release.yaml` (on `vX.Y.Z` tags) re-runs `make tests`,
 asserts the `VERSION`/`SCHEMA_VERSION` strings are present in
@@ -307,8 +318,9 @@ missing repeating-field markers. A bad header edit makes **both** `analyzer` and
 4. `make generated` — regenerates `docs/*` + `pgns.dbc` and validates the schema.
 5. `make tests`; regenerate intentional golden diffs (manual `cp` + review, §5).
 6. **Commit the regenerated `docs/` + `pgns.dbc` together with the header
-   change, in the same commit/PR.** Nothing forces this for you (§6) — it is
-   your responsibility.
+   change, in the same PR.** CI enforces this — the `build-ubuntu` job
+   regenerates and runs `git diff --exit-code`, so a PR with stale generated
+   files fails (§6).
 
 ---
 

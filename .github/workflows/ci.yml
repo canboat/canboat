@@ -20,6 +20,14 @@ jobs:
       - name: make generated
         run: make generated
 
+      - name: verify generated files are up to date
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated files are out of date. Run 'make generated' locally and commit the result (docs/*, dbc-exporter/pgns.dbc)."
+            git --no-pager diff --stat
+            exit 1
+          fi
+
   build-armv7-musl:
     runs-on: ubuntu-latest
     steps:

@@ -20,7 +20,7 @@ on:
 
 jobs:
   build_and_test:
-    name: 'Build & Test'
+    name: 'canboatjs dependencies'
     runs-on: ubuntu-latest
 
     steps:
