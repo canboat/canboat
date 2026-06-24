@@ -159,4 +159,14 @@ test16:
 	diff $(TEMPDIR)/invalid-pgn-test.out invalid-pgn-test.out
 	diff $(TEMPDIR)/invalid-pgn-test.err invalid-pgn-test.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16
+#
+# This tests that a message that is short by just a trailing reserved/spare
+# field still decodes instead of raising a PGN analysis error (issue #663).
+#
+test17:
+	$(ANALYZER) -json -nv < short-reserved.in > $(TEMPDIR)/short-reserved.out -fixtime short-reserved 2> $(TEMPDIR)/short-reserved.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/short-reserved.out
+	diff $(TEMPDIR)/short-reserved.out short-reserved.out
+	diff $(TEMPDIR)/short-reserved.err short-reserved.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17
