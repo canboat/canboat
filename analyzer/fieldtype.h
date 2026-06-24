@@ -594,11 +594,11 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "FLOAT"},
 
     {.name                = "DECIMAL",
-     .description         = "A unsigned numeric value represented with 2 decimal digits per byte",
-     .encodingDescription = "Each byte represent 2 digits, so 1234 is represented by 2 bytes containing 0x12 and 0x34. A number "
-                            "with an odd number of digits will have 0 as the first digit in the first byte.",
+     .description         = "An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)",
+     .encodingDescription = "Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes "
+                            "containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is "
+                            "padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).",
      .hasSign             = False,
-     .url                 = "https://en.wikipedia.org/wiki/Binary-coded_decimal",
      .pf                  = fieldPrintDecimal},
 
     {.name                = "LOOKUP",
