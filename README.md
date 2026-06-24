@@ -22,8 +22,7 @@ and how to start extending the PGN database. Short instructions are also found i
 
 ## Using the definitions in your own project
 
-If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json). The older versions in `analyzer/pgn.{xml,json}` should not be used, they are only present for historical
-reasons as there are some downstream projects that use these. These will be removed in v6.
+If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json).
 
 ## Version history
 
