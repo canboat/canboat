@@ -3015,6 +3015,13 @@ limitations under the License.
       <BitPair Bit='6' Name='Neutral Start Protect' />
       <BitPair Bit='7' Name='Engine Shutting Down' />
     </LookupBitEnumeration>
+    <LookupBitEnumeration Name='TRANSMISSION_STATUS_1' MaxValue='7'>
+      <BitPair Bit='0' Name='Check Transmission' />
+      <BitPair Bit='1' Name='Over Temperature' />
+      <BitPair Bit='2' Name='Low Oil Pressure' />
+      <BitPair Bit='3' Name='Low Oil Level' />
+      <BitPair Bit='4' Name='Sail Drive' />
+    </LookupBitEnumeration>
     <LookupBitEnumeration Name='ENTERTAINMENT_PLAY_STATUS_BITFIELD' MaxValue='31'>
       <BitPair Bit='0' Name='Play' />
       <BitPair Bit='1' Name='Pause' />
@@ -25295,10 +25302,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>TRANSMISSION_STATUS_1</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>7</Order>

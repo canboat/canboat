@@ -3925,7 +3925,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(6),
       PRESSURE_UFIX16_HPA_FIELD("Oil pressure"),
       TEMPERATURE_HIGH_FIELD("Oil temperature"),
-      UINT8_FIELD("Discrete Status 1"),
+      BITLOOKUP_FIELD("Discrete Status 1", BYTES(1), TRANSMISSION_STATUS_1),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .priority = 2,
