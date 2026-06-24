@@ -86,7 +86,9 @@ static double getMaxRange(const char *name, uint32_t size, double resolution, bo
   uint64_t maxValue;
   double   r;
 
-  maxValue = (UINT64_C(1) << highbit) - 1 - specialvalues;
+  // highbit == 64 for a full-width 64-bit field; shifting a 64-bit value by 64
+  // is undefined, so clamp to UINT64_MAX (== (1 << 64) - 1) in that case.
+  maxValue = (highbit >= 64 ? UINT64_MAX : (UINT64_C(1) << highbit) - 1) - specialvalues;
   if (offset != 0)
   {
     maxValue += offset;

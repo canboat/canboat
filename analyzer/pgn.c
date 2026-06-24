@@ -30,13 +30,16 @@ limitations under the License.
  */
 const Pgn *searchForPgn(int pgn)
 {
+  // Half-open range [start, end): end is the count, not the last index, so an
+  // out-of-range pgn converges to start == end and returns NULL rather than
+  // dereferencing pgnList[pgnListSize] one past the array.
   size_t start = 0;
   size_t end   = pgnListSize;
   size_t mid;
 
-  while (start <= end)
+  while (start < end)
   {
-    mid = (start + end) / 2;
+    mid = start + (end - start) / 2;
     if (pgn == pgnList[mid].pgn)
     {
       // Return the first one, unless it is the catch-all
@@ -47,7 +50,7 @@ const Pgn *searchForPgn(int pgn)
       if (pgnList[mid].fallback)
       {
         mid++;
-        if (pgn != pgnList[mid].pgn)
+        if (mid >= pgnListSize || pgn != pgnList[mid].pgn)
         {
           return NULL;
         }
@@ -56,11 +59,7 @@ const Pgn *searchForPgn(int pgn)
     }
     if (pgn < pgnList[mid].pgn)
     {
-      if (mid == 0)
-      {
-        return NULL;
-      }
-      end = mid - 1;
+      end = mid;
     }
     else
     {
