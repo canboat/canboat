@@ -418,10 +418,12 @@ static bool extractNumberNotEmpty(const Field   *field,
   int64_t threshold = *maxValue - reserved;
   if (field != NULL && field->rangeMax > 0 && field->resolution > 0.0)
   {
-    int64_t range_max_raw = (int64_t) (field->rangeMax / field->resolution + 0.5);
-    if (range_max_raw == *maxValue)
+    double range_max_raw = field->rangeMax / field->resolution + 0.5;
+    // Guard the int64_t conversion: casting a double >= 2^63 to int64_t is
+    // undefined, and such a value can never equal *maxValue (<= INT64_MAX).
+    if (range_max_raw < 0x1p63 && (int64_t) range_max_raw == *maxValue)
     {
-      threshold = range_max_raw;
+      threshold = *maxValue;
     }
   }
 
