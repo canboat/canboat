@@ -59,6 +59,7 @@ static int      passthru       = 0;
 static long     timeout        = 0;
 static int      outputCommands = 0;
 static bool     isFile;
+static bool     isRegularFile; // a real on-disk file (replay), not a serial/TCP device
 static bool     isEBL;
 static uint64_t timestamp = 0;
 
@@ -246,13 +247,15 @@ int main(int argc, char **argv)
         oflag |= O_WRONLY | O_CREAT;
         isFile = true;
       }
-      else if (readonly)
-      {
-        oflag |= O_RDONLY;
-      }
       else
       {
-        oflag |= O_RDWR;
+        // Replaying an existing regular file: always read-only, in
+        // both -r and default mode. A replay handle must never be
+        // written to, otherwise the periodic NGT keep-alive ping (and
+        // any stdin-sourced commands) get written back into the log
+        // being read, corrupting it. See issue #660.
+        oflag |= O_RDONLY;
+        isRegularFile = true;
       }
     }
     else
@@ -398,7 +401,7 @@ int main(int argc, char **argv)
         fflush(stdout);
       }
     }
-    if (time(0) - lastPing > 20)
+    if (!isRegularFile && time(0) - lastPing > 20)
     {
       writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
       lastPing = time(0);
