@@ -1,0 +1,54 @@
+name: release-please
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      pr: ${{ steps.rp.outputs.pr }}
+      prs_created: ${{ steps.rp.outputs.prs_created }}
+      releases_created: ${{ steps.rp.outputs.releases_created }}
+    steps:
+      - uses: googleapis/release-please-action@v4
+        id: rp
+        with:
+          # A PAT (RELEASE_PLEASE_TOKEN) is preferred so that the regenerate job's
+          # push below re-triggers CI on the release PR. Falls back to GITHUB_TOKEN.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+  # release-please bumps VERSION in common/version.h, and that version is stamped
+  # into the generated docs/* + dbc-exporter/pgns.dbc. Regenerate them on the
+  # release PR branch so it passes the build-ubuntu generated-files gate.
+  regenerate:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.prs_created == 'true' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ fromJson(needs.release-please.outputs.pr).headBranchName }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: regenerate
+        run: |
+          make
+          make generated
+
+      - name: commit regenerated files
+        run: |
+          if ! git diff --exit-code; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "chore: regenerate docs/* + pgns.dbc for release"
+            git push
+          fi
