@@ -1,0 +1,46 @@
+name: Autofix generated files
+
+# If a PR edits the C headers but forgets to regenerate docs/* + pgns.dbc, this
+# regenerates them and pushes the result back onto the PR branch, so the
+# build-ubuntu generated-files gate passes without manual intervention.
+#
+# SAME-REPO BRANCHES ONLY. Fork PRs are intentionally skipped: we must not build
+# untrusted fork code while holding a write token, and we can't push back to a
+# fork from here anyway. Fork PRs fall through to the build-ubuntu gate, which
+# fails with a "run make generated" message for the contributor to fix locally.
+#
+# Needs RELEASE_PLEASE_TOKEN (a PAT) so the auto-commit re-triggers CI on the PR;
+# with the default GITHUB_TOKEN the push would not re-run the required checks.
+
+on:
+  pull_request:
+
+permissions:
+  contents: write
+
+jobs:
+  autofix:
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: make + regenerate
+        run: |
+          make
+          make generated
+
+      - name: commit & push if generated files are stale
+        run: |
+          if ! git diff --exit-code; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "chore: regenerate docs/* + pgns.dbc"
+            git push
+          fi

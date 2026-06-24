@@ -185,7 +185,10 @@ wired into any target.
 > 1. Branch off `master` (slash-style names are fine, e.g. `feat/pgn-130824`).
 > 2. Make your change; if you touched any C header or `common/version.h`, run
 >    `make generated` and commit the regenerated `docs/*` + `dbc-exporter/pgns.dbc`
->    **in the same PR**.
+>    **in the same PR**. (For a branch **in this repo**, the `Autofix generated
+>    files` workflow regenerates and pushes them for you if you forget — but
+>    **fork PRs are not auto-fixed**, so fork contributors must run
+>    `make generated` themselves or the `build-ubuntu` gate fails.)
 > 3. **Title the PR as a [Conventional Commit](https://www.conventionalcommits.org/)**
 >    — `type(scope): subject`, e.g. `feat(130845): decode satellites-in-view` or
 >    `fix(130843): correct heel decode`. Allowed types: `feat fix perf refactor
