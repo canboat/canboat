@@ -580,6 +580,10 @@ static int readCan(int sock)
     {
       continue; /* error frame, not a real message */
     }
+    if ((frame.can_id & CAN_EFF_FLAG) == 0)
+    {
+      continue; /* CAN 1.0 / 2.0A standard (11-bit) frame, not NMEA 2000 */
+    }
 
     for (cmsg = CMSG_FIRSTHDR(&msg); cmsg != NULL; cmsg = CMSG_NXTHDR(&msg, cmsg))
     {
