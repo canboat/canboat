@@ -9,6 +9,11 @@ name: Autofix generated files
 # fork from here anyway. Fork PRs fall through to the build-ubuntu gate, which
 # fails with a "run make generated" message for the contributor to fix locally.
 #
+# The release-please branch is ALSO skipped: the `regenerate` job in
+# release-please.yml already regenerates and pushes the version-stamped docs for
+# the release PR. Running both raced to push the same commit, and the loser
+# failed with "! [rejected] (fetch first)" on every release.
+#
 # Needs RELEASE_PLEASE_TOKEN (a PAT) so the auto-commit re-triggers CI on the PR;
 # with the default GITHUB_TOKEN the push would not re-run the required checks.
 
@@ -20,7 +25,8 @@ permissions:
 
 jobs:
   autofix:
-    if: ${{ github.event.pull_request.head.repo.full_name == github.repository }}
+    if: ${{ github.event.pull_request.head.repo.full_name == github.repository
+        && !startsWith(github.event.pull_request.head.ref, 'release-please--') }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
