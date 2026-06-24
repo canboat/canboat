@@ -4,6 +4,15 @@ on:
   push:
   pull_request:
 
+# ci.yml triggers on both push and pull_request, so a branch with an open PR
+# otherwise runs CI twice per commit. Collapse those into one run per branch and
+# cancel superseded runs when a newer commit arrives (e.g. release-please's
+# regenerate job pushing the regenerated docs on top of the version bump).
+# master is excluded so every merge to the default branch gets its own full run.
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref_name != 'master' }}
+
 jobs:
   build-ubuntu:
     runs-on: ubuntu-latest
