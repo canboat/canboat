@@ -899,6 +899,9 @@ extern bool fieldPrintReserved(const Field   *field,
 
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
+    // A trailing reserved field that runs off the end of a slightly short
+    // message carries no information, so skip it instead of failing the PGN.
+    g_skip = true;
     return true;
   }
   if (value == maxValue)
@@ -926,6 +929,9 @@ extern bool fieldPrintSpare(const Field   *field,
 
   if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
   {
+    // A trailing spare field that runs off the end of a slightly short
+    // message carries no information, so skip it instead of failing the PGN.
+    g_skip = true;
     return true;
   }
   if (value == 0)
