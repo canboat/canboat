@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [6.2.2](https://github.com/canboat/canboat/compare/v6.2.1...v6.2.2) (2026-06-24)
+
+
+### Fixed
+
+* drop CAN 1.0 (11-bit) standard frames ([#647](https://github.com/canboat/canboat/issues/647)) ([c9f5285](https://github.com/canboat/canboat/commit/c9f5285f0618ff3722fbd5c26471449c946beff7)), closes [#400](https://github.com/canboat/canboat/issues/400)
+
 ## [Unreleased]
 
 ## [6.2.1]
