@@ -184,6 +184,14 @@ int main(int argc, char **argv)
       }
     }
 
+    // NMEA 2000 always uses 29-bit extended CAN identifiers. CAN 1.0 / 2.0A
+    // standard frames use an 11-bit identifier (max 0x7ff) and cannot be NMEA
+    // 2000, so the analyzer can't decode them -- skip them.
+    if (canid <= 0x7ff)
+    {
+      continue;
+    }
+
     unsigned int pri = 0;
     unsigned int src = 0;
     unsigned int dst = 255;
