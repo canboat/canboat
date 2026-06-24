@@ -28,7 +28,7 @@ TEMPDIR=/tmp
 all:	tests
 
 #
-# This tests that actisense-serial reads the W2K-1 / OpenCPN JSON capture
+# This tests that actisense-serial reads the W2K-1 JSON capture
 # format (one {"pgn":..,"payload":[..]} per line) and converts it to canboat
 # FAST format that analyzer can decode. See discussion #635.
 # The W2K payload carries no usable timestamp, so actisense-serial stamps each
