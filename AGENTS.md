@@ -277,7 +277,8 @@ Essential facts before editing:
   `complete` (`PacketComplete` bits), `type` (`PacketType`), `fieldList`. You
   set designated members `.interval`, `.priority`, `.explanation`, `.url`, and
   `.repeating*`. Members like `.fieldCount`, `.bitOffset`, `.camelName`, `.ft`
-  are filled by C — do not set them.
+  are filled by C — do not set them directly (the one exception is `.camelName`
+  via the `ID_AND_NAME` macro, see below).
 - **`complete`:** use `PACKET_COMPLETE` only when fully reverse-engineered;
   otherwise OR the unknown-status bits (`PACKET_INCOMPLETE` =
   fields|lengths|resolution unknown, `PACKET_INCOMPLETE_LOOKUP`, etc.).
@@ -288,6 +289,19 @@ Essential facts before editing:
 - **Repeating sets:** `.repeatingField1` = 1-based index of the count field,
   `.repeatingCount1` = how many fields repeat, `.repeatingStart1` = first field
   of the repeating block (255 = no count field).
+- **`Id` is the frozen contract; `Name` is the display label.** Each field emits
+  `<Id>` (the camelCase `.camelName`, the key downstream decoders use as the
+  property name) and `<Name>` (the human label, `.name`). `Id` is normally
+  derived from `Name` by `camelize()`, so naively re-wording a `Name` silently
+  changes its `Id` and **breaks consumers**. As of the changelog note "no
+  changes to Id fields", `Id` is a stable contract. To re-word a field's `Name`
+  (or fix a typo) without moving its `Id`, pin both with the **`ID_AND_NAME(id,
+  nam)`** macro (or **`PK_ID_AND_NAME`** when the field is also a primary key) —
+  e.g. `UINT8_FIELD(ID_AND_NAME("sid", "SID"))`. These wrap the `.name`/
+  `.camelName` pair and are the only sanctioned way to set `.camelName` by hand
+  (it is otherwise C-filled). The macros use a one-stage `DEFER()` trick, so they
+  do **not** compose with `PK()` — use the combined `PK_ID_AND_NAME` instead of
+  nesting.
 
 **Enumerations** (`lookup.h`) are an X-macro stream: `LOOKUP_TYPE(NAME, BITS(n))`
 … `LOOKUP(NAME, value, "text")` … `LOOKUP_END`, with variants
