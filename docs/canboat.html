@@ -6827,10 +6827,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Oil temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Discrete Status 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Discrete Status 1</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      bitfield
+                      <a href="#lookupbit-TRANSMISSION_STATUS_1">TRANSMISSION_STATUS_1</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-127494">0x1F206:
             PGN 127494
             - Electric Drive Information</h3><p>This PGN is used to provide information about electric motor specifications and ratings.</p><p>
@@ -20558,7 +20558,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^15-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Check Engine</td></tr><tr><td>1</td><td>Over Temperature</td></tr><tr><td>2</td><td>Low Oil Pressure</td></tr><tr><td>3</td><td>Low Oil Level</td></tr><tr><td>4</td><td>Low Fuel Pressure</td></tr><tr><td>5</td><td>Low System Voltage</td></tr><tr><td>6</td><td>Low Coolant Level</td></tr><tr><td>7</td><td>Water Flow</td></tr><tr><td>8</td><td>Water In Fuel</td></tr><tr><td>9</td><td>Charge Indicator</td></tr><tr><td>10</td><td>Preheat Indicator</td></tr><tr><td>11</td><td>High Boost Pressure</td></tr><tr><td>12</td><td>Rev Limit Exceeded</td></tr><tr><td>13</td><td>EGR System</td></tr><tr><td>14</td><td>Throttle Position Sensor</td></tr><tr><td>15</td><td>Emergency Stop</td></tr></table><h3 id="lookupbit-ENGINE_STATUS_2">ENGINE_STATUS_2
         (0 - 2^15-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Warning Level 1</td></tr><tr><td>1</td><td>Warning Level 2</td></tr><tr><td>2</td><td>Power Reduction</td></tr><tr><td>3</td><td>Maintenance Needed</td></tr><tr><td>4</td><td>Engine Comm Error</td></tr><tr><td>5</td><td>Sub or Secondary Throttle</td></tr><tr><td>6</td><td>Neutral Start Protect</td></tr><tr><td>7</td><td>Engine Shutting Down</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_PLAY_STATUS_BITFIELD">ENTERTAINMENT_PLAY_STATUS_BITFIELD
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Warning Level 1</td></tr><tr><td>1</td><td>Warning Level 2</td></tr><tr><td>2</td><td>Power Reduction</td></tr><tr><td>3</td><td>Maintenance Needed</td></tr><tr><td>4</td><td>Engine Comm Error</td></tr><tr><td>5</td><td>Sub or Secondary Throttle</td></tr><tr><td>6</td><td>Neutral Start Protect</td></tr><tr><td>7</td><td>Engine Shutting Down</td></tr></table><h3 id="lookupbit-TRANSMISSION_STATUS_1">TRANSMISSION_STATUS_1
+        (0 - 2^7-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Check Transmission</td></tr><tr><td>1</td><td>Over Temperature</td></tr><tr><td>2</td><td>Low Oil Pressure</td></tr><tr><td>3</td><td>Low Oil Level</td></tr><tr><td>4</td><td>Sail Drive</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_PLAY_STATUS_BITFIELD">ENTERTAINMENT_PLAY_STATUS_BITFIELD
         (0 - 2^31-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play</td></tr><tr><td>1</td><td>Pause</td></tr><tr><td>2</td><td>Stop</td></tr><tr><td>3</td><td>FF 1x</td></tr><tr><td>4</td><td>FF 2x</td></tr><tr><td>5</td><td>FF 3x</td></tr><tr><td>6</td><td>FF 4x</td></tr><tr><td>7</td><td>RW 1x</td></tr><tr><td>8</td><td>RW 2x</td></tr><tr><td>9</td><td>RW 3x</td></tr><tr><td>10</td><td>RW 4x</td></tr><tr><td>11</td><td>Skip ahead</td></tr><tr><td>12</td><td>Skip back</td></tr><tr><td>13</td><td>Jog ahead</td></tr><tr><td>14</td><td>Jog back</td></tr><tr><td>15</td><td>Seek up</td></tr><tr><td>16</td><td>Seek down</td></tr><tr><td>17</td><td>Scan up</td></tr><tr><td>18</td><td>Scan down</td></tr><tr><td>19</td><td>Tune up</td></tr><tr><td>20</td><td>Tune down</td></tr><tr><td>21</td><td>Slow motion .75x</td></tr><tr><td>22</td><td>Slow motion .5x</td></tr><tr><td>23</td><td>Slow motion .25x</td></tr><tr><td>24</td><td>Slow motion .125x</td></tr><tr><td>25</td><td>Source renaming</td></tr></table><h3 id="lookupbit-ENTERTAINMENT_GROUP_BITFIELD">ENTERTAINMENT_GROUP_BITFIELD
         (0 - 2^15-1)

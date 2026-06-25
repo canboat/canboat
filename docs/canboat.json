@@ -3959,6 +3959,17 @@
         ]
       },
       {
+        "Name":"TRANSMISSION_STATUS_1",
+        "MaxValue":7,
+        "EnumBitValues":[
+          {"Name":"Check Transmission", "Bit":0},
+          {"Name":"Over Temperature", "Bit":1},
+          {"Name":"Low Oil Pressure", "Bit":2},
+          {"Name":"Low Oil Level", "Bit":3},
+          {"Name":"Sail Drive", "Bit":4}
+        ]
+      },
+      {
         "Name":"ENTERTAINMENT_PLAY_STATUS_BITFIELD",
         "MaxValue":31,
         "EnumBitValues":[
@@ -25545,10 +25556,10 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"TRANSMISSION_STATUS_1"
           },
           {
             "Order":7,
