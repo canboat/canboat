@@ -79,10 +79,19 @@ static void fillMaxRangeLookup(size_t n, const char *s)
 }
 #endif
 
-static double getMaxRange(const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup)
+// Number of top-of-range values reserved as non-data sentinels, by bit width
+// (NMEA 2000: Unknown / OutOfRange / Reserved). Authoritative source: Cassidy,
+// "NMEA 2000 Explained" -- uint16 valid range is 0..65532, i.e. 3 reserved.
+// https://web.archive.org/web/20151008123209/http://www.kvaser.com/wp-content/uploads/2014/08/nmea2000-explained-cassidy.pdf
+static uint8_t reservedCountForSize(uint32_t size)
 {
-  uint64_t specialvalues = (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
-  uint32_t highbit       = (sign && offset == 0) ? (size - 1) : size;
+  return (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
+}
+
+static double getMaxRange(
+    const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup, uint8_t specialvalues)
+{
+  uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
   double   r;
 
@@ -283,7 +292,8 @@ extern void fillFieldType(bool doUnitFixup)
     if (ft->size != 0 && ft->resolution != 0.0 && ft->hasSign != Null && ft->rangeMax == 0.0)
     {
       ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
-      ft->rangeMax = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset, NULL);
+      ft->rangeMax = getMaxRange(
+          ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset, NULL, reservedCountForSize(ft->size));
     }
     else
     {
@@ -390,10 +400,36 @@ extern void fillFieldType(bool doUnitFixup)
 
       logDebug("%s size=%u res=%g sign=%u rangeMax=%g\n", f->name, f->size, f->resolution, ft->hasSign, f->rangeMax);
 
+      uint8_t bySize = reservedCountForSize(f->size);
+      uint8_t count  = (f->reservedOverride != 0) ? (uint8_t) (f->reservedOverride - 1) : bySize;
+
+      // Compute the range when it is still unset (using the resolved reserved count). Fields that
+      // set an explicit .rangeMax (e.g. the "all values valid" idiom) keep it.
       if (f->size != 0 && f->resolution != 0.0 && ft->hasSign != Null && isnan(f->rangeMax))
       {
         f->rangeMin = getMinRange(f->name, f->size, f->resolution, f->hasSign, f->offset);
-        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign, f->offset, &f->lookup);
+        f->rangeMax = getMaxRange(f->name, f->size, f->resolution, f->hasSign, f->offset, &f->lookup, count);
+      }
+
+      // Number of top-of-range sentinels (Unknown / OutOfRange / Reserved). An explicit
+      // SPECIAL_VALUES() override wins; otherwise a field whose value range spans the full unsigned
+      // bit width reserves none (the "all values valid" idiom, e.g. ISO device instance with
+      // .rangeMax = 7). The check compares against the UNSIGNED raw maximum (2^size - 1) so it is
+      // independent of display units -- a signed angle shown as 0..2pi rad (SI) or 0..360 deg
+      // (user) both stay below it, while a genuinely full field reaches it. 64-bit fields can't be
+      // distinguished by double precision, so they rely on the override.
+      if (f->reservedOverride != 0)
+      {
+        f->reservedCount = count;
+      }
+      else if (f->size != 0 && f->size < 64 && f->resolution > 0.0 && !isnan(f->rangeMax)
+               && (uint64_t) (f->rangeMax / f->resolution + 0.5) >= (UINT64_C(1) << f->size) - 1)
+      {
+        f->reservedCount = 0;
+      }
+      else
+      {
+        f->reservedCount = bySize;
       }
 
       f->pgn   = &pgnList[i];

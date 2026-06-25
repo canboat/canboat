@@ -103,10 +103,12 @@ typedef struct
   bool   proprietary;      /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
+  int8_t reservedOverride; /* Override reserved (special) value count; 0 = auto, else (count + 1). See SPECIAL_VALUES(). */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;
-  size_t     bitOffset; // Bit offset from start of data, e.g. lower 3 bits = bit#, bit 4.. is byte offset
+  uint8_t    reservedCount; /* Resolved number of reserved special values (0..3): Unknown, OutOfRange, Reserved. */
+  size_t     bitOffset;     // Bit offset from start of data, e.g. lower 3 bits = bit#, bit 4.. is byte offset
   char      *camelName;
   LookupInfo lookup;
   FieldType *ft;

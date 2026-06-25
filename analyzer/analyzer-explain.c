@@ -24,12 +24,12 @@ limitations under the License.
 #include "analyzer.h"
 #include "common.h"
 
-/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
- * but I don't yet know which datafields reserve the reserved values.
+/* See analyzer.h: 8-bit and larger numbers reserve three top-of-range sentinels
+ * (Unknown / Out-of-range / Reserved) per Cassidy, "NMEA 2000 Explained".
  */
 #define DATAFIELD_UNKNOWN (0)
-#define DATAFIELD_ERROR (-1)
-#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_OUT_OF_RANGE (-1)
+#define DATAFIELD_RESERVED (-2)
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
@@ -951,6 +951,27 @@ static void explainPGNXML(Pgn pgn)
                  f.size,
                  (double) ((UINT64_C(1) << f.size) - 1));
         printf("          <RangeMax>%.15g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
+      }
+
+      // Explicit non-data sentinels for integer numbers (NMEA 2000 reserves the top of the
+      // range): Unknown (most positive), OutOfRange (max-1), Reserved (max-2). Only for plain
+      // numeric fields -- not lookups, reserved/spare/string (no range), match fields, floats, or
+      // ISO_NAME. 64-bit fields are excluded: their sentinels exceed JSON's safe integer range.
+      if (!doV1 && f.reservedCount > 0 && f.size < 64 && !isnan(f.rangeMin) && f.lookup.type == LOOKUP_TYPE_NONE
+          && !(f.unit != NULL && f.unit[0] == '=') && strcmp(getV2Type(ft), "FLOAT") != 0
+          && strcmp(getV2Type(ft), "DECIMAL") != 0)
+      {
+        uint32_t highbit = (ft->hasSign == True && f.offset == 0) ? (f.size - 1) : f.size;
+        uint64_t raw     = (UINT64_C(1) << highbit) - 1;
+        printf("          <UnknownValue>%" PRIu64 "</UnknownValue>\n", raw);
+        if (f.reservedCount >= 2)
+        {
+          printf("          <OutOfRangeValue>%" PRIu64 "</OutOfRangeValue>\n", raw - 1);
+        }
+        if (f.reservedCount >= 3)
+        {
+          printf("          <ReservedValue>%" PRIu64 "</ReservedValue>\n", raw - 2);
+        }
       }
 
       if (!doV1)
