@@ -29257,9 +29257,10 @@
         "PGN":127751,
         "Id":"dcVoltageCurrent",
         "Description":"DC Voltage/Current",
-        "Type":"Single",
+        "Explanation":"This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission interval is likewise unknown. See github issue #655.",
+        "Type":"Fast",
         "Complete":false,
-        "Missing":["Interval"
+        "Missing":["SampleData","Interval"
         ],
         "FieldCount":5,
         "Length":8,

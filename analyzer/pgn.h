@@ -4429,14 +4429,19 @@ Pgn pgnList[] = {
     ,
     {"DC Voltage/Current",
      127751,
-     PACKET_COMPLETE,
-     PACKET_SINGLE,
+     PACKET_NOT_SEEN | PACKET_INTERVAL_UNKNOWN,
+     PACKET_FAST,
      {UINT8_FIELD("SID"),
       UINT8_FIELD("Connection Number"),
       VOLTAGE_U16_100MV_FIELD("DC Voltage"),
       CURRENT_FIX24_CA_FIELD("DC Current"),
       RESERVED_FIELD(BYTES(1)),
-      END_OF_FIELDS}}
+      END_OF_FIELDS},
+     .explanation
+     = "This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a single "
+       "frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico "
+       "chartplotter in testing, so it is defined here as fast packet (the more likely framing) until a live capture "
+       "settles it. The transmission interval is likewise unknown. See github issue #655."}
 
     ,
     {"Leeway Angle",

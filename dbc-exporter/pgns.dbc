@@ -926,11 +926,8 @@ BO_ 2582841086 PGN_127750_converterStatus: 8 Vector__XXX
  SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582841342 PGN_127751_dcVoltageCurrent: 8 Vector__XXX
- SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dcCurrent : 32|24@1- (0.01,0) [0|0] "A" Vector__XXX
- SG_ dcVoltage : 16|16@1+ (0.1,0) [0|0] "V" Vector__XXX
- SG_ connectionNumber : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ sid : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2582905086 PGN_128000_leewayAngle: 8 Vector__XXX
  SG_ reserved : 24|40@1+ (1,0) [0|0] "" Vector__XXX
