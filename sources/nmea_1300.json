@@ -684,7 +684,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 59904,
@@ -708,7 +709,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 60160,
@@ -746,7 +748,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 60416,
@@ -851,7 +854,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 60928,
@@ -1016,7 +1020,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 65240,
@@ -1195,7 +1200,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 126208,
@@ -1203,7 +1209,7 @@
       "frameType": "Fast",
       "priority": 3,
       "updateRate": null,
-      "fieldCount": 16,
+      "fieldCount": 14,
       "fields": [
         {
           "order": 1,
@@ -1313,34 +1319,6 @@
           "enums": null
         },
         {
-          "order": 8,
-          "name": "Variable Number of fields, Field number 6",
-          "bits": 8,
-          "signed": false,
-          "type": "NUMBER",
-          "resolution": "1 bit",
-          "dataType": "DF53",
-          "dd": "005",
-          "reserved": false,
-          "repeated": true,
-          "repeatOf": 6,
-          "enums": null
-        },
-        {
-          "order": 9,
-          "name": "Variable Number of fields, Field number 7",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": true,
-          "repeatOf": 7,
-          "enums": null
-        },
-        {
           "order": 10,
           "name": "Value of first Commanded Parameter",
           "bits": null,
@@ -1438,7 +1416,11 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 2
+      }
     },
     {
       "pgn": 126464,
@@ -1446,7 +1428,7 @@
       "frameType": "Fast",
       "priority": 6,
       "updateRate": null,
-      "fieldCount": 3,
+      "fieldCount": 2,
       "fields": [
         {
           "order": 1,
@@ -1475,22 +1457,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 3,
-          "name": "Variable Number of fields, Field number 2",
-          "bits": 24,
-          "signed": null,
-          "type": "BITFIELD",
-          "resolution": "1",
-          "dataType": "DF52",
-          "dd": "009",
-          "reserved": false,
-          "repeated": true,
-          "repeatOf": 2,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 2,
+        "size": 1
+      }
     },
     {
       "pgn": 126992,
@@ -1603,7 +1575,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 126996,
@@ -1669,7 +1642,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 126998,
@@ -1678,7 +1652,8 @@
       "priority": 6,
       "updateRate": null,
       "fieldCount": 0,
-      "fields": []
+      "fields": [],
+      "repeat": null
     },
     {
       "pgn": 127237,
@@ -1940,7 +1915,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127245,
@@ -2034,7 +2010,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127250,
@@ -2128,7 +2105,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127251,
@@ -2180,7 +2158,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127257,
@@ -2260,7 +2239,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127258,
@@ -2389,7 +2369,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127488,
@@ -2469,7 +2450,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127489,
@@ -2675,7 +2657,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127493,
@@ -2783,7 +2766,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127496,
@@ -2849,7 +2833,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127497,
@@ -2929,7 +2914,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127498,
@@ -2967,7 +2953,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127501,
@@ -3383,7 +3370,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127502,
@@ -3799,7 +3787,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127503,
@@ -4011,7 +4000,11 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 3,
+        "size": 10
+      }
     },
     {
       "pgn": 127504,
@@ -4231,7 +4224,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127505,
@@ -4357,7 +4351,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127506,
@@ -4502,7 +4497,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127507,
@@ -4710,7 +4706,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127508,
@@ -4790,7 +4787,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127509,
@@ -4921,7 +4919,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127510,
@@ -5180,7 +5179,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127511,
@@ -5348,7 +5348,8 @@
             }
           ]
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127512,
@@ -5429,7 +5430,8 @@
             }
           ]
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127513,
@@ -5690,7 +5692,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 127514,
@@ -6060,7 +6063,8 @@
             }
           ]
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 128259,
@@ -6140,7 +6144,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 128267,
@@ -6206,7 +6211,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 128275,
@@ -6272,7 +6278,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 128520,
@@ -6464,7 +6471,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129025,
@@ -6502,7 +6510,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129026,
@@ -6596,7 +6605,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129027,
@@ -6662,7 +6672,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129028,
@@ -6770,7 +6781,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129029,
@@ -7125,7 +7137,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129033,
@@ -7177,7 +7190,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129038,
@@ -7425,7 +7439,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129039,
@@ -7743,7 +7758,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129040,
@@ -8103,7 +8119,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129044,
@@ -8155,7 +8172,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129045,
@@ -8291,7 +8309,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129283,
@@ -8418,7 +8437,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129284,
@@ -8638,7 +8658,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129285,
@@ -8646,7 +8667,7 @@
       "frameType": "Fast",
       "priority": 6,
       "updateRate": null,
-      "fieldCount": 12,
+      "fieldCount": 11,
       "fields": [
         {
           "order": 1,
@@ -8801,22 +8822,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 14,
-          "name": "Fields 10 thru 13 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 10,
+        "size": 4
+      }
     },
     {
       "pgn": 129291,
@@ -8910,7 +8921,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129301,
@@ -8990,7 +9002,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129302,
@@ -9140,7 +9153,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129538,
@@ -9290,7 +9304,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129539,
@@ -9398,7 +9413,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129540,
@@ -9660,7 +9676,11 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 5,
+        "size": 7
+      }
     },
     {
       "pgn": 129541,
@@ -9866,7 +9886,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129542,
@@ -9988,7 +10009,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129545,
@@ -10138,7 +10160,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129546,
@@ -10218,7 +10241,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129547,
@@ -10340,7 +10364,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129549,
@@ -10542,7 +10567,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129550,
@@ -10650,7 +10676,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129551,
@@ -10855,7 +10882,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129556,
@@ -11061,7 +11089,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129792,
@@ -11225,7 +11254,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129793,
@@ -11445,7 +11475,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129794,
@@ -11693,7 +11724,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129795,
@@ -11857,7 +11889,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129796,
@@ -12035,7 +12068,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129797,
@@ -12143,7 +12177,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129798,
@@ -12377,7 +12412,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129799,
@@ -12457,7 +12493,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129800,
@@ -12579,7 +12616,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129801,
@@ -12729,7 +12767,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129802,
@@ -12823,7 +12862,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129803,
@@ -13113,7 +13153,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129804,
@@ -13305,7 +13346,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129805,
@@ -13637,7 +13679,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129806,
@@ -13955,7 +13998,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129807,
@@ -14133,7 +14177,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129808,
@@ -14353,7 +14398,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129809,
@@ -14377,7 +14423,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 129810,
@@ -14499,7 +14546,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130052,
@@ -14752,7 +14800,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130053,
@@ -15005,7 +15054,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130054,
@@ -15071,7 +15121,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130064,
@@ -15079,7 +15130,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 12,
+      "fieldCount": 11,
       "fields": [
         {
           "order": 1,
@@ -15234,22 +15285,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 13,
-          "name": "Fields 4 thru 12 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 4,
+        "size": 9
+      }
     },
     {
       "pgn": 130065,
@@ -15257,7 +15298,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 9,
+      "fieldCount": 8,
       "fields": [
         {
           "order": 1,
@@ -15370,22 +15411,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 10,
-          "name": "Fields 5 thru 9 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 5,
+        "size": 5
+      }
     },
     {
       "pgn": 130066,
@@ -15563,7 +15594,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130067,
@@ -15571,7 +15603,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 9,
+      "fieldCount": 8,
       "fields": [
         {
           "order": 1,
@@ -15684,22 +15716,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 10,
-          "name": "Fields 6 thru 9 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 4
+      }
     },
     {
       "pgn": 130068,
@@ -15707,7 +15729,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 7,
+      "fieldCount": 6,
       "fields": [
         {
           "order": 1,
@@ -15792,22 +15814,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 8,
-          "name": "field 6 thru 7 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 2
+      }
     },
     {
       "pgn": 130069,
@@ -15815,7 +15827,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 10,
+      "fieldCount": 9,
       "fields": [
         {
           "order": 1,
@@ -15942,22 +15954,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 10,
-          "name": "Fields 6 thru 9 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 4
+      }
     },
     {
       "pgn": 130070,
@@ -15965,7 +15967,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 7,
+      "fieldCount": 6,
       "fields": [
         {
           "order": 1,
@@ -16050,22 +16052,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 8,
-          "name": "Fields 6 thru 7 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 2
+      }
     },
     {
       "pgn": 130071,
@@ -16073,7 +16065,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 6,
+      "fieldCount": 5,
       "fields": [
         {
           "order": 1,
@@ -16144,22 +16136,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 7,
-          "name": "Fields 5 thru 6 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 5,
+        "size": 2
+      }
     },
     {
       "pgn": 130072,
@@ -16167,7 +16149,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 5,
+      "fieldCount": 4,
       "fields": [
         {
           "order": 1,
@@ -16224,22 +16206,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 6,
-          "name": "Fields 4 thru 5 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 4,
+        "size": 2
+      }
     },
     {
       "pgn": 130073,
@@ -16361,7 +16333,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130074,
@@ -16369,7 +16342,7 @@
       "frameType": "Fast",
       "priority": 7,
       "updateRate": null,
-      "fieldCount": 9,
+      "fieldCount": 8,
       "fields": [
         {
           "order": 1,
@@ -16482,22 +16455,12 @@
           "repeated": false,
           "repeatOf": null,
           "enums": null
-        },
-        {
-          "order": 10,
-          "name": "Fields 6 thru 9 repeat as needed",
-          "bits": null,
-          "signed": null,
-          "type": "UNKNOWN",
-          "resolution": "undefined",
-          "dataType": "DF00",
-          "dd": "000",
-          "reserved": false,
-          "repeated": false,
-          "repeatOf": null,
-          "enums": null
         }
-      ]
+      ],
+      "repeat": {
+        "start": 6,
+        "size": 4
+      }
     },
     {
       "pgn": 130306,
@@ -16610,7 +16573,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130310,
@@ -16690,7 +16654,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130311,
@@ -16834,7 +16799,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130312,
@@ -16928,7 +16894,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130313,
@@ -17022,7 +16989,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130314,
@@ -17102,7 +17070,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130315,
@@ -17182,7 +17151,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130320,
@@ -17351,7 +17321,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130321,
@@ -17506,7 +17477,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130322,
@@ -17703,7 +17675,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130323,
@@ -17961,7 +17934,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130324,
@@ -18275,7 +18249,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130576,
@@ -18327,7 +18302,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130577,
@@ -18510,7 +18486,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     },
     {
       "pgn": 130578,
@@ -18604,7 +18581,8 @@
           "repeatOf": null,
           "enums": null
         }
-      ]
+      ],
+      "repeat": null
     }
   ]
 }

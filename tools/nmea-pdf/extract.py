@@ -258,7 +258,45 @@ def parse_pgn_block(block, datatypes):
             }
         )
         i = j
-    return frame_type, priority, update_rate, fields
+
+    # Third notation: the repeat is only described in the PGN's intro prose,
+    # e.g. "Fields 3 through 12 may repeat ...". Best-effort; report-only.
+    prose_repeat = None
+    pm = re.search(r"Fields?\s+(\d+)\s+(?:thru|through|to)\s+(\d+).{0,120}?repeat",
+                   "\n".join(block), re.I | re.S)
+    if pm and int(pm.group(2)) >= int(pm.group(1)):
+        a, b = int(pm.group(1)), int(pm.group(2))
+        prose_repeat = {"start": a, "size": b - a + 1}
+
+    return frame_type, priority, update_rate, fields, prose_repeat
+
+
+# The PDF marks repeating sets two ways: a trailing pseudo-field
+# "Fields X thru Y repeat as needed", or per-field "repeated" tokens that
+# reference an earlier "Field number N". Both are lifted to one {start,size}
+# record so the field list holds a single copy of the repeat unit, matching
+# canboat's RepeatingFieldSet model.
+_REPEAT_MARKER = re.compile(r"^Fields?\s+(\d+)\s+(?:thru|through|to)\s+(\d+)\s+repeat", re.I)
+
+
+def lift_repeat(fields):
+    """Return (base_fields, repeat) where repeat is {start,size} or None."""
+    repeat = None
+    kept = []
+    for f in fields:
+        m = _REPEAT_MARKER.match(f["name"])
+        if m:  # style 2: trailing pseudo-field
+            a, b = int(m.group(1)), int(m.group(2))
+            repeat = {"start": a, "size": b - a + 1}
+            continue
+        kept.append(f)
+    if repeat is None:  # style 1: per-field "repeated" markers
+        rep = [f for f in kept if f.get("repeated")]
+        if rep:
+            starts = [f["repeatOf"] for f in rep if f["repeatOf"]]
+            repeat = {"start": min(starts) if starts else rep[0]["order"], "size": len(rep)}
+            kept = [f for f in kept if not f.get("repeated")]
+    return kept, repeat
 
 
 def parse(text):
@@ -270,12 +308,14 @@ def parse(text):
     for idx, (start, pgn, desc) in enumerate(starts):
         end = starts[idx + 1][0] if idx + 1 < len(starts) else len(lines)
         block = lines[start + 2 : end]  # skip the "PGN:" + "hex:" lines
-        frame_type, priority, update_rate, fields = parse_pgn_block(block, datatypes)
+        frame_type, priority, update_rate, fields, prose_repeat = parse_pgn_block(block, datatypes)
         # A PGN may be split across several page-blocks with the same number;
         # merge consecutive blocks of the same PGN by appending their fields.
         if pgns and pgns[-1]["pgn"] == pgn:
             existing = {f["order"] for f in pgns[-1]["fields"]}
             pgns[-1]["fields"].extend(f for f in fields if f["order"] not in existing)
+            if pgns[-1]["_proseRepeat"] is None:
+                pgns[-1]["_proseRepeat"] = prose_repeat
             continue
         pgns.append(
             {
@@ -286,9 +326,14 @@ def parse(text):
                 "updateRate": update_rate,
                 "fieldCount": None,  # filled after merge
                 "fields": fields,
+                "_proseRepeat": prose_repeat,
             }
         )
     for p in pgns:
+        p["fields"], rep = lift_repeat(p["fields"])
+        # Structured marker wins; otherwise fall back to the intro-prose repeat.
+        p["repeat"] = rep or p.pop("_proseRepeat")
+        p.pop("_proseRepeat", None)
         # Total fields incl. reserved, matching canboat's FieldCount convention.
         p["fieldCount"] = len(p["fields"])
     return {"source": "NMEA 2000 Appendix B.1 PGN Table, Version 1.300 (May 2009)",

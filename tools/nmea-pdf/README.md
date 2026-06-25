@@ -50,6 +50,8 @@ python3 tools/nmea-pdf/extract.py \
 python3 tools/nmea-pdf/reconcile.py              # structural worklist
 python3 tools/nmea-pdf/reconcile.py --naming     # + field-name differences (#526)
 python3 tools/nmea-pdf/reconcile.py --backfill   # priority/interval canboat has unset
+python3 tools/nmea-pdf/reconcile.py --enums      # PDF lookup values missing in canboat
+python3 tools/nmea-pdf/reconcile.py --repeating  # repeating-set disagreements
 ```
 
 `reconcile.py` reads `docs/canboat.json`, so run `make generated` first if you
@@ -58,9 +60,14 @@ have local database changes you want reflected.
 ## Scope
 
 In scope: datatype dictionary; PGN frame/priority/interval/field-count; field
-order/name/type/signedness/bit-length; lookup enum values and repeating-set
-detection (extracted, not yet diffed).
+order/name/type/signedness/bit-length; lookup enum **values** (`--enums`); and
+repeating-set presence/size (`--repeating`). The extractor lifts all three of
+the PDF's repeating-set notations into one `{start,size}` record: the trailing
+"Fields X thru Y repeat" pseudo-field, per-field `repeated` markers, and (best
+effort) the intro-prose "Fields X through Y … repeat" sentence.
 
-Out of scope: resolution-unit comparison, PhysicalQuantity assignment, and
-diffing of enum values / repeating-set grouping (the JSON carries them; the
-reconciler does not yet compare them).
+Out of scope / known limits: resolution-unit comparison and PhysicalQuantity
+assignment; a few PGNs describe their repeat only in prose phrasings the
+extractor does not match (`--repeating` then shows `PDF=0` where canboat has a
+set — canboat is correct in those). Enum and repeating reports are informational,
+not gated.

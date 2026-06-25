@@ -168,6 +168,76 @@ def compare_pgn(npgn, cands, allow):
     return issues
 
 
+# Enum value names the PDF lists as placeholders rather than real meanings;
+# canboat routinely omits these, so they are not gaps worth reporting.
+_ENUM_PLACEHOLDER = re.compile(r"reserve|error|null|not used|available|unused|spare", re.I)
+_CB_ENUM_KEYS = ("LookupEnumerations", "LookupBitEnumerations",
+                 "LookupIndirectEnumerations", "LookupFieldTypeEnumerations")
+_CB_FIELD_ENUM_KEYS = ("LookupEnumeration", "LookupBitEnumeration",
+                       "LookupIndirectEnumeration", "LookupFieldTypeEnumeration")
+
+
+def build_cb_enums(canboat):
+    """{enumName: {value: name}} across all of canboat's lookup tables."""
+    out = {}
+    for key in _CB_ENUM_KEYS:
+        for e in canboat.get(key, []):
+            vals = {}
+            for v in e.get("EnumValues", []):
+                num = v.get("Value", v.get("Bit"))
+                if num is not None:
+                    vals[num] = v.get("Name")
+            out[e["Name"]] = vals
+    return out
+
+
+def cb_field_enum(cf):
+    for k in _CB_FIELD_ENUM_KEYS:
+        if cf.get(k):
+            return cf[k]
+    return None
+
+
+def compare_enums(nmea, cbidx, cbenums):
+    """PDF enum values absent from the aligned canboat enum (potential gaps)."""
+    rows = []
+    for np_ in nmea["pgns"]:
+        cands = cbidx.get(np_["pgn"])
+        if not cands:
+            continue
+        cb = min(cands, key=lambda p: abs(p.get("FieldCount", 0) - (np_["fieldCount"] or 0)))
+        cfo = {f["Order"]: f for f in cb.get("Fields", [])}
+        for nf in np_["fields"]:
+            if not nf.get("enums"):
+                continue
+            cf = cfo.get(nf["order"])
+            if not cf:
+                continue
+            en = cb_field_enum(cf)
+            cbvals = cbenums.get(en)
+            if cbvals is None:
+                continue  # not an aligned lookup field -> alignment noise, skip
+            for ev in nf["enums"]:
+                if ev["value"] not in cbvals and not _ENUM_PLACEHOLDER.search(ev["name"]):
+                    rows.append((np_["pgn"], nf["order"], en, ev["value"], ev["name"]))
+    return rows
+
+
+def compare_repeating(nmea, cbidx):
+    """PGNs where PDF and canboat disagree on having / sizing a repeating set."""
+    rows = []
+    for np_ in nmea["pgns"]:
+        cands = cbidx.get(np_["pgn"])
+        if not cands:
+            continue
+        cb = min(cands, key=lambda p: abs(p.get("FieldCount", 0) - (np_["fieldCount"] or 0)))
+        pdf_n = (np_.get("repeat") or {}).get("size", 0)
+        cb_n = cb.get("RepeatingFieldSet1Size", 0) or 0
+        if (pdf_n > 0) != (cb_n > 0) or (pdf_n and cb_n and pdf_n != cb_n):
+            rows.append((np_["pgn"], np_["description"], pdf_n, cb_n))
+    return rows
+
+
 def backfill_candidates(nmea, cbidx):
     """PGNs where canboat has priority/interval UNSET but the PDF supplies one."""
     rows = []
@@ -201,6 +271,10 @@ def main():
     ap.add_argument("--check", action="store_true",
                     help="exit non-zero if any structural field-level finding remains "
                          "(gate mode for `make validation`); PGN-level stays report-only")
+    ap.add_argument("--enums", action="store_true",
+                    help="report PDF lookup values missing from the aligned canboat enum")
+    ap.add_argument("--repeating", action="store_true",
+                    help="report repeating-set presence/size disagreements")
     args = ap.parse_args()
 
     nmea = load(args.nmea)
@@ -253,6 +327,20 @@ def main():
         for pgn, cid, fills in sorted(rows):
             for what, val in fills:
                 print(f"#   PGN {pgn:<7} {cid:<28} {what} = {val}")
+
+    if args.enums:
+        rows = compare_enums(nmea, cbidx, build_cb_enums(canboat))
+        print(f"# Enum values in the PDF missing from the aligned canboat enum: {len(rows)}")
+        for pgn, order, en, val, name in sorted(rows):
+            print(f"#   PGN {pgn:<7} #{order:<2} {en:<28} {val} = {name!r}")
+        print()
+
+    if args.repeating:
+        rows = compare_repeating(nmea, cbidx)
+        print(f"# Repeating-set disagreements (PDF count vs canboat size): {len(rows)}")
+        for pgn, desc, pdf_n, cb_n in sorted(rows):
+            print(f"#   PGN {pgn:<7} PDF={pdf_n} canboat={cb_n}  {desc}")
+        print()
 
     if args.check and n_field:
         print(f"\nFAILED: {n_field} structural field-level finding(s) not in "
