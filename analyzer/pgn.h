@@ -1014,7 +1014,8 @@ Pgn pgnList[] = {
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
                     "0xEE00 (59392 - 60928). "
-                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet.",
+     .priority    = 6}
 
     /************ Protocol PGNs ************/
     /* https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf */
@@ -1080,7 +1081,8 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .interval    = UINT16_MAX,
      .explanation = "ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have "
-                    "9 or more data bytes. This PGN represents a single packet of a multipacket message."}
+                    "9 or more data bytes. This PGN represents a single packet of a multipacket message.",
+     .priority    = 6}
 
     // ''ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have
     // 9 or more data bytes. This PGN's role in the transport process is determined by the group function value found in the first
@@ -1100,7 +1102,8 @@ Pgn pgnList[] = {
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN's role in the transport process is to prepare the receiver "
-                    "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS."}
+                    "for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.",
+     .priority    = 6}
 
     ,
     {"ISO Transport Protocol, Connection Management - Clear To Send",
@@ -1117,7 +1120,8 @@ Pgn pgnList[] = {
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender "
-                    "that the receive is ready to receive a number of frames."}
+                    "that the receive is ready to receive a number of frames.",
+     .priority    = 6}
 
     ,
     {"ISO Transport Protocol, Connection Management - End Of Message",
@@ -1134,7 +1138,8 @@ Pgn pgnList[] = {
      .url      = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation
      = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that "
-       "have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message."}
+       "have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message.",
+     .priority = 6}
 
     ,
     {"ISO Transport Protocol, Connection Management - Broadcast Announce",
@@ -1151,7 +1156,8 @@ Pgn pgnList[] = {
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN's role in the transport process is to announce a broadcast "
-                    "of a long message spanning multiple frames."}
+                    "of a long message spanning multiple frames.",
+     .priority    = 6}
 
     ,
     {"ISO Transport Protocol, Connection Management - Abort",
@@ -1167,7 +1173,8 @@ Pgn pgnList[] = {
      .url         = "https://embeddedflakes.com/j1939-transport-protocol/",
      .explanation = "ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting "
                     "messages that have 9 or more data bytes. This PGN's role in the transport process is to announce an abort "
-                    "of a long message spanning multiple frames."}
+                    "of a long message spanning multiple frames.",
+     .priority    = 6}
 
     ,
     {"ISO Address Claim",
@@ -1621,7 +1628,8 @@ Pgn pgnList[] = {
      .explanation = "ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME "
                     "information in the data portion of the message must match the name information of the node whose network "
                     "address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol "
-                    "method. The appropriate response to this message is defined in section 5.2.3 of 11783-5."}
+                    "method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.",
+     .priority    = 6}
 
     /* proprietary PDU2 (non addressed) single-frame range 0xFF00 to 0xFFFF (65280 - 65535) */
 
@@ -2670,7 +2678,8 @@ Pgn pgnList[] = {
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to "
                     "0x1EE00 (126208 - 126464). "
-                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet.",
+     .priority    = 3}
 
     ,
     {"NMEA - Request group function",
@@ -2694,7 +2703,8 @@ Pgn pgnList[] = {
                     "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 6}
+     .repeatingStart1 = 6,
+     .priority    = 3}
 
     ,
     {"NMEA - Command group function",
@@ -2716,7 +2726,8 @@ Pgn pgnList[] = {
                     "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 2,
-     .repeatingStart1 = 6}
+     .repeatingStart1 = 6,
+     .priority    = 3}
 
     ,
     {"NMEA - Acknowledge group function",
@@ -2737,7 +2748,8 @@ Pgn pgnList[] = {
                         "20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf",
      .repeatingField1 = 5,
      .repeatingCount1 = 1,
-     .repeatingStart1 = 6}
+     .repeatingStart1 = 6,
+     .priority        = 3}
 
     ,
     {"NMEA - Read Fields group function",
@@ -2767,7 +2779,8 @@ Pgn pgnList[] = {
      .repeatingStart1 = 9,
      .repeatingField2 = 8,
      .repeatingCount2 = 1,
-     .repeatingStart2 = 11}
+     .repeatingStart2 = 11,
+     .priority    = 3}
 
     ,
     {"NMEA - Read Fields reply group function",
@@ -2798,7 +2811,8 @@ Pgn pgnList[] = {
      .repeatingStart1 = 9,
      .repeatingField2 = 8,
      .repeatingCount2 = 2,
-     .repeatingStart2 = 11}
+     .repeatingStart2 = 11,
+     .priority = 3}
 
     ,
     {"NMEA - Write Fields group function",
@@ -2829,7 +2843,8 @@ Pgn pgnList[] = {
      .repeatingStart1 = 9,
      .repeatingField2 = 8,
      .repeatingCount2 = 2,
-     .repeatingStart2 = 11}
+     .repeatingStart2 = 11,
+     .priority    = 3}
 
     ,
     {"NMEA - Write Fields reply group function",
@@ -2860,7 +2875,8 @@ Pgn pgnList[] = {
      .repeatingStart1 = 9,
      .repeatingField2 = 8,
      .repeatingCount2 = 2,
-     .repeatingStart2 = 11}
+     .repeatingStart2 = 11,
+     .priority = 3}
 
     /************ RESPONSE TO REQUEST PGNS **************/
 
@@ -2873,7 +2889,8 @@ Pgn pgnList[] = {
      .interval        = UINT16_MAX,
      .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 1,
-     .repeatingStart1 = 2}
+     .repeatingStart1 = 2,
+     .priority        = 6}
 
     /* proprietary PDU1 (addressed) fast-packet PGN 0x1EF00 (126720 ) */
 
@@ -6015,7 +6032,7 @@ Pgn pgnList[] = {
       DURATION_FIX32_NANO_FIELD("Station ASF", NULL),
       END_OF_FIELDS},
      .priority = 3,
-     .interval = 0}
+     .interval = 1000}
 
     ,
     {"Label",

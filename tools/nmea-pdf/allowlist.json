@@ -1,0 +1,29 @@
+{
+  "_README": "Documented, expected canboat-vs-NMEA-v1.300 divergences, suppressed from the reconcile field-level worklist. The NMEA reference is a 2009 snapshot, so most entries are deliberate canboat improvements or reconcile field-alignment artifacts. field.<PGN> maps a field Order (or \"*\" for the whole PGN) to the reason it is expected; pgn.<PGN> maps a PGN-level key (frame|priority|interval|fieldcount, or \"*\") likewise. Anything NOT listed here surfaces in reconcile.py as a candidate real discrepancy.",
+  "pgn": {
+    "129793": {"fieldcount": "minor real gap: canboat defines 24 bytes but real captures are 26-27 bytes (samples/susteranna 26B, samples/merrimac 27B) -- canboat omits ~2-3 trailing reserved/spare bytes (0xff fill); all data fields decode correctly. The PDF's trailing 10-bit Spare points at this. Candidate follow-up: add the trailing reserved (AIS UTC and Date Report)"},
+    "129800": {"fieldcount": "minor: canboat omits the trailing 2-bit Spare the PDF lists; all data fields match. No sample capture available to confirm on-wire length (AIS UTC/Date Inquiry)"}
+  },
+  "field": {
+    "60416": {"4": "canboat improvement: PDF marks the RTS frame-count byte reserved; canboat decodes it as a number"},
+    "60928": {"10": "canboat improvement: PDF reserved bit decoded as ISO self-configurable lookup"},
+    "126208": {"*": "reconcile artifact: PDF has one generic group-function entry; canboat splits PRN 126208 into 8 message variants, so field-by-order alignment is meaningless"},
+    "126464": {"1": "canboat improvement: PDF generic number is canboat's GROUP_FUNCTION lookup"},
+    "126996": {"7": "canboat improvement: Certification Level refined from number to lookup"},
+    "127511": {"8": "canboat improvement: Load Sense Interval modeled as DURATION (time) rather than an enumeration"},
+    "128259": {"5": "canboat improvement: PDF reserved bits decoded as Speed Direction"},
+    "128267": {"4": "canboat improvement: PDF reserved bits decoded as Range"},
+    "128520": {"*": "known divergence (also in legacy validate-csv ignore_prn): canboat field split/repeating-set modeling differs throughout Tracked Target Data"},
+    "129038": {"16": "canboat improvement: regional-applications reserved bits decoded as a lookup"},
+    "129285": {"5": "minor: Navigation direction modeled as 3 bits (canboat) vs 4 (PDF); absorbed by adjacent reserved"},
+    "129550": {"7": "reconcile artifact: PDF skips field #6 (numbers 5 -> 7), so PDF #7 Differential Operation Mode misaligns against canboat #7 Reserved; the fields actually match (canboat #6)"},
+    "129796": {"*": "reconcile artifact: AIS Acknowledge repeating Destination/Sequence set is modeled differently from the PDF's flat fields"},
+    "129798": {"14": "reconcile artifact: AIS regional/repeating field alignment"},
+    "129808": {"1": "canboat improvement: DSC Format Symbol refined number -> lookup",
+               "2": "canboat improvement: DSC Category Symbol refined number -> lookup",
+               "4": "canboat improvement: Nature of Distress refined number -> lookup",
+               "5": "canboat improvement: Subsequent Communication Mode refined number -> lookup",
+               "21": "canboat improvement: DSC Expansion Field Symbol refined number -> lookup"},
+    "130074": {"5": "canboat improvement: field the PDF gives an integer datatype is correctly reserved in canboat"}
+  }
+}
