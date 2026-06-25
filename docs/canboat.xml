@@ -3561,6 +3561,7 @@ limitations under the License.
       <PGN>59392</PGN>
       <Id>0xe8000xee00StandardizedSingleFrameAddressed</Id>
       <Description>0xE800-0xEE00: Standardized single-frame addressed</Description>
+    <Priority>6</Priority>
       <Explanation>Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -3680,6 +3681,7 @@ limitations under the License.
       <PGN>60160</PGN>
       <Id>isoTransportProtocolDataTransfer</Id>
       <Description>ISO Transport Protocol, Data Transfer</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN represents a single packet of a multipacket message.</Explanation>
       <Type>Single</Type>
       <Complete>true</Complete>
@@ -3718,6 +3720,7 @@ limitations under the License.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementRequestToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Request To Send</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.</Explanation>
       <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
@@ -3802,6 +3805,7 @@ limitations under the License.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementClearToSend</Id>
       <Description>ISO Transport Protocol, Connection Management - Clear To Send</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.</Explanation>
       <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
@@ -3882,6 +3886,7 @@ limitations under the License.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementEndOfMessage</Id>
       <Description>ISO Transport Protocol, Connection Management - End Of Message</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message.</Explanation>
       <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
@@ -3962,6 +3967,7 @@ limitations under the License.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementBroadcastAnnounce</Id>
       <Description>ISO Transport Protocol, Connection Management - Broadcast Announce</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to announce a broadcast of a long message spanning multiple frames.</Explanation>
       <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
@@ -4042,6 +4048,7 @@ limitations under the License.
       <PGN>60416</PGN>
       <Id>isoTransportProtocolConnectionManagementAbort</Id>
       <Description>ISO Transport Protocol, Connection Management - Abort</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to announce an abort of a long message spanning multiple frames.</Explanation>
       <URL>https://embeddedflakes.com/j1939-transport-protocol/</URL>
       <Type>Single</Type>
@@ -6764,6 +6771,7 @@ limitations under the License.
       <PGN>65240</PGN>
       <Id>isoCommandedAddress</Id>
       <Description>ISO Commanded Address</Description>
+    <Priority>6</Priority>
       <Explanation>ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5 requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is defined in section 5.2.3 of 11783-5.</Explanation>
       <Type>ISO</Type>
       <Complete>false</Complete>
@@ -15876,6 +15884,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>0x1ed000x1ee00StandardizedFastPacketAddressed</Id>
       <Description>0x1ED00 - 0x1EE00: Standardized fast-packet addressed</Description>
+    <Priority>3</Priority>
       <Explanation>Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -15906,6 +15915,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaRequestGroupFunction</Id>
       <Description>NMEA - Request group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16021,6 +16031,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaCommandGroupFunction</Id>
       <Description>NMEA - Command group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Command variation of this group function PGN. This instructs the receiver to modify its internal state for the passed parameters. The receiver shall reply with an Acknowledge reply.</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16129,6 +16140,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaAcknowledgeGroupFunction</Id>
       <Description>NMEA - Acknowledge group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt to perform the command (change its parameters) and reply positively or negatively.</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16230,6 +16242,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaReadFieldsGroupFunction</Id>
       <Description>NMEA - Read Fields group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read Reply variation of this PGN, containing the desired values. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a proprietary PGN</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16388,6 +16401,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaReadFieldsReplyGroupFunction</Id>
       <Description>NMEA - Read Fields reply group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Read Fields Reply variation of this group function PGN. The receiver is responding to a Read Fields request. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a proprietary PGN</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16548,6 +16562,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaWriteFieldsGroupFunction</Id>
       <Description>NMEA - Write Fields group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Write Fields variation of this group function PGN. The receiver shall modify internal state and reply with a Write Fields Reply message. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a proprietary PGN</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16708,6 +16723,7 @@ limitations under the License.
       <PGN>126208</PGN>
       <Id>nmeaWriteFieldsReplyGroupFunction</Id>
       <Description>NMEA - Write Fields reply group function</Description>
+    <Priority>3</Priority>
       <Explanation>This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields request. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a proprietary PGN</Explanation>
       <URL>https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf</URL>
       <Type>Fast</Type>
@@ -16868,6 +16884,7 @@ limitations under the License.
       <PGN>126464</PGN>
       <Id>pgnListTransmitAndReceive</Id>
       <Description>PGN List (Transmit and Receive)</Description>
+    <Priority>6</Priority>
       <Type>Fast</Type>
       <Complete>true</Complete>
       <FieldCount>2</FieldCount>
@@ -40614,10 +40631,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>SampleData</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
       <Length>15</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
       <Fields>
         <Field>
           <Order>1</Order>
