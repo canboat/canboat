@@ -289,6 +289,18 @@ Essential facts before editing:
 - **Repeating sets:** `.repeatingField1` = 1-based index of the count field,
   `.repeatingCount1` = how many fields repeat, `.repeatingStart1` = first field
   of the repeating block (255 = no count field).
+- **Special (sentinel) values:** NMEA 2000 reserves the top of an integer range
+  as non-data sentinels — most-positive = *Unknown* (data not available), max-1 =
+  *OutOfRange*, max-2 = *Reserved*. The count is derived from the bit width (3 for
+  ≥8 bit, 2 for 4-7, 1 for 2-3, 0 for 1) and drives both the published
+  `RangeMax`/`<UnknownValue>`/`<OutOfRangeValue>`/`<ReservedValue>` and the
+  decoder's sentinel stripping — keep them in lockstep; don't reintroduce a
+  separate per-decoder count. When a field genuinely uses **all** its values
+  (e.g. a 3-bit instance where 7 is valid), declare **`SPECIAL_VALUES(0, "Name")`**
+  so it reserves none; `SPECIAL_VALUES(n, …)` sets any explicit count. The "all
+  values valid" idiom is also recognised automatically when a field's `.rangeMax`
+  reaches the full unsigned width. (Source for the three-value convention:
+  Cassidy, *NMEA 2000 Explained*.)
 - **`Id` is the frozen contract; `Name` is the display label.** Each field emits
   `<Id>` (the camelCase `.camelName`, the key downstream decoders use as the
   property name) and `<Name>` (the human label, `.name`). `Id` is normally

@@ -68,12 +68,14 @@ limitations under the License.
 
 #define DST_GLOBAL (0xff) /* The address used when a message is addressed to -all- stations */
 
-/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
- * but I don't yet know which datafields reserve the reserved values.
+/* NMEA 2000 reserves the top of an integer range as non-data sentinels. Per Cassidy,
+ * "NMEA 2000 Explained", 8-bit and larger numbers reserve three: the most positive value
+ * is Data-not-available (Unknown), max-1 is Out-of-range, max-2 is Reserved. (J1939, the
+ * ancestor, reserves up to five for a 1-byte SPN; NMEA collapsed it to three.)
  */
-#define DATAFIELD_UNKNOWN (0)
-#define DATAFIELD_ERROR (-1)
-#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_UNKNOWN (0)       /* most positive value: Data not available */
+#define DATAFIELD_OUT_OF_RANGE (-1) /* max-1: Out of range */
+#define DATAFIELD_RESERVED (-2)     /* max-2: Reserved */
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 

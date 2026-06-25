@@ -103,10 +103,14 @@ typedef struct
   bool   proprietary;      /* Field is only present if earlier PGN field is in proprietary range */
   bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
+  int8_t reservedOverride; /* Override the number of reserved (special) values at the top of the range.
+                            *    0 = auto (derive from size); otherwise an explicit count encoded as (count + 1),
+                            *    so set via the SPECIAL_VALUES() macro rather than by hand. */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;
-  size_t     bitOffset; // Bit offset from start of data, e.g. lower 3 bits = bit#, bit 4.. is byte offset
+  uint8_t    reservedCount; /* Resolved number of reserved special values (0..3): Unknown, OutOfRange, Reserved. */
+  size_t     bitOffset;     // Bit offset from start of data, e.g. lower 3 bits = bit#, bit 4.. is byte offset
   char      *camelName;
   LookupInfo lookup;
   FieldType *ft;
@@ -126,6 +130,13 @@ typedef struct
  * so a field's Name can be re-worded later without changing the Id that consumers key on. */
 #define ID_AND_NAME_(id, nam) nam, .camelName = id
 #define ID_AND_NAME(id, nam) DEFER(ID_AND_NAME_)(id, nam)
+
+/* SPECIAL_VALUES overrides how many top-of-range values a numeric field reserves as
+ * non-data sentinels (Unknown / OutOfRange / Reserved). Use when the by-bit-width default
+ * is wrong -- e.g. a 3-bit field that actually uses all 8 values: SPECIAL_VALUES(0, "Name").
+ * Encoded as count+1 so the zero-initialised default still means "auto". */
+#define SPECIAL_VALUES_(n, nam) nam, .reservedOverride = (n) + 1
+#define SPECIAL_VALUES(n, nam) DEFER(SPECIAL_VALUES_)(n, nam)
 
 #define PK_ID_AND_NAME_(id, nam) nam, .camelName = id, .partOfPrimaryKey = true
 #define PK_ID_AND_NAME(id, nam) DEFER(PK_ID_AND_NAME_)(id, nam)

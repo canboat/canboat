@@ -24,12 +24,12 @@ limitations under the License.
 #include "analyzer.h"
 #include "common.h"
 
-/* There are max five reserved values according to ISO 11873-9 (that I gather from indirect sources)
- * but I don't yet know which datafields reserve the reserved values.
+/* See analyzer.h: 8-bit and larger numbers reserve three top-of-range sentinels
+ * (Unknown / Out-of-range / Reserved) per Cassidy, "NMEA 2000 Explained".
  */
 #define DATAFIELD_UNKNOWN (0)
-#define DATAFIELD_ERROR (-1)
-#define DATAFIELD_RESERVED1 (-2)
+#define DATAFIELD_OUT_OF_RANGE (-1)
+#define DATAFIELD_RESERVED (-2)
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
@@ -700,6 +700,23 @@ static const char *getV2Type(const FieldType *ft)
   return NULL;
 }
 
+// Whether a field type advertises top-of-range special values. Excludes non-integers
+// (FLOAT/DECIMAL), the structured ISO_NAME identity, and the identifier-like numbers
+// (PGN/MMSI/FIELD_INDEX), which carry an id rather than a measurement that reserves sentinels.
+static bool emitsSpecialValues(const char *v2type)
+{
+  static const char *const excluded[] = {"FLOAT", "DECIMAL", "ISO_NAME", "PGN", "MMSI", "FIELD_INDEX"};
+
+  for (size_t i = 0; i < sizeof(excluded) / sizeof(excluded[0]); i++)
+  {
+    if (strcmp(v2type, excluded[i]) == 0)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 static void explainPGNXML(Pgn pgn)
 {
   int      i;
@@ -951,6 +968,27 @@ static void explainPGNXML(Pgn pgn)
                  f.size,
                  (double) ((UINT64_C(1) << f.size) - 1));
         printf("          <RangeMax>%.15g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
+      }
+
+      // Explicit non-data sentinels for integer numbers (NMEA 2000 reserves the top of the
+      // range): Unknown (most positive), OutOfRange (max-1), Reserved (max-2). Only for plain
+      // numeric measurement fields -- not lookups, reserved/spare/string (no range), match fields,
+      // or the types emitsSpecialValues() rejects. 64-bit fields are excluded: their sentinels
+      // exceed JSON's safe integer range.
+      if (!doV1 && f.reservedCount > 0 && f.size < 64 && !isnan(f.rangeMin) && f.lookup.type == LOOKUP_TYPE_NONE
+          && !(f.unit != NULL && f.unit[0] == '=') && emitsSpecialValues(getV2Type(ft)))
+      {
+        uint32_t highbit = (ft->hasSign == True && f.offset == 0) ? (f.size - 1) : f.size;
+        uint64_t raw     = (UINT64_C(1) << highbit) - 1;
+        printf("          <UnknownValue>%" PRIu64 "</UnknownValue>\n", raw);
+        if (f.reservedCount >= 2)
+        {
+          printf("          <OutOfRangeValue>%" PRIu64 "</OutOfRangeValue>\n", raw - 1);
+        }
+        if (f.reservedCount >= 3)
+        {
+          printf("          <ReservedValue>%" PRIu64 "</ReservedValue>\n", raw - 2);
+        }
       }
 
       if (!doV1)

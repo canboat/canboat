@@ -1,4 +1,4 @@
-<xs:schema version="2.3.0"
+<xs:schema version="2.4.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -511,6 +511,30 @@ limitations under the License.
             a floating point value -- e.g. after the sign and offset and resolution
             have been applied. Note that this reserves space for the special values
             that can be present.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:unsignedLong" name="UnknownValue" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            For integer number fields: the raw (unscaled) value that signals
+            "data not available". This is the most positive value the field can hold.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:unsignedLong" name="OutOfRangeValue" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            For integer number fields of 4 bits and larger: the raw (unscaled) value
+            that signals "out of range" (the most positive value minus one).
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:unsignedLong" name="ReservedValue" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            For integer number fields of 8 bits and larger: the raw (unscaled) value
+            that the NMEA 2000 standard reserves (the most positive value minus two).
           </xs:documentation>
         </xs:annotation>
       </xs:element>

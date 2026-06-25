@@ -350,17 +350,17 @@ extern void printEmpty(const char *fieldName, int64_t exceptionValue)
       case DATAFIELD_UNKNOWN:
         mprintf("Unknown");
         break;
-      case DATAFIELD_ERROR:
-        mprintf("ERROR");
+      case DATAFIELD_OUT_OF_RANGE:
+        mprintf("Out Of Range");
         break;
-      case DATAFIELD_RESERVED1:
-        mprintf("RESERVED1");
+      case DATAFIELD_RESERVED:
+        mprintf("Reserved");
         break;
       case DATAFIELD_RESERVED2:
-        mprintf("RESERVED2");
+        mprintf("Reserved2");
         break;
       case DATAFIELD_RESERVED3:
-        mprintf("RESERVED3");
+        mprintf("Reserved3");
         break;
       default:
         mprintf("Unhandled value %ld", exceptionValue);
@@ -384,18 +384,9 @@ static bool extractNumberNotEmpty(const Field   *field,
     return false;
   }
 
-  if (*maxValue >= 7)
-  {
-    reserved = 2; /* DATAFIELD_ERROR and DATAFIELD_UNKNOWN */
-  }
-  else if (*maxValue > 1)
-  {
-    reserved = 1; /* DATAFIELD_UNKNOWN */
-  }
-  else
-  {
-    reserved = 0;
-  }
+  /* Number of top-of-range sentinel values (Unknown / OutOfRange / Reserved),
+   * resolved per field from its bit width or an explicit SPECIAL_VALUES() override. */
+  reserved = field->reservedCount;
 
   if (field->pgn != NULL && field->pgn->repeatingField1 == field->order)
   {
