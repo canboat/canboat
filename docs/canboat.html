@@ -11001,7 +11001,301 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
               Source:
-              <a href="https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-130052">0x1FC04:
+              <a href="https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129811">0x1FB13:
+            PGN 129811
+            - AIS Single Slot Binary Message (Deprecated)</h3><p>Deprecated single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 13
+            bytes long and contains 11 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Destination Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR</a></td><td/></tr><tr><td>6</td><td>Binary data flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>8</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>9</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>10</td><td>Number of bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Binary Data</td><td/><td/><td>
+                    Field 10 defines the 
+                  
+                    Variable length
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-129812">0x1FB14:
+            PGN 129812
+            - AIS Multi Slot Binary Message (Deprecated)</h3><p>Deprecated multi-slot addressed binary message (AIS message 26): a binary-data slot (number of bits + data) repeats. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 15
+            bytes long and contains 16 fields.
+
+            
+        The 2 fields starting at field 
+        15 
+        (with name "Number of Bits in Binary Data Field")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Destination Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR</a></td><td/></tr><tr><td>6</td><td>Binary data flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>9</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>10</td><td>Spare</td><td/><td/><td>3 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Communication state selector flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Communication State</td><td/><td/><td>19 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>13</td><td>Spare</td><td/><td/><td>3 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">15<div>Set 1</div></td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">16<div>Set 1</div></td><td>Binary Data</td><td/><td/><td>
+                    Field 15 defines the 
+                  
+                    Variable length
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-129813">0x1FB15:
+            PGN 129813
+            - AIS Long-Range Broadcast Message</h3><p>Long-range broadcast (AIS message 27). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            20
+            bytes long and contains 15 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>User ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Longitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LONGITUDE">deg</a><div class="xs">-180 .. 180</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Latitude</td><td/><td>1e-07 <a href="#pq-GEOGRAPHICAL_LATITUDE">deg</a><div class="xs">-90 .. 90</div></td><td>32 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Position Accuracy</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-POSITION_ACCURACY">POSITION_ACCURACY</a></td><td/></tr><tr><td>8</td><td>RAIM</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-RAIM_FLAG">RAIM_FLAG</a></td><td/></tr><tr><td>9</td><td>Nav Status</td><td/><td><div class="xs">0 .. 14</div></td><td>4 bits
+                  
+                      lookup
+                      <a href="#lookup-NAV_STATUS">NAV_STATUS</a></td><td/></tr><tr><td>10</td><td>Position Latency</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Spare</td><td/><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>12</td><td>SOG</td><td/><td>0.01 <a href="#pq-SPEED">m/s</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>COG</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">0 .. 6.2831852</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>3 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-129814">0x1FB16:
+            PGN 129814
+            - AIS Single Slot Binary Message</h3><p>Single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 14
+            bytes long and contains 12 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Destination Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR</a></td><td/></tr><tr><td>6</td><td>Binary data flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>10</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>11</td><td>Number of bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Binary Data</td><td/><td/><td>
+                    Field 11 defines the 
+                  
+                    Variable length
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-129815">0x1FB17:
+            PGN 129815
+            - AIS Multi Slot Binary Message</h3><p>Multi-slot addressed binary message (AIS message 26). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 17
+            bytes long and contains 16 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Destination Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                      lookup
+                      <a href="#lookup-BROADCAST_INDICATOR">BROADCAST_INDICATOR</a></td><td/></tr><tr><td>6</td><td>Binary data flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>3 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Communication state selector flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Communication State</td><td/><td/><td>19 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>Spare</td><td/><td/><td>3 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>13</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>14</td><td>Reserved</td><td/><td/><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>15</td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>16</td><td>Binary Data</td><td/><td/><td>
+                    Field 15 defines the 
+                  
+                    Variable length
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-129816">0x1FB18:
+            PGN 129816
+            - AIS Acknowledge (Binary)</h3><p>Acknowledgment of received addressed binary messages; the destination/sequence triple repeats per acknowledgment. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 8
+            bytes long and contains 11 fields.
+
+            
+        The 3 fields starting at field 
+        9 
+        (with name "Destination ID")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        8 
+        (with name "Number of Acknowledgments".)
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Message ID</td><td/><td><div class="xs">0 .. 61</div></td><td>6 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_MESSAGE_ID">AIS_MESSAGE_ID</a></td><td/></tr><tr><td>3</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>4</td><td>Source ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>AIS Transceiver information</td><td/><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                      lookup
+                      <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>1 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>8</td><td>Number of Acknowledgments</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Destination ID</td><td/><td><div class="xs">2000000 .. 999999999</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-MMSI">MMSI</a></td><td>true</td></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Sequence Number</td><td/><td><div class="xs">0 .. 3</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130052">0x1FC04:
             PGN 130052
             - Loran-C TD Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -12719,7 +13013,31 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><p>
               Source:
-              <a href="https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf">https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf</a></p><h3 id="pgn-130569">0x1FE09:
+              <a href="https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf">https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf</a></p><h3 id="pgn-130568">0x1FE08:
+            PGN 130568
+            - Entertainment - Diagnostic Status</h3><p>Audio/video source diagnostic status. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 4
+            bytes long and contains 5 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE</a></td><td/></tr><tr><td>2</td><td>Number</td><td>Source number per type</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Diagnostic Mode</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Diagnostic Data</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130569">0x1FE09:
             PGN 130569
             - Current Status and File</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -13033,7 +13351,39 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
               Source:
-              <a href="https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf">https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</a></p><h3 id="pgn-130576">0x1FE10:
+              <a href="https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf">https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf</a></p><h3 id="pgn-130575">0x1FE0F:
+            PGN 130575
+            - Entertainment - Parental Control Status</h3><p>Audio/video parental-control (lock) status. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-ENTERTAINMENT_SOURCE">ENTERTAINMENT_SOURCE</a></td><td/></tr><tr><td>2</td><td>Number</td><td>Source number per type</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Lock Type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Lock Status</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>File / Station ID</td><td>Unique file or station ID</td><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Current Pincode</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr><tr><td>8</td><td>New Pincode</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><h3 id="pgn-130576">0x1FE10:
             PGN 130576
             - Small Craft Status</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.

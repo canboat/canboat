@@ -5972,6 +5972,154 @@ Pgn pgnList[] = {
      .url      = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
      .interval = UINT16_MAX}
 
+    /* The following PGNs are taken from the field-name list in the NMEA Network Message Database
+     * Version 3.002, Appendix A/B. That document lists only field names, so the field lengths,
+     * datatypes and any reserved/spare padding below are a best guess and are flagged
+     * PACKET_PDF_ONLY (not seen live; lengths/datatypes/lookups unconfirmed). */
+
+    ,
+    {"AIS Single Slot Binary Message (Deprecated)",
+     129811,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("Destination Indicator", 1, BROADCAST_INDICATOR),
+      SIMPLE_FIELD("Binary data flag", 1),
+      SPARE_FIELD(1),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      MMSI_FIELD("Destination ID"),
+      UINT16_FIELD("Number of bits in Binary Data Field"),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
+      END_OF_FIELDS},
+     .explanation = "Deprecated single-slot addressed binary message (AIS message 25). Field lengths and types are "
+                    "inferred from the NMEA 3.002 field-name list and are unconfirmed."}
+
+    ,
+    {"AIS Multi Slot Binary Message (Deprecated)",
+     129812,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("Destination Indicator", 1, BROADCAST_INDICATOR),
+      SIMPLE_FIELD("Binary data flag", 1),
+      RESERVED_FIELD(2),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      MMSI_FIELD("Destination ID"),
+      SPARE_FIELD(3),
+      SIMPLE_FIELD("Communication state selector flag", 1),
+      BINARY_FIELD("Communication State", 19, NULL),
+      SPARE_FIELD(3),
+      RESERVED_FIELD(5),
+      UINT16_FIELD("Number of Bits in Binary Data Field"),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 2,
+     .repeatingStart1 = 15,
+     .explanation     = "Deprecated multi-slot addressed binary message (AIS message 26): a binary-data slot (number of "
+                        "bits + data) repeats. Field lengths and types are inferred from the NMEA 3.002 field-name list "
+                        "and are unconfirmed."}
+
+    ,
+    {"AIS Long-Range Broadcast Message",
+     129813,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("User ID"),
+      LONGITUDE_I32_FIELD("Longitude"),
+      LATITUDE_I32_FIELD("Latitude"),
+      LOOKUP_FIELD("Position Accuracy", 1, POSITION_ACCURACY),
+      LOOKUP_FIELD("RAIM", 1, RAIM_FLAG),
+      LOOKUP_FIELD("Nav Status", 4, NAV_STATUS),
+      SIMPLE_FIELD("Position Latency", 1),
+      SPARE_FIELD(1),
+      SPEED_U16_CM_FIELD("SOG"),
+      ANGLE_U16_FIELD("COG", NULL),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(3),
+      END_OF_FIELDS},
+     .explanation = "Long-range broadcast (AIS message 27). Field lengths and types are inferred from the NMEA 3.002 "
+                    "field-name list and are unconfirmed."}
+
+    ,
+    {"AIS Single Slot Binary Message",
+     129814,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("Destination Indicator", 1, BROADCAST_INDICATOR),
+      SIMPLE_FIELD("Binary data flag", 1),
+      SPARE_FIELD(1),
+      RESERVED_FIELD(8),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      MMSI_FIELD("Destination ID"),
+      UINT16_FIELD("Number of bits in Binary Data Field"),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
+      END_OF_FIELDS},
+     .explanation = "Single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from "
+                    "the NMEA 3.002 field-name list and are unconfirmed."}
+
+    ,
+    {"AIS Multi Slot Binary Message",
+     129815,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      LOOKUP_FIELD("Destination Indicator", 1, BROADCAST_INDICATOR),
+      SIMPLE_FIELD("Binary data flag", 1),
+      RESERVED_FIELD(2),
+      MMSI_FIELD("Destination ID"),
+      SPARE_FIELD(3),
+      SIMPLE_FIELD("Communication state selector flag", 1),
+      BINARY_FIELD("Communication State", 19, NULL),
+      SPARE_FIELD(3),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      RESERVED_FIELD(5),
+      UINT16_FIELD("Number of Bits in Binary Data Field"),
+      BINARY_FIELD("Binary Data", LEN_VARIABLE, NULL),
+      END_OF_FIELDS},
+     .explanation = "Multi-slot addressed binary message (AIS message 26). Field lengths and types are inferred from "
+                    "the NMEA 3.002 field-name list and are unconfirmed."}
+
+    ,
+    {"AIS Acknowledge (Binary)",
+     129816,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {UINT8_FIELD("Sequence ID"),
+      LOOKUP_FIELD("Message ID", 6, AIS_MESSAGE_ID),
+      LOOKUP_FIELD("Repeat Indicator", 2, REPEAT_INDICATOR),
+      MMSI_FIELD("Source ID"),
+      RESERVED_FIELD(2),
+      LOOKUP_FIELD("AIS Transceiver information", 5, AIS_TRANSCEIVER),
+      SPARE_FIELD(1),
+      UINT8_FIELD("Number of Acknowledgments"),
+      MMSI_FIELD("Destination ID"),
+      UINT2_FIELD("Sequence Number"),
+      RESERVED_FIELD(6),
+      END_OF_FIELDS},
+     .repeatingField1 = 8,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 9,
+     .explanation     = "Acknowledgment of received addressed binary messages; the destination/sequence triple repeats "
+                        "per acknowledgment. Field lengths and types are inferred from the NMEA 3.002 field-name list "
+                        "and are unconfirmed."}
+
     ,
     {"Loran-C TD Data",
      130052,
@@ -6758,6 +6906,21 @@ Pgn pgnList[] = {
             "20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf"}
 
     ,
+    /* From the NMEA 3.002 field-name list; lengths/datatypes a best guess, flagged PACKET_PDF_ONLY. */
+    {"Entertainment - Diagnostic Status",
+     130568,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      UINT8_DESC_FIELD("Number", "Source number per type"),
+      SIMPLE_FIELD("Diagnostic Mode", 8),
+      RESERVED_FIELD(8),
+      STRINGLAU_FIELD("Diagnostic Data"),
+      END_OF_FIELDS},
+     .explanation = "Audio/video source diagnostic status. Field lengths and types are inferred from the NMEA 3.002 "
+                    "field-name list and are unconfirmed."}
+
+    ,
     {"Current Status and File",
      130569,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -6893,6 +7056,24 @@ Pgn pgnList[] = {
      .interval        = 500,
      .url             = "https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/"
                         "20160715%20corrigenda%20entertainment%20pgns%20.pdf"}
+
+    ,
+    /* From the NMEA 3.002 field-name list; lengths/datatypes a best guess, flagged PACKET_PDF_ONLY. */
+    {"Entertainment - Parental Control Status",
+     130575,
+     PACKET_PDF_ONLY,
+     PACKET_FAST,
+     {LOOKUP_FIELD("Source", 8, ENTERTAINMENT_SOURCE),
+      UINT8_DESC_FIELD("Number", "Source number per type"),
+      SIMPLE_FIELD("Lock Type", 4),
+      SIMPLE_FIELD("Lock Status", 2),
+      RESERVED_FIELD(2),
+      UINT32_DESC_FIELD("File / Station ID", "Unique file or station ID"),
+      STRINGLAU_FIELD("Current Pincode"),
+      STRINGLAU_FIELD("New Pincode"),
+      END_OF_FIELDS},
+     .explanation = "Audio/video parental-control (lock) status. Field lengths and types are inferred from the NMEA "
+                    "3.002 field-name list and are unconfirmed."}
 
     ,
     {"Small Craft Status",

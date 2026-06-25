@@ -1298,6 +1298,30 @@ BO_ 2583368446 PGN_129810_aisClassBStaticDataMs: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583368702 PGN_129811_aisSingleSlotBinaryMe: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583368958 PGN_129812_aisMultiSlotBinaryMes: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583369214 PGN_129813_aisLongRangeBroadcast: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583369470 PGN_129814_aisSingleSlotBinaryMe: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583369726 PGN_129815_aisMultiSlotBinaryMes: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583369982 PGN_129816_aisAcknowledgeBinary: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583430398 PGN_130052_loranCTdData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1485,6 +1509,10 @@ BO_ 2583562238 PGN_130567_watermakerInputSettin: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2583562494 PGN_130568_entertainmentDiagnost: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2583562750 PGN_130569_currentStatusAndFile: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -1506,6 +1534,10 @@ BO_ 2583563774 PGN_130573_supportedSourceData: 8 Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2583564030 PGN_130574_supportedZoneData: 8 Vector__XXX
+ SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2583564286 PGN_130575_entertainmentParental: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -2031,6 +2063,12 @@ CM_ BO_ 2583367422 "AIS Channel Management";
 CM_ BO_ 2583367678 "AIS Class B Group Assignment";
 CM_ BO_ 2583368190 "AIS Class B static data (msg 24 Part A)";
 CM_ BO_ 2583368446 "AIS Class B static data (msg 24 Part B)";
+CM_ BO_ 2583368702 "AIS Single Slot Binary Message (Deprecated)";
+CM_ BO_ 2583368958 "AIS Multi Slot Binary Message (Deprecated)";
+CM_ BO_ 2583369214 "AIS Long-Range Broadcast Message";
+CM_ BO_ 2583369470 "AIS Single Slot Binary Message";
+CM_ BO_ 2583369726 "AIS Multi Slot Binary Message";
+CM_ BO_ 2583369982 "AIS Acknowledge (Binary)";
 CM_ BO_ 2583430398 "Loran-C TD Data";
 CM_ BO_ 2583430654 "Loran-C Range Data";
 CM_ BO_ 2583430910 "Loran-C Signal Data";
@@ -2070,12 +2108,14 @@ CM_ BO_ 2583561470 "Lighting Device Enumeration";
 CM_ BO_ 2583561726 "Lighting Color Sequence";
 CM_ BO_ 2583561982 "Lighting Program";
 CM_ BO_ 2583562238 "Watermaker Input Setting and Status";
+CM_ BO_ 2583562494 "Entertainment - Diagnostic Status";
 CM_ BO_ 2583562750 "Current Status and File";
 CM_ BO_ 2583563006 "Library Data File";
 CM_ BO_ 2583563262 "Library Data Group";
 CM_ BO_ 2583563518 "Library Data Search";
 CM_ BO_ 2583563774 "Supported Source Data";
 CM_ BO_ 2583564030 "Supported Zone Data";
+CM_ BO_ 2583564286 "Entertainment - Parental Control Status";
 CM_ BO_ 2583564542 "Small Craft Status";
 CM_ BO_ 2583564798 "Direction Data";
 CM_ BO_ 2583565054 "Vessel Speed Components";
@@ -2218,6 +2258,11 @@ BA_ "SystemMessageLongSymbol" BO_ 2583367166 "PGN_129805_aisDataLinkManagementMe
 BA_ "SystemMessageLongSymbol" BO_ 2583367678 "PGN_129807_aisClassBGroupAssignment";
 BA_ "SystemMessageLongSymbol" BO_ 2583368190 "PGN_129809_aisClassBStaticDataMsg24PartA";
 BA_ "SystemMessageLongSymbol" BO_ 2583368446 "PGN_129810_aisClassBStaticDataMsg24PartB";
+BA_ "SystemMessageLongSymbol" BO_ 2583368702 "PGN_129811_aisSingleSlotBinaryMessageDeprecated";
+BA_ "SystemMessageLongSymbol" BO_ 2583368958 "PGN_129812_aisMultiSlotBinaryMessageDeprecated";
+BA_ "SystemMessageLongSymbol" BO_ 2583369214 "PGN_129813_aisLongRangeBroadcastMessage";
+BA_ "SystemMessageLongSymbol" BO_ 2583369470 "PGN_129814_aisSingleSlotBinaryMessage";
+BA_ "SystemMessageLongSymbol" BO_ 2583369726 "PGN_129815_aisMultiSlotBinaryMessage";
 BA_ "SystemMessageLongSymbol" BO_ 2583432702 "PGN_130061_channelSourceConfiguration";
 BA_ "SystemMessageLongSymbol" BO_ 2583433470 "PGN_130064_routeAndWpServiceDatabaseList";
 BA_ "SystemMessageLongSymbol" BO_ 2583433726 "PGN_130065_routeAndWpServiceRouteList";
@@ -2237,6 +2282,8 @@ BA_ "SystemMessageLongSymbol" BO_ 2583499774 "PGN_130323_meteorologicalStationDa
 BA_ "SystemMessageLongSymbol" BO_ 2583501566 "PGN_130330_lightingSystemSettings";
 BA_ "SystemMessageLongSymbol" BO_ 2583561470 "PGN_130564_lightingDeviceEnumeration";
 BA_ "SystemMessageLongSymbol" BO_ 2583562238 "PGN_130567_watermakerInputSettingAndStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2583562494 "PGN_130568_entertainmentDiagnosticStatus";
+BA_ "SystemMessageLongSymbol" BO_ 2583564286 "PGN_130575_entertainmentParentalControlStatus";
 BA_ "SystemMessageLongSymbol" BO_ 2583565566 "PGN_130580_systemConfigurationDeprecated";
 BA_ "SystemMessageLongSymbol" BO_ 2583565822 "PGN_130581_zoneConfigurationDeprecated";
 BA_ "SystemMessageLongSymbol" BO_ 2583566334 "PGN_130583_availableAudioEqPresets";
