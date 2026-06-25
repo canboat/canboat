@@ -1,2 +1,8 @@
 INFO test-n2kd [n2kd] Timestamp fixed
+ERROR test-n2kd [n2kd] 
+**** DEPRECATION WARNING ****************************************************
+* n2kd is DEPRECATED. The C implementation will be REMOVED in CANboat v7.0. *
+* Switch to the Rust implementation from                                    *
+* https://github.com/canboat/canboat-rs now. See issue #674.                *
+****************************************************************************
 INFO test-n2kd [n2kd] N2KD stopping

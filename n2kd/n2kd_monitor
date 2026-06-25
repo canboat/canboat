@@ -166,6 +166,12 @@ sub manageCanInterface($)
   return 1;
 }
 
+logText("**** DEPRECATION WARNING ****************************************************");
+logText("* n2kd (and this n2kd_monitor) is DEPRECATED. The C implementation will be  *");
+logText("* REMOVED in CANboat v7.0. Switch to the Rust implementation from           *");
+logText("* https://github.com/canboat/canboat-rs now. See issue #674.                *");
+logText("****************************************************************************");
+
 if ($#ARGV >= 0 && $ARGV[0] eq "-fg")
 {
   logText("Starting n2kd_monitor service");
