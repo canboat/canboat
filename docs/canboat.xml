@@ -3649,9 +3649,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3678,9 +3675,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3815,9 +3809,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3904,9 +3895,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -3993,9 +3981,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -4082,9 +4067,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -4147,9 +4129,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -8115,9 +8094,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -16614,9 +16590,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -16685,9 +16658,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -16744,9 +16714,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -16802,9 +16769,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -16861,9 +16825,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -16976,9 +16937,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -17073,9 +17031,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17095,9 +17050,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
       </Fields>
@@ -17147,9 +17099,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -17244,9 +17193,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17266,9 +17212,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17325,9 +17268,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -17422,9 +17362,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17444,9 +17381,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17503,9 +17437,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -17600,9 +17531,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17622,9 +17550,6 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
           <FieldType>FIELD_INDEX</FieldType>
         </Field>
         <Field>
@@ -17672,9 +17597,6 @@ limitations under the License.
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
       </Fields>
@@ -25008,9 +24930,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -34218,9 +34137,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -34528,9 +34444,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -34877,9 +34790,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -35279,9 +35189,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -38894,9 +38801,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39070,9 +38974,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39288,9 +39189,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39606,9 +39504,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39660,9 +39555,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39782,9 +39674,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39833,9 +39722,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -39915,9 +39801,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40038,9 +39921,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40412,9 +40292,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40463,9 +40340,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40525,9 +40399,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40579,9 +40450,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40684,9 +40552,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40792,9 +40657,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40843,9 +40705,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -40960,9 +40819,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41098,9 +40954,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41149,9 +41002,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41200,9 +41050,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41318,9 +41165,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41482,9 +41326,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -41816,9 +41657,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -42675,9 +42513,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -42783,9 +42618,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -42904,9 +42736,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -43612,9 +43441,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -43794,9 +43620,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -63722,9 +63545,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <RangeMin>0</RangeMin>
           <RangeMax>262143</RangeMax>
-          <UnknownValue>16777215</UnknownValue>
-          <OutOfRangeValue>16777214</OutOfRangeValue>
-          <ReservedValue>16777213</ReservedValue>
           <FieldType>PGN</FieldType>
         </Field>
         <Field>
@@ -67764,9 +67584,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -68114,9 +67931,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
@@ -68235,9 +68049,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>2000000</RangeMin>
           <RangeMax>999999999</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
           <FieldType>MMSI</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>

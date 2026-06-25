@@ -4472,9 +4472,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4501,9 +4498,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4638,9 +4632,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4727,9 +4718,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4816,9 +4804,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4905,9 +4890,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -4970,9 +4952,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -8836,9 +8815,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17006,9 +16982,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17077,9 +17050,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17136,9 +17106,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17194,9 +17161,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17253,9 +17217,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17365,9 +17326,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17462,9 +17420,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17484,9 +17439,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           }
         ]
@@ -17536,9 +17488,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17633,9 +17582,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17655,9 +17601,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17714,9 +17657,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17811,9 +17751,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17833,9 +17770,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -17892,9 +17826,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -17989,9 +17920,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18011,9 +17939,6 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18061,9 +17986,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           }
         ]
@@ -25274,9 +25196,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -34408,9 +34327,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -34718,9 +34634,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -35066,9 +34979,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -35468,9 +35378,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39077,9 +38984,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39253,9 +39157,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39471,9 +39372,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39789,9 +39687,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39843,9 +39738,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -39965,9 +39857,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40016,9 +39905,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40098,9 +39984,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40220,9 +40103,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40593,9 +40473,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40644,9 +40521,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           }
@@ -40705,9 +40579,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40759,9 +40630,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40863,9 +40731,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -40967,9 +40832,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41018,9 +40880,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41135,9 +40994,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41272,9 +41128,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41323,9 +41176,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41374,9 +41224,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41491,9 +41338,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41654,9 +41498,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -41987,9 +41828,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -42838,9 +42676,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -42946,9 +42781,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -43067,9 +42899,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -43767,9 +43596,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -43946,9 +43772,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -63542,9 +63365,6 @@
             "Resolution":1,
             "RangeMin":0,
             "RangeMax":262143,
-            "UnknownValue":16777215,
-            "OutOfRangeValue":16777214,
-            "ReservedValue":16777213,
             "FieldType":"PGN"
           },
           {
@@ -67438,9 +67258,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -67780,9 +67597,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },
@@ -67901,9 +67715,6 @@
             "Signed":false,
             "RangeMin":2000000,
             "RangeMax":999999999,
-            "UnknownValue":4294967295,
-            "OutOfRangeValue":4294967294,
-            "ReservedValue":4294967293,
             "FieldType":"MMSI",
             "PartOfPrimaryKey":true
           },

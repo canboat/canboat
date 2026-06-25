@@ -700,6 +700,23 @@ static const char *getV2Type(const FieldType *ft)
   return NULL;
 }
 
+// Whether a field type advertises top-of-range special values. Excludes non-integers
+// (FLOAT/DECIMAL), the structured ISO_NAME identity, and the identifier-like numbers
+// (PGN/MMSI/FIELD_INDEX), which carry an id rather than a measurement that reserves sentinels.
+static bool emitsSpecialValues(const char *v2type)
+{
+  static const char *const excluded[] = {"FLOAT", "DECIMAL", "ISO_NAME", "PGN", "MMSI", "FIELD_INDEX"};
+
+  for (size_t i = 0; i < sizeof(excluded) / sizeof(excluded[0]); i++)
+  {
+    if (strcmp(v2type, excluded[i]) == 0)
+    {
+      return false;
+    }
+  }
+  return true;
+}
+
 static void explainPGNXML(Pgn pgn)
 {
   int      i;
@@ -955,11 +972,11 @@ static void explainPGNXML(Pgn pgn)
 
       // Explicit non-data sentinels for integer numbers (NMEA 2000 reserves the top of the
       // range): Unknown (most positive), OutOfRange (max-1), Reserved (max-2). Only for plain
-      // numeric fields -- not lookups, reserved/spare/string (no range), match fields, floats, or
-      // ISO_NAME. 64-bit fields are excluded: their sentinels exceed JSON's safe integer range.
+      // numeric measurement fields -- not lookups, reserved/spare/string (no range), match fields,
+      // or the types emitsSpecialValues() rejects. 64-bit fields are excluded: their sentinels
+      // exceed JSON's safe integer range.
       if (!doV1 && f.reservedCount > 0 && f.size < 64 && !isnan(f.rangeMin) && f.lookup.type == LOOKUP_TYPE_NONE
-          && !(f.unit != NULL && f.unit[0] == '=') && strcmp(getV2Type(ft), "FLOAT") != 0
-          && strcmp(getV2Type(ft), "DECIMAL") != 0)
+          && !(f.unit != NULL && f.unit[0] == '=') && emitsSpecialValues(getV2Type(ft)))
       {
         uint32_t highbit = (ft->hasSign == True && f.offset == 0) ? (f.size - 1) : f.size;
         uint64_t raw     = (UINT64_C(1) << highbit) - 1;
