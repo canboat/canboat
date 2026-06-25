@@ -1,0 +1,5 @@
+{
+  "_README": "Documented, expected canboat-vs-NMEA-v1.300 divergences, suppressed from the reconcile worklist. The NMEA reference is a 2009 snapshot, so most divergences here are deliberate canboat improvements or later-spec corrections. Structure: pgn.<PGN>=[keys] suppresses PGN-level keys (frame|priority|interval|fieldcount, or * for all); field.<PGN>=[orders] suppresses field rows by order (or * for all). Each PGN you add SHOULD get a matching note in the comments below.",
+  "pgn": {},
+  "field": {}
+}

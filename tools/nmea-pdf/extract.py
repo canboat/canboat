@@ -170,18 +170,26 @@ def parse_bits(byte_s, bit_s):
 
 
 def classify(dd_id, dd_name, df, dtype, reserved, enums):
-    """Map a field to a canboat-ish coarse type."""
+    """Map a field to a canboat-ish coarse type.
+
+    The PDF models most fields as a generic "Bit field" (DF52, bit(n)) with no
+    concrete datatype. Such fields carry no reliable type signal, so they become
+    the vague bucket "BITFIELD" -- the reconciler treats those as wildcards
+    rather than flagging canboat's refined typing as a discrepancy. A real
+    enumeration needs >=2 listed values; a lone "0xNN =" in prose (e.g.
+    "255 = no data") is description bleed, not a lookup table.
+    """
     if reserved or dd_id == "001":
         return "RESERVED"
     enc = (dtype or {}).get("encoding")
     if enc in ("char8(n)", "ch8or16(n)"):
         return "STRING"
-    if enums:
+    if enums and len(enums) >= 2:
         return "LOOKUP"
-    if enc == "bit(n)":
-        return "BINARY"  # bit field with no enumerated values
     if enc in ("uint8", "int8", "uint16", "int16", "uint32", "int32", "uint64", "int64"):
         return "NUMBER"
+    if enc == "bit(n)":
+        return "BITFIELD"  # PDF gave no concrete type
     return "UNKNOWN"
 
 
@@ -281,7 +289,8 @@ def parse(text):
             }
         )
     for p in pgns:
-        p["fieldCount"] = len([f for f in p["fields"] if not f["reserved"]])
+        # Total fields incl. reserved, matching canboat's FieldCount convention.
+        p["fieldCount"] = len(p["fields"])
     return {"source": "NMEA 2000 Appendix B.1 PGN Table, Version 1.300 (May 2009)",
             "dataTypes": datatypes, "pgns": pgns}
 
