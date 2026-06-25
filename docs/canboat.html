@@ -7910,11 +7910,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-GOOD_WARNING_ERROR">GOOD_WARNING_ERROR</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-127751">0x1F307:
             PGN 127751
-            - DC Voltage/Current</h3><p/><p>
+            - DC Voltage/Current</h3><p>This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission interval is likewise unknown. See github issue #655.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
             This
-             single-frame 
+             fast-packet 
             PGN is
             8
             bytes long and contains 5 fields.
