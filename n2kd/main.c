@@ -1507,6 +1507,13 @@ int main(int argc, char **argv)
     argc--, argv++;
   }
 
+  logError("\n"
+           "**** DEPRECATION WARNING ****************************************************\n"
+           "* n2kd is DEPRECATED. The C implementation will be REMOVED in CANboat v7.0. *\n"
+           "* Switch to the Rust implementation from                                    *\n"
+           "* https://github.com/canboat/canboat-rs now. See issue #674.                *\n"
+           "****************************************************************************\n");
+
   // Read the first line from stdin, this must contain JSON from analyzer
   verifyStdin();
   setFdUsed(stdinfd, DATA_INPUT_STREAM);
