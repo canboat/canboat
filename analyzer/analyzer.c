@@ -86,6 +86,7 @@ bool       showJson      = false;
 bool       showJsonEmpty = false;
 bool       showJsonValue = false;
 bool       showVersion   = true;
+bool       fixedTime     = false; // -fixtime in effect (test mode)
 bool       showSI        = false; // Output everything in strict SI units
 bool       showCamel     = false;
 GeoFormats showGeo       = GEO_DD;
@@ -265,6 +266,7 @@ int main(int argc, char **argv)
     else if (ac > 2 && strcasecmp(av[1], "-fixtime") == 0)
     {
       setFixedTimestamp(av[2]);
+      fixedTime = true;
       if (strstr(av[2], "n2kd") == NULL)
       {
         showVersion = false;
@@ -594,6 +596,12 @@ static enum RawFormats detectFormat(const char *const msg)
 
 static bool isMsgAllowed(const RawMessage *msg)
 {
+  // The CANboat startup record embeds the build version, which changes on every
+  // release. Drop it in test mode (-fixtime) so golden outputs stay stable.
+  if (fixedTime && msg->pgn == CANBOAT_BEM)
+  {
+    return false;
+  }
   if (onlySrc >= 0 && onlySrc != msg->src)
   {
     return false;
