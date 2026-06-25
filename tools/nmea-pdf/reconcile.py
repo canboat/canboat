@@ -152,10 +152,18 @@ def compare_pgn(npgn, cands, allow):
             issues["naming"].append(
                 {"order": nf["order"], "nmea": nf["name"], "canboat": cf.get("Name")})
 
+    # Field-count differs constantly because the two databases model fields
+    # differently, so only the genuinely suspicious shape is flagged: canboat
+    # has FEWER fields than the PDF AND no repeating set explains the gap.
+    # canboat having MORE (refinement) or fewer-with-a-repeating-set (the PDF
+    # flattens every repeat) is expected and stays silent.
     n_cnt, c_cnt = npgn["fieldCount"], cb.get("FieldCount")
-    if c_cnt is not None and n_cnt is not None and n_cnt != c_cnt \
+    if c_cnt is not None and n_cnt is not None and c_cnt < n_cnt \
+            and not cb.get("RepeatingFieldSet1Size") \
             and not allowed(allow, npgn["pgn"], "pgn", "fieldcount"):
-        issues["level"].append(f"fieldCount: NMEA={n_cnt} canboat={c_cnt}")
+        issues["level"].append(
+            f"fieldCount: canboat={c_cnt} < NMEA={n_cnt} with no repeating set "
+            f"(possible missing field)")
 
     return issues
 

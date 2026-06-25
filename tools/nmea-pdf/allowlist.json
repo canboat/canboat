@@ -1,6 +1,9 @@
 {
   "_README": "Documented, expected canboat-vs-NMEA-v1.300 divergences, suppressed from the reconcile field-level worklist. The NMEA reference is a 2009 snapshot, so most entries are deliberate canboat improvements or reconcile field-alignment artifacts. field.<PGN> maps a field Order (or \"*\" for the whole PGN) to the reason it is expected; pgn.<PGN> maps a PGN-level key (frame|priority|interval|fieldcount, or \"*\") likewise. Anything NOT listed here surfaces in reconcile.py as a candidate real discrepancy.",
-  "pgn": {},
+  "pgn": {
+    "129793": {"fieldcount": "minor: canboat omits the trailing 10-bit Spare and keeps a clean 24-byte length; all data fields match (AIS UTC and Date Report)"},
+    "129800": {"fieldcount": "minor: canboat omits the trailing 2-bit Spare and keeps a clean 10-byte length; all data fields match (AIS UTC/Date Inquiry)"}
+  },
   "field": {
     "60416": {"4": "canboat improvement: PDF marks the RTS frame-count byte reserved; canboat decodes it as a number"},
     "60928": {"10": "canboat improvement: PDF reserved bit decoded as ISO self-configurable lookup"},
