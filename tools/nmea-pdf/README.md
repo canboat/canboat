@@ -30,11 +30,13 @@ docs/canboat.json  (canboat's own generated DB) ┘
 - **`reconcile.py`** — diffs `nmea_1300.json` against `docs/canboat.json` at PGN
   level (frame / priority / interval / field count) and field level (coarse
   type / signedness / bit length; names are informational, see #526). Emits a
-  worklist grouped by PGN. **This is a maintainer report, not a CI gate** — the
-  reference is a 2009 snapshot, so many divergences are deliberate canboat
-  improvements.
+  worklist grouped by PGN. `make validation` runs it with `--check`, which
+  **gates** on field-level findings (`type`/`signed`/`bits`); PGN-level
+  differences stay report-only, since the reference is a 2009 snapshot and many
+  divergences are deliberate canboat improvements.
 - **`allowlist.json`** — documented, expected divergences, suppressed from the
-  worklist (generalises the old `validate-csv.py` ignore lists).
+  worklist (this is the curated reconciliation result; supersedes the old
+  `validate-csv.py` ignore lists). Anything not listed here makes `--check` fail.
 
 ## Regenerating
 

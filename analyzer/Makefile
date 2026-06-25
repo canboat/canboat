@@ -24,13 +24,13 @@ ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
 ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
 TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
-NMEA_XMLFILE=../sources/NMEA_database_1_300.xml
+NMEA_JSONFILE=../sources/nmea_1300.json
+RECONCILE=../tools/nmea-pdf/reconcile.py
 XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
-CSV_XSLFILE=./canboat-csv.xsl
 HEADERS=analyzer.h pgn.h lookup.h fieldtype.h
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h
 COMMONDIR=../common
@@ -76,10 +76,8 @@ $(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
 	python3 validate-json.py --range $(@)
 
-validation: $(ANALYZER_EXPLAIN) $(XML2FILE) $(NMEA_XMLFILE) $(CSV_XSLFILE)
-	xsltproc $(CSV_XSLFILE) $(XML2FILE) > /tmp/canboat.csv
-	xsltproc $(CSV_XSLFILE) $(NMEA_XMLFILE) > /tmp/nmea.csv
-	python3 validate-csv.py /tmp/canboat.csv /tmp/nmea.csv
+validation: $(JSON2FILE) $(NMEA_JSONFILE) $(RECONCILE)
+	python3 $(RECONCILE) --canboat $(JSON2FILE) --nmea $(NMEA_JSONFILE) --check
 	
 
 generated: validation $(JSON2FILE) $(HTML2FILE) 

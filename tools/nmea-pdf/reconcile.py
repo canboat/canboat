@@ -198,6 +198,9 @@ def main():
                     help="list priority/interval that canboat has unset")
     ap.add_argument("--naming", action="store_true",
                     help="also show informational field-name differences (#526)")
+    ap.add_argument("--check", action="store_true",
+                    help="exit non-zero if any structural field-level finding remains "
+                         "(gate mode for `make validation`); PGN-level stays report-only")
     args = ap.parse_args()
 
     nmea = load(args.nmea)
@@ -250,6 +253,12 @@ def main():
         for pgn, cid, fills in sorted(rows):
             for what, val in fills:
                 print(f"#   PGN {pgn:<7} {cid:<28} {what} = {val}")
+
+    if args.check and n_field:
+        print(f"\nFAILED: {n_field} structural field-level finding(s) not in "
+              f"{os.path.relpath(args.allowlist)}. Review and either fix pgn.h or "
+              f"document the divergence in the allowlist.", file=sys.stderr)
+        sys.exit(1)
 
 
 if __name__ == "__main__":
