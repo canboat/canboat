@@ -122,11 +122,13 @@ typedef struct
 #define PRIMARY_KEY(nam) nam, .partOfPrimaryKey = true
 #define PK(nam) DEFER(PRIMARY_KEY)(nam)
 
-#define CAMEL_NAME(camel, nam) nam, .camelName = camel
-#define CAMEL(camel, nam) DEFER(CAMEL_NAME)(camel, nam)
+/* ID_AND_NAME pins the stable <Id> (.camelName) independently of the display <Name> (.name),
+ * so a field's Name can be re-worded later without changing the Id that consumers key on. */
+#define ID_AND_NAME_(id, nam) nam, .camelName = id
+#define ID_AND_NAME(id, nam) DEFER(ID_AND_NAME_)(id, nam)
 
-#define PK_CAMEL_NAME(camel, nam) nam, .camelName = camel, .partOfPrimaryKey = true
-#define PK_CAMEL(camel, nam) DEFER(PK_CAMEL_NAME)(camel, nam)
+#define PK_ID_AND_NAME_(id, nam) nam, .camelName = id, .partOfPrimaryKey = true
+#define PK_ID_AND_NAME(id, nam) DEFER(PK_ID_AND_NAME_)(id, nam)
 
 #define LOOKUP_FIELD(nam, len, typ)       \
   {.name              = nam,              \
@@ -997,7 +999,7 @@ Pgn pgnList[] = {
      0xe800,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {BINARY_FIELD(CAMEL("data", "Data"), BYTES(8), NULL), END_OF_FIELDS},
+     {BINARY_FIELD(ID_AND_NAME("data", "Data"), BYTES(8), NULL), END_OF_FIELDS},
      .fallback    = true,
      .explanation = "Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to "
                     "0xEE00 (59392 - 60928). "
@@ -1220,7 +1222,7 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1851),
-      UINT8_FIELD(PK_CAMEL("PID", "Proprietary ID")),
+      UINT8_FIELD(PK_ID_AND_NAME("PID", "Proprietary ID")),
       UINT8_FIELD("Variant"),
       UINT8_FIELD("Beep Control"),
       RESERVED_FIELD(BYTES(3)),
@@ -3793,7 +3795,10 @@ Pgn pgnList[] = {
      127251,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {UINT8_FIELD(CAMEL("sid", "SID")), ROTATION_FIX32_FIELD(CAMEL("rate", "Rate")), RESERVED_FIELD(BYTES(3)), END_OF_FIELDS},
+     {UINT8_FIELD(ID_AND_NAME("sid", "SID")),
+      ROTATION_FIX32_FIELD(ID_AND_NAME("rate", "Rate")),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
      .interval = 100,
      .priority = 2}
 
