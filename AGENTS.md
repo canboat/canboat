@@ -70,7 +70,7 @@ to the C headers in `analyzer/`, followed by `make generated`.
 | `docs/canboat.html` | **generated** | `xsltproc canboat.xsl canboat.xml \| fixup-html.sh`. The published doc page. |
 | `docs/canboat.json` | **generated** | `xsltproc canboat2json.xslt canboat.xml`, range-validated. **THE downstream contract.** |
 | `dbc-exporter/pgns.dbc` | **generated** | CANdb file (CRLF, version-stamped, ~466 KB) from `docs/canboat.json`. |
-| `sources/NMEA_database_1_300.xml` | fixture | Reference NMEA DB used only by `make validation` cross-check. |
+| `sources/nmea_1300.json` | fixture | Deterministic extract of the official NMEA 2000 v1.300 PGN-table PDF (`tools/nmea-pdf/extract.py`). `make validation` reconciles the database against it via `tools/nmea-pdf/reconcile.py` (gate on field-level type/sign/bits; PGN-level is report-only). Documented divergences live in `tools/nmea-pdf/allowlist.json`. The PDF itself is copyrighted and **not** committed. |
 | `samples/` | fixture | Raw N2K capture corpus; evidence cited in `pgn.h` comments. NOT used by the golden-file tests. |
 | `config/` | config | Env snippets for the `n2kd` launcher. |
 | `.clang-format` | config | Google-based clang-format (IndentWidth 2, ColumnLimit 132). |
@@ -126,7 +126,7 @@ Key facts:
 |---|---|
 | `make` | Builds all tool binaries into `rel/<platform>/`. |
 | `make tests` | Builds, then runs `analyzer` (test1..15) and `n2kd` (test1..2) golden tests. |
-| `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}` + `pgns.dbc`, validating schema/JSON/CSV. |
+| `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}` + `pgns.dbc`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
 | `make format` | `clang-format -i` over `*/*.c */*.h` (one directory level deep). |
 | `make docker-build` | Runs `make clean generated` inside an `ubuntu:22.04` builder. |
 | `make release` | **Maintainer-only:** `clean generated`, `git diff --exit-code`, tag `v<VERSION>`, push tags. |
