@@ -217,9 +217,16 @@ static unsigned int getMinimalPgnLength(Pgn *pgn, bool *isVariable)
 
   length /= 8; // Bits to bytes
 
-  if (pgn->type == PACKET_SINGLE && length != 8 && pgn->pgn != 59904)
+  // A fixed-layout single-frame PGN must fill the 8-byte CAN frame exactly. A single-frame PGN with a
+  // variable-length field (e.g. a register-keyed value) only has a minimum length here; the frame is still
+  // 8 bytes on the wire, with the value occupying as much of the remaining space as its type needs.
+  if (pgn->type == PACKET_SINGLE && !*isVariable && length != 8 && pgn->pgn != 59904)
   {
     logAbort("PGN %u '%s' has a length %u bytes but a single-frame PGN should be 8 bytes\n", pgn->pgn, pgn->description, length);
+  }
+  if (pgn->type == PACKET_SINGLE && *isVariable && length > 8)
+  {
+    logAbort("PGN %u '%s' has %u fixed bytes which does not fit in a single 8-byte frame\n", pgn->pgn, pgn->description, length);
   }
 
   logDebug("PGN %u len=%u\n", pgn->pgn, length);

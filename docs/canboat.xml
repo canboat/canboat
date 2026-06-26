@@ -3567,6 +3567,344 @@ limitations under the License.
       <EnumFieldType Value='387' Name='Pilot Mean Heel' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
     </LookupFieldTypeEnumeration>
+    <LookupFieldTypeEnumeration Name='VICTRON_VREG' MaxValue='65535'>
+      <EnumFieldType Value='260' Name='Group ID' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='261' Name='Hardware Revision' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='270' Name='Identify' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='288' Name='Uptime' FieldType='DURATION' Signed='false'
+ Resolution='1' Unit='s' Bits='32'/>
+      <EnumFieldType Value='304' Name='CAN Hardware RX Overflows' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='305' Name='CAN Software RX Overflows' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='306' Name='CAN Error Passive Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='307' Name='CAN Bus Off Counter' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='512' Name='Device Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='513' Name='Device State' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='514' Name='Remote Control Used' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='515' Name='AC Input Current Limit' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='516' Name='AC Active Input' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='528' Name='AC Input 1 Current Limit' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='529' Name='AC Input 1 Current Limit Min' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='530' Name='AC Input 1 Current Limit Max' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='531' Name='AC Input 1 Current Limit Internal' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='532' Name='AC Input 1 Current Limit Remote' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='544' Name='AC Input 2 Current Limit' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='545' Name='AC Input 2 Current Limit Min' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='546' Name='AC Input 2 Current Limit Max' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='547' Name='AC Input 2 Current Limit Internal' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='548' Name='AC Input 2 Current Limit Remote' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='768' Name='Deepest Discharge' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='Ah' Bits='32'/>
+      <EnumFieldType Value='769' Name='Last Discharge' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='Ah' Bits='32'/>
+      <EnumFieldType Value='770' Name='Average Discharge' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='Ah' Bits='32'/>
+      <EnumFieldType Value='771' Name='Charge Cycles' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='772' Name='Full Discharges' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='773' Name='Cumulative Ah Drawn' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='Ah' Bits='32'/>
+      <EnumFieldType Value='774' Name='Minimum Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='32'/>
+      <EnumFieldType Value='775' Name='Maximum Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='32'/>
+      <EnumFieldType Value='776' Name='Seconds Since Last Full Charge' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='777' Name='Automatic Synchronizations' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='778' Name='Low Voltage Alarms' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='779' Name='High Voltage Alarms' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='780' Name='Low Auxiliary Voltage Alarms' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='781' Name='High Auxiliary Voltage Alarms' FieldType='NUMBER' Signed='true'
+ Bits='32'/>
+      <EnumFieldType Value='782' Name='Minimum Auxiliary Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='32'/>
+      <EnumFieldType Value='783' Name='Maximum Auxiliary Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='32'/>
+      <EnumFieldType Value='784' Name='Discharged Energy' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='785' Name='Charged Energy' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='800' Name='Low Voltage Alarm Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='801' Name='Low Voltage Alarm Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='802' Name='High Voltage Alarm Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='803' Name='High Voltage Alarm Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='804' Name='Low Auxiliary Voltage Alarm Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='805' Name='Low Auxiliary Voltage Alarm Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='806' Name='High Auxiliary Voltage Alarm Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='807' Name='High Auxiliary Voltage Alarm Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='808' Name='Low State of Charge Alarm Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='809' Name='Low State of Charge Alarm Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='810' Name='Low Battery Temperature Alarm Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='811' Name='Low Battery Temperature Alarm Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='812' Name='High Battery Temperature Alarm Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='813' Name='High Battery Temperature Alarm Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='814' Name='High Internal Temperature Alarm Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='815' Name='High Internal Temperature Alarm Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='816' Name='Fuse Blown Alarm' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='817' Name='Mid-point Voltage Alarm Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='818' Name='Mid-point Voltage Alarm Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='845' Name='Relay Invert' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='846' Name='Relay Control' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='847' Name='Relay Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='848' Name='Low Voltage Relay Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='849' Name='Low Voltage Relay Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='850' Name='High Voltage Relay Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='851' Name='High Voltage Relay Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='852' Name='Low Auxiliary Voltage Relay Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='853' Name='Low Auxiliary Voltage Relay Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='854' Name='High Auxiliary Voltage Relay Set' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='855' Name='High Auxiliary Voltage Relay Clear' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='856' Name='Low State of Charge Relay Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='857' Name='Low State of Charge Relay Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='858' Name='Low Battery Temperature Relay Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='859' Name='Low Battery Temperature Relay Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='860' Name='High Battery Temperature Relay Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='861' Name='High Battery Temperature Relay Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='862' Name='High Internal Temperature Relay Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='863' Name='High Internal Temperature Relay Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='864' Name='Fuse Blown Relay' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='865' Name='Mid-point Voltage Relay Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='866' Name='Mid-point Voltage Relay Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='880' Name='BMS Flags' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='881' Name='BMS State' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='882' Name='BMS Error Flags' FieldType='NUMBER' Signed='false'
+ Bits='32'/>
+      <EnumFieldType Value='898' Name='Mid-point Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='899' Name='Mid-point Voltage Deviation' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='4094' Name='Time To Go' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='16'/>
+      <EnumFieldType Value='4095' Name='State of Charge' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='%' Bits='16'/>
+      <EnumFieldType Value='4096' Name='Battery Capacity' FieldType='NUMBER' Signed='false'
+ Resolution='1' Unit='Ah' Bits='16'/>
+      <EnumFieldType Value='4097' Name='Charged Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='V' Bits='16'/>
+      <EnumFieldType Value='4098' Name='Charged Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='4099' Name='Charged Detection Time' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='16'/>
+      <EnumFieldType Value='4100' Name='Charge Efficiency' FieldType='NUMBER' Signed='false'
+ Bits='16'/>
+      <EnumFieldType Value='4101' Name='Peukert Coefficient' FieldType='NUMBER' Signed='false'
+ Bits='16'/>
+      <EnumFieldType Value='4102' Name='Current Threshold' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='A' Bits='16'/>
+      <EnumFieldType Value='4103' Name='Average Time To Go' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='16'/>
+      <EnumFieldType Value='4104' Name='Low State of Charge Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='4105' Name='Low State of Charge Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='%' Bits='16'/>
+      <EnumFieldType Value='4106' Name='Relay Minimum Enabled Time' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='16'/>
+      <EnumFieldType Value='4107' Name='Relay Disable Delay' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='16'/>
+      <EnumFieldType Value='4148' Name='Current Offset' FieldType='NUMBER' Signed='false'
+ Bits='16'/>
+      <EnumFieldType Value='8194' Name='DC Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='8220' Name='DC Current' FieldType='NUMBER' Signed='true'
+ Resolution='0.001' Unit='A' Bits='32'/>
+      <EnumFieldType Value='60781' Name='Channel 3 Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60782' Name='Channel 3 Power' FieldType='NUMBER' Signed='true'
+ Resolution='1' Unit='W' Bits='16'/>
+      <EnumFieldType Value='60783' Name='Channel 3 Current' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60797' Name='Channel 2 Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60798' Name='Channel 2 Power' FieldType='NUMBER' Signed='true'
+ Resolution='1' Unit='W' Bits='16'/>
+      <EnumFieldType Value='60799' Name='Channel 2 Current' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60813' Name='Channel 1 Voltage' FieldType='NUMBER' Signed='true'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60814' Name='Channel 1 Power' FieldType='NUMBER' Signed='true'
+ Resolution='1' Unit='W' Bits='16'/>
+      <EnumFieldType Value='60815' Name='Channel 1 Current' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60831' Name='CAN Select' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60840' Name='Load Output Status' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60841' Name='Load Output Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60842' Name='Load Output Power' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='W' Bits='16'/>
+      <EnumFieldType Value='60843' Name='Load Output Control Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60844' Name='Load Output Offset Voltage' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60845' Name='Load Output Actual Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60846' Name='Load Output Current Limit' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60847' Name='Load Output Maximum Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60857' Name='Input Voltage Maximum Clear' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60858' Name='Input Voltage Maximum Set' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60859' Name='Input Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60860' Name='Input Power' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='W' Bits='32'/>
+      <EnumFieldType Value='60861' Name='Input Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60863' Name='Input Maximum Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60880' Name='Charger Maximum Power Yesterday' FieldType='NUMBER' Signed='false'
+ Resolution='1' Unit='W' Bits='32'/>
+      <EnumFieldType Value='60881' Name='Charger Yield Yesterday' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='60882' Name='Charger Maximum Power Today' FieldType='NUMBER' Signed='false'
+ Resolution='1' Unit='W' Bits='32'/>
+      <EnumFieldType Value='60883' Name='Charger Yield Today' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='60884' Name='Charger Additional State Information' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60885' Name='Charger Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60886' Name='Charger Power' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='W' Bits='16'/>
+      <EnumFieldType Value='60887' Name='Charger Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60888' Name='Charger Relay State' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60889' Name='Charger Relay Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60890' Name='Charger Error Code' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60891' Name='Charger Internal Temperature' FieldType='NUMBER' Signed='true'
+ Bits='16'/>
+      <EnumFieldType Value='60892' Name='Charger User Yield' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='60893' Name='Charger System Yield' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='kWh' Bits='32'/>
+      <EnumFieldType Value='60894' Name='Charger Number of Physical Outputs' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60895' Name='Charger Maximum Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60904' Name='Battery BMS Present' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60905' Name='Battery Power Supply Voltage' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60906' Name='Battery Voltage Setting' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60907' Name='Battery Overcharge Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60908' Name='Battery Temperature' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='K' Bits='16'/>
+      <EnumFieldType Value='60909' Name='Battery Intelligent Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60910' Name='Battery Storage Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60911' Name='Battery Voltage Selection' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60912' Name='Battery Maximum Current' FieldType='NUMBER' Signed='false'
+ Resolution='0.1' Unit='A' Bits='16'/>
+      <EnumFieldType Value='60913' Name='Battery Type' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60914' Name='Battery Temperature Compensation' FieldType='NUMBER' Signed='true'
+ Bits='16'/>
+      <EnumFieldType Value='60915' Name='Battery Discharge Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60916' Name='Battery Equalisation Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60917' Name='Battery Storage Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60918' Name='Battery Float Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60919' Name='Battery Absorption Voltage Level' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='V' Bits='16'/>
+      <EnumFieldType Value='60920' Name='Battery Repeated Absorption Time Interval' FieldType='DURATION' Signed='false'
+ Resolution='864' Unit='s' Bits='16'/>
+      <EnumFieldType Value='60921' Name='Battery Repeated Absorption Time Duration' FieldType='DURATION' Signed='false'
+ Resolution='36' Unit='s' Bits='16'/>
+      <EnumFieldType Value='60922' Name='Battery Float Time Limit' FieldType='DURATION' Signed='false'
+ Resolution='36' Unit='s' Bits='16'/>
+      <EnumFieldType Value='60923' Name='Battery Absorption Time Limit' FieldType='DURATION' Signed='false'
+ Resolution='36' Unit='s' Bits='16'/>
+      <EnumFieldType Value='60924' Name='Battery Bulk Time Limit' FieldType='DURATION' Signed='false'
+ Resolution='36' Unit='s' Bits='16'/>
+      <EnumFieldType Value='60925' Name='Battery Automatic Equalisation Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60926' Name='Battery Adaptive Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='60927' Name='Battery Safe Mode' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+    </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
   <PGNs>
     <PGNInfo>
@@ -4631,8 +4969,11 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>61184</PGN>
-      <Id>victronBatteryRegister</Id>
-      <Description>Victron Battery Register</Description>
+      <Id>victronVeCanRegister</Id>
+      <Description>Victron: VE.Can Register</Description>
+    <Priority>7</Priority>
+      <Explanation>Victron VE.Can register (VREG) read/broadcast: the frame carries a 16-bit register id and the register's value, whose type is selected by the register id (see the VE.Can registers document at .url). Register ids that are not listed, or that carry a multi-field or string value, decode as raw bytes.</Explanation>
+      <URL>https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf</URL>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -4642,7 +4983,7 @@ limitations under the License.
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>5</FieldCount>
-      <Length>8</Length>
+      <MinLength>4</MinLength>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -4697,26 +5038,19 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
+          <LookupFieldTypeEnumeration>VICTRON_VREG</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>payload</Id>
-          <Name>Payload</Name>
-          <BitLength>32</BitLength>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Register value; its type is selected by Register Id</Description>
+          <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967292</RangeMax>
-          <UnknownValue>4294967295</UnknownValue>
-          <OutOfRangeValue>4294967294</OutOfRangeValue>
-          <ReservedValue>4294967293</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

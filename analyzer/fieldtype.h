@@ -1115,6 +1115,53 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "FIX24"},
 
+    {.name          = "CURRENT_FIX32_MA",
+     .description   = "Electrical current",
+     .resolution    = .001,
+     .physical      = &ELECTRICAL_CURRENT,
+     .baseFieldType = "FIX32"},
+
+    {.name = "CURRENT_UFIX16_CA", .description = "Electrical current", .resolution = 0.01, .physical = &ELECTRICAL_CURRENT, .baseFieldType = "UFIX16"},
+
+    {.name          = "VOLTAGE_FIX32_10MV",
+     .description   = "Voltage",
+     .resolution    = 0.01,
+     .physical      = &POTENTIAL_DIFFERENCE,
+     .baseFieldType = "FIX32"},
+
+    {.name          = "ELECTRIC_CHARGE_FIX32_DAH",
+     .description   = "Electrical charge",
+     .resolution    = 0.1,
+     .unit          = "Ah",
+     .physical      = &ELECTRICAL_CHARGE,
+     .baseFieldType = "FIX32"},
+
+    {.name = "ENERGY_UFIX32_CKWH", .description = "Electrical energy", .resolution = 0.01, .physical = &ELECTRICAL_ENERGY, .baseFieldType = "UFIX32"},
+
+    {.name = "POWER_UFIX16_CW", .description = "Electrical power", .resolution = 0.01, .physical = &ELECTRICAL_POWER, .baseFieldType = "UFIX16"},
+
+    {.name = "POWER_UFIX32_CW", .description = "Electrical power", .resolution = 0.01, .physical = &ELECTRICAL_POWER, .baseFieldType = "UFIX32"},
+
+    {.name = "POWER_FIX16", .description = "Electrical power", .resolution = 1, .physical = &ELECTRICAL_POWER, .baseFieldType = "FIX16"},
+
+    {.name = "DURATION_UFIX16_CHOUR", .description = "Time duration, 0.01 hour resolution", .resolution = 36, .size = 16, .hasSign = False, .baseFieldType = "DURATION"},
+
+    {.name = "DURATION_UFIX16_CDAY", .description = "Time duration, 0.01 day resolution", .resolution = 864, .size = 16, .hasSign = False, .baseFieldType = "DURATION"},
+
+    {.name          = "PERCENTAGE_UFIX16_D",
+     .description   = "Percentage, unsigned, 0.1% resolution",
+     .resolution    = 0.1,
+     .unit          = "%",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "UFIX16"},
+
+    {.name          = "PERCENTAGE_UFIX16_C",
+     .description   = "Percentage, unsigned, 0.01% resolution",
+     .resolution    = 0.01,
+     .unit          = "%",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "UFIX16"},
+
     {.name          = "ELECTRIC_CHARGE_UFIX16_AH",
      .description   = "Electrical charge",
      .resolution    = 1,
