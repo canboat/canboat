@@ -54,12 +54,15 @@ limitations under the License.
 #define PGN_PGN_LIST (126464)
 #define PGN_PRODUCT_INFO (126996)
 
-/* Product Information (PGN 126996) content. */
+/* Product Information (PGN 126996) content. Model ID carries our brand;
+ * the per-binary name (this C binary, or canboat-rs's socketcan-serial-rs
+ * / canboat-pipeline-rs) goes in the Model Version field. */
 #define N2K_DB_VERSION (2100)      /* NMEA 2000 database version 2.100 (0.001 res) */
 #define PRODUCT_CODE (1)
 #define CERTIFICATION_LEVEL (0)    /* Level A */
 #define LOAD_EQUIVALENCY (1)       /* 1 LEN = 50 mA */
-#define MODEL_ID "socketcan-serial"
+#define MODEL_ID "CANboat"
+#define MODEL_VERSION "socketcan-serial"
 
 /* Group Function (PGN 126208) function codes and DURATION sentinels. */
 #define GROUP_FUNCTION_REQUEST (0)
@@ -225,6 +228,7 @@ static void     handleIsoRequest(uint8_t src, uint8_t dst, const uint8_t *data, 
 static void     handleGroupFunction(uint8_t src, uint8_t dst, const uint8_t *data, uint8_t len);
 static void     tickAddressClaim(int sock, uint64_t now);
 static int      pickFreeAddress(void);
+static uint32_t getMachineId(void);
 static uint64_t nameFromBytes(const uint8_t *data);
 static void     sendHeartbeat(int sock);
 static void     sendProductInfo(int sock);
@@ -328,7 +332,7 @@ int main(int argc, char **argv)
             "  -n        do not claim an address (passive bridge only)\n"
             "  -t <n>    timeout, quit if no frame is received for <n> seconds\n"
             "  -a <addr> preferred source address to claim (default 0)\n"
-            "  -u <n>    unique number for the ISO NAME (default derived from pid)\n"
+            "  -u <n>    unique number for the ISO NAME (default derived from /etc/machine-id)\n"
             "  -m <n>    manufacturer code for the ISO NAME (default %u)\n"
             "  -si <n>   ISO NAME System Instance, 0..15 (default 15 = yield to other devices)\n"
             "  -hb <ms>  heartbeat (PGN 126993) interval in ms, default %d, 0 disables\n"
@@ -346,7 +350,7 @@ int main(int argc, char **argv)
 
   if (uniqueNumber == 0)
   {
-    uniqueNumber = (uint32_t) (getpid() & 0x1fffff);
+    uniqueNumber = getMachineId();
   }
   address = preferredAddress;
 
@@ -1281,6 +1285,56 @@ static void sendHeartbeat(int sock)
   heartbeatSeq = (heartbeatSeq >= 252) ? 0 : heartbeatSeq + 1;
 }
 
+/*
+ * Stable per-machine 21-bit ISO NAME Identity Number. Reads
+ * /etc/machine-id (or the dbus fallback) and runs it through FNV-1a
+ * with the same "canboat|" salt as canboat-rs's canboat_core::os
+ * helper, so both binaries produce the same NAME on the same host.
+ * Falls back to hashing just the salt if neither file is present.
+ */
+static uint32_t getMachineId(void)
+{
+  static const char *paths[]   = {"/etc/machine-id", "/var/lib/dbus/machine-id"};
+  static const char  salt[]    = "canboat|";
+  const uint64_t     FNV_BASIS = 0xcbf29ce484222325ULL;
+  const uint64_t     FNV_PRIME = 0x100000001b3ULL;
+  char               buf[256];
+  size_t             n = 0;
+  size_t             i;
+  uint64_t           hash;
+
+  for (i = 0; i < sizeof(paths) / sizeof(paths[0]); i++)
+  {
+    FILE *f = fopen(paths[i], "r");
+    if (f == NULL)
+    {
+      continue;
+    }
+    n = fread(buf, 1, sizeof(buf), f);
+    fclose(f);
+    /* trim trailing whitespace to match the Rust helper's `trim()`. */
+    while (n > 0 && (buf[n - 1] == ' ' || buf[n - 1] == '\t' || buf[n - 1] == '\r' || buf[n - 1] == '\n'))
+    {
+      n--;
+    }
+    if (n > 0)
+    {
+      break;
+    }
+  }
+
+  hash = FNV_BASIS;
+  for (i = 0; i < sizeof(salt) - 1; i++) /* -1: skip the terminating NUL */
+  {
+    hash = (hash ^ (uint8_t) salt[i]) * FNV_PRIME;
+  }
+  for (i = 0; i < n; i++)
+  {
+    hash = (hash ^ (uint8_t) buf[i]) * FNV_PRIME;
+  }
+  return (uint32_t) (hash & 0x1fffffULL);
+}
+
 /* Copy a C string into a fixed-width NUL-padded STRING_FIX field. */
 static void putStringFix(uint8_t *dst, size_t width, const char *s)
 {
@@ -1319,8 +1373,8 @@ static void sendProductInfo(int sock)
   data[2] = (uint8_t) PRODUCT_CODE;
   data[3] = (uint8_t) (PRODUCT_CODE >> 8);
   putStringFix(data + 4, 32, MODEL_ID);
-  putStringFix(data + 36, 32, VERSION); /* software version code */
-  putStringFix(data + 68, 32, "");      /* model version */
+  putStringFix(data + 36, 32, VERSION);        /* software version code */
+  putStringFix(data + 68, 32, MODEL_VERSION);  /* per-binary name */
   snprintf(serial, sizeof(serial), "%u", uniqueNumber);
   putStringFix(data + 100, 32, serial);
   data[132] = CERTIFICATION_LEVEL;
