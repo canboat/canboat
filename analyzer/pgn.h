@@ -8626,6 +8626,24 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
+    {"Mercury: Engine Key-Value Data",
+     130824,
+     PACKET_LOOKUPS_UNKNOWN,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_DYNAMIC_FIELD_KEY("Key", 12, MERCURY_KEY_VALUE),
+      DYNAMIC_FIELD_LENGTH("Length", 4, "Length of field 6"),
+      DYNAMIC_FIELD_VALUE("Value", "Data value"),
+      END_OF_FIELDS},
+     .priority        = 7,
+     .repeatingField1 = UINT8_MAX,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 4,
+     .explanation     = "Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, "
+                        "configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value "
+                        "scheme as the B&G PGN 130824. Keys are only partially identified."}
+
+    ,
     {"Maretron: Data Instance Channel Correlation",
      130825,
      PACKET_COMPLETE,
@@ -8654,6 +8672,38 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
+    {"Mercury: Cruise Control Data",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      MATCH_LOOKUP_FIELD("Opcode", BYTES(1), 4, MERCURY_COMMAND_OPCODE),
+      UINT8_FIELD("Engine Instance"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_DESC_FIELD("Cruise State", "Cruise engagement/mode byte; 0 = disengaged, 5 = engaged"),
+      {.name = "Cruise RPM Setpoint", .size = BYTES(2), .resolution = 1, .unit = "rpm", .fieldType = "UFIX16"},
+      {.name = "Cruise Speed Setpoint", .size = BYTES(2), .resolution = 0.01, .unit = "km/h", .fieldType = "UFIX16"},
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Opcode 4 (Cruise Control) sub-message of Mercury PGN 130825: engine instance, a cruise "
+                    "engagement/mode byte (0 = disengaged, 5 = engaged), and the cruise RPM and speed setpoints "
+                    "(0xFFFF = not available). Some payload bytes are not yet identified."}
+
+    ,
+    {"Mercury: Command/Response",
+     130825,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      LOOKUP_FIELD("Opcode", BYTES(1), MERCURY_COMMAND_OPCODE),
+      BINARY_FIELD("Data", BYTES(30), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function "
+                    "and the following data is opcode-specific."}
+
+    ,
     {"Maretron: Switch Indicator Status",
      130826,
      PACKET_COMPLETE,
@@ -8679,6 +8729,23 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     /* Uwe Lovas has seen this from EP-70R */
+    ,
+    {"Mercury: BAM Digital-Data Proxy",
+     130826,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144),
+      UINT8_FIELD("Type"),
+      UINT8_FIELD("Instance"),
+      SIMPLE_FIELD("Field 4", 2),
+      RESERVED_FIELD(6),
+      UINT8_FIELD("Flag"),
+      BINARY_FIELD("Data", BYTES(32), NULL),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Variable-length Mercury digital-data proxy channel; the trailing data block is "
+                    "opcode/instance-specific and may be empty."}
+
     ,
     {"Lowrance: unknown",
      130827,
@@ -8717,9 +8784,20 @@ Pgn pgnList[] = {
     ,
     {"Mercury: Engine Status",
      130829,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(144), END_OF_FIELDS}}
+     {COMPANY(144),
+      RESERVED_FIELD(4),
+      BINARY_FIELD("Field A", 4, "Reserved (unused)"),
+      BINARY_FIELD("Sub Helm", 4, "Helm-station sub-address (Mercury multi-helm); byte 3 low nibble"),
+      BINARY_FIELD("Helm", 4, "Helm-station address (Mercury multi-helm); byte 3 high nibble"),
+      BINARY_FIELD("Capabilities", BYTES(1), "Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one "
+                    "source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, "
+                    "bit1 = Cruise Control capability); byte 3 carries the Helm and Sub Helm station addresses for "
+                    "Mercury multi-helm installations."}
 
     ,
     {"Maretron: Dometic HVAC Status",
