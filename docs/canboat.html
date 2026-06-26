@@ -414,17 +414,20 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-61184">0xEF00:
             PGN 61184
-            - Victron Battery Register</h3><p>
+            - Victron: VE.Can Register</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>358</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>358</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Victron VE.Can register (VREG) read/broadcast: the frame carries a 16-bit register id and the register's value, whose type is selected by the register id (see the VE.Can registers document at .url). Register ids that are not listed, or that carry a multi-field or string value, decode as raw bytes.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
-            8
+            
+              at least 4
             bytes long and contains 5 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>358:
                   Victron Energy</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -436,11 +439,14 @@ limitations under the License.
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Register Id</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Payload</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-61184">0xEF00:
+                      lookup
+                      <a href="#lookup-VICTRON_VREG">VICTRON_VREG</a>
+                      that defines the next variable field's type.
+                    </td><td>true</td></tr><tr><td>5</td><td>Value</td><td>Register value; its type is selected by Register Id</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf">https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf</a></p><h3 id="pgn-61184">0xEF00:
             PGN 61184
             - Carling: Breaker Command</h3><p>
               This PGN description applies when the following field(s) match:
@@ -21775,6 +21781,512 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>387</td><td>Pilot Mean Heel</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-VICTRON_VREG">VICTRON_VREG
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>260</td><td>Group ID</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>261</td><td>Hardware Revision</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>270</td><td>Identify</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>288</td><td>Uptime</td><td>1 s</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>304</td><td>CAN Hardware RX Overflows</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>305</td><td>CAN Software RX Overflows</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>306</td><td>CAN Error Passive Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>307</td><td>CAN Bus Off Counter</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>512</td><td>Device Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>513</td><td>Device State</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>514</td><td>Remote Control Used</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>515</td><td>AC Input Current Limit</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>516</td><td>AC Active Input</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>528</td><td>AC Input 1 Current Limit</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>529</td><td>AC Input 1 Current Limit Min</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>530</td><td>AC Input 1 Current Limit Max</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>531</td><td>AC Input 1 Current Limit Internal</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>532</td><td>AC Input 1 Current Limit Remote</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>544</td><td>AC Input 2 Current Limit</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>545</td><td>AC Input 2 Current Limit Min</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>546</td><td>AC Input 2 Current Limit Max</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>547</td><td>AC Input 2 Current Limit Internal</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>548</td><td>AC Input 2 Current Limit Remote</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Deepest Discharge</td><td>0.1 Ah</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>769</td><td>Last Discharge</td><td>0.1 Ah</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>770</td><td>Average Discharge</td><td>0.1 Ah</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>771</td><td>Charge Cycles</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>772</td><td>Full Discharges</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>773</td><td>Cumulative Ah Drawn</td><td>0.1 Ah</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>774</td><td>Minimum Voltage</td><td>0.01 V</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>775</td><td>Maximum Voltage</td><td>0.01 V</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>776</td><td>Seconds Since Last Full Charge</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>777</td><td>Automatic Synchronizations</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>778</td><td>Low Voltage Alarms</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>779</td><td>High Voltage Alarms</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>780</td><td>Low Auxiliary Voltage Alarms</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>781</td><td>High Auxiliary Voltage Alarms</td><td> </td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>782</td><td>Minimum Auxiliary Voltage</td><td>0.01 V</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>783</td><td>Maximum Auxiliary Voltage</td><td>0.01 V</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>784</td><td>Discharged Energy</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>785</td><td>Charged Energy</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>800</td><td>Low Voltage Alarm Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>801</td><td>Low Voltage Alarm Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>802</td><td>High Voltage Alarm Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>803</td><td>High Voltage Alarm Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>804</td><td>Low Auxiliary Voltage Alarm Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>805</td><td>Low Auxiliary Voltage Alarm Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>806</td><td>High Auxiliary Voltage Alarm Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>807</td><td>High Auxiliary Voltage Alarm Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>808</td><td>Low State of Charge Alarm Set</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>809</td><td>Low State of Charge Alarm Clear</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>810</td><td>Low Battery Temperature Alarm Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>811</td><td>Low Battery Temperature Alarm Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>812</td><td>High Battery Temperature Alarm Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>813</td><td>High Battery Temperature Alarm Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>814</td><td>High Internal Temperature Alarm Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>815</td><td>High Internal Temperature Alarm Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>816</td><td>Fuse Blown Alarm</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>817</td><td>Mid-point Voltage Alarm Set</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>818</td><td>Mid-point Voltage Alarm Clear</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>845</td><td>Relay Invert</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>846</td><td>Relay Control</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>847</td><td>Relay Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>848</td><td>Low Voltage Relay Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>849</td><td>Low Voltage Relay Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>850</td><td>High Voltage Relay Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>851</td><td>High Voltage Relay Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>852</td><td>Low Auxiliary Voltage Relay Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>853</td><td>Low Auxiliary Voltage Relay Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>854</td><td>High Auxiliary Voltage Relay Set</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>855</td><td>High Auxiliary Voltage Relay Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>856</td><td>Low State of Charge Relay Set</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>857</td><td>Low State of Charge Relay Clear</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>858</td><td>Low Battery Temperature Relay Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>859</td><td>Low Battery Temperature Relay Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>860</td><td>High Battery Temperature Relay Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>861</td><td>High Battery Temperature Relay Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>862</td><td>High Internal Temperature Relay Set</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>863</td><td>High Internal Temperature Relay Clear</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>864</td><td>Fuse Blown Relay</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>865</td><td>Mid-point Voltage Relay Set</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>866</td><td>Mid-point Voltage Relay Clear</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>880</td><td>BMS Flags</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>881</td><td>BMS State</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>882</td><td>BMS Error Flags</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>898</td><td>Mid-point Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>899</td><td>Mid-point Voltage Deviation</td><td>0.1 %</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4094</td><td>Time To Go</td><td>60 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>4095</td><td>State of Charge</td><td>0.01 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4096</td><td>Battery Capacity</td><td>1 Ah</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4097</td><td>Charged Voltage</td><td>0.1 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4098</td><td>Charged Current</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4099</td><td>Charged Detection Time</td><td>60 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>4100</td><td>Charge Efficiency</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4101</td><td>Peukert Coefficient</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4102</td><td>Current Threshold</td><td>0.01 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4103</td><td>Average Time To Go</td><td>60 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>4104</td><td>Low State of Charge Set</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4105</td><td>Low State of Charge Clear</td><td>0.1 %</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>4106</td><td>Relay Minimum Enabled Time</td><td>60 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>4107</td><td>Relay Disable Delay</td><td>60 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>4148</td><td>Current Offset</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8194</td><td>DC Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>8220</td><td>DC Current</td><td>0.001 A</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60781</td><td>Channel 3 Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60782</td><td>Channel 3 Power</td><td>1 W</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60783</td><td>Channel 3 Current</td><td>0.1 A</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60797</td><td>Channel 2 Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60798</td><td>Channel 2 Power</td><td>1 W</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60799</td><td>Channel 2 Current</td><td>0.1 A</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60813</td><td>Channel 1 Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60814</td><td>Channel 1 Power</td><td>1 W</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60815</td><td>Channel 1 Current</td><td>0.1 A</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60831</td><td>CAN Select</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60840</td><td>Load Output Status</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60841</td><td>Load Output Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60842</td><td>Load Output Power</td><td>0.01 W</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60843</td><td>Load Output Control Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60844</td><td>Load Output Offset Voltage</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60845</td><td>Load Output Actual Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60846</td><td>Load Output Current Limit</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60847</td><td>Load Output Maximum Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60857</td><td>Input Voltage Maximum Clear</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60858</td><td>Input Voltage Maximum Set</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60859</td><td>Input Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60860</td><td>Input Power</td><td>0.01 W</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60861</td><td>Input Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60863</td><td>Input Maximum Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60880</td><td>Charger Maximum Power Yesterday</td><td>1 W</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60881</td><td>Charger Yield Yesterday</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60882</td><td>Charger Maximum Power Today</td><td>1 W</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60883</td><td>Charger Yield Today</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60884</td><td>Charger Additional State Information</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60885</td><td>Charger Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60886</td><td>Charger Power</td><td>0.01 W</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60887</td><td>Charger Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60888</td><td>Charger Relay State</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60889</td><td>Charger Relay Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60890</td><td>Charger Error Code</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60891</td><td>Charger Internal Temperature</td><td> </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60892</td><td>Charger User Yield</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60893</td><td>Charger System Yield</td><td>0.01 kWh</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60894</td><td>Charger Number of Physical Outputs</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60895</td><td>Charger Maximum Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60904</td><td>Battery BMS Present</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60905</td><td>Battery Power Supply Voltage</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60906</td><td>Battery Voltage Setting</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60907</td><td>Battery Overcharge Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60908</td><td>Battery Temperature</td><td>0.01 K</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60909</td><td>Battery Intelligent Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60910</td><td>Battery Storage Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60911</td><td>Battery Voltage Selection</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60912</td><td>Battery Maximum Current</td><td>0.1 A</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60913</td><td>Battery Type</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60914</td><td>Battery Temperature Compensation</td><td> </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60915</td><td>Battery Discharge Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60916</td><td>Battery Equalisation Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60917</td><td>Battery Storage Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60918</td><td>Battery Float Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60919</td><td>Battery Absorption Voltage Level</td><td>0.01 V</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60920</td><td>Battery Repeated Absorption Time Interval</td><td>864 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>60921</td><td>Battery Repeated Absorption Time Duration</td><td>36 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>60922</td><td>Battery Float Time Limit</td><td>36 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>60923</td><td>Battery Absorption Time Limit</td><td>36 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>60924</td><td>Battery Bulk Time Limit</td><td>36 s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>60925</td><td>Battery Automatic Equalisation Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60926</td><td>Battery Adaptive Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60927</td><td>Battery Safe Mode</td><td> </td><td>8 bits 
+              
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>
             Some fields are not stored as a straight signed two's complement binary number,
             but as an binary number with an offset.

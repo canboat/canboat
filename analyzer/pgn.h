@@ -491,6 +491,9 @@ typedef struct
 #define CURRENT_FIX24_CA_FIELD(nam) \
   {.name = nam, .size = BYTES(3), .resolution = 0.01, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX24_CA"}
 
+#define CURRENT_FIX32_MA_FIELD(nam) \
+  {.name = nam, .size = BYTES(4), .resolution = 0.001, .hasSign = true, .unit = "A", .fieldType = "CURRENT_FIX32_MA"}
+
 #define ELECTRIC_CHARGE_UFIX16_AH(nam) {.name = nam, .fieldType = "ELECTRIC_CHARGE_UFIX16_AH"}
 
 #define PEUKERT_FIELD(nam) {.name = nam, .fieldType = "PEUKERT_EXPONENT", .rangeMin = 1.0, .rangeMax = 1.5}
@@ -1247,11 +1250,20 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Victron Battery Register",
+    {"Victron: VE.Can Register",
      61184,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
-     {COMPANY(358), UINT16_FIELD("Register Id"), SIMPLE_FIELD("Payload", BYTES(4)), END_OF_FIELDS}}
+     {COMPANY(358),
+      LOOKUP_DYNAMIC_FIELD_KEY("Register Id", BYTES(2), VICTRON_VREG),
+      DYNAMIC_FIELD_VALUE("Value", "Register value; its type is selected by Register Id"),
+      END_OF_FIELDS},
+     .url         = "https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf",
+     .explanation = "Victron VE.Can register (VREG) read/broadcast: the frame carries a 16-bit register id and the "
+                    "register's value, whose type is selected by the register id (see the VE.Can registers document at "
+                    ".url). Register ids that are not listed, or that carry a multi-field or string value, decode as raw "
+                    "bytes.",
+     .priority    = 7}
 
     ,
     {"Carling: Breaker Command",
