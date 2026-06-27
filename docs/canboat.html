@@ -3010,16 +3010,16 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65313">0xFF21:
             PGN 65313
-            - Navico: Proprietary</h3><p>
+            - Navico: Depth Quality</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 4 fields.
+            bytes long and contains 6 fields.
 
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -3030,8 +3030,14 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65314">0xFF22:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Depth Quality</td><td>Depth signal quality ratio (0 = no bottom lock .. <sub/></td><td>0.01 <div class="xs">-1.27 .. 1.24</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65314">0xFF22:
             PGN 65314
             - BEP Marine: Proprietary PGN 65314</h3><p>
               This PGN description applies when the following field(s) match:
@@ -17538,17 +17544,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130825">0x1FF09:
             PGN 130825
-            - Navico: Unknown 2</h3><p>
+            - Navico: NDP2k Alert</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert State tracks its lifecycle (Normal -&gt; Active -&gt; Silenced -&gt; Acknowledged), and Alert Severity classifies it.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            12
-            bytes long and contains 4 fields.
+            11
+            bytes long and contains 11 fields.
 
+            
+              The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -17558,8 +17566,31 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>80 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130825">0x1FF09:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Alert Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Alert ID</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Alert State</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-ALERT_STATE">ALERT_STATE</a></td><td/></tr><tr><td>9</td><td>Action Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Alert Severity</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                      lookup
+                      <a href="#lookup-ALERT_TYPE">ALERT_TYPE</a></td><td/></tr><tr><td>11</td><td>Value</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130825">0x1FF09:
             PGN 130825
             - BEP Marine: Proprietary PGN 130825</h3><p>
               This PGN description applies when the following field(s) match:
@@ -17628,7 +17659,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130825
             - Mercury: Command/Response</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function and the following data is opcode-specific.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function and the following data is opcode-specific. Several opcodes are the proprietary-PGN equivalents of the corresponding Mercury manufacturer commands carried in PGN 126720: opcode 4 (Cruise Control), opcodes 6/7 (Active Trim command/status), opcode 8 (Autopilot), opcode 9 (Active Exhaust) and opcodes 12/13 (Oil Level check/reset).</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -17720,7 +17751,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130826
             - Mercury: BAM Digital-Data Proxy</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length Mercury digital-data proxy channel; the trailing data block is opcode/instance-specific and may be empty.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing data block is opcode/instance-specific, may be empty, and its block semantics are defined by an external BAM specification rather than being locally decodable.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -17871,7 +17902,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130829
             - Mercury: Engine Status</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); byte 3 carries the Helm and Sub Helm station addresses for Mercury multi-helm installations.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>144</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for Mercury multi-helm installations.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -21374,7 +21405,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>120</td></tr><tr><td>1</td><td>121</td></tr><tr><td>2</td><td>122</td></tr><tr><td>3</td><td>123</td></tr><tr><td>4</td><td>124</td></tr><tr><td>5</td><td>125</td></tr><tr><td>6</td><td>126</td></tr><tr><td>7</td><td>127</td></tr><tr><td>8</td><td>128</td></tr><tr><td>9</td><td>129</td></tr><tr><td>10</td><td>130</td></tr><tr><td>11</td><td>131</td></tr><tr><td>12</td><td>132</td></tr><tr><td>13</td><td>133</td></tr><tr><td>14</td><td>134</td></tr><tr><td>15</td><td>135</td></tr><tr><td>16</td><td>136</td></tr><tr><td>17</td><td>137</td></tr><tr><td>18</td><td>138</td></tr></table><h3 id="lookup-MERCURY_COMMAND_OPCODE">MERCURY_COMMAND_OPCODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>7</td><td>Active Trim Status</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value in other field</th><th>Value</th><th>Description</th></tr><tr><td>10</td><td>130</td><td>Diagnostic</td></tr><tr><td>10</td><td>140</td><td>Bus Traffic Logger</td></tr><tr><td>20</td><td>110</td><td>Alarm Enunciator</td></tr><tr><td>20</td><td>130</td><td>Emergency Position Indicating Radio Beacon (EPIRB)</td></tr><tr><td>20</td><td>135</td><td>Man Overboard</td></tr><tr><td>20</td><td>140</td><td>Voyage Data Recorder</td></tr><tr><td>20</td><td>150</td><td>Camera</td></tr><tr><td>25</td><td>130</td><td>PC Gateway</td></tr><tr><td>25</td><td>131</td><td>NMEA 2000 to Analog Gateway</td></tr><tr><td>25</td><td>132</td><td>Analog to NMEA 2000 Gateway</td></tr><tr><td>25</td><td>133</td><td>NMEA 2000 to Serial Gateway</td></tr><tr><td>25</td><td>135</td><td>NMEA 0183 Gateway</td></tr><tr><td>25</td><td>136</td><td>NMEA Network Gateway</td></tr><tr><td>25</td><td>137</td><td>NMEA 2000 Wireless Gateway</td></tr><tr><td>25</td><td>140</td><td>Router</td></tr><tr><td>25</td><td>150</td><td>Bridge</td></tr><tr><td>25</td><td>160</td><td>Repeater</td></tr><tr><td>30</td><td>130</td><td>Binary Event Monitor</td></tr><tr><td>30</td><td>140</td><td>Load Controller</td></tr><tr><td>30</td><td>141</td><td>AC/DC Input</td></tr><tr><td>30</td><td>150</td><td>Function Controller</td></tr><tr><td>35</td><td>140</td><td>Engine</td></tr><tr><td>35</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>35</td><td>142</td><td>Solar Panel (Solar Array)</td></tr><tr><td>35</td><td>143</td><td>Wind Generator (DC)</td></tr><tr><td>35</td><td>144</td><td>Fuel Cell</td></tr><tr><td>35</td><td>145</td><td>Network Power Supply</td></tr><tr><td>35</td><td>151</td><td>AC Generator</td></tr><tr><td>35</td><td>152</td><td>AC Bus</td></tr><tr><td>35</td><td>153</td><td>AC Mains (Utility/Shore)</td></tr><tr><td>35</td><td>154</td><td>AC Output</td></tr><tr><td>35</td><td>160</td><td>Power Converter - Battery Charger</td></tr><tr><td>35</td><td>161</td><td>Power Converter - Battery Charger+Inverter</td></tr><tr><td>35</td><td>162</td><td>Power Converter - Inverter</td></tr><tr><td>35</td><td>163</td><td>Power Converter - DC</td></tr><tr><td>35</td><td>170</td><td>Battery</td></tr><tr><td>35</td><td>180</td><td>Engine Gateway</td></tr><tr><td>40</td><td>130</td><td>Follow-up Controller</td></tr><tr><td>40</td><td>140</td><td>Mode Controller</td></tr><tr><td>40</td><td>150</td><td>Autopilot</td></tr><tr><td>40</td><td>155</td><td>Rudder</td></tr><tr><td>40</td><td>160</td><td>Heading Sensors</td></tr><tr><td>40</td><td>170</td><td>Trim (Tabs)/Interceptors</td></tr><tr><td>40</td><td>180</td><td>Attitude (Pitch, Roll, Yaw) Control</td></tr><tr><td>50</td><td>130</td><td>Engineroom Monitoring</td></tr><tr><td>50</td><td>140</td><td>Engine</td></tr><tr><td>50</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>50</td><td>150</td><td>Engine Controller</td></tr><tr><td>50</td><td>151</td><td>AC Generator</td></tr><tr><td>50</td><td>155</td><td>Motor</td></tr><tr><td>50</td><td>160</td><td>Engine Gateway</td></tr><tr><td>50</td><td>165</td><td>Transmission</td></tr><tr><td>50</td><td>170</td><td>Throttle/Shift Control</td></tr><tr><td>50</td><td>180</td><td>Actuator</td></tr><tr><td>50</td><td>190</td><td>Gauge Interface</td></tr><tr><td>50</td><td>200</td><td>Gauge Large</td></tr><tr><td>50</td><td>210</td><td>Gauge Small</td></tr><tr><td>60</td><td>130</td><td>Bottom Depth</td></tr><tr><td>60</td><td>135</td><td>Bottom Depth/Speed</td></tr><tr><td>60</td><td>136</td><td>Bottom Depth/Speed/Temperature</td></tr><tr><td>60</td><td>140</td><td>Ownship Attitude</td></tr><tr><td>60</td><td>145</td><td>Ownship Position (GNSS)</td></tr><tr><td>60</td><td>150</td><td>Ownship Position (Loran C)</td></tr><tr><td>60</td><td>155</td><td>Speed</td></tr><tr><td>60</td><td>160</td><td>Turn Rate Indicator</td></tr><tr><td>60</td><td>170</td><td>Integrated Navigation</td></tr><tr><td>60</td><td>175</td><td>Integrated Navigation System</td></tr><tr><td>60</td><td>190</td><td>Navigation Management</td></tr><tr><td>60</td><td>195</td><td>Automatic Identification System (AIS)</td></tr><tr><td>60</td><td>200</td><td>Radar</td></tr><tr><td>60</td><td>201</td><td>Infrared Imaging</td></tr><tr><td>60</td><td>205</td><td>ECDIS</td></tr><tr><td>60</td><td>210</td><td>ECS</td></tr><tr><td>60</td><td>220</td><td>Direction Finder</td></tr><tr><td>60</td><td>230</td><td>Voyage Status</td></tr><tr><td>70</td><td>130</td><td>EPIRB</td></tr><tr><td>70</td><td>140</td><td>AIS</td></tr><tr><td>70</td><td>150</td><td>DSC</td></tr><tr><td>70</td><td>160</td><td>Data Receiver/Transceiver</td></tr><tr><td>70</td><td>170</td><td>Satellite</td></tr><tr><td>70</td><td>180</td><td>Radio-telephone (MF/HF)</td></tr><tr><td>70</td><td>190</td><td>Radiotelephone</td></tr><tr><td>75</td><td>130</td><td>Temperature</td></tr><tr><td>75</td><td>140</td><td>Pressure</td></tr><tr><td>75</td><td>150</td><td>Fluid Level</td></tr><tr><td>75</td><td>160</td><td>Flow</td></tr><tr><td>75</td><td>170</td><td>Humidity</td></tr><tr><td>80</td><td>130</td><td>Time/Date Systems</td></tr><tr><td>80</td><td>140</td><td>VDR</td></tr><tr><td>80</td><td>150</td><td>Integrated Instrumentation</td></tr><tr><td>80</td><td>160</td><td>General Purpose Displays</td></tr><tr><td>80</td><td>170</td><td>General Sensor Box</td></tr><tr><td>80</td><td>180</td><td>Weather Instruments</td></tr><tr><td>80</td><td>190</td><td>Transducer/General</td></tr><tr><td>80</td><td>200</td><td>NMEA 0183 Converter</td></tr><tr><td>85</td><td>130</td><td>Atmospheric</td></tr><tr><td>85</td><td>160</td><td>Aquatic</td></tr><tr><td>90</td><td>130</td><td>HVAC</td></tr><tr><td>100</td><td>130</td><td>Scale (Catch)</td></tr><tr><td>110</td><td>130</td><td>Button Interface</td></tr><tr><td>110</td><td>135</td><td>Switch Interface</td></tr><tr><td>110</td><td>140</td><td>Analog Interface</td></tr><tr><td>120</td><td>130</td><td>Display</td></tr><tr><td>120</td><td>140</td><td>Alarm Enunciator</td></tr><tr><td>125</td><td>130</td><td>Multimedia Player</td></tr><tr><td>125</td><td>140</td><td>Multimedia Controller</td></tr></table><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h3 id="lookupbit-STATION_STATUS">STATION_STATUS
         (0 - 2^3-1)

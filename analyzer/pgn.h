@@ -2321,11 +2321,20 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Navico: Proprietary",
+    {"Navico: Depth Quality",
      65313,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      {.name        = "Depth Quality",
+       .size        = BYTES(1),
+       .resolution  = 0.01,
+       .hasSign     = true,
+       .fieldType   = "FIX8",
+       .description = "Depth signal quality ratio (0 = no bottom lock .. ~1.0 = good)"},
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65314",
@@ -8658,11 +8667,24 @@ Pgn pgnList[] = {
      .priority = 6}
 
     ,
-    {"Navico: Unknown 2",
+    {"Navico: NDP2k Alert",
      130825,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      UINT8_FIELD("Record ID"),
+      UINT16_FIELD("Alert Type"),
+      UINT16_FIELD("Alert ID"),
+      LOOKUP_FIELD("Alert State", 3, ALERT_STATE),
+      SIMPLE_FIELD("Action Flag", 1),
+      LOOKUP_FIELD("Alert Severity", 4, ALERT_TYPE),
+      UINT16_FIELD("Value"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert "
+                    "State tracks its lifecycle (Normal -> Active -> Silenced -> Acknowledged), and Alert Severity "
+                    "classifies it."}
 
 
     ,
@@ -8701,7 +8723,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority    = 7,
      .explanation = "Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function "
-                    "and the following data is opcode-specific."}
+                    "and the following data is opcode-specific. Several opcodes are the proprietary-PGN equivalents "
+                    "of the corresponding Mercury manufacturer commands carried in PGN 126720: opcode 4 (Cruise "
+                    "Control), opcodes 6/7 (Active Trim command/status), opcode 8 (Autopilot), opcode 9 (Active "
+                    "Exhaust) and opcodes 12/13 (Oil Level check/reset)."}
 
     ,
     {"Maretron: Switch Indicator Status",
@@ -8743,8 +8768,9 @@ Pgn pgnList[] = {
       BINARY_FIELD("Data", BYTES(32), NULL),
       END_OF_FIELDS},
      .priority    = 7,
-     .explanation = "Variable-length Mercury digital-data proxy channel; the trailing data block is "
-                    "opcode/instance-specific and may be empty."}
+     .explanation = "Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing "
+                    "data block is opcode/instance-specific, may be empty, and its block semantics are defined by an "
+                    "external BAM specification rather than being locally decodable."}
 
     ,
     {"Lowrance: unknown",
@@ -8796,7 +8822,8 @@ Pgn pgnList[] = {
      .priority    = 7,
      .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one "
                     "source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, "
-                    "bit1 = Cruise Control capability); byte 3 carries the Helm and Sub Helm station addresses for "
+                    "bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control "
+                    "PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for "
                     "Mercury multi-helm installations."}
 
     ,
