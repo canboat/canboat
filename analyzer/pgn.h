@@ -3052,6 +3052,51 @@ Pgn pgnList[] = {
       END_OF_FIELDS },
      .priority    = 7}
 
+    /* Turn Angle Order/Measured are a full-circle u16 angle pair (raw * 2*pi/65536 rad, wrapping 0..2*pi),
+       the same order/measured relationship as the Rate of Turn pair above. */
+
+    ,
+    {"Garmin Autopilot: Turn Angle Order",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("Field"), BYTES(1), 116, "Turn Angle Order"),
+      RESERVED_FIELD(BYTES(1)),
+      {.name        = "Turn Angle Order",
+       .size        = BYTES(2),
+       .resolution  = (2 * Pi / 65536),
+       .unit        = "rad",
+       .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)",
+       .fieldType   = "UFIX16"},
+      END_OF_FIELDS },
+     .priority    = 7}
+
+    ,
+    {"Garmin Autopilot: Turn Angle Measured",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 2, "2"),
+      MATCH_FIELD(PK("Field"), BYTES(1), 161, "Turn Angle Measured"),
+      RESERVED_FIELD(BYTES(1)),
+      {.name        = "Turn Angle Measured",
+       .size        = BYTES(2),
+       .resolution  = (2 * Pi / 65536),
+       .unit        = "rad",
+       .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)",
+       .fieldType   = "UFIX16"},
+      END_OF_FIELDS },
+     .priority    = 7}
+
     ,
     {"Garmin Autopilot: Engine RPM A",
      126720,
@@ -3081,6 +3126,75 @@ Pgn pgnList[] = {
       MATCH_FIELD(PK("Field"), BYTES(1), 239, "Engine RPM B"),
       RESERVED_FIELD(BYTES(1)),
       {.name = "Engine Speed", .size = BYTES(2), .resolution = 1, .unit = "rpm", .fieldType = "UFIX16"},
+      END_OF_FIELDS },
+     .priority    = 7}
+
+    /* Garmin autopilot command plane: directed helm->CCU control messages, the complement of the scalar
+       broadcast above (which the source emits from address 0). They share the same envelope and are
+       distinguished by their Field Group + Field selectors. Decode-only: this recognises and decodes a
+       command, it is not a transmit path. The source address is not matched (canboat MATCH cannot see it),
+       but the selectors are disjoint from the broadcast scalars so decoding stays unambiguous. */
+
+    ,
+    {"Garmin Autopilot: Response Setting",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 1, "1"),
+      MATCH_FIELD(PK("Field"), BYTES(1), 62, "Response Setting"),
+      RESERVED_FIELD(BYTES(1)),
+      SIMPLE_SIGNED_FIELD("Response Setting", BYTES(1)),
+      END_OF_FIELDS },
+     .priority    = 7}
+
+    ,
+    {"Garmin Autopilot: Mode State",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 5, "5"),
+      MATCH_FIELD(PK("Field"), BYTES(1), 10, "Mode State"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_DESC_FIELD("Mode State", "Engage/standby state command (observed 2 = Standby, 5 = Engaged)"),
+      END_OF_FIELDS },
+     .priority    = 7}
+
+    ,
+    {"Garmin Autopilot: Heartbeat",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 21, "21"),
+      MATCH_FIELD(PK("Field"), BYTES(1), 3, "Heartbeat"),
+      BINARY_FIELD("Heartbeat Data", BYTES(4), "Fixed helm heartbeat payload (observed 01 00 c8 00)"),
+      END_OF_FIELDS },
+     .priority    = 7}
+
+    ,
+    {"Garmin Autopilot: Maneuver",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     { COMPANY(229),
+      MATCH_FIELD(PK("Sub-protocol ID"), BYTES(2), 5904, "Garmin autopilot transport"),
+      MATCH_FIELD("Wrapper Byte 1", BYTES(1), 4, "4"),
+      MATCH_FIELD("Wrapper Byte 2", BYTES(1), 4, "4"),
+      MATCH_FIELD("Field Group", BYTES(1), 38, "38"),
+      UINT8_DESC_FIELD("Maneuver Code", "Maneuver button event code (observed 0..9)"),
+      RESERVED_FIELD(BYTES(1)),
+      UINT8_FIELD("Value"),
       END_OF_FIELDS },
      .priority    = 7}
 
