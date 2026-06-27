@@ -447,6 +447,7 @@
   <xsl:template match="LookupFieldTypeEnumeration/EnumFieldType">
     <xsl:call-template name="indent"/>{"name": "<xsl:value-of select="@Name"/>", "value": <xsl:value-of select="@Value"/>
     <xsl:if test="@FieldType">, "FieldType": "<xsl:value-of select="@FieldType"/>"</xsl:if>
+    <xsl:if test="@Signed">, "Signed": <xsl:value-of select="@Signed"/></xsl:if>
     <xsl:if test="@Resolution">, "Resolution": <xsl:value-of select="@Resolution"/></xsl:if>
     <xsl:if test="@Unit">, "Unit": "<xsl:value-of select="@Unit"/>"</xsl:if>
     <xsl:if test="@Bits">, "Bits": "<xsl:value-of select="@Bits"/>"</xsl:if>
