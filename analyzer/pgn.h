@@ -8723,7 +8723,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .priority    = 7,
      .explanation = "Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function "
-                    "and the following data is opcode-specific."}
+                    "and the following data is opcode-specific. Several opcodes are the proprietary-PGN equivalents "
+                    "of the corresponding Mercury manufacturer commands carried in PGN 126720: opcode 4 (Cruise "
+                    "Control), opcodes 6/7 (Active Trim command/status), opcode 8 (Autopilot), opcode 9 (Active "
+                    "Exhaust) and opcodes 12/13 (Oil Level check/reset)."}
 
     ,
     {"Maretron: Switch Indicator Status",
@@ -8765,8 +8768,9 @@ Pgn pgnList[] = {
       BINARY_FIELD("Data", BYTES(32), NULL),
       END_OF_FIELDS},
      .priority    = 7,
-     .explanation = "Variable-length Mercury digital-data proxy channel; the trailing data block is "
-                    "opcode/instance-specific and may be empty."}
+     .explanation = "Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing "
+                    "data block is opcode/instance-specific, may be empty, and its block semantics are defined by an "
+                    "external BAM specification rather than being locally decodable."}
 
     ,
     {"Lowrance: unknown",
@@ -8818,7 +8822,8 @@ Pgn pgnList[] = {
      .priority    = 7,
      .explanation = "Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one "
                     "source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, "
-                    "bit1 = Cruise Control capability); byte 3 carries the Helm and Sub Helm station addresses for "
+                    "bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control "
+                    "PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for "
                     "Mercury multi-helm installations."}
 
     ,
