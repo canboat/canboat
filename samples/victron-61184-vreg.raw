@@ -1,0 +1,5 @@
+# Victron Energy (mfg 358) PGN 61184 VREG samples — real-world frames, one per Register Id.
+# DC Voltage (VREG register 0x2002)
+2024-01-01T00:00:00.019Z,7,61184,227,255,8,66,99,02,20,f8,04,00,00
+# DC Current (VREG register 0x201C)
+2024-01-01T00:00:00.020Z,7,61184,227,255,8,66,99,1c,20,10,f5,ff,ff
