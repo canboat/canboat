@@ -351,8 +351,10 @@ BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2566857214 PGN_65313_navicoProprietary: 8 Vector__XXX
- SG_ data : 16|48@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 2566857214 PGN_65313_navicoDepthQuality: 8 Vector__XXX
+ SG_ reserved6 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ depthQuality : 24|8@1- (0.01,0) [0|0] "" Vector__XXX
+ SG_ instance : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX
  SG_ reserved : 11|2@1+ (1,0) [0|0] "" Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
@@ -1835,7 +1837,8 @@ CM_ SG_ 2566856702 manufacturerCode "BEP Marine 2";
 CM_ BO_ 2566856958 "Navico: Wireless Signal Status";
 CM_ SG_ 2566856958 industryCode "Marine Industry";
 CM_ SG_ 2566856958 manufacturerCode "Navico";
-CM_ BO_ 2566857214 "Navico: Proprietary";
+CM_ BO_ 2566857214 "Navico: Depth Quality";
+CM_ SG_ 2566857214 depthQuality "Depth signal quality ratio (0 = no bottom lock .. ~1.0 = good)";
 CM_ SG_ 2566857214 industryCode "Marine Industry";
 CM_ SG_ 2566857214 manufacturerCode "Navico";
 CM_ BO_ 2566857726 "Suzuki: Troll Mode Control";
