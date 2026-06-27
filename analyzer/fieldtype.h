@@ -593,6 +593,18 @@ FieldType fieldTypeList[] = {
      .physical      = &CONCENTRATION,
      .baseFieldType = "FLOAT"},
 
+    {.name          = "FLOAT_RAD_S",
+     .description   = "32 bit IEEE-754 floating point angular velocity in radians/second",
+     .unit          = "rad/s",
+     .physical      = &ANGULAR_VELOCITY,
+     .baseFieldType = "FLOAT"},
+
+    {.name          = "FLOAT_SPEED",
+     .description   = "32 bit IEEE-754 floating point speed in meters/second",
+     .unit          = "m/s",
+     .physical      = &SPEED,
+     .baseFieldType = "FLOAT"},
+
     {.name                = "DECIMAL",
      .description         = "An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)",
      .encodingDescription = "Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes "
