@@ -2321,11 +2321,20 @@ Pgn pgnList[] = {
      .priority = 7}
 
     ,
-    {"Navico: Proprietary",
+    {"Navico: Depth Quality",
      65313,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      {.name        = "Depth Quality",
+       .size        = BYTES(1),
+       .resolution  = 0.01,
+       .hasSign     = true,
+       .fieldType   = "FIX8",
+       .description = "Depth signal quality ratio (0 = no bottom lock .. ~1.0 = good)"},
+      RESERVED_FIELD(BYTES(4)),
+      END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65314",
@@ -8658,11 +8667,24 @@ Pgn pgnList[] = {
      .priority = 6}
 
     ,
-    {"Navico: Unknown 2",
+    {"Navico: NDP2k Alert",
      130825,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(10), ""), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_FIELD("Instance"),
+      UINT8_FIELD("Record ID"),
+      UINT16_FIELD("Alert Type"),
+      UINT16_FIELD("Alert ID"),
+      LOOKUP_FIELD("Alert State", 3, ALERT_STATE),
+      SIMPLE_FIELD("Action Flag", 1),
+      LOOKUP_FIELD("Alert Severity", 4, ALERT_TYPE),
+      UINT16_FIELD("Value"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert "
+                    "State tracks its lifecycle (Normal -> Active -> Silenced -> Acknowledged), and Alert Severity "
+                    "classifies it."}
 
 
     ,
