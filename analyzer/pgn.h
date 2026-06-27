@@ -1764,6 +1764,13 @@ Pgn pgnList[] = {
                     "channel index, an alarm-state polarity flag, or a frame counter)."}
 
     ,
+    {"Evinrude: Joystick Control Primary",
+     65283,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: CZone Channel State",
      65283,
      PACKET_INCOMPLETE,
@@ -1792,6 +1799,13 @@ Pgn pgnList[] = {
                     "(likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been "
                     "verified against captures with known channel states."}
     ,
+    {"Evinrude: Joystick Control Secondary",
+     65284,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Maretron: Proprietary DC Breaker Current",
      65284,
      PACKET_COMPLETE,
@@ -1812,22 +1826,24 @@ Pgn pgnList[] = {
      {COMPANY(175), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"BEP Marine: CZone Circuit Status",
+    {"BEP Marine: CZone Circuit State Bitmap",
      65284,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(295),
-      UINT8_FIELD("Dipswitch"),
-      UINT8_DESC_FIELD("Type", "Observed 0x0F for circuit-state reports"),
-      BINARY_FIELD("Bitmap", BYTES(4), "32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON"),
+      UINT8_FIELD("DIP Switch"),
+      LOOKUP_FIELD_DESC("Module Type", BYTES(1), CZONE_MODULE_TYPE, "CZone module type"),
+      BINARY_FIELD("Circuit Flags", BYTES(4), "32 circuit state flags, LSB-first"),
       END_OF_FIELDS},
-     .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md",
-     .explanation = "Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the "
-                    "module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival "
-                    "deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone "
-                    "panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence "
-                    "is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks "
-                    "every module to report; the bitmap bytes are then unused."}
+     .explanation = "CZone circuit state bitmap. The message identifies the module by DIP switch and module type, "
+                    "followed by 32 circuit state flags."}
+
+    ,
+    {"Evinrude: iDock Manifold Controller Feedback Port",
+     65285,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Boot State Acknowledgment",
@@ -1855,6 +1871,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(137), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Evinrude: iDock Manifold Controller Feedback Starboard",
+     65286,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Chetco: Dimmer",
@@ -1891,6 +1914,13 @@ Pgn pgnList[] = {
       {.name = "Fluid Flow Rate", .size = BYTES(3), .resolution = 0.0001, .hasSign = true, .fieldType = "INTEGER"},
       END_OF_FIELDS},
      .priority = 5}
+
+    ,
+    {"Evinrude: G4 Control Head State Message",
+     65287,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Airmar: Access Level",
@@ -2104,6 +2134,13 @@ Pgn pgnList[] = {
      {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Evinrude: Throttle/Shift Control",
+     65299,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"Suzuki: Engine Data B",
      65299,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -2122,6 +2159,13 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .explanation = "CZone request for remote alarm string text. The request identifies the device and channel/alarm id; "
                     "the remote device is expected to respond with the matching alarm string."}
+
+    ,
+    {"Yanmar: Engine Status",
+     65300,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(172), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"Suzuki: Engine Data C",
@@ -2152,17 +2196,25 @@ Pgn pgnList[] = {
                     "The Message Type field selects the variant."}
 
     ,
-    {"BEP Marine: CZone 65301",
+    {"BEP Marine: CZone Circuit Extended State",
      65301,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_SINGLE,
      {COMPANY(295),
-      UINT8_DESC_FIELD("Field 1", "Pass-through byte; purpose unverified"),
-      SIMPLE_DESC_FIELD("Field 2", 5, "5-bit field; purpose unverified"),
-      SIMPLE_DESC_FIELD("Field 3", 3, "3-bit field; purpose unverified"),
-      BINARY_FIELD("Status Bitmap", BYTES(4), "32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified."),
+      UINT8_DESC_FIELD("DIP Switch", "CZone module DIP-switch / module instance byte"),
+      LOOKUP_FIELD_DESC("Module Type", 5, CZONE_MODULE_TYPE, "Module-type/status-class selector"),
+      SIMPLE_DESC_FIELD("Page", 3, "Field/page value, used as high page bits for the channel number"),
+      BINARY_FIELD("Circuit Flags",
+                   BYTES(4),
+                   "32 LSB-first flags. Module types 8, 9, and 14 use a 32-channel/page direct state layout; "
+                   "module types 11, 16, and 17 use a 16-channel/page direct state layout; "
+                   "module types 28 and 31 use an 8-channel/page extended status layout; "
+                   "other module types use an 8-channel/page default layout."),
       END_OF_FIELDS},
-     .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md"}
+     .explanation = "CZone circuit extended state message. The message identifies the module by DIP switch, "
+                    "module type, and channel page, followed by 32 LSB-first circuit flags. The module type "
+                    "selects whether the flags describe 32, 16, or 8 channels per page and whether additional "
+                    "status banks are present."}
     ,
     {"Simnet: AP Unknown 1",
      65302,
@@ -2300,11 +2352,25 @@ Pgn pgnList[] = {
 
 
     ,
+    {"Evinrude: Winterization",
+     65310,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
     {"BEP Marine: Proprietary PGN 65310",
      65310,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Evinrude: Engine Management Module",
+     65311,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(163), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
     {"BEP Marine: Proprietary PGN 65311",
@@ -7271,6 +7337,13 @@ Pgn pgnList[] = {
        "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
+    {"Mercury: Alarm",
+     130816,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"SonicHub: Init #2",
      130816,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -7609,6 +7682,13 @@ Pgn pgnList[] = {
       SIMPLE_FIELD("System Status", 2),
       RESERVED_FIELD(4),
       END_OF_FIELDS}}
+
+    ,
+    {"Mercury: Vessel Configuration",
+     130817,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Navico: Unknown",
@@ -8499,6 +8579,13 @@ Pgn pgnList[] = {
     // NAC-3 sends this once a second, with (decoded) data like this:
     // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
+    {"Mercury: Pop-up",
+     130821,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
     {"Navico: ASCII Data",
      130821,
      PACKET_INCOMPLETE,
@@ -8554,6 +8641,13 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+    ,
+    {"Mercury: Proprietary PGN 130822",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
     ,
     {"Navico: Unknown 1",
      130822,
@@ -8825,6 +8919,13 @@ Pgn pgnList[] = {
                     "bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control "
                     "PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for "
                     "Mercury multi-helm installations."}
+
+    ,
+    {"Mercury: Propulsion Control Mode Status",
+     130830,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(144), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
 
     ,
     {"Maretron: Dometic HVAC Status",
