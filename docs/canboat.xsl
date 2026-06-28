@@ -124,6 +124,17 @@
           <p>
             <xsl:value-of select="Explanation"/>
           </p>
+          <xsl:if test="ResearchDoc">
+            <p>
+              For a detailed explanation see:
+              <a>
+                <xsl:attribute name="href">
+                  <xsl:value-of select="concat(ResearchDoc, '.html')"/>
+                </xsl:attribute>
+                <xsl:value-of select="concat(ResearchDoc, '.html')"/>
+              </a>
+            </p>
+          </xsl:if>
           <p>
             <xsl:choose>
               <xsl:when test="Complete = 'false'">

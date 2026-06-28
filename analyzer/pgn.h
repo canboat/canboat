@@ -106,6 +106,11 @@ typedef struct
   int8_t reservedOverride; /* Override the number of reserved (special) values at the top of the range.
                             *    0 = auto (derive from size); otherwise an explicit count encoded as (count + 1),
                             *    so set via the SPECIAL_VALUES() macro rather than by hand. */
+  bool    dynamicFieldLength; /* True if this field's value is the byte length of a following DYNAMIC_FIELD_VALUE field.
+                               *    Set via DYNAMIC_FIELD_LENGTH(); replaces the legacy field-name == "Length" check. */
+  uint8_t dynamicFieldLengthOverhead; /* Non-value bytes (a per-record header sitting between this length field and the value)
+                                       *    that are counted in the reported length and must be subtracted to obtain the
+                                       *    value length. Set via DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(). */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;
@@ -162,8 +167,16 @@ typedef struct
    .partOfPrimaryKey       = true,                  \
    .fieldType              = "DYNAMIC_FIELD_KEY"}
 
-#define DYNAMIC_FIELD_LENGTH(nam, len, desc) \
-  {.name = nam, .size = len, .resolution = 1, .hasSign = false, .description = desc, .fieldType = "DYNAMIC_FIELD_LENGTH"}
+#define DYNAMIC_FIELD_LENGTH(nam, len, desc)                                                                   \
+  {.name = nam, .size = len, .resolution = 1, .hasSign = false, .dynamicFieldLength = true, .description = desc, \
+   .fieldType = "DYNAMIC_FIELD_LENGTH"}
+
+/* Like DYNAMIC_FIELD_LENGTH, but the length counts `hdr` extra header bytes (sitting between this field and the
+ * DYNAMIC_FIELD_VALUE, e.g. a class byte plus a key) that are not part of the value. Those bytes are subtracted to
+ * obtain the value length. */
+#define DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(nam, len, hdr, desc)                                               \
+  {.name = nam, .size = len, .resolution = 1, .hasSign = false, .dynamicFieldLength = true,                     \
+   .dynamicFieldLengthOverhead = hdr, .description = desc, .fieldType = "DYNAMIC_FIELD_LENGTH"}
 
 #define DYNAMIC_FIELD_VALUE(nam, desc) {.name = nam, .size = LEN_VARIABLE, .description = desc, .fieldType = "DYNAMIC_FIELD_VALUE"}
 
@@ -945,6 +958,7 @@ struct Pgn
   bool        hasMatchFields;   /* true = there are multiple PGNs with same PRN */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
   const char *url;              /* External URL */
+  const char *researchDoc;      /* Basename (no extension) of a local research HTML doc in docs/, rendered as a link */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
   uint8_t     priority;         /* Default priority */
   uint8_t     repeatingCount1;  /* How many fields repeat in set 1? */
@@ -2393,6 +2407,25 @@ Pgn pgnList[] = {
      .explanation = "Single-frame Simnet frame emitted by autopilot control heads (AP48, Triton2, ZEUS). The "
                     "frame builder writes a fixed 0xFF, then two bytes A and B, then padding 0xFF; the meaning of "
                     "A and B is not yet identified. The autopilot receives it. Observed in live captures.",
+     .priority    = 3}
+
+    ,
+    {"Simnet: Analog Telemetry",
+     65324,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Sub-Type", "0x40 = telemetry"),
+      UINT8_DESC_FIELD("Channel",
+                       "Selects which analog quantity is reported (e.g. drive/heatsink temperature, drive supply voltage, "
+                       "drive current, rudder-feedback angle)"),
+      UINT32_DESC_FIELD("Value", "Raw channel reading; 0x7FFF or 0xFFFF means not available"),
+      END_OF_FIELDS},
+     .interval    = 1000,
+     .explanation = "Diagnostic telemetry emitted by the AutoPilot Computer, one analog channel per frame in round-robin. "
+                    "The Channel field selects the quantity (drive/heatsink temperature, drive supply voltage, drive "
+                    "current, rudder-feedback angle, ...) and Value carries its raw reading. Used by commissioning and "
+                    "diagnostic tools; observed in live captures.",
      .priority    = 3}
 
     ,
@@ -8555,11 +8588,174 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
     ,
-    {"Navico: Unknown 1",
+    {"Navico: UDB Database, Object Ping",
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), BINARY_FIELD("Data", BYTES(231), NULL), END_OF_FIELDS},
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 0, "Object Ping"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority    = 3,
+     .explanation = "Header-only form of the Navico/SimNet UDB database broadcast (Command 0; Commands 8 and 9 are "
+                    "equivalent reserved pings). The object is addressed by (Address, Section, Item)."}
+
+    ,
+    {"Navico: UDB Database, Source Report",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 1, "Source Report"),
+      SPARE_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_DESC_FIELD("Source Setting Id",
+                       "Compacted id selecting which data type this object is for. This is a different id space from the "
+                       "Command 6 dump / PGN 130845 data-type ids (NAVICO_DATA_TYPE) - the two use different numbers for the "
+                       "same quantity. Only 0x0F = Heading is mapped so far; see PGN 130840."),
+      UINT8_FIELD("Item"),
+      UINT16_DESC_FIELD("Object Value", "Current value (A); 0xFC00 means no value. This is the field that varies over time."),
+      SIMPLE_FIELD("Instance", 4),
+      SIMPLE_DESC_FIELD("Source Selection Master", 1, "Auto-select / source-selection-master flag"),
+      SPARE_FIELD(3),
+      BINARY_FIELD("Sub", BYTES(3), "Sub-index and auxiliary bytes; constant per object (same Sub as the Command 6 dump)"),
+      UINT16_DESC_FIELD("Token", "Per-object identity/CRC-like token (B), constant per object (same Token as the Command 6 dump)"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority    = 3,
+     .explanation = "Per-object value report (Command 1), the form that accounts for essentially all observed 130822 "
+                    "traffic. Each frame reports one object's current 'Object Value' (0xFC00 = no value), addressed by "
+                    "(Address, Source Setting Id, Item). The trailing 'Sub' and 'Token' are the object's identity metadata, "
+                    "byte-identical to the same object's Command 6 dump and constant per object; 'Token' is a stable "
+                    "per-object-definition handle (only a couple dozen distinct values on a typical bus) that tracks the "
+                    "object independently of its local Section/Item address. The selected source DEVICE for each data type "
+                    "is not carried here - it appears only in the Command 6 dump (as a NAME) and in PGN 130840. 'Source "
+                    "Setting Id' uses a different id space from the data-type ids carried by the Command 6 dump and PGN "
+                    "130845." }
+
+    ,
+    {"Navico: UDB Database, Bulk Report 2",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 2, "Bulk Report 2"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      BINARY_FIELD("Data", BYTES(216), "Bulk variant payload (length-prefixed); layout not yet observed on the wire"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority = 3}
+
+    ,
+    {"Navico: UDB Database, Bulk Report 3",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 3, "Bulk Report 3"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      BINARY_FIELD("Data", BYTES(216), "Bulk variant payload (length-prefixed); layout not yet observed on the wire"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority = 3}
+
+    ,
+    {"Navico: UDB Database, Bulk Report 4",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 4, "Bulk Report 4"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      BINARY_FIELD("Data", BYTES(216), "Bulk variant payload (length-prefixed); layout not yet observed on the wire"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority = 3}
+
+    ,
+    {"Navico: UDB Database, Short Report 5",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 5, "Short Report 5"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      BINARY_FIELD("Data", BYTES(4), NULL),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority = 3}
+
+    ,
+    {"Navico: UDB Database, Object Dump",
+     130822,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 6, "Object Dump"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      UINT16_DESC_FIELD("Object Value", "Current value (A); 0xFC00 means no value"),
+      BINARY_FIELD("Sub", BYTES(3), "Sub-index and auxiliary bytes"),
+      UINT16_DESC_FIELD("Token", "Per-object identity/CRC-like token (B), constant per object"),
+      DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(
+          "Length", BYTES(1), 3, "Bytes following in this record: a class byte, a 16-bit data-type id and the value"),
+      UINT8_DESC_FIELD("Class", "Record class, always 0x02"),
+      LOOKUP_FIELD("Data Type", BYTES(2), NAVICO_DATA_TYPE),
+      DYNAMIC_FIELD_VALUE("Value",
+                          "Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed "
+                          "by the source's 64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means "
+                          "none/auto; other data types carry small typed values."),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
+     .priority        = 3,
+     .repeatingField1 = UINT8_MAX,
+     .repeatingCount1 = 4,
+     .repeatingStart1 = 13,
+     .explanation     = "Verbose dump (Command 6) of a source-selection object: it carries the same Value and Token as the "
+                        "Command 1 report for the object, followed by a list of every data type the object covers and the "
+                        "selected source for each. Each record is a length, a constant class byte, a data-type id and the "
+                        "selected source's value."}
+
+    ,
+    {"Navico: UDB Database, Short Report 7",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Marker", "Always 0xFF"),
+      MATCH_FIELD(PK("Command"), 6, 7, "Short Report 7"),
+      RESERVED_FIELD(2),
+      UINT8_DESC_FIELD("Address", "Part of the object address"),
+      UINT8_FIELD("Section"),
+      UINT8_FIELD("Item"),
+      BINARY_FIELD("Data", BYTES(4), NULL),
+      END_OF_FIELDS},
+     .researchDoc = "navico_udb",
      .priority = 3}
 
     ,
@@ -8588,6 +8784,26 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
+
+    ,
+    {"Mercury: Engine Telemetry, Low Speed",
+     130822,
+     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {COMPANY(144),
+      UINT8_FIELD("Engine Instance"),
+      UINT8_DESC_FIELD("Malfunction Indicator", "Check-engine indicator lamp (0 = off, 1 = on)"),
+      UINT8_DESC_FIELD("Intake Air Temperature", "Raw value, Mercury-specific scaling"),
+      UINT16_DESC_FIELD("Exhaust Gas Temperature", "Raw value, Mercury-specific scaling"),
+      UINT8_DESC_FIELD("GPL", "Raw value; fraction = value / 128"),
+      UINT8_DESC_FIELD("Engine State", "Raw engine run-state code"),
+      END_OF_FIELDS},
+     .explanation = "Low-speed engine telemetry broadcast by Mercury engine gateways. Carries the malfunction-indicator "
+                    "(check-engine) state, intake-air and exhaust-gas temperatures (raw, Mercury-specific scaling), a "
+                    "'GPL' fraction (raw / 128) and an engine run-state code. This is a flat fixed record, unrelated to "
+                    "the Navico and BEP variants of this PGN number; the manufacturer code in the first two bytes is the "
+                    "only disambiguator. Observed on live engine networks."}
+
     ,
     {"Maretron: Proprietary Temperature High Range",
      130823,
@@ -8612,6 +8828,7 @@ Pgn pgnList[] = {
       DYNAMIC_FIELD_LENGTH("Length", 4, "Length of field 6"),
       DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
+     .researchDoc = "navico_udb",
      .priority        = 2,
      .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 3,
@@ -8667,23 +8884,24 @@ Pgn pgnList[] = {
      .priority = 6}
 
     ,
-    {"Navico: NDP2k Alert",
+    {"Navico: Alarm",
      130825,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275),
       UINT8_FIELD("Instance"),
       UINT8_FIELD("Record ID"),
-      UINT16_FIELD("Alert Type"),
-      UINT16_FIELD("Alert ID"),
-      LOOKUP_FIELD("Alert State", 3, ALERT_STATE),
+      UINT16_FIELD("Alarm Type"),
+      LOOKUP_FIELD("Alarm ID", BYTES(2), SIMNET_ALARM_ID),
+      LOOKUP_FIELD("Alarm State", 3, ALERT_STATE),
       SIMPLE_FIELD("Action Flag", 1),
-      LOOKUP_FIELD("Alert Severity", 4, ALERT_TYPE),
+      LOOKUP_FIELD("Alarm Severity", 4, ALERT_TYPE),
       UINT16_FIELD("Value"),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority    = 7,
-     .explanation = "Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert "
-                    "State tracks its lifecycle (Normal -> Active -> Silenced -> Acknowledged), and Alert Severity "
+     .explanation = "Navico alarm status record (mfg 275): Alarm Type + Alarm ID identify the fault, Alarm "
+                    "State tracks its lifecycle (Normal -> Active -> Silenced -> Acknowledged), and Alarm Severity "
                     "classifies it."}
 
 
@@ -9112,6 +9330,7 @@ Pgn pgnList[] = {
       ISO_NAME_FIELD("Source"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_udb",
      .interval    = UINT16_MAX,
      .explanation = "Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is "
                     "selected for each data type across the instrument network. 'Data Type' identifies the "
@@ -9281,6 +9500,7 @@ Pgn pgnList[] = {
       SIMPLE_DESC_FIELD("MinLength", BYTES(1), "Possibly the length of data field; probably something else"),
       DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .interval = UINT16_MAX}
 
     ,
@@ -9295,7 +9515,7 @@ Pgn pgnList[] = {
       UINT16_DESC_FIELD("D", "Various values observed"),
       LOOKUP_DYNAMIC_FIELD_KEY("Key", BYTES(2), SIMNET_KEY_VALUE),
       SPARE_FIELD(BYTES(1)),
-      SIMPLE_DESC_FIELD("Length", BYTES(1), "Possibly the length of data field; probably something else"),
+      DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Possibly the length of data field; probably something else"),
       DYNAMIC_FIELD_VALUE("Value", "Data value"),
       END_OF_FIELDS},
      .interval = UINT16_MAX}
@@ -9363,42 +9583,6 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(275), END_OF_FIELDS}}
 
-/*    ,
-    {"Simnet: AP Command",
-     130850,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1857),
-      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
-      RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      LOOKUP_FIELD("AP status", BYTES(1), SIMNET_AP_STATUS),
-      LOOKUP_FIELD("AP Command", BYTES(1), SIMNET_AP_EVENTS),
-      SPARE_FIELD(BYTES(1)),
-      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      ANGLE_U16_FIELD("Angle", "Commanded angle change"),
-      END_OF_FIELDS},
-     .priority = 2}
-*/
-
-/*   ,
-    {"Simnet: Event Command: AP command",
-     130850,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1857),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 2, SIMNET_EVENT_COMMAND),
-      UINT16_FIELD("Unused A"),
-      UINT8_FIELD("Controlling Device"),
-      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
-      SIMPLE_FIELD("Unused B", BYTES(1)),
-      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      ANGLE_U16_FIELD("Angle", NULL),
-      SIMPLE_FIELD("Unused C", BYTES(1)),
-      END_OF_FIELDS},
-     .priority = 2}
-
-*/
     ,
     {"Simnet: Command AP Standby",
      130850,
@@ -9407,12 +9591,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 6, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9423,12 +9608,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 12, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9439,12 +9625,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 15, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9455,12 +9642,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 10, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9471,12 +9659,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 9, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9487,13 +9676,14 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 17, SIMNET_AP_EVENTS),
       SIMPLE_FIELD("Unknown A", BYTES(1)),
       SIMPLE_FIELD("Unknown B", BYTES(1)),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
      ,
@@ -9504,12 +9694,13 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 2, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 2, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 14, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(4)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
 
     ,
@@ -9520,15 +9711,41 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 26, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       ANGLE_U16_FIELD("Angle", "Absolute change in desired attitude, generally 1 or 10 degrees"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .priority = 2}
+
+    ,
+    /* Navico MFD timer event. PGN 130850 has a single fixed byte layout, confirmed live:
+     * byte 2 = Address, byte 3 = reserved, byte 4 = Network/Display Group, byte 5 = Event Type, byte
+     * 6 = command. The broadcast-event families (Timer = Event Type 23, Alarm = Event Type 255) are
+     * distinguished by byte 5, so they are mutually exclusive and order-independent. See issue #409. */
+    {"Simnet: Event Command: Timer",
+     130850,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device, used for autopilot events"),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Event Type"), BYTES(1), 23, SIMNET_EVENT_TYPE),
+      LOOKUP_FIELD("Event", BYTES(2), SIMNET_TIMER_EVENT),
+      UINT8_DESC_FIELD("Parameter 1", "Event dependent; for the trip timer 0 = Trip 1, 1 = Trip 2"),
+      UINT16_DESC_FIELD("Parameter 2", "Event dependent"),
+      UINT8_DESC_FIELD("Parameter 3", "Event dependent"),
+      END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
+     .priority    = 2,
+     .explanation = "Race and trip timer commands sent by a Navico MFD, all observed live: race "
+                    "start/stop/sync/reset and trip enable/disable/reset, with Parameter 1 selecting the trip "
+                    "(0 = Trip 1, 1 = Trip 2). Broadcast to a display group, so every device in the group acts."}
 
     ,
     {"Simnet: Alarm",
@@ -9538,15 +9755,20 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 1, SIMNET_EVENT_COMMAND),
-      RESERVED_FIELD(BYTES(1)),
-      LOOKUP_FIELD("Alarm", BYTES(2), SIMNET_ALARM),
-      UINT16_FIELD("Message ID"),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Event Type"), BYTES(1), 255, SIMNET_EVENT_TYPE),
+      LOOKUP_FIELD("Command", BYTES(1), SIMNET_ALARM_COMMAND),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Alarm ID", BYTES(2), SIMNET_ALARM_ID),
       UINT8_FIELD("F"),
       UINT8_FIELD("G"),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .interval    = UINT16_MAX,
-     .explanation = "There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm",
+     .explanation = "An alarm lifecycle command (Activate when it triggers, Acknowledge/Silence on user action, "
+                    "Deactivate when it clears) for the alarm named by 'Alarm ID'. Any device may issue these, which is "
+                    "why acknowledging an alarm on one display clears it on the others. There may follow a PGN 130856 "
+                    "'Simnet: Alarm Message' with a textual explanation of the alarm.",
      .priority    = 2}
 
     ,
@@ -9557,8 +9779,8 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      LOOKUP_FIELD("Command Type", BYTES(1), SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
@@ -9568,6 +9790,7 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .interval    = UINT16_MAX,
      .explanation = "Other Simnet AP command",
      .priority    = 2}
@@ -9580,7 +9803,7 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
       RESERVED_FIELD(BYTES(1)),
-      LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), SIMNET_EVENT_COMMAND),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
@@ -9589,26 +9812,11 @@ Pgn pgnList[] = {
       RESERVED_FIELD(BYTES(1)),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .interval    = UINT16_MAX,
      .explanation = "Other Simnet Event",
      .priority    = 2}
 
-    ,
-    {"Simnet: Event Reply: AP command",
-     130851,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(1857),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 2, SIMNET_EVENT_COMMAND),
-      UINT16_FIELD("B"),
-      UINT8_DESC_FIELD("Address", "NMEA 2000 address of controlling device"),
-      LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
-      UINT8_FIELD("C"),
-      LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
-      ANGLE_U16_FIELD("Angle", NULL),
-      UINT8_FIELD("G"),
-      END_OF_FIELDS},
-     .priority = 7}
 
     ,
     {"Simnet: AP command Reply: Change Course",
@@ -9618,14 +9826,15 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of the autopilot that ran the command"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      MATCH_LOOKUP_FIELD("Command Type", BYTES(1), 10, SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       MATCH_LOOKUP_FIELD("Event", BYTES(1), 26, SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       LOOKUP_FIELD("Direction", BYTES(1), SIMNET_DIRECTION),
       ANGLE_U16_FIELD("Angle", "Absolute change in desired attitude, generally 1 or 10 degrees"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .explanation = "Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' "
                     "that was addressed to it.",
      .priority    = 7}
@@ -9638,14 +9847,15 @@ Pgn pgnList[] = {
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of the autopilot that ran the command"),
       RESERVED_FIELD(BYTES(1)),
-      MATCH_LOOKUP_FIELD(PK("Proprietary ID"), BYTES(1), 255, SIMNET_EVENT_COMMAND),
-      LOOKUP_FIELD("Command Type", BYTES(1), SIMNET_AP_COMMAND_TYPE),
+      LOOKUP_FIELD("Network Group", BYTES(1), SIMNET_DISPLAY_GROUP),
+      MATCH_LOOKUP_FIELD(PK("Command Type"), BYTES(1), 10, SIMNET_EVENT_TYPE),
       LOOKUP_FIELD("Event", BYTES(1), SIMNET_AP_EVENTS),
       SPARE_FIELD(BYTES(1)),
       UINT8_FIELD("D"),
       UINT16_FIELD("Value"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .explanation = "Reply emitted by the autopilot (NAC-3/AC-42) acknowledging an addressed 130850 'Simnet: AP "
                     "command' by echoing it back, byte-for-byte. The autopilot sends exactly one per addressed "
                     "command (Address = its own NMEA address), within ~20-70 ms; broadcast commands (Address "
@@ -9665,11 +9875,12 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(1857),
-      UINT16_FIELD("Message ID"),
+      LOOKUP_FIELD("Alarm ID", BYTES(2), SIMNET_ALARM_ID),
       UINT8_FIELD("B"),
       UINT8_FIELD("C"),
       STRING_FIX_FIELD("Text", BYTES(FASTPACKET_MAX_SIZE)),
       END_OF_FIELDS},
+     .researchDoc = "navico_alarms_and_commands",
      .interval    = UINT16_MAX,
      .explanation = "Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form."}
 

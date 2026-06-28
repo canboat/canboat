@@ -1786,6 +1786,7 @@ limitations under the License.
       <EnumPair Value='0' Name='MOB Emitter Activated' />
       <EnumPair Value='1' Name='Manual on-board MOB Button Activation' />
       <EnumPair Value='2' Name='Test mode' />
+      <EnumPair Value='3' Name='MOB Not Active' />
     </LookupEnumeration>
     <LookupEnumeration Name='LOW_BATTERY' MaxValue='7'>
       <EnumPair Value='0' Name='Good' />
@@ -2093,13 +2094,737 @@ limitations under the License.
       <EnumPair Value='42' Name='Apparent Wind' />
       <EnumPair Value='43' Name='Barometric Pressure' />
     </LookupEnumeration>
+    <LookupEnumeration Name='NAVICO_DATA_TYPE' MaxValue='65535'>
+      <EnumPair Value='0' Name='Altitude' />
+      <EnumPair Value='1' Name='Position' />
+      <EnumPair Value='2' Name='Position Error' />
+      <EnumPair Value='3' Name='HDOP' />
+      <EnumPair Value='4' Name='VDOP' />
+      <EnumPair Value='5' Name='TDOP' />
+      <EnumPair Value='6' Name='PDOP' />
+      <EnumPair Value='7' Name='Geoidal Seperation' />
+      <EnumPair Value='8' Name='COG' />
+      <EnumPair Value='9' Name='Position Quality' />
+      <EnumPair Value='10' Name='Position Integrity' />
+      <EnumPair Value='11' Name='Sats In View' />
+      <EnumPair Value='12' Name='Waas Status' />
+      <EnumPair Value='13' Name='Bearing' />
+      <EnumPair Value='14' Name='Course' />
+      <EnumPair Value='15' Name='CDI Graphic' />
+      <EnumPair Value='16' Name='Course To Steer' />
+      <EnumPair Value='17' Name='Cross Track' />
+      <EnumPair Value='18' Name='Velocity Made Good' />
+      <EnumPair Value='19' Name='Destination' />
+      <EnumPair Value='20' Name='Distance To Turn' />
+      <EnumPair Value='21' Name='Distance To Dest' />
+      <EnumPair Value='22' Name='Time To Turn' />
+      <EnumPair Value='23' Name='Time To Dest' />
+      <EnumPair Value='24' Name='ETA At Turn' />
+      <EnumPair Value='25' Name='ETA At Dest' />
+      <EnumPair Value='26' Name='Total Distance' />
+      <EnumPair Value='27' Name='Steer Arrow' />
+      <EnumPair Value='28' Name='Odometer' />
+      <EnumPair Value='29' Name='Trip Distance' />
+      <EnumPair Value='30' Name='Trip Time' />
+      <EnumPair Value='31' Name='Date' />
+      <EnumPair Value='32' Name='Time' />
+      <EnumPair Value='33' Name='UTC Date' />
+      <EnumPair Value='34' Name='UTC Time' />
+      <EnumPair Value='35' Name='Local Time Offset' />
+      <EnumPair Value='36' Name='Heading' />
+      <EnumPair Value='37' Name='Was Voltage' />
+      <EnumPair Value='38' Name='Current Set' />
+      <EnumPair Value='39' Name='Current Drift' />
+      <EnumPair Value='40' Name='Speed SOG' />
+      <EnumPair Value='41' Name='Speed Water' />
+      <EnumPair Value='42' Name='Speed Pitot' />
+      <EnumPair Value='43' Name='Speed Trip Avg' />
+      <EnumPair Value='44' Name='Speed Trip Max' />
+      <EnumPair Value='45' Name='Speed Wind App' />
+      <EnumPair Value='46' Name='Speed Wind True' />
+      <EnumPair Value='47' Name='Temp Water' />
+      <EnumPair Value='48' Name='Temp Outside' />
+      <EnumPair Value='49' Name='Temp Inside' />
+      <EnumPair Value='50' Name='Temp Engine Room' />
+      <EnumPair Value='51' Name='Temp Main Cabin' />
+      <EnumPair Value='52' Name='Temp Live Well' />
+      <EnumPair Value='53' Name='Temp Bait Well' />
+      <EnumPair Value='54' Name='Temp Refrigeration' />
+      <EnumPair Value='55' Name='Temp Heating System' />
+      <EnumPair Value='56' Name='Temp Dew Point' />
+      <EnumPair Value='57' Name='Temp Wind Chill App' />
+      <EnumPair Value='58' Name='Temp Wind Chill Theoretic' />
+      <EnumPair Value='59' Name='Temp Heat Index' />
+      <EnumPair Value='60' Name='Temp Freezer' />
+      <EnumPair Value='61' Name='Engine Temp' />
+      <EnumPair Value='62' Name='Engine Air Temp' />
+      <EnumPair Value='63' Name='Engine Oil Temp' />
+      <EnumPair Value='64' Name='Temp Battery' />
+      <EnumPair Value='65' Name='Pressure Atmospheric' />
+      <EnumPair Value='66' Name='Engine Boost Pres' />
+      <EnumPair Value='67' Name='Engine Oil Pres' />
+      <EnumPair Value='68' Name='Engine Water Pres' />
+      <EnumPair Value='69' Name='Engine Fuel Pres' />
+      <EnumPair Value='70' Name='Engine Manifold Pres' />
+      <EnumPair Value='71' Name='Pressure Steam' />
+      <EnumPair Value='72' Name='Pressure Compr Air' />
+      <EnumPair Value='73' Name='Pressure Hydraulic' />
+      <EnumPair Value='74' Name='Was Generic Pressure Lo' />
+      <EnumPair Value='75' Name='Was Generic Pressure Hi' />
+      <EnumPair Value='76' Name='Depth' />
+      <EnumPair Value='77' Name='Water Distance' />
+      <EnumPair Value='78' Name='Engine RPM' />
+      <EnumPair Value='79' Name='Engine Trim' />
+      <EnumPair Value='80' Name='Engine Alternator Potential' />
+      <EnumPair Value='81' Name='Engine Fuel Rate' />
+      <EnumPair Value='82' Name='Engine Percent Load' />
+      <EnumPair Value='83' Name='Engine Percent Torque' />
+      <EnumPair Value='84' Name='Was Suzuki Alarm Lev Lo' />
+      <EnumPair Value='85' Name='Was Suzuki Alarm Lev High' />
+      <EnumPair Value='86' Name='Tank Fuel Level' />
+      <EnumPair Value='87' Name='Fluid Level Fresh Water' />
+      <EnumPair Value='88' Name='Fluid Level Gray Water' />
+      <EnumPair Value='89' Name='Fluid Level Live Well' />
+      <EnumPair Value='90' Name='Fluid Level Oil' />
+      <EnumPair Value='91' Name='Fluid Level Black Water' />
+      <EnumPair Value='92' Name='Tank Fuel Remaining' />
+      <EnumPair Value='93' Name='Fluid Volume Fresh Water' />
+      <EnumPair Value='94' Name='Fluid Volume Gray Water' />
+      <EnumPair Value='95' Name='Fluid Volume Live Well' />
+      <EnumPair Value='96' Name='Fluid Volume Oil' />
+      <EnumPair Value='97' Name='Fluid Volume Black Water' />
+      <EnumPair Value='98' Name='Gen Fluid Volume' />
+      <EnumPair Value='99' Name='Was Tank Fuel Level Lo' />
+      <EnumPair Value='100' Name='Was Fluid Level Lo Fresh Water' />
+      <EnumPair Value='101' Name='Was Fluid Level Lo Gray Water' />
+      <EnumPair Value='102' Name='Was Fluid Level Lo Live Well' />
+      <EnumPair Value='103' Name='Was Fluid Level Lo Oil' />
+      <EnumPair Value='104' Name='Gen Tank Capacity' />
+      <EnumPair Value='105' Name='Tank Fuel Capacity' />
+      <EnumPair Value='106' Name='Tank Capacity Fresh Water' />
+      <EnumPair Value='107' Name='Tank Capacity Gray Water' />
+      <EnumPair Value='108' Name='Tank Capacity Live Well' />
+      <EnumPair Value='109' Name='Tank Capacity Oil' />
+      <EnumPair Value='110' Name='Tank Capacity Black Water' />
+      <EnumPair Value='111' Name='Was Tank Fuel Used' />
+      <EnumPair Value='112' Name='Engine Fuel Used' />
+      <EnumPair Value='113' Name='Engine Fuel Used Trip' />
+      <EnumPair Value='114' Name='Engine Fuel Used Seasonal' />
+      <EnumPair Value='115' Name='Engine Fuel K Value' />
+      <EnumPair Value='116' Name='Battery Potential' />
+      <EnumPair Value='117' Name='Battery Current' />
+      <EnumPair Value='118' Name='Trim Tab' />
+      <EnumPair Value='119' Name='Was Trim Stbd Tab' />
+      <EnumPair Value='120' Name='Rate Of Turn' />
+      <EnumPair Value='121' Name='Attitude Yaw' />
+      <EnumPair Value='122' Name='Attitude Pitch' />
+      <EnumPair Value='123' Name='Attitude Roll' />
+      <EnumPair Value='124' Name='Magnetic Variation' />
+      <EnumPair Value='125' Name='Deviation' />
+      <EnumPair Value='126' Name='Fuel Economy Wtr' />
+      <EnumPair Value='127' Name='Fuel Economy GPS' />
+      <EnumPair Value='128' Name='Was Fuel Remaining' />
+      <EnumPair Value='129' Name='Was Fuel Range Wtr' />
+      <EnumPair Value='130' Name='Was Fuel Range GPS' />
+      <EnumPair Value='131' Name='Engine Hours Used' />
+      <EnumPair Value='132' Name='Engine Type' />
+      <EnumPair Value='133' Name='Vessel Fuel Rate' />
+      <EnumPair Value='134' Name='Vessel Fuel Economy Wtr' />
+      <EnumPair Value='135' Name='Vessel Fuel Economy GPS' />
+      <EnumPair Value='136' Name='Vessel Fuel Remaining' />
+      <EnumPair Value='137' Name='Vessel Fuel Range Wtr' />
+      <EnumPair Value='138' Name='Vessel Fuel Range GPS' />
+      <EnumPair Value='139' Name='Wind App Angle' />
+      <EnumPair Value='140' Name='Wind True Angle' />
+      <EnumPair Value='141' Name='Wind True Direction' />
+      <EnumPair Value='142' Name='Humidity Inside' />
+      <EnumPair Value='143' Name='Humidity Outside' />
+      <EnumPair Value='144' Name='Set Humidity' />
+      <EnumPair Value='145' Name='Rudder Angle' />
+      <EnumPair Value='146' Name='Trans Gear' />
+      <EnumPair Value='147' Name='Trans Oil Pressure' />
+      <EnumPair Value='148' Name='Trans Oil Temp' />
+      <EnumPair Value='149' Name='Cmd Rudder Angle' />
+      <EnumPair Value='150' Name='Rudder Limit' />
+      <EnumPair Value='151' Name='Off Heading Lim' />
+      <EnumPair Value='152' Name='Radius Of Turn Order' />
+      <EnumPair Value='153' Name='Rate Of Turn Order' />
+      <EnumPair Value='154' Name='Off Track Lim' />
+      <EnumPair Value='155' Name='Logging Time Remaining' />
+      <EnumPair Value='156' Name='Position Fix Type' />
+      <EnumPair Value='157' Name='Engine Discrete Status' />
+      <EnumPair Value='158' Name='Transmission Discrete Status' />
+      <EnumPair Value='159' Name='GPS Best Of Four Snr' />
+      <EnumPair Value='160' Name='Gen Fluid Level' />
+      <EnumPair Value='161' Name='Gen Pressure' />
+      <EnumPair Value='162' Name='Gen Temperature' />
+      <EnumPair Value='163' Name='Internal Voltage' />
+      <EnumPair Value='164' Name='Depth Offset' />
+      <EnumPair Value='165' Name='Structure Depth' />
+      <EnumPair Value='166' Name='Loran Position' />
+      <EnumPair Value='167' Name='Vessel Status' />
+      <EnumPair Value='168' Name='Battery DC Type' />
+      <EnumPair Value='169' Name='Battery State Of Charge' />
+      <EnumPair Value='170' Name='Battery State Of Health' />
+      <EnumPair Value='171' Name='Battery Time Remaining' />
+      <EnumPair Value='172' Name='Battery Ripple Voltage' />
+      <EnumPair Value='173' Name='Ac1 Acceptability' />
+      <EnumPair Value='174' Name='Ac2 Acceptability' />
+      <EnumPair Value='175' Name='Ac3 Acceptability' />
+      <EnumPair Value='176' Name='Ac1 Voltage' />
+      <EnumPair Value='177' Name='Ac2 Voltage' />
+      <EnumPair Value='178' Name='Ac3 Voltage' />
+      <EnumPair Value='179' Name='Ac1 Current' />
+      <EnumPair Value='180' Name='Ac2 Current' />
+      <EnumPair Value='181' Name='Ac3 Current' />
+      <EnumPair Value='182' Name='Ac1 Frequency' />
+      <EnumPair Value='183' Name='Ac2 Frequency' />
+      <EnumPair Value='184' Name='Ac3 Frequency' />
+      <EnumPair Value='185' Name='Ac1 Breaker Size' />
+      <EnumPair Value='186' Name='Ac2 Breaker Size' />
+      <EnumPair Value='187' Name='Ac3 Breaker Size' />
+      <EnumPair Value='188' Name='Ac1 Real Power' />
+      <EnumPair Value='189' Name='Ac2 Real Power' />
+      <EnumPair Value='190' Name='Ac3 Real Power' />
+      <EnumPair Value='191' Name='Ac1 Reactive Power' />
+      <EnumPair Value='192' Name='Ac2 Reactive Power' />
+      <EnumPair Value='193' Name='Ac3 Reactive Power' />
+      <EnumPair Value='194' Name='Ac1 Power Factor' />
+      <EnumPair Value='195' Name='Ac2 Power Factor' />
+      <EnumPair Value='196' Name='Ac3 Power Factor' />
+      <EnumPair Value='197' Name='Switch State' />
+      <EnumPair Value='198' Name='Switch Current' />
+      <EnumPair Value='199' Name='Switch Fault' />
+      <EnumPair Value='200' Name='Switch Dim Level' />
+      <EnumPair Value='201' Name='Previous Cmd Heading' />
+      <EnumPair Value='202' Name='Cmd Wind Angle' />
+      <EnumPair Value='203' Name='Was Cmd Bearing Offset' />
+      <EnumPair Value='204' Name='Cmd Bearing' />
+      <EnumPair Value='205' Name='Cmd Depth Contour' />
+      <EnumPair Value='206' Name='Cmd Course Change' />
+      <EnumPair Value='207' Name='Pilot Drift' />
+      <EnumPair Value='208' Name='Pilot Distance To Turn' />
+      <EnumPair Value='209' Name='Pilot Time To Turn' />
+      <EnumPair Value='210' Name='Pilot Reference Position' />
+      <EnumPair Value='211' Name='DC Status' />
+      <EnumPair Value='212' Name='Ac1 Status' />
+      <EnumPair Value='213' Name='Was Switch Voltage' />
+      <EnumPair Value='214' Name='Battery Capacity Remaining' />
+      <EnumPair Value='215' Name='Pilot Heading Reference' />
+      <EnumPair Value='216' Name='B And G Linear 1' />
+      <EnumPair Value='217' Name='B And G Linear 2' />
+      <EnumPair Value='218' Name='B And G Linear 3' />
+      <EnumPair Value='219' Name='Boom Position' />
+      <EnumPair Value='220' Name='Sailing Course' />
+      <EnumPair Value='221' Name='Daggerboard Position' />
+      <EnumPair Value='222' Name='B And G Linear 4' />
+      <EnumPair Value='223' Name='Heading On Next Tack' />
+      <EnumPair Value='224' Name='Keel Angle' />
+      <EnumPair Value='225' Name='Leeway' />
+      <EnumPair Value='226' Name='Mast Angle' />
+      <EnumPair Value='227' Name='Target True Wind Angle' />
+      <EnumPair Value='228' Name='Keel Trim Tab' />
+      <EnumPair Value='229' Name='Race Timer' />
+      <EnumPair Value='230' Name='Canard Angle' />
+      <EnumPair Value='231' Name='Next Leg Apparent Wind Angle' />
+      <EnumPair Value='232' Name='Next Leg Apparent Wind Speed' />
+      <EnumPair Value='233' Name='Target Boat Speed' />
+      <EnumPair Value='234' Name='VMG To Wind' />
+      <EnumPair Value='235' Name='Time To Laylines' />
+      <EnumPair Value='236' Name='Distance To Laylines' />
+      <EnumPair Value='237' Name='Aft Depth' />
+      <EnumPair Value='238' Name='Forestay' />
+      <EnumPair Value='239' Name='Polar Speed' />
+      <EnumPair Value='240' Name='Polar Performance' />
+      <EnumPair Value='241' Name='Tacking Performance' />
+      <EnumPair Value='242' Name='Wind Angle To Mast' />
+      <EnumPair Value='243' Name='Can Bus Voltage' />
+      <EnumPair Value='244' Name='Internal Temperature' />
+      <EnumPair Value='245' Name='Engage Current' />
+      <EnumPair Value='246' Name='Uref Voltage' />
+      <EnumPair Value='247' Name='Supply Voltage' />
+      <EnumPair Value='248' Name='Destination Position' />
+      <EnumPair Value='249' Name='Compass Heading Reference' />
+      <EnumPair Value='250' Name='Cmd Rudder Direction' />
+      <EnumPair Value='251' Name='Was Engine Sync State' />
+      <EnumPair Value='252' Name='Engine General Maintenance' />
+      <EnumPair Value='253' Name='Engine Percent Throttle' />
+      <EnumPair Value='254' Name='Engine Steering Angle' />
+      <EnumPair Value='255' Name='Engine Break In Reqd' />
+      <EnumPair Value='256' Name='GPS All' />
+      <EnumPair Value='257' Name='Engine Break In Accum' />
+      <EnumPair Value='258' Name='Engine Trim Status' />
+      <EnumPair Value='259' Name='Pilot Present' />
+      <EnumPair Value='260' Name='Ac1 Out Waveform' />
+      <EnumPair Value='261' Name='Ac2 Out Waveform' />
+      <EnumPair Value='262' Name='Ac3 Out Waveform' />
+      <EnumPair Value='263' Name='Ac1 Out Voltage' />
+      <EnumPair Value='264' Name='Ac2 Out Voltage' />
+      <EnumPair Value='265' Name='Ac3 Out Voltage' />
+      <EnumPair Value='266' Name='Ac1 Out Current' />
+      <EnumPair Value='267' Name='Ac2 Out Current' />
+      <EnumPair Value='268' Name='Ac3 Out Current' />
+      <EnumPair Value='269' Name='Ac1 Out Frequency' />
+      <EnumPair Value='270' Name='Ac2 Out Frequency' />
+      <EnumPair Value='271' Name='Ac3 Out Frequency' />
+      <EnumPair Value='272' Name='Ac1 Out Breaker Size' />
+      <EnumPair Value='273' Name='Ac2 Out Breaker Size' />
+      <EnumPair Value='274' Name='Ac3 Out Breaker Size' />
+      <EnumPair Value='275' Name='Ac1 Out Real Power' />
+      <EnumPair Value='276' Name='Ac2 Out Real Power' />
+      <EnumPair Value='277' Name='Ac3 Out Real Power' />
+      <EnumPair Value='278' Name='Ac1 Out Reactive Power' />
+      <EnumPair Value='279' Name='Ac2 Out Reactive Power' />
+      <EnumPair Value='280' Name='Ac3 Out Reactive Power' />
+      <EnumPair Value='281' Name='Ac1 Out Power Factor' />
+      <EnumPair Value='282' Name='Ac2 Out Power Factor' />
+      <EnumPair Value='283' Name='Ac3 Out Power Factor' />
+      <EnumPair Value='284' Name='Ac2 Status' />
+      <EnumPair Value='285' Name='Ac3 Status' />
+      <EnumPair Value='286' Name='Ac1 Out Status' />
+      <EnumPair Value='287' Name='Ac2 Out Status' />
+      <EnumPair Value='288' Name='Ac3 Out Status' />
+      <EnumPair Value='289' Name='Switch Manual Override' />
+      <EnumPair Value='290' Name='Switch Reverse Polarity' />
+      <EnumPair Value='291' Name='Switch Acsource Available' />
+      <EnumPair Value='292' Name='Switch Accontactor Systemsonstate' />
+      <EnumPair Value='293' Name='Charger Battery Instance' />
+      <EnumPair Value='294' Name='Charger Operating State' />
+      <EnumPair Value='295' Name='Charger Mode' />
+      <EnumPair Value='296' Name='Charger Enabled' />
+      <EnumPair Value='297' Name='Charger Equalization Pending' />
+      <EnumPair Value='298' Name='Charger Equalization Time Remaining' />
+      <EnumPair Value='299' Name='Inverter AC Instance' />
+      <EnumPair Value='300' Name='Inverter DC Instance' />
+      <EnumPair Value='301' Name='Inverter Operating State' />
+      <EnumPair Value='302' Name='Inverter Enabled' />
+      <EnumPair Value='303' Name='Thruster Power' />
+      <EnumPair Value='304' Name='Fuel To Turn' />
+      <EnumPair Value='305' Name='Engine Mil' />
+      <EnumPair Value='306' Name='Engine Warning Flags' />
+      <EnumPair Value='307' Name='Speed Stw' />
+      <EnumPair Value='308' Name='Engine Performance SOG' />
+      <EnumPair Value='309' Name='Engine Performance Stw' />
+      <EnumPair Value='310' Name='Engine Control Flags' />
+      <EnumPair Value='311' Name='Engine Troll RPM Setpoint' />
+      <EnumPair Value='312' Name='Active Helm' />
+      <EnumPair Value='313' Name='Cruise RPM Setpoint' />
+      <EnumPair Value='314' Name='Cruise Speed Setpoint' />
+      <EnumPair Value='315' Name='Cmd Pattern Dir' />
+      <EnumPair Value='316' Name='Smart Contextual' />
+      <EnumPair Value='317' Name='Sailing Time To Waypoint' />
+      <EnumPair Value='318' Name='Sailing Distance To Waypoint' />
+      <EnumPair Value='319' Name='Sailing ETA' />
+      <EnumPair Value='320' Name='Generator Temp' />
+      <EnumPair Value='321' Name='Generator Oil Temp' />
+      <EnumPair Value='322' Name='Generator Oil Pres' />
+      <EnumPair Value='323' Name='Generator Water Pres' />
+      <EnumPair Value='324' Name='Generator Fuel Pres' />
+      <EnumPair Value='325' Name='Generator Fuel Rate' />
+      <EnumPair Value='326' Name='Generator Hours Used' />
+      <EnumPair Value='327' Name='Generator Discrete Status' />
+      <EnumPair Value='328' Name='Generator Percent Load' />
+      <EnumPair Value='329' Name='Generator Percent Torque' />
+      <EnumPair Value='330' Name='Generator Battery Voltage' />
+      <EnumPair Value='331' Name='Generator Average Voltage' />
+      <EnumPair Value='332' Name='Generator Average Frequency' />
+      <EnumPair Value='333' Name='Generator Average Current' />
+      <EnumPair Value='334' Name='Pilot Mode' />
+      <EnumPair Value='335' Name='Pilot Response Level' />
+      <EnumPair Value='336' Name='Cruise Smarttow Overshoot' />
+      <EnumPair Value='337' Name='Pilot Cmd Heading' />
+      <EnumPair Value='338' Name='MOB Dr Position' />
+      <EnumPair Value='339' Name='MOB Dr Range' />
+      <EnumPair Value='340' Name='MOB Dr Bearing' />
+      <EnumPair Value='341' Name='Bow Position' />
+      <EnumPair Value='342' Name='Start Line Bearing' />
+      <EnumPair Value='343' Name='Start Line Bias' />
+      <EnumPair Value='344' Name='Distance To Start Line' />
+      <EnumPair Value='345' Name='Distance To Start Line Port End' />
+      <EnumPair Value='346' Name='Distance To Start Line Stbd End' />
+      <EnumPair Value='347' Name='Start Line Port Position' />
+      <EnumPair Value='348' Name='Start Line Stbd Position' />
+      <EnumPair Value='349' Name='Start Line Boat Length Advantage' />
+      <EnumPair Value='350' Name='Distance To Start Line Boat Lengths' />
+      <EnumPair Value='351' Name='Backstay' />
+      <EnumPair Value='352' Name='Boom Angle' />
+      <EnumPair Value='353' Name='Boom Vang' />
+      <EnumPair Value='354' Name='Chain Length' />
+      <EnumPair Value='355' Name='Cunningham' />
+      <EnumPair Value='356' Name='Inner Forestay Load' />
+      <EnumPair Value='357' Name='Inner Forestay Halyard Load' />
+      <EnumPair Value='358' Name='Jib Furl' />
+      <EnumPair Value='359' Name='Jib Halyard Load' />
+      <EnumPair Value='360' Name='Optimum Wind Angle' />
+      <EnumPair Value='361' Name='Outhaul Load' />
+      <EnumPair Value='362' Name='Pitch Rate' />
+      <EnumPair Value='363' Name='Plow Angle' />
+      <EnumPair Value='364' Name='Roll Rate' />
+      <EnumPair Value='365' Name='VMG Performance' />
+      <EnumPair Value='366' Name='B And G Linear 5' />
+      <EnumPair Value='367' Name='B And G Linear 6' />
+      <EnumPair Value='368' Name='B And G Linear 7' />
+      <EnumPair Value='369' Name='B And G Linear 8' />
+      <EnumPair Value='370' Name='B And G Linear 9' />
+      <EnumPair Value='371' Name='B And G Linear 10' />
+      <EnumPair Value='372' Name='B And G Linear 11' />
+      <EnumPair Value='373' Name='B And G Linear 12' />
+      <EnumPair Value='374' Name='B And G Linear 13' />
+      <EnumPair Value='375' Name='B And G Linear 14' />
+      <EnumPair Value='376' Name='B And G Linear 15' />
+      <EnumPair Value='377' Name='B And G Linear 16' />
+      <EnumPair Value='378' Name='Keel Draught' />
+      <EnumPair Value='379' Name='Pool Temperature' />
+      <EnumPair Value='380' Name='Jacuzzi Temperature' />
+      <EnumPair Value='381' Name='Trip Dr Bearing' />
+      <EnumPair Value='382' Name='Trip Dr Distance' />
+      <EnumPair Value='383' Name='Code Zero Load' />
+      <EnumPair Value='384' Name='B And G MOB Position' />
+      <EnumPair Value='385' Name='Distance Behind Start Line' />
+      <EnumPair Value='386' Name='Distance Behind Start Line Boat Lengths' />
+      <EnumPair Value='387' Name='Bias Advantage' />
+      <EnumPair Value='388' Name='Opposite Tack COG' />
+      <EnumPair Value='389' Name='Opposite Tack Target Heading' />
+      <EnumPair Value='390' Name='Mast Rake' />
+      <EnumPair Value='391' Name='Next Leg Bearing' />
+      <EnumPair Value='392' Name='Next Leg Target Speed' />
+      <EnumPair Value='393' Name='Ground Wind Direction' />
+      <EnumPair Value='394' Name='Ground Wind Speed' />
+      <EnumPair Value='395' Name='Mast Cant Angle' />
+      <EnumPair Value='396' Name='Rudder Toe In' />
+      <EnumPair Value='397' Name='Daggerboard Port' />
+      <EnumPair Value='398' Name='Daggerboard Starboard' />
+      <EnumPair Value='399' Name='B And G Remote 0' />
+      <EnumPair Value='400' Name='B And G Remote 1' />
+      <EnumPair Value='401' Name='B And G Remote 2' />
+      <EnumPair Value='402' Name='B And G Remote 3' />
+      <EnumPair Value='403' Name='B And G Remote 4' />
+      <EnumPair Value='404' Name='B And G Remote 5' />
+      <EnumPair Value='405' Name='B And G Remote 6' />
+      <EnumPair Value='406' Name='B And G Remote 7' />
+      <EnumPair Value='407' Name='B And G Remote 8' />
+      <EnumPair Value='408' Name='B And G Remote 9' />
+      <EnumPair Value='409' Name='Forward Depth' />
+      <EnumPair Value='410' Name='Critical Range' />
+      <EnumPair Value='411' Name='Caution Range' />
+      <EnumPair Value='412' Name='Max Range' />
+      <EnumPair Value='413' Name='Generator Alternator Voltage' />
+      <EnumPair Value='414' Name='Trolling Prop Rate' />
+      <EnumPair Value='415' Name='Trolling Cruise Control Speed' />
+      <EnumPair Value='416' Name='Vessel Fuel Used' />
+      <EnumPair Value='417' Name='Suzuki Engine Baro Pressure' />
+      <EnumPair Value='418' Name='Suzuki Cylinder Temperature' />
+      <EnumPair Value='419' Name='Suzuki Intake Air Temperature' />
+      <EnumPair Value='420' Name='Suzuki Ignition Timing' />
+      <EnumPair Value='421' Name='Suzuki Fuel Injector Pulse Width' />
+      <EnumPair Value='422' Name='Was Suzuki Injected Fuel Amount' />
+      <EnumPair Value='423' Name='Suzuki Iac Valve Duty' />
+      <EnumPair Value='424' Name='Suzuki Discrete Status 1' />
+      <EnumPair Value='425' Name='Suzuki Discrete Status 2' />
+      <EnumPair Value='426' Name='Suzuki Discrete Status 3' />
+      <EnumPair Value='427' Name='Suzuki Discrete Status 4' />
+      <EnumPair Value='428' Name='Fuel Economy Pit' />
+      <EnumPair Value='429' Name='Vessel Fuel Economy Pit' />
+      <EnumPair Value='430' Name='Vessel Fuel Range Pit' />
+      <EnumPair Value='431' Name='Waypoint' />
+      <EnumPair Value='432' Name='Average Wind Direction' />
+      <EnumPair Value='433' Name='Wind Phase' />
+      <EnumPair Value='434' Name='Wind Lift' />
+      <EnumPair Value='435' Name='Fuel Range Seasonal Average' />
+      <EnumPair Value='436' Name='Fuel Range Instantaneous' />
+      <EnumPair Value='437' Name='Vessel Fuel Economy' />
+      <EnumPair Value='438' Name='Average Fuel Economy Seasonal' />
+      <EnumPair Value='439' Name='Average Fuel Economy Trip' />
+      <EnumPair Value='440' Name='Best Fuel Economy Seasonal' />
+      <EnumPair Value='441' Name='Best Fuel Economy Trip' />
+      <EnumPair Value='442' Name='Vessel Fuel Level' />
+      <EnumPair Value='443' Name='Vessel Fuel Used Trip' />
+      <EnumPair Value='444' Name='B And G Linear 17' />
+      <EnumPair Value='445' Name='B And G Linear 18' />
+      <EnumPair Value='446' Name='B And G Linear 19' />
+      <EnumPair Value='447' Name='B And G Linear 20' />
+      <EnumPair Value='448' Name='B And G Linear 21' />
+      <EnumPair Value='449' Name='B And G Linear 22' />
+      <EnumPair Value='450' Name='B And G Linear 23' />
+      <EnumPair Value='451' Name='B And G Linear 24' />
+      <EnumPair Value='452' Name='B And G Linear 25' />
+      <EnumPair Value='453' Name='B And G Linear 26' />
+      <EnumPair Value='454' Name='B And G Linear 27' />
+      <EnumPair Value='455' Name='B And G Linear 28' />
+      <EnumPair Value='456' Name='B And G Linear 29' />
+      <EnumPair Value='457' Name='B And G Linear 30' />
+      <EnumPair Value='458' Name='B And G Linear 31' />
+      <EnumPair Value='459' Name='B And G Linear 32' />
+      <EnumPair Value='460' Name='Origin Way Point Number' />
+      <EnumPair Value='461' Name='Dest Way Point Number' />
+      <EnumPair Value='462' Name='Arrival Notification' />
+      <EnumPair Value='463' Name='Arrival Circle Notification' />
+      <EnumPair Value='464' Name='Was Nav Terminated' />
+      <EnumPair Value='465' Name='Bobstay' />
+      <EnumPair Value='466' Name='J1' />
+      <EnumPair Value='467' Name='J2' />
+      <EnumPair Value='468' Name='J3' />
+      <EnumPair Value='469' Name='Mast Base' />
+      <EnumPair Value='470' Name='Mainsheet' />
+      <EnumPair Value='471' Name='D0 Port' />
+      <EnumPair Value='472' Name='D0 Starboard' />
+      <EnumPair Value='473' Name='Runner Port' />
+      <EnumPair Value='474' Name='Runner Starboard' />
+      <EnumPair Value='475' Name='Foil Port' />
+      <EnumPair Value='476' Name='Foil Starboard' />
+      <EnumPair Value='477' Name='Sailtack Port' />
+      <EnumPair Value='478' Name='Sailtack Starboard' />
+      <EnumPair Value='479' Name='Deflect Port' />
+      <EnumPair Value='480' Name='Deflect Starboard' />
+      <EnumPair Value='481' Name='Rudder Load Port' />
+      <EnumPair Value='482' Name='Rudder Load Starboard' />
+      <EnumPair Value='483' Name='D1 Port' />
+      <EnumPair Value='484' Name='D1 Starboard' />
+      <EnumPair Value='485' Name='V0 Port' />
+      <EnumPair Value='486' Name='V0 Starboard' />
+      <EnumPair Value='487' Name='V1 Port' />
+      <EnumPair Value='488' Name='V1 Starboard' />
+      <EnumPair Value='489' Name='Gnss System' />
+      <EnumPair Value='490' Name='Sv Count' />
+      <EnumPair Value='491' Name='Gnss Op Mode' />
+      <EnumPair Value='492' Name='Dgnss Mode' />
+      <EnumPair Value='493' Name='Suzuki Fuel Pump Duty' />
+      <EnumPair Value='494' Name='Speed Log Water Longitudinal' />
+      <EnumPair Value='495' Name='Speed Log Water Transverse' />
+      <EnumPair Value='496' Name='Speed Log Water Resultant' />
+      <EnumPair Value='497' Name='Speed Log Water Angle' />
+      <EnumPair Value='498' Name='Speed Log Ground Longitudinal' />
+      <EnumPair Value='499' Name='Speed Log Ground Transverse' />
+      <EnumPair Value='500' Name='Speed Log Ground Resultant' />
+      <EnumPair Value='501' Name='Speed Log Ground Angle' />
+      <EnumPair Value='502' Name='Speed Log Stern Water Transverse' />
+      <EnumPair Value='503' Name='Speed Log Stern Ground Transverse' />
+      <EnumPair Value='504' Name='Position Datum' />
+      <EnumPair Value='505' Name='Speed Boat' />
+      <EnumPair Value='506' Name='Was Engine Fuel Used Mercury' />
+      <EnumPair Value='507' Name='Heave' />
+      <EnumPair Value='508' Name='Speed Trip Max RPM' />
+      <EnumPair Value='509' Name='Honda Engine Status Params' />
+      <EnumPair Value='510' Name='Pilot Features' />
+      <EnumPair Value='511' Name='Pilot Setpoint Heading' />
+      <EnumPair Value='512' Name='Idle Speed Control Mode' />
+      <EnumPair Value='513' Name='Idle Speed Control Value' />
+      <EnumPair Value='514' Name='Trolling Mode' />
+      <EnumPair Value='515' Name='Immobilizer Lock Status' />
+      <EnumPair Value='516' Name='Engine Discrete Params 1' />
+      <EnumPair Value='517' Name='Engine Discrete Params 2' />
+      <EnumPair Value='518' Name='Engine Discrete Params 3' />
+      <EnumPair Value='519' Name='Engine Discrete Params 4' />
+      <EnumPair Value='520' Name='Engine Discrete Params 5' />
+      <EnumPair Value='521' Name='Engine Discrete Params 6' />
+      <EnumPair Value='522' Name='Idle Speed Limit Low' />
+      <EnumPair Value='523' Name='Idle Speed Limit High' />
+      <EnumPair Value='524' Name='Was Trolling Variable RPM Info' />
+      <EnumPair Value='525' Name='Idle Speed Control Target Rev' />
+      <EnumPair Value='526' Name='Idle Control' />
+      <EnumPair Value='527' Name='Idle Feedback' />
+      <EnumPair Value='528' Name='Immediately After Starting Control' />
+      <EnumPair Value='529' Name='Gateway Params' />
+      <EnumPair Value='530' Name='Gateway Protocol' />
+      <EnumPair Value='531' Name='Engine Wall Temp' />
+      <EnumPair Value='532' Name='Substitute Battery Voltage' />
+      <EnumPair Value='533' Name='Yamaha Engine M6 Diag Code' />
+      <EnumPair Value='534' Name='Wireless Sensor Battery Status' />
+      <EnumPair Value='535' Name='Wireless Sensor Battery Charge Status' />
+      <EnumPair Value='536' Name='Wireless Sensor Battery Status Voltage' />
+      <EnumPair Value='537' Name='Wireless Sensor Battery Charge Status Current' />
+      <EnumPair Value='538' Name='Fluid Type Mode' />
+      <EnumPair Value='539' Name='Datetime' />
+      <EnumPair Value='540' Name='Reacher Load' />
+      <EnumPair Value='541' Name='Blade Load' />
+      <EnumPair Value='542' Name='Staysail Load' />
+      <EnumPair Value='543' Name='Tack Load' />
+      <EnumPair Value='544' Name='J4 Load' />
+      <EnumPair Value='545' Name='Solent Load' />
+      <EnumPair Value='546' Name='Tack Port Load' />
+      <EnumPair Value='547' Name='Tack Starboard Load' />
+      <EnumPair Value='548' Name='Deflect Upper Load' />
+      <EnumPair Value='549' Name='Deflect Lower Load' />
+      <EnumPair Value='550' Name='Winch Port Load' />
+      <EnumPair Value='551' Name='Winch Starboard Load' />
+      <EnumPair Value='552' Name='Spin Halyard Port Load' />
+      <EnumPair Value='553' Name='Spin Halyard Starboard Load' />
+      <EnumPair Value='554' Name='Main Halyward' />
+      <EnumPair Value='555' Name='Load 1 Load' />
+      <EnumPair Value='556' Name='Load 2 Load' />
+      <EnumPair Value='557' Name='Mast Base 2 Load' />
+      <EnumPair Value='558' Name='Pilot Active Perf Mode' />
+      <EnumPair Value='559' Name='Pilot Gust' />
+      <EnumPair Value='560' Name='Pilot Tws Response' />
+      <EnumPair Value='561' Name='Pilot Heel Comp' />
+      <EnumPair Value='562' Name='Pilot Net Course' />
+      <EnumPair Value='563' Name='Pilot Target Wind Angle' />
+      <EnumPair Value='564' Name='Pilot Weather Helm' />
+      <EnumPair Value='565' Name='Pilot Mean Heel' />
+      <EnumPair Value='566' Name='Propeller Shaft Pitch Angle' />
+      <EnumPair Value='567' Name='Propeller Shaft Pitch Percent' />
+      <EnumPair Value='568' Name='Propeller Shaft RPM' />
+      <EnumPair Value='569' Name='Thruster Pitch Angle' />
+      <EnumPair Value='570' Name='Thruster Pitch Percent' />
+      <EnumPair Value='571' Name='Ground Wind Angle' />
+      <EnumPair Value='572' Name='Fuel Flow Offset' />
+      <EnumPair Value='573' Name='Fluid Level Gasoline' />
+      <EnumPair Value='574' Name='Fluid Volume Gasoline' />
+      <EnumPair Value='575' Name='Tank Capacity Gasoline' />
+      <EnumPair Value='576' Name='Cmd Xte Offset' />
+      <EnumPair Value='577' Name='Engine 4Stroke Oil' />
+      <EnumPair Value='578' Name='Wireless Sensor Signal Strength' />
+      <EnumPair Value='579' Name='Wireless Sensor Software Update Progress' />
+      <EnumPair Value='580' Name='Trolling Status' />
+      <EnumPair Value='581' Name='Mercury Exhaust Valve' />
+      <EnumPair Value='582' Name='Mercury Exhaust Status' />
+      <EnumPair Value='583' Name='Yanmar Engine Ecu Alarms' />
+      <EnumPair Value='584' Name='Yanmar Helm Ecu Alarms' />
+      <EnumPair Value='585' Name='Yanmar Drive Ecu Alarms' />
+      <EnumPair Value='586' Name='Dgps Correction Data' />
+      <EnumPair Value='587' Name='Dgps Reference Station Id' />
+      <EnumPair Value='588' Name='Dgps Reference Station Health' />
+      <EnumPair Value='589' Name='Dgps Signal Snr' />
+      <EnumPair Value='590' Name='Dgps Signal Frequency' />
+      <EnumPair Value='591' Name='Dgps Signal Strength' />
+      <EnumPair Value='592' Name='Engine Fuel Temp' />
+      <EnumPair Value='593' Name='Depth Quality' />
+      <EnumPair Value='594' Name='Number Of Active Dtc' />
+      <EnumPair Value='595' Name='Yanmar Fuel Level Tank1 Port' />
+      <EnumPair Value='596' Name='Yanmar Fuel Level Tank2 Port' />
+      <EnumPair Value='597' Name='Yanmar Fuel Level Tank1 Stbd' />
+      <EnumPair Value='598' Name='Yanmar Fuel Level Tank2 Stbd' />
+      <EnumPair Value='599' Name='Yanmar Fuel Level Tank1 Center' />
+      <EnumPair Value='600' Name='Yanmar Fuel Level Tank2 Center' />
+      <EnumPair Value='601' Name='Yanmar Fresh Water Level Tank1 Port' />
+      <EnumPair Value='602' Name='Yanmar Fresh Water Level Tank2 Port' />
+      <EnumPair Value='603' Name='Yanmar Fresh Water Level Tank1 Stbd' />
+      <EnumPair Value='604' Name='Yanmar Fresh Water Level Tank2 Stbd' />
+      <EnumPair Value='605' Name='Yanmar Fresh Water Level Tank1 Center' />
+      <EnumPair Value='606' Name='Yanmar Fresh Water Level Tank2 Center' />
+      <EnumPair Value='607' Name='Yanmar Gray Water Level Tank1 Port' />
+      <EnumPair Value='608' Name='Yanmar Gray Water Level Tank2 Port' />
+      <EnumPair Value='609' Name='Yanmar Gray Water Level Tank1 Stbd' />
+      <EnumPair Value='610' Name='Yanmar Gray Water Level Tank2 Stbd' />
+      <EnumPair Value='611' Name='Yanmar Gray Water Level Tank1 Center' />
+      <EnumPair Value='612' Name='Yanmar Gray Water Level Tank2 Center' />
+      <EnumPair Value='613' Name='Rudder Angle Percentage' />
+      <EnumPair Value='614' Name='Troll Active Helm' />
+      <EnumPair Value='615' Name='Tides Graphic' />
+      <EnumPair Value='616' Name='Anchor Distance' />
+      <EnumPair Value='617' Name='Anchor Size' />
+      <EnumPair Value='618' Name='Anchor Depth' />
+      <EnumPair Value='619' Name='Anchor Bearing' />
+      <EnumPair Value='620' Name='Honda Engine Warning Params' />
+      <EnumPair Value='621' Name='Honda Engine Discrete Params 1' />
+      <EnumPair Value='622' Name='Honda Engine Discrete Params 2' />
+      <EnumPair Value='623' Name='Honda Engine Discrete Params 3' />
+      <EnumPair Value='624' Name='Honda Engine Discrete Params 4' />
+      <EnumPair Value='625' Name='Mainsail Head Load' />
+      <EnumPair Value='626' Name='Mainsail Clew Load' />
+      <EnumPair Value='627' Name='Mainsail Tack Load' />
+      <EnumPair Value='628' Name='J1 Head Load' />
+      <EnumPair Value='629' Name='J1 Clew Load' />
+      <EnumPair Value='630' Name='J1 Tack Load' />
+      <EnumPair Value='631' Name='J2 Head Load' />
+      <EnumPair Value='632' Name='J2 Clew Load' />
+      <EnumPair Value='633' Name='J2 Tack Load' />
+      <EnumPair Value='634' Name='J3 Head Load' />
+      <EnumPair Value='635' Name='J3 Clew Load' />
+      <EnumPair Value='636' Name='J3 Tack Load' />
+      <EnumPair Value='637' Name='Code Zero Head Load' />
+      <EnumPair Value='638' Name='Code Zero Clew Load' />
+      <EnumPair Value='639' Name='Code Zero Tack Load' />
+      <EnumPair Value='640' Name='Suzuki Engine Alert I' />
+      <EnumPair Value='641' Name='Engine Oil Life' />
+      <EnumPair Value='642' Name='Engine Oil Level Status' />
+      <EnumPair Value='643' Name='Trans Fluid Status' />
+      <EnumPair Value='644' Name='Honda Eco Status All Engines' />
+      <EnumPair Value='645' Name='Output RPM' />
+      <EnumPair Value='646' Name='Suzuki Engine Alert A' />
+      <EnumPair Value='647' Name='Suzuki Engine Alert B' />
+      <EnumPair Value='648' Name='Suzuki Engine Alert C' />
+      <EnumPair Value='649' Name='Suzuki Engine Alert D' />
+      <EnumPair Value='650' Name='Suzuki Engine Alert E' />
+      <EnumPair Value='651' Name='Suzuki Engine Alert F' />
+      <EnumPair Value='652' Name='Suzuki Engine Alert G' />
+      <EnumPair Value='653' Name='Suzuki Engine Alert H' />
+      <EnumPair Value='654' Name='Suzuki Engine Alert J' />
+      <EnumPair Value='655' Name='Suzuki Bcm Fault' />
+      <EnumPair Value='656' Name='Suzuki Bcm Mode' />
+      <EnumPair Value='657' Name='Suzuki Engine Kls Status' />
+      <EnumPair Value='658' Name='Suzuki Switch Fault' />
+      <EnumPair Value='659' Name='Suzuki Shift Position Status' />
+      <EnumPair Value='660' Name='Vessel Fuel Used Seasonal' />
+      <EnumPair Value='661' Name='Vessel Fuel Capacity' />
+      <EnumPair Value='662' Name='Suzuki Engine Auto Trim Status' />
+      <EnumPair Value='663' Name='Trolling Mode Active' />
+      <EnumPair Value='664' Name='Trolling Mode Active Master' />
+      <EnumPair Value='665' Name='Keyless Communication State' />
+      <EnumPair Value='666' Name='Linear Actuator Position' />
+      <EnumPair Value='667' Name='Engine Exhaust Temp' />
+      <EnumPair Value='668' Name='Engine Guardian Power Limit' />
+      <EnumPair Value='669' Name='Engine State' />
+      <EnumPair Value='670' Name='Sailing Time To Burn' />
+      <EnumPair Value='671' Name='Mast Twist' />
+      <EnumPair Value='672' Name='VHF Channel' />
+      <EnumPair Value='673' Name='Trolling Lower Unit Direction' />
+      <EnumPair Value='674' Name='Propulsion Battery Status' />
+      <EnumPair Value='675' Name='Propulsion Battery Isolation Status' />
+      <EnumPair Value='676' Name='Propulsion Battery Error' />
+      <EnumPair Value='677' Name='Propulsion Battery Voltage' />
+      <EnumPair Value='678' Name='Propulsion Battery Current' />
+      <EnumPair Value='679' Name='Propulsion Battery State Of Charge' />
+      <EnumPair Value='680' Name='Propulsion Battery Time Remaining' />
+      <EnumPair Value='681' Name='Propulsion Battery Highest Cell Temperature' />
+      <EnumPair Value='682' Name='Propulsion Battery Lowest Cell Temperature' />
+      <EnumPair Value='683' Name='Propulsion Battery Average Cell Temperature' />
+      <EnumPair Value='684' Name='Propulsion Battery Maximum Discharge Current' />
+      <EnumPair Value='685' Name='Propulsion Battery Maximum Charge Current' />
+      <EnumPair Value='686' Name='Propulsion Battery Cooling System Status' />
+      <EnumPair Value='687' Name='Propulsion Battery Heating System Status' />
+      <EnumPair Value='688' Name='Propulsion Battery Storage Mode' />
+      <EnumPair Value='689' Name='Propulsion Battery Chemistry' />
+      <EnumPair Value='690' Name='Propulsion Battery Maximum Temperature Derating' />
+      <EnumPair Value='691' Name='Propulsion Battery Maximum Temperature Shutoff' />
+      <EnumPair Value='692' Name='Propulsion Battery Minimum Temperature Derating' />
+      <EnumPair Value='693' Name='Propulsion Battery Minimum Temperature Shutoff' />
+      <EnumPair Value='694' Name='Propulsion Battery Usable Energy' />
+      <EnumPair Value='695' Name='Propulsion Battery State Of Health' />
+      <EnumPair Value='696' Name='Propulsion Battery Discharge Cycles Count' />
+      <EnumPair Value='697' Name='Propulsion Battery Full Status' />
+      <EnumPair Value='698' Name='Propulsion Battery Empty Status' />
+      <EnumPair Value='699' Name='Propulsion Battery Maximum Charge Soc' />
+      <EnumPair Value='700' Name='Propulsion Battery Minimum Discharge Soc' />
+      <EnumPair Value='701' Name='Active Motor Mode' />
+      <EnumPair Value='702' Name='Motor Brake Mode' />
+      <EnumPair Value='703' Name='Motor Rotational Shaft Speed' />
+      <EnumPair Value='704' Name='Motor Voltage' />
+      <EnumPair Value='705' Name='Motor Current' />
+      <EnumPair Value='706' Name='Motor Operating Mode' />
+      <EnumPair Value='707' Name='Motor Temperature' />
+      <EnumPair Value='708' Name='Motor Inverter Temperature' />
+      <EnumPair Value='709' Name='Motor Coolant Temperature' />
+      <EnumPair Value='710' Name='Motor Gear Temperature' />
+      <EnumPair Value='711' Name='Motor Shaft Torque Percent' />
+      <EnumPair Value='712' Name='Motor Voltage Type' />
+      <EnumPair Value='713' Name='Motor Voltage Rating' />
+      <EnumPair Value='714' Name='Motor Max Continuous Power' />
+      <EnumPair Value='715' Name='Motor Max Boost Power' />
+      <EnumPair Value='716' Name='Motor Max Temperature Rating' />
+      <EnumPair Value='717' Name='Motor Rated Speed' />
+      <EnumPair Value='718' Name='Motor Max Controller Temperature Rating' />
+      <EnumPair Value='719' Name='Motor Shaft Torque Rating' />
+      <EnumPair Value='720' Name='Motor DC Voltage Derating Threshold' />
+      <EnumPair Value='721' Name='Motor DC Voltage Cutoff Threshold' />
+      <EnumPair Value='722' Name='Motor Runtime' />
+      <EnumPair Value='723' Name='Sailing Ping Time Port' />
+      <EnumPair Value='724' Name='Sailing Ping Time Stbd' />
+      <EnumPair Value='725' Name='Heading Source' />
+      <EnumPair Value='726' Name='Invalid' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_EVENT_COMMAND' MaxValue='255'>
-      <EnumPair Value='1' Name='Alarm' />
-      <EnumPair Value='2' Name='AP command' />
-      <EnumPair Value='255' Name='Autopilot' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_NIGHT_MODE' MaxValue='255'>
       <EnumPair Value='2' Name='Day' />
@@ -2113,6 +2838,7 @@ limitations under the License.
       <EnumPair Value='4' Name='Magenta' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_DISPLAY_GROUP' MaxValue='255'>
+      <EnumPair Value='0' Name='None' />
       <EnumPair Value='1' Name='Default' />
       <EnumPair Value='2' Name='Group 1' />
       <EnumPair Value='3' Name='Group 2' />
@@ -2162,6 +2888,8 @@ limitations under the License.
       <EnumPair Value='24' Name='Depth (Turn)' />
       <EnumPair Value='26' Name='Change course' />
       <EnumPair Value='61' Name='Timer sync' />
+      <EnumPair Value='107' Name='MOB Activated' />
+      <EnumPair Value='108' Name='MOB Deactivated' />
       <EnumPair Value='112' Name='Ping port end' />
       <EnumPair Value='113' Name='Ping starboard end' />
     </LookupEnumeration>
@@ -2171,14 +2899,215 @@ limitations under the License.
       <EnumPair Value='4' Name='Left rudder (port)' />
       <EnumPair Value='5' Name='Right rudder (starboard)' />
     </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_AP_COMMAND_TYPE' MaxValue='255'>
+    <LookupEnumeration Name='SIMNET_ALARM_COMMAND' MaxValue='255'>
+      <EnumPair Value='56' Name='Deactivate' />
+      <EnumPair Value='57' Name='Activate' />
+      <EnumPair Value='58' Name='Acknowledge' />
+      <EnumPair Value='68' Name='Silence' />
+      <EnumPair Value='104' Name='Alarm History' />
+      <EnumPair Value='107' Name='MOB Activated' />
+      <EnumPair Value='108' Name='MOB Cancelled' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_EVENT_TYPE' MaxValue='255'>
       <EnumPair Value='2' Name='Follow Up' />
       <EnumPair Value='10' Name='AP Command' />
+      <EnumPair Value='23' Name='Timer' />
+      <EnumPair Value='31' Name='Siren' />
+      <EnumPair Value='36' Name='AIS vessel selected' />
+      <EnumPair Value='255' Name='Alarm' />
     </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_ALARM' MaxValue='255'>
-      <EnumPair Value='57' Name='Low boat speed' />
-      <EnumPair Value='56' Name='No autopilot computer' />
-      <EnumPair Value='58' Name='Nav data missing' />
+    <LookupEnumeration Name='SIMNET_TIMER_EVENT' MaxValue='65535'>
+      <EnumPair Value='61' Name='Race Timer Start' />
+      <EnumPair Value='62' Name='Race Timer Stop' />
+      <EnumPair Value='63' Name='Race Timer Sync' />
+      <EnumPair Value='64' Name='Race Timer Reset' />
+      <EnumPair Value='65' Name='Trip Timer Reset All' />
+      <EnumPair Value='100' Name='Trip Timer Enable' />
+      <EnumPair Value='101' Name='Trip Timer Disable' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_ALARM_ID' MaxValue='65535'>
+      <EnumPair Value='10' Name='Shallow water' />
+      <EnumPair Value='11' Name='Deep water' />
+      <EnumPair Value='12' Name='Anchor depth' />
+      <EnumPair Value='13' Name='True wind shift' />
+      <EnumPair Value='14' Name='True wind high' />
+      <EnumPair Value='15' Name='True wind low' />
+      <EnumPair Value='16' Name='Low boat speed' />
+      <EnumPair Value='17' Name='High voltage' />
+      <EnumPair Value='18' Name='Low voltage' />
+      <EnumPair Value='19' Name='Depth data missing' />
+      <EnumPair Value='20' Name='Wind data missing' />
+      <EnumPair Value='21' Name='Nav data missing' />
+      <EnumPair Value='22' Name='Heading missing' />
+      <EnumPair Value='23' Name='XTE' />
+      <EnumPair Value='24' Name='Rudder data missing' />
+      <EnumPair Value='25' Name='Rudder controller fault' />
+      <EnumPair Value='26' Name='No rudder response' />
+      <EnumPair Value='27' Name='Rudder drive overload' />
+      <EnumPair Value='28' Name='High internal temperature' />
+      <EnumPair Value='29' Name='AP clutch overload' />
+      <EnumPair Value='30' Name='AP clutch disengaged' />
+      <EnumPair Value='31' Name='High drive supply' />
+      <EnumPair Value='32' Name='Low drive supply' />
+      <EnumPair Value='33' Name='No active autopilot control unit' />
+      <EnumPair Value='34' Name='No autopilot computer' />
+      <EnumPair Value='35' Name='Memory fail' />
+      <EnumPair Value='36' Name='Water temp missing' />
+      <EnumPair Value='37' Name='Low water temp' />
+      <EnumPair Value='38' Name='High water temp' />
+      <EnumPair Value='39' Name='Water temp rate' />
+      <EnumPair Value='40' Name='Fish' />
+      <EnumPair Value='41' Name='No GPS fix' />
+      <EnumPair Value='42' Name='WAAS/DGPS' />
+      <EnumPair Value='45' Name='Arrival' />
+      <EnumPair Value='46' Name='Anchor' />
+      <EnumPair Value='47' Name='Fuel low' />
+      <EnumPair Value='48' Name='Fuel high' />
+      <EnumPair Value='49' Name='Tank low' />
+      <EnumPair Value='50' Name='Tank high' />
+      <EnumPair Value='51' Name='BEP' />
+      <EnumPair Value='52' Name='Waypoint radius' />
+      <EnumPair Value='53' Name='CPA' />
+      <EnumPair Value='54' Name='AIS range to vessel' />
+      <EnumPair Value='55' Name='AIS vessel lost' />
+      <EnumPair Value='56' Name='Vessel message' />
+      <EnumPair Value='57' Name='Lightning' />
+      <EnumPair Value='58' Name='Severe weather' />
+      <EnumPair Value='59' Name='Storm' />
+      <EnumPair Value='61' Name='Engine Check' />
+      <EnumPair Value='62' Name='Engine over temperature' />
+      <EnumPair Value='63' Name='Engine low oil pressure' />
+      <EnumPair Value='64' Name='Engine low oil level' />
+      <EnumPair Value='65' Name='Engine low fuel pressure' />
+      <EnumPair Value='66' Name='Engine low voltage' />
+      <EnumPair Value='67' Name='Engine low coolant level' />
+      <EnumPair Value='68' Name='Engine water flow' />
+      <EnumPair Value='69' Name='Engine water in fuel' />
+      <EnumPair Value='70' Name='Engine charge' />
+      <EnumPair Value='71' Name='Engine preheat' />
+      <EnumPair Value='72' Name='Engine high boost pressure' />
+      <EnumPair Value='73' Name='Engine rev limit' />
+      <EnumPair Value='74' Name='Engine EGR system' />
+      <EnumPair Value='75' Name='Engine throttle position' />
+      <EnumPair Value='76' Name='Engine emergency stop' />
+      <EnumPair Value='77' Name='Engine warning level 1' />
+      <EnumPair Value='78' Name='Engine warning level 2' />
+      <EnumPair Value='79' Name='Engine power reduction' />
+      <EnumPair Value='80' Name='Engine maintenance' />
+      <EnumPair Value='81' Name='Engine comm error' />
+      <EnumPair Value='82' Name='Engine throttle' />
+      <EnumPair Value='83' Name='Engine start protect' />
+      <EnumPair Value='84' Name='Engine shutting down' />
+      <EnumPair Value='85' Name='Transmission Check' />
+      <EnumPair Value='86' Name='Transmission over temperature' />
+      <EnumPair Value='87' Name='Transmission low oil pressure' />
+      <EnumPair Value='88' Name='Transmission low oil level' />
+      <EnumPair Value='89' Name='Sail drive' />
+      <EnumPair Value='96' Name='Fresh water low' />
+      <EnumPair Value='97' Name='Fresh water high' />
+      <EnumPair Value='98' Name='Gray water low' />
+      <EnumPair Value='99' Name='Gray water high' />
+      <EnumPair Value='100' Name='Live well low' />
+      <EnumPair Value='101' Name='Live well high' />
+      <EnumPair Value='102' Name='Oil low' />
+      <EnumPair Value='103' Name='Oil high' />
+      <EnumPair Value='104' Name='Black water low' />
+      <EnumPair Value='105' Name='Black water high' />
+      <EnumPair Value='106' Name='Weather data missing' />
+      <EnumPair Value='107' Name='AP Position data missing' />
+      <EnumPair Value='108' Name='AP Speed data missing' />
+      <EnumPair Value='109' Name='AP Depth data missing' />
+      <EnumPair Value='110' Name='AP Heading data missing' />
+      <EnumPair Value='111' Name='AP Nav data missing' />
+      <EnumPair Value='112' Name='AP Off course' />
+      <EnumPair Value='113' Name='AP Rudder data missing' />
+      <EnumPair Value='114' Name='AP Wind data missing' />
+      <EnumPair Value='115' Name='Radar guard zone' />
+      <EnumPair Value='116' Name='MARPA target lost' />
+      <EnumPair Value='117' Name='MARPA unavailable' />
+      <EnumPair Value='118' Name='Dangerous vessel' />
+      <EnumPair Value='119' Name='Radar error' />
+      <EnumPair Value='120' Name='CZone critical' />
+      <EnumPair Value='121' Name='CZone important' />
+      <EnumPair Value='122' Name='CZone standard' />
+      <EnumPair Value='123' Name='CZone warning' />
+      <EnumPair Value='124' Name='True wind shift' />
+      <EnumPair Value='125' Name='EVC Com Error' />
+      <EnumPair Value='126' Name='EVC override' />
+      <EnumPair Value='127' Name='High drive temperature' />
+      <EnumPair Value='128' Name='Drive inhibit' />
+      <EnumPair Value='129' Name='CAN bus supply overload' />
+      <EnumPair Value='130' Name='Drive ref voltage missing' />
+      <EnumPair Value='131' Name='Rudder limit' />
+      <EnumPair Value='132' Name='Compass difference' />
+      <EnumPair Value='133' Name='AP Low boat speed' />
+      <EnumPair Value='134' Name='Monitor compass missing' />
+      <EnumPair Value='135' Name='Cross track distance limit' />
+      <EnumPair Value='137' Name='End of route' />
+      <EnumPair Value='138' Name='Compass alignment' />
+      <EnumPair Value='139' Name='R.A.I.M' />
+      <EnumPair Value='141' Name='Off heading' />
+      <EnumPair Value='142' Name='Supply voltage' />
+      <EnumPair Value='143' Name='Low CAN bus voltage' />
+      <EnumPair Value='144' Name='CAN bus failure' />
+      <EnumPair Value='145' Name='Drive ready missing' />
+      <EnumPair Value='146' Name='Drive computer missing' />
+      <EnumPair Value='147' Name='External mode illegal' />
+      <EnumPair Value='148' Name='Rudder too slow' />
+      <EnumPair Value='149' Name='Wheel over' />
+      <EnumPair Value='150' Name='Thruster inhibited' />
+      <EnumPair Value='151' Name='Check heading' />
+      <EnumPair Value='152' Name='True wind speed high' />
+      <EnumPair Value='153' Name='Override' />
+      <EnumPair Value='154' Name='Speed through water rationality fault' />
+      <EnumPair Value='155' Name='No drives available' />
+      <EnumPair Value='156' Name='Fuel remaining low' />
+      <EnumPair Value='157' Name='Fuel remaining high' />
+      <EnumPair Value='158' Name='Generator Check' />
+      <EnumPair Value='159' Name='Generator over temperature' />
+      <EnumPair Value='160' Name='Generator low oil pressure' />
+      <EnumPair Value='161' Name='Generator low oil level' />
+      <EnumPair Value='162' Name='Generator low fuel pressure' />
+      <EnumPair Value='163' Name='Generator low voltage' />
+      <EnumPair Value='164' Name='Generator low coolant level' />
+      <EnumPair Value='165' Name='Generator water flow' />
+      <EnumPair Value='166' Name='Generator water in fuel' />
+      <EnumPair Value='167' Name='Generator charge' />
+      <EnumPair Value='168' Name='Generator preheat' />
+      <EnumPair Value='169' Name='Generator high boost pressure' />
+      <EnumPair Value='170' Name='Generator rev limit' />
+      <EnumPair Value='171' Name='Generator EGR system' />
+      <EnumPair Value='172' Name='Generator throttle position' />
+      <EnumPair Value='173' Name='Generator emergency stop' />
+      <EnumPair Value='174' Name='Generator warning level 1' />
+      <EnumPair Value='175' Name='Generator warning level 2' />
+      <EnumPair Value='176' Name='Generator power reduction' />
+      <EnumPair Value='177' Name='Generator maintenance' />
+      <EnumPair Value='178' Name='Generator comm error' />
+      <EnumPair Value='179' Name='Generator throttle' />
+      <EnumPair Value='180' Name='Generator start protect' />
+      <EnumPair Value='181' Name='Generator shutting down' />
+      <EnumPair Value='182' Name='Shallow aft depth' />
+      <EnumPair Value='183' Name='Forward range' />
+      <EnumPair Value='245' Name='Alarm source missing' />
+      <EnumPair Value='246' Name='External' />
+      <EnumPair Value='247' Name='EVC Com Error' />
+      <EnumPair Value='248' Name='Wind sensor battery low' />
+      <EnumPair Value='266' Name='Gasoline low' />
+      <EnumPair Value='267' Name='Gasoline high' />
+      <EnumPair Value='268' Name='Charging System' />
+      <EnumPair Value='269' Name='Seawater Flow' />
+      <EnumPair Value='270' Name='Water in Drive Seal' />
+      <EnumPair Value='272' Name='Turnover' />
+      <EnumPair Value='273' Name='Helm ECU Detect Failure' />
+      <EnumPair Value='274' Name='Joystick ECU Detect Failure' />
+      <EnumPair Value='275' Name='Drive ECU Detect Failure' />
+      <EnumPair Value='276' Name='Hot Transmission' />
+      <EnumPair Value='277' Name='Low Gear Oil Pressure' />
+      <EnumPair Value='278' Name='Low Drive Lub Oil Level' />
+      <EnumPair Value='285' Name='Check Thermostat' />
+      <EnumPair Value='287' Name='Track offset active' />
+      <EnumPair Value='385' Name='Navigation Not Supported' />
     </LookupEnumeration>
     <LookupEnumeration Name='FUSION_MESSAGE_ID' MaxValue='65535'>
       <EnumPair Value='1' Name='Request Status' />
@@ -3256,14 +4185,24 @@ limitations under the License.
       </EnumFieldType>
       <EnumFieldType Value='11524' Name='True wind shift' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='16903' Name='Race timer duration' FieldType='DURATION' Signed='false'
+ Resolution='60' Unit='s' Bits='32'/>
       <EnumFieldType Value='22296' Name='AP low boat speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='32789' Name='Alert bits' FieldType='BITLOOKUP' Bits='64'>
           <LookupBitEnumeration>SIMNET_ALERT_BITFIELD</LookupBitEnumeration>
       </EnumFieldType>
+      <EnumFieldType Value='40711' Name='Race timer auto start' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>OFF_ON</LookupEnumeration>
+      </EnumFieldType>
       <EnumFieldType Value='44079' Name='Night mode color' FieldType='LOOKUP' Signed='false'
  Bits='8'>
           <LookupEnumeration>SIMNET_NIGHT_MODE_COLOR</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='49159' Name='Race timer rolling start' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>OFF_ON</LookupEnumeration>
       </EnumFieldType>
       <EnumFieldType Value='55087' Name='Day mode invert' FieldType='NUMBER' Signed='false'
  Bits='8'/>
@@ -3447,6 +4386,10 @@ limitations under the License.
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='262' Name='Sailing ETA' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='263' Name='Start Line Latitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
+      <EnumFieldType Value='264' Name='Start Line Longitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='265' Name='Trip Time' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
       <EnumFieldType Value='270' Name='Bow Latitude' FieldType='NUMBER' Signed='true'
@@ -14248,6 +15191,119 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65324</PGN>
+      <Id>simnetAnalogTelemetry</Id>
+      <Description>Simnet: Analog Telemetry</Description>
+    <Priority>3</Priority>
+      <Explanation>Diagnostic telemetry emitted by the AutoPilot Computer, one analog channel per frame in round-robin. The Channel field selects the quantity (drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle, ...) and Value carries its raw reading. Used by commissioning and diagnostic tools; observed in live captures.</Explanation>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>subType</Id>
+          <Name>Sub-Type</Name>
+          <Description>0x40 = telemetry</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>channel</Id>
+          <Name>Channel</Name>
+          <Description>Selects which analog quantity is reported (e.g. drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Raw channel reading; 0x7FFF or 0xFFFF means not available</Description>
+          <BitLength>32</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -65527,9 +66583,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130822</PGN>
-      <Id>navicoUnknown1</Id>
-      <Description>Navico: Unknown 1</Description>
+      <Id>navicoUdbDatabaseObjectPing</Id>
+      <Description>Navico: UDB Database, Object Ping</Description>
     <Priority>3</Priority>
+      <Explanation>Header-only form of the Navico/SimNet UDB database broadcast (Command 0; Commands 8 and 9 are equivalent reserved pings). The object is addressed by (Address, Section, Item).</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -65538,8 +66596,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
-      <Length>233</Length>
+      <FieldCount>9</FieldCount>
+      <Length>7</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -65585,10 +66643,1414 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Object Ping</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>0</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseSourceReport</Id>
+      <Description>Navico: UDB Database, Source Report</Description>
+    <Priority>3</Priority>
+      <Explanation>Per-object value report (Command 1), the form that accounts for essentially all observed 130822 traffic. Each frame reports one object's current 'Object Value' (0xFC00 = no value), addressed by (Address, Source Setting Id, Item). The trailing 'Sub' and 'Token' are the object's identity metadata, byte-identical to the same object's Command 6 dump and constant per object; 'Token' is a stable per-object-definition handle (only a couple dozen distinct values on a typical bus) that tracks the object independently of its local Section/Item address. The selected source DEVICE for each data type is not carried here - it appears only in the Command 6 dump (as a NAME) and in PGN 130840. 'Source Setting Id' uses a different id space from the data-type ids carried by the Command 6 dump and PGN 130845.</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>15</FieldCount>
+      <Length>15</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Source Report</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>sourceSettingId</Id>
+          <Name>Source Setting Id</Name>
+          <Description>Compacted id selecting which data type this object is for. This is a different id space from the Command 6 dump / PGN 130845 data-type ids (NAVICO_DATA_TYPE) - the two use different numbers for the same quantity. Only 0x0F = Heading is mapped so far; see PGN 130840.</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>objectValue</Id>
+          <Name>Object Value</Name>
+          <Description>Current value (A); 0xFC00 means no value. This is the field that varies over time.</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>instance</Id>
+          <Name>Instance</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>sourceSelectionMaster</Id>
+          <Name>Source Selection Master</Name>
+          <Description>Auto-select / source-selection-master flag</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>76</BitOffset>
+          <BitStart>4</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>spare13</Id>
+          <Name>Spare</Name>
+          <BitLength>3</BitLength>
+          <BitOffset>77</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>sub</Id>
+          <Name>Sub</Name>
+          <Description>Sub-index and auxiliary bytes; constant per object (same Sub as the Command 6 dump)</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>token</Id>
+          <Name>Token</Name>
+          <Description>Per-object identity/CRC-like token (B), constant per object (same Token as the Command 6 dump)</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseBulkReport2</Id>
+      <Description>Navico: UDB Database, Bulk Report 2</Description>
+    <Priority>3</Priority>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>223</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Bulk Report 2</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>2</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
           <Id>data</Id>
           <Name>Data</Name>
-          <BitLength>1848</BitLength>
+          <Description>Bulk variant payload (length-prefixed); layout not yet observed on the wire</Description>
+          <BitLength>1728</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseBulkReport3</Id>
+      <Description>Navico: UDB Database, Bulk Report 3</Description>
+    <Priority>3</Priority>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>223</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Bulk Report 3</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>3</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <Description>Bulk variant payload (length-prefixed); layout not yet observed on the wire</Description>
+          <BitLength>1728</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseBulkReport4</Id>
+      <Description>Navico: UDB Database, Bulk Report 4</Description>
+    <Priority>3</Priority>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>223</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Bulk Report 4</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <Description>Bulk variant payload (length-prefixed); layout not yet observed on the wire</Description>
+          <BitLength>1728</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseShortReport5</Id>
+      <Description>Navico: UDB Database, Short Report 5</Description>
+    <Priority>3</Priority>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Short Report 5</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>5</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseObjectDump</Id>
+      <Description>Navico: UDB Database, Object Dump</Description>
+    <Priority>3</Priority>
+      <Explanation>Verbose dump (Command 6) of a source-selection object: it carries the same Value and Token as the Command 1 report for the object, followed by a list of every data type the object covers and the selected source for each. Each record is a length, a constant class byte, a data-type id and the selected source's value.</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>16</FieldCount>
+      <MinLength>14</MinLength>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>13</RepeatingFieldSet1StartField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Object Dump</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>6</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>objectValue</Id>
+          <Name>Object Value</Name>
+          <Description>Current value (A); 0xFC00 means no value</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>sub</Id>
+          <Name>Sub</Name>
+          <Description>Sub-index and auxiliary bytes</Description>
+          <BitLength>24</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>token</Id>
+          <Name>Token</Name>
+          <Description>Per-object identity/CRC-like token (B), constant per object</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Bytes following in this record: a class byte, a 16-bit data-type id and the value</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <DynamicFieldLengthOverhead>3</DynamicFieldLengthOverhead>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>class</Id>
+          <Name>Class</Name>
+          <Description>Record class, always 0x02</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>dataType</Id>
+          <Name>Data Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_DATA_TYPE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's 64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>144</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>navicoUdbDatabaseShortReport7</Id>
+      <Description>Navico: UDB Database, Short Report 7</Description>
+    <Priority>3</Priority>
+      <ResearchDoc>navico_udb</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>marker</Id>
+          <Name>Marker</Name>
+          <Description>Always 0xFF</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <Description>Short Report 7</Description>
+          <BitLength>6</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>7</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>61</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>30</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>Part of the object address</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>section</Id>
+          <Name>Section</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>item</Id>
+          <Name>Item</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -65873,6 +68335,168 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130822</PGN>
+      <Id>mercuryEngineTelemetryLowSpeed</Id>
+      <Description>Mercury: Engine Telemetry, Low Speed</Description>
+      <Explanation>Low-speed engine telemetry broadcast by Mercury engine gateways. Carries the malfunction-indicator (check-engine) state, intake-air and exhaust-gas temperatures (raw, Mercury-specific scaling), a 'GPL' fraction (raw / 128) and an engine run-state code. This is a flat fixed record, unrelated to the Navico and BEP variants of this PGN number; the manufacturer code in the first two bytes is the only disambiguator. Observed on live engine networks.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>9</FieldCount>
+      <Length>9</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Mercury Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>144</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>engineInstance</Id>
+          <Name>Engine Instance</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>malfunctionIndicator</Id>
+          <Name>Malfunction Indicator</Name>
+          <Description>Check-engine indicator lamp (0 = off, 1 = on)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>intakeAirTemperature</Id>
+          <Name>Intake Air Temperature</Name>
+          <Description>Raw value, Mercury-specific scaling</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>exhaustGasTemperature</Id>
+          <Name>Exhaust Gas Temperature</Name>
+          <Description>Raw value, Mercury-specific scaling</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>gpl</Id>
+          <Name>GPL</Name>
+          <Description>Raw value; fraction = value / 128</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>engineState</Id>
+          <Name>Engine State</Name>
+          <Description>Raw engine run-state code</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130823</PGN>
       <Id>maretronProprietaryTemperatureHighRange</Id>
       <Description>Maretron: Proprietary Temperature High Range</Description>
@@ -66019,6 +68643,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>B&amp;G: key-value data</Description>
     <Priority>2</Priority>
       <Explanation>Contains any number of key/value pairs, sent by various B&amp;G devices such as MFDs and Sailing Processors.</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -66494,10 +69119,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130825</PGN>
-      <Id>navicoNdp2kAlert</Id>
-      <Description>Navico: NDP2k Alert</Description>
+      <Id>navicoAlarm</Id>
+      <Description>Navico: Alarm</Description>
     <Priority>7</Priority>
-      <Explanation>Navico NDP2k alert status record (mfg 275): Alert Type + Alert ID identify the fault, Alert State tracks its lifecycle (Normal -&gt; Active -&gt; Silenced -&gt; Acknowledged), and Alert Severity classifies it.</Explanation>
+      <Explanation>Navico alarm status record (mfg 275): Alarm Type + Alarm ID identify the fault, Alarm State tracks its lifecycle (Normal -&gt; Active -&gt; Silenced -&gt; Acknowledged), and Alarm Severity classifies it.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -66585,8 +69211,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>alertType</Id>
-          <Name>Alert Type</Name>
+          <Id>alarmType</Id>
+          <Name>Alarm Type</Name>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -66601,8 +69227,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>alertId</Id>
-          <Name>Alert ID</Name>
+          <Id>alarmId</Id>
+          <Name>Alarm ID</Name>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -66610,15 +69236,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_ALARM_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>alertState</Id>
-          <Name>Alert State</Name>
+          <Id>alarmState</Id>
+          <Name>Alarm State</Name>
           <BitLength>3</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -66644,8 +69268,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>alertSeverity</Id>
-          <Name>Alert Severity</Name>
+          <Id>alarmSeverity</Id>
+          <Name>Alarm Severity</Name>
           <BitLength>4</BitLength>
           <BitOffset>68</BitOffset>
           <BitStart>4</BitStart>
@@ -70416,6 +73040,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Simnet: Data Source Selection</Description>
     <Priority>3</Priority>
       <Explanation>Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is selected for each data type across the instrument network. 'Data Type' identifies the quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. Emitted on change. The data-type ids were mapped from a live source-selection probe; see also the compact form in PGN 130822.</Explanation>
+      <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -72168,6 +74793,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130845</PGN>
       <Id>simnetKeyValue</Id>
       <Description>Simnet: Key Value</Description>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -72492,7 +75118,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -73086,6 +75712,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApStandby</Id>
       <Description>Simnet: Command AP Standby</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73168,20 +75795,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73195,9 +75819,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73242,6 +75867,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApNodrift</Id>
       <Description>Simnet: Command AP NoDrift</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73324,20 +75950,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73351,9 +75974,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73398,6 +76022,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApWind</Id>
       <Description>Simnet: Command AP Wind</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73480,20 +76105,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73507,9 +76129,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73554,6 +76177,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApNav</Id>
       <Description>Simnet: Command AP Nav</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73636,20 +76260,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73663,9 +76284,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73710,6 +76332,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApHeading</Id>
       <Description>Simnet: Command AP Heading</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73792,20 +76415,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73819,9 +76439,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73866,6 +76487,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApTack</Id>
       <Description>Simnet: Command AP Tack</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73948,20 +76570,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -73975,9 +76594,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -74044,6 +76664,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApFollowUp</Id>
       <Description>Simnet: Command AP Follow Up</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -74126,20 +76747,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -74153,9 +76771,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -74200,6 +76819,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetCommandApChangeCourse</Id>
       <Description>Simnet: Command AP Change Course</Description>
     <Priority>2</Priority>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -74282,20 +76902,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -74309,9 +76926,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -74386,10 +77004,196 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130850</PGN>
+      <Id>simnetEventCommandTimer</Id>
+      <Description>Simnet: Event Command: Timer</Description>
+    <Priority>2</Priority>
+      <Explanation>Race and trip timer commands sent by a Navico MFD, all observed live: race start/stop/sync/reset and trip enable/disable/reset, with Parameter 1 selecting the trip (0 = Trip 1, 1 = Trip 2). Broadcast to a display group, so every device in the group acts.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>11</FieldCount>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Simrad</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1857</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>address</Id>
+          <Name>Address</Name>
+          <Description>NMEA 2000 address of commanded device, used for autopilot events</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>eventType</Id>
+          <Name>Event Type</Name>
+          <Description>Timer</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>23</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>event</Id>
+          <Name>Event</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_TIMER_EVENT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>parameter1</Id>
+          <Name>Parameter 1</Name>
+          <Description>Event dependent; for the trip timer 0 = Trip 1, 1 = Trip 2</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>parameter2</Id>
+          <Name>Parameter 2</Name>
+          <Description>Event dependent</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>parameter3</Id>
+          <Name>Parameter 3</Name>
+          <Description>Event dependent</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130850</PGN>
       <Id>simnetAlarm</Id>
       <Description>Simnet: Alarm</Description>
     <Priority>2</Priority>
-      <Explanation>There may follow a PGN 130856 'Simnet: Alarm Text' message with a textual explanation of the alarm</Explanation>
+      <Explanation>An alarm lifecycle command (Activate when it triggers, Acknowledge/Silence on user action, Deactivate when it clears) for the alarm named by 'Alarm ID'. Any device may issue these, which is why acknowledging an alarm on one display clears it on the others. There may follow a PGN 130856 'Simnet: Alarm Message' with a textual explanation of the alarm.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -74397,7 +77201,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>11</FieldCount>
+      <FieldCount>12</FieldCount>
       <Length>12</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -74472,49 +77276,63 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Alarm</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>1</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>eventType</Id>
+          <Name>Event Type</Name>
+          <Description>Alarm</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>reserved7</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
           <Order>8</Order>
-          <Id>alarm</Id>
-          <Name>Alarm</Name>
-          <BitLength>16</BitLength>
+          <Id>command</Id>
+          <Name>Command</Name>
+          <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_ALARM</LookupEnumeration>
+          <LookupEnumeration>SIMNET_ALARM_COMMAND</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>alarmId</Id>
+          <Name>Alarm ID</Name>
           <BitLength>16</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -74522,13 +77340,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_ALARM_ID</LookupEnumeration>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>11</Order>
           <Id>f</Id>
           <Name>F</Name>
           <BitLength>8</BitLength>
@@ -74544,7 +77360,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>12</Order>
           <Id>g</Id>
           <Name>G</Name>
           <BitLength>8</BitLength>
@@ -74567,6 +77383,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Simnet: AP command</Description>
     <Priority>2</Priority>
       <Explanation>Other Simnet AP command</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -74649,34 +77466,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>255</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>commandType</Id>
-          <Name>Command Type</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
+          <Description>AP Command</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>10</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -74770,6 +77587,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Simnet: Event</Description>
     <Priority>2</Priority>
       <Explanation>Other Simnet Event</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -74852,18 +77670,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -74939,198 +77756,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130851</PGN>
-      <Id>simnetEventReplyApCommand</Id>
-      <Description>Simnet: Event Reply: AP command</Description>
-    <Priority>7</Priority>
-      <Type>Fast</Type>
-      <Complete>false</Complete>
-      <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>Interval</MissingAttribute>
-      </Missing>
-      <FieldCount>11</FieldCount>
-      <Length>12</Length>
-      <Fields>
-        <Field>
-          <Order>1</Order>
-          <Id>manufacturerCode</Id>
-          <Name>Manufacturer Code</Name>
-          <Description>Simrad</Description>
-          <BitLength>11</BitLength>
-          <BitOffset>0</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>1857</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2044</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>2</Order>
-          <Id>reserved</Id>
-          <Name>Reserved</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>11</BitOffset>
-          <BitStart>3</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>3</Order>
-          <Id>industryCode</Id>
-          <Name>Industry Code</Name>
-          <Description>Marine Industry</Description>
-          <BitLength>3</BitLength>
-          <BitOffset>13</BitOffset>
-          <BitStart>5</BitStart>
-          <Match>4</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>4</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>AP command</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>16</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>2</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
-        </Field>
-        <Field>
-          <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>address</Id>
-          <Name>Address</Name>
-          <Description>NMEA 2000 address of controlling device</Description>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>event</Id>
-          <Name>Event</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_EVENTS</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>c</Id>
-          <Name>C</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>56</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>9</Order>
-          <Id>direction</Id>
-          <Name>Direction</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DIRECTION</LookupEnumeration>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>angle</Id>
-          <Name>Angle</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>72</BitOffset>
-          <BitStart>0</BitStart>
-          <Unit>rad</Unit>
-          <Resolution>0.0001</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6.2831852</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>ANGLE</PhysicalQuantity>
-        </Field>
-        <Field>
-          <Order>11</Order>
-          <Id>g</Id>
-          <Name>G</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-      </Fields>
-    </PGNInfo>
-    <PGNInfo>
-      <PGN>130851</PGN>
       <Id>simnetApCommandReplyChangeCourse</Id>
       <Description>Simnet: AP command Reply: Change Course</Description>
     <Priority>7</Priority>
       <Explanation>Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to it.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -75213,20 +77843,17 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Match>255</Match>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -75240,9 +77867,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
+          <RangeMax>255</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -75321,6 +77949,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Description>Simnet: AP command Reply</Description>
     <Priority>7</Priority>
       <Explanation>Reply emitted by the autopilot (NAC-3/AC-42) acknowledging an addressed 130850 'Simnet: AP command' by echoing it back, byte-for-byte. The autopilot sends exactly one per addressed command (Address = its own NMEA address), within ~20-70 ms; broadcast commands (Address 0xFF) are not acknowledged.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -75403,34 +78032,34 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>proprietaryId</Id>
-          <Name>Proprietary ID</Name>
-          <Description>Autopilot</Description>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
-          <BitStart>0</BitStart>
-          <Match>255</Match>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_EVENT_COMMAND</LookupEnumeration>
-          <PartOfPrimaryKey>true</PartOfPrimaryKey>
-        </Field>
-        <Field>
-          <Order>7</Order>
-          <Id>commandType</Id>
-          <Name>Command Type</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_AP_COMMAND_TYPE</LookupEnumeration>
+          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>commandType</Id>
+          <Name>Command Type</Name>
+          <Description>AP Command</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>10</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>255</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_EVENT_TYPE</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>8</Order>
@@ -75565,6 +78194,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetAlarmMessage</Id>
       <Description>Simnet: Alarm Message</Description>
       <Explanation>Usually accompanied by a PGN 130850 'Simnet: Alarm' message with the same information in binary form.</Explanation>
+      <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -75620,8 +78250,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>messageId</Id>
-          <Name>Message ID</Name>
+          <Id>alarmId</Id>
+          <Name>Alarm ID</Name>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -75629,10 +78259,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_ALARM_ID</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>

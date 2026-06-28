@@ -495,6 +495,16 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:unsignedByte" name="DynamicFieldLengthOverhead" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            For a DYNAMIC_FIELD_LENGTH field: the number of non-value header bytes (for example a class byte
+            and a data-type id) that sit between this length field and the value and are counted in this
+            length. A decoder must subtract this from the length to obtain the byte count of the following
+            DYNAMIC_FIELD_VALUE field.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:float" name="RangeMin" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -649,6 +659,7 @@ limitations under the License.
       <xs:element type="xs:unsignedShort" name="Priority" minOccurs="0"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="URL" minOccurs="0"/>
+      <xs:element type="xs:string" name="ResearchDoc" minOccurs="0"/>
       <xs:element type="xs:string" name="Type">
         <xs:annotation>
           <xs:documentation>
