@@ -2826,6 +2826,11 @@ limitations under the License.
     <LookupEnumeration Name='SIMNET_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_KEY_OPERATION' MaxValue='255'>
+      <EnumPair Value='0' Name='Read' />
+      <EnumPair Value='1' Name='Set' />
+      <EnumPair Value='2' Name='Reply' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_NIGHT_MODE' MaxValue='255'>
       <EnumPair Value='2' Name='Day' />
       <EnumPair Value='4' Name='Night' />
@@ -4146,7 +4151,7 @@ limitations under the License.
     </LookupBitEnumeration>
   </LookupBitEnumerations>
   <LookupFieldTypeEnumerations>
-    <LookupFieldTypeEnumeration Name='SIMNET_KEY_VALUE' MaxValue='65535'>
+    <LookupFieldTypeEnumeration Name='SIMNET_KEY_VALUE' MaxValue='16777215'>
       <EnumFieldType Value='0' Name='Heading Offset' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='41' Name='Timezone offset' FieldType='DURATION' Signed='true'
@@ -74793,6 +74798,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130845</PGN>
       <Id>simnetKeyValue</Id>
       <Description>Simnet: Key Value</Description>
+      <Explanation>Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter (and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed against NAC3 and AC42 autopilot and MFD capture corpus.</Explanation>
       <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -74801,7 +74807,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>11</FieldCount>
+      <FieldCount>10</FieldCount>
       <MinLength>10</MinLength>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -74906,32 +74912,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>8</Order>
           <Id>key</Id>
           <Name>Key</Name>
-          <BitLength>16</BitLength>
+          <Description>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is &quot;True wind high&quot; in group 4 but &quot;Deep water&quot; in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</Description>
+          <BitLength>24</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
+          <RangeMax>16777212</RangeMax>
           <FieldType>DYNAMIC_FIELD_KEY</FieldType>
           <LookupFieldTypeEnumeration>SIMNET_KEY_VALUE</LookupFieldTypeEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>spare9</Id>
-          <Name>Spare</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
-        </Field>
-        <Field>
-          <Order>10</Order>
-          <Id>minlength</Id>
-          <Name>MinLength</Name>
-          <Description>Possibly the length of data field; probably something else</Description>
+          <Id>operation</Id>
+          <Name>Operation</Name>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -74939,16 +74935,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_KEY_OPERATION</LookupEnumeration>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>10</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Data value</Description>
+          <Description>Always 4 bytes on the bus but actual width and datatype defined per key</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>

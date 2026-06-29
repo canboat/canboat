@@ -167,6 +167,18 @@ typedef struct
    .partOfPrimaryKey       = true,                  \
    .fieldType              = "DYNAMIC_FIELD_KEY"}
 
+#define LOOKUP_DYNAMIC_FIELD_KEY_DESC(nam, len, typ, desc) \
+  {.name                   = nam,                          \
+   .size                   = len,                          \
+   .resolution             = 1,                            \
+   .hasSign                = false,                        \
+   .lookup.type            = LOOKUP_TYPE_FIELDTYPE,        \
+   LOOKUP_FIELDTYPE_MEMBER = lookup##typ,                  \
+   .lookup.name            = xstr(typ),                    \
+   .partOfPrimaryKey       = true,                         \
+   .description            = desc,                         \
+   .fieldType              = "DYNAMIC_FIELD_KEY"}
+
 #define DYNAMIC_FIELD_LENGTH(nam, len, desc)                                                                   \
   {.name = nam, .size = len, .resolution = 1, .hasSign = false, .dynamicFieldLength = true, .description = desc, \
    .fieldType = "DYNAMIC_FIELD_LENGTH"}
@@ -9495,13 +9507,24 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Repeat Indicator", BYTES(1), REPEAT_INDICATOR),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
       RESERVED_FIELD(BYTES(1)),
-      LOOKUP_DYNAMIC_FIELD_KEY("Key", BYTES(2), SIMNET_KEY_VALUE),
-      SPARE_FIELD(BYTES(1)),
-      SIMPLE_DESC_FIELD("MinLength", BYTES(1), "Possibly the length of data field; probably something else"),
-      DYNAMIC_FIELD_VALUE("Value", "Data value"),
+      LOOKUP_DYNAMIC_FIELD_KEY_DESC("Key",
+                                    BYTES(3),
+                                    SIMNET_KEY_VALUE,
+                                    "Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 "
+                                    "bits) << 8. The two parts are NOT split into separate fields because the parameter key is "
+                                    "only unique within a command group (e.g. key 1 is \"True wind high\" in group 4 but \"Deep "
+                                    "water\" in group 8), so the value's data type can only be resolved from the group and key "
+                                    "together. This key space is distinct from the PGN 130822 tDataType ids and from the B&G and "
+                                    "Mercury key spaces."),
+      LOOKUP_FIELD("Operation", BYTES(1), SIMNET_KEY_OPERATION),
+      DYNAMIC_FIELD_VALUE("Value", "Always 4 bytes on the bus but actual width and datatype defined per key"),
       END_OF_FIELDS},
+     .explanation = "Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter "
+                    "(and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is "
+                    "NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed "
+                    "against NAC3 and AC42 autopilot and MFD capture corpus.",
      .researchDoc = "navico_alarms_and_commands",
-     .interval = UINT16_MAX}
+     .interval    = UINT16_MAX}
 
     ,
     {"Simnet: Parameter Set",
