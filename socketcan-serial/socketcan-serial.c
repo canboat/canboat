@@ -9,7 +9,11 @@ much like actisense-serial and ikonvert-serial as possible:
     to the bus;
   - the program is a real node on the bus: it claims an ISO source address
     (PGN 60928), backs off / re-claims on conflict, and answers ISO Requests
-    (PGN 59904) for its address claim.
+    (PGN 59904) for its address claim;
+  - every few seconds it writes a synthetic "NMEA 2000 gateway: network
+    status" PGN (262400) to stdout, the same shape the iKonvert emits from
+    its $PDGY heartbeat, populated from the Linux kernel's per-interface CAN
+    statistics (bus load, errors, device count, uptime, rejected TX).
 
 Unlike the NGT-1 / iKonvert, a raw SocketCAN socket only ever delivers
 individual <= 8 byte CAN frames, so the fast-packet reassembly that those
@@ -77,6 +81,22 @@ limitations under the License.
 #define PGN_HEARTBEAT (126993)
 #define HEARTBEAT_DEFAULT_INTERVAL (60000) /* ms, the NMEA 2000 default heartbeat rate */
 
+/* Synthetic "NMEA 2000 gateway: network status" PGN (IKONVERT_BEM = 262400).
+ * Like ikonvert-serial's $PDGY heartbeat, this is written to stdout only — it
+ * is a BEM-range PGN by design and never goes on the wire. We synthesize the
+ * same 15-byte shape from the Linux kernel's per-interface CAN statistics so a
+ * downstream consumer sees a uniform per-gateway status record. */
+#define PGN_NETWORK_STATUS (IKONVERT_BEM)
+#define NETWORK_STATUS_INTERVAL_MS (5000) /* emit cadence; 5s is plenty for status */
+
+/* CAN bus-load estimation from /sys/class/net/<iface>/statistics byte counters.
+ * Those count data bytes only, so we add the per-frame protocol overhead and a
+ * flat bit-stuffing inflation to approximate the true on-wire bit count. */
+#define FALLBACK_BITRATE_BPS (250000) /* NMEA 2000 is fixed at 250 kbit/s */
+#define CAN_EFF_OVERHEAD_BITS (67)    /* SOF+arb+ctrl+CRC+ACK+EOF+IFS, 29-bit frame */
+#define CAN_STUFFING_NUMER (120)      /* ~20% average bit-stuffing inflation */
+#define CAN_STUFFING_DENOM (100)
+
 #define MAX_FASTPACKETS (64)
 
 enum ClaimState
@@ -119,6 +139,28 @@ static bool            addressUsed[N2K_MAX_ADDR + 1]; /* addresses seen claimed 
 static long     heartbeatInterval = HEARTBEAT_DEFAULT_INTERVAL; /* 0 disables */
 static uint8_t  heartbeatSeq      = 0;
 static uint64_t nextHeartbeat     = 0; /* ms; when to send the next heartbeat */
+
+/* Network status (synthetic PGN 262400): emitted to stdout every
+ * NETWORK_STATUS_INTERVAL_MS, populated from kernel CAN counters. */
+static const char *canIface          = NULL; /* interface name, for /sys reads */
+static uint64_t    startTime         = 0;     /* ms; for the uptime field */
+static uint64_t    nextNetworkStatus = 0;     /* ms; when to emit next */
+static uint32_t    busBitrate        = FALLBACK_BITRATE_BPS; /* bits/s, read once */
+static bool        seenAddr[256];             /* distinct source addresses seen */
+
+/* One read of the four kernel counters needed for the bus-load delta. The
+ * sysfs counters are 32-bit here; deltas use modular subtraction so a counter
+ * wrap is a small delta rather than a phantom 4 GiB burst. */
+typedef struct
+{
+  uint32_t rxBytes;
+  uint32_t txBytes;
+  uint32_t rxPackets;
+  uint32_t txPackets;
+  uint64_t when; /* ms */
+} LoadSample;
+static LoadSample prevLoadSample;
+static bool       havePrevLoadSample = false;
 
 /* Outbound buffer drained one frame per select() POLLOUT, so a burst of
  * frames (fast-packet PGN, claim flurry, …) never blocks the main loop
@@ -231,6 +273,13 @@ static void     sendProductInfo(int sock);
 static void     sendPgnList(int sock, uint8_t dst);
 static void     sendIsoAck(int sock, uint8_t dst, uint8_t control, uint32_t pgn);
 static void     sendAckGroupFunction(int sock, uint8_t dst, uint32_t pgn, uint8_t pgnError, uint8_t paramError);
+
+/* Network status (synthetic PGN 262400) */
+static void     sendNetworkStatus(void);
+static bool     readSysfsCounter(const char *iface, const char *name, uint32_t *out);
+static uint32_t readSysfsBitrate(const char *iface);
+static bool     readLoadSample(const char *iface, uint64_t now, LoadSample *out);
+static bool     computeLoadPct(const LoadSample *prev, const LoadSample *curr, uint32_t bitrate, uint8_t *out);
 
 int main(int argc, char **argv)
 {
@@ -364,6 +413,14 @@ int main(int argc, char **argv)
     startAddressClaim(sock);
   }
 
+  /* Network-status emission state: read the (fixed) bitrate once and arm
+   * the first emission one interval out. Disabled in writeonly mode, which
+   * suppresses all stdout output. */
+  canIface          = device;
+  startTime         = getNow();
+  busBitrate        = readSysfsBitrate(device);
+  nextNetworkStatus = startTime + NETWORK_STATUS_INTERVAL_MS;
+
   uint64_t lastFrame = getNow();
 
   for (;;)
@@ -402,6 +459,14 @@ int main(int argc, char **argv)
     else if (claimState == CLAIM_CLAIMED && heartbeatInterval > 0)
     {
       waitMs = (nextHeartbeat > now) ? nextHeartbeat - now : 0;
+    }
+    if (!writeonly)
+    {
+      uint64_t nsWait = (nextNetworkStatus > now) ? nextNetworkStatus - now : 0;
+      if (nsWait < waitMs)
+      {
+        waitMs = nsWait;
+      }
     }
     if (txCount > 0 && waitMs > 5)
     {
@@ -471,6 +536,12 @@ int main(int argc, char **argv)
     {
       sendHeartbeat(sock);
       nextHeartbeat = getNow() + (uint64_t) heartbeatInterval;
+    }
+
+    if (!writeonly && getNow() >= nextNetworkStatus)
+    {
+      sendNetworkStatus();
+      nextNetworkStatus = getNow() + NETWORK_STATUS_INTERVAL_MS;
     }
   }
 
@@ -612,6 +683,10 @@ static void handleFrame(uint32_t canId, const uint8_t *data, uint8_t len, uint64
   uint8_t      idx, seq, bucket, offset;
 
   getISO11783BitsFromCanId(canId, &prio, &pgn, &src, &dst);
+
+  /* Remember every source we hear from, for the network-status device
+   * count (independent of the address-claim table, which undercounts). */
+  seenAddr[src & 0xff] = true;
 
   /* Act on the single-frame messages that drive the address-claim
    * protocol, but still emit them to stdout like any other frame. */
@@ -1384,4 +1459,204 @@ static void sendAckGroupFunction(int sock, uint8_t dst, uint32_t pgn, uint8_t pg
   data[5] = 0; /* Number of parameters */
 
   sendN2k(sock, 6, PGN_GROUP_FUNCTION, (uint8_t) address, dst, data, sizeof(data), true);
+}
+
+/*
+ * --- NMEA 2000 gateway: network status (synthetic PGN 262400) -----------
+ *
+ * Read a single unsigned decimal counter from
+ * /sys/class/net/<iface>/statistics/<name>. Returns false (leaving *out
+ * untouched) when the file is missing or unparseable, so each field
+ * degrades to the canboat "no data" sentinel rather than reporting a wrong
+ * value.
+ */
+static bool readSysfsCounter(const char *iface, const char *name, uint32_t *out)
+{
+  char          path[128];
+  FILE         *f;
+  unsigned long v;
+  int           n;
+
+  snprintf(path, sizeof(path), "/sys/class/net/%s/statistics/%s", iface, name);
+  if ((f = fopen(path, "r")) == NULL)
+  {
+    return false;
+  }
+  n = fscanf(f, "%lu", &v);
+  fclose(f);
+  if (n != 1)
+  {
+    return false;
+  }
+  *out = (uint32_t) v;
+  return true;
+}
+
+/*
+ * Read the CAN bitrate (bits/s) from /sys/class/net/<iface>/can_bittiming/
+ * bitrate, falling back to NMEA 2000's fixed 250 kbit/s when the file is
+ * missing, unreadable or zero (e.g. the kernel has not filled in bittiming
+ * yet, or this is a virtual interface).
+ */
+static uint32_t readSysfsBitrate(const char *iface)
+{
+  char          path[128];
+  FILE         *f;
+  unsigned long v;
+  int           n;
+
+  snprintf(path, sizeof(path), "/sys/class/net/%s/can_bittiming/bitrate", iface);
+  if ((f = fopen(path, "r")) == NULL)
+  {
+    return FALLBACK_BITRATE_BPS;
+  }
+  n = fscanf(f, "%lu", &v);
+  fclose(f);
+  if (n != 1 || v == 0)
+  {
+    return FALLBACK_BITRATE_BPS;
+  }
+  return (uint32_t) v;
+}
+
+/*
+ * Take one snapshot of the four kernel counters needed for the bus-load
+ * delta. Returns false if any are unreadable, in which case the caller
+ * reports load as "no data".
+ */
+static bool readLoadSample(const char *iface, uint64_t now, LoadSample *out)
+{
+  if (!readSysfsCounter(iface, "rx_bytes", &out->rxBytes) || !readSysfsCounter(iface, "tx_bytes", &out->txBytes)
+      || !readSysfsCounter(iface, "rx_packets", &out->rxPackets) || !readSysfsCounter(iface, "tx_packets", &out->txPackets))
+  {
+    return false;
+  }
+  out->when = now;
+  return true;
+}
+
+/*
+ * CAN bus load percentage from two counter samples and the bus bitrate.
+ * The sysfs byte counters cover data bytes only, so we add the per-frame
+ * protocol overhead (CAN_EFF_OVERHEAD_BITS) and a flat bit-stuffing
+ * inflation to approximate the true on-wire bit count:
+ *
+ *   bits_on_wire = (d_bytes * 8 + d_packets * 67) * 1.20
+ *   pct          = bits_on_wire * 100 / (bitrate * dt_seconds)
+ *
+ * Returns false (load = "no data") when there is no usable interval.
+ * Counter deltas use modular uint32 subtraction so a counter wrap shows
+ * up as a small delta rather than a phantom multi-GiB burst.
+ */
+static bool computeLoadPct(const LoadSample *prev, const LoadSample *curr, uint32_t bitrate, uint8_t *out)
+{
+  uint64_t dtMs = curr->when - prev->when;
+  uint64_t dBytes, dPackets, bitsRaw, bitsOnWire, denom, pct;
+
+  if (dtMs == 0 || bitrate == 0)
+  {
+    return false;
+  }
+  dBytes   = (uint64_t) (uint32_t) (curr->rxBytes - prev->rxBytes) + (uint64_t) (uint32_t) (curr->txBytes - prev->txBytes);
+  dPackets = (uint64_t) (uint32_t) (curr->rxPackets - prev->rxPackets) + (uint64_t) (uint32_t) (curr->txPackets - prev->txPackets);
+
+  bitsRaw    = dBytes * 8 + dPackets * CAN_EFF_OVERHEAD_BITS;
+  bitsOnWire = bitsRaw * CAN_STUFFING_NUMER / CAN_STUFFING_DENOM;
+  denom      = (uint64_t) bitrate * dtMs;
+  if (denom == 0)
+  {
+    return false;
+  }
+  /* pct = bits * 100 / (bitrate * dt_s) = bits * 100000 / (bitrate * dt_ms) */
+  pct  = bitsOnWire * 100000 / denom;
+  *out = (uint8_t) (pct > 100 ? 100 : pct);
+  return true;
+}
+
+/*
+ * Emit the synthetic "NMEA 2000 gateway: network status" PGN (262400) to
+ * stdout. Same 15-byte layout as ikonvert-serial's $PDGY heartbeat:
+ *   [0]     CAN network load (%)
+ *   [1..4]  Errors (u32 LE)
+ *   [5]     Device count
+ *   [6..9]  Uptime (u32 LE, seconds)
+ *   [10]    Gateway address
+ *   [11..14] Rejected TX requests (u32 LE)
+ * Fields we cannot measure are left at the 0xff / 0xffffffff "no data"
+ * sentinel. This is a BEM-range PGN: it is written to stdout only, never
+ * sent on the bus.
+ */
+static void sendNetworkStatus(void)
+{
+  uint64_t   now = getNow();
+  uint8_t    data[15];
+  uint8_t    src = 0;
+  uint8_t    load;
+  uint32_t   counter;
+  LoadSample curr;
+  unsigned   count = 0;
+
+  memset(data, 0xff, sizeof(data));
+
+  /* [0] CAN network load: delta-sampled against the previous emission.
+   * The first emission has no baseline, so load stays at the sentinel. */
+  if (readLoadSample(canIface, now, &curr))
+  {
+    if (havePrevLoadSample && computeLoadPct(&prevLoadSample, &curr, busBitrate, &load))
+    {
+      data[0] = load;
+    }
+    prevLoadSample     = curr;
+    havePrevLoadSample = true;
+  }
+
+  /* [1..4] Errors: kernel RX error counter. */
+  if (readSysfsCounter(canIface, "rx_errors", &counter))
+  {
+    data[1] = (uint8_t) (counter >> 0);
+    data[2] = (uint8_t) (counter >> 8);
+    data[3] = (uint8_t) (counter >> 16);
+    data[4] = (uint8_t) (counter >> 24);
+  }
+
+  /* [5] Device count: distinct source addresses seen on the bus. This is
+   * strictly more than the address-claim table, which only updates on PGN
+   * 60928 — many real devices never re-announce. */
+  for (int a = 0; a < 256; a++)
+  {
+    if (seenAddr[a])
+    {
+      count++;
+    }
+  }
+  data[5] = (uint8_t) (count > 255 ? 255 : count);
+
+  /* [6..9] Uptime in whole seconds since startup. */
+  {
+    uint32_t uptime = (uint32_t) ((now - startTime) / 1000);
+    data[6]         = (uint8_t) (uptime >> 0);
+    data[7]         = (uint8_t) (uptime >> 8);
+    data[8]         = (uint8_t) (uptime >> 16);
+    data[9]         = (uint8_t) (uptime >> 24);
+  }
+
+  /* [10] Gateway address: our claimed CAN address, if we own one. Also
+   * used as the emitted message's source so downstream tools attribute
+   * the status to this gateway rather than bucketing it at src=0. */
+  if (claimState == CLAIM_CLAIMED)
+  {
+    data[10] = (uint8_t) address;
+    src      = (uint8_t) address;
+  }
+
+  /* [11..14] Rejected TX requests: kernel TX-dropped counter. */
+  if (readSysfsCounter(canIface, "tx_dropped", &counter))
+  {
+    data[11] = (uint8_t) (counter >> 0);
+    data[12] = (uint8_t) (counter >> 8);
+    data[13] = (uint8_t) (counter >> 16);
+    data[14] = (uint8_t) (counter >> 24);
+  }
+
+  emitMessage(now, 7, PGN_NETWORK_STATUS, src, N2K_ADDR_GLOBAL, data, sizeof(data));
 }
