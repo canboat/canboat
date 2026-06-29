@@ -104,6 +104,8 @@ typedef struct
   bool   hasSign;          /* Is the value signed, e.g. has both positive and negative values? */
   bool   partOfPrimaryKey; /* Is the value part of the primary key for the message */
   int8_t reservedOverride; /* Override reserved (special) value count; 0 = auto, else (count + 1). See SPECIAL_VALUES(). */
+  bool    dynamicFieldLength;          /* True if this field's value is the byte length of a following DYNAMIC_FIELD_VALUE field. */
+  uint8_t dynamicFieldLengthOverhead;  /* Non-value header bytes counted in the length that must be subtracted (see pgn.h). */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;
@@ -774,6 +776,7 @@ struct Pgn
   bool        hasMatchFields;   /* true = there are multiple PGNs with same PRN */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
   const char *url;              /* External URL */
+  const char *researchDoc;      /* Basename (no extension) of a local research HTML doc in docs/, rendered as a link */
   uint16_t    interval;         /* Milliseconds between transmissions, standard. 0 is: not known, UINT16_MAX = never */
   uint8_t     priority;         /* Default priority */
   uint8_t     repeatingCount1;  /* How many fields repeat in set 1? */

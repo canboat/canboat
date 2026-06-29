@@ -955,12 +955,12 @@ static void showBytesOrBits(const uint8_t *data, size_t startBit, size_t bits)
 static uint32_t   g_refPrn = 0; // Remember this over the entire set of fields
 static const Pgn *g_refPgn = 0; // Remember this over the entire set of fields
 
-static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
+static void fillGlobalsBasedOnField(const Field *field, const uint8_t *data, size_t dataLen, size_t startBit, size_t bits)
 {
   int64_t value;
   int64_t maxValue;
 
-  if (strcmp(fieldName, "PGN") == 0)
+  if (strcmp(field->name, "PGN") == 0)
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
     logDebug("Reference PGN = %" PRId64 "\n", value);
@@ -969,11 +969,14 @@ static void fillGlobalsBasedOnFieldName(const char *fieldName, const uint8_t *da
     return;
   }
 
-  if (strcmp(fieldName, "Length") == 0)
+  if (field->dynamicFieldLength)
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
-    logDebug("for next field: length = %" PRId64 "\n", value);
-    g_length = value;
+    g_length = value - field->dynamicFieldLengthOverhead;
+    logDebug("for next field: length = %" PRId64 " (raw %" PRId64 ", overhead %u)\n",
+             g_length,
+             value,
+             field->dynamicFieldLengthOverhead);
     return;
   }
 }
@@ -1023,7 +1026,7 @@ static bool printField(const Field   *field,
     *bits = 0;
   }
 
-  fillGlobalsBasedOnFieldName(field->name, data, dataLen, startBit, *bits);
+  fillGlobalsBasedOnField(field, data, dataLen, startBit, *bits);
 
   logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",
            field->pgn->pgn,

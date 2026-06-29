@@ -987,6 +987,13 @@ FieldType fieldTypeList[] = {
      .hasSign       = False,
      .baseFieldType = "DURATION"},
 
+    {.name          = "DURATION_UFIX32_MIN",
+     .description   = "Time duration, 32 bits with minute resolution",
+     .resolution    = 60,
+     .size          = 32,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
     {.name          = "DURATION_UFIX24_MS",
      .description   = "Time duration, 24 bits with millisecond resolution",
      .resolution    = 0.001,

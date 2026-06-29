@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navico / Simrad alarms and commands over NMEA 2000</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+</style>
+</head>
+<body>
+<h1 id="navico-simrad-alarms-and-commands-over-nmea-2000">Navico / Simrad alarms and commands over NMEA 2000</h1>
+<p>This note explains how alarms and the broader event/command channel work on a Navico-family network — Simrad, B&amp;G and Lowrance displays, autopilot controllers and instruments. It is based on observing real bus traffic while raising/clearing alarms, running race and trip timers, driving an autopilot, and triggering a man-overboard, and is meant to help interpret the decoded PGNs in canboat.</p>
+<p>It is <strong>not</strong> part of the NMEA 2000 standard alert mechanism (PGNs 126983/126984/ 126985). Navico devices use their own proprietary PGNs, disambiguated by the manufacturer code in the first two data bytes (Simrad 1857, Navico 275).</p>
+<blockquote>
+<p><strong>A note on "alarm" vs "alert".</strong> The NMEA 2000 standard and Navico's newer Ethernet/MQTT generation (Neon — the SRX/SR displays) call these <em>alerts</em>. The older generation that emits the proprietary PGNs documented here (Triton, the AP controllers, the NOS displays) calls them <em>alarms</em>. canboat follows the emitting devices and uses <strong>"alarm"</strong> for these proprietary Simnet/Navico PGNs and their fields, reserving "alert" for the standard NMEA alert PGNs.</p>
+</blockquote>
+<h2 id="pgn-130850-the-simnet-command-channel">PGN 130850 — the Simnet command channel</h2>
+<p>PGN 130850 is a single Simrad-proprietary message that carries <strong>all</strong> of these event/command families — alarms, race/trip timers, autopilot commands, MOB and more. Despite canboat historically modelling it as several differently-shaped variants, every 130850 frame on the wire uses <strong>one fixed 12-byte layout</strong>:</p>
+<table>
+<thead><tr>
+<th>Byte</th>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>0–1</td><td>Manufacturer + Industry</td><td>Simrad 1857, marine</td></tr>
+<tr><td>2</td><td>Address</td><td>target address; <code>0xff</code> = broadcast to all</td></tr>
+<tr><td>3</td><td>(reserved)</td><td><code>0xff</code></td></tr>
+<tr><td>4</td><td><strong>Network Group</strong></td><td>display/alarm group: 1 = Default, 2..9 = Group x-1, <code>0xff</code> = all</td></tr>
+<tr><td>5</td><td><strong>Command Type</strong></td><td>the discriminator that selects the family (see below)</td></tr>
+<tr><td>6</td><td><strong>Command</strong></td><td>the action within that family</td></tr>
+<tr><td>7</td><td>(spare)</td><td><code>0x00</code></td></tr>
+<tr><td>8–9</td><td>Target id</td><td>meaning depends on family (alarm id, timer index, …)</td></tr>
+<tr><td>10–11</td><td>Parameters</td><td>family-specific parameters</td></tr>
+</tbody>
+</table>
+<p>There is <strong>no "proprietary id"</strong> in 130850, and the address does not move between byte positions — earlier canboat variants that placed <code>Address</code> at byte 3, or matched byte 4 as a "proprietary id", were mis-framed and produced wrong decodes for anything outside the default group.</p>
+<h3 id="byte-5-the-command-type-simnet-event-type">Byte 5 — the command type (<code>SIMNET_EVENT_TYPE</code>)</h3>
+<p>Byte 5 is the single discriminator. The values seen on the wire:</p>
+<table>
+<thead><tr>
+<th>Value</th>
+<th>Family</th>
+<th>Byte 6 lookup</th>
+</tr></thead>
+<tbody>
+<tr><td>2</td><td>Follow Up</td><td>—</td></tr>
+<tr><td>10</td><td>AP Command</td><td>autopilot command set</td></tr>
+<tr><td>23</td><td>Timer</td><td><code>SIMNET_TIMER_EVENT</code> (race / trip)</td></tr>
+<tr><td>31</td><td>Siren</td><td>—</td></tr>
+<tr><td>36</td><td>AIS</td><td>—</td></tr>
+<tr><td>255</td><td>Alarm</td><td><code>SIMNET_ALARM_COMMAND</code></td></tr>
+</tbody>
+</table>
+<p>The autopilot command type and the alarm/event type are <strong>the same field</strong> — they are mutually-exclusive values of this one byte, not separate fields. Byte 4 is always the network/display group, independent of which family byte 5 selects.</p>
+<h3 id="byte-4-the-network-group">Byte 4 — the network group</h3>
+<p>Byte 4 (<code>SIMNET_DISPLAY_GROUP</code>) scopes the command to a display/alarm group: <code>1</code> = Default, <code>2</code> = Group 1, etcetera (and <code>0xff</code> = all groups, used for ship-wide events like MOB). A device assigned to "Group 2" emits and reacts to byte 4 = 3; a listener that assumes byte 4 = 1 will silently miss those frames.</p>
+<h2 id="the-alarm-families">The alarm families</h2>
+<p>A single alarm shows up on the wire through up to three cooperating PGNs, each with a distinct job, all tied together by the same small <strong>alarm id</strong>:</p>
+<table>
+<thead><tr>
+<th>PGN</th>
+<th>canboat name</th>
+<th>Manufacturer</th>
+<th>Role</th>
+</tr></thead>
+<tbody>
+<tr><td>130845</td><td>Simnet: Key Value</td><td>Simrad (1857)</td><td>the <strong>threshold</strong> for each alarm type</td></tr>
+<tr><td>130850</td><td>Simnet: Alarm</td><td>Simrad (1857)</td><td>the alarm <strong>lifecycle command</strong></td></tr>
+<tr><td>130825</td><td>Navico: Alarm</td><td>Navico (275)</td><td>the alarm <strong>state</strong> (id, state, severity)</td></tr>
+<tr><td>130856</td><td>Simnet: Alarm Message</td><td>Simrad (1857)</td><td>the human-readable <strong>text</strong> for the id</td></tr>
+</tbody>
+</table>
+<h3 id="thresholds-pgn-130845-simnet-key-value">Thresholds — PGN 130845 (Simnet: Key Value)</h3>
+<p>Alarm limits are published as key/value pairs keyed by <code>SIMNET_KEY_VALUE</code>. Each display group broadcasts the current limit for every configured alarm. For example the "True wind low" limit (key 516) is a <code>SPEED_UFIX16_CM</code> value:</p>
+<pre><code>Simnet: Key Value  Key=516 &quot;True wind low&quot;  Value=12.86   (= 25.0 kn)</code></pre>
+<p>Changing the limit on one device re-broadcasts the key with the new value, and the other devices (including autopilot controllers) pick it up — which is why a threshold edited on one display immediately appears on another. Related limit keys live next to each other in the lookup, e.g. key 517 "Low boat speed".</p>
+<h3 id="the-lifecycle-command-pgn-130850-simnet-alarm">The lifecycle command — PGN 130850 (Simnet: Alarm)</h3>
+<p>When byte 5 = 255 (Alarm), byte 6 carries the lifecycle command (<code>SIMNET_ALARM_COMMAND</code>), and bytes 8–9 carry the alarm id:</p>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>57 Activate</td><td>the limit was crossed — raise the alarm</td></tr>
+<tr><td>58 Acknowledge</td><td>a user acknowledged it</td></tr>
+<tr><td>68 Silence</td><td>a user muted the audible part</td></tr>
+<tr><td>56 Deactivate</td><td>the condition cleared — clear the alarm</td></tr>
+<tr><td>104 Alarm History</td><td>history request</td></tr>
+<tr><td>107 MOB Activated</td><td>man overboard raised (see MOB below)</td></tr>
+<tr><td>108 MOB Cancelled</td><td>man overboard cleared</td></tr>
+</tbody>
+</table>
+<p>When an alarm fires, the participating devices broadcast <code>Activate</code> for that id (several devices within a second or two). User actions then broadcast <code>Acknowledge</code> / <code>Silence</code>, and the clear broadcasts <code>Deactivate</code>. So a single alarm id is seen cycling Activate → … → Deactivate. <strong>Because these are broadcast commands, acknowledging an alarm on one display clears it on the others</strong> — that is the network mechanism behind cross-device acknowledge.</p>
+<h3 id="the-alarm-record-pgn-130825-navico-alarm">The alarm record — PGN 130825 (Navico: Alarm)</h3>
+<p>The alarm <em>status</em> is a small fixed record:</p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>Alarm Id</td><td>which alarm (matches the id in 130845 / 130850 / 130856)</td></tr>
+<tr><td>Alarm State</td><td>lifecycle: Normal, Active, Silenced, Acknowledged, Awaiting Acknowledge</td></tr>
+<tr><td>Alarm Severity</td><td>Emergency Alarm, Alarm, Warning, Caution</td></tr>
+<tr><td>Value</td><td>associated value (often 0)</td></tr>
+</tbody>
+</table>
+<p>In practice 130825 mainly re-announces <strong><code>Active</code></strong> while the condition holds — it is the <em>state</em> view of the alarm. The actual lifecycle (acknowledge, silence, clear) is driven by the 130850 <strong>commands</strong> above, not by 130825 state changes, so a listener watching only 130825 sees it stay <code>Active</code> even after an acknowledge. Watch 130850 for the transitions and 130825 for the steady-state severity. The companion PGN 130856 carries the same id with the human-readable text.</p>
+<h2 id="timers-pgn-130850-byte-5-23">Timers — PGN 130850, byte 5 = 23</h2>
+<p>Race and trip timers ride the same 130850 with byte 5 = 23 (Timer); byte 6 is the timer event (<code>SIMNET_TIMER_EVENT</code>):</p>
+<table>
+<thead><tr>
+<th>Command</th>
+<th>meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>61 Race Timer Start</td><td>start the race countdown</td></tr>
+<tr><td>62 Race Timer Stop</td><td>stop it</td></tr>
+<tr><td>63 Race Timer Sync</td><td>round the countdown to the nearest minute (rolling start)</td></tr>
+<tr><td>64 Race Timer Reset</td><td>reset it</td></tr>
+<tr><td>65 Trip Timer Reset All</td><td>reset all trip logs</td></tr>
+<tr><td>100 Trip Timer Enable</td><td>start a trip log (parameter 1 = trip index)</td></tr>
+<tr><td>101 Trip Timer Disable</td><td>stop a trip log</td></tr>
+</tbody>
+</table>
+<p>The trip enable/disable commands carry the trip index in the parameter bytes, and a trip started on one display is picked up network-wide (the distance/time/average fields then appear on other displays). A <em>partial</em> reset of a single field on a display does <strong>not</strong> go on the wire — only the enable/disable and full-reset commands are broadcast.</p>
+<h2 id="man-overboard-pgn-130850-127233">Man overboard — PGN 130850 + 127233</h2>
+<p>A man-overboard is an alarm-class event (byte 5 = 255) with byte 6 = <strong>107 MOB Activated</strong> / <strong>108 MOB Cancelled</strong>, broadcast to all groups (byte 4 = <code>0xff</code>, no alarm id). Unlike depth/wind alarms — which burst from several devices — the MOB is emitted only by the <strong>originating display</strong> and is not re-broadcast by the other devices.</p>
+<p>The MOB <strong>position</strong> does not ride 130850; it rides the standard NMEA 2000 PGN <strong>127233 (Man Overboard Notification)</strong>, emitted by the same source at the same instant. So a complete MOB is a <em>pair</em>: 130850 carries the lifecycle (Activated/Cancelled) and 127233 carries the latitude/longitude. To follow a MOB in a capture, watch for the 130850 <code>MOB Activated</code> and read the position from the paired 127233.</p>
+<h2 id="autopilot-commands-pgn-130850-byte-5-10">Autopilot commands — PGN 130850, byte 5 = 10</h2>
+<p>Autopilot mode changes (Auto, Wind, Nav, No Drift), heading/course adjustments and the like ride 130850 with byte 5 = 10 (AP Command). The autopilot computer echoes accepted commands back on PGN 130851 (AP command reply). These share the same 12-byte frame and the same byte-4 network group as the alarm and timer families.</p>
+<h2 id="propagation-why-an-alarm-sometimes-stays-local">Propagation — why an alarm sometimes stays local</h2>
+<p>An alarm is only network-wide if it is actually broadcast. The same alarm type can behave differently depending on where it is enabled:</p>
+<ul>
+<li>Raised through a display/instrument that broadcasts: every configured device reacts (audible/visual alarm) and the PGNs above appear on the bus.</li>
+<li>Enabled locally on a single controller without broadcasting: it alarms only on that device, and other displays stay silent — there is no traffic on the bus.</li>
+</ul>
+<p>So when troubleshooting "device A beeps but device B does not", first check whether the alarm PGNs appear on the bus at all.</p>
+<h2 id="correlating-a-capture">Correlating a capture</h2>
+<p>To follow an alarm in a capture:</p>
+<ol>
+<li>Watch <strong>130845</strong> for the configured thresholds (and any live edits).</li>
+<li>Follow the <strong>130850</strong> commands (Activate / Acknowledge / Silence / Deactivate) — note the alarm id (bytes 8–9), the command (byte 6) and the network group (byte 4).</li>
+<li>Match that id in <strong>130825</strong> for the state and severity (and in <strong>130856</strong> for the alarm text).</li>
+</ol>
+<p>The same alarm id ties the records together, and the manufacturer code in bytes 0–1 keeps the Simrad and Navico variants of these PGN numbers distinct from the unrelated uses by other manufacturers.</p>
+</body>
+</html>

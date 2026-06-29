@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Navico UDB database and source selection</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+</style>
+</head>
+<body>
+<h1 id="navico-udb-database-and-source-selection">Navico UDB database and source selection</h1>
+<p>Navico-family devices share configuration and settings across the network with a group of proprietary key/value PGNs. The central one, <strong>PGN 130822</strong>, is a general database / table-sharing transport (the "UDB" database). <em>Source selection</em> — which device provides each data type — is a related but <strong>separate</strong> mechanism, carried by <strong>PGN 130840</strong>.</p>
+<p>This note covers both, because they are easy to confuse: 130822 carries a <em>table</em> of source selections among many other tables, but it is a periodic dump that <strong>lags</strong> live changes; the actual change-driven selection is 130840.</p>
+<p>As always, the manufacturer code in the first two data bytes disambiguates these from unrelated uses of the same PGN numbers (130822 is also used by BEP Marine (295) and Mercury (144)).</p>
+<h2 id="pgn-130822-the-udb-database-navico-udb-database">PGN 130822 — the UDB database (Navico: UDB Database)</h2>
+<p>A general table-sharing transport. Every frame shares an outer container:</p>
+<table>
+<thead><tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>Marker</td><td>always <code>0xFF</code></td></tr>
+<tr><td>Command</td><td>message type (the dispatch opcode)</td></tr>
+<tr><td>Address / Section / Item</td><td>address of the object being reported</td></tr>
+<tr><td>(payload)</td><td>depends on Command</td></tr>
+</tbody>
+</table>
+<p>Two commands appear in normal traffic:</p>
+<ul>
+<li><strong>Command 1 — Source Report</strong> (the everyday form): a fixed per-object record carrying an <code>Object Value</code> (<code>0xFC00</code> = no value), and a <code>Sub</code> + <code>Token</code> pair that is a stable identity for the object definition. It is best read as a periodic <em>per-object value</em> broadcast; it does <strong>not</strong> name a device.</li>
+<li><strong>Command 6 — Object Dump</strong> (occasional): an object's full table, as a list of length-prefixed records <code>[length][class][data type id : u16][value]</code>. The <code>Data Type</code> is decoded with <code>NAVICO_DATA_TYPE</code>, and <code>Value</code> is a tagged blob: a device-NAME wrapper (<code>0x0A 0x00</code> + 64-bit NAME + <code>0xFF</code>), a single <code>0x00</code> (none/auto), or a small typed value.</li>
+</ul>
+<p>The Command 6 dump <em>includes</em> a source-selection table (data type → selected NAME), but it is one of several replicated tables and is broadcast periodically. Because it is a database snapshot rather than an event, it can show a stale selection for some seconds after a change, and it keys data types by the full <code>NAVICO_DATA_TYPE</code> space (e.g. "Attitude Yaw", "Heading", pilot limits, ...), which is broader than the live-selection id space below.</p>
+<h2 id="pgn-130840-simnet-data-source-selection-the-live-selection">PGN 130840 — Simnet: Data Source Selection (the live selection)</h2>
+<p>This is the <strong>change-driven</strong> PGN that fires when a source is chosen on a display or controller. The 17-byte payload, confirmed against a live capture of a compass-source change, is:</p>
+<table>
+<thead><tr>
+<th>Byte</th>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>0–1</td><td>Manufacturer + Industry</td><td>Simrad (1857), marine</td></tr>
+<tr><td>2</td><td>Reserved</td><td><code>0xFF</code></td></tr>
+<tr><td>3</td><td>Sequence</td><td>observed constant <code>0x00</code></td></tr>
+<tr><td>4</td><td>B</td><td>observed constant <code>0x01</code></td></tr>
+<tr><td>5</td><td><strong>Data Type</strong></td><td>which quantity (<code>SIMNET_DATA_SOURCE</code> lookup, e.g. 27 = Heading)</td></tr>
+<tr><td>6</td><td>Reserved</td><td><code>0xFF</code></td></tr>
+<tr><td>7</td><td>C</td><td>a <strong>change counter</strong> (seen incrementing by one per source change)</td></tr>
+<tr><td>8–15</td><td><strong>Source</strong></td><td>the selected device's full 64-bit NMEA 2000 NAME</td></tr>
+<tr><td>16</td><td>Reserved</td><td><code>0xFF</code></td></tr>
+</tbody>
+</table>
+<p>For example, switching the compass source on an autopilot controller emits a single 130840 with <code>Data Type = Heading</code> and <code>Source</code> = the newly selected device's NAME (and <code>C</code> ticks up by one). It appears immediately on the change, not periodically. (Values <code>0xFA–0xFE</code> in the Data Type byte are not data types — they are the auto-select handshake codes.)</p>
+<p>Note the two id spaces differ: 130840's <code>SIMNET_DATA_SOURCE</code> is a small, compact data-type id (Heading = 27), <strong>distinct</strong> from the larger <code>NAVICO_DATA_TYPE</code> id (Heading = 36) used by the 130822 Command 6 table.</p>
+<h2 id="which-to-watch">Which to watch</h2>
+<ul>
+<li>To observe a source <strong>change</strong> as it happens: watch <strong>130840</strong> — it is emitted once, immediately, with the new device's NAME.</li>
+<li>To read the current <strong>database</strong> of selections (and other replicated tables): read the <strong>130822</strong> Command 6 dumps, keeping in mind they are periodic and can lag.</li>
+<li>To resolve a NAME to a device, match it to that device's ISO Address Claim (PGN 60928) and Product Information (PGN 126996) on the same bus.</li>
+</ul>
+<h2 id="related-keyvalue-pgns">Related key/value PGNs</h2>
+<ul>
+<li><strong>PGN 130823</strong> — a sibling UDB container with the same Command 6 record layout; carries additional per-object tables.</li>
+<li><strong>PGN 130824 (B&amp;G)</strong> — an H3000-style key/value broadcast: a packed stream of <code>{12-bit key, 4-bit length, value}</code> records, where the per-key length is the fixed unit width of the value (not a free-form size).</li>
+<li><strong>PGN 130845 (Simnet: Key Value)</strong> — single key/value parameter messages keyed by <code>SIMNET_KEY_VALUE</code>; this is where per-parameter limits (e.g. alarm thresholds) are published.</li>
+</ul>
+</body>
+</html>

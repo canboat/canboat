@@ -750,6 +750,7 @@ static void explainPGNXML(Pgn pgn)
     }
     printXML(6, "Explanation", pgn.explanation);
     printXML(6, "URL", pgn.url);
+    printXML(6, "ResearchDoc", pgn.researchDoc);
   }
   printXML(6, "Type", PACKET_TYPE_STR[pgn.type]);
   printXML(6, "Complete", (pgn.complete == PACKET_COMPLETE ? "true" : "false"));
@@ -943,6 +944,13 @@ static void explainPGNXML(Pgn pgn)
         {
           printf("          <Offset>%" PRId64 "</Offset>\n", (int64_t) (f.offset * f.resolution));
         }
+      }
+
+      if (f.dynamicFieldLength && f.dynamicFieldLengthOverhead != 0)
+      {
+        // Header bytes (Class, Data Type, ...) counted in this length field but sitting before the value; a downstream
+        // decoder must subtract this from the length to obtain the byte count of the following DYNAMIC_FIELD_VALUE field.
+        printf("          <DynamicFieldLengthOverhead>%u</DynamicFieldLengthOverhead>\n", f.dynamicFieldLengthOverhead);
       }
 
       if (!isnan(f.rangeMin))
