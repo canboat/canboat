@@ -47,6 +47,13 @@ generated: tests research-docs
 	$(MAKE) -C analyzer generated
 	$(MAKE) -C dbc-exporter
 
+# Run before opening a PR: regenerates the database, then reports how this
+# change affects the public contract (breaking / minor / additive) and what
+# conventional-commit level it needs. Advisory only; CI enforces the same
+# check via tools/contract-pr.sh --gate.
+pr: generated
+	@tools/contract-pr.sh
+
 # Explanation documents: research/*.md -> docs/*.html via a portable,
 # dependency-free converter (Python 3 standard library only).
 RESEARCH_MD := $(wildcard research/*.md)
@@ -118,7 +125,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)
