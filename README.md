@@ -61,6 +61,12 @@ the [`samples/`](./samples) directory.
 In [Wiki](https://github.com/canboat/canboat/wiki) you can find instructions on how to build the programs on your own computer 
 and how to start extending the PGN database. Short instructions are also found in [BUILDING.md](./BUILDING.md).
 
+## Contributing
+
+Pull requests are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to write your PR title
+(it becomes the release changelog entry), the source/generated lockstep rule, and what evidence a
+database change needs.
+
 ## Using the definitions in your own project
 
 If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json).
