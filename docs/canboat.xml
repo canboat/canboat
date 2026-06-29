@@ -4275,8 +4275,6 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='79' Name='Wind Speed True' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='80' Name='Average True Wind Direction' FieldType='NUMBER' Signed='true'
- Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='81' Name='Wind Angle True' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='83' Name='Target TWA' FieldType='NUMBER' Signed='true'
@@ -4287,8 +4285,8 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='89' Name='True Wind Direction' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='100' Name='Unknown' FieldType='NUMBER' Signed='true'
- Bits='16'/>
+      <EnumFieldType Value='100' Name='Trip 1 Speed Avg' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='102' Name='Keel Angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='103' Name='Canard Angle' FieldType='NUMBER' Signed='true'
@@ -4353,6 +4351,8 @@ limitations under the License.
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='207' Name='Trip Distance' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
+      <EnumFieldType Value='208' Name='Trip 2 Distance' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='211' Name='DR Bearing' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='233' Name='Course Over Ground' FieldType='NUMBER' Signed='true'
@@ -4397,6 +4397,14 @@ limitations under the License.
  Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='265' Name='Trip Time' FieldType='DURATION' Signed='false'
  Resolution='0.001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='266' Name='Trip 1 Speed Max' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='267' Name='Trip 2 Time' FieldType='DURATION' Signed='false'
+ Resolution='0.001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='268' Name='Trip 2 Speed Max' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='269' Name='Trip 2 Speed Avg' FieldType='NUMBER' Signed='false'
+ Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='270' Name='Bow Latitude' FieldType='NUMBER' Signed='true'
  Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='271' Name='Bow Longitude' FieldType='NUMBER' Signed='true'
@@ -4511,6 +4519,10 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='338' Name='Wind Lift' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='364' Name='Start Line Distance To Port (Boat Lengths)' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Bits='16'/>
+      <EnumFieldType Value='365' Name='Start Line Distance To Starboard (Boat Lengths)' FieldType='NUMBER' Signed='true'
+ Resolution='0.1' Bits='16'/>
       <EnumFieldType Value='380' Name='Active Perf Mode' FieldType='NUMBER' Signed='true'
  Bits='16'/>
       <EnumFieldType Value='381' Name='Gust Bear Away' FieldType='NUMBER' Signed='true'
@@ -4527,6 +4539,14 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='387' Name='Pilot Mean Heel' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='409' Name='Time To Burn' FieldType='DURATION' Signed='true'
+ Resolution='0.001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='410' Name='Mast Twist' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='411' Name='Port End Ping Time' FieldType='DURATION' Signed='true'
+ Resolution='0.001' Unit='s' Bits='32'/>
+      <EnumFieldType Value='412' Name='Starboard End Ping Time' FieldType='DURATION' Signed='true'
+ Resolution='0.001' Unit='s' Bits='32'/>
     </LookupFieldTypeEnumeration>
     <LookupFieldTypeEnumeration Name='VICTRON_VREG' MaxValue='65535'>
       <EnumFieldType Value='260' Name='Group ID' FieldType='NUMBER' Signed='false'
