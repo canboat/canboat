@@ -1,0 +1,38 @@
+name: Upward compatibility
+
+# Replaces the former "Test canboatjs, ts-pgns and related Signal K projects"
+# downstream-build matrix. canboat is now self-contained: rather than building
+# every downstream project, we check that this PR's change to the public
+# contract (docs/canboat.json) is *declared* at a high enough semver level.
+#
+#   breaking change  -> needs a 'type!:' header / 'BREAKING CHANGE:' footer (major)
+#   additive change  -> needs a 'feat:' commit                              (minor)
+#
+# release-please then turns that declaration into the version bump and the
+# changelog. The committed docs/canboat.json is trusted here: the CI workflow
+# (.github/workflows/ci.yml) already fails if it is stale versus analyzer/pgn.h.
+#
+# Logic lives in tools/contract.py (classifier) and tools/contract-pr.sh
+# (git plumbing + gate). Run `make pr` locally for the same report.
+
+on:
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  contract-compat:
+    name: contract upward-compatibility
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # need the merge-base with the target branch
+
+      - name: check public-contract compatibility
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: tools/contract-pr.sh --gate

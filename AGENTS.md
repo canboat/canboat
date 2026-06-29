@@ -196,11 +196,16 @@ wired into any target.
 >    PR** if the title doesn't match. This title becomes the squash-merge commit
 >    subject and is what release-please reads (see §11) — `feat` → minor bump,
 >    `fix`/`perf`/`refactor` → patch, `feat!`/`BREAKING CHANGE` → major.
-> 4. Open the PR. Required checks must pass: `build-ubuntu` (incl. the
+> 4. Before opening the PR, run **`make pr`**: it regenerates the database and
+>    reports how your change affects the public contract (breaking / minor /
+>    additive) and what conventional-commit level that requires. If it says the
+>    change is breaking, mark the PR `type!:` and paste the printed
+>    `BREAKING CHANGE:` footer into the PR description.
+> 5. Open the PR. Required checks must pass: `build-ubuntu` (incl. the
 >    generated-files gate), `build-armv7-musl`, `build-windows`,
->    `canboatjs dependencies` (downstream Signal K integration), and
+>    `contract upward-compatibility` (the public-contract gate), and
 >    `validate-pr-title`.
-> 5. Merge once checks are green. The version bump, `CHANGELOG.md`, tag, and
+> 6. Merge once checks are green. The version bump, `CHANGELOG.md`, tag, and
 >    GitHub Release are produced automatically by release-please (§11) — you do
 >    **not** hand-edit the version or changelog in a feature PR.
 
@@ -221,15 +226,21 @@ asserts the `VERSION`/`SCHEMA_VERSION` strings are present in
 `docs/canboat.{json,xml,xsd}`, and uploads them + a Cygwin Windows zip as
 release assets. **There is no npm publish** (no `package.json`).
 
-`.github/workflows/test_canboatjs_sk.yml` is the **downstream integration
-gate**: it builds canboat, feeds the fresh `docs/canboat.json` into `ts-pgns`,
-builds/tests `ts-pgns` and `canboatjs`, then builds/tests ~10 Signal K projects
-against them.
+`.github/workflows/upward-compatibility.yml` is the **public-contract gate**.
+canboat no longer builds the downstream projects; instead it diffs the load-
+bearing surface of `docs/canboat.json` against the PR's merge-base and requires
+the change to be *declared* at a sufficient semver level (`tools/contract.py`
+classifies; `tools/contract-pr.sh --gate` enforces). It fails a PR that removes/
+renames/retypes a field, PGN, lookup or value — or makes a field required —
+unless the PR is marked breaking (`type!:` + `BREAKING CHANGE:` footer); an
+additive change (new PGN/field/lookup/value) needs at least `feat:`.
 
-> **`docs/canboat.json` is the consumed contract.** A JSON-shape change that
-> breaks parsing fails these downstream jobs **even though canboat's own tests
-> pass**. A schema-affecting change should bump `SCHEMA_VERSION` and expect
-> downstream churn.
+> **`docs/canboat.json` is the consumed contract.** Downstream projects
+> (`ts-pgns`, `canboatjs`, the Signal K plugins) generate their types, decoders
+> and test fixtures from it and pin to canboat releases. A rename/removal/retype
+> is therefore source-breaking for them; the gate makes sure such a change ships
+> as a major with a changelog entry, so downstream can plan the update. Run
+> `make pr` to preview the impact before pushing.
 
 ---
 
