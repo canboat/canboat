@@ -6,6 +6,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [7.0.0](https://github.com/canboat/canboat/compare/v6.2.2...v7.0.0) (2026-06-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **navico:** PGN 130845 'repeatIndicator' and the trailing reserved field become 'instance' and 'source'. PGN 130846 is restructured: 'b', 'd' and the spare are removed; 'instance', 'operation' and 'source' added; 'key' widened from 16 to 24 bits.
+
+### Added
+
+* **540:** expose Unknown/OutOfRange/Reserved special values per field ([#672](https://github.com/canboat/canboat/issues/672)) ([20e98c7](https://github.com/canboat/canboat/commit/20e98c75673ac6eda0676a0fde0b33cc0ea8968a))
+* **654:** reconcile PGN database against NMEA 2000 PDF v1.3 ([#671](https://github.com/canboat/canboat/issues/671)) ([813bef8](https://github.com/canboat/canboat/commit/813bef8d27f54e7edda7628d476568542dc4f672))
+* **693:** "NMEA 2000 gateway: network status" PGN — rename + socketcan/actisense emission ([#698](https://github.com/canboat/canboat/issues/698)) ([a6f6c78](https://github.com/canboat/canboat/commit/a6f6c780730cec3154c7ce77d244d4bd9fcbfa84))
+* add 8 missing PGNs from the NMEA 3.002 field-name list ([#655](https://github.com/canboat/canboat/issues/655)) ([#673](https://github.com/canboat/canboat/issues/673)) ([3efabb1](https://github.com/canboat/canboat/commit/3efabb13075d16c2a1e0f998415f17b4a5a4220f))
+* decode Discrete Status 1 bitfield in PGN 127493 ([#419](https://github.com/canboat/canboat/issues/419)) ([#667](https://github.com/canboat/canboat/issues/667)) ([bd2fb6b](https://github.com/canboat/canboat/commit/bd2fb6b92cffba3497cd4c58b1ec77cdecdd7e18))
+* fold canboat-py extended-decoder notes into Mercury PGN descriptions ([#689](https://github.com/canboat/canboat/issues/689)) ([#690](https://github.com/canboat/canboat/issues/690)) ([27ca9b5](https://github.com/canboat/canboat/commit/27ca9b5f9fe129077949c4a3acd7ff29555e4e39))
+* **fusion:** decode additional 130820 status messages ([#682](https://github.com/canboat/canboat/issues/682)) ([906dcde](https://github.com/canboat/canboat/commit/906dcdebc653f9cc6fac0c50e4069acc1711ca44)), closes [#678](https://github.com/canboat/canboat/issues/678)
+* **mercury:** decode VesselView-Link PGNs 130824/130825/130826/130829 ([#683](https://github.com/canboat/canboat/issues/683)) ([9f380a8](https://github.com/canboat/canboat/commit/9f380a8ac5694702fc4d818264a0fabae1fe785e))
+* **navico:** decode 65313 Depth Quality and 130825 NDP2k Alert ([#686](https://github.com/canboat/canboat/issues/686)) ([8df21c8](https://github.com/canboat/canboat/commit/8df21c8466d9112f24828a119ec1b7717bd80358))
+* **navico:** rework Simnet 130845/130846 Key/Parameter PGNs from firmware ([#701](https://github.com/canboat/canboat/issues/701)) ([9fe36ac](https://github.com/canboat/canboat/commit/9fe36ac99ad6f562c286798daac4f661757647a8))
+* read Actisense W2K-1 files in actisense-serial ([#662](https://github.com/canboat/canboat/issues/662)) ([c460636](https://github.com/canboat/canboat/commit/c460636c218cc98c4c72f12c36bedc30865f6142))
+* read PCAN-View trace files in candump2analyzer ([#250](https://github.com/canboat/canboat/issues/250)) ([#665](https://github.com/canboat/canboat/issues/665)) ([1123b97](https://github.com/canboat/canboat/commit/1123b975f5e97f8932e9ed673f56e9183b1f9b78))
+* **victron:** decode VE.Can VREG registers via a key/value/type table (61184) ([#681](https://github.com/canboat/canboat/issues/681)) ([99c4c0a](https://github.com/canboat/canboat/commit/99c4c0ab6fae970b79fe3884019050b526a2666d)), closes [#677](https://github.com/canboat/canboat/issues/677)
+
+
+### Fixed
+
+* **126993:** heartbeat "Data transmit offset" is in milliseconds ([#696](https://github.com/canboat/canboat/issues/696)) ([d6afb2a](https://github.com/canboat/canboat/commit/d6afb2ab457a1e23d1a16f64a2001ac08939b3fa))
+* avoid signed left-shift overflow in fast-packet reassembly ([#650](https://github.com/canboat/canboat/issues/650)) ([ef5b1c5](https://github.com/canboat/canboat/commit/ef5b1c50685abe550a12df561dba8a55ab1c97cb))
+* correct SIMNET Alert bits field length to 64 bits ([#657](https://github.com/canboat/canboat/issues/657)) ([c104d8e](https://github.com/canboat/canboat/commit/c104d8e7bb2d53d7bae3dc56f92aa91dfee0fb0a))
+* define PGN 127751 as fast packet, flag as unconfirmed ([#655](https://github.com/canboat/canboat/issues/655)) ([#669](https://github.com/canboat/canboat/issues/669)) ([a178ddf](https://github.com/canboat/canboat/commit/a178ddf8a95ffe2992dcc9616f1323f8d84780e2))
+* don't fail a PGN when only a trailing reserved/spare field is short ([#663](https://github.com/canboat/canboat/issues/663)) ([#664](https://github.com/canboat/canboat/issues/664)) ([5788c7f](https://github.com/canboat/canboat/commit/5788c7f571ebf383e61f9c369357a94fda410442))
+* drop the CANboat startup record from analyzer output under -fixtime ([#668](https://github.com/canboat/canboat/issues/668)) ([27c3ef7](https://github.com/canboat/canboat/commit/27c3ef706062b7c8d6f860a9c1c202c61da8b61b))
+* guard int64 conversion of field range maximum ([#651](https://github.com/canboat/canboat/issues/651)) ([0c18ddc](https://github.com/canboat/canboat/commit/0c18ddcdcd670c2fcf8f4ee6ca1f3bf31b784d18))
+* **json:** export Signed for keyed (DYNAMIC_FIELD_VALUE) field types ([#691](https://github.com/canboat/canboat/issues/691)) ([f705ea4](https://github.com/canboat/canboat/commit/f705ea4d6c0d701ae61c7ab306cc2e8e57396451))
+* never write to a replayed file in actisense-serial ([#660](https://github.com/canboat/canboat/issues/660)) ([#661](https://github.com/canboat/canboat/issues/661)) ([2db94ad](https://github.com/canboat/canboat/commit/2db94ade17f5b735209404bbd5d55c0e63218ef4))
+* prevent out-of-bounds read for out-of-range PGNs ([#649](https://github.com/canboat/canboat/issues/649)) ([a5a22b7](https://github.com/canboat/canboat/commit/a5a22b74b9ac5688019cba62669df08562cebd6f)), closes [#644](https://github.com/canboat/canboat/issues/644)
+* treat ESC as an escape byte only in .ebl files ([#431](https://github.com/canboat/canboat/issues/431)) ([#659](https://github.com/canboat/canboat/issues/659)) ([2bc71c2](https://github.com/canboat/canboat/commit/2bc71c234140bc96ea5de458e2b54e093f382398))
+
+
+### Changed
+
+* rename CAMEL macro to ID_AND_NAME ([#526](https://github.com/canboat/canboat/issues/526)) ([#670](https://github.com/canboat/canboat/issues/670)) ([a4fd69a](https://github.com/canboat/canboat/commit/a4fd69a57e91a5f55c35485a4771d55824b0a450))
+
 ## [6.2.2](https://github.com/canboat/canboat/compare/v6.2.1...v6.2.2) (2026-06-24)
 
 
