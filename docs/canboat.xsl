@@ -624,6 +624,35 @@
           </p>
         </xsl:when>
       </xsl:choose>
+      <xsl:if test="Sentinels">
+        <p>
+          Unavailable value:
+          <xsl:choose>
+            <xsl:when test="Sentinels = 'TopOfRange'">
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </xsl:when>
+            <xsl:when test="Sentinels = 'EmptyString'">
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </xsl:when>
+            <xsl:when test="Sentinels = 'NaN'">
+              the IEEE-754 Not-a-Number value means the field is unavailable.
+            </xsl:when>
+            <xsl:when test="Sentinels = 'Variable'">
+              depends on the data type that is resolved at run time through the companion
+              DYNAMIC_FIELD_KEY field.
+            </xsl:when>
+            <xsl:otherwise>
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </xsl:otherwise>
+          </xsl:choose>
+        </p>
+      </xsl:if>
       <xsl:if test="URL">
         <p>
           For more information see:

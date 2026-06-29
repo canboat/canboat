@@ -707,21 +707,18 @@ static const char *getV2Type(const FieldType *ft)
   return NULL;
 }
 
-// Whether a field type advertises top-of-range special values. Excludes non-integers
-// (FLOAT/DECIMAL), the structured ISO_NAME identity, and the identifier-like numbers
-// (PGN/MMSI/FIELD_INDEX), which carry an id rather than a measurement that reserves sentinels.
-static bool emitsSpecialValues(const char *v2type)
+// The sentinel convention of a field, resolved from its root base field type (the .sentinels
+// member). Drives both the type-level <Sentinels> and the per-field top-of-range markers.
+static Sentinels sentinelsForFieldType(const FieldType *ft)
 {
-  static const char *const excluded[] = {"FLOAT", "DECIMAL", "ISO_NAME", "PGN", "MMSI", "FIELD_INDEX"};
-
-  for (size_t i = 0; i < sizeof(excluded) / sizeof(excluded[0]); i++)
+  for (; ft != NULL; ft = ft->baseFieldTypePtr)
   {
-    if (strcmp(v2type, excluded[i]) == 0)
+    if (ft->baseFieldTypePtr == NULL)
     {
-      return false;
+      return ft->sentinels;
     }
   }
-  return true;
+  return SENTINEL_NONE;
 }
 
 static void explainPGNXML(Pgn pgn)
@@ -985,13 +982,14 @@ static void explainPGNXML(Pgn pgn)
         printf("          <RangeMax>%.15g</RangeMax>\n", (double) ((UINT64_C(1) << f.size) - 1));
       }
 
-      // Explicit non-data sentinels for integer numbers (NMEA 2000 reserves the top of the
-      // range): Unknown (most positive), OutOfRange (max-1), Reserved (max-2). Only for plain
-      // numeric measurement fields -- not lookups, reserved/spare/string (no range), match fields,
-      // or the types emitsSpecialValues() rejects. 64-bit fields are excluded: their sentinels
-      // exceed JSON's safe integer range.
-      if (!doV1 && f.reservedCount > 0 && f.size < 64 && !isnan(f.rangeMin) && f.lookup.type == LOOKUP_TYPE_NONE
-          && !(f.unit != NULL && f.unit[0] == '=') && emitsSpecialValues(getV2Type(ft)))
+      // Explicit non-data sentinels for integer fields (NMEA 2000 reserves the top of the
+      // range): Unknown (most positive), OutOfRange (max-1), Reserved (max-2). Emitted for the
+      // field types whose .sentinels is TopOfRange (numbers AND lookups); a lookup that names a
+      // value in the sentinel region has had its reservedCount reduced accordingly, so the named
+      // value is not advertised as a sentinel. Excludes match fields (unit '=') and 64-bit fields
+      // (their sentinels exceed JSON's safe integer range).
+      if (!doV1 && f.reservedCount > 0 && f.size < 64 && !isnan(f.rangeMin) && !(f.unit != NULL && f.unit[0] == '=')
+          && sentinelsForFieldType(ft) == SENTINEL_TOP_OF_RANGE)
       {
         uint32_t highbit = (ft->hasSign == True && f.offset == 0) ? (f.size - 1) : f.size;
         uint64_t raw     = (UINT64_C(1) << highbit) - 1;
@@ -1194,6 +1192,8 @@ static void explainFieldTypesXML(void)
     {
       printf("      <RangeMax>%.15g</RangeMax>\n", ft->rangeMax);
     }
+
+    printf("      <Sentinels>%s</Sentinels>\n", sentinelsName(ft->sentinels));
 
     printf("    </FieldType>\n");
   }
