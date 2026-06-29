@@ -64,6 +64,22 @@ static bool     isEBL;
 static bool     isJson; // W2K-1 JSON capture: one {"pgn":..,"payload":[..]} per line
 static uint64_t timestamp = 0;
 
+/* NMEA 2000 gateway: network status (synthetic PGN 262400 / IKONVERT_BEM).
+ * Emitted to stdout every NETWORK_STATUS_INTERVAL_S so a downstream consumer
+ * sees the same per-gateway status record the iKonvert produces. Bus load and
+ * error count come from the NGT-1's once-per-second "Actisense: System status"
+ * message (ACTISENSE_BEM + 0xf2), which the gateway only sends when P-codes are
+ * enabled for the port; device count and uptime are measured here. Fields with
+ * no source ride the canboat 0xff/0xffffffff "no data" sentinel. */
+#define NETWORK_STATUS_INTERVAL_S (5)
+static bool     naSeenAddr[256];      /* distinct sources seen, for device count */
+static time_t   naStartTime  = 0;     /* for the uptime field */
+static time_t   naLastStatus = 0;     /* wall-clock of the last emission */
+static bool     naHaveLoad   = false; /* Ch1 Rx Load seen in a System Status */
+static uint8_t  naLoad       = 0;
+static bool     naHaveErrors = false; /* Error ID seen in a System Status */
+static uint32_t naErrors     = 0;
+
 enum MSG_State
 {
   MSG_START,
@@ -86,6 +102,7 @@ static void headerReceived(const unsigned char *msg, size_t msgLen);
 static void messageReceived(const unsigned char *msg, size_t msgLen);
 static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, unsigned char command);
 static void ngtMessageReceived(const unsigned char *msg, size_t msgLen);
+static void emitNetworkStatus(void);
 
 int main(int argc, char **argv)
 {
@@ -96,7 +113,10 @@ int main(int argc, char **argv)
   struct stat    statbuf;
   int            speed = 115200;
   int            i;
-  time_t         lastPing = time(0);
+  time_t         lastPing     = time(0);
+
+  naStartTime  = time(0);
+  naLastStatus = time(0);
 
   setProgName(argv[0]);
   while (argc > 1)
@@ -418,6 +438,14 @@ int main(int argc, char **argv)
     {
       writeMessage(handle, NGT_MSG_SEND, NGT_STARTUP_SEQ, sizeof(NGT_STARTUP_SEQ), UINT64_C(0));
       lastPing = time(0);
+    }
+    /* Live fallback: when the gateway is not sending System Status messages
+     * (P-codes disabled), still surface device count + uptime on a timer.
+     * Gated to live devices — a fast file replay barely advances the wall
+     * clock, so replays rely on the per-System-Status emission below. */
+    if (!isRegularFile && !writeonly && time(0) - naLastStatus >= NETWORK_STATUS_INTERVAL_S)
+    {
+      emitNetworkStatus();
     }
   }
 
@@ -991,6 +1019,26 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
     return;
   }
 
+  /* Cache the bus load and error count from the NGT-1's "Actisense: System
+   * status" message (subcommand 0xf2) for the synthetic gateway network-status
+   * PGN. Field offsets follow that PGN's definition in analyzer/pgn.h, where
+   * data[k] is msg[1 + k]: data[7..10] = Error ID, data[13] = Ch1 Rx Load
+   * (the NMEA 2000 channel's receive load percentage). */
+  if (msg[0] == 0xf2)
+  {
+    naErrors = (uint32_t) msg[8] | ((uint32_t) msg[9] << 8) | ((uint32_t) msg[10] << 16) | ((uint32_t) msg[11] << 24);
+    naHaveErrors = true;
+    if (msgLen >= 15) /* Ch1 Rx Load is at msg[14] */
+    {
+      naLoad     = msg[14];
+      naHaveLoad = true;
+    }
+    /* A System Status arrival is the authoritative trigger for a fresh
+     * gateway-status record; emit one now (works during file replay too,
+     * where the wall-clock fallback timer never fires). */
+    emitNetworkStatus();
+  }
+
   sprintf(line, "%s,%u,%u,%u,%u,%u", fmtTimestamp(dateStr, timestamp), 0, ACTISENSE_BEM + msg[0], 0, 0, (unsigned int) msgLen - 1);
   p = line + strlen(line);
   for (i = 1; i < msgLen && p < line + sizeof(line) - 5; i++)
@@ -1002,6 +1050,67 @@ static void ngtMessageReceived(const unsigned char *msg, size_t msgLen)
 
   puts(line);
   fflush(stdout);
+}
+
+/*
+ * Emit the synthetic "NMEA 2000 gateway: network status" PGN (262400) to
+ * stdout. Same 15-byte layout as ikonvert-serial's $PDGY heartbeat:
+ *   [0]      CAN network load (%)         - Ch1 Rx Load from System Status
+ *   [1..4]   Errors (u32 LE)              - Error ID from System Status
+ *   [5]      Device count                 - distinct sources seen
+ *   [6..9]   Uptime (u32 LE, seconds)     - since startup
+ *   [10]     Gateway address              - unknown for the NGT-1: sentinel
+ *   [11..14] Rejected TX requests (u32)   - not reported by the NGT-1: sentinel
+ * Load and Errors stay at the sentinel until a System Status message is seen
+ * (the gateway only sends those when P-codes are enabled for the port).
+ */
+static void emitNetworkStatus(void)
+{
+  char     line[200];
+  char    *p;
+  char     dateStr[DATE_LENGTH];
+  uint8_t  data[15];
+  unsigned count   = 0;
+  uint32_t uptime  = (uint32_t) (time(0) - naStartTime);
+
+  memset(data, 0xff, sizeof(data));
+
+  if (naHaveLoad)
+  {
+    data[0] = naLoad;
+  }
+  if (naHaveErrors)
+  {
+    data[1] = (uint8_t) (naErrors >> 0);
+    data[2] = (uint8_t) (naErrors >> 8);
+    data[3] = (uint8_t) (naErrors >> 16);
+    data[4] = (uint8_t) (naErrors >> 24);
+  }
+  for (int a = 0; a < 256; a++)
+  {
+    if (naSeenAddr[a])
+    {
+      count++;
+    }
+  }
+  data[5] = (uint8_t) (count > 255 ? 255 : count);
+  data[6] = (uint8_t) (uptime >> 0);
+  data[7] = (uint8_t) (uptime >> 8);
+  data[8] = (uint8_t) (uptime >> 16);
+  data[9] = (uint8_t) (uptime >> 24);
+
+  snprintf(line, sizeof(line), "%s,7,%u,0,255,15", fmtTimestamp(dateStr, timestamp), (unsigned int) IKONVERT_BEM);
+  p = line + strlen(line);
+  for (int b = 0; b < 15; b++)
+  {
+    snprintf(p, line + sizeof(line) - p, ",%02x", data[b]);
+    p += strlen(p);
+  }
+
+  puts(line);
+  fflush(stdout);
+
+  naLastStatus = time(0);
 }
 
 static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, const unsigned char command)
@@ -1033,6 +1142,8 @@ static void n2kMessageReceived(const unsigned char *msg, size_t msgLen, const un
     src = msg[5];
     /* Skip the timestamp logged by the NGT-1-A in bytes 6-9 */
     len = msg[10];
+    /* Remember every source we hear from, for the network-status device count. */
+    naSeenAddr[src & 0xff] = true;
   }
 
   if (len > 223)

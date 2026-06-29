@@ -10263,7 +10263,7 @@ Pgn pgnList[] = {
      {UINT8_FIELD("SID"), UINT16_FIELD("Model ID"), UINT32_FIELD("Serial ID"), END_OF_FIELDS}}
 
     ,
-    {"iKonvert: Network status",
+    {"NMEA 2000 gateway: network status",
      IKONVERT_BEM,
      PACKET_COMPLETE,
      PACKET_FAST,
