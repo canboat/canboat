@@ -2874,7 +2874,9 @@ LOOKUP_TYPE(SIMNET_COMMAND, BYTES(1))
 LOOKUP(SIMNET_COMMAND, 50, "Text")
 LOOKUP_END
 
-LOOKUP_TYPE_FIELDTYPE(SIMNET_KEY_VALUE, BYTES(2))
+// The key is a 24-bit composite: low byte = command group, upper 16 bits = parameter key (group | key << 8).
+// Observed captures always have the parameter key's high byte zero, so these values match the historical 16-bit keys.
+LOOKUP_TYPE_FIELDTYPE(SIMNET_KEY_VALUE, BYTES(3))
 LOOKUP_FIELDTYPE(SIMNET_KEY_VALUE, 0, "Heading Offset", "ANGLE_FIX16")
 LOOKUP_FIELDTYPE(SIMNET_KEY_VALUE, 41, "Timezone offset", "DURATION_FIX16_MIN")
 LOOKUP_FIELDTYPE(SIMNET_KEY_VALUE, 260, "True wind high", "SPEED_UFIX16_CM")
@@ -2897,6 +2899,14 @@ LOOKUP_FIELDTYPE_LOOKUP(SIMNET_KEY_VALUE, 40711, "Race timer auto start", "LOOKU
 LOOKUP_FIELDTYPE_LOOKUP(SIMNET_KEY_VALUE, 44079, "Night mode color", "LOOKUP", 8, PAIR, SIMNET_NIGHT_MODE_COLOR)
 LOOKUP_FIELDTYPE_LOOKUP(SIMNET_KEY_VALUE, 49159, "Race timer rolling start", "LOOKUP", 8, PAIR, OFF_ON) // see #409
 LOOKUP_FIELDTYPE(SIMNET_KEY_VALUE, 55087, "Day mode invert", "UINT8")
+LOOKUP_END
+
+// Operation byte of the Simnet Key/Value get-set protocol (PGN 130845), observed in the NAC3 and AC42
+// autopilot and MFD capture corpus: 0 = read request, 1 = write/set, 2 = reply/notify (value report).
+LOOKUP_TYPE(SIMNET_KEY_OPERATION, BYTES(1))
+LOOKUP(SIMNET_KEY_OPERATION, 0, "Read")
+LOOKUP(SIMNET_KEY_OPERATION, 1, "Set")
+LOOKUP(SIMNET_KEY_OPERATION, 2, "Reply")
 LOOKUP_END
 
 // There are other bits in use, but their meaning is not yet clear.

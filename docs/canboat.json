@@ -3462,6 +3462,15 @@
         ]
       },
       {
+        "Name":"SIMNET_KEY_OPERATION",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Read", "Value":0},
+          {"Name":"Set", "Value":1},
+          {"Name":"Reply", "Value":2}
+        ]
+      },
+      {
         "Name":"SIMNET_NIGHT_MODE",
         "MaxValue":255,
         "EnumValues":[
@@ -5163,7 +5172,7 @@
     "LookupFieldTypeEnumerations":[
       {
         "Name":"SIMNET_KEY_VALUE",
-        "MaxValue":65535,
+        "MaxValue":16777215,
         "EnumFieldTypeValues":[
         {"name": "Heading Offset", "value": 0, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Timezone offset", "value": 41, "FieldType": "DURATION", "Signed": true, "Resolution": 60, "Unit": "s", "Bits": "16"},
@@ -74140,12 +74149,13 @@
         "PGN":130845,
         "Id":"simnetKeyValue",
         "Description":"Simnet: Key Value",
+        "Explanation":"Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter (and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed against NAC3 and AC42 autopilot and MFD capture corpus.",
         "ResearchDoc":"navico_alarms_and_commands",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":11,
+        "FieldCount":10,
         "MinLength":10,
         "TransmissionIrregular":true,
         "Fields":[
@@ -74250,32 +74260,22 @@
             "Order":8,
             "Id":"key",
             "Name":"Key",
-            "BitLength":16,
+            "Description":"Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) << 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is \"True wind high\" in group 4 but \"Deep water\" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&G and Mercury key spaces.",
+            "BitLength":24,
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
+            "RangeMax":16777212,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE",
             "PartOfPrimaryKey":true
           },
           {
             "Order":9,
-            "Id":"spare9",
-            "Name":"Spare",
-            "BitLength":8,
-            "BitOffset":64,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"SPARE"
-          },
-          {
-            "Order":10,
-            "Id":"minlength",
-            "Name":"MinLength",
-            "Description":"Possibly the length of data field; probably something else",
+            "Id":"operation",
+            "Name":"Operation",
             "BitLength":8,
             "BitOffset":72,
             "BitStart":0,
@@ -74283,16 +74283,14 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_KEY_OPERATION"
           },
           {
-            "Order":11,
+            "Order":10,
             "Id":"value",
             "Name":"Value",
-            "Description":"Data value",
+            "Description":"Always 4 bytes on the bus but actual width and datatype defined per key",
             "BitLengthVariable":true,
             "BitOffset":80,
             "BitStart":0,
