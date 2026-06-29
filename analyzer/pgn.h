@@ -3687,7 +3687,7 @@ Pgn pgnList[] = {
      126993,
      PACKET_COMPLETE,
      PACKET_SINGLE,
-     {DURATION_UFIX16_CS_FIELD(
+     {DURATION_UFIX16_MS_FIELD(
           "Data transmit offset",
           "Offset in transmit time from time of request command: 0x0 = transmit immediately, 0xFFFF = Do not change offset."),
       UINT8_FIELD("Sequence Counter"),
