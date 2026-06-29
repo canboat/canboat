@@ -9504,9 +9504,13 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
-      LOOKUP_FIELD("Repeat Indicator", BYTES(1), REPEAT_INDICATOR),
+      UINT8_DESC_FIELD("Instance",
+                       "Instance index when a Key has multiple sources/instances; 0xFF when not applicable. "
+                       "Caller-supplied and echoed back in replies."),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      RESERVED_FIELD(BYTES(1)),
+      UINT8_DESC_FIELD("Source",
+                       "Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF "
+                       "in read/set requests. This is NOT an NMEA 2000 bus address."),
       LOOKUP_DYNAMIC_FIELD_KEY_DESC("Key",
                                     BYTES(3),
                                     SIMNET_KEY_VALUE,
@@ -9533,15 +9537,34 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       UINT8_DESC_FIELD("Address", "NMEA 2000 address of commanded device"),
-      UINT8_DESC_FIELD("B", "00, 01 or FF observed"),
+      UINT8_DESC_FIELD("Instance",
+                       "Instance index when a Key has multiple sources/instances; 0xFF when not applicable. "
+                       "Caller-supplied and echoed back in replies."),
       LOOKUP_FIELD("Display Group", BYTES(1), SIMNET_DISPLAY_GROUP),
-      UINT16_DESC_FIELD("D", "Various values observed"),
-      LOOKUP_DYNAMIC_FIELD_KEY("Key", BYTES(2), SIMNET_KEY_VALUE),
-      SPARE_FIELD(BYTES(1)),
-      DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Possibly the length of data field; probably something else"),
-      DYNAMIC_FIELD_VALUE("Value", "Data value"),
+      UINT8_DESC_FIELD("Source",
+                       "Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF "
+                       "in read/set requests. This is NOT an NMEA 2000 bus address."),
+      LOOKUP_DYNAMIC_FIELD_KEY_DESC("Key",
+                                    BYTES(3),
+                                    SIMNET_KEY_VALUE,
+                                    "Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 "
+                                    "bits) << 8. The two parts are NOT split into separate fields because the parameter key is "
+                                    "only unique within a command group (e.g. key 1 is \"True wind high\" in group 4 but \"Deep "
+                                    "water\" in group 8), so the value's data type can only be resolved from the group and key "
+                                    "together. This key space is distinct from the PGN 130822 tDataType ids and from the B&G and "
+                                    "Mercury key spaces."),
+      LOOKUP_FIELD("Operation", BYTES(1), SIMNET_KEY_OPERATION),
+      DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Number of bytes in the Value field that follows"),
+      DYNAMIC_FIELD_VALUE("Value", "Variable-width value; width given by Length, datatype resolved per Key"),
       END_OF_FIELDS},
-     .interval = UINT16_MAX}
+     .explanation = "Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, "
+                    "Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value "
+                    "is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware "
+                    "switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the "
+                    "echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder "
+                    "and the nac3-operations capture corpus.",
+     .researchDoc = "navico_alarms_and_commands",
+     .interval    = UINT16_MAX}
 
     ,
     {"Maretron: Battery Amp Hour Record",

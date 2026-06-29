@@ -19619,14 +19619,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Repeat Indicator</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-REPEAT_INDICATOR">REPEAT_INDICATOR</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
@@ -19640,7 +19642,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130846
             - Simnet: Parameter Set</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.</p><p>
+              For a detailed explanation see:
+              <a href="navico_alarms_and_commands.html">navico_alarms_and_commands.html</a></p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li></ul></p><p>
             This
@@ -19664,25 +19668,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td>00, 01 or FF observed</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>D</td><td>Various values observed</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE</a>
                       that defines the next variable field's type.
-                    </td><td>true</td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Length</td><td>Possibly the length of data field; probably something else</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                    </td><td>true</td></tr><tr><td>9</td><td>Operation</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_KEY_OPERATION">SIMNET_KEY_OPERATION</a></td><td/></tr><tr><td>10</td><td>Length</td><td>Number of bytes in the Value field that follows</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td>11</td><td>Value</td><td>Data value</td><td> </td><td>
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td>11</td><td>Value</td><td>Variable-width value; width given by Length, datatype resolved per Key</td><td> </td><td>
                     Variable length
                   <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
