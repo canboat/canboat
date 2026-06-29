@@ -77,9 +77,26 @@ See [Changelog](CHANGELOG.md).
 
 ## Related Projects
 
-- [canboatjs](https://github.com/canboat/canboatjs) Pure JavaScript NMEA 2000 decoder and encoder
-- [nmea2000](https://github.com/tomer-w/nmea2000) Pure Python NMEA 2000 decoder and encoder library based on canboat
-- [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) Expose NMEA2000 PGNs as Home Assistant devices and entities
+### Sibling projects (same authors)
+
+- [canboatjs](https://github.com/canboat/canboatjs) — pure JavaScript NMEA 2000 decoder and encoder
+- [canboat-rs](https://github.com/canboat/canboat-rs) — Rust NMEA 2000 library
+
+### Other projects using the CANboat PGN definitions
+
+- [go-nmea-client](https://github.com/aldas/go-nmea-client) — Go
+- [n2k](https://github.com/mbj4668/n2k) — Erlang
+- [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) — Windows GUI
+- [nmea2000](https://github.com/tomer-w/nmea2000) — pure Python NMEA 2000 decoder and encoder library
+- [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) — expose NMEA 2000 PGNs as Home Assistant devices and entities
+
+### For non-technical sailors
+
+CANboat and its sibling [canboatjs](https://github.com/canboat/canboatjs) are command-line tools. If you
+just want to use your NMEA 2000 network, these projects build on them and provide a friendlier experience:
+
+- [OpenPlotter](https://openplotter.org/)
+- [Signal K](https://signalk.org/)
 
 ---
 
