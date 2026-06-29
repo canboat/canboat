@@ -22078,9 +22078,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>79</td><td>Wind Speed True</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>80</td><td>Average True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
-              
-                    signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>81</td><td>Wind Angle True</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
@@ -22096,9 +22093,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>89</td><td>True Wind Direction</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Unknown</td><td> </td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>100</td><td>Trip 1 Speed Avg</td><td>0.01 m/s</td><td>16 bits 
               
-                    signed
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>102</td><td>Keel Angle</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
@@ -22195,6 +22192,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>207</td><td>Trip Distance</td><td>0.01 m</td><td>32 bits 
               
                     unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>208</td><td>Trip 2 Distance</td><td>0.01 m</td><td>32 bits 
+              
+                    unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>211</td><td>DR Bearing</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
@@ -22261,7 +22261,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>265</td><td>Trip Time</td><td>0.001 s</td><td>32 bits 
               
                     unsigned
-                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>270</td><td>Bow Latitude</td><td>1e-07 deg</td><td>32 bits 
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>266</td><td>Trip 1 Speed Max</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>267</td><td>Trip 2 Time</td><td>0.001 s</td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>268</td><td>Trip 2 Speed Max</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>269</td><td>Trip 2 Speed Avg</td><td>0.01 m/s</td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>270</td><td>Bow Latitude</td><td>1e-07 deg</td><td>32 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>271</td><td>Bow Longitude</td><td>1e-07 deg</td><td>32 bits 
@@ -22432,6 +22444,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>338</td><td>Wind Lift</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>364</td><td>Start Line Distance To Port (Boat Lengths)</td><td>0.1 </td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>365</td><td>Start Line Distance To Starboard (Boat Lengths)</td><td>0.1 </td><td>16 bits 
+              
+                    signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>380</td><td>Active Perf Mode</td><td> </td><td>16 bits 
               
                     signed
@@ -22456,7 +22474,19 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>387</td><td>Pilot Mean Heel</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-VICTRON_VREG">VICTRON_VREG
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>409</td><td>Time To Burn</td><td>0.001 s</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>410</td><td>Mast Twist</td><td>0.0001 rad</td><td>16 bits 
+              
+                    signed
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>411</td><td>Port End Ping Time</td><td>0.001 s</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-DURATION">DURATION</a></td></tr><tr><td>412</td><td>Starboard End Ping Time</td><td>0.001 s</td><td>32 bits 
+              
+                    signed
+                  <a href="#ft-DURATION">DURATION</a></td></tr></table><h3 id="lookup-VICTRON_VREG">VICTRON_VREG
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>260</td><td>Group ID</td><td> </td><td>8 bits 
               
