@@ -4447,6 +4447,14 @@ limitations under the License.
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='275' Name='Distance to Start Line Starboard' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='32'/>
+      <EnumFieldType Value='276' Name='Start Line Port Latitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
+      <EnumFieldType Value='277' Name='Start Line Port Longitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
+      <EnumFieldType Value='278' Name='Start Line Starboard Latitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
+      <EnumFieldType Value='279' Name='Start Line Starboard Longitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='280' Name='Bias Advantage in Boat Lengths' FieldType='NUMBER' Signed='true'
  Resolution='0.1' Bits='16'/>
       <EnumFieldType Value='281' Name='Distance to Start Line in Boat Lengths' FieldType='NUMBER' Signed='true'
@@ -4483,6 +4491,10 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='298' Name='Code Zero Load' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='32'/>
+      <EnumFieldType Value='299' Name='MOB Latitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
+      <EnumFieldType Value='300' Name='MOB Longitude' FieldType='NUMBER' Signed='true'
+ Resolution='1e-07' Unit='deg' Bits='32'/>
       <EnumFieldType Value='301' Name='Distance Behind Start Line' FieldType='NUMBER' Signed='true'
  Resolution='0.01' Unit='m' Bits='32'/>
       <EnumFieldType Value='302' Name='Distance Behind Start Line in Boat Lengths' FieldType='NUMBER' Signed='true'
