@@ -965,7 +965,7 @@ struct Pgn
   Field      fieldList[33]; /* Note fixed # of fields; increase if needed. RepeatingFields support means this is enough for now. */
   uint32_t   fieldCount;    /* Filled by C, no need to set in initializers. */
   // uint32_t    size;          /* Filled by C, no need to set in initializers. */
-  char       *camelDescription; /* Filled by C, no need to set in initializers. */
+  char       *camelDescription; /* Filled by C from .description; set explicitly only to pin a historic <Id>. */
   bool        fallback;         /* true = this is a catch-all for unknown PGNs */
   bool        hasMatchFields;   /* true = there are multiple PGNs with same PRN */
   const char *explanation;      /* Preferably the NMEA 2000 explanation from the NMEA PGN field list */
@@ -9531,7 +9531,7 @@ Pgn pgnList[] = {
      .interval    = UINT16_MAX}
 
     ,
-    {"Simnet: Parameter Set",
+    {"Simnet: Key Value - Long",
      130846,
      PACKET_INCOMPLETE,
      PACKET_FAST,
@@ -9557,6 +9557,8 @@ Pgn pgnList[] = {
       DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Number of bytes in the Value field that follows"),
       DYNAMIC_FIELD_VALUE("Value", "Variable-width value; width given by Length, datatype resolved per Key"),
       END_OF_FIELDS},
+     // Pin the historic <Id> (shipped in v7.0.0 as "Simnet: Parameter Set"); only the display Name changed.
+     .camelDescription = "simnetParameterSet",
      .explanation = "Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, "
                     "Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value "
                     "is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware "
