@@ -67,7 +67,7 @@ setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        'cantools==38.0.0'
+        'cantools==42.0.1'
         # eg: 'aspectlib==1.1.1', 'six>=1.7',
     ],
     extras_require={
