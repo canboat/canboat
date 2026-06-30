@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [7.1.0](https://github.com/canboat/canboat/compare/v7.0.0...v7.1.0) (2026-06-30)
+
+
+### Added
+
+* **540:** per-field-type .sentinels + lookup top-of-range markers ([#704](https://github.com/canboat/canboat/issues/704)) ([ce03421](https://github.com/canboat/canboat/commit/ce03421e1d257569808a55404cbc7e672cf74716))
+* **dbc:** multiplex proprietary PGN variants; move to docs/canboat.dbc ([#707](https://github.com/canboat/canboat/issues/707)) ([859bf85](https://github.com/canboat/canboat/commit/859bf859af76c6627b4cd357718dd830f2ac7d38))
+
+
+### Fixed
+
+* **navico:** rename PGN 130846 to "Simnet: Key Value - Long" ([#705](https://github.com/canboat/canboat/issues/705)) ([a2c9a43](https://github.com/canboat/canboat/commit/a2c9a4370cc7b356f8d7a58642c177851cdee209))
+
 ## [7.0.0](https://github.com/canboat/canboat/compare/v6.2.2...v7.0.0) (2026-06-29)
 
 
