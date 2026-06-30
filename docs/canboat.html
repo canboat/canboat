@@ -19640,7 +19640,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                     Variable length
                   <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130846">0x1FF1E:
             PGN 130846
-            - Simnet: Parameter Set</h3><p>
+            - Simnet: Key Value - Long</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.</p><p>
               For a detailed explanation see:

@@ -395,8 +395,28 @@ void camelCase(bool upperCamelCase)
 
   for (i = 0; i < pgnListSize; i++)
   {
-    pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase, 0);
-    haveEarlierSpareOrReserved  = false;
+    // A PGN may pin its historic <Id> by setting .camelDescription in the initializer (the same
+    // Id-is-frozen-contract reason fields use .camelName); only camelize the description when it
+    // was not pinned.
+    if (pgnList[i].camelDescription == NULL)
+    {
+      pgnList[i].camelDescription = camelize(pgnList[i].description, upperCamelCase, 0);
+    }
+    else if (upperCamelCase)
+    {
+      // The pinned id is already lowerCamelCase; for the v1 (UpperCamel) output just upper-case the
+      // first letter. Re-camelizing would collapse the internal capitals (simnetParameterSet ->
+      // Simnetparameterset) because camelize() only upper-cases letters that follow a separator.
+      char *upper = malloc(strlen(pgnList[i].camelDescription) + 1);
+
+      if (upper != NULL)
+      {
+        strcpy(upper, pgnList[i].camelDescription);
+        upper[0]                    = toupper((unsigned char) upper[0]);
+        pgnList[i].camelDescription = upper;
+      }
+    }
+    haveEarlierSpareOrReserved = false;
     for (j = 0; j < ARRAY_SIZE(pgnList[i].fieldList) && pgnList[i].fieldList[j].name; j++)
     {
       const char *name = pgnList[i].fieldList[j].name;
