@@ -1679,7 +1679,13 @@
           {"Name":"AIS Lost Target", "Value":105},
           {"Name":"AIS Safety Related Message (used to silence)", "Value":106},
           {"Name":"AIS Connection Lost", "Value":107},
-          {"Name":"No Fix", "Value":108}
+          {"Name":"No Fix", "Value":108},
+          {"Name":"Pilot Compass Calibration Complete", "Value":112},
+          {"Name":"AIS Transmitter Disabled - MMSI Required", "Value":113},
+          {"Name":"Bluetooth Device Low Battery", "Value":122},
+          {"Name":"Bluetooth Device Sleep Mode", "Value":123},
+          {"Name":"Bluetooth Device High Battery Temperature", "Value":124},
+          {"Name":"Bluetooth Device Lost Communications", "Value":125}
         ]
       },
       {
@@ -1690,7 +1696,8 @@
           {"Name":"Autopilot", "Value":1},
           {"Name":"Radar", "Value":2},
           {"Name":"Chart Plotter", "Value":3},
-          {"Name":"AIS", "Value":4}
+          {"Name":"AIS", "Value":4},
+          {"Name":"Bluetooth Accessory", "Value":5}
         ]
       },
       {
