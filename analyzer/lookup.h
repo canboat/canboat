@@ -1272,6 +1272,12 @@ LOOKUP(SEATALK_ALARM_ID, 105, "AIS Lost Target")
 LOOKUP(SEATALK_ALARM_ID, 106, "AIS Safety Related Message (used to silence)")
 LOOKUP(SEATALK_ALARM_ID, 107, "AIS Connection Lost")
 LOOKUP(SEATALK_ALARM_ID, 108, "No Fix")
+LOOKUP(SEATALK_ALARM_ID, 112, "Pilot Compass Calibration Complete")
+LOOKUP(SEATALK_ALARM_ID, 113, "AIS Transmitter Disabled - MMSI Required")
+LOOKUP(SEATALK_ALARM_ID, 122, "Bluetooth Device Low Battery")
+LOOKUP(SEATALK_ALARM_ID, 123, "Bluetooth Device Sleep Mode")
+LOOKUP(SEATALK_ALARM_ID, 124, "Bluetooth Device High Battery Temperature")
+LOOKUP(SEATALK_ALARM_ID, 125, "Bluetooth Device Lost Communications")
 LOOKUP_END
 
 LOOKUP_TYPE(SEATALK_ALARM_GROUP, BYTES(1))
@@ -1280,6 +1286,7 @@ LOOKUP(SEATALK_ALARM_GROUP, 1, "Autopilot")
 LOOKUP(SEATALK_ALARM_GROUP, 2, "Radar")
 LOOKUP(SEATALK_ALARM_GROUP, 3, "Chart Plotter")
 LOOKUP(SEATALK_ALARM_GROUP, 4, "AIS")
+LOOKUP(SEATALK_ALARM_GROUP, 5, "Bluetooth Accessory")
 LOOKUP_END
 
 LOOKUP_TYPE(SEATALK_PILOT_MODE, BYTES(1))

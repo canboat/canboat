@@ -1438,6 +1438,12 @@ limitations under the License.
       <EnumPair Value='106' Name='AIS Safety Related Message (used to silence)' />
       <EnumPair Value='107' Name='AIS Connection Lost' />
       <EnumPair Value='108' Name='No Fix' />
+      <EnumPair Value='112' Name='Pilot Compass Calibration Complete' />
+      <EnumPair Value='113' Name='AIS Transmitter Disabled - MMSI Required' />
+      <EnumPair Value='122' Name='Bluetooth Device Low Battery' />
+      <EnumPair Value='123' Name='Bluetooth Device Sleep Mode' />
+      <EnumPair Value='124' Name='Bluetooth Device High Battery Temperature' />
+      <EnumPair Value='125' Name='Bluetooth Device Lost Communications' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK_ALARM_GROUP' MaxValue='255'>
       <EnumPair Value='0' Name='Instrument' />
@@ -1445,6 +1451,7 @@ limitations under the License.
       <EnumPair Value='2' Name='Radar' />
       <EnumPair Value='3' Name='Chart Plotter' />
       <EnumPair Value='4' Name='AIS' />
+      <EnumPair Value='5' Name='Bluetooth Accessory' />
     </LookupEnumeration>
     <LookupEnumeration Name='SEATALK_PILOT_MODE' MaxValue='255'>
       <EnumPair Value='64' Name='Standby' />
