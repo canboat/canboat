@@ -2951,7 +2951,7 @@ Pgn pgnList[] = {
      126464,
      PACKET_COMPLETE,
      PACKET_FAST,
-     {LOOKUP_FIELD("Function Code", BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS},
+     {LOOKUP_FIELD(PK("Function Code"), BYTES(1), PGN_LIST_FUNCTION), PGN_FIELD("PGN", NULL), END_OF_FIELDS},
      .interval        = UINT16_MAX,
      .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 1,

@@ -19522,7 +19522,8 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"PGN_LIST_FUNCTION"
+            "LookupEnumeration":"PGN_LIST_FUNCTION",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":2,

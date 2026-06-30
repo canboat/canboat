@@ -19337,6 +19337,7 @@ limitations under the License.
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>PGN_LIST_FUNCTION</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>2</Order>
