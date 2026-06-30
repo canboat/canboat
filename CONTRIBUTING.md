@@ -8,7 +8,7 @@ merged. For build instructions and the architecture of the PGN database, see
 
 The NMEA 2000 PGN database is **hand-edited C** in `analyzer/pgn.h`,
 `analyzer/lookup.h` and `analyzer/fieldtype.h`. The files under `docs/`
-(`canboat.xml`, `canboat.html`, `canboat.json`) and `dbc-exporter/pgns.dbc` are
+(`canboat.xml`, `canboat.html`, `canboat.json`) and `docs/canboat.dbc` are
 **generated** from those headers and committed to git. If your change touches
 the database, regenerate the artifacts in the **same** commit:
 

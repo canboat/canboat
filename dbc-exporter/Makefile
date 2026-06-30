@@ -8,11 +8,11 @@ TARGETDIR=../$(BUILDDIR)
 VENV=$(TARGETDIR)/venv
 
 
-all: pgns.dbc
+all: ../docs/canboat.dbc
 
-pgns.dbc: dbc-exporter ../docs/canboat.json
-	"$(VENV)/bin/canboat-dbc-exporter" ../docs/canboat.json pgns.dbc
-	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer pgns.dbc
+../docs/canboat.dbc: dbc-exporter ../docs/canboat.json
+	"$(VENV)/bin/canboat-dbc-exporter" ../docs/canboat.json ../docs/canboat.dbc
+	"$(VENV)/bin/python3" ../analyzer/fixup-version.py -w $(TARGETDIR)/analyzer ../docs/canboat.dbc
 
 dbc-exporter: $(VENV)
 	"$(VENV)/bin/pip" install .

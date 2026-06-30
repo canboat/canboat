@@ -9,7 +9,7 @@
 # (analyzer/fixup-version.py -w). Treat it as binary so git stores the bytes
 # verbatim and never normalizes the CRLF away, so `make generated` produces no
 # spurious diff.
-dbc-exporter/pgns.dbc -text
+docs/canboat.dbc -text
 
 # Raw NMEA 2000 captures and other evidence: keep the bytes exactly as
 # committed (several contain CR and some are effectively binary).
