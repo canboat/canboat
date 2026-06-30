@@ -157,6 +157,20 @@ typedef enum Bool
   True
 } Bool;
 
+// How a field type signals "data not available" (and, for integers, out-of-range/reserved).
+// Emitted per field type as <Sentinels>; for TOP_OF_RANGE the actual reserved raw values are
+// given per field as <UnknownValue>/<OutOfRangeValue>/<ReservedValue> (they vary by bit width).
+typedef enum Sentinels
+{
+  SENTINEL_NONE = 0,     // No unavailable encoding (identifier, filler, or structured field)
+  SENTINEL_TOP_OF_RANGE, // The top 1-3 raw integer values are reserved (Unknown/OutOfRange/Reserved)
+  SENTINEL_NAN,          // IEEE-754 Not-a-Number
+  SENTINEL_EMPTY_STRING, // An empty string (after trimming end-of-string bytes) means unavailable
+  SENTINEL_VARIABLE      // Depends on the data type resolved through the companion DYNAMIC_FIELD_KEY
+} Sentinels;
+
+extern const char *sentinelsName(Sentinels s);
+
 typedef struct PhysicalQuantity
 {
   const char *name;        // Name, UPPERCASE_WITH_UNDERSCORE
@@ -457,6 +471,9 @@ struct FieldType
   double rangeMin;
   double rangeMax;
 
+  // How this field type signals "data not available"
+  Sentinels sentinels;
+
   // How to print this field
   FieldPrintFunctionType  pf;
   const PhysicalQuantity *physical;
@@ -469,6 +486,7 @@ struct FieldType
 FieldType fieldTypeList[] = {
     // Numeric types
     {.name        = "NUMBER",
+     .sentinels   = SENTINEL_TOP_OF_RANGE,
      .description = "Number",
      .encodingDescription
      = "Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to "
@@ -569,6 +587,7 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UNSIGNED_FIXED_POINT_NUMBER"},
 
     {.name        = "FLOAT",
+     .sentinels   = SENTINEL_NAN,
      .description = "32 bit IEEE-754 floating point number",
      .size        = 32,
      .hasSign     = True,
@@ -602,6 +621,7 @@ FieldType fieldTypeList[] = {
      .pf                  = fieldPrintDecimal},
 
     {.name                = "LOOKUP",
+     .sentinels           = SENTINEL_TOP_OF_RANGE,
      .description         = "Number value where each value encodes for a distinct meaning",
      .encodingDescription = "Each lookup has a LookupEnumeration defining what the possible values mean",
      .comment = "For almost all lookups the list of values is known with some precision, but it is quite possible that a value "
@@ -614,7 +634,8 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintLookup,
      .v1Type  = "Lookup table"},
 
-    {.name = "INDIRECT_LOOKUP",
+    {.name      = "INDIRECT_LOOKUP",
+     .sentinels = SENTINEL_TOP_OF_RANGE,
      .description
      = "Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
      .encodingDescription = "Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
@@ -634,6 +655,7 @@ FieldType fieldTypeList[] = {
      .v1Type  = "Bitfield"},
 
     {.name        = "DYNAMIC_FIELD_KEY",
+     .sentinels   = SENTINEL_TOP_OF_RANGE,
      .description = "Number value where each value encodes for a distinct meaning including a fieldtype of the next variable "
                     "field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is "
                     "no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
@@ -644,11 +666,13 @@ FieldType fieldTypeList[] = {
      .pf      = fieldPrintLookup},
 
     {.name        = "DYNAMIC_FIELD_LENGTH",
+     .sentinels   = SENTINEL_TOP_OF_RANGE,
      .description = "Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
      .hasSign     = False,
      .pf          = fieldPrintNumber},
 
     {.name        = "DYNAMIC_FIELD_VALUE",
+     .sentinels   = SENTINEL_VARIABLE,
      .description = "Variable field whose type and length is dynamic",
      .encodingDescription
      = "The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by "
@@ -682,7 +706,10 @@ FieldType fieldTypeList[] = {
      .resolution    = 0.001,
      .baseFieldType = "UFIX16"},
 
-    {.name = "UFIX8_2", .description = "Fixed point unsigned with 2 digits resolution", .resolution = 0.01, .baseFieldType = "UFIX8"},
+    {.name          = "UFIX8_2",
+     .description   = "Fixed point unsigned with 2 digits resolution",
+     .resolution    = 0.01,
+     .baseFieldType = "UFIX8"},
 
     {.name          = "UFIX16_6",
      .description   = "Fixed point unsigned with 6 digits resolution",
@@ -913,9 +940,19 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX32_DML", .description = "Volume", .resolution = 0.0001, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
-    {.name = "TIME", .description = "Time", .physical = &TIME, .pf = fieldPrintTime, .v1Type = "Time"},
+    {.name        = "TIME",
+     .sentinels   = SENTINEL_TOP_OF_RANGE,
+     .description = "Time",
+     .physical    = &TIME,
+     .pf          = fieldPrintTime,
+     .v1Type      = "Time"},
 
-    {.name = "DURATION", .description = "Duration", .physical = &DURATION, .pf = fieldPrintTime, .v1Type = "Time"},
+    {.name        = "DURATION",
+     .sentinels   = SENTINEL_TOP_OF_RANGE,
+     .description = "Duration",
+     .physical    = &DURATION,
+     .pf          = fieldPrintTime,
+     .v1Type      = "Time"},
 
     {.name          = "DURATION_UFIX32",
      .description   = "Duration",
@@ -1045,6 +1082,7 @@ FieldType fieldTypeList[] = {
      .v1Type        = "Integer"},
 
     {.name                = "DATE",
+     .sentinels           = SENTINEL_TOP_OF_RANGE,
      .description         = "Date",
      .encodingDescription = "The date, in days since 1 January 1970.",
      .physical            = &DATE,
@@ -1137,7 +1175,11 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_CURRENT,
      .baseFieldType = "FIX32"},
 
-    {.name = "CURRENT_UFIX16_CA", .description = "Electrical current", .resolution = 0.01, .physical = &ELECTRICAL_CURRENT, .baseFieldType = "UFIX16"},
+    {.name          = "CURRENT_UFIX16_CA",
+     .description   = "Electrical current",
+     .resolution    = 0.01,
+     .physical      = &ELECTRICAL_CURRENT,
+     .baseFieldType = "UFIX16"},
 
     {.name          = "VOLTAGE_FIX32_10MV",
      .description   = "Voltage",
@@ -1152,17 +1194,43 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_CHARGE,
      .baseFieldType = "FIX32"},
 
-    {.name = "ENERGY_UFIX32_CKWH", .description = "Electrical energy", .resolution = 0.01, .physical = &ELECTRICAL_ENERGY, .baseFieldType = "UFIX32"},
+    {.name          = "ENERGY_UFIX32_CKWH",
+     .description   = "Electrical energy",
+     .resolution    = 0.01,
+     .physical      = &ELECTRICAL_ENERGY,
+     .baseFieldType = "UFIX32"},
 
-    {.name = "POWER_UFIX16_CW", .description = "Electrical power", .resolution = 0.01, .physical = &ELECTRICAL_POWER, .baseFieldType = "UFIX16"},
+    {.name          = "POWER_UFIX16_CW",
+     .description   = "Electrical power",
+     .resolution    = 0.01,
+     .physical      = &ELECTRICAL_POWER,
+     .baseFieldType = "UFIX16"},
 
-    {.name = "POWER_UFIX32_CW", .description = "Electrical power", .resolution = 0.01, .physical = &ELECTRICAL_POWER, .baseFieldType = "UFIX32"},
+    {.name          = "POWER_UFIX32_CW",
+     .description   = "Electrical power",
+     .resolution    = 0.01,
+     .physical      = &ELECTRICAL_POWER,
+     .baseFieldType = "UFIX32"},
 
-    {.name = "POWER_FIX16", .description = "Electrical power", .resolution = 1, .physical = &ELECTRICAL_POWER, .baseFieldType = "FIX16"},
+    {.name          = "POWER_FIX16",
+     .description   = "Electrical power",
+     .resolution    = 1,
+     .physical      = &ELECTRICAL_POWER,
+     .baseFieldType = "FIX16"},
 
-    {.name = "DURATION_UFIX16_CHOUR", .description = "Time duration, 0.01 hour resolution", .resolution = 36, .size = 16, .hasSign = False, .baseFieldType = "DURATION"},
+    {.name          = "DURATION_UFIX16_CHOUR",
+     .description   = "Time duration, 0.01 hour resolution",
+     .resolution    = 36,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
 
-    {.name = "DURATION_UFIX16_CDAY", .description = "Time duration, 0.01 day resolution", .resolution = 864, .size = 16, .hasSign = False, .baseFieldType = "DURATION"},
+    {.name          = "DURATION_UFIX16_CDAY",
+     .description   = "Time duration, 0.01 day resolution",
+     .resolution    = 864,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
 
     {.name          = "PERCENTAGE_UFIX16_D",
      .description   = "Percentage, unsigned, 0.1% resolution",
@@ -1282,11 +1350,23 @@ FieldType fieldTypeList[] = {
      .physical      = &ELECTRICAL_REACTIVE_POWER,
      .baseFieldType = "UINT32"},
 
-    {.name = "PERCENTAGE_UINT8", .description = "Percentage, unsigned", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "UINT8"},
+    {.name          = "PERCENTAGE_UINT8",
+     .description   = "Percentage, unsigned",
+     .unit          = "%",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "UINT8"},
 
-    {.name = "PERCENTAGE_UINT8_HIGHRES", .description = "Percentage, unsigned", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "UINT8"},
+    {.name          = "PERCENTAGE_UINT8_HIGHRES",
+     .description   = "Percentage, unsigned",
+     .unit          = "%",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "UINT8"},
 
-    {.name = "PERCENTAGE_INT8", .description = "Percentage", .unit = "%", .physical = &DIMENSIONLESS_RATIO, .baseFieldType = "INT8"},
+    {.name          = "PERCENTAGE_INT8",
+     .description   = "Percentage",
+     .unit          = "%",
+     .physical      = &DIMENSIONLESS_RATIO,
+     .baseFieldType = "INT8"},
 
     {.name          = "PERCENTAGE_FIX16",
      .description   = "Percentage, high precision",
@@ -1570,10 +1650,15 @@ FieldType fieldTypeList[] = {
      .baseFieldType = "UNSIGNED_ALMANAC_PARAMETER"},
 
     // Stringy types
-    {.name                = "STRING_FIX",
-     .description         = "A fixed length string containing single byte codepoints.",
-     .encodingDescription = "The length of the string is determined by the PGN field definition. Trailing bytes have been observed "
-                            "as '@', ' ', 0x0 or 0xff.",
+    {.name        = "STRING_FIX",
+     .sentinels   = SENTINEL_EMPTY_STRING,
+     .description = "A fixed length string containing single byte codepoints.",
+     .encodingDescription
+     = "This always takes up as many bytes as defined in the field definition. "
+       "Three end-of-string characters are seen: 0xff (255), the standard NMEA 2000 \"Unknown\" value. '@', the standard "
+       "AIS \"Unknown\" value for strings. 0x00, the standard C end-of-string marker. "
+       "It is encouraged to stop the string at the first such character (and not make it part of the string). An empty "
+       "string can be considered to make the entire field \"Unknown\".",
      .comment
      = "It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values "
        "are supported.",
@@ -1581,6 +1666,7 @@ FieldType fieldTypeList[] = {
      .v1Type = "ASCII text"},
 
     {.name        = "STRING_LZ",
+     .sentinels   = SENTINEL_EMPTY_STRING,
      .description = "A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
      .encodingDescription = "The length of the string is determined by a starting length byte. It also contains a terminating "
                             "zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
@@ -1591,7 +1677,8 @@ FieldType fieldTypeList[] = {
      .pf           = fieldPrintStringLZ,
      .v1Type       = "ASCII string starting with length byte"},
 
-    {.name = "STRING_LAU",
+    {.name      = "STRING_LAU",
+     .sentinels = SENTINEL_EMPTY_STRING,
      .description
      = "A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
      .encodingDescription = "The length of the string is determined by a starting length byte. This count includes the length and "
@@ -1641,12 +1728,13 @@ FieldType fieldTypeList[] = {
      .pf           = fieldPrintVariable},
 
     {.name                = "FIELD_INDEX",
+     .sentinels           = SENTINEL_TOP_OF_RANGE,
      .description         = "Field Index",
      .resolution          = 1,
      .size                = 8,
      .hasSign             = False,
-     .rangeMin            = 1, // Minimum field index (.Order)
-     .rangeMax            = 253,
+     .rangeMin            = 0,   // Order - 1
+     .rangeMax            = 252, // 255 minus the 3 top-of-range sentinels (Unknown/OutOfRange/Reserved)
      .encodingDescription = "Index of the specified field in the PGN referenced.",
      .pf                  = fieldPrintNumber}};
 

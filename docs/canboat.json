@@ -1,6 +1,6 @@
 
   {
-    "SchemaVersion":"2.4.0",
+    "SchemaVersion":"2.5.0",
     "Comment":"See https://github.com/canboat/canboat for the full source code",
     "CreatorCode":"Canboat NMEA2000 Analyzer",
     "License":"Apache License Version 2.0",
@@ -241,68 +241,79 @@
         "Name":"NUMBER",
       "Description":"Number",
       "EncodingDescription":"Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.",
-      "URL":"https://en.wikipedia.org/wiki/Binary_number"
+      "URL":"https://en.wikipedia.org/wiki/Binary_number",
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"FLOAT",
       "Description":"32 bit IEEE-754 floating point number",
       "URL":"https://en.wikipedia.org/wiki/IEEE_754",
       "Bits":32,
-      "Signed":true
+      "Signed":true,
+      "Sentinels":"NaN"
       },
     {
         "Name":"DECIMAL",
       "Description":"An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)",
       "EncodingDescription":"Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"None"
       },
     {
         "Name":"LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning",
       "EncodingDescription":"Each lookup has a LookupEnumeration defining what the possible values mean",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. ",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"INDIRECT_LOOKUP",
       "Description":"Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field",
       "EncodingDescription":"Each lookup has a LookupIndirectEnumeration defining what the possible values mean",
       "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"BITLOOKUP",
       "Description":"Number value where each bit value encodes for a distinct meaning",
       "EncodingDescription":"Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.",
-      "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation."
+      "Comment":"For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.",
+      "Sentinels":"None"
       },
     {
         "Name":"DYNAMIC_FIELD_KEY",
       "Description":"Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table",
       "EncodingDescription":"Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean",
       "Comment":"These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"DYNAMIC_FIELD_LENGTH",
       "Description":"Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"DYNAMIC_FIELD_VALUE",
       "Description":"Variable field whose type and length is dynamic",
-      "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value."
+      "EncodingDescription":"The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.",
+      "Sentinels":"Variable"
       },
     {
         "Name":"TIME",
       "Description":"Time",
       "URL":"https://en.wikipedia.org/wiki/Time",
-      "Unit":"s"
+      "Unit":"s",
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"DURATION",
       "Description":"Duration",
-      "Unit":"s"
+      "Unit":"s",
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"DATE",
@@ -311,54 +322,63 @@
       "URL":"https://en.wikipedia.org/wiki/Calendar_date",
       "Bits":16,
       "Unit":"d",
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       },
     {
         "Name":"PGN",
       "Description":"Parameter Group Number",
-      "EncodingDescription":"A 24 bit number referring to a PGN"
+      "EncodingDescription":"A 24 bit number referring to a PGN",
+      "Sentinels":"None"
       },
     {
         "Name":"ISO_NAME",
       "Description":"ISO NAME field",
       "EncodingDescription":"A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.",
-      "Bits":64
+      "Bits":64,
+      "Sentinels":"None"
       },
     {
         "Name":"STRING_FIX",
       "Description":"A fixed length string containing single byte codepoints.",
-      "EncodingDescription":"The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.",
-      "Comment":"It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported."
+      "EncodingDescription":"This always takes up as many bytes as defined in the field definition. Three end-of-string characters are seen: 0xff (255), the standard NMEA 2000 \"Unknown\" value. '@', the standard AIS \"Unknown\" value for strings. 0x00, the standard C end-of-string marker. It is encouraged to stop the string at the first such character (and not make it part of the string). An empty string can be considered to make the entire field \"Unknown\".",
+      "Comment":"It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.",
+      "Sentinels":"EmptyString"
       },
     {
         "Name":"STRING_LZ",
       "Description":"A varying length string containing single byte codepoints encoded with a length byte and terminating zero.",
       "EncodingDescription":"The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.",
       "Comment":"This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.",
-      "VariableSize":true
+      "VariableSize":true,
+      "Sentinels":"EmptyString"
       },
     {
         "Name":"STRING_LAU",
       "Description":"A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
       "EncodingDescription":"The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
-      "VariableSize":true
+      "VariableSize":true,
+      "Sentinels":"EmptyString"
       },
     {
         "Name":"BINARY",
       "Description":"Binary field",
-      "EncodingDescription":"Unspecified content consisting of any number of bits."
+      "EncodingDescription":"Unspecified content consisting of any number of bits.",
+      "Sentinels":"None"
       },
     {
         "Name":"RESERVED",
       "Description":"Reserved field",
       "EncodingDescription":"All reserved bits shall be 1",
-      "Comment":"NMEA reserved for future expansion and/or to align next data on byte boundary"
+      "Comment":"NMEA reserved for future expansion and/or to align next data on byte boundary",
+      "Sentinels":"None"
       },
     {
         "Name":"SPARE",
       "Description":"Spare field",
       "EncodingDescription":"All spare bits shall be 0",
-      "Comment":"This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard."
+      "Comment":"This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard.",
+      "Sentinels":"None"
       },
     {
         "Name":"MMSI",
@@ -366,20 +386,23 @@
       "EncodingDescription":"The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.",
       "URL":"https://navcen.uscg.gov/maritime-mobile-service-identity",
       "Bits":32,
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"None"
       },
     {
         "Name":"VARIABLE",
       "Description":"Variable",
       "EncodingDescription":"The definition of the field is that of the reference PGN and reference field, this is totally variable.",
-      "VariableSize":true
+      "VariableSize":true,
+      "Sentinels":"None"
       },
     {
         "Name":"FIELD_INDEX",
       "Description":"Field Index",
       "EncodingDescription":"Index of the specified field in the PGN referenced.",
       "Bits":8,
-      "Signed":false
+      "Signed":false,
+      "Sentinels":"TopOfRange"
       }
     ],
     "MissingEnumerations":[
@@ -5643,6 +5666,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ISO_CONTROL"
           },
@@ -6214,6 +6240,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -6257,6 +6286,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"INDIRECT_LOOKUP",
             "LookupIndirectEnumeration":"DEVICE_FUNCTION",
             "LookupIndirectEnumerationFieldOrder":7
@@ -6282,6 +6314,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":125,
+            "UnknownValue":127,
+            "OutOfRangeValue":126,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DEVICE_CLASS"
           },
@@ -6312,6 +6346,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -6356,6 +6391,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -6380,6 +6418,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -6705,6 +6744,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"VICTRON_VREG",
             "PartOfPrimaryKey":true
@@ -6906,6 +6948,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -6930,6 +6975,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -7365,6 +7411,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -7576,6 +7623,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -7788,6 +7836,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -8000,6 +8049,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -8262,6 +8312,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -8474,6 +8525,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -8686,6 +8738,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -8898,6 +8951,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POWER_FACTOR"
           },
@@ -9086,6 +9140,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -9129,6 +9186,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"INDIRECT_LOOKUP",
             "LookupIndirectEnumeration":"DEVICE_FUNCTION",
             "LookupIndirectEnumerationFieldOrder":7
@@ -9154,6 +9214,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":125,
+            "UnknownValue":127,
+            "OutOfRangeValue":126,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DEVICE_CLASS"
           },
@@ -9184,6 +9246,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -9239,6 +9302,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -9263,6 +9329,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -10784,6 +10851,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BOOT_STATE"
           },
@@ -10863,6 +10931,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TEMPERATURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -11278,6 +11349,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TANK_TYPE"
           },
@@ -11390,6 +11463,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ACCESS_LEVEL"
           },
@@ -11585,6 +11659,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TANK_TYPE"
           },
@@ -11697,6 +11773,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_ALARM_STATUS"
           },
@@ -11711,6 +11790,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_ALARM_ID"
           },
@@ -11725,6 +11807,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_ALARM_GROUP"
           },
@@ -12911,6 +12996,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CZONE_ALARM_TYPE"
           },
@@ -14032,6 +14120,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
@@ -14062,6 +14153,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AP_STATUS"
           },
@@ -14141,6 +14235,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
@@ -14238,6 +14335,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
@@ -14346,6 +14446,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
@@ -14443,6 +14546,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DEVICE_MODEL"
           },
@@ -15966,6 +16072,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AUTOPILOT_MODE_CLASS"
           },
@@ -15980,6 +16089,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AUTOPILOT_MODE"
           },
@@ -16118,6 +16230,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AP_MODE"
           },
@@ -16907,6 +17022,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_ALARM_ID"
           },
@@ -16921,6 +17039,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_ALARM_GROUP"
           },
@@ -17283,6 +17404,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_PILOT_MODE_16"
           },
@@ -17552,6 +17676,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_DEPTH_QUALITY_FACTOR"
           },
@@ -18408,6 +18534,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18478,6 +18607,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PRIORITY"
           },
@@ -18520,6 +18651,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18590,6 +18724,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PGN_ERROR_CODE"
           },
@@ -18604,6 +18740,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TRANSMISSION_INTERVAL"
           },
@@ -18634,6 +18772,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PARAMETER_FIELD"
           }
@@ -18702,6 +18842,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -18726,6 +18869,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -18781,6 +18925,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18800,6 +18947,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           }
         ]
@@ -18865,6 +19015,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -18889,6 +19042,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -18944,6 +19098,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -18963,6 +19120,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -19035,6 +19195,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -19059,6 +19222,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -19114,6 +19278,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -19133,6 +19300,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -19205,6 +19375,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -19229,6 +19402,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -19284,6 +19458,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -19303,6 +19480,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"FIELD_INDEX"
           },
           {
@@ -19338,6 +19518,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PGN_LIST_FUNCTION"
           },
@@ -19911,6 +20094,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -19935,6 +20121,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -20075,6 +20262,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_PILOT_MODE"
           },
@@ -20224,6 +20414,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_PILOT_HULL_TYPE"
           },
@@ -20347,6 +20540,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -20361,6 +20557,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -20501,6 +20700,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_DEVICE_ID"
           }
@@ -20604,6 +20806,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_NETWORK_GROUP"
           },
@@ -20618,6 +20823,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_SHARED"
           },
@@ -20764,6 +20972,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_NETWORK_GROUP"
           },
@@ -20803,6 +21014,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_DISPLAY_COLOR"
           },
@@ -20949,6 +21163,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SEATALK_KEYSTROKE"
           },
@@ -21078,6 +21295,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_COMMAND"
           }
@@ -21180,6 +21400,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SIRIUS_COMMAND"
           },
@@ -21442,6 +21665,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MUTE_COMMAND"
           }
@@ -21768,6 +21994,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_POWER_STATE"
           }
@@ -21985,6 +22214,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_CALIBRATE_FUNCTION"
           },
@@ -21999,6 +22231,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_CALIBRATE_STATUS"
           },
@@ -22266,6 +22501,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -22362,6 +22598,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -22687,6 +22924,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_TEMPERATURE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -23303,6 +23541,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_TRANSMISSION_INTERVAL"
           },
@@ -23455,6 +23694,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARETRON_PRODUCT_CODE"
           },
@@ -23501,6 +23743,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARETRON_STATUS_DEVIATION"
           }
@@ -23689,6 +23934,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARETRON_PRODUCT_CODE"
           },
@@ -23719,6 +23967,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARETRON_OPCODE"
           },
@@ -24240,6 +24491,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GARMIN_BACKLIGHT_LEVEL"
           }
@@ -24405,6 +24659,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GARMIN_BACKLIGHT_LEVEL"
           }
@@ -24570,6 +24827,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GARMIN_COLOR"
           }
@@ -24622,6 +24882,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -24636,6 +24898,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -24865,6 +25129,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TRIGGER_CONDITION"
           },
@@ -24879,6 +25145,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_THRESHOLD_STATUS"
           },
@@ -24909,6 +25177,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_STATE"
           }
@@ -24936,6 +25207,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -24950,6 +25223,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -25122,6 +25397,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -25136,6 +25413,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -25259,6 +25538,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_LANGUAGE_ID"
           },
@@ -25302,6 +25584,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -25316,6 +25600,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -25541,6 +25827,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -25555,6 +25843,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -25772,6 +26062,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -25786,6 +26078,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -26002,6 +26296,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SYSTEM_TIME",
             "PartOfPrimaryKey":true
@@ -26113,6 +26409,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CONTROLLER_STATE"
           },
@@ -26127,6 +26424,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CONTROLLER_STATE"
           },
@@ -26141,6 +26439,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"EQUIPMENT_STATUS"
           },
@@ -26248,6 +26547,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CERTIFICATION_LEVEL"
           },
@@ -26363,6 +26665,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MOB_STATUS"
           },
@@ -26405,6 +26708,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MOB_POSITION_SOURCE"
           },
@@ -26501,6 +26805,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -26575,6 +26880,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"LOW_BATTERY"
           },
@@ -26612,6 +26918,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -26626,6 +26933,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -26640,6 +26948,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -26654,6 +26963,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -26668,6 +26978,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"STEERING_MODE"
           },
@@ -26682,6 +26993,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TURN_MODE"
           },
@@ -26696,6 +27008,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -26720,6 +27033,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_RUDDER"
           },
@@ -26926,6 +27240,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_RUDDER"
           },
@@ -27079,6 +27394,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -27340,6 +27656,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MAGNETIC_VARIATION",
             "PartOfPrimaryKey":true
@@ -27424,6 +27742,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -27516,6 +27837,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -28092,6 +28416,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -28107,6 +28434,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GEAR_STATUS"
           },
@@ -28786,6 +29114,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -28886,6 +29217,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE",
             "PartOfPrimaryKey":true
@@ -29108,6 +29442,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29122,6 +29457,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29136,6 +29472,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29150,6 +29487,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29164,6 +29502,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29178,6 +29517,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29192,6 +29532,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29206,6 +29547,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29220,6 +29562,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29234,6 +29577,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29248,6 +29592,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29262,6 +29607,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29276,6 +29622,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29290,6 +29637,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29304,6 +29652,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29318,6 +29667,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29332,6 +29682,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29346,6 +29697,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29360,6 +29712,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29374,6 +29727,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29388,6 +29742,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29402,6 +29757,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29416,6 +29772,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29430,6 +29787,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29444,6 +29802,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29458,6 +29817,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29472,6 +29832,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -29486,6 +29847,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           }
@@ -29973,6 +30335,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AC_LINE"
           },
@@ -30186,6 +30549,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"LINE"
           },
@@ -30200,6 +30564,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WAVEFORM"
           },
@@ -30379,6 +30744,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TANK_TYPE"
           },
@@ -30485,6 +30852,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DC_SOURCE",
             "PartOfPrimaryKey":true
@@ -30638,6 +31008,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CHARGER_STATE"
           },
@@ -30652,6 +31024,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CHARGER_MODE"
           },
@@ -30666,6 +31040,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -30680,6 +31055,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -30888,6 +31264,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INVERTER_STATE"
           },
@@ -30902,6 +31280,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -30973,6 +31352,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -31015,6 +31395,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CHARGING_ALGORITHM"
           },
@@ -31029,6 +31411,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CHARGER_MODE"
           },
@@ -31044,6 +31428,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DEVICE_TEMP_STATE"
           },
@@ -31058,6 +31444,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -31072,6 +31459,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -31168,6 +31556,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -31182,6 +31571,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INVERTER_MODE"
           },
@@ -31196,6 +31587,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -31295,6 +31687,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AGS_MODE"
           },
@@ -31349,6 +31743,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BATTERY_TYPE"
           },
@@ -31363,6 +31759,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -31387,6 +31784,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BATTERY_VOLTAGE"
           },
@@ -31401,6 +31800,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BATTERY_CHEMISTRY"
           },
@@ -31532,6 +31933,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AGS_OPERATING_STATE"
           },
@@ -31546,6 +31949,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AGS_GENERATING_STATE"
           },
@@ -31560,6 +31965,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AGS_ON_REASON"
           },
@@ -31574,6 +31982,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AGS_OFF_REASON"
           }
@@ -32173,6 +32584,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"CONVERTER_STATE"
           },
@@ -32187,6 +32601,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GOOD_WARNING_ERROR"
           },
@@ -32201,6 +32616,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GOOD_WARNING_ERROR"
           },
@@ -32215,6 +32631,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GOOD_WARNING_ERROR"
           },
@@ -32229,6 +32646,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GOOD_WARNING_ERROR"
           },
@@ -32778,6 +33196,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"THRUSTER_DIRECTION_CONTROL"
           },
@@ -32792,6 +33212,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -32806,6 +33227,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"THRUSTER_RETRACT_CONTROL"
           },
@@ -32916,6 +33338,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"THRUSTER_MOTOR_TYPE"
           },
@@ -33171,6 +33595,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WATER_REFERENCE"
           },
@@ -33473,6 +33900,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -33631,6 +34059,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -34378,6 +34807,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WINDLASS_DIRECTION"
           },
@@ -34392,6 +34822,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -34406,6 +34837,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SPEED_TYPE"
           },
@@ -34441,6 +34873,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -34455,6 +34888,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -34469,6 +34903,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -34483,6 +34918,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -34585,6 +35021,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WINDLASS_DIRECTION"
           },
@@ -34599,6 +35036,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WINDLASS_MOTION"
           },
@@ -34613,6 +35051,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RODE_TYPE"
           },
@@ -34673,6 +35112,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DOCKING_STATUS"
           },
@@ -35006,6 +35446,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -35208,6 +35649,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS_METHOD"
           },
@@ -35222,6 +35665,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -35396,6 +35840,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS"
           },
@@ -35410,6 +35856,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS_METHOD"
           },
@@ -35535,6 +35983,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS"
           },
@@ -35664,6 +36114,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -35832,6 +36284,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -35883,6 +36337,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":14,
+            "UnknownValue":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"NAV_STATUS"
           },
@@ -35971,6 +36426,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -36138,6 +36595,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -36316,6 +36775,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -36502,6 +36963,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SHIP_TYPE"
           },
@@ -36544,6 +37008,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -36677,6 +37143,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -36715,6 +37183,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -36973,6 +37443,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -37008,6 +37480,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -37333,6 +37807,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -37357,6 +37833,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -37446,6 +37923,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -37460,6 +37938,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -37474,6 +37953,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -37488,6 +37968,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BEARING_MODE"
           },
@@ -37740,6 +38221,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION"
           },
@@ -37754,6 +38236,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -37877,6 +38360,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -37995,6 +38479,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARK_TYPE"
           },
@@ -38065,6 +38551,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -38079,6 +38566,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BEARING_MODE"
           },
@@ -38139,6 +38627,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARK_TYPE"
           },
@@ -38153,6 +38643,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARK_TYPE"
           },
@@ -38284,6 +38776,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNSS_MODE"
           },
@@ -38298,6 +38791,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DGNSS_MODE"
           },
@@ -38312,6 +38806,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -38362,6 +38857,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -38415,6 +38911,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNSS_MODE"
           },
@@ -38429,6 +38926,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNSS_MODE"
           },
@@ -38536,6 +39034,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RANGE_RESIDUAL_MODE"
           },
@@ -38664,6 +39163,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SATELLITE_STATUS"
           },
@@ -39577,6 +40078,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS"
           },
@@ -39609,6 +40112,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"STATION_HEALTH"
           },
@@ -39766,6 +40271,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SERIAL_BIT_RATE"
           },
@@ -39780,6 +40287,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SERIAL_DETECTION_MODE"
           },
@@ -39794,6 +40302,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIFFERENTIAL_SOURCE"
           },
@@ -39808,6 +40318,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIFFERENTIAL_MODE"
           },
@@ -39932,6 +40444,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"GNS"
           },
@@ -39962,6 +40476,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SERIAL_BIT_RATE"
           },
@@ -39976,6 +40492,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SERIAL_DETECTION_MODE"
           },
@@ -39990,6 +40507,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -40014,6 +40532,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIFFERENTIAL_SOURCE"
           },
@@ -40321,6 +40841,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -40373,6 +40895,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -40494,6 +41018,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -40639,6 +41165,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -40681,6 +41209,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           }
@@ -40709,6 +41239,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -40785,6 +41317,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SHIP_TYPE"
           },
@@ -40948,6 +41483,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -40986,6 +41523,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41024,6 +41563,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41076,6 +41617,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41194,6 +41737,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41246,6 +41791,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41321,6 +41868,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41373,6 +41922,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41440,6 +41991,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41608,6 +42161,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41762,6 +42317,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TELEPHONE_MODE"
           },
@@ -41810,6 +42368,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41862,6 +42422,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -41916,6 +42478,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -41968,6 +42532,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42068,6 +42634,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42120,6 +42688,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42169,6 +42739,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42221,6 +42793,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42269,6 +42843,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42309,6 +42885,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42383,6 +42961,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42465,6 +43045,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42517,6 +43099,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42675,6 +43259,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42727,6 +43313,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42835,6 +43423,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -42887,6 +43477,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -42967,6 +43559,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TX_RX_MODE"
           },
@@ -43115,6 +43709,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ZONE_SIZE"
           },
@@ -43165,6 +43760,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -43217,6 +43814,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TX_RX_MODE"
           },
@@ -43313,6 +43912,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"STATION_TYPE"
           },
@@ -43337,6 +43938,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SHIP_TYPE"
           },
@@ -43371,6 +43975,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"REPORTING_INTERVAL"
           },
@@ -43441,6 +44047,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_FORMAT"
           },
@@ -43485,6 +44094,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_NATURE"
           },
@@ -43499,6 +44111,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_SECOND_TELECOMMAND"
           },
@@ -43611,6 +44226,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -43691,6 +44307,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_EXPANSION_DATA"
           },
@@ -43730,6 +44349,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_FORMAT"
           },
@@ -43744,6 +44366,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_CATEGORY"
           },
@@ -43772,6 +44397,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_FIRST_TELECOMMAND"
           },
@@ -43786,6 +44414,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_SECOND_TELECOMMAND"
           },
@@ -43898,6 +44529,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -43978,6 +44610,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DSC_EXPANSION_DATA"
           },
@@ -44013,6 +44648,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -44064,6 +44701,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -44118,6 +44757,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -44160,6 +44801,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SHIP_TYPE"
           },
@@ -44298,6 +44942,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
           },
@@ -44312,6 +44958,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -44382,6 +45030,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -44461,6 +45111,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -44548,6 +45200,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -44627,6 +45281,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -44765,6 +45421,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -44871,6 +45529,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":14,
+            "UnknownValue":15,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"NAV_STATUS"
           },
@@ -44944,6 +45603,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -44998,6 +45659,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -45087,6 +45750,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -45172,6 +45837,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -45308,6 +45975,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -45392,6 +46061,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_MESSAGE_ID"
           },
@@ -45444,6 +46115,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIS_TRANSCEIVER"
           },
@@ -45740,6 +46413,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -45983,6 +46658,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -46519,6 +47196,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_POSITION_RESOLUTION"
           },
@@ -46694,6 +47373,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_IDENTIFICATION_METHOD"
           },
@@ -46706,6 +47386,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_ROUTE_STATUS"
           }
@@ -46840,6 +47522,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_NAVIGATION_METHOD"
           },
@@ -46852,6 +47535,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_IDENTIFICATION_METHOD"
           },
@@ -46864,6 +47548,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_ROUTE_STATUS"
           },
@@ -47298,6 +47984,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WP_NAVIGATION_METHOD"
           },
@@ -47980,6 +48667,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WIND_REFERENCE",
             "PartOfPrimaryKey":true
@@ -48129,6 +48817,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TEMPERATURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -48144,6 +48834,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"HUMIDITY_SOURCE"
           },
@@ -48258,6 +48949,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TEMPERATURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -48365,6 +49059,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"HUMIDITY_SOURCE",
             "PartOfPrimaryKey":true
@@ -48472,6 +49169,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PRESSURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -48561,6 +49261,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"PRESSURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -48651,6 +49354,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TEMPERATURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -48715,6 +49421,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -48729,6 +49437,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TIDE"
           },
@@ -48894,6 +49603,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -49054,6 +49765,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -49068,6 +49781,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FLOOD_STATE"
           },
@@ -49269,6 +49983,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -49401,6 +50117,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WIND_REFERENCE"
           },
@@ -49511,6 +50228,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -49643,6 +50362,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WIND_REFERENCE"
           },
@@ -49881,6 +50601,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -50263,6 +50984,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"LIGHTING_COMMAND"
           },
@@ -50681,6 +51403,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -51124,6 +51847,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -51469,6 +52193,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":61,
+            "UnknownValue":63,
+            "OutOfRangeValue":62,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"WATERMAKER_STATE"
           },
@@ -51483,6 +52209,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51497,6 +52224,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51511,6 +52239,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51525,6 +52254,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51539,6 +52269,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51553,6 +52284,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51567,6 +52299,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -51581,6 +52314,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51595,6 +52329,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51609,6 +52344,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51623,6 +52359,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51637,6 +52374,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OK_WARNING"
           },
@@ -51837,6 +52575,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -51917,6 +52658,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -51931,6 +52675,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -51979,6 +52726,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_PLAY_STATUS"
           },
@@ -52029,6 +52779,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_REPEAT_STATUS"
           },
@@ -52043,6 +52795,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SHUFFLE_STATUS"
           },
@@ -52091,6 +52845,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_LIKE_STATUS"
           },
@@ -52205,6 +52962,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -52253,6 +53013,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_TYPE"
           },
@@ -52346,6 +53109,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -52358,6 +53124,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -52370,6 +53137,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -52430,6 +53198,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -52461,6 +53232,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_TYPE"
           },
@@ -52475,6 +53249,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -52557,6 +53334,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ID_TYPE"
           },
@@ -52617,6 +53397,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -52665,6 +53448,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_GROUP"
           },
@@ -52686,6 +53472,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_GROUP"
           },
@@ -52705,6 +53494,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_GROUP"
           },
@@ -52811,6 +53603,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -52871,6 +53666,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -52883,6 +53679,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -52989,6 +53786,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -53026,6 +53826,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_SOURCE"
           },
@@ -53201,6 +54004,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"RESIDUAL_MODE"
           },
@@ -53215,6 +54020,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"DIRECTION_REFERENCE"
           },
@@ -53497,6 +54303,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -53511,6 +54318,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_DEFAULT_SETTINGS"
           },
@@ -53525,6 +54333,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_REGIONS"
           },
@@ -53555,6 +54365,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"VIDEO_PROTOCOLS"
           },
@@ -53592,6 +54404,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -53606,6 +54419,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_DEFAULT_SETTINGS"
           },
@@ -53620,6 +54434,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_REGIONS"
           },
@@ -53717,6 +54533,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -53753,6 +54572,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -53786,6 +54608,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_VOLUME_CONTROL"
           },
@@ -53800,6 +54623,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -53824,6 +54648,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_CHANNEL"
           },
@@ -53913,6 +54740,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_EQ"
           },
@@ -54011,6 +54841,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BLUETOOTH_STATUS"
           },
@@ -54079,6 +54912,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BLUETOOTH_SOURCE_STATUS"
           },
@@ -54093,6 +54928,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -54107,6 +54943,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -54144,6 +54981,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_ZONE"
           },
@@ -54284,6 +55124,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_EQ"
           },
@@ -54298,6 +55141,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_FILTER"
           },
@@ -54348,6 +55194,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENTERTAINMENT_CHANNEL"
           }
@@ -54377,6 +55226,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MANUFACTURER_CODE"
           },
@@ -54401,6 +55253,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"INDUSTRY_CODE"
           },
@@ -54508,6 +55361,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -54637,6 +55493,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -54651,6 +55510,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_TUNING"
           },
@@ -54814,6 +55676,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -54927,6 +55792,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -54941,6 +55809,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_SOURCE"
           }
@@ -55038,6 +55909,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55176,6 +56050,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55190,6 +56067,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MUTE_COMMAND"
           }
@@ -55287,6 +56167,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55301,6 +56184,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_TUNING"
           },
@@ -55464,6 +56350,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55478,6 +56367,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_PLAYLIST"
           },
@@ -55659,6 +56551,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55781,6 +56676,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -55903,6 +56801,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56025,6 +56926,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56195,6 +57099,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56308,6 +57215,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56437,6 +57347,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56566,6 +57479,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           }
@@ -56663,6 +57579,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -56778,6 +57697,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SONICHUB_CONTROL"
           },
@@ -57890,6 +58812,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AUTOMATIC_MANUAL"
           },
@@ -57904,6 +58829,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SBAS_SV"
           },
@@ -59007,6 +59935,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -59021,6 +59951,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -59243,6 +60175,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -60307,6 +61240,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SOURCE_TYPE"
           },
@@ -60524,6 +61460,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_PLAY_STATUS"
           },
@@ -61652,6 +62591,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           },
@@ -61803,6 +62745,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           }
@@ -61890,6 +62835,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           }
@@ -61993,6 +62941,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           }
@@ -62188,6 +63139,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_RADIO_SOURCE",
             "PartOfPrimaryKey":true
@@ -62589,6 +63543,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"YES_NO"
           }
@@ -62945,6 +63902,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967292,
+            "UnknownValue":4294967295,
+            "OutOfRangeValue":4294967294,
+            "ReservedValue":4294967293,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_REPEAT_STATUS"
           }
@@ -63032,6 +63992,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967292,
+            "UnknownValue":4294967295,
+            "OutOfRangeValue":4294967294,
+            "ReservedValue":4294967293,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SETTING"
           },
@@ -63154,6 +64117,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4294967292,
+            "UnknownValue":4294967295,
+            "OutOfRangeValue":4294967294,
+            "ReservedValue":4294967293,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SETTING"
           },
@@ -63257,6 +64223,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_MUTE_COMMAND"
           }
@@ -64364,6 +65333,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_POWER_STATE"
           }
@@ -64512,6 +65484,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"FUSION_SIRIUS_TUNING_MODE"
           }
@@ -65381,6 +66356,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -65395,6 +66372,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -65972,6 +66951,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -65986,6 +66967,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -66109,6 +67092,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_LANGUAGE_ID"
           },
@@ -67460,6 +68446,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"NAVICO_DATA_TYPE"
           },
@@ -67699,6 +68688,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -67713,6 +68704,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_CATEGORY"
           },
@@ -68158,6 +69151,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TEMPERATURE_SOURCE",
             "PartOfPrimaryKey":true
@@ -68270,6 +69266,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4092,
+            "UnknownValue":4095,
+            "OutOfRangeValue":4094,
+            "ReservedValue":4093,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE",
             "PartOfPrimaryKey":true
@@ -68506,6 +69505,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4092,
+            "UnknownValue":4095,
+            "OutOfRangeValue":4094,
+            "ReservedValue":4093,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"MERCURY_KEY_VALUE",
             "PartOfPrimaryKey":true
@@ -68787,6 +69789,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_ALARM_ID"
           },
@@ -68801,6 +69806,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_STATE"
           },
@@ -68828,6 +69834,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ALERT_TYPE"
           },
@@ -69140,6 +70148,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MERCURY_COMMAND_OPCODE"
           },
@@ -70715,6 +71726,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":4092,
+            "UnknownValue":4095,
+            "OutOfRangeValue":4094,
+            "ReservedValue":4093,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"BANDG_KEY_VALUE",
             "PartOfPrimaryKey":true
@@ -70756,6 +71770,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":254,
+            "UnknownValue":255,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"BANDG_DECIMALS"
           },
@@ -71541,6 +72556,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"TANK_TYPE"
           },
@@ -71793,6 +72810,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72105,6 +73123,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72559,6 +73578,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DATA_SOURCE"
           },
@@ -72802,6 +73824,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72816,6 +73839,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72830,6 +73854,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72844,6 +73869,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72858,6 +73884,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72872,6 +73899,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72886,6 +73914,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72900,6 +73929,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           },
@@ -72914,6 +73944,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":2,
+            "UnknownValue":3,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"OFF_ON"
           }
@@ -73398,6 +74429,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SHIP_TYPE"
           },
@@ -74256,6 +75290,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -74288,6 +75325,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":16777212,
+            "UnknownValue":16777215,
+            "OutOfRangeValue":16777214,
+            "ReservedValue":16777213,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE",
             "PartOfPrimaryKey":true
@@ -74303,6 +75343,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_KEY_OPERATION"
           },
@@ -74419,6 +75462,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -74451,6 +75497,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":16777212,
+            "UnknownValue":16777215,
+            "OutOfRangeValue":16777214,
+            "ReservedValue":16777213,
             "FieldType":"DYNAMIC_FIELD_KEY",
             "LookupFieldTypeEnumeration":"SIMNET_KEY_VALUE",
             "PartOfPrimaryKey":true
@@ -74466,6 +75515,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_KEY_OPERATION"
           },
@@ -75140,6 +76192,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -75291,6 +76346,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -75442,6 +76500,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -75593,6 +76654,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -75744,6 +76808,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -75895,6 +76962,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76068,6 +77138,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76219,6 +77292,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76276,6 +77352,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DIRECTION"
           },
@@ -76404,6 +77483,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76435,6 +77517,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_TIMER_EVENT"
           },
@@ -76586,6 +77671,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76617,6 +77705,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_ALARM_COMMAND"
           },
@@ -76641,6 +77732,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_ALARM_ID"
           },
@@ -76773,6 +77867,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -76804,6 +77901,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AP_EVENTS"
           },
@@ -76974,6 +78074,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -77143,6 +78246,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -77200,6 +78306,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DIRECTION"
           },
@@ -77328,6 +78437,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
           },
@@ -77359,6 +78471,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_AP_EVENTS"
           },
@@ -77538,6 +78653,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"SIMNET_ALARM_ID"
           },
@@ -79789,6 +80907,9 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"AIRMAR_POST_ID"
           },

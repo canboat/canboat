@@ -306,12 +306,21 @@ Essential facts before editing:
   ≥8 bit, 2 for 4-7, 1 for 2-3, 0 for 1) and drives both the published
   `RangeMax`/`<UnknownValue>`/`<OutOfRangeValue>`/`<ReservedValue>` and the
   decoder's sentinel stripping — keep them in lockstep; don't reintroduce a
-  separate per-decoder count. When a field genuinely uses **all** its values
-  (e.g. a 3-bit instance where 7 is valid), declare **`SPECIAL_VALUES(0, "Name")`**
-  so it reserves none; `SPECIAL_VALUES(n, …)` sets any explicit count. The "all
-  values valid" idiom is also recognised automatically when a field's `.rangeMax`
-  reaches the full unsigned width. (Source for the three-value convention:
-  Cassidy, *NMEA 2000 Explained*.)
+  separate per-decoder count. The resolved count is `reservedCount = clamp(rawMax −
+  rawRangeMax, 0, byWidth)`: it follows a pulled-up `.rangeMax`, so the "all values
+  valid" idiom (`.rangeMax` reaches the full unsigned width) reserves none, and a
+  **LOOKUP** whose enumeration names value(s) in the sentinel region keeps only the
+  sentinels above the named values. Declare **`SPECIAL_VALUES(0, "Name")`** to force
+  none, `SPECIAL_VALUES(n, …)` to force an explicit count. (Source for the
+  three-value convention: Cassidy, *NMEA 2000 Explained*.)
+- **`.sentinels` per field type:** every FieldType declares a `Sentinels` enum
+  (`fieldtype.h`) emitted as `<Sentinels>` in the FieldTypes section: `TopOfRange`
+  (numbers and lookups — the per-field `UnknownValue`/… above), `EmptyString`
+  (STRING_*), `NaN` (FLOAT), `Variable` (DYNAMIC_FIELD_VALUE), or `None`
+  (identifiers like PGN/MMSI, filler like RESERVED, structured like ISO_NAME). This
+  is the single source of truth for which fields emit top-of-range markers — the
+  per-field emission keys off `.sentinels == TopOfRange`, so don't add a separate
+  exclusion list.
 - **`Id` is the frozen contract; `Name` is the display label.** Each field emits
   `<Id>` (the camelCase `.camelName`, the key downstream decoders use as the
   property name) and `<Name>` (the human label, `.name`). `Id` is normally

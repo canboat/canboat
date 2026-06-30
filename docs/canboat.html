@@ -21357,6 +21357,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     <h3 id="ft-NUMBER">NUMBER - Number</h3><p/><p>
             Encoding:
             Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Binary_number">https://en.wikipedia.org/wiki/Binary_number</a></p><h3 id="ft-FLOAT">FLOAT - 32 bit IEEE-754 floating point number</h3><p/><p>32 bits
             
@@ -21364,22 +21372,89 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               
             number
             </p><p>
+          Unavailable value:
+          
+              the IEEE-754 Not-a-Number value means the field is unavailable.
+            </p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/IEEE_754">https://en.wikipedia.org/wiki/IEEE_754</a></p><h3 id="ft-DECIMAL">DECIMAL - An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)</h3><p/><p>
             Encoding:
-            Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).</p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. </p><p>
+            Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. </p><p>
             Encoding:
-            Each lookup has a LookupEnumeration defining what the possible values mean</p><h3 id="ft-INDIRECT_LOOKUP">INDIRECT_LOOKUP - Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
+            Each lookup has a LookupEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-INDIRECT_LOOKUP">INDIRECT_LOOKUP - Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
             Encoding:
-            Each lookup has a LookupIndirectEnumeration defining what the possible values mean</p><h3 id="ft-BITLOOKUP">BITLOOKUP - Number value where each bit value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
+            Each lookup has a LookupIndirectEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-BITLOOKUP">BITLOOKUP - Number value where each bit value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
             Encoding:
-            Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</p><h3 id="ft-DYNAMIC_FIELD_KEY">DYNAMIC_FIELD_KEY - Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table</h3><p>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</p><p>
+            Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-DYNAMIC_FIELD_KEY">DYNAMIC_FIELD_KEY - Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table</h3><p>These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes</p><p>
             Encoding:
-            Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><h3 id="ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH - Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field</h3><p/><h3 id="ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE - Variable field whose type and length is dynamic</h3><p/><p>
+            Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH - Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE - Variable field whose type and length is dynamic</h3><p/><p>
             Encoding:
-            The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.</p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
+            The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.</p><p>
+          Unavailable value:
+          
+              depends on the data type that is resolved at run time through the companion
+              DYNAMIC_FIELD_KEY field.
+            </p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
           For more information see:
-          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DURATION">DURATION - Duration</h3><p/><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DURATION">DURATION - Duration</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
             
                 unsigned
               
@@ -21387,29 +21462,77 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><p>
             Encoding:
             The date, in days since 1 January 1970.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
           For more information see:
           <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="ft-PGN">PGN - Parameter Group Number</h3><p/><p>
             Encoding:
-            A 24 bit number referring to a PGN</p><h3 id="ft-ISO_NAME">ISO_NAME - ISO NAME field</h3><p/><p>64 bits
+            A 24 bit number referring to a PGN</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-ISO_NAME">ISO_NAME - ISO NAME field</h3><p/><p>64 bits
             
                 unsigned
               
             number
             </p><p>
             Encoding:
-            A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.</p><h3 id="ft-STRING_FIX">STRING_FIX - A fixed length string containing single byte codepoints.</h3><p>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</p><p>
+            A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-STRING_FIX">STRING_FIX - A fixed length string containing single byte codepoints.</h3><p>It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.</p><p>
             Encoding:
-            The length of the string is determined by the PGN field definition. Trailing bytes have been observed as '@', ' ', 0x0 or 0xff.</p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.</p><p>
+            This always takes up as many bytes as defined in the field definition. Three end-of-string characters are seen: 0xff (255), the standard NMEA 2000 "Unknown" value. '@', the standard AIS "Unknown" value for strings. 0x00, the standard C end-of-string marker. It is encouraged to stop the string at the first such character (and not make it part of the string). An empty string can be considered to make the entire field "Unknown".</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.</p><p>
             Encoding:
-            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.</p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p/><p>
+            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.</h3><p/><p>
             Encoding:
-            The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
+            The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
             Encoding:
-            Unspecified content consisting of any number of bits.</p><h3 id="ft-RESERVED">RESERVED - Reserved field</h3><p>NMEA reserved for future expansion and/or to align next data on byte boundary</p><p>
+            Unspecified content consisting of any number of bits.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-RESERVED">RESERVED - Reserved field</h3><p>NMEA reserved for future expansion and/or to align next data on byte boundary</p><p>
             Encoding:
-            All reserved bits shall be 1</p><h3 id="ft-SPARE">SPARE - Spare field</h3><p>This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard.</p><p>
+            All reserved bits shall be 1</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-SPARE">SPARE - Spare field</h3><p>This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard.</p><p>
             Encoding:
-            All spare bits shall be 0</p><h3 id="ft-MMSI">MMSI - MMSI</h3><p/><p>32 bits
+            All spare bits shall be 0</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-MMSI">MMSI - MMSI</h3><p/><p>32 bits
             
                 unsigned
               
@@ -21417,17 +21540,35 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             </p><p>
             Encoding:
             The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><p>
           For more information see:
           <a href="https://navcen.uscg.gov/maritime-mobile-service-identity">https://navcen.uscg.gov/maritime-mobile-service-identity</a></p><h3 id="ft-VARIABLE">VARIABLE - Variable</h3><p/><p>
             Encoding:
-            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><h3 id="ft-FIELD_INDEX">FIELD_INDEX - Field Index</h3><p/><p>8 bits
+            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-FIELD_INDEX">FIELD_INDEX - Field Index</h3><p/><p>8 bits
             
                 unsigned
               
             number
             </p><p>
             Encoding:
-            Index of the specified field in the PGN referenced.</p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-LIGHTING_COMMAND">LIGHTING_COMMAND
+            Index of the specified field in the PGN referenced.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-LIGHTING_COMMAND">LIGHTING_COMMAND
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Idle</td></tr><tr><td>1</td><td>Detect Devices</td></tr><tr><td>2</td><td>Reboot</td></tr><tr><td>3</td><td>Factory Reset</td></tr><tr><td>4</td><td>Powering Up</td></tr></table><h3 id="lookup-INDUSTRY_CODE">INDUSTRY_CODE
         (0 - 7)
