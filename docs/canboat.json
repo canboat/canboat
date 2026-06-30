@@ -14140,7 +14140,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -14255,7 +14256,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -14355,7 +14357,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -14466,7 +14469,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -14566,7 +14570,8 @@
             "RangeMin":0,
             "RangeMax":252,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DEVICE_REPORT"
+            "LookupEnumeration":"SIMNET_DEVICE_REPORT",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
