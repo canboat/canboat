@@ -59,10 +59,9 @@ FIELD_ATTRS = {
     "offset": "minor",  # value
     "unit": "cosmetic",  # SI unit, downstream conversion only
 }
-# "primaryKey" is handled separately in _diff_fields because its severity is
-# direction-dependent: making a field required (False->True) is source-breaking
-# in the generated CreateArgs, but relaxing it (True->False) only changes key
-# semantics and still compiles.
+# "primaryKey" is handled separately in _diff_fields. A flip either direction
+# only changes key semantics (the decoded key set), not whether downstream
+# source compiles, so it is classified "minor" rather than "breaking".
 
 
 def _field_lookup(field):
@@ -243,12 +242,12 @@ def _diff_fields(changes, anchor, old_fields, new_fields):
                     )
                 )
         if o.get("primaryKey") != n.get("primaryKey"):
-            # becoming required is source-breaking; relaxing it is only a
-            # key-semantics change that still compiles.
-            severity = "breaking" if n.get("primaryKey") else "minor"
+            # A primaryKey flip either direction is only a key-semantics change:
+            # downstream still compiles, but the decoded key set differs, so it
+            # warrants a minor bump rather than a major.
             changes.append(
                 Change(
-                    severity,
+                    "minor",
                     "field-primaryKey",
                     anchor,
                     "field '%s' primaryKey: %r -> %r"
