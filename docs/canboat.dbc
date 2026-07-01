@@ -1984,10 +1984,6 @@ BO_ 2583637246 PGN_130860_simnetApUnknown4: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583637502 PGN_130861_simradEngineData: 8 Vector__XXX
- SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
- SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2583642366 PGN_130880_airmarAdditionalWeath: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -2567,7 +2563,6 @@ CM_ BO_ 2583634942 "Fast packet (multiple variants)";
 CM_ BO_ 2583635198 "Navico: Proprietary 2 FP";
 CM_ BO_ 2583636222 "Simnet: Alarm Message";
 CM_ BO_ 2583637246 "Simnet: AP Unknown 4";
-CM_ BO_ 2583637502 "Simrad: Engine Data";
 CM_ BO_ 2583642366 "Airmar: Additional Weather Data";
 CM_ BO_ 2583642622 "Airmar: Heater Control";
 CM_ BO_ 2583647486 "Xantrex: AC Status";

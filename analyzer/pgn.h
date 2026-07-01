@@ -9955,13 +9955,6 @@ Pgn pgnList[] = {
                     "meaning of the individual fields not yet identified."}
 
     ,
-    {"Simrad: Engine Data",
-     130861,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
-     PACKET_FAST,
-     {COMPANY(1857), END_OF_FIELDS}}
-
-    ,
     {"Airmar: Additional Weather Data",
      130880,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,

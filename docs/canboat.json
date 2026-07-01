@@ -78879,61 +78879,6 @@
         ]
       },
       {
-        "PGN":130861,
-        "Id":"simradEngineData",
-        "Description":"Simrad: Engine Data",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
-        ],
-        "FieldCount":3,
-        "Length":2,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Simrad",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":1857,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          }
-        ]
-      },
-      {
         "PGN":130880,
         "Id":"airmarAdditionalWeatherData",
         "Description":"Airmar: Additional Weather Data",
