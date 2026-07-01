@@ -21874,7 +21874,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Read</td></tr><tr><td>1</td><td>Set</td></tr><tr><td>2</td><td>Reply</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE">SIMNET_NIGHT_MODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Day</td></tr><tr><td>4</td><td>Night</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Day</td></tr><tr><td>4</td><td>Night</td></tr></table><h3 id="lookup-SIMNET_COMPASS_AUTOCAL_MODE">SIMNET_COMPASS_AUTOCAL_MODE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Auto locked</td></tr><tr><td>3</td><td>Auto</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Red</td></tr><tr><td>1</td><td>Green</td></tr><tr><td>2</td><td>Blue</td></tr><tr><td>3</td><td>White</td></tr><tr><td>4</td><td>Magenta</td></tr></table><h3 id="lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP
         (0 - 255)
@@ -22085,7 +22087,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>520</td><td>Shallow water</td><td>0.01 m</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.0001 rad</td><td>16 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>768</td><td>Local field</td><td>0.004 %</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>1024</td><td>Field angle</td><td>0.0001 rad</td><td>16 bits 
@@ -22127,7 +22129,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR</a></td></tr><tr><td>49159</td><td>Race timer rolling start</td><td> </td><td>8 bits 
               
                   lookup
-                  <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>55087</td><td>Day mode invert</td><td> </td><td>8 bits 
+                  <a href="#lookup-OFF_ON">OFF_ON</a></td></tr><tr><td>53760</td><td>Auto calibration mode</td><td> </td><td>8 bits 
+              
+                  lookup
+                  <a href="#lookup-SIMNET_COMPASS_AUTOCAL_MODE">SIMNET_COMPASS_AUTOCAL_MODE</a></td></tr><tr><td>55087</td><td>Day mode invert</td><td> </td><td>8 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-BANDG_KEY_VALUE">BANDG_KEY_VALUE
