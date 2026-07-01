@@ -13,15 +13,19 @@
 # This script distils canboat.json down to just that load-bearing surface (its
 # "signature"), and diffs two signatures to classify every change as:
 #
-#   breaking  - "real" breaking: a generated identifier is removed, renamed,
-#               retyped or made required, or a PGN/lookup/value disappears.
-#               Downstream *source stops compiling* or loses a referenced
-#               symbol. Needs a major bump and a "BREAKING CHANGE:" footer.
-#   minor     - "minor" breaking: every name still exists and code still
-#               compiles, but the decoded value or wire encoding changes
-#               (resolution/offset/sign/bit-width, transport type, match
-#               rebinding, a field made optional). Downstream recompiles fine
-#               but decodes differently, so fixtures need updating. Minor bump.
+#   breaking  - retained tier, not currently emitted. canboat regenerates the
+#               downstream database, so no docs/canboat.json change is treated
+#               as source-incompatible: even a removed/renamed/retyped
+#               identifier is picked up when downstream regenerates its types,
+#               which is a minor concern, not a major one. The tier (and its
+#               "BREAKING CHANGE:" footer / exit code 4) is kept so the
+#               machinery stays stable if a genuine major trigger is ever added.
+#   minor     - any change downstream must react to: a generated identifier
+#               removed / renamed / retyped, an enum / value / label change, a
+#               PGN/lookup/value disappearing, OR a decoded value / wire
+#               encoding change (resolution/offset/sign/bit-width, transport
+#               type, match rebinding, primaryKey, a field made optional).
+#               Downstream regenerates and updates fixtures. Minor bump.
 #   additive  - new PGN / field / lookup / lookup value. Backwards compatible,
 #               but still warrants at least a minor bump (a new field is an
 #               extra key in a strict-equality fixture downstream).
@@ -51,8 +55,8 @@ import sys
 # break already captured by the add/remove. Genuine layout breaks surface
 # through bits/type/lookup changes instead.
 FIELD_ATTRS = {
-    "type": "breaking",  # FieldType -> generated TS type changes
-    "lookup": "breaking",  # which enum the TS type references + label source
+    "type": "minor",  # FieldType -> generated TS type changes (downstream regenerates)
+    "lookup": "minor",  # which enum the TS type references + label source
     "bits": "minor",  # BitLength -> value range / encoded bytes; type unchanged
     "signed": "minor",  # value sign; TS type stays number
     "resolution": "minor",  # scaled value
@@ -212,7 +216,7 @@ def _diff_fields(changes, anchor, old_fields, new_fields):
     for r, a in renamed.items():
         changes.append(
             Change(
-                "breaking",
+                "minor",
                 "field-renamed",
                 anchor,
                 "field '%s' renamed to '%s'" % (r, a),
@@ -220,7 +224,7 @@ def _diff_fields(changes, anchor, old_fields, new_fields):
         )
     for fid in sorted(removed):
         changes.append(
-            Change("breaking", "field-removed", anchor, "field '%s' removed" % fid)
+            Change("minor", "field-removed", anchor, "field '%s' removed" % fid)
         )
     for fid in sorted(added):
         changes.append(
@@ -309,7 +313,7 @@ def _diff_pgns(changes, old_sig, new_sig):
             anchor = "PGN %s" % num
             changes.append(
                 Change(
-                    "breaking",
+                    "minor",
                     "pgn-renamed",
                     anchor,
                     "definition Id renamed '%s' -> '%s'" % (r, a),
@@ -322,7 +326,7 @@ def _diff_pgns(changes, old_sig, new_sig):
         for rid in sorted(removed):
             changes.append(
                 Change(
-                    "breaking",
+                    "minor",
                     "pgn-removed",
                     "PGN %s %s" % (num, rid),
                     "PGN definition removed",
@@ -347,7 +351,7 @@ def _diff_lookups(changes, old_sig, new_sig):
     for name in sorted(set(old) | set(new)):
         if name not in new:
             changes.append(
-                Change("breaking", "lookup-removed", name, "enumeration removed")
+                Change("minor", "lookup-removed", name, "enumeration removed")
             )
             continue
         if name not in old:
@@ -367,7 +371,7 @@ def _diff_lookups(changes, old_sig, new_sig):
             if value not in nv:
                 changes.append(
                     Change(
-                        "breaking",
+                        "minor",
                         "lookup-value-removed",
                         name,
                         "value %s (%r) removed" % (value, ov[value]),
@@ -385,7 +389,7 @@ def _diff_lookups(changes, old_sig, new_sig):
             elif ov[value] != nv[value]:
                 changes.append(
                     Change(
-                        "breaking",
+                        "minor",
                         "lookup-label",
                         name,
                         "value %s label: %r -> %r"
