@@ -3509,6 +3509,16 @@
         ]
       },
       {
+        "Name":"SIMNET_COMPASS_AUTOCAL_MODE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Off", "Value":0},
+          {"Name":"On", "Value":1},
+          {"Name":"Auto locked", "Value":2},
+          {"Name":"Auto", "Value":3}
+        ]
+      },
+      {
         "Name":"SIMNET_NIGHT_MODE_COLOR",
         "MaxValue":255,
         "EnumValues":[
@@ -5211,7 +5221,7 @@
         {"name": "True wind low", "value": 516, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Low boat speed", "value": 517, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Shallow water", "value": 520, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m", "Bits": "16"},
-        {"name": "Local field", "value": 768, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
+        {"name": "Local field", "value": 768, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.004, "Unit": "%", "Bits": "16"},
         {"name": "Field angle", "value": 1024, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m", "Bits": "16"},
         {"name": "Backlight level", "value": 4863, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_BACKLIGHT_LEVEL"},
@@ -5225,6 +5235,7 @@
         {"name": "Race timer auto start", "value": 40711, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "OFF_ON"},
         {"name": "Night mode color", "value": 44079, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE_COLOR"},
         {"name": "Race timer rolling start", "value": 49159, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "OFF_ON"},
+        {"name": "Auto calibration mode", "value": 53760, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_COMPASS_AUTOCAL_MODE"},
         {"name": "Day mode invert", "value": 55087, "FieldType": "NUMBER", "Signed": false, "Bits": "8"}
         ]
       },

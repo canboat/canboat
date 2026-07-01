@@ -2865,6 +2865,12 @@ limitations under the License.
       <EnumPair Value='2' Name='Day' />
       <EnumPair Value='4' Name='Night' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_COMPASS_AUTOCAL_MODE' MaxValue='255'>
+      <EnumPair Value='0' Name='Off' />
+      <EnumPair Value='1' Name='On' />
+      <EnumPair Value='2' Name='Auto locked' />
+      <EnumPair Value='3' Name='Auto' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_NIGHT_MODE_COLOR' MaxValue='255'>
       <EnumPair Value='0' Name='Red' />
       <EnumPair Value='1' Name='Green' />
@@ -4197,7 +4203,7 @@ limitations under the License.
       <EnumFieldType Value='520' Name='Shallow water' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='16'/>
       <EnumFieldType Value='768' Name='Local field' FieldType='NUMBER' Signed='true'
- Resolution='0.0001' Unit='rad' Bits='16'/>
+ Resolution='0.004' Unit='%' Bits='16'/>
       <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='1800' Name='Anchor depth' FieldType='NUMBER' Signed='false'
@@ -4238,6 +4244,10 @@ limitations under the License.
       <EnumFieldType Value='49159' Name='Race timer rolling start' FieldType='LOOKUP' Signed='false'
  Bits='8'>
           <LookupEnumeration>OFF_ON</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='53760' Name='Auto calibration mode' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_COMPASS_AUTOCAL_MODE</LookupEnumeration>
       </EnumFieldType>
       <EnumFieldType Value='55087' Name='Day mode invert' FieldType='NUMBER' Signed='false'
  Bits='8'/>
