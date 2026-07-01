@@ -13796,6 +13796,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_DEVICE_REPORT</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -13911,6 +13912,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_DEVICE_REPORT</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -14012,6 +14014,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_DEVICE_REPORT</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -14123,6 +14126,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_DEVICE_REPORT</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -14226,6 +14230,7 @@ limitations under the License.
           <RangeMax>252</RangeMax>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>SIMNET_DEVICE_REPORT</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -19356,6 +19361,7 @@ limitations under the License.
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>PGN_LIST_FUNCTION</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>2</Order>

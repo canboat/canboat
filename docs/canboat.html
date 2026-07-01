@@ -2716,7 +2716,7 @@ limitations under the License.
                   Status</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td/></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td>true</td></tr><tr><td>6</td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-SIMNET_AP_STATUS">SIMNET_AP_STATUS</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>24 bits
@@ -2751,7 +2751,7 @@ limitations under the License.
                   Send Status</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Pilot Mode</h3><p>
@@ -2783,7 +2783,7 @@ limitations under the License.
                   Mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td/></tr><tr><td>6</td><td>Mode</td><td/><td><div class="xs">0 .. 65535</div></td><td>16 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td>true</td></tr><tr><td>6</td><td>Mode</td><td/><td><div class="xs">0 .. 65535</div></td><td>16 bits
                   
                       bitfield
                       <a href="#lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>16 bits
@@ -2818,7 +2818,7 @@ limitations under the License.
                   Send Mode</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>32 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Sailing Processor Status</h3><p>
@@ -2850,7 +2850,7 @@ limitations under the License.
                   Sailing Processor Status</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td/></tr><tr><td>6</td><td>Data</td><td/><td/><td>32 bits
+                      <a href="#lookup-SIMNET_DEVICE_REPORT">SIMNET_DEVICE_REPORT</a></td><td>true</td></tr><tr><td>6</td><td>Data</td><td/><td/><td>32 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65306">0xFF1A:
             PGN 65306
             - BEP Marine: Proprietary PGN 65306</h3><p>
@@ -4459,7 +4459,7 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Function Code</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 262143</div></td><td>24 bits
+                      <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td>true</td></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 262143</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin AHRS ATT: COG Source Valid Flag</h3><p>
