@@ -2544,11 +2544,12 @@ Pgn pgnList[] = {
      65350,
      PACKET_INCOMPLETE | PACKET_MISSING_COMPANY_FIELDS,
      PACKET_SINGLE,
-     {ANGLE_I16_FIELD("A", NULL),
-      PERCENTAGE_U8_FIELD("B"),
-      ANGLE_I16_FIELD("C", NULL),
-      ANGLE_I16_FIELD("D", NULL),
-      RESERVED_FIELD(BYTES(1)),
+     // Normalized magnetometer field unit-vector (|X,Y,Z| ~= 1.0); signed 1e-4/bit, dimensionless.
+     {{.name = "Field X", .size = BYTES(2), .resolution = 0.0001, .hasSign = true, .fieldType = "FIX16"},
+      {.name = "Field Y", .size = BYTES(2), .resolution = 0.0001, .hasSign = true, .fieldType = "FIX16"},
+      {.name = "Field Z", .size = BYTES(2), .resolution = 0.0001, .hasSign = true, .fieldType = "FIX16"},
+      SIMPLE_FIELD("Marker", BYTES(1)),   // observed constant 2
+      RESERVED_FIELD(BYTES(1)),           // observed constant 0xff
       END_OF_FIELDS}},
 
     {"Seatalk: Pilot Heading",

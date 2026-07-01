@@ -680,10 +680,10 @@ BO_ 2566866430 PGN_65349_yanmarEngineDataF: 8 Vector__XXX
 
 BO_ 2566866686 PGN_65350_simnetMagneticField: 8 Vector__XXX
  SG_ reserved : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ d : 40|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ c : 24|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
- SG_ b : 16|8@1+ (1,0) [0|0] "%" Vector__XXX
- SG_ a : 0|16@1- (0.0001,0) [0|0] "rad" Vector__XXX
+ SG_ marker : 48|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ fieldZ : 32|16@1- (0.0001,0) [0|0] "" Vector__XXX
+ SG_ fieldY : 16|16@1- (0.0001,0) [0|0] "" Vector__XXX
+ SG_ fieldX : 0|16@1- (0.0001,0) [0|0] "" Vector__XXX
 
 BO_ 2566868990 PGN_65359_seatalkPilotHeading: 8 Vector__XXX
  SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
