@@ -2150,16 +2150,40 @@ LOOKUP(SIMNET_AUTOPILOT_MODE, 5, "Non-Follow-Up")
 LOOKUP(SIMNET_AUTOPILOT_MODE, 6, "Navigation")
 LOOKUP_END
 
-// PGN 130840 (Data Source Selection) data-type id. Values confirmed by a live bus probe
-// (changing each source and reading the selected device's NMEA NAME); unmapped ids show numerically.
+// PGN 65323 / 130840 source-selection Data Type. This is a Navico source-selection namespace
+// (tNDP2kDeviceSelection), distinct from tDataType/NAVICO_DATA_TYPE. Values below were confirmed by a
+// Data Type = the physical quantity a selected source provides. Twelve values were verified on the live
+// bus (switching a quantity's source held the Data Type constant while the Source Address moved); the
+// remaining values were reverse-engineered from the Simrad source-selection catalogue and confirmed to
+// agree with every live-verified value. The "backup" and autopilot entries are the autopilot's own
+// selectable source types. Values outside this set show numerically.
 LOOKUP_TYPE(SIMNET_DATA_SOURCE, BYTES(1))
-LOOKUP(SIMNET_DATA_SOURCE, 17, "Rudder Feedback")
-LOOKUP(SIMNET_DATA_SOURCE, 19, "Position")
-LOOKUP(SIMNET_DATA_SOURCE, 27, "Heading")
-LOOKUP(SIMNET_DATA_SOURCE, 35, "Depth")
-LOOKUP(SIMNET_DATA_SOURCE, 36, "Boat Speed")
-LOOKUP(SIMNET_DATA_SOURCE, 42, "Apparent Wind")
-LOOKUP(SIMNET_DATA_SOURCE, 43, "Barometric Pressure")
+LOOKUP(SIMNET_DATA_SOURCE, 0, "Heading")
+LOOKUP(SIMNET_DATA_SOURCE, 1, "Navigation")
+LOOKUP(SIMNET_DATA_SOURCE, 2, "Position")
+LOOKUP(SIMNET_DATA_SOURCE, 3, "Apparent Wind")
+LOOKUP(SIMNET_DATA_SOURCE, 4, "True Wind")
+LOOKUP(SIMNET_DATA_SOURCE, 5, "Speed Through Water")
+LOOKUP(SIMNET_DATA_SOURCE, 6, "Sea Temperature")
+LOOKUP(SIMNET_DATA_SOURCE, 7, "Distance Log")
+LOOKUP(SIMNET_DATA_SOURCE, 8, "Depth")
+LOOKUP(SIMNET_DATA_SOURCE, 9, "Rudder Feedback")
+LOOKUP(SIMNET_DATA_SOURCE, 19, "Monitor Compass")
+LOOKUP(SIMNET_DATA_SOURCE, 20, "Position Backup")
+LOOKUP(SIMNET_DATA_SOURCE, 21, "Boat Speed Backup")
+LOOKUP(SIMNET_DATA_SOURCE, 22, "Air Temperature")
+LOOKUP(SIMNET_DATA_SOURCE, 28, "Barometric Pressure")
+LOOKUP(SIMNET_DATA_SOURCE, 30, "Heel Angle")
+LOOKUP(SIMNET_DATA_SOURCE, 34, "Sailing Navigation")
+LOOKUP(SIMNET_DATA_SOURCE, 35, "Trim Angle")
+LOOKUP(SIMNET_DATA_SOURCE, 36, "Sailing")
+LOOKUP(SIMNET_DATA_SOURCE, 37, "Aft Depth")
+LOOKUP(SIMNET_DATA_SOURCE, 38, "Speed Log")
+LOOKUP(SIMNET_DATA_SOURCE, 39, "RTCM Signal")
+LOOKUP(SIMNET_DATA_SOURCE, 40, "RTCM Corrections")
+LOOKUP(SIMNET_DATA_SOURCE, 54, "Autopilot")
+LOOKUP(SIMNET_DATA_SOURCE, 59, "Autopilot Function Backup")
+LOOKUP(SIMNET_DATA_SOURCE, 104, "Autopilot Control")
 LOOKUP_END
 
 LOOKUP_TYPE(NAVICO_DATA_TYPE, BYTES(2))
