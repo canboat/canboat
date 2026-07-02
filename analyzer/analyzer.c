@@ -972,7 +972,8 @@ static void fillGlobalsBasedOnField(const Field *field, const uint8_t *data, siz
   if (field->dynamicFieldLength)
   {
     extractNumber(NULL, data, dataLen, startBit, bits, &value, &maxValue);
-    g_length = value - field->dynamicFieldLengthOverhead;
+    g_length      = value - field->dynamicFieldLengthOverhead;
+    g_lengthValid = true;
     logDebug("for next field: length = %" PRId64 " (raw %" PRId64 ", overhead %u)\n",
              g_length,
              value,

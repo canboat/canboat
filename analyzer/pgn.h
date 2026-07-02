@@ -8871,6 +8871,57 @@ Pgn pgnList[] = {
      .priority = 3}
 
     ,
+    {"Navico: Data Type Source Directory",
+     130823,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      MATCH_FIELD("Report Type", BYTES(1), 5, "Data-type source directory"),
+      UINT8_DESC_FIELD("Part", "Sequence/part number of the directory report"),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Data Type", BYTES(2), NAVICO_DATA_TYPE),
+      DYNAMIC_FIELD_LENGTH("Source Length", BYTES(1), "Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present"),
+      DYNAMIC_FIELD_VALUE("Source", "Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME"),
+      UINT8_DESC_FIELD("Value Type", "Encoding of the data type's value (e.g. 4 = float32)"),
+      UINT8_DESC_FIELD("Instance", "Data instance the entry refers to"),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 5,
+     .repeatingStart1 = 9,
+     .explanation = "Directory mapping the Navico data types a device tracks to their currently-selected source device, "
+                    "broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the "
+                    "fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source "
+                    "Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes "
+                    "the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source "
+                    "Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's "
+                    "8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing "
+                    "it). The data type values themselves are not carried here."}
+
+    ,
+    {"Navico: Boat Speed Polar Table",
+     130823,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      MATCH_FIELD("Report Type", BYTES(1), 15, "Boat-speed polar / performance table"),
+      UINT8_DESC_FIELD("Part", "Part number; the table is split across several parts that must be concatenated in order"),
+      SPARE_FIELD(BYTES(1)),
+      BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), "Raw table fragment carried by this part"),
+      END_OF_FIELDS},
+     .explanation = "Boat-speed (target performance) polar table, produced only by the B&G Hercules performance processor. It "
+                    "is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that "
+                    "must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a "
+                    "3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is "
+                    "8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at "
+                    "true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame "
+                    "fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is "
+                    "Hercules-only; NEON displays emit the Report Type 5 data-type directory instead."}
+
+    ,
     {"B&G: key-value data",
      130824,
      PACKET_LOOKUPS_UNKNOWN,

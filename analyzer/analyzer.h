@@ -99,6 +99,7 @@ extern char         closingBraces[16]; // } and ] chars to close sentence in JSO
 extern bool         g_skip;
 extern const Field *g_ftf;
 extern int64_t      g_length;
+extern bool         g_lengthValid; // true once a DYNAMIC_FIELD_LENGTH set g_length (so a length of 0 means "empty", not "unknown")
 
 /* analyzer.c */
 

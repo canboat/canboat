@@ -1862,7 +1862,7 @@ BO_ 2583627518 PGN_130822_fast: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583627774 PGN_130823_maretronProprietaryTe: 8 Vector__XXX
+BO_ 2583627774 PGN_130823_fast: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -2540,7 +2540,7 @@ CM_ BO_ 2583626750 "Fast packet (multiple variants)";
 CM_ BO_ 2583627006 "Fast packet (multiple variants)";
 CM_ BO_ 2583627262 "Fast packet (multiple variants)";
 CM_ BO_ 2583627518 "Fast packet (multiple variants)";
-CM_ BO_ 2583627774 "Maretron: Proprietary Temperature High Range";
+CM_ BO_ 2583627774 "Fast packet (multiple variants)";
 CM_ BO_ 2583628030 "Fast packet (multiple variants)";
 CM_ BO_ 2583628286 "Fast packet (multiple variants)";
 CM_ BO_ 2583628542 "Fast packet (multiple variants)";
@@ -2719,7 +2719,6 @@ BA_ "SystemMessageLongSymbol" BO_ 2583565566 "PGN_130580_systemConfigurationDepr
 BA_ "SystemMessageLongSymbol" BO_ 2583565822 "PGN_130581_zoneConfigurationDeprecated";
 BA_ "SystemMessageLongSymbol" BO_ 2583566334 "PGN_130583_availableAudioEqPresets";
 BA_ "SystemMessageLongSymbol" BO_ 2583566590 "PGN_130584_availableBluetoothAddresses";
-BA_ "SystemMessageLongSymbol" BO_ 2583627774 "PGN_130823_maretronProprietaryTemperatureHighRange";
 BA_ "SystemMessageLongSymbol" BO_ 2583631870 "PGN_130839_simnetPressureSensorConfiguration";
 BA_ "SystemMessageLongSymbol" BO_ 2583632382 "PGN_130841_maretronCanFrameForwarding";
 BA_ "SystemMessageLongSymbol" BO_ 2583634174 "PGN_130848_seatalkWaypointInformation";

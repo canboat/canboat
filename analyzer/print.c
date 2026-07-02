@@ -1544,8 +1544,9 @@ extern bool fieldPrintBinary(const Field   *field,
   return true;
 }
 
-const Field *g_ftf    = NULL;
-int64_t      g_length = 0;
+const Field *g_ftf         = NULL;
+int64_t      g_length      = 0;
+bool         g_lengthValid = false;
 
 extern bool fieldPrintKeyValue(const Field   *field,
                                const char    *fieldName,
@@ -1556,7 +1557,7 @@ extern bool fieldPrintKeyValue(const Field   *field,
 {
   bool r = false;
 
-  if (g_length != 0)
+  if (g_lengthValid)
   {
     *bits = ((size_t) g_length) * 8;
   }
@@ -1565,6 +1566,18 @@ extern bool fieldPrintKeyValue(const Field   *field,
     *bits = field->size;
   }
   logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
+
+  // An explicit length of zero means the value is present but empty (e.g. PGN 130823 directory
+  // entries that only declare a data type). Skip the field cleanly so it is simply omitted rather
+  // than triggering the "print routine did not print anything" guard in text mode.
+  if (g_lengthValid && *bits == 0)
+  {
+    g_skip        = true;
+    g_ftf         = NULL;
+    g_length      = 0;
+    g_lengthValid = false;
+    return true;
+  }
 
   if (dataLen >= ((startBit + *bits) >> 3))
   {
@@ -1593,7 +1606,7 @@ extern bool fieldPrintKeyValue(const Field   *field,
       // outcome as when the length is known (cf. PGN 130846). Without this,
       // an unknown Key (e.g. PGN 130845) prints an empty Value despite the
       // bytes being present on the bus.
-      if (*bits == 0 && startBit < dataLen * 8)
+      if (*bits == 0 && !g_lengthValid && startBit < dataLen * 8)
       {
         *bits = dataLen * 8 - startBit;
       }
@@ -1605,8 +1618,9 @@ extern bool fieldPrintKeyValue(const Field   *field,
     logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn ? field->pgn->pgn : 0, fieldName);
   }
 
-  g_ftf    = NULL;
-  g_length = 0;
+  g_ftf         = NULL;
+  g_length      = 0;
+  g_lengthValid = false;
 
   return r;
 }
