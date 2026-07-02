@@ -948,6 +948,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "VOLUME_UFIX16_L", .description = "Volume", .resolution = 1, .physical = &VOLUME, .baseFieldType = "UFIX16"},
 
+    {.name = "VOLUME_UFIX16_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX16"},
+
     {.name = "VOLUME_UFIX32_DL", .description = "Volume", .resolution = 0.1, .physical = &VOLUME, .baseFieldType = "UFIX32"},
 
     {.name = "VOLUME_UFIX32_DML", .description = "Volume", .resolution = 0.0001, .physical = &VOLUME, .baseFieldType = "UFIX32"},

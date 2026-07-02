@@ -683,6 +683,8 @@ typedef struct
 
 #define VOLUME_UFIX16_L_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "L", .fieldType = "VOLUME_UFIX16_L"}
 
+#define VOLUME_UFIX16_DL_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX16_DL"}
+
 #define VOLUME_UFIX32_DL_FIELD(nam) {.name = nam, .size = BYTES(4), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX32_DL"}
 
 #define DURATION_UFIX16_S_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "DURATION_UFIX16_S"}
@@ -2214,6 +2216,21 @@ Pgn pgnList[] = {
      {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Lowrance: Vessel Setup - Engine and Tank Configuration",
+     65303,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      SIMPLE_DESC_FIELD("Number of Engines", 4, "Engine count configured on the display's Vessel Setup page"),
+      SIMPLE_DESC_FIELD("Number of Fuel Tanks", 4, "Fuel-tank count configured on the display's Vessel Setup page"),
+      VOLUME_UFIX16_DL_FIELD("Total Fuel Capacity"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .explanation = "Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of "
+                    "engines, number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a "
+                    "capture where the values were changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L)."}
+
+    ,
     {"Suzuki: Engine Data E",
      65304,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -2226,6 +2243,21 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast",
+     65304,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      SIMPLE_DESC_FIELD("Number of Engines", 4, "Engine count configured on the display's Vessel Setup page"),
+      SIMPLE_DESC_FIELD("Number of Fuel Tanks", 4, "Fuel-tank count configured on the display's Vessel Setup page"),
+      VOLUME_UFIX16_DL_FIELD("Total Fuel Capacity"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .explanation = "Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and "
+                    "total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default "
+                    "(1 engine, 1 tank, 1200 L) by autopilot-computer and display devices."}
     ,
     {"Simnet: Device Status",
      65305,
@@ -9069,6 +9101,57 @@ Pgn pgnList[] = {
      .priority = 3}
 
     ,
+    {"Navico: Data Type Source Directory",
+     130823,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      MATCH_FIELD("Report Type", BYTES(1), 5, "Data-type source directory"),
+      UINT8_DESC_FIELD("Part", "Sequence/part number of the directory report"),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Data Type", BYTES(2), NAVICO_DATA_TYPE),
+      DYNAMIC_FIELD_LENGTH("Source Length", BYTES(1), "Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present"),
+      DYNAMIC_FIELD_VALUE("Source", "Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME"),
+      UINT8_DESC_FIELD("Value Type", "Encoding of the data type's value (e.g. 4 = float32)"),
+      UINT8_DESC_FIELD("Instance", "Data instance the entry refers to"),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 5,
+     .repeatingStart1 = 9,
+     .explanation = "Directory mapping the Navico data types a device tracks to their currently-selected source device, "
+                    "broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the "
+                    "fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source "
+                    "Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes "
+                    "the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source "
+                    "Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's "
+                    "8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing "
+                    "it). The data type values themselves are not carried here."}
+
+    ,
+    {"Navico: Boat Speed Polar Table",
+     130823,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      MATCH_FIELD("Report Type", BYTES(1), 15, "Boat-speed polar / performance table"),
+      UINT8_DESC_FIELD("Part", "Part number; the table is split across several parts that must be concatenated in order"),
+      SPARE_FIELD(BYTES(1)),
+      BINARY_FIELD("Data", BYTES(FASTPACKET_MAX_SIZE), "Raw table fragment carried by this part"),
+      END_OF_FIELDS},
+     .explanation = "Boat-speed (target performance) polar table, produced only by the B&G Hercules performance processor. It "
+                    "is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that "
+                    "must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a "
+                    "3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is "
+                    "8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at "
+                    "true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame "
+                    "fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is "
+                    "Hercules-only; NEON displays emit the Report Type 5 data-type directory instead."}
+
+    ,
     {"B&G: key-value data",
      130824,
      PACKET_LOOKUPS_UNKNOWN,
@@ -10159,11 +10242,28 @@ Pgn pgnList[] = {
      .priority    = 7}
 
     ,
-    {"Navico: Proprietary 2 FP",
+    {"Navico: Diagnostic Data",
      130852,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Instance", "Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)"),
+      LOOKUP_DYNAMIC_FIELD_KEY("Field ID", BYTES(1), NAVICO_DIAGNOSTIC),
+      DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Value width in bytes (observed 1, 2 or 4)"),
+      DYNAMIC_FIELD_VALUE("Value", "Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise"),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 5,
+     .explanation = "Device diagnostic report, returned in reply to a PGN 126208 Request Group Function for PGN 130852 that "
+                    "carries the Navico manufacturer (275) and Marine industry parameters. Emitted by both NEON- and "
+                    "Triton-generation Navico devices. After the manufacturer field and an Instance/channel byte, the frame "
+                    "carries a list of {Field ID, Length, Value} records to the end of the fast-packet; Length is the value "
+                    "width (1, 2 or 4 bytes). Field IDs index a set of CAN bus diagnostic counters; ids 4/5/7 (Rx Messages, "
+                    "Tx Messages, Fast Packet Errors) are confirmed against a device's on-screen bus statistics. Ids 0-3 are "
+                    "the rx/tx overflow and error counters (zero on a healthy bus, so their order is not yet distinguished) "
+                    "and id 22 relates to bus state; those are shown numerically. Bus Load shown in the device UI is computed "
+                    "locally and is not carried here."}
 
     ,
     {"Simnet: Alarm Message",

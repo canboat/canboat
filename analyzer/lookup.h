@@ -2916,6 +2916,15 @@ LOOKUP(NAVICO_DATA_TYPE, 725, "Heading Source")
 LOOKUP(NAVICO_DATA_TYPE, 726, "Invalid")
 LOOKUP_END
 
+// PGN 130852 diagnostic field ids. Only 4/5/7 are confirmed (matched against a device's on-screen
+// bus statistics); ids 0-3 are the rx/tx overflow and error counters (all zero on a healthy bus, so
+// their individual order is not yet distinguished), id 22 relates to bus state.
+LOOKUP_TYPE_FIELDTYPE(NAVICO_DIAGNOSTIC, BYTES(1))
+LOOKUP_FIELDTYPE(NAVICO_DIAGNOSTIC, 4, "Rx Messages", "UINT32")
+LOOKUP_FIELDTYPE(NAVICO_DIAGNOSTIC, 5, "Tx Messages", "UINT32")
+LOOKUP_FIELDTYPE(NAVICO_DIAGNOSTIC, 7, "Fast Packet Errors", "UINT32")
+LOOKUP_END
+
 LOOKUP_TYPE(SIMNET_COMMAND, BYTES(1))
 LOOKUP(SIMNET_COMMAND, 50, "Text")
 LOOKUP_END

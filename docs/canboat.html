@@ -2639,7 +2639,39 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65303">0xFF17:
+            PGN 65303
+            - Lowrance: Vessel Setup - Engine and Tank Configuration</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>140</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of engines, number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a capture where the values were changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L).</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
+                  Lowrance</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Number of Engines</td><td>Engine count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Number of Fuel Tanks</td><td>Fuel-tank count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Fuel Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
             PGN 65304
             - Suzuki: Engine Data E</h3><p>
               This PGN description applies when the following field(s) match:
@@ -2685,7 +2717,39 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65304">0xFF18:
+            PGN 65304
+            - Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>140</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200 L) by autopilot-computer and display devices.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>140:
+                  Lowrance</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Number of Engines</td><td>Engine count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Number of Fuel Tanks</td><td>Fuel-tank count configured on the display's Vessel Setup page</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Total Fuel Capacity</td><td/><td>0.1 <a href="#pq-VOLUME">L</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65305">0xFF19:
             PGN 65305
             - Simnet: Device Status</h3><p>
               This PGN description applies when the following field(s) match:
@@ -18441,7 +18505,92 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Set Temperature</td><td/><td>0.1 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Data Type Source Directory</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>5</td></tr></table></p><p>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's 8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing it). The data type values themselves are not carried here.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 13 fields.
+
+            
+        The 5 fields starting at field 
+        9 
+        (with name "Data Type")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>5:
+                  Data-type source directory</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Sequence/part number of the directory report</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Source Length</td><td>Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Source</td><td>Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value Type</td><td>Encoding of the data type's value (e.g. 4 = float32)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Instance</td><td>Data instance the entry refers to</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Boat Speed Polar Table</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>15</td></tr></table></p><p>Boat-speed (target performance) polar table, produced only by the B&amp;G Hercules performance processor. It is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a 3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is 8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is Hercules-only; NEON displays emit the Report Type 5 data-type directory instead.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            230
+            bytes long and contains 9 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>15:
+                  Boat-speed polar / performance table</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Part number; the table is split across several parts that must be concatenated in order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>9</td><td>Data</td><td>Raw table fragment carried by this part</td><td/><td>1784 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130824">0x1FF08:
             PGN 130824
             - B&amp;G: key-value data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -21132,18 +21281,24 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130852">0x1FF24:
             PGN 130852
-            - Navico: Proprietary 2 FP</h3><p>
+            - Navico: Diagnostic Data</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Device diagnostic report, returned in reply to a PGN 126208 Request Group Function for PGN 130852 that carries the Navico manufacturer (275) and Marine industry parameters. Emitted by both NEON- and Triton-generation Navico devices. After the manufacturer field and an Instance/channel byte, the frame carries a list of {Field ID, Length, Value} records to the end of the fast-packet; Length is the value width (1, 2 or 4 bytes). Field IDs index a set of CAN bus diagnostic counters; ids 4/5/7 (Rx Messages, Tx Messages, Fast Packet Errors) are confirmed against a device's on-screen bus statistics. Ids 0-3 are the rx/tx overflow and error counters (zero on a healthy bus, so their order is not yet distinguished) and id 22 relates to bus state; those are shown numerically. Bus Load shown in the device UI is computed locally and is not carried here.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            2
-            bytes long and contains 3 fields.
+            
+              at least 3
+            bytes long and contains 7 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+            
+        The 3 fields starting at field 
+        5 
+        (with name "Field ID")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
@@ -21152,7 +21307,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr></table><h3 id="pgn-130856">0x1FF28:
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Instance</td><td>Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">5<div>Set 1</div></td><td>Field ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DIAGNOSTIC">NAVICO_DIAGNOSTIC</a>
+                      that defines the next variable field's type.
+                    </td><td>true</td></tr><tr><td class="repeating">6<div>Set 1</div></td><td>Length</td><td>Value width in bytes (observed 1, 2 or 4)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>Value</td><td>Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130856">0x1FF28:
             PGN 130856
             - Simnet: Alarm Message</h3><p>
               This PGN description applies when the following field(s) match:
@@ -22665,7 +22833,18 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^7-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Navigation Method</td></tr><tr><td>1</td><td>XTE Limit</td></tr></table><h3 id="lookupbit-DISABLED_SATELLITES">DISABLED_SATELLITES
         (0 - 2^39-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Disable SV #1</td></tr><tr><td>1</td><td>Disable SV #2</td></tr><tr><td>2</td><td>Disable SV #3</td></tr><tr><td>3</td><td>Disable SV #4</td></tr><tr><td>4</td><td>Disable SV #5</td></tr><tr><td>5</td><td>Disable SV #6</td></tr><tr><td>6</td><td>Disable SV #7</td></tr><tr><td>7</td><td>Disable SV #8</td></tr><tr><td>8</td><td>Disable SV #9</td></tr><tr><td>9</td><td>Disable SV #10</td></tr><tr><td>10</td><td>Disable SV #11</td></tr><tr><td>11</td><td>Disable SV #12</td></tr><tr><td>12</td><td>Disable SV #13</td></tr><tr><td>13</td><td>Disable SV #14</td></tr><tr><td>14</td><td>Disable SV #15</td></tr><tr><td>15</td><td>Disable SV #16</td></tr><tr><td>16</td><td>Disable SV #17</td></tr><tr><td>17</td><td>Disable SV #18</td></tr><tr><td>18</td><td>Disable SV #19</td></tr><tr><td>19</td><td>Disable SV #20</td></tr><tr><td>20</td><td>Disable SV #21</td></tr><tr><td>21</td><td>Disable SV #22</td></tr><tr><td>22</td><td>Disable SV #23</td></tr><tr><td>23</td><td>Disable SV #24</td></tr><tr><td>24</td><td>Disable SV #25</td></tr><tr><td>25</td><td>Disable SV #26</td></tr><tr><td>26</td><td>Disable SV #27</td></tr><tr><td>27</td><td>Disable SV #28</td></tr><tr><td>28</td><td>Disable SV #29</td></tr><tr><td>29</td><td>Disable SV #30</td></tr><tr><td>30</td><td>Disable SV #31</td></tr><tr><td>31</td><td>Disable SV #32</td></tr><tr><td>32</td><td>Disable SV #33</td></tr><tr><td>33</td><td>Disable SV #34</td></tr><tr><td>34</td><td>Disable SV #35</td></tr><tr><td>35</td><td>Disable SV #36</td></tr><tr><td>36</td><td>Disable SV #37</td></tr><tr><td>37</td><td>Disable SV #38</td></tr><tr><td>38</td><td>Disable SV #39</td></tr><tr><td>39</td><td>Disable SV #40</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Disable SV #1</td></tr><tr><td>1</td><td>Disable SV #2</td></tr><tr><td>2</td><td>Disable SV #3</td></tr><tr><td>3</td><td>Disable SV #4</td></tr><tr><td>4</td><td>Disable SV #5</td></tr><tr><td>5</td><td>Disable SV #6</td></tr><tr><td>6</td><td>Disable SV #7</td></tr><tr><td>7</td><td>Disable SV #8</td></tr><tr><td>8</td><td>Disable SV #9</td></tr><tr><td>9</td><td>Disable SV #10</td></tr><tr><td>10</td><td>Disable SV #11</td></tr><tr><td>11</td><td>Disable SV #12</td></tr><tr><td>12</td><td>Disable SV #13</td></tr><tr><td>13</td><td>Disable SV #14</td></tr><tr><td>14</td><td>Disable SV #15</td></tr><tr><td>15</td><td>Disable SV #16</td></tr><tr><td>16</td><td>Disable SV #17</td></tr><tr><td>17</td><td>Disable SV #18</td></tr><tr><td>18</td><td>Disable SV #19</td></tr><tr><td>19</td><td>Disable SV #20</td></tr><tr><td>20</td><td>Disable SV #21</td></tr><tr><td>21</td><td>Disable SV #22</td></tr><tr><td>22</td><td>Disable SV #23</td></tr><tr><td>23</td><td>Disable SV #24</td></tr><tr><td>24</td><td>Disable SV #25</td></tr><tr><td>25</td><td>Disable SV #26</td></tr><tr><td>26</td><td>Disable SV #27</td></tr><tr><td>27</td><td>Disable SV #28</td></tr><tr><td>28</td><td>Disable SV #29</td></tr><tr><td>29</td><td>Disable SV #30</td></tr><tr><td>30</td><td>Disable SV #31</td></tr><tr><td>31</td><td>Disable SV #32</td></tr><tr><td>32</td><td>Disable SV #33</td></tr><tr><td>33</td><td>Disable SV #34</td></tr><tr><td>34</td><td>Disable SV #35</td></tr><tr><td>35</td><td>Disable SV #36</td></tr><tr><td>36</td><td>Disable SV #37</td></tr><tr><td>37</td><td>Disable SV #38</td></tr><tr><td>38</td><td>Disable SV #39</td></tr><tr><td>39</td><td>Disable SV #40</td></tr></table><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h3 id="lookup-NAVICO_DIAGNOSTIC">NAVICO_DIAGNOSTIC
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>4</td><td>Rx Messages</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>5</td><td>Tx Messages</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>7</td><td>Fast Packet Errors</td><td> </td><td>32 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-SIMNET_KEY_VALUE">SIMNET_KEY_VALUE
         (0 - 16777215)
       </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>0</td><td>Heading Offset</td><td>0.0001 rad</td><td>16 bits 
               
