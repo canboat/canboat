@@ -1,11 +1,11 @@
-<xs:schema version="2.4.0"
+<xs:schema version="2.5.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
   <xs:element name="PGNDefinitions" type="PGNDefinitions">
     <xs:annotation>
       <xs:documentation>
-CANboat version v6.2.2 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+CANboat version v7.1.0 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
 For more information see https://github.com/canboat/canboat
 
 This file is part of CANboat.
@@ -334,6 +334,37 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element name="Sentinels">
+        <xs:annotation>
+          <xs:documentation>
+            How a field of this type signals "data not available" (and, for integers,
+            out-of-range and reserved). One of:
+            TopOfRange  - the top 1 to 3 raw integer values are reserved as
+                          Unknown (most positive), OutOfRange (max-1) and Reserved
+                          (max-2); the count depends on the bit width, so the actual
+                          reserved values are given per field as UnknownValue,
+                          OutOfRangeValue and ReservedValue. For LOOKUP fields a value
+                          that the enumeration names explicitly is a real value and is
+                          not reserved, lowering the count.
+            EmptyString - an empty string (after trimming end-of-string bytes such as
+                          0xff, 0x00 and '@') marks the field as unavailable.
+            NaN         - the IEEE-754 Not-a-Number value.
+            Variable    - the convention depends on the data type that is resolved at
+                          run time through the companion DYNAMIC_FIELD_KEY field.
+            None        - the field has no unavailable encoding (an identifier such as
+                          PGN or MMSI, filler such as RESERVED, or a structured field).
+          </xs:documentation>
+        </xs:annotation>
+        <xs:simpleType>
+          <xs:restriction base="xs:string">
+            <xs:enumeration value="TopOfRange"/>
+            <xs:enumeration value="EmptyString"/>
+            <xs:enumeration value="NaN"/>
+            <xs:enumeration value="Variable"/>
+            <xs:enumeration value="None"/>
+          </xs:restriction>
+        </xs:simpleType>
+      </xs:element>
     </xs:sequence>
     <xs:attribute type="xs:string" name="Name"/>
   </xs:complexType>
@@ -495,6 +526,16 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:unsignedByte" name="DynamicFieldLengthOverhead" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            For a DYNAMIC_FIELD_LENGTH field: the number of non-value header bytes (for example a class byte
+            and a data-type id) that sit between this length field and the value and are counted in this
+            length. A decoder must subtract this from the length to obtain the byte count of the following
+            DYNAMIC_FIELD_VALUE field.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:float" name="RangeMin" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
@@ -649,6 +690,7 @@ limitations under the License.
       <xs:element type="xs:unsignedShort" name="Priority" minOccurs="0"/>
       <xs:element type="xs:string" name="Explanation" minOccurs="0"/>
       <xs:element type="xs:string" name="URL" minOccurs="0"/>
+      <xs:element type="xs:string" name="ResearchDoc" minOccurs="0"/>
       <xs:element type="xs:string" name="Type">
         <xs:annotation>
           <xs:documentation>

@@ -35,7 +35,7 @@ jobs:
       - name: verify generated files are up to date
         run: |
           if ! git diff --exit-code; then
-            echo "::error::Generated files are out of date. Run 'make generated' locally and commit the result (docs/*, dbc-exporter/pgns.dbc)."
+            echo "::error::Generated files are out of date. Run 'make generated' locally and commit the result (docs/*, docs/canboat.dbc)."
             git --no-pager diff --stat
             exit 1
           fi

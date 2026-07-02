@@ -88,8 +88,31 @@ static uint8_t reservedCountForSize(uint32_t size)
   return (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
 }
 
-static double getMaxRange(
-    const char *name, uint32_t size, double resolution, bool sign, int32_t offset, LookupInfo *lookup, uint8_t specialvalues)
+extern const char *sentinelsName(Sentinels s)
+{
+  switch (s)
+  {
+    case SENTINEL_TOP_OF_RANGE:
+      return "TopOfRange";
+    case SENTINEL_NAN:
+      return "NaN";
+    case SENTINEL_EMPTY_STRING:
+      return "EmptyString";
+    case SENTINEL_VARIABLE:
+      return "Variable";
+    case SENTINEL_NONE:
+    default:
+      return "None";
+  }
+}
+
+static double getMaxRange(const char *name,
+                          uint32_t    size,
+                          double      resolution,
+                          bool        sign,
+                          int32_t     offset,
+                          LookupInfo *lookup,
+                          uint8_t     specialvalues)
 {
   uint32_t highbit = (sign && offset == 0) ? (size - 1) : size;
   uint64_t maxValue;
@@ -292,8 +315,8 @@ extern void fillFieldType(bool doUnitFixup)
     if (ft->size != 0 && ft->resolution != 0.0 && ft->hasSign != Null && ft->rangeMax == 0.0)
     {
       ft->rangeMin = getMinRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset);
-      ft->rangeMax = getMaxRange(
-          ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset, NULL, reservedCountForSize(ft->size));
+      ft->rangeMax
+          = getMaxRange(ft->name, ft->size, ft->resolution, ft->hasSign == True, ft->offset, NULL, reservedCountForSize(ft->size));
     }
     else
     {
@@ -412,20 +435,26 @@ extern void fillFieldType(bool doUnitFixup)
       }
 
       // Number of top-of-range sentinels (Unknown / OutOfRange / Reserved). An explicit
-      // SPECIAL_VALUES() override wins; otherwise a field whose value range spans the full unsigned
-      // bit width reserves none (the "all values valid" idiom, e.g. ISO device instance with
-      // .rangeMax = 7). The check compares against the UNSIGNED raw maximum (2^size - 1) so it is
-      // independent of display units -- a signed angle shown as 0..2pi rad (SI) or 0..360 deg
-      // (user) both stay below it, while a genuinely full field reaches it. 64-bit fields can't be
+      // SPECIAL_VALUES() override wins. Otherwise the count is the gap between the raw bit-width
+      // maximum and the field's raw rangeMax, capped at the width-derived count. This makes it
+      // follow a rangeMax that was pulled up: a field spanning its full UNSIGNED width reserves
+      // none (the "all values valid" idiom), and a LOOKUP whose enumeration names values in the
+      // sentinel region (getMaxRange raised its rangeMax for them) reserves only the sentinels left
+      // above the named values. The threshold is the full UNSIGNED width (2^size - 1) so it is
+      // independent of sign and of display-unit fixups: a signed field, or a field whose rangeMax
+      // was clamped to a rounder display value (e.g. an angle to 360 deg), never reaches it and so
+      // keeps its full count -- matching the value the decoder strips. 64-bit fields can't be
       // distinguished by double precision, so they rely on the override.
       if (f->reservedOverride != 0)
       {
         f->reservedCount = count;
       }
-      else if (f->size != 0 && f->size < 64 && f->resolution > 0.0 && !isnan(f->rangeMax)
-               && (uint64_t) (f->rangeMax / f->resolution + 0.5) >= (UINT64_C(1) << f->size) - 1)
+      else if (f->size != 0 && f->size < 64 && f->resolution > 0.0 && !isnan(f->rangeMax))
       {
-        f->reservedCount = 0;
+        uint64_t rawMax      = (UINT64_C(1) << f->size) - 1;
+        uint64_t rawRangeMax = (uint64_t) (f->rangeMax / f->resolution + 0.5);
+
+        f->reservedCount = (rawRangeMax >= rawMax) ? 0 : (uint8_t) CB_MIN(rawMax - rawRangeMax, (uint64_t) bySize);
       }
       else
       {

@@ -1587,6 +1587,16 @@ extern bool fieldPrintKeyValue(const Field   *field,
     }
     else
     {
+      // The Key did not resolve to a field type and there is no explicit
+      // DYNAMIC_FIELD_LENGTH. The value occupies the rest of the frame, so
+      // fall back to that length and still print the raw bytes -- the same
+      // outcome as when the length is known (cf. PGN 130846). Without this,
+      // an unknown Key (e.g. PGN 130845) prints an empty Value despite the
+      // bytes being present on the bus.
+      if (*bits == 0 && startBit < dataLen * 8)
+      {
+        *bits = dataLen * 8 - startBit;
+      }
       r = fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
     }
   }

@@ -11,6 +11,7 @@ import warnings
 from cantools.database import Database
 from cantools.database import Message
 from cantools.database import Signal
+from cantools.database.conversion import BaseConversion
 
 
 def get_unique_id(id_: str, reserved_ids: Set[str]) -> str:
@@ -96,9 +97,12 @@ class CanboatReader:
 
         for pgn_number, variants in pgns.items():
             if len(variants) > 1:
-                msg = self._variants_to_multiplexed_message(pgn_number, variants)
+                msg = self._variants_to_multiplexed_message(pgn_number, variants, lookups)
                 if msg is not None:
                     yield msg
+                elif any(v["Type"] == "Fast" for v in variants):
+                    # cannot multiplex, but it is a fast packet: emit the opaque representation
+                    yield self._generic_fast_message(pgn_number, variants, lookups)
                 else:
                     logging.warning("Could not multiplex PGN %d, ignoring", pgn_number)
                     continue
@@ -147,15 +151,32 @@ class CanboatReader:
         """
         Convert a fast packet PGN to a cantools Message
         """
-
         pgn_number = json_data["PGN"]
-        pgn_id = f"PGN_{pgn_number}_{json_data['Id']}"
-        pgn_description = json_data["Description"]
-        pgn_length = json_data["Length" if "Length" in json_data else "MinLength"]
+        return self._opaque_fast_message(
+            pgn_number,
+            f"PGN_{pgn_number}_{json_data['Id']}",
+            json_data["Description"],
+            json_data["Length" if "Length" in json_data else "MinLength"],
+            lookups,
+        )
 
-        # fast packets cannot be represented by DBC; replace the data definition
-        # with a generic message representation
+    def _generic_fast_message(self, pgn_number, variants, lookups):
+        """
+        Multi-variant fast packet PGNs (proprietary media, database and autopilot messages)
+        span several CAN frames and cannot be field-mapped, nor multiplexed (the manufacturer
+        header is not at a fixed position once the sequence counter is prepended). Represent the
+        PGN with the same opaque layout used for a single fast packet so it is at least present.
+        """
+        length = max(v["Length" if "Length" in v else "MinLength"] for v in variants)
+        return self._opaque_fast_message(
+            pgn_number, f"PGN_{pgn_number}_fast", "Fast packet (multiple variants)", length, lookups
+        )
 
+    def _opaque_fast_message(self, pgn_number, pgn_id, description, length, lookups):
+        """
+        Build the generic "sequence counter + opaque data" message used for fast packets, which
+        DBC cannot otherwise represent.
+        """
         first_field = {
             "Order": 1,
             "Id": "fastPacketSequenceCounter",
@@ -183,9 +204,7 @@ class CanboatReader:
             self._field_to_signal(Field(data_field, lookups, reserved_field_ids)),
         ]
 
-        return self._pgn_to_message(
-            pgn_number, pgn_id, pgn_description, pgn_length, signals
-        )
+        return self._pgn_to_message(pgn_number, pgn_id, description, length, signals)
 
     def _single_to_message(self, json_data: dict, lookups: dict) -> Message:
         """
@@ -230,135 +249,226 @@ class CanboatReader:
         last_field = fields[-1]
         return last_field["BitOffset"] + last_field["BitLength"] <= pgn_length * 8
 
-    def _variants_to_multiplexed_message(self, pgn_number, variants):
+    # ---- Multiplexed (multi-variant) PGN support ---------------------------------------
+
+    @staticmethod
+    def _composite_match(variant):
         """
-        Merge several variants of the same PGN into a multiplexed message
+        The leading Manufacturer (11 bits) + Reserved (2 bits) + Industry (3 bits) fields form a
+        fixed 2-byte block; collapse them into a single 16-bit multiplexor value. The Reserved
+        bits are all ones on the wire. Returns None when the variant does not have this standard
+        proprietary header (so it cannot take part in manufacturer multiplexing).
         """
-
-        # validate that the variants have the same multiplex field
-
-        if not self._validate_multiplex_field(variants):
-            logging.warning("Multiplex fields differ for PGN %d", pgn_number)
+        fields = variant["Fields"]
+        if len(fields) < 3:
             return None
-
-        # generate the message data
-        pgn_id = f"PGN_{pgn_number}_multiplexed"
-        pgn_description = "Multiplexed message"
-        for v in variants:
-            logging.warning("Variant %d [ %s ]", pgn_number, json.dumps(v))
-
-        pgn_length = max([v["Length" if "Length" in v else "MinLength"] for v in variants])
-
-        valid_variants = [v for v in variants if v["Length" if "Length" in v else "MinLength"] < 8 and v["Type"] != "Fast"]
-
-        if len(valid_variants) < len(variants):
-            logging.warning(
-                "PGN %d: Ignoring fast packet variants", pgn_number
-            )
+        manuf, industry = fields[0], fields[2]
+        if (
+            manuf.get("BitOffset") != 0 or manuf.get("BitLength") != 11 or "Match" not in manuf
+            or industry.get("BitOffset") != 13 or industry.get("BitLength") != 3 or "Match" not in industry
+        ):
             return None
+        return manuf["Match"] | (0b11 << 11) | (industry["Match"] << 13)
 
-        signals = []
-        reserved_field_ids = set()
-
-        # get the multiplexing signal
-        multiplex_field = Field(valid_variants[0]["Fields"][0], reserved_field_ids)
-        multiplex_choices = {
-            variant["Fields"][0]["Match"]: variant["Id"] for variant in valid_variants if "Match" in variant["Fields"][0]
+    @staticmethod
+    def _secondary_matches(variant):
+        """
+        The proprietary sub-protocol discriminators: match fields beyond the 2-byte
+        manufacturer/industry header, keyed by bit offset (Proprietary ID, Message ID, Command,
+        Report, Event, ...).
+        """
+        return {
+            f["BitOffset"]: f for f in variant["Fields"] if "Match" in f and f["BitOffset"] >= 16
         }
-        multiplex_field.enum_values = multiplex_choices
-        multiplex_field.multiplexer = True
-        multiplex_signal = self._field_to_signal(multiplex_field)
-        signals.append(multiplex_signal)
 
-        # get the signals for each variant
+    def _variants_to_multiplexed_message(self, pgn_number, variants, lookups):
+        """
+        Merge several variants of the same PGN into a (possibly nested) multiplexed message.
 
-        for variant in valid_variants:
-            variant_signals = self._get_variant_signals(
-                variant, multiplex_signal, reserved_field_ids
+        Level 0 multiplexes on the 16-bit manufacturer/industry header; deeper levels nest on the
+        proprietary match fields. Variants that cannot be field-mapped (fast/ISO) or that are a
+        less-specific "catch-all" of a sibling are dropped with a warning.
+        """
+        single = [v for v in variants if v["Type"] == "Single"]
+        if len(single) < len(variants):
+            # The non-single (fast/ISO) variants cannot be field-mapped; the caller falls back to
+            # an opaque fast-packet message, so this is informational rather than a warning.
+            logging.info(
+                "PGN %d: %d non-single-frame variant(s) not field-mapped", pgn_number, len(variants) - len(single)
             )
-            signals.extend(variant_signals)
+        if len(single) < 2:
+            return None
 
-        # create the multiplexed message
+        usable = [v for v in single if self._composite_match(v) is not None]
+        if len(usable) < len(single):
+            # Not every variant carries the proprietary manufacturer header (e.g. ISO Transport
+            # Protocol on PGN 60416, keyed on a Group Function Code). Fall back to flat
+            # multiplexing on the first match field.
+            return self._simple_multiplex(pgn_number, single, lookups)
+
+        reserved_ids = set()
+        manuf_names = {d["Value"]: d["Name"] for d in lookups.get("MANUFACTURER_CODE", [])}
+
+        # Level-0 multiplexor: the 16-bit manufacturer/industry header.
+        header = {
+            "Order": 1, "Id": "manufacturerIndustry", "Name": "Manufacturer and industry",
+            "BitOffset": 0, "BitLength": 16, "BitStart": 0, "FieldType": "NUMBER", "Signed": False,
+        }
+        header_field = Field(header, lookups, reserved_ids)
+        header_field.multiplexer = True
+
+        groups = {}
+        for v in usable:
+            groups.setdefault(self._composite_match(v), []).append(v)
+        header_field.enum_values = {
+            comp: manuf_names.get(comp & 0x7FF, str(comp & 0x7FF)) for comp in groups
+        }
+        header_signal = self._field_to_signal(header_field)
+
+        signals = [header_signal]
+        for comp, group in groups.items():
+            signals.extend(
+                self._emit_variant_group(group, header_signal, comp, set(), reserved_ids, lookups, pgn_number)
+            )
+
         return self._pgn_to_message(
-            pgn_number, pgn_id, pgn_description, pgn_length, signals
+            pgn_number,
+            f"PGN_{pgn_number}_multiplexed",
+            "Multiplexed message",
+            max(v["Length" if "Length" in v else "MinLength"] for v in usable),
+            signals,
         )
 
-    def _get_variant_signals(
-        self, variant: dict, multiplexer_signal: Signal, reserved_field_ids: Set[int]
-    ):
+    def _simple_multiplex(self, pgn_number, variants, lookups):
         """
-        Get the signals for a variant of a multiplexed message
+        Flat multiplexing for non-proprietary multi-variant PGNs: the first field is the
+        multiplexor and every variant is selected by its unique match value. Returns None when
+        the variants cannot be told apart by that first field.
         """
+        reserved_ids = set()
+        by_match = {}
+        for v in variants:
+            field0 = v["Fields"][0]
+            if "Match" not in field0:
+                logging.warning("PGN %d: variant %s has no leading match field; cannot multiplex", pgn_number, v["Id"])
+                return None
+            if field0["Match"] in by_match:
+                logging.warning("PGN %d: match value %d is not unique; cannot multiplex", pgn_number, field0["Match"])
+                return None
+            by_match[field0["Match"]] = v
 
-        if "Match" not in variant["Fields"][0]:
-            return []
-        variant_match = variant["Fields"][0]["Match"]
-        variant_signals = []
-        for json_field in variant["Fields"][1:]:
-            field = Field(json_field, reserved_field_ids)
-            # add the message id to the multiplexed field id
-            field.id = f"m{variant_match}_{field.id}"
-            field.multiplexer_ids = [variant_match]
-            signal = self._field_to_signal(field, multiplexer_signal)
-            variant_signals.append(signal)
+        mux_field = Field(variants[0]["Fields"][0], lookups, reserved_ids)
+        mux_field.multiplexer = True
+        mux_field.enum_values = {m: v["Id"] for m, v in by_match.items()}
+        mux_signal = self._field_to_signal(mux_field)
 
-        return variant_signals
+        signals = [mux_signal]
+        for match, variant in by_match.items():
+            for f in variant["Fields"][1:]:
+                if "BitLength" not in f:
+                    continue
+                field = Field(f, lookups, reserved_ids)
+                field.id = get_unique_id(f"m{match}_{field.id}", reserved_ids)
+                field.multiplexer_ids = [match]
+                signals.append(self._field_to_signal(field, mux_signal.name))
 
-    def _validate_multiplex_field(self, variants):
+        return self._pgn_to_message(
+            pgn_number,
+            f"PGN_{pgn_number}_multiplexed",
+            "Multiplexed message",
+            max(v["Length" if "Length" in v else "MinLength"] for v in variants),
+            signals,
+        )
+
+    def _emit_variant_group(self, variants, parent_signal, parent_value, consumed, reserved_ids, lookups, pgn_number):
         """
-        Check that the variants have a valid multiplex field
-
-        Multiplex fields need to have the same id, same bit offset and length,
-        and different values. It is assumed that the first field is always
-        the multiplexor.
+        Emit the signals for variants that all share the multiplexor values on the path so far
+        (`parent_signal` == `parent_value`, plus the offsets in `consumed`). Recurses, nesting a
+        further multiplexor on the next shared, differing match field.
         """
+        if len(variants) == 1:
+            return self._leaf_signals(variants[0], parent_signal, parent_value, consumed, reserved_ids, lookups)
 
-        ignore_variants = set()
+        disc, variants = self._pick_discriminator(variants, consumed, pgn_number)
+        if disc is None:
+            for v in variants[1:]:
+                logging.warning("PGN %d: variant %s is indistinguishable; dropping", pgn_number, v["Id"])
+            return self._leaf_signals(variants[0], parent_signal, parent_value, consumed, reserved_ids, lookups)
+        if len(variants) == 1:
+            return self._leaf_signals(variants[0], parent_signal, parent_value, consumed, reserved_ids, lookups)
 
-        for variant in variants:
-            variant_field0 = variant["Fields"][0]
-            if "Match" not in variant_field0:
-                logging.warning("No match field in variant %s; ignoring", variant["Id"])
-                ignore_variants.add(variant["Id"])
+        sub_groups = {}
+        for v in variants:
+            sub_groups.setdefault(self._secondary_matches(v)[disc]["Match"], []).append(v)
 
-        ref = variants[0]
-        ref_field0 = ref["Fields"][0]
-        if "Match" not in ref_field0:
-            return False
-        seen_values = {ref_field0["Match"]}
-        for variant in variants[1:]:
-            if variant["Id"] in ignore_variants:
+        mux_field = Field(self._secondary_matches(variants[0])[disc], lookups, reserved_ids)
+        mux_field.id = get_unique_id(f"m{parent_value}_{mux_field.id}", reserved_ids)
+        mux_field.multiplexer = True
+        mux_field.multiplexer_ids = [parent_value]
+        mux_field.enum_values = {val: grp[0]["Id"] for val, grp in sub_groups.items()}
+        mux_signal = self._field_to_signal(mux_field, parent_signal.name)
+
+        signals = [mux_signal]
+        deeper = consumed | {disc}
+        for val, grp in sub_groups.items():
+            signals.extend(
+                self._emit_variant_group(grp, mux_signal, val, deeper, reserved_ids, lookups, pgn_number)
+            )
+        return signals
+
+    def _pick_discriminator(self, variants, consumed, pgn_number):
+        """
+        Choose the next bit offset to multiplex on. Returns (offset, variants_to_keep), or
+        (None, [one variant]) when no further split is possible. Drops catch-all variants (no
+        further match field) and, only if the survivors are misaligned, the minority that do not
+        carry the chosen offset.
+        """
+        def sec(v):
+            return set(self._secondary_matches(v)) - consumed
+
+        specific = [v for v in variants if sec(v)]
+        for v in variants:
+            if not sec(v):
+                logging.warning("PGN %d: dropping catch-all variant %s", pgn_number, v["Id"])
+        if len(specific) <= 1:
+            return (None, specific or [variants[0]])
+
+        common = set.intersection(*[sec(v) for v in specific])
+        for off in sorted(common):
+            if len({self._secondary_matches(v)[off]["Match"] for v in specific}) > 1:
+                return (off, specific)
+
+        # No offset shared by every survivor: pick the most common one, drop the rest.
+        counts = {}
+        for v in specific:
+            for off in sec(v):
+                counts[off] = counts.get(off, 0) + 1
+        best = max(counts, key=lambda o: (counts[o], -o))
+        keep = [v for v in specific if best in self._secondary_matches(v)]
+        for v in specific:
+            if best not in self._secondary_matches(v):
+                logging.warning("PGN %d: dropping misaligned variant %s", pgn_number, v["Id"])
+        if len({self._secondary_matches(v)[best]["Match"] for v in keep}) <= 1:
+            return (None, keep)
+        return (best, keep)
+
+    def _leaf_signals(self, variant, parent_signal, parent_value, consumed, reserved_ids, lookups):
+        """
+        Emit the data signals for a single variant: every field past the 2-byte header that was
+        not already consumed as a multiplexor, multiplexed under `parent_value`.
+        """
+        signals = []
+        for f in variant["Fields"]:
+            if f["BitOffset"] < 16 or f["BitOffset"] in consumed:
                 continue
-            variant_field0 = variant["Fields"][0]
-            if ref_field0["Id"] != variant_field0["Id"]:
-                logging.warning(
-                    "Multiplex variants %s and %s have different ids",
-                    ref["Id"],
-                    variant["Id"],
-                )
-                return False
-            if variant_field0["Match"] in seen_values:
-                logging.warning(
-                    "Multiplex field value %d is not unique",
-                    variant_field0["Match"],
-                )
-                return False
-            seen_values.add(variant_field0["Match"])
-            if ref_field0["BitOffset"] != variant_field0["BitOffset"]:
-                logging.warning(
-                    "Multiplex fields have different bit offsets (%d != %d)",
-                    ref_field0["BitOffset"],
-                    variant_field0["BitOffset"],
-                )
-                return False
-            if ref_field0["BitLength"] != variant_field0["BitLength"]:
-                logging.warning(
-                    "Multiplex fields have different bit lengths (%d != %d)",
-                    ref_field0["BitLength"],
-                    variant_field0["BitLength"],
-                )
-                return False
-        return True
+            if "BitLength" not in f:
+                # variable-length trailing field (string / dynamic); not a fixed-width DBC signal
+                continue
+            field = Field(f, lookups, reserved_ids)
+            field.id = get_unique_id(f"m{parent_value}_{field.id}", reserved_ids)
+            field.multiplexer_ids = [parent_value]
+            signals.append(self._field_to_signal(field, parent_signal.name))
+        return signals
 
     def _repeat(self, signals, repeating_fields):
         """
@@ -379,7 +489,11 @@ class CanboatReader:
             "Processing field %s (%d, %d)", field.id, field.bit_offset, field.bit_length
         )
 
-        # FIXME: implement type awareness and enums (choices)
+        # cantools >= 39 bundles scale/offset/choices into a conversion object
+        # instead of taking them as direct Signal arguments.
+        conversion = BaseConversion.factory(
+            scale=field.resolution, choices=field.enum_values
+        )
 
         return Signal(
             name=field.id,
@@ -387,10 +501,9 @@ class CanboatReader:
             length=field.bit_length,
             byte_order="little_endian",
             is_signed=field.signed,
-            scale=field.resolution,
+            conversion=conversion,
             unit=field.unit,
             comment=field.description,
-            choices=field.enum_values,
             is_multiplexer=field.multiplexer,
             multiplexer_ids=field.multiplexer_ids,
             multiplexer_signal=multiplexer_signal,
