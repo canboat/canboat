@@ -9478,7 +9478,7 @@ Pgn pgnList[] = {
     ,
     {"Furuno: Multi Sats In View Extended",
      130845,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {COMPANY(1855),
       SIMPLE_FIELD("Report type", 4),

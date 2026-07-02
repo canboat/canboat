@@ -74980,7 +74980,7 @@
         "Description":"Furuno: Multi Sats In View Extended",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
         "FieldCount":16,
         "MinLength":7,
