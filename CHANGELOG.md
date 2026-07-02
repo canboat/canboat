@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [7.2.0](https://github.com/canboat/canboat/compare/v7.1.0...v7.2.0) (2026-07-02)
+
+
+### Added
+
+* decode Garmin autopilot scalar transport over PGN 126720 ([#688](https://github.com/canboat/canboat/issues/688)) ([#692](https://github.com/canboat/canboat/issues/692)) ([3f6ce56](https://github.com/canboat/canboat/commit/3f6ce561f933c3e14769c4c6aa605c341d9f361b))
+* **furuno:** correct PGN 130845 satellite record layout and decode Baseline status ([#723](https://github.com/canboat/canboat/issues/723)) ([e72b6d5](https://github.com/canboat/canboat/commit/e72b6d5c4790ff1b77f67913d299d76547be1fb7))
+* **navico:** add 130824 B&G start-line & MOB position keys ([#708](https://github.com/canboat/canboat/issues/708)) ([2938fd8](https://github.com/canboat/canboat/commit/2938fd80be71d3c2117c35f823007ed069c67d08))
+* **navico:** add compass auto-calibration mode key; fix Local field units (130845) ([#720](https://github.com/canboat/canboat/issues/720)) ([e59571c](https://github.com/canboat/canboat/commit/e59571c5a47d3ce3eead7f2c7473913f9782a675)), closes [#718](https://github.com/canboat/canboat/issues/718)
+* **navico:** correct PGN 65350 layout to normalized magnetic field vector X/Y/Z ([#719](https://github.com/canboat/canboat/issues/719)) ([4426234](https://github.com/canboat/canboat/commit/44262343b2bec327b8ad26c3eacbdaa70e149486)), closes [#716](https://github.com/canboat/canboat/issues/716)
+* **navico:** drop PGN 130861 "Simrad: Engine Data" — no producer exists ([#721](https://github.com/canboat/canboat/issues/721)) ([28d39e7](https://github.com/canboat/canboat/commit/28d39e740e46c7aab40738e1cff85664e7046c55)), closes [#712](https://github.com/canboat/canboat/issues/712)
+* **navico:** resolve PGN 65323 & 130840 Simnet Data Source Selection ([#725](https://github.com/canboat/canboat/issues/725)) ([20fee4f](https://github.com/canboat/canboat/commit/20fee4f49fc16305e1450a10808a865e11a062dc))
+* **pk:** mark Function Code (126464) and Report (65305) as PartOfPrimaryKey ([#713](https://github.com/canboat/canboat/issues/713)) ([e0348ad](https://github.com/canboat/canboat/commit/e0348ade718c030c3312e6bd8542f221e76222a3))
+* **seatalk:** add alarm IDs 112/113/122-125 and Bluetooth alarm group ([#709](https://github.com/canboat/canboat/issues/709)) ([893287b](https://github.com/canboat/canboat/commit/893287b2e93c14e6e318073a4878db5d436d9dc1)), closes [#552](https://github.com/canboat/canboat/issues/552)
+
 ## [7.1.0](https://github.com/canboat/canboat/compare/v7.0.0...v7.1.0) (2026-06-30)
 
 
