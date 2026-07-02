@@ -19536,16 +19536,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
              fast-packet 
             PGN is
             
-              at least 6
-            bytes long and contains 15 fields.
+              at least 7
+            bytes long and contains 16 fields.
 
             
         The 6 fields starting at field 
-        10 
-        (with name "Status")
-        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
-        9 
-        (with name "Sats in View".)
+        11 
+        (with name "PRN")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
       </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1855:
                   Furuno</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -19568,13 +19566,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Sats in View</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Sats in Use</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">10<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Sats in View</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>PRN</td><td>1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">11<div>Set 1</div></td><td>PRN</td><td>1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Elevation</td><td/><td>0.0001 <a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>16 bits
@@ -19589,7 +19587,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">15<div>Set 1</div></td><td>Range residual</td><td/><td>1e-05 <a href="#pq-DISTANCE">m</a><div class="xs">-21474.83647 .. 21474.83644</div></td><td>32 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">16<div>Set 1</div></td><td>Baseline status</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                      bitfield
+                      <a href="#lookupbit-FURUNO_BASELINE_STATUS">FURUNO_BASELINE_STATUS</a></td><td/></tr></table><h3 id="pgn-130845">0x1FF1D:
             PGN 130845
             - Simnet: Key Value</h3><p>
               This PGN description applies when the following field(s) match:
@@ -22028,7 +22029,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 2^5-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>System error</td></tr><tr><td>1</td><td>Sensor error</td></tr><tr><td>2</td><td>No windlass motion detected</td></tr><tr><td>3</td><td>Retrieval docking distance reached</td></tr><tr><td>4</td><td>End of rode reached</td></tr></table><h3 id="lookupbit-WINDLASS_MONITORING">WINDLASS_MONITORING
         (0 - 2^7-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Controller under voltage cut-out</td></tr><tr><td>1</td><td>Controller over current cut-out</td></tr><tr><td>2</td><td>Controller over temperature cut-out</td></tr><tr><td>3</td><td>Manufacturer defined</td></tr></table><h3 id="lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Controller under voltage cut-out</td></tr><tr><td>1</td><td>Controller over current cut-out</td></tr><tr><td>2</td><td>Controller over temperature cut-out</td></tr><tr><td>3</td><td>Manufacturer defined</td></tr></table><h3 id="lookupbit-FURUNO_BASELINE_STATUS">FURUNO_BASELINE_STATUS
+        (0 - 2^7-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Baseline Antenna 1-2</td></tr><tr><td>1</td><td>Baseline Antenna 2-3</td></tr><tr><td>2</td><td>Baseline Antenna 3-4</td></tr><tr><td>3</td><td>Baseline Antenna 4-1</td></tr><tr><td>4</td><td>Baseline Antenna 1-3</td></tr><tr><td>5</td><td>Baseline Antenna 2-4</td></tr></table><h3 id="lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD
         (0 - 2^15-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>3</td><td>Standby</td></tr><tr><td>4</td><td>Heading</td></tr><tr><td>6</td><td>Nav</td></tr><tr><td>8</td><td>No Drift</td></tr><tr><td>10</td><td>Wind</td></tr></table><h3 id="lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD
         (0 - 2^63-1)

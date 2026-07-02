@@ -1993,6 +1993,21 @@ LOOKUP(SATELLITE_STATUS, 4, "Tracked+Diff")
 LOOKUP(SATELLITE_STATUS, 5, "Used+Diff")
 LOOKUP_END
 
+// Per-SV "Baseline status" byte in the Furuno SCX four-antenna GNSS compass (PGN 130845). Zero means the
+// SV is used for the position fix only; any non-zero value means it also contributes to the attitude
+// (heading) solution. The SCX forms all six carrier-phase baselines of its square antenna array (four
+// edges + two diagonals); each bit marks a baseline this SV feeds. Each antenna reports only the three
+// baselines it belongs to (its two edges + one diagonal), which matches the observed bits in 100% of
+// records. Reverse-engineered from SCX-20 captures. See #722.
+LOOKUP_TYPE_BITFIELD(FURUNO_BASELINE_STATUS, BITS(8))
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 0, "Baseline Antenna 1-2")
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 1, "Baseline Antenna 2-3")
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 2, "Baseline Antenna 3-4")
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 3, "Baseline Antenna 4-1")
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 4, "Baseline Antenna 1-3")
+LOOKUP_BITFIELD(FURUNO_BASELINE_STATUS, 5, "Baseline Antenna 2-4")
+LOOKUP_END
+
 LOOKUP_TYPE(AIS_VERSION, BITS(2))
 LOOKUP(AIS_VERSION, 0, "ITU-R M.1371-1")
 LOOKUP(AIS_VERSION, 1, "ITU-R M.1371-3")
