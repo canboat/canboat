@@ -683,6 +683,8 @@ typedef struct
 
 #define VOLUME_UFIX16_L_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "L", .fieldType = "VOLUME_UFIX16_L"}
 
+#define VOLUME_UFIX16_DL_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX16_DL"}
+
 #define VOLUME_UFIX32_DL_FIELD(nam) {.name = nam, .size = BYTES(4), .resolution = 0.1, .unit = "L", .fieldType = "VOLUME_UFIX32_DL"}
 
 #define DURATION_UFIX16_S_FIELD(nam) {.name = nam, .size = BYTES(2), .resolution = 1, .unit = "s", .fieldType = "DURATION_UFIX16_S"}
@@ -2214,6 +2216,21 @@ Pgn pgnList[] = {
      {COMPANY(586), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Lowrance: Vessel Setup - Engine and Tank Configuration",
+     65303,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      SIMPLE_DESC_FIELD("Number of Engines", 4, "Engine count configured on the display's Vessel Setup page"),
+      SIMPLE_DESC_FIELD("Number of Fuel Tanks", 4, "Fuel-tank count configured on the display's Vessel Setup page"),
+      VOLUME_UFIX16_DL_FIELD("Total Fuel Capacity"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .explanation = "Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of "
+                    "engines, number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a "
+                    "capture where the values were changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L)."}
+
+    ,
     {"Suzuki: Engine Data E",
      65304,
      PACKET_INCOMPLETE | PACKET_NOT_SEEN,
@@ -2226,6 +2243,21 @@ Pgn pgnList[] = {
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(295), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
+
+    ,
+    {"Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast",
+     65304,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      SIMPLE_DESC_FIELD("Number of Engines", 4, "Engine count configured on the display's Vessel Setup page"),
+      SIMPLE_DESC_FIELD("Number of Fuel Tanks", 4, "Fuel-tank count configured on the display's Vessel Setup page"),
+      VOLUME_UFIX16_DL_FIELD("Total Fuel Capacity"),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
+     .explanation = "Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and "
+                    "total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default "
+                    "(1 engine, 1 tank, 1200 L) by autopilot-computer and display devices."}
     ,
     {"Simnet: Device Status",
      65305,
