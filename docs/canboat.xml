@@ -2116,13 +2116,32 @@ limitations under the License.
       <EnumPair Value='6' Name='Navigation' />
     </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_DATA_SOURCE' MaxValue='255'>
-      <EnumPair Value='17' Name='Rudder Feedback' />
-      <EnumPair Value='19' Name='Position' />
-      <EnumPair Value='27' Name='Heading' />
-      <EnumPair Value='35' Name='Depth' />
-      <EnumPair Value='36' Name='Boat Speed' />
-      <EnumPair Value='42' Name='Apparent Wind' />
-      <EnumPair Value='43' Name='Barometric Pressure' />
+      <EnumPair Value='0' Name='Heading' />
+      <EnumPair Value='1' Name='Navigation' />
+      <EnumPair Value='2' Name='Position' />
+      <EnumPair Value='3' Name='Apparent Wind' />
+      <EnumPair Value='4' Name='True Wind' />
+      <EnumPair Value='5' Name='Speed Through Water' />
+      <EnumPair Value='6' Name='Sea Temperature' />
+      <EnumPair Value='7' Name='Distance Log' />
+      <EnumPair Value='8' Name='Depth' />
+      <EnumPair Value='9' Name='Rudder Feedback' />
+      <EnumPair Value='19' Name='Monitor Compass' />
+      <EnumPair Value='20' Name='Position Backup' />
+      <EnumPair Value='21' Name='Boat Speed Backup' />
+      <EnumPair Value='22' Name='Air Temperature' />
+      <EnumPair Value='28' Name='Barometric Pressure' />
+      <EnumPair Value='30' Name='Heel Angle' />
+      <EnumPair Value='34' Name='Sailing Navigation' />
+      <EnumPair Value='35' Name='Trim Angle' />
+      <EnumPair Value='36' Name='Sailing' />
+      <EnumPair Value='37' Name='Aft Depth' />
+      <EnumPair Value='38' Name='Speed Log' />
+      <EnumPair Value='39' Name='RTCM Signal' />
+      <EnumPair Value='40' Name='RTCM Corrections' />
+      <EnumPair Value='54' Name='Autopilot' />
+      <EnumPair Value='59' Name='Autopilot Function Backup' />
+      <EnumPair Value='104' Name='Autopilot Control' />
     </LookupEnumeration>
     <LookupEnumeration Name='NAVICO_DATA_TYPE' MaxValue='65535'>
       <EnumPair Value='0' Name='Altitude' />
@@ -15256,10 +15275,10 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>65323</PGN>
-      <Id>simnetApUnknown5</Id>
-      <Description>Simnet: AP Unknown 5</Description>
+      <Id>simnetDataSourceSelectionRequest</Id>
+      <Description>Simnet: Data Source Selection Request</Description>
     <Priority>3</Priority>
-      <Explanation>Single-frame Simnet frame emitted by autopilot control heads (AP48, Triton2, ZEUS). The frame builder writes a fixed 0xFF, then two bytes A and B, then padding 0xFF; the meaning of A and B is not yet identified. The autopilot receives it. Observed in live captures.</Explanation>
+      <Explanation>Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet half is PGN 130840, which shares the same Data Type namespace. Data Type selects the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type - it does not identify the selected device. A node answers with a 130840 record naming the source (Source Address plus NAME) it has selected for that (Data Type, Source Class) channel. Emitted by autopilot heads and instruments (AP48, Triton2, ZEUS); the autopilot and MFDs receive it.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -15325,8 +15344,8 @@ limitations under the License.
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>a</Id>
-          <Name>A</Name>
+          <Id>dataType</Id>
+          <Name>Data Type</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -15337,12 +15356,14 @@ limitations under the License.
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DATA_SOURCE</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
+          <Id>sourceClass</Id>
+          <Name>Source Class</Name>
+          <Description>Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources and 100 for autopilot-provided sources</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -74118,7 +74139,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>simnetDataSourceSelection</Id>
       <Description>Simnet: Data Source Selection</Description>
     <Priority>3</Priority>
-      <Explanation>Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is selected for each data type across the instrument network. 'Data Type' identifies the quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. Emitted on change. The data-type ids were mapped from a live source-selection probe; see also the compact form in PGN 130822.</Explanation>
+      <Explanation>Change-driven broadcast announcing which source is selected for each Data Type across the instrument network; it is the fast-packet answer to the single-frame PGN 65323 poll and shares its Data Type/Source Class namespace. Data Type identifies the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. Source Address is the current NMEA 2000 address of the selected device and Source is that same device's 64-bit NAME (address and NAME both identify the one selected source); Change Counter increments on each selection change. See also the periodic UDB table dump in PGN 130822.</Explanation>
       <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -74185,8 +74206,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>sequence</Id>
-          <Name>Sequence</Name>
+          <Id>dataType</Id>
+          <Name>Data Type</Name>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -74197,13 +74218,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SIMNET_DATA_SOURCE</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <Description>Usually 0x01</Description>
+          <Id>sourceClass</Id>
+          <Name>Source Class</Name>
+          <Description>Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources and 100 for autopilot-provided sources</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -74218,8 +74240,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>7</Order>
-          <Id>dataType</Id>
-          <Name>Data Type</Name>
+          <Id>sourceAddress</Id>
+          <Name>Source Address</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -74230,8 +74252,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DATA_SOURCE</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -74245,8 +74266,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>c</Id>
-          <Name>C</Name>
+          <Id>changeCounter</Id>
+          <Name>Change Counter</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>

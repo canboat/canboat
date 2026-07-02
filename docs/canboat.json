@@ -2742,13 +2742,32 @@
         "Name":"SIMNET_DATA_SOURCE",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"Rudder Feedback", "Value":17},
-          {"Name":"Position", "Value":19},
-          {"Name":"Heading", "Value":27},
-          {"Name":"Depth", "Value":35},
-          {"Name":"Boat Speed", "Value":36},
-          {"Name":"Apparent Wind", "Value":42},
-          {"Name":"Barometric Pressure", "Value":43}
+          {"Name":"Heading", "Value":0},
+          {"Name":"Navigation", "Value":1},
+          {"Name":"Position", "Value":2},
+          {"Name":"Apparent Wind", "Value":3},
+          {"Name":"True Wind", "Value":4},
+          {"Name":"Speed Through Water", "Value":5},
+          {"Name":"Sea Temperature", "Value":6},
+          {"Name":"Distance Log", "Value":7},
+          {"Name":"Depth", "Value":8},
+          {"Name":"Rudder Feedback", "Value":9},
+          {"Name":"Monitor Compass", "Value":19},
+          {"Name":"Position Backup", "Value":20},
+          {"Name":"Boat Speed Backup", "Value":21},
+          {"Name":"Air Temperature", "Value":22},
+          {"Name":"Barometric Pressure", "Value":28},
+          {"Name":"Heel Angle", "Value":30},
+          {"Name":"Sailing Navigation", "Value":34},
+          {"Name":"Trim Angle", "Value":35},
+          {"Name":"Sailing", "Value":36},
+          {"Name":"Aft Depth", "Value":37},
+          {"Name":"Speed Log", "Value":38},
+          {"Name":"RTCM Signal", "Value":39},
+          {"Name":"RTCM Corrections", "Value":40},
+          {"Name":"Autopilot", "Value":54},
+          {"Name":"Autopilot Function Backup", "Value":59},
+          {"Name":"Autopilot Control", "Value":104}
         ]
       },
       {
@@ -15569,10 +15588,10 @@
       },
       {
         "PGN":65323,
-        "Id":"simnetApUnknown5",
-        "Description":"Simnet: AP Unknown 5",
+        "Id":"simnetDataSourceSelectionRequest",
+        "Description":"Simnet: Data Source Selection Request",
         "Priority":3,
-        "Explanation":"Single-frame Simnet frame emitted by autopilot control heads (AP48, Triton2, ZEUS). The frame builder writes a fixed 0xFF, then two bytes A and B, then padding 0xFF; the meaning of A and B is not yet identified. The autopilot receives it. Observed in live captures.",
+        "Explanation":"Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet half is PGN 130840, which shares the same Data Type namespace. Data Type selects the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type - it does not identify the selected device. A node answers with a 130840 record naming the source (Source Address plus NAME) it has selected for that (Data Type, Source Class) channel. Emitted by autopilot heads and instruments (AP48, Triton2, ZEUS); the autopilot and MFDs receive it.",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
@@ -15635,8 +15654,8 @@
           },
           {
             "Order":5,
-            "Id":"a",
-            "Name":"A",
+            "Id":"dataType",
+            "Name":"Data Type",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -15647,12 +15666,14 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DATA_SOURCE"
           },
           {
             "Order":6,
-            "Id":"b",
-            "Name":"B",
+            "Id":"sourceClass",
+            "Name":"Source Class",
+            "Description":"Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources and 100 for autopilot-provided sources",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -73506,7 +73527,7 @@
         "Id":"simnetDataSourceSelection",
         "Description":"Simnet: Data Source Selection",
         "Priority":3,
-        "Explanation":"Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is selected for each data type across the instrument network. 'Data Type' identifies the quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. Emitted on change. The data-type ids were mapped from a live source-selection probe; see also the compact form in PGN 130822.",
+        "Explanation":"Change-driven broadcast announcing which source is selected for each Data Type across the instrument network; it is the fast-packet answer to the single-frame PGN 65323 poll and shares its Data Type/Source Class namespace. Data Type identifies the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. Source Address is the current NMEA 2000 address of the selected device and Source is that same device's 64-bit NAME (address and NAME both identify the one selected source); Change Counter increments on each selection change. See also the periodic UDB table dump in PGN 130822.",
         "ResearchDoc":"navico_udb",
         "Type":"Fast",
         "Complete":false,
@@ -73570,8 +73591,8 @@
           },
           {
             "Order":5,
-            "Id":"sequence",
-            "Name":"Sequence",
+            "Id":"dataType",
+            "Name":"Data Type",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -73582,13 +73603,14 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"SIMNET_DATA_SOURCE"
           },
           {
             "Order":6,
-            "Id":"b",
-            "Name":"B",
-            "Description":"Usually 0x01",
+            "Id":"sourceClass",
+            "Name":"Source Class",
+            "Description":"Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources and 100 for autopilot-provided sources",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -73603,8 +73625,8 @@
           },
           {
             "Order":7,
-            "Id":"dataType",
-            "Name":"Data Type",
+            "Id":"sourceAddress",
+            "Name":"Source Address",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
@@ -73615,8 +73637,7 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DATA_SOURCE"
+            "FieldType":"NUMBER"
           },
           {
             "Order":8,
@@ -73630,8 +73651,8 @@
           },
           {
             "Order":9,
-            "Id":"c",
-            "Name":"C",
+            "Id":"changeCounter",
+            "Name":"Change Counter",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,

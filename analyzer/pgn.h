@@ -2405,20 +2405,27 @@ Pgn pgnList[] = {
      {COMPANY(275), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
-    {"Simnet: AP Unknown 5",
+    {"Simnet: Data Source Selection Request",
      65323,
      PACKET_INCOMPLETE,
      PACKET_SINGLE,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(1)),
-      UINT8_FIELD("A"),
-      UINT8_FIELD("B"),
+      LOOKUP_FIELD("Data Type", BYTES(1), SIMNET_DATA_SOURCE),
+      UINT8_DESC_FIELD("Source Class",
+                       "Class of source for this Data Type, constant per Data Type: observed as 1 for direct "
+                       "sensor/navigation sources and 100 for autopilot-provided sources"),
       RESERVED_FIELD(BYTES(3)),
       END_OF_FIELDS},
      .interval    = 1000,
-     .explanation = "Single-frame Simnet frame emitted by autopilot control heads (AP48, Triton2, ZEUS). The "
-                    "frame builder writes a fixed 0xFF, then two bytes A and B, then padding 0xFF; the meaning of "
-                    "A and B is not yet identified. The autopilot receives it. Observed in live captures.",
+     .explanation = "Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet "
+                    "half is PGN 130840, which shares the same Data Type namespace. Data Type selects the quantity "
+                    "(heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a "
+                    "direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data "
+                    "Type - it does not identify the selected device. A node answers with a 130840 record naming "
+                    "the source (Source Address plus NAME) it has selected for that (Data Type, Source Class) "
+                    "channel. Emitted by autopilot heads and instruments (AP48, Triton2, ZEUS); the autopilot and "
+                    "MFDs receive it.",
      .priority    = 3}
 
     ,
@@ -9335,21 +9342,27 @@ Pgn pgnList[] = {
      PACKET_FAST,
      {COMPANY(1857),
       RESERVED_FIELD(BYTES(1)),
-      UINT8_FIELD("Sequence"),
-      UINT8_DESC_FIELD("B", "Usually 0x01"),
       LOOKUP_FIELD("Data Type", BYTES(1), SIMNET_DATA_SOURCE),
+      UINT8_DESC_FIELD("Source Class",
+                       "Class of source for this Data Type, constant per Data Type: observed as 1 for direct "
+                       "sensor/navigation sources and 100 for autopilot-provided sources"),
+      UINT8_FIELD("Source Address"),
       RESERVED_FIELD(BYTES(1)),
-      UINT8_FIELD("C"),
+      UINT8_FIELD("Change Counter"),
       ISO_NAME_FIELD("Source"),
       RESERVED_FIELD(BYTES(1)),
       END_OF_FIELDS},
      .researchDoc = "navico_udb",
      .interval    = UINT16_MAX,
-     .explanation = "Broadcast by Navico displays/heads to share which source (by NMEA 2000 NAME) is "
-                    "selected for each data type across the instrument network. 'Data Type' identifies the "
-                    "quantity (heading, depth, wind, ...); 'Source' is the 64-bit NAME of the selected device. "
-                    "Emitted on change. The data-type ids were mapped from a live source-selection probe; "
-                    "see also the compact form in PGN 130822.",
+     .explanation = "Change-driven broadcast announcing which source is selected for each Data Type across the "
+                    "instrument network; it is the fast-packet answer to the single-frame PGN 65323 poll and "
+                    "shares its Data Type/Source Class namespace. Data Type identifies the quantity (heading, "
+                    "depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct "
+                    "sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. "
+                    "Source Address is the current NMEA 2000 address of the selected device and Source is that "
+                    "same device's 64-bit NAME (address and NAME both identify the one selected source); Change "
+                    "Counter increments on each selection change. See also the periodic UDB table dump in "
+                    "PGN 130822.",
      .priority    = 3}
 
     ,
