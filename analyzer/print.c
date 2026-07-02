@@ -551,7 +551,7 @@ extern bool fieldPrintFloat(const Field   *field,
     return false;
   }
 
-  if (*bits != sizeof(f) || startBit != 0)
+  if (*bits != BYTES(sizeof(f)) || startBit != 0)
   {
     logError("field '%s' FLOAT value unhandled bits=%zu startBit=%zu\n", fieldName, *bits, startBit);
     return false;
