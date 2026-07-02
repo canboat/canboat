@@ -1978,7 +1978,7 @@ BO_ 2583634942 PGN_130851_fast: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583635198 PGN_130852_navicoProprietary2Fp: 8 Vector__XXX
+BO_ 2583635198 PGN_130852_navicoDiagnosticData: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -2569,7 +2569,7 @@ CM_ BO_ 2583634174 "SeaTalk: Waypoint Information";
 CM_ BO_ 2583634430 "Navico: Proprietary FP";
 CM_ BO_ 2583634686 "Fast packet (multiple variants)";
 CM_ BO_ 2583634942 "Fast packet (multiple variants)";
-CM_ BO_ 2583635198 "Navico: Proprietary 2 FP";
+CM_ BO_ 2583635198 "Navico: Diagnostic Data";
 CM_ BO_ 2583636222 "Simnet: Alarm Message";
 CM_ BO_ 2583637246 "Simnet: AP Unknown 4";
 CM_ BO_ 2583642366 "Airmar: Additional Weather Data";

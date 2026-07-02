@@ -10012,11 +10012,28 @@ Pgn pgnList[] = {
      .priority    = 7}
 
     ,
-    {"Navico: Proprietary 2 FP",
+    {"Navico: Diagnostic Data",
      130852,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), END_OF_FIELDS}}
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Instance", "Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)"),
+      LOOKUP_DYNAMIC_FIELD_KEY("Field ID", BYTES(1), NAVICO_DIAGNOSTIC),
+      DYNAMIC_FIELD_LENGTH("Length", BYTES(1), "Value width in bytes (observed 1, 2 or 4)"),
+      DYNAMIC_FIELD_VALUE("Value", "Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise"),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 3,
+     .repeatingStart1 = 5,
+     .explanation = "Device diagnostic report, returned in reply to a PGN 126208 Request Group Function for PGN 130852 that "
+                    "carries the Navico manufacturer (275) and Marine industry parameters. Emitted by both NEON- and "
+                    "Triton-generation Navico devices. After the manufacturer field and an Instance/channel byte, the frame "
+                    "carries a list of {Field ID, Length, Value} records to the end of the fast-packet; Length is the value "
+                    "width (1, 2 or 4 bytes). Field IDs index a set of CAN bus diagnostic counters; ids 4/5/7 (Rx Messages, "
+                    "Tx Messages, Fast Packet Errors) are confirmed against a device's on-screen bus statistics. Ids 0-3 are "
+                    "the rx/tx overflow and error counters (zero on a healthy bus, so their order is not yet distinguished) "
+                    "and id 22 relates to bus state; those are shown numerically. Bus Load shown in the device UI is computed "
+                    "locally and is not carried here."}
 
     ,
     {"Simnet: Alarm Message",
