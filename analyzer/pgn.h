@@ -9478,25 +9478,29 @@ Pgn pgnList[] = {
     ,
     {"Furuno: Multi Sats In View Extended",
      130845,
-     PACKET_INCOMPLETE,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {COMPANY(1855),
       SIMPLE_FIELD("Report type", 4),
-      SIMPLE_FIELD("Antenna", 4),
+      SIMPLE_FIELD("Antenna", 4), // 0..3 = antenna 1..4
       SIMPLE_FIELD("Page type", 4),
       SIMPLE_FIELD("Page", 4),
       RESERVED_FIELD(BYTES(1)),
-      UINT8_FIELD("Sats in View"),
-      UINT8_FIELD("Status"),
+      UINT8_FIELD("Sats in Use"),  // SVs used in the solution (subset of Sats in View)
+      UINT8_FIELD("Sats in View"), // total SVs this cycle; drives the multi-page record assembly
       UINT8_DESC_FIELD("PRN", "1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou"),
       ANGLE_I16_FIELD("Elevation", NULL),
       ANGLE_I16_FIELD("Azimuth", NULL),
       SIGNALTONOISERATIO_FIX16_FIELD("SNR", NULL),
       DISTANCE_FIX32_MMM_FIELD("Range residual", NULL),
+      BITLOOKUP_FIELD("Baseline status", BYTES(1), FURUNO_BASELINE_STATUS),
       END_OF_FIELDS},
-     .repeatingField1 = 9,
+     // Each 12-byte SV record is PRN, Elevation, Azimuth, SNR, Range residual, Baseline status. "Sats in
+     // Use"/"Sats in View" are device totals across pages, not this frame's record count, so the repeating
+     // set runs to end of data (UINT8_MAX). Reverse-engineered from SCX-20 captures. See #722.
+     .repeatingField1 = UINT8_MAX,
      .repeatingCount1 = 6,
-     .repeatingStart1 = 10}
+     .repeatingStart1 = 11}
 
     ,
     {"Simnet: Key Value",

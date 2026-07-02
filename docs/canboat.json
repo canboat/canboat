@@ -5082,6 +5082,18 @@
         ]
       },
       {
+        "Name":"FURUNO_BASELINE_STATUS",
+        "MaxValue":7,
+        "EnumBitValues":[
+          {"Name":"Baseline Antenna 1-2", "Bit":0},
+          {"Name":"Baseline Antenna 2-3", "Bit":1},
+          {"Name":"Baseline Antenna 3-4", "Bit":2},
+          {"Name":"Baseline Antenna 4-1", "Bit":3},
+          {"Name":"Baseline Antenna 1-3", "Bit":4},
+          {"Name":"Baseline Antenna 2-4", "Bit":5}
+        ]
+      },
+      {
         "Name":"SIMNET_AP_MODE_BITFIELD",
         "MaxValue":15,
         "EnumBitValues":[
@@ -74968,13 +74980,12 @@
         "Description":"Furuno: Multi Sats In View Extended",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
-        "FieldCount":15,
-        "MinLength":6,
+        "FieldCount":16,
+        "MinLength":7,
         "RepeatingFieldSet1Size":6,
-        "RepeatingFieldSet1StartField":10,
-        "RepeatingFieldSet1CountField":9,
+        "RepeatingFieldSet1StartField":11,
         "Fields":[
           {
             "Order":1,
@@ -75090,8 +75101,8 @@
           },
           {
             "Order":9,
-            "Id":"satsInView",
-            "Name":"Sats in View",
+            "Id":"satsInUse",
+            "Name":"Sats in Use",
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
@@ -75106,8 +75117,8 @@
           },
           {
             "Order":10,
-            "Id":"status",
-            "Name":"Status",
+            "Id":"satsInView",
+            "Name":"Sats in View",
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
@@ -75208,6 +75219,19 @@
             "ReservedValue":2147483645,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"DISTANCE"
+          },
+          {
+            "Order":16,
+            "Id":"baselineStatus",
+            "Name":"Baseline status",
+            "BitLength":8,
+            "BitOffset":144,
+            "BitStart":0,
+            "Resolution":1,
+            "RangeMin":0,
+            "RangeMax":255,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FURUNO_BASELINE_STATUS"
           }
         ]
       },
