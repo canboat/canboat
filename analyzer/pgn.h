@@ -8941,7 +8941,7 @@ Pgn pgnList[] = {
     ,
     {"Navico: UDB Database, Bulk Report 3",
      130822,
-     PACKET_INCOMPLETE | PACKET_NOT_SEEN,
+     PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275),
       UINT8_DESC_FIELD("Marker", "Always 0xFF"),
@@ -8950,10 +8950,21 @@ Pgn pgnList[] = {
       UINT8_DESC_FIELD("Address", "Part of the object address"),
       UINT8_FIELD("Section"),
       UINT8_FIELD("Item"),
-      BINARY_FIELD("Data", BYTES(216), "Bulk variant payload (length-prefixed); layout not yet observed on the wire"),
+      RESERVED_FIELD(BYTES(1)),
+      LOOKUP_FIELD("Source Setting Id", BYTES(1), NAVICO_SOURCE_SETTING_ID),
+      RESERVED_FIELD(BYTES(3)),
+      UINT16_DESC_FIELD("Token", "Per-object identity token, constant per object"),
+      DYNAMIC_FIELD_LENGTH("Length", BYTES(2), "Byte length of the Value field that follows"),
+      DYNAMIC_FIELD_VALUE("Value",
+                          "Tagged value for this setting: a 1-byte count, an 8-byte source device NMEA 2000 NAME, or a "
+                          "small typed value (e.g. seconds for a damping setting), depending on Source Setting Id."),
       END_OF_FIELDS},
      .researchDoc = "navico_udb",
-     .priority = 3}
+     .priority    = 3,
+     .explanation = "Despite the 'Bulk' name, this Command (3) periodically re-broadcasts single small per-object "
+                    "updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every "
+                    "frame observed so far carries exactly one Section 10 (0x0A) record at Item 1, keyed by 'Source "
+                    "Setting Id' (a compacted id space distinct from Command 1's field of the same name)."}
 
     ,
     {"Navico: UDB Database, Bulk Report 4",

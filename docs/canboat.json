@@ -3504,6 +3504,19 @@
         ]
       },
       {
+        "Name":"NAVICO_SOURCE_SETTING_ID",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Wind Source Count", "Value":17},
+          {"Name":"Wind Source 1", "Value":18},
+          {"Name":"Wind Source 2", "Value":19},
+          {"Name":"Depth/Speed Source Count", "Value":20},
+          {"Name":"Depth/Speed Source 1", "Value":21},
+          {"Name":"Depth/Speed Source 2", "Value":22},
+          {"Name":"True Wind Direction Damping", "Value":24}
+        ]
+      },
+      {
         "Name":"SIMNET_COMMAND",
         "MaxValue":255,
         "EnumValues":[
@@ -70186,13 +70199,14 @@
         "Id":"navicoUdbDatabaseBulkReport3",
         "Description":"Navico: UDB Database, Bulk Report 3",
         "Priority":3,
+        "Explanation":"Despite the 'Bulk' name, this Command (3) periodically re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1, keyed by 'Source Setting Id' (a compacted id space distinct from Command 1's field of the same name).",
         "ResearchDoc":"navico_udb",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":10,
-        "Length":223,
+        "FieldCount":15,
+        "MinLength":16,
         "Fields":[
           {
             "Order":1,
@@ -70330,14 +70344,84 @@
           },
           {
             "Order":10,
-            "Id":"data",
-            "Name":"Data",
-            "Description":"Bulk variant payload (length-prefixed); layout not yet observed on the wire",
-            "BitLength":1728,
+            "Id":"reserved10",
+            "Name":"Reserved",
+            "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"BINARY"
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":11,
+            "Id":"sourceSettingId",
+            "Name":"Source Setting Id",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"NAVICO_SOURCE_SETTING_ID"
+          },
+          {
+            "Order":12,
+            "Id":"reserved12",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":72,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":13,
+            "Id":"token",
+            "Name":"Token",
+            "Description":"Per-object identity token, constant per object",
+            "BitLength":16,
+            "BitOffset":96,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":14,
+            "Id":"length",
+            "Name":"Length",
+            "Description":"Byte length of the Value field that follows",
+            "BitLength":16,
+            "BitOffset":112,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "UnknownValue":65535,
+            "OutOfRangeValue":65534,
+            "ReservedValue":65533,
+            "FieldType":"DYNAMIC_FIELD_LENGTH"
+          },
+          {
+            "Order":15,
+            "Id":"value",
+            "Name":"Value",
+            "Description":"Tagged value for this setting: a 1-byte count, an 8-byte source device NMEA 2000 NAME, or a small typed value (e.g. seconds for a damping setting), depending on Source Setting Id.",
+            "BitLengthVariable":true,
+            "BitOffset":128,
+            "BitStart":0,
+            "FieldType":"DYNAMIC_FIELD_VALUE"
           }
         ]
       },

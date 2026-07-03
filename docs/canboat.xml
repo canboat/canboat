@@ -2872,6 +2872,15 @@ limitations under the License.
       <EnumPair Value='725' Name='Heading Source' />
       <EnumPair Value='726' Name='Invalid' />
     </LookupEnumeration>
+    <LookupEnumeration Name='NAVICO_SOURCE_SETTING_ID' MaxValue='255'>
+      <EnumPair Value='17' Name='Wind Source Count' />
+      <EnumPair Value='18' Name='Wind Source 1' />
+      <EnumPair Value='19' Name='Wind Source 2' />
+      <EnumPair Value='20' Name='Depth/Speed Source Count' />
+      <EnumPair Value='21' Name='Depth/Speed Source 1' />
+      <EnumPair Value='22' Name='Depth/Speed Source 2' />
+      <EnumPair Value='24' Name='True Wind Direction Damping' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
     </LookupEnumeration>
@@ -70664,6 +70673,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>navicoUdbDatabaseBulkReport3</Id>
       <Description>Navico: UDB Database, Bulk Report 3</Description>
     <Priority>3</Priority>
+      <Explanation>Despite the 'Bulk' name, this Command (3) periodically re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1, keyed by 'Source Setting Id' (a compacted id space distinct from Command 1's field of the same name).</Explanation>
       <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -70671,11 +70681,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>223</Length>
+      <FieldCount>15</FieldCount>
+      <MinLength>16</MinLength>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -70813,14 +70822,84 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <Description>Bulk variant payload (length-prefixed); layout not yet observed on the wire</Description>
-          <BitLength>1728</BitLength>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>BINARY</FieldType>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>sourceSettingId</Id>
+          <Name>Source Setting Id</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_SOURCE_SETTING_ID</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved12</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>token</Id>
+          <Name>Token</Name>
+          <Description>Per-object identity token, constant per object</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>96</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Byte length of the Value field that follows</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>112</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
+        </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Tagged value for this setting: a 1-byte count, an 8-byte source device NMEA 2000 NAME, or a small typed value (e.g. seconds for a damping setting), depending on Source Setting Id.</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
