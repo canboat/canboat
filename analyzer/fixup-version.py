@@ -1,7 +1,7 @@
 
 
 #
-# (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+# (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #  
 # This file is part of CANboat.
 # 

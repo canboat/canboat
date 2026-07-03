@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+# Copyright (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #
 # Upward-compatibility check for the canboat public contract.
 #

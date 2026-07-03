@@ -22,7 +22,7 @@ is decided by range (see common.h) except for the mixed 0x1F000..0x1FFFF
 range, for which fastpacket-table.h holds a per-PGN lookup generated from
 canboat.json at build time.
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
