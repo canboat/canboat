@@ -2925,17 +2925,19 @@ LOOKUP_FIELDTYPE(NAVICO_DIAGNOSTIC, 5, "Tx Messages", "UINT32")
 LOOKUP_FIELDTYPE(NAVICO_DIAGNOSTIC, 7, "Fast Packet Errors", "UINT32")
 LOOKUP_END
 
-// PGN 130822 Command 3 "Bulk Report 3" Section 10 setting ids. A different, compacted id space from
-// the Command 1 "Source Setting Id" field, the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and
-// PGN 130840's SIMNET_DATA_SOURCE. Only these 7 ids are proven by capture; others surely exist.
-LOOKUP_TYPE(NAVICO_SOURCE_SETTING_ID, BYTES(1))
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 17, "Wind Source Count")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 18, "Wind Source 1")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 19, "Wind Source 2")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 20, "Depth/Speed Source Count")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 21, "Depth/Speed Source 1")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 22, "Depth/Speed Source 2")
-LOOKUP(NAVICO_SOURCE_SETTING_ID, 24, "True Wind Direction Damping")
+// PGN 130822 Command 3 "Navico: Configuration Set" Section 10 setting ids. A different, compacted id
+// space from the Command 1 "Source Setting Id" field, the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE
+// ids, and PGN 130840's SIMNET_DATA_SOURCE. Only these 7 ids are proven by capture; others surely exist.
+// Each id also fixes the wire type of the companion Value field (counts are UINT8, sources are the
+// selected device's ISO_NAME, the damping value is a plain seconds duration).
+LOOKUP_TYPE_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, BYTES(1))
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 17, "Wind Source Count", "UINT8")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 18, "Wind Source 1", "ISO_NAME")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 19, "Wind Source 2", "ISO_NAME")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 20, "Depth/Speed Source Count", "UINT8")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 21, "Depth/Speed Source 1", "ISO_NAME")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 22, "Depth/Speed Source 2", "ISO_NAME")
+LOOKUP_FIELDTYPE(NAVICO_SOURCE_SETTING_ID, 24, "True Wind Direction Damping", "DURATION_UFIX16_S")
 LOOKUP_END
 
 LOOKUP_TYPE(SIMNET_COMMAND, BYTES(1))

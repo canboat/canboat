@@ -2872,15 +2872,6 @@ limitations under the License.
       <EnumPair Value='725' Name='Heading Source' />
       <EnumPair Value='726' Name='Invalid' />
     </LookupEnumeration>
-    <LookupEnumeration Name='NAVICO_SOURCE_SETTING_ID' MaxValue='255'>
-      <EnumPair Value='17' Name='Wind Source Count' />
-      <EnumPair Value='18' Name='Wind Source 1' />
-      <EnumPair Value='19' Name='Wind Source 2' />
-      <EnumPair Value='20' Name='Depth/Speed Source Count' />
-      <EnumPair Value='21' Name='Depth/Speed Source 1' />
-      <EnumPair Value='22' Name='Depth/Speed Source 2' />
-      <EnumPair Value='24' Name='True Wind Direction Damping' />
-    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_COMMAND' MaxValue='255'>
       <EnumPair Value='50' Name='Text' />
     </LookupEnumeration>
@@ -4279,6 +4270,18 @@ limitations under the License.
  Bits='32'/>
       <EnumFieldType Value='7' Name='Fast Packet Errors' FieldType='NUMBER' Signed='false'
  Bits='32'/>
+    </LookupFieldTypeEnumeration>
+    <LookupFieldTypeEnumeration Name='NAVICO_SOURCE_SETTING_ID' MaxValue='255'>
+      <EnumFieldType Value='17' Name='Wind Source Count' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='18' Name='Wind Source 1' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='19' Name='Wind Source 2' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='20' Name='Depth/Speed Source Count' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='21' Name='Depth/Speed Source 1' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='22' Name='Depth/Speed Source 2' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='24' Name='True Wind Direction Damping' FieldType='DURATION' Signed='false'
+ Resolution='1' Unit='s' Bits='16'/>
     </LookupFieldTypeEnumeration>
     <LookupFieldTypeEnumeration Name='SIMNET_KEY_VALUE' MaxValue='16777215'>
       <EnumFieldType Value='0' Name='Heading Offset' FieldType='NUMBER' Signed='true'
@@ -70670,10 +70673,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130822</PGN>
-      <Id>navicoUdbDatabaseBulkReport3</Id>
-      <Description>Navico: UDB Database, Bulk Report 3</Description>
+      <Id>navicoConfigurationSet</Id>
+      <Description>Navico: Configuration Set</Description>
     <Priority>3</Priority>
-      <Explanation>Despite the 'Bulk' name, this Command (3) periodically re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1, keyed by 'Source Setting Id' (a compacted id space distinct from Command 1's field of the same name).</Explanation>
+      <Explanation>Command 3, formerly documented as 'Bulk Report 3'; despite that name it periodically re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source selection and True wind direction damping - that PGN 130845 does not.</Explanation>
       <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -70749,7 +70752,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>command</Id>
           <Name>Command</Name>
-          <Description>Bulk Report 3</Description>
+          <Description>Configuration Set</Description>
           <BitLength>6</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -70834,6 +70837,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>11</Order>
           <Id>sourceSettingId</Id>
           <Name>Source Setting Id</Name>
+          <Description>Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN 130840.</Description>
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
@@ -70844,8 +70848,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>NAVICO_SOURCE_SETTING_ID</LookupEnumeration>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
+          <LookupFieldTypeEnumeration>NAVICO_SOURCE_SETTING_ID</LookupFieldTypeEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>12</Order>
@@ -70895,7 +70900,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>15</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Tagged value for this setting: a 1-byte count, an 8-byte source device NMEA 2000 NAME, or a small typed value (e.g. seconds for a damping setting), depending on Source Setting Id.</Description>
+          <Description>Value for this setting; its type is resolved from Source Setting Id.</Description>
           <BitLengthVariable>true</BitLengthVariable>
           <BitOffset>128</BitOffset>
           <BitStart>0</BitStart>
