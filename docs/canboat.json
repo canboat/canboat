@@ -5346,9 +5346,9 @@
         {"name": "Wind Source Count", "value": 17, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
         {"name": "Wind Source 1", "value": 18, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
         {"name": "Wind Source 2", "value": 19, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
-        {"name": "Depth/Speed Source Count", "value": 20, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
-        {"name": "Depth/Speed Source 1", "value": 21, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
-        {"name": "Depth/Speed Source 2", "value": 22, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
+        {"name": "Boat Speed Source Count", "value": 20, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
+        {"name": "Port Boat Speed Source", "value": 21, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
+        {"name": "Starboard Boat Speed Source", "value": 22, "FieldType": "ISO_NAME", "Resolution": 1, "Bits": "64"},
         {"name": "True Wind Direction Damping", "value": 24, "FieldType": "DURATION", "Signed": false, "Resolution": 1, "Unit": "s", "Bits": "16"}
         ]
       },
@@ -70124,13 +70124,13 @@
           },
           {
             "Order":6,
-            "Id":"reserved6",
-            "Name":"Reserved",
+            "Id":"spare6",
+            "Name":"Spare",
             "BitLength":2,
             "BitOffset":30,
             "BitStart":6,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":7,
@@ -70285,13 +70285,13 @@
           },
           {
             "Order":6,
-            "Id":"reserved6",
-            "Name":"Reserved",
+            "Id":"spare6",
+            "Name":"Spare",
             "BitLength":2,
             "BitOffset":30,
             "BitStart":6,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":7,
@@ -70344,13 +70344,13 @@
           },
           {
             "Order":10,
-            "Id":"reserved10",
-            "Name":"Reserved",
+            "Id":"spare10",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":11,
@@ -70373,13 +70373,13 @@
           },
           {
             "Order":12,
-            "Id":"reserved12",
-            "Name":"Reserved",
+            "Id":"spare12",
+            "Name":"Spare",
             "BitLength":24,
             "BitOffset":72,
             "BitStart":0,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "FieldType":"SPARE"
           },
           {
             "Order":13,

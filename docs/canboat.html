@@ -18099,8 +18099,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Bulk Report 2</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Section</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -18144,8 +18144,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Configuration Set</td><td><div class="xs">0 .. 61</div></td><td>6 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Spare</td><td/><td/><td>2 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Address</td><td>Part of the object address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Section</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -18154,14 +18154,14 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Item</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Source Setting Id</td><td>Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN 130840.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Source Setting Id</td><td>Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN 130840.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
                       <a href="#lookup-NAVICO_SOURCE_SETTING_ID">NAVICO_SOURCE_SETTING_ID</a>
                       that defines the next variable field's type.
-                    </td><td>true</td></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>13</td><td>Token</td><td>Per-object identity token, constant per object</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                    </td><td>true</td></tr><tr><td>12</td><td>Spare</td><td/><td/><td>24 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>13</td><td>Token</td><td>Per-object identity token, constant per object</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Length</td><td>Byte length of the Value field that follows</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
@@ -22886,11 +22886,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>18</td><td>Wind Source 1</td><td>1 </td><td>64 bits 
               <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>19</td><td>Wind Source 2</td><td>1 </td><td>64 bits 
-              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>20</td><td>Depth/Speed Source Count</td><td> </td><td>8 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>20</td><td>Boat Speed Source Count</td><td> </td><td>8 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>Depth/Speed Source 1</td><td>1 </td><td>64 bits 
-              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>22</td><td>Depth/Speed Source 2</td><td>1 </td><td>64 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>21</td><td>Port Boat Speed Source</td><td>1 </td><td>64 bits 
+              <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>22</td><td>Starboard Boat Speed Source</td><td>1 </td><td>64 bits 
               <a href="#ft-ISO_NAME">ISO_NAME</a></td></tr><tr><td>24</td><td>True Wind Direction Damping</td><td>1 s</td><td>16 bits 
               
                     unsigned

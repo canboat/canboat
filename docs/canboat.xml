@@ -4276,10 +4276,10 @@ limitations under the License.
  Bits='8'/>
       <EnumFieldType Value='18' Name='Wind Source 1' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
       <EnumFieldType Value='19' Name='Wind Source 2' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
-      <EnumFieldType Value='20' Name='Depth/Speed Source Count' FieldType='NUMBER' Signed='false'
+      <EnumFieldType Value='20' Name='Boat Speed Source Count' FieldType='NUMBER' Signed='false'
  Bits='8'/>
-      <EnumFieldType Value='21' Name='Depth/Speed Source 1' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
-      <EnumFieldType Value='22' Name='Depth/Speed Source 2' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='21' Name='Port Boat Speed Source' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
+      <EnumFieldType Value='22' Name='Starboard Boat Speed Source' FieldType='ISO_NAME' Resolution='1' Bits='64'/>
       <EnumFieldType Value='24' Name='True Wind Direction Damping' FieldType='DURATION' Signed='false'
  Resolution='1' Unit='s' Bits='16'/>
     </LookupFieldTypeEnumeration>
@@ -70601,13 +70601,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved6</Id>
-          <Name>Reserved</Name>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -70766,13 +70766,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved6</Id>
-          <Name>Reserved</Name>
+          <Id>spare6</Id>
+          <Name>Spare</Name>
           <BitLength>2</BitLength>
           <BitOffset>30</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>7</Order>
@@ -70825,13 +70825,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>reserved10</Id>
-          <Name>Reserved</Name>
+          <Id>spare10</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>11</Order>
@@ -70854,13 +70854,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>reserved12</Id>
-          <Name>Reserved</Name>
+          <Id>spare12</Id>
+          <Name>Spare</Name>
           <BitLength>24</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>13</Order>
