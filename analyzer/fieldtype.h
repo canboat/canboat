@@ -1038,6 +1038,22 @@ FieldType fieldTypeList[] = {
      .hasSign       = False,
      .baseFieldType = "DURATION"},
 
+    // Simnet Key Value (PGN 130845) instrument damping settings encode the displayed number of seconds
+    // scaled by a per-quantity factor (11 or 111) that does not reduce to a round SI resolution; see #730.
+    {.name          = "DURATION_UFIX16_1_11S",
+     .description   = "Time duration, 16 bits with 1/11 second resolution",
+     .resolution    = 1.0 / 11.0,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
+    {.name          = "DURATION_UFIX16_1_111S",
+     .description   = "Time duration, 16 bits with 1/111 second resolution",
+     .resolution    = 1.0 / 111.0,
+     .size          = 16,
+     .hasSign       = False,
+     .baseFieldType = "DURATION"},
+
     {.name          = "DURATION_UFIX32_MIN",
      .description   = "Time duration, 32 bits with minute resolution",
      .resolution    = 60,
