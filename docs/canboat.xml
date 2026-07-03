@@ -4290,6 +4290,24 @@ limitations under the License.
  Resolution='0.004' Unit='%' Bits='16'/>
       <EnumFieldType Value='1024' Name='Field angle' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='1280' Name='Heading damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1283' Name='Apparent wind damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1285' Name='Boat speed damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1329' Name='Trim angle damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1335' Name='SOG damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1336' Name='COG damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1337' Name='Heel angle damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1345' Name='Tide damping' FieldType='DURATION' Signed='false'
+ Resolution='0.0909091' Unit='s' Bits='16'/>
+      <EnumFieldType Value='1349' Name='True wind speed damping' FieldType='DURATION' Signed='false'
+ Resolution='0.00900901' Unit='s' Bits='16'/>
       <EnumFieldType Value='1800' Name='Anchor depth' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m' Bits='16'/>
       <EnumFieldType Value='4863' Name='Backlight level' FieldType='LOOKUP' Signed='false'

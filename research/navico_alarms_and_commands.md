@@ -128,6 +128,37 @@ Findings:
   in `lookup.h`), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet
   captured for the general Pressure key). See #729.
 
+### Instrument damping — PGN 130845 (Simnet: Key Value)
+
+The same channel also carries **damping** (averaging time) for individual
+instrument readouts: Heading, Apparent wind speed, True wind speed, Boat
+speed, SOG, COG, Heel angle, Trim angle, Tide. All of these share **command
+group 5**, and unlike the unit preferences above they are broadcast with
+`Display Group = Default` regardless of which display group is active:
+
+```
+Simnet: Key Value  Display Group=Default  Key=1280 "Heading damping"  Value=00:00:09
+```
+
+Confirmed live against a Triton head (source 48) the same way as the unit
+preferences — cycling each damping setting and correlating the Set frame
+with the value just chosen.
+
+- The raw value is the displayed number of **seconds scaled by a per-quantity
+  factor** that doesn't reduce to a round SI resolution: most quantities use
+  ×11 (1/11 s ≈ 90.9 ms resolution), but True wind speed damping uses ×111
+  (1/111 s ≈ 9.0 ms) — why that one differs is unconfirmed. Modelled as two
+  new field types, `DURATION_UFIX16_1_11S` and `DURATION_UFIX16_1_111S`.
+- Most quantities are limited to whole seconds 0–9 (raw 0–99), the same
+  0–99 raw-range convention already seen in `SIMNET_BACKLIGHT_LEVEL`. Tide
+  damping is the exception, with a wider enum: Off, 15s, 30s, 45s, 1/2/3/4
+  min (raw 0–2640).
+- **True wind *direction* damping visibly changes readings live on other
+  devices but produces no PGN 130845 traffic at all**, despite repeated
+  attempts — it must ride a different PGN, not yet identified.
+
+See #730.
+
 ### The lifecycle command — PGN 130850 (Simnet: Alarm)
 
 When byte 5 = 255 (Alarm), byte 6 carries the lifecycle command

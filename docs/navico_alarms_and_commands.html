@@ -102,6 +102,16 @@ a { color: #1a73e8; }
 <li>Distance has a second, short-range unit (key 36871, "Distance unit (small)") for readouts like depth/anchor/waypoint proximity, distinct from the main Distance unit.</li>
 <li>Pressure (key 5163) and Barometric pressure (key 5164) are separate keys — the Triton menu has one setting for general/engine pressure and another for barometric pressure — and only some of their enum values were observed during the capture (see <code>SIMNET_PRESSURE_UNIT</code> / <code>SIMNET_BARO_PRESSURE_UNIT</code> in <code>lookup.h</code>), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet captured for the general Pressure key). See #729.</li>
 </ul>
+<h3 id="instrument-damping-pgn-130845-simnet-key-value">Instrument damping — PGN 130845 (Simnet: Key Value)</h3>
+<p>The same channel also carries <strong>damping</strong> (averaging time) for individual instrument readouts: Heading, Apparent wind speed, True wind speed, Boat speed, SOG, COG, Heel angle, Trim angle, Tide. All of these share <strong>command group 5</strong>, and unlike the unit preferences above they are broadcast with <code>Display Group = Default</code> regardless of which display group is active:</p>
+<pre><code>Simnet: Key Value  Display Group=Default  Key=1280 &quot;Heading damping&quot;  Value=00:00:09</code></pre>
+<p>Confirmed live against a Triton head (source 48) the same way as the unit preferences — cycling each damping setting and correlating the Set frame with the value just chosen.</p>
+<ul>
+<li>The raw value is the displayed number of <strong>seconds scaled by a per-quantity factor</strong> that doesn't reduce to a round SI resolution: most quantities use ×11 (1/11 s ≈ 90.9 ms resolution), but True wind speed damping uses ×111 (1/111 s ≈ 9.0 ms) — why that one differs is unconfirmed. Modelled as two new field types, <code>DURATION_UFIX16_1_11S</code> and <code>DURATION_UFIX16_1_111S</code>.</li>
+<li>Most quantities are limited to whole seconds 0–9 (raw 0–99), the same 0–99 raw-range convention already seen in <code>SIMNET_BACKLIGHT_LEVEL</code>. Tide damping is the exception, with a wider enum: Off, 15s, 30s, 45s, 1/2/3/4 min (raw 0–2640).</li>
+<li>**True wind <em>direction</em> damping visibly changes readings live on other devices but produces no PGN 130845 traffic at all**, despite repeated attempts — it must ride a different PGN, not yet identified.</li>
+</ul>
+<p>See #730.</p>
 <h3 id="the-lifecycle-command-pgn-130850-simnet-alarm">The lifecycle command — PGN 130850 (Simnet: Alarm)</h3>
 <p>When byte 5 = 255 (Alarm), byte 6 carries the lifecycle command (<code>SIMNET_ALARM_COMMAND</code>), and bytes 8–9 carry the alarm id:</p>
 <table>
