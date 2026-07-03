@@ -3549,7 +3549,7 @@
         ]
       },
       {
-        "Name":"SIMNET_DISPLAY_GROUP",
+        "Name":"SIMNET_NETWORK_GROUP",
         "MaxValue":255,
         "EnumValues":[
           {"Name":"None", "Value":0},
@@ -78071,8 +78071,9 @@
           },
           {
             "Order":6,
-            "Id":"displayGroup",
-            "Name":"Display Group",
+            "Id":"networkGroup",
+            "Name":"Network Group",
+            "Description":"This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -78084,7 +78085,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -78243,8 +78244,9 @@
           },
           {
             "Order":6,
-            "Id":"displayGroup",
-            "Name":"Display Group",
+            "Id":"networkGroup",
+            "Name":"Network Group",
+            "Description":"This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -78256,7 +78258,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -78986,7 +78988,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79140,7 +79142,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79294,7 +79296,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79448,7 +79450,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79602,7 +79604,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79756,7 +79758,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -79932,7 +79934,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -80086,7 +80088,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -80277,7 +80279,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -80465,7 +80467,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -80661,7 +80663,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -80868,7 +80870,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -81040,7 +81042,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
@@ -81231,7 +81233,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"SIMNET_DISPLAY_GROUP"
+            "LookupEnumeration":"SIMNET_NETWORK_GROUP"
           },
           {
             "Order":7,
