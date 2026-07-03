@@ -20405,10 +20405,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
@@ -20454,10 +20454,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Display Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Source</td><td>Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Key</td><td>Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) &lt;&lt; 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&amp;G and Mercury key spaces.</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
@@ -20681,7 +20681,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20724,7 +20724,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20767,7 +20767,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20810,7 +20810,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20853,7 +20853,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20896,7 +20896,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20944,7 +20944,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>2:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>2:
                   Follow Up</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -20987,7 +20987,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21036,7 +21036,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>23:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>23:
                   Timer</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21087,7 +21087,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>255:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Event Type</td><td>255:
                   Alarm</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21139,7 +21139,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21188,7 +21188,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>8 bits
@@ -21228,7 +21228,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -21277,7 +21277,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
+                      <a href="#lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP</a></td><td/></tr><tr><td>7</td><td>Command Type</td><td>10:
                   AP Command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
@@ -22660,7 +22660,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Off</td></tr><tr><td>1</td><td>On</td></tr><tr><td>2</td><td>Auto locked</td></tr><tr><td>3</td><td>Auto</td></tr></table><h3 id="lookup-SIMNET_NIGHT_MODE_COLOR">SIMNET_NIGHT_MODE_COLOR
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Red</td></tr><tr><td>1</td><td>Green</td></tr><tr><td>2</td><td>Blue</td></tr><tr><td>3</td><td>White</td></tr><tr><td>4</td><td>Magenta</td></tr></table><h3 id="lookup-SIMNET_DISPLAY_GROUP">SIMNET_DISPLAY_GROUP
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Red</td></tr><tr><td>1</td><td>Green</td></tr><tr><td>2</td><td>Blue</td></tr><tr><td>3</td><td>White</td></tr><tr><td>4</td><td>Magenta</td></tr></table><h3 id="lookup-SIMNET_NETWORK_GROUP">SIMNET_NETWORK_GROUP
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>None</td></tr><tr><td>1</td><td>Default</td></tr><tr><td>2</td><td>Group 1</td></tr><tr><td>3</td><td>Group 2</td></tr><tr><td>4</td><td>Group 3</td></tr><tr><td>5</td><td>Group 4</td></tr><tr><td>6</td><td>Group 5</td></tr><tr><td>7</td><td>Group 6</td></tr></table><h3 id="lookup-SIMNET_HOUR_DISPLAY">SIMNET_HOUR_DISPLAY
         (0 - 255)

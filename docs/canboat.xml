@@ -2906,7 +2906,7 @@ limitations under the License.
       <EnumPair Value='3' Name='White' />
       <EnumPair Value='4' Name='Magenta' />
     </LookupEnumeration>
-    <LookupEnumeration Name='SIMNET_DISPLAY_GROUP' MaxValue='255'>
+    <LookupEnumeration Name='SIMNET_NETWORK_GROUP' MaxValue='255'>
       <EnumPair Value='0' Name='None' />
       <EnumPair Value='1' Name='Default' />
       <EnumPair Value='2' Name='Group 1' />
@@ -78871,8 +78871,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>displayGroup</Id>
-          <Name>Display Group</Name>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
+          <Description>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -78884,7 +78885,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -79046,8 +79047,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>displayGroup</Id>
-          <Name>Display Group</Name>
+          <Id>networkGroup</Id>
+          <Name>Network Group</Name>
+          <Description>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -79059,7 +79061,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -79819,7 +79821,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -79977,7 +79979,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80135,7 +80137,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80293,7 +80295,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80451,7 +80453,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80609,7 +80611,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80789,7 +80791,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -80947,7 +80949,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -81142,7 +81144,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -81333,7 +81335,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -81532,7 +81534,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -81742,7 +81744,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -81918,7 +81920,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -82113,7 +82115,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SIMNET_DISPLAY_GROUP</LookupEnumeration>
+          <LookupEnumeration>SIMNET_NETWORK_GROUP</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
