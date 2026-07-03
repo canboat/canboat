@@ -27,7 +27,7 @@ relay/server daemon (`n2kd`), and format converters (`candump2analyzer`,
 `socketcan-writer`, `replay`, `ip`, `pcap2candump`, `analyzer2csv`,
 `group-function`).
 
-License is **Apache-2.0**; every file carries the `(C) 2009-2025 Kees Verruijt`
+License is **Apache-2.0**; every file carries the `(C) 2009-2026 Kees Verruijt`
 header. The current `VERSION` and `SCHEMA_VERSION` are defined in
 `common/version.h` — the single source of truth; don't hard-code them elsewhere.
 

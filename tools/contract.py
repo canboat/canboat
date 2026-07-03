@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 #
-# Copyright (C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+# Copyright (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 #
 # Canboat "public contract" tooling.
 #

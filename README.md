@@ -98,9 +98,14 @@ just want to use your NMEA 2000 network, these projects build on them and provid
 - [OpenPlotter](https://openplotter.org/)
 - [Signal K](https://signalk.org/)
 
+## Sponsorship
+
+If you find CANboat useful, please consider supporting its development via
+[GitHub Sponsors](https://github.com/sponsors/keesverruijt).
+
 ---
 
-(C) 2009-2025, Kees Verruijt, Harlingen, The Netherlands.
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 This file is part of CANboat.
 
