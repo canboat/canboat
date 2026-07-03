@@ -183,4 +183,18 @@ test18:
 	diff $(TEMPDIR)/iso-tp-test.out iso-tp-test.out
 	diff $(TEMPDIR)/iso-tp-test.err iso-tp-test.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18
+#
+# This tests that the message output buffer (print.c's mbuf, backed by the
+# shared growable StringBuffer) does not silently truncate a large decoded
+# message. A 148-satellite PGN 129540 payload - the largest a 148-satellite
+# GNSS Sats in View list reassembled via ISO Transport Protocol can be
+# (255 packets * 7 bytes, ISO TP's own ceiling) - renders to ~50KB in
+# -nv -debug -json mode, well past the old fixed 8192-byte buffer.
+#
+test19:
+	$(ANALYZER) -nv -debug -q -json < iso-tp-large-payload-test.in > $(TEMPDIR)/iso-tp-large-payload-test.out -fixtime iso-tp-large-payload-test 2> $(TEMPDIR)/iso-tp-large-payload-test.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/iso-tp-large-payload-test.out
+	diff $(TEMPDIR)/iso-tp-large-payload-test.out iso-tp-large-payload-test.out
+	diff $(TEMPDIR)/iso-tp-large-payload-test.err iso-tp-large-payload-test.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19
