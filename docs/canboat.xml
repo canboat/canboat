@@ -2929,6 +2929,55 @@ limitations under the License.
       <EnumPair Value='88' Name='90%' />
       <EnumPair Value='99' Name='100% (Max)' />
     </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_HEADING_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Magnetic' />
+      <EnumPair Value='1' Name='True' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_WIND_SPEED_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Knots' />
+      <EnumPair Value='1' Name='Meters per second' />
+      <EnumPair Value='2' Name='Miles per hour' />
+      <EnumPair Value='3' Name='Kilometers per hour' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_SPEED_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Knots' />
+      <EnumPair Value='1' Name='Kilometers per hour' />
+      <EnumPair Value='2' Name='Miles per hour' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_TEMPERATURE_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Celsius' />
+      <EnumPair Value='1' Name='Fahrenheit' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_DISTANCE_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Nautical miles' />
+      <EnumPair Value='1' Name='Kilometers' />
+      <EnumPair Value='2' Name='Miles' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_DISTANCE_SMALL_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Feet' />
+      <EnumPair Value='1' Name='Meters' />
+      <EnumPair Value='2' Name='Yards' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_DEPTH_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Meters' />
+      <EnumPair Value='1' Name='Feet' />
+      <EnumPair Value='2' Name='Fathoms' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_VOLUME_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Liters' />
+      <EnumPair Value='1' Name='Gallons' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_PRESSURE_UNIT' MaxValue='255'>
+      <EnumPair Value='1' Name='PSI' />
+      <EnumPair Value='3' Name='Kilopascal' />
+      <EnumPair Value='5' Name='Inches of mercury' />
+      <EnumPair Value='6' Name='Bar' />
+    </LookupEnumeration>
+    <LookupEnumeration Name='SIMNET_BARO_PRESSURE_UNIT' MaxValue='255'>
+      <EnumPair Value='0' Name='Millibar' />
+      <EnumPair Value='2' Name='Hectopascal' />
+      <EnumPair Value='5' Name='Inches of mercury' />
+    </LookupEnumeration>
     <LookupEnumeration Name='SIMNET_AP_EVENTS' MaxValue='255'>
       <EnumPair Value='2' Name='Follow/Non Follow' />
       <EnumPair Value='6' Name='Standby' />
@@ -4247,6 +4296,34 @@ limitations under the License.
  Bits='8'>
           <LookupEnumeration>SIMNET_BACKLIGHT_LEVEL</LookupEnumeration>
       </EnumFieldType>
+      <EnumFieldType Value='5120' Name='Heading unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_HEADING_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5123' Name='Wind speed unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_WIND_SPEED_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5125' Name='Speed unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_SPEED_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5126' Name='Temperature unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_TEMPERATURE_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5127' Name='Distance unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_DISTANCE_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5128' Name='Depth unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_DEPTH_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5134' Name='Volume unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_VOLUME_UNIT</LookupEnumeration>
+      </EnumFieldType>
       <EnumFieldType Value='5160' Name='Time format' FieldType='LOOKUP' Signed='false'
  Bits='8'>
           <LookupEnumeration>SIMNET_TIME_FORMAT</LookupEnumeration>
@@ -4255,6 +4332,16 @@ limitations under the License.
  Bits='8'>
           <LookupEnumeration>SIMNET_HOUR_DISPLAY</LookupEnumeration>
       </EnumFieldType>
+      <EnumFieldType Value='5163' Name='Pressure unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_PRESSURE_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5164' Name='Barometric pressure unit' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_BARO_PRESSURE_UNIT</LookupEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='5174' Name='Distance unit (companion)' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
       <EnumFieldType Value='9983' Name='Night mode' FieldType='LOOKUP' Signed='false'
  Bits='8'>
           <LookupEnumeration>SIMNET_NIGHT_MODE</LookupEnumeration>
@@ -4267,6 +4354,10 @@ limitations under the License.
  Resolution='0.01' Unit='m/s' Bits='16'/>
       <EnumFieldType Value='32789' Name='Alert bits' FieldType='BITLOOKUP' Bits='64'>
           <LookupBitEnumeration>SIMNET_ALERT_BITFIELD</LookupBitEnumeration>
+      </EnumFieldType>
+      <EnumFieldType Value='36871' Name='Distance unit (small)' FieldType='LOOKUP' Signed='false'
+ Bits='8'>
+          <LookupEnumeration>SIMNET_DISTANCE_SMALL_UNIT</LookupEnumeration>
       </EnumFieldType>
       <EnumFieldType Value='40711' Name='Race timer auto start' FieldType='LOOKUP' Signed='false'
  Bits='8'>

@@ -92,6 +92,16 @@ a { color: #1a73e8; }
 <p>Alarm limits are published as key/value pairs keyed by <code>SIMNET_KEY_VALUE</code>. Each display group broadcasts the current limit for every configured alarm. For example the "True wind low" limit (key 516) is a <code>SPEED_UFIX16_CM</code> value:</p>
 <pre><code>Simnet: Key Value  Key=516 &quot;True wind low&quot;  Value=12.86   (= 25.0 kn)</code></pre>
 <p>Changing the limit on one device re-broadcasts the key with the new value, and the other devices (including autopilot controllers) pick it up — which is why a threshold edited on one display immediately appears on another. Related limit keys live next to each other in the lookup, e.g. key 517 "Low boat speed".</p>
+<h3 id="display-unit-preferences-pgn-130845-simnet-key-value">Display unit preferences — PGN 130845 (Simnet: Key Value)</h3>
+<p>The same Key Value channel also carries the <strong>unit-of-measure preference</strong> for each quantity a display can show (Distance, Speed, Wind speed, Depth, Temperature, Volume, Pressure, Barometric pressure, Heading reference). Each quantity is its own key, but all of them share <strong>command group 20</strong> (the low byte of the composite key), e.g.:</p>
+<pre><code>Simnet: Key Value  Display Group=Group 1  Key=5127 &quot;Distance unit&quot;  Value=Kilometers</code></pre>
+<p>Confirmed live against a Triton head (source 48) by starting a capture filtered to <code>130845</code> from that source and cycling every option in its Units menu, one at a time, correlating each Set frame with the button just pressed. Findings:</p>
+<ul>
+<li>Like the alarm thresholds above, a unit change is broadcast per <strong>Display Group</strong> — switching the head to a different group (e.g. "Group 2") and changing a unit there produces a Set frame tagged with that group, using the <em>same</em> key and the <em>same</em> value encoding, so unit preferences are independent per display group rather than a single global setting.</li>
+<li>Distance (key 5127) always broadcasts together with a second key (5174, "Distance unit (companion)") that was only ever observed at value 0; its purpose is unconfirmed.</li>
+<li>Distance has a second, short-range unit (key 36871, "Distance unit (small)") for readouts like depth/anchor/waypoint proximity, distinct from the main Distance unit.</li>
+<li>Pressure (key 5163) and Barometric pressure (key 5164) are separate keys — the Triton menu has one setting for general/engine pressure and another for barometric pressure — and only some of their enum values were observed during the capture (see <code>SIMNET_PRESSURE_UNIT</code> / <code>SIMNET_BARO_PRESSURE_UNIT</code> in <code>lookup.h</code>), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet captured for the general Pressure key). See #729.</li>
+</ul>
 <h3 id="the-lifecycle-command-pgn-130850-simnet-alarm">The lifecycle command — PGN 130850 (Simnet: Alarm)</h3>
 <p>When byte 5 = 255 (Alarm), byte 6 carries the lifecycle command (<code>SIMNET_ALARM_COMMAND</code>), and bytes 8–9 carry the alarm id:</p>
 <table>

@@ -93,6 +93,41 @@ the other devices (including autopilot controllers) pick it up — which is why 
 threshold edited on one display immediately appears on another. Related limit
 keys live next to each other in the lookup, e.g. key 517 "Low boat speed".
 
+### Display unit preferences — PGN 130845 (Simnet: Key Value)
+
+The same Key Value channel also carries the **unit-of-measure preference** for
+each quantity a display can show (Distance, Speed, Wind speed, Depth,
+Temperature, Volume, Pressure, Barometric pressure, Heading reference). Each
+quantity is its own key, but all of them share **command group 20** (the low
+byte of the composite key), e.g.:
+
+```
+Simnet: Key Value  Display Group=Group 1  Key=5127 "Distance unit"  Value=Kilometers
+```
+
+Confirmed live against a Triton head (source 48) by starting a capture
+filtered to `130845` from that source and cycling every option in its Units
+menu, one at a time, correlating each Set frame with the button just pressed.
+Findings:
+
+- Like the alarm thresholds above, a unit change is broadcast per **Display
+  Group** — switching the head to a different group (e.g. "Group 2") and
+  changing a unit there produces a Set frame tagged with that group, using the
+  *same* key and the *same* value encoding, so unit preferences are
+  independent per display group rather than a single global setting.
+- Distance (key 5127) always broadcasts together with a second key (5174,
+  "Distance unit (companion)") that was only ever observed at value 0; its
+  purpose is unconfirmed.
+- Distance has a second, short-range unit (key 36871, "Distance unit
+  (small)") for readouts like depth/anchor/waypoint proximity, distinct from
+  the main Distance unit.
+- Pressure (key 5163) and Barometric pressure (key 5164) are separate keys —
+  the Triton menu has one setting for general/engine pressure and another for
+  barometric pressure — and only some of their enum values were observed
+  during the capture (see `SIMNET_PRESSURE_UNIT` / `SIMNET_BARO_PRESSURE_UNIT`
+  in `lookup.h`), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet
+  captured for the general Pressure key). See #729.
+
 ### The lifecycle command — PGN 130850 (Simnet: Alarm)
 
 When byte 5 = 255 (Alarm), byte 6 carries the lifecycle command

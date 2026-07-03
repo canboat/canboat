@@ -3597,6 +3597,95 @@
         ]
       },
       {
+        "Name":"SIMNET_HEADING_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Magnetic", "Value":0},
+          {"Name":"True", "Value":1}
+        ]
+      },
+      {
+        "Name":"SIMNET_WIND_SPEED_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Knots", "Value":0},
+          {"Name":"Meters per second", "Value":1},
+          {"Name":"Miles per hour", "Value":2},
+          {"Name":"Kilometers per hour", "Value":3}
+        ]
+      },
+      {
+        "Name":"SIMNET_SPEED_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Knots", "Value":0},
+          {"Name":"Kilometers per hour", "Value":1},
+          {"Name":"Miles per hour", "Value":2}
+        ]
+      },
+      {
+        "Name":"SIMNET_TEMPERATURE_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Celsius", "Value":0},
+          {"Name":"Fahrenheit", "Value":1}
+        ]
+      },
+      {
+        "Name":"SIMNET_DISTANCE_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Nautical miles", "Value":0},
+          {"Name":"Kilometers", "Value":1},
+          {"Name":"Miles", "Value":2}
+        ]
+      },
+      {
+        "Name":"SIMNET_DISTANCE_SMALL_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Feet", "Value":0},
+          {"Name":"Meters", "Value":1},
+          {"Name":"Yards", "Value":2}
+        ]
+      },
+      {
+        "Name":"SIMNET_DEPTH_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Meters", "Value":0},
+          {"Name":"Feet", "Value":1},
+          {"Name":"Fathoms", "Value":2}
+        ]
+      },
+      {
+        "Name":"SIMNET_VOLUME_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Liters", "Value":0},
+          {"Name":"Gallons", "Value":1}
+        ]
+      },
+      {
+        "Name":"SIMNET_PRESSURE_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"PSI", "Value":1},
+          {"Name":"Kilopascal", "Value":3},
+          {"Name":"Inches of mercury", "Value":5},
+          {"Name":"Bar", "Value":6}
+        ]
+      },
+      {
+        "Name":"SIMNET_BARO_PRESSURE_UNIT",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Millibar", "Value":0},
+          {"Name":"Hectopascal", "Value":2},
+          {"Name":"Inches of mercury", "Value":5}
+        ]
+      },
+      {
         "Name":"SIMNET_AP_EVENTS",
         "MaxValue":255,
         "EnumValues":[
@@ -5265,13 +5354,24 @@
         {"name": "Field angle", "value": 1024, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Anchor depth", "value": 1800, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m", "Bits": "16"},
         {"name": "Backlight level", "value": 4863, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_BACKLIGHT_LEVEL"},
+        {"name": "Heading unit", "value": 5120, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_HEADING_UNIT"},
+        {"name": "Wind speed unit", "value": 5123, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_WIND_SPEED_UNIT"},
+        {"name": "Speed unit", "value": 5125, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_SPEED_UNIT"},
+        {"name": "Temperature unit", "value": 5126, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_TEMPERATURE_UNIT"},
+        {"name": "Distance unit", "value": 5127, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_DISTANCE_UNIT"},
+        {"name": "Depth unit", "value": 5128, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_DEPTH_UNIT"},
+        {"name": "Volume unit", "value": 5134, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_VOLUME_UNIT"},
         {"name": "Time format", "value": 5160, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_TIME_FORMAT"},
         {"name": "Time hour display", "value": 5161, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_HOUR_DISPLAY"},
+        {"name": "Pressure unit", "value": 5163, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_PRESSURE_UNIT"},
+        {"name": "Barometric pressure unit", "value": 5164, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_BARO_PRESSURE_UNIT"},
+        {"name": "Distance unit (companion)", "value": 5174, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
         {"name": "Night mode", "value": 9983, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE"},
         {"name": "True wind shift", "value": 11524, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Race timer duration", "value": 16903, "FieldType": "DURATION", "Signed": false, "Resolution": 60, "Unit": "s", "Bits": "32"},
         {"name": "AP low boat speed", "value": 22296, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Alert bits", "value": 32789, "FieldType": "BITLOOKUP", "Bits": "64", "LookupBitEnumeration": "SIMNET_ALERT_BITFIELD"},
+        {"name": "Distance unit (small)", "value": 36871, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_DISTANCE_SMALL_UNIT"},
         {"name": "Race timer auto start", "value": 40711, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "OFF_ON"},
         {"name": "Night mode color", "value": 44079, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "SIMNET_NIGHT_MODE_COLOR"},
         {"name": "Race timer rolling start", "value": 49159, "FieldType": "LOOKUP", "Signed": false, "Bits": "8", "LookupEnumeration": "OFF_ON"},
