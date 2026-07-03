@@ -8965,9 +8965,10 @@ Pgn pgnList[] = {
       END_OF_FIELDS},
      .researchDoc = "navico_udb",
      .priority    = 3,
-     .explanation = "Command 3, formerly documented as 'Bulk Report 3'; despite that name it periodically "
-                    "re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', "
-                    "not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) "
+     .explanation = "Command 3, formerly documented as 'Bulk Report 3'; despite that name it carries a single small "
+                    "per-object update, not a bulk/multi-item transfer. Unlike Command 1 'Source Report' (which "
+                    "continually re-broadcasts its whole table), Command 3 is change-driven - it is only sent when "
+                    "the object's value changes. Every frame observed so far carries exactly one Section 10 (0x0A) "
                     "record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: "
                     "Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source "
                     "selection and True wind direction damping - that PGN 130845 does not."}

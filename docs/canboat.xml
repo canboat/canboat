@@ -70676,7 +70676,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>navicoConfigurationSet</Id>
       <Description>Navico: Configuration Set</Description>
     <Priority>3</Priority>
-      <Explanation>Command 3, formerly documented as 'Bulk Report 3'; despite that name it periodically re-broadcasts single small per-object updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source selection and True wind direction damping - that PGN 130845 does not.</Explanation>
+      <Explanation>Command 3, formerly documented as 'Bulk Report 3'; despite that name it carries a single small per-object update, not a bulk/multi-item transfer. Unlike Command 1 'Source Report' (which continually re-broadcasts its whole table), Command 3 is change-driven - it is only sent when the object's value changes. Every frame observed so far carries exactly one Section 10 (0x0A) record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source selection and True wind direction damping - that PGN 130845 does not.</Explanation>
       <ResearchDoc>navico_udb</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
