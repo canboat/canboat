@@ -153,11 +153,29 @@ with the value just chosen.
   0–99 raw-range convention already seen in `SIMNET_BACKLIGHT_LEVEL`. Tide
   damping is the exception, with a wider enum: Off, 15s, 30s, 45s, 1/2/3/4
   min (raw 0–2640).
-- **True wind *direction* damping visibly changes readings live on other
-  devices but produces no PGN 130845 traffic at all**, despite repeated
-  attempts — it must ride a different PGN, not yet identified.
+- **True wind *direction* damping is the one exception** — it does not use
+  the 130845 Key Value channel at all. It rides **PGN 130822 (Navico: UDB
+  Database), Command 3 "Bulk Report 3"**, Section 10, Item 1, as an object
+  with **Source Setting Id 24 (0x18)** — the same `{00, SSI, 00 00 00, token,
+  valueLen, value}` object shape already documented for the "Measured
+  sources" objects in #727 (SSI 17–22), just a higher SSI in the same
+  Section 10 space. Unlike the other damping keys it is **not scaled** — the
+  value byte is the literal number of seconds (0 = Off, 1 = 1s, 9 = 9s).
+  Found by diffing a live capture of *all* traffic from the Triton before
+  and after the change, since it doesn't stand out in a 130845-only filter.
 
-See #730.
+  This also means "Bulk Report 3" is a misnomer for at least this traffic:
+  the frame we captured is a single small per-object update (`Item = 1`),
+  periodically re-broadcast the same way `Source Report` (Command 1)
+  constantly re-broadcasts its table — not a bulk/multi-item transfer. An
+  earlier capture in this same session had already logged this exact SSI 24
+  update (during unrelated background traffic) and it was misread as
+  unrelated "Measured sources" noise before the correlation was made. A
+  companion `Item = 0` record fires alongside each change with a different,
+  not-yet-understood 10-byte layout (doesn't match the SSI/token/value
+  shape) — possibly a token/sequence header rather than a value.
+
+See #730 (and #727 for the shared Section 10 SSI/token/value wire shape).
 
 ### The lifecycle command — PGN 130850 (Simnet: Alarm)
 
