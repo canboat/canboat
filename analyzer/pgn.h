@@ -8929,7 +8929,7 @@ Pgn pgnList[] = {
      {COMPANY(275),
       UINT8_DESC_FIELD("Marker", "Always 0xFF"),
       MATCH_FIELD(PK("Command"), 6, 2, "Bulk Report 2"),
-      RESERVED_FIELD(2),
+      SPARE_FIELD(2),
       UINT8_DESC_FIELD("Address", "Part of the object address"),
       UINT8_FIELD("Section"),
       UINT8_FIELD("Item"),
@@ -8939,32 +8939,39 @@ Pgn pgnList[] = {
      .priority = 3}
 
     ,
-    {"Navico: UDB Database, Bulk Report 3",
+    {"Navico: Configuration Set",
      130822,
      PACKET_INCOMPLETE,
      PACKET_FAST,
      {COMPANY(275),
       UINT8_DESC_FIELD("Marker", "Always 0xFF"),
-      MATCH_FIELD(PK("Command"), 6, 3, "Bulk Report 3"),
-      RESERVED_FIELD(2),
+      MATCH_FIELD(PK("Command"), 6, 3, "Configuration Set"),
+      SPARE_FIELD(2),
       UINT8_DESC_FIELD("Address", "Part of the object address"),
       UINT8_FIELD("Section"),
       UINT8_FIELD("Item"),
-      RESERVED_FIELD(BYTES(1)),
-      LOOKUP_FIELD("Source Setting Id", BYTES(1), NAVICO_SOURCE_SETTING_ID),
-      RESERVED_FIELD(BYTES(3)),
+      SPARE_FIELD(BYTES(1)),
+      LOOKUP_DYNAMIC_FIELD_KEY_DESC("Source Setting Id",
+                                    BYTES(1),
+                                    NAVICO_SOURCE_SETTING_ID,
+                                    "Compacted id selecting which setting this object reports; also resolves the wire "
+                                    "type of the Value field that follows. Different id space from the Command 1 "
+                                    "'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN "
+                                    "130840."),
+      SPARE_FIELD(BYTES(3)),
       UINT16_DESC_FIELD("Token", "Per-object identity token, constant per object"),
       DYNAMIC_FIELD_LENGTH("Length", BYTES(2), "Byte length of the Value field that follows"),
-      DYNAMIC_FIELD_VALUE("Value",
-                          "Tagged value for this setting: a 1-byte count, an 8-byte source device NMEA 2000 NAME, or a "
-                          "small typed value (e.g. seconds for a damping setting), depending on Source Setting Id."),
+      DYNAMIC_FIELD_VALUE("Value", "Value for this setting; its type is resolved from Source Setting Id."),
       END_OF_FIELDS},
      .researchDoc = "navico_udb",
      .priority    = 3,
-     .explanation = "Despite the 'Bulk' name, this Command (3) periodically re-broadcasts single small per-object "
-                    "updates - the same paradigm as Command 1 'Source Report', not a bulk/multi-item transfer. Every "
-                    "frame observed so far carries exactly one Section 10 (0x0A) record at Item 1, keyed by 'Source "
-                    "Setting Id' (a compacted id space distinct from Command 1's field of the same name)."}
+     .explanation = "Command 3, formerly documented as 'Bulk Report 3'; despite that name it carries a single small "
+                    "per-object update, not a bulk/multi-item transfer. Unlike Command 1 'Source Report' (which "
+                    "continually re-broadcasts its whole table), Command 3 is change-driven - it is only sent when "
+                    "the object's value changes. Every frame observed so far carries exactly one Section 10 (0x0A) "
+                    "record at Item 1. Most Navico/Simnet parameter settings are read/written over PGN 130845 (Simnet: "
+                    "Key Value) instead; this PGN only carries the handful of settings - wind/depth-speed source "
+                    "selection and True wind direction damping - that PGN 130845 does not."}
 
     ,
     {"Navico: UDB Database, Bulk Report 4",
