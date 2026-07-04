@@ -85,6 +85,7 @@ See [Changelog](CHANGELOG.md).
 ### Other projects using the CANboat PGN definitions
 
 - [go-nmea-client](https://github.com/aldas/go-nmea-client) — Go
+- [korri-n2k](https://github.com/fard-draf/korri-n2k) — NMEA 2000 stack for embedded Rust targets
 - [n2k](https://github.com/mbj4668/n2k) — Erlang
 - [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) — Windows GUI
 - [nmea2000](https://github.com/tomer-w/nmea2000) — pure Python NMEA 2000 decoder and encoder library
