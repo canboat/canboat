@@ -42,60 +42,60 @@ static bool unhandledBitLength(const char *fieldName, size_t length)
   return false;
 }
 
-static char  mbuf[8192];
-static char *mp = mbuf;
+// The message output buffer uses the shared growable StringBuffer (common.h)
+// rather than a fixed size: a message can be much larger than a single
+// fast-packet payload (223 bytes) once ISO Transport Protocol reassembly is
+// in play (up to 1785 bytes), and the human-readable/-debug rendering of a
+// large repeating field group can need many times that in characters (e.g.
+// GNSS Sats in View with a large satellite list). A fixed buffer would
+// silently truncate instead of erroring.
+static StringBuffer mbuf = {0};
 
 extern void mprintf(const char *format, ...)
 {
   va_list ap;
-  int     remain;
 
   va_start(ap, format);
-  remain = sizeof(mbuf) - (mp - mbuf) - 1;
-  if (remain > 0)
-  {
-    mp += vsnprintf(mp, remain, format, ap);
-  }
+  sbAppendFormatV(&mbuf, format, ap);
   va_end(ap);
 }
 
 extern void mreset(void)
 {
-  mp = mbuf;
+  sbEmpty(&mbuf);
 }
 
 extern void mset(size_t location)
 {
-  mp = mbuf + location;
+  sbTruncate(&mbuf, location);
 }
 
 extern char mchr(size_t location)
 {
-  return mbuf[location];
+  return mbuf.data[location];
 }
 
 extern void minsert(size_t location, const char *str)
 {
   size_t len = strlen(str);
 
-  if (mp + len - mbuf <= sizeof(mbuf))
-  {
-    memmove(mbuf + location + len, mbuf + location, mp - mbuf - location);
-    memmove(mbuf + location, str, len);
-    mp += len;
-  }
+  sbEnsureCapacity(&mbuf, mbuf.len + len);
+  memmove(mbuf.data + location + len, mbuf.data + location, mbuf.len - location);
+  memcpy(mbuf.data + location, str, len);
+  mbuf.len += len;
+  mbuf.data[mbuf.len] = '\0';
 }
 
 extern void mwrite(FILE *stream)
 {
-  fwrite(mbuf, sizeof(char), mp - mbuf, stream);
+  fwrite(sbGet(&mbuf), sizeof(char), sbGetLength(&mbuf), stream);
   fflush(stream);
   mreset();
 }
 
 extern size_t mlocation(void)
 {
-  return mp - mbuf;
+  return sbGetLength(&mbuf);
 }
 
 extern char *getSep(void)
