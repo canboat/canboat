@@ -894,14 +894,37 @@ static void printCanFormat(RawMessage *msg)
       p->frames = 0;
     }
 
-    if (frame == 0 && p->frames == 0)
+    if (frame == 0)
     {
-      p->size = msg->data[1];
-      if (p->size > FASTPACKET_MAX_SIZE)
+      // Frame 0 declares the payload size and thus the mask of required
+      // frame indices. Frames already held in the slot are ambiguous: an
+      // out-of-order retransmission must survive (see recombine-frames.in),
+      // but the body of a previous burst whose frame 0 was lost must not —
+      // completing against it would emit a payload gluing this frame 0
+      // onto the previous message's body, and a size mismatch would leave
+      // p->frames a strict superset of p->allFrames so the slot never
+      // completes again. The tell is completion: a genuinely reordered
+      // burst completes on a later index, stale leftovers would complete
+      // the moment frame 0 lands. Discard held bits exactly when they
+      // would complete the mask this frame declares. (allFrames == 1 is
+      // exempt: a <= 6 byte payload legitimately completes on frame 0
+      // alone, using no held data.)
+      size_t   size = msg->data[1];
+      uint32_t allFrames;
+
+      if (size > FASTPACKET_MAX_SIZE)
       {
-        p->size = FASTPACKET_MAX_SIZE;
+        size = FASTPACKET_MAX_SIZE;
       }
-      p->allFrames = (uint32_t) ((UINT64_C(1) << (1 + (p->size / 7))) - 1);
+      allFrames = (uint32_t) ((UINT64_C(1) << (1 + (size / 7))) - 1);
+
+      if (p->frames != 0 && allFrames != 1 && ((p->frames | UINT32_C(1)) & allFrames) == allFrames)
+      {
+        logError("Received incomplete fast packet PGN %u from source %u\n", msg->pgn, msg->src);
+        p->frames = 0;
+      }
+      p->size      = size;
+      p->allFrames = allFrames;
     }
 
     if (msg->len > msgIdx)
