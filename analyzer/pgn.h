@@ -7926,12 +7926,22 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
-    {"Navico: Unknown",
+    {"Navico: Feature Unlock",
      130817,
      PACKET_INCOMPLETE,
      PACKET_FAST,
-     {COMPANY(275), UINT8_FIELD("A"), UINT8_FIELD("B"), UINT8_FIELD("C"), UINT8_FIELD("D"), UINT8_FIELD("E"), END_OF_FIELDS},
-     .priority = 7}
+     {COMPANY(275),
+      UINT16_DESC_FIELD("Feature Id",
+                        "Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 "
+                        "(the requester asks the target to report a specific feature)."),
+      UINT8_DESC_FIELD("Record Count", "Number of 3-byte records that follow; 0 in every observed broadcast"),
+      UINT16_DESC_FIELD("Data", "Trailing value (observed only with Record Count 0)"),
+      END_OF_FIELDS},
+     .priority = 7,
+     .explanation = "Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request "
+                    "seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id "
+                    "and a record count; a non-zero count is believed to be followed by that many 3-byte records (never "
+                    "observed on the wire, so their layout is left undecoded here) and two trailing bytes."}
 
     ,
     {"Lowrance: Product Information",
@@ -9129,23 +9139,55 @@ Pgn pgnList[] = {
       MATCH_FIELD("Report Type", BYTES(1), 5, "Data-type source directory"),
       UINT8_DESC_FIELD("Part", "Sequence/part number of the directory report"),
       SPARE_FIELD(BYTES(1)),
+      DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(
+          "Length", BYTES(1), 3, "Bytes following in this record: a type byte, a 16-bit data-type id and the value"),
+      UINT8_DESC_FIELD("Type", "Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)"),
       LOOKUP_FIELD("Data Type", BYTES(2), NAVICO_DATA_TYPE),
-      DYNAMIC_FIELD_LENGTH("Source Length", BYTES(1), "Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present"),
-      DYNAMIC_FIELD_VALUE("Source", "Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME"),
-      UINT8_DESC_FIELD("Value Type", "Encoding of the data type's value (e.g. 4 = float32)"),
-      UINT8_DESC_FIELD("Instance", "Data instance the entry refers to"),
+      DYNAMIC_FIELD_VALUE("Value",
+                          "Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper "
+                          "(0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 "
+                          "value means none/auto; other data types carry small typed values."),
       END_OF_FIELDS},
      .repeatingField1 = 255,
-     .repeatingCount1 = 5,
+     .repeatingCount1 = 4,
      .repeatingStart1 = 9,
      .explanation = "Directory mapping the Navico data types a device tracks to their currently-selected source device, "
                     "broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the "
-                    "fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source "
-                    "Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes "
-                    "the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source "
-                    "Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's "
-                    "8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing "
-                    "it). The data type values themselves are not carried here."}
+                    "fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data "
+                    "Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type "
+                    "plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table "
+                    "(the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A "
+                    "0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or "
+                    "none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 "
+                    "Object Dump, and matches the layout observed across all captured traffic."}
+
+    ,
+    {"Navico: Data Type Source Directory, Full Report",
+     130823,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(275),
+      RESERVED_FIELD(BYTES(1)),
+      SPARE_FIELD(BYTES(1)),
+      MATCH_FIELD("Report Type", BYTES(1), 6, "Data-type source directory (full report)"),
+      UINT8_DESC_FIELD("Part", "Sequence/part number of the directory report"),
+      SPARE_FIELD(BYTES(1)),
+      DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(
+          "Length", BYTES(1), 3, "Bytes following in this record: a type byte, a 16-bit data-type id and the value"),
+      UINT8_DESC_FIELD("Type", "Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)"),
+      LOOKUP_FIELD("Data Type", BYTES(2), NAVICO_DATA_TYPE),
+      DYNAMIC_FIELD_VALUE("Value",
+                          "Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper "
+                          "(0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 "
+                          "value means none/auto; other data types carry small typed values."),
+      END_OF_FIELDS},
+     .repeatingField1 = 255,
+     .repeatingCount1 = 4,
+     .repeatingStart1 = 9,
+     .explanation = "Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record "
+                    "list, but covering every data type the reporting object owns rather than a summary subset, so it "
+                    "typically carries the bound-source NAME entries. Uses the identical record format as Report Type 5 and "
+                    "the PGN 130822 Command 6 Object Dump."}
 
     ,
     {"Navico: Boat Speed Polar Table",
@@ -9910,10 +9952,9 @@ Pgn pgnList[] = {
      .camelDescription = "simnetParameterSet",
      .explanation = "Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, "
                     "Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value "
-                    "is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware "
-                    "switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the "
-                    "echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder "
-                    "and the nac3-operations capture corpus.",
+                    "is replaced by an explicit Length byte followed by that many bytes of Value. Devices switch from 130845 "
+                    "to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form "
+                    "(Operation = 2) for wide parameters. Observed in the nac3-operations capture corpus.",
      .researchDoc = "navico_alarms_and_commands",
      .interval    = UINT16_MAX}
 

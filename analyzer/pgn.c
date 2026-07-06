@@ -230,10 +230,17 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
              data[0],
              pgn->description);
 
-    // Iterate over fields in the data[0,length> parameter list
-    // and try to find a matching list where all match parameters are found;
-    // we can stop after the first non-match parameter.
-    for (d = 1; d < length;)
+    // Iterate over the parameter list and try to find a matching definition where all match
+    // parameters are found; we can stop after the first non-match parameter.
+    //
+    // data[0] is the parameter count: iterate exactly that many {field index, value} pairs and no
+    // further. Walking to the end of the data instead would misread trailing bytes (e.g. a wider
+    // value field than this definition assumes, or fast-packet padding) as a bogus extra parameter
+    // whose "field index" is out of range, spuriously rejecting an otherwise-matching definition.
+    int nparams = data[0];
+    int param;
+
+    for (d = 1, param = 0; param < nparams && d < length; param++)
     {
       int index = data[d++] - 1;
 
