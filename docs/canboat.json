@@ -15337,7 +15337,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":7,
+        "FieldCount":8,
         "Length":8,
         "Fields":[
           {
@@ -15438,11 +15438,27 @@
             "Order":7,
             "Id":"reserved7",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
+          },
+          {
+            "Order":8,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":16,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-32767,
+            "RangeMax":32764,
+            "UnknownValue":32767,
+            "OutOfRangeValue":32766,
+            "ReservedValue":32765,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -15585,7 +15601,7 @@
         "Complete":false,
         "Missing":["Fields","Interval"
         ],
-        "FieldCount":6,
+        "FieldCount":7,
         "Length":8,
         "Fields":[
           {
@@ -15666,10 +15682,26 @@
           },
           {
             "Order":6,
-            "Id":"reserved6",
-            "Name":"Reserved",
-            "BitLength":32,
+            "Id":"a",
+            "Name":"A",
+            "BitLength":8,
             "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":124,
+            "UnknownValue":127,
+            "OutOfRangeValue":126,
+            "ReservedValue":125,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"

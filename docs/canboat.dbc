@@ -534,7 +534,8 @@ BO_ 2566855934 PGN_65308_bepMarineProprietaryPg: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566856190 PGN_65309_navicoWirelessBatteryS: 8 Vector__XXX
- SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ a : 48|16@1- (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 40|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ batteryChargeStatus : 32|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ batteryStatus : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ status : 16|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -555,7 +556,8 @@ BO_ 2566856702 PGN_65311_bepMarineProprietaryPg: 8 Vector__XXX
  SG_ manufacturerCode : 0|11@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2566856958 PGN_65312_navicoWirelessSignalSt: 8 Vector__XXX
- SG_ reserved6 : 32|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ reserved7 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ a : 32|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ signalStrength : 24|8@1+ (1,0) [0|0] "%" Vector__XXX
  SG_ unknown : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX

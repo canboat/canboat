@@ -14998,7 +14998,7 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
+      <FieldCount>8</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -15099,11 +15099,27 @@ limitations under the License.
           <Order>7</Order>
           <Id>reserved7</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-32767</RangeMin>
+          <RangeMax>32764</RangeMax>
+          <UnknownValue>32767</UnknownValue>
+          <OutOfRangeValue>32766</OutOfRangeValue>
+          <ReservedValue>32765</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -15256,7 +15272,7 @@ limitations under the License.
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>6</FieldCount>
+      <FieldCount>7</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -15337,10 +15353,26 @@ limitations under the License.
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>reserved6</Id>
-          <Name>Reserved</Name>
-          <BitLength>32</BitLength>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>

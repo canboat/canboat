@@ -2386,7 +2386,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Status"),
       PERCENTAGE_U8_FIELD("Battery Status"),
       PERCENTAGE_U8_FIELD("Battery Charge Status"),
-      RESERVED_FIELD(BYTES(3)),
+      RESERVED_FIELD(BYTES(1)),
+      SIMPLE_SIGNED_FIELD("A", BYTES(2)),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -2409,7 +2410,12 @@ Pgn pgnList[] = {
      65312,
      PACKET_FIELDS_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS},
+     {COMPANY(275),
+      UINT8_FIELD("Unknown"),
+      PERCENTAGE_U8_FIELD("Signal Strength"),
+      SIMPLE_SIGNED_FIELD("A", BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
      .priority = 7}
 
     ,

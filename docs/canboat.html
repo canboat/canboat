@@ -3032,7 +3032,7 @@ limitations under the License.
              single-frame 
             PGN is
             8
-            bytes long and contains 7 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -3054,8 +3054,11 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Battery Charge Status</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65310">0xFF1E:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>A</td><td/><td><div class="xs">-32767 .. 32764</div></td><td>16 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65310">0xFF1E:
             PGN 65310
             - BEP Marine: Proprietary PGN 65310</h3><p>
               This PGN description applies when the following field(s) match:
@@ -3112,7 +3115,7 @@ limitations under the License.
              single-frame 
             PGN is
             8
-            bytes long and contains 6 fields.
+            bytes long and contains 7 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -3131,7 +3134,10 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Signal Strength</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>A</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65313">0xFF21:
             PGN 65313
             - Navico: Depth Quality</h3><p>
