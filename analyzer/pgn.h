@@ -1312,6 +1312,23 @@ Pgn pgnList[] = {
                     "Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, "
                     "and 17 to 19 in Breaker Mapping 3."}
 
+    ,
+    {"Simnet: Keep Alive",
+     61184,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      SIMPLE_DESC_FIELD("Command", 14, "Command selector; 49 keeps the addressed device awake"),
+      RESERVED_FIELD(1),
+      SIMPLE_DESC_FIELD("Reply", 1, "0 = request, 1 = reply"),
+      BINARY_FIELD("Value", BYTES(4), "Only meaningful in a reply (carries a status); left unset (0xFF) in a request"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to "
+                    "keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically "
+                    "and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the "
+                    "reply carries a status."}
+
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
