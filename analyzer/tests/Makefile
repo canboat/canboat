@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 tests
 
 all:	tests
 
@@ -197,4 +197,15 @@ test19:
 	diff $(TEMPDIR)/iso-tp-large-payload-test.out iso-tp-large-payload-test.out
 	diff $(TEMPDIR)/iso-tp-large-payload-test.err iso-tp-large-payload-test.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19
+#
+# This tests that a STRING_LAU field whose encoding byte is 0xff (an unset field
+# padded with 0xff, e.g. the H5000 pilot in PGN 126998) decodes as an empty field
+# instead of raising "Unhandled string type 255" and aborting the whole PGN.
+#
+test20:
+	$(ANALYZER) -json -nv < pgn-126998-lau-ff.in > $(TEMPDIR)/pgn-126998-lau-ff.out -fixtime pgn-126998-lau-ff 2> $(TEMPDIR)/pgn-126998-lau-ff.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-126998-lau-ff.out
+	diff $(TEMPDIR)/pgn-126998-lau-ff.out pgn-126998-lau-ff.out
+	diff $(TEMPDIR)/pgn-126998-lau-ff.err pgn-126998-lau-ff.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20
