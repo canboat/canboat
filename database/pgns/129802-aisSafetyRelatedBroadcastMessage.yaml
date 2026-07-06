@@ -1,0 +1,42 @@
+pgn: 129802
+id: aisSafetyRelatedBroadcastMessage
+description: AIS Safety Related Broadcast Message
+type: Fast
+priority: 5
+interval: irregular
+missing:
+- SampleData
+url: https://www.navcen.uscg.gov/ais-safety-related-broadcast-message14
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: safetyRelatedText
+  name: Safety Related Text
+  type: STRING_LAU

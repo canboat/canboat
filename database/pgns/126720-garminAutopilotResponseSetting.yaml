@@ -1,0 +1,63 @@
+pgn: 126720
+id: garminAutopilotResponseSetting
+description: 'Garmin Autopilot: Response Setting'
+type: Fast
+variantOrder: 14
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: UINT16
+  description: Garmin autopilot transport
+  match: 5904
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '4'
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '4'
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  description: '1'
+  match: 1
+- id: field
+  name: Field
+  type: UINT8
+  description: Response Setting
+  match: 62
+  primaryKey: true
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: responseSetting
+  name: Response Setting
+  type: INT8

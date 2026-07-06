@@ -1,0 +1,78 @@
+pgn: 127237
+id: headingTrackControl
+description: Heading/Track control
+type: Fast
+priority: 2
+interval: 250
+fields:
+- id: rudderLimitExceeded
+  name: Rudder Limit Exceeded
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: offHeadingLimitExceeded
+  name: Off-Heading Limit Exceeded
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: offTrackLimitExceeded
+  name: Off-Track Limit Exceeded
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: override
+  name: Override
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: steeringMode
+  name: Steering Mode
+  type: LOOKUP
+  bits: 3
+  lookup: STEERING_MODE
+- id: turnMode
+  name: Turn Mode
+  type: LOOKUP
+  bits: 3
+  lookup: TURN_MODE
+- id: headingReference
+  name: Heading Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: commandedRudderDirection
+  name: Commanded Rudder Direction
+  type: LOOKUP
+  bits: 3
+  lookup: DIRECTION_RUDDER
+- id: commandedRudderAngle
+  name: Commanded Rudder Angle
+  type: ANGLE_FIX16
+- id: headingToSteerCourse
+  name: Heading-To-Steer (Course)
+  type: ANGLE_UFIX16
+- id: track
+  name: Track
+  type: ANGLE_UFIX16
+- id: rudderLimit
+  name: Rudder Limit
+  type: ANGLE_UFIX16
+- id: offHeadingLimit
+  name: Off-Heading Limit
+  type: ANGLE_UFIX16
+- id: radiusOfTurnOrder
+  name: Radius of Turn Order
+  type: DISTANCE_FIX16_M
+- id: rateOfTurnOrder
+  name: Rate of Turn Order
+  type: ROTATION_FIX16
+- id: offTrackLimit
+  name: Off-Track Limit
+  type: DISTANCE_FIX16_M
+- id: vesselHeading
+  name: Vessel Heading
+  type: ANGLE_UFIX16

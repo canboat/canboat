@@ -1,0 +1,47 @@
+pgn: 130820
+id: fusionVersions
+description: 'Fusion: Versions'
+type: Fast
+variantOrder: 4
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: API Version
+  match: 32769
+  lookup: FUSION_STATUS_MESSAGE_ID
+- id: hwVersionMajor
+  name: HW Version Major
+  type: UINT16
+- id: hwVersionMinor
+  name: HW Version Minor
+  type: UINT16
+- id: swVersionMajor
+  name: SW Version Major
+  type: UINT8
+- id: swVersionMinor
+  name: SW Version Minor
+  type: UINT8
+- id: buildNumber
+  name: Build Number
+  type: UINT8

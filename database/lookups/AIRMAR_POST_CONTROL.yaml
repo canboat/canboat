@@ -1,0 +1,6 @@
+name: AIRMAR_POST_CONTROL
+kind: pair
+bits: 1
+values:
+  0: Report previous values
+  1: Generate new values

@@ -1,0 +1,51 @@
+pgn: 130860
+id: simnetApUnknown4
+description: 'Simnet: AP Unknown 4'
+type: Fast
+priority: 7
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Extended autopilot status/telemetry broadcast by the AC (AutoPilot Computer): a sequence of 32-bit values, each
+  0x7FFFFFFF/0xFFFFFFFF when not available. Observed emitted by both the AC-42 and the NAC-3 (and reportedly the H5000 AP).
+  Byte 2 (A) is 0xFF on the AC-42 but 0 on the NAC-3; in NAC-3 captures field F is a slowly incrementing 32-bit counter. Physical
+  meaning of the individual fields not yet identified.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: INT32
+- id: c
+  name: C
+  type: INT32
+- id: d
+  name: D
+  type: UINT32
+- id: e
+  name: E
+  type: INT32
+- id: f
+  name: F
+  type: UINT32

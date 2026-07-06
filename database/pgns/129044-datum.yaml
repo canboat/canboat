@@ -1,0 +1,32 @@
+pgn: 129044
+id: datum
+description: Datum
+type: Fast
+priority: 6
+interval: 10000
+fields:
+- id: localDatum
+  name: Local Datum
+  type: STRING_FIX
+  bits: 32
+  description: defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth
+    char is local datum subdivision code.
+- id: deltaLatitude
+  name: Delta Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: deltaLongitude
+  name: Delta Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: deltaAltitude
+  name: Delta Altitude
+  type: DISTANCE_FIX32_CM
+- id: referenceDatum
+  name: Reference Datum
+  type: STRING_FIX
+  bits: 32
+  description: defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth
+    char is local datum subdivision code.

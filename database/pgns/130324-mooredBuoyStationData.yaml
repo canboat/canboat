@@ -1,0 +1,80 @@
+pgn: 130324
+id: mooredBuoyStationData
+description: Moored Buoy Station Data
+type: Fast
+priority: 6
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: measurementDate
+  name: Measurement Date
+  type: DATE
+- id: measurementTime
+  name: Measurement Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: stationLatitude
+  name: Station Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: stationLongitude
+  name: Station Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: windSpeed
+  name: Wind Speed
+  type: SPEED_UFIX16_CM
+- id: windDirection
+  name: Wind Direction
+  type: ANGLE_UFIX16
+- id: windReference
+  name: Wind Reference
+  type: LOOKUP
+  bits: 3
+  lookup: WIND_REFERENCE
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: windGusts
+  name: Wind Gusts
+  type: SPEED_UFIX16_CM
+- id: waveHeight
+  name: Wave Height
+  type: LENGTH_UFIX16_CM
+- id: dominantWavePeriod
+  name: Dominant Wave Period
+  type: DURATION_UFIX16_CS
+- id: atmosphericPressure
+  name: Atmospheric Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: pressureTendencyRate
+  name: Pressure Tendency Rate
+  type: PRESSURE_RATE_FIX16_PA
+- id: airTemperature
+  name: Air Temperature
+  type: TEMPERATURE
+- id: waterTemperature
+  name: Water Temperature
+  type: TEMPERATURE
+- id: stationId
+  name: Station ID
+  type: STRING_LAU
+  primaryKey: true

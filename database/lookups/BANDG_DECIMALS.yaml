@@ -1,0 +1,10 @@
+name: BANDG_DECIMALS
+kind: pair
+bits: 8
+values:
+  0: '0'
+  1: '1'
+  2: '2'
+  3: '3'
+  4: '4'
+  254: Auto

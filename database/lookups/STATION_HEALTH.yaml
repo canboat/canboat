@@ -1,0 +1,9 @@
+name: STATION_HEALTH
+kind: pair
+bits: 4
+values:
+  0: Not Working
+  1: Unmonitored
+  2: Healthy Operational
+  3: Healthy Test Mode
+  4: Test Mode

@@ -1,0 +1,42 @@
+pgn: 130834
+id: furunoSpeedCalculationPosition
+description: 'Furuno: Speed-calculation Position'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: pointIndex
+  name: Point index
+  type: UINT8
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: positionY
+  name: Position Y
+  type: LENGTH_UFIX16_DM
+- id: positionZ
+  name: Position Z
+  type: LENGTH_UFIX16_DM

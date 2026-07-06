@@ -1,0 +1,6 @@
+name: SIMNET_HEADING_UNIT
+kind: pair
+bits: 8
+values:
+  0: Magnetic
+  1: 'True'

@@ -1,0 +1,51 @@
+pgn: 65314
+id: yamahaGearStatus
+description: 'Yamaha: Gear Status'
+type: Single
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://github.com/canboat/canboat/issues/603
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mystic Valley Communications
+  match: 198
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: neutral
+  name: Neutral
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 16

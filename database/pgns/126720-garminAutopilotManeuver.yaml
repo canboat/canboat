@@ -1,0 +1,61 @@
+pgn: 126720
+id: garminAutopilotManeuver
+description: 'Garmin Autopilot: Maneuver'
+type: Fast
+variantOrder: 17
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: UINT16
+  description: Garmin autopilot transport
+  match: 5904
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '4'
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '4'
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  description: '38'
+  match: 38
+- id: maneuverCode
+  name: Maneuver Code
+  type: UINT8
+  description: Maneuver button event code (observed 0..9)
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: value
+  name: Value
+  type: UINT8

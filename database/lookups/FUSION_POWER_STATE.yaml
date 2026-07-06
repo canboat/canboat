@@ -1,0 +1,6 @@
+name: FUSION_POWER_STATE
+kind: pair
+bits: 8
+values:
+  1: 'On'
+  2: 'Off'

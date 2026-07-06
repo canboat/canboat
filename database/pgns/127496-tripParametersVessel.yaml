@@ -1,0 +1,19 @@
+pgn: 127496
+id: tripParametersVessel
+description: Trip Parameters, Vessel
+type: Fast
+priority: 5
+interval: 1000
+fields:
+- id: timeToEmpty
+  name: Time to Empty
+  type: DURATION_UFIX32_MS
+- id: distanceToEmpty
+  name: Distance to Empty
+  type: LENGTH_UFIX32_CM
+- id: estimatedFuelRemaining
+  name: Estimated Fuel Remaining
+  type: VOLUME_UFIX16_L
+- id: tripRunTime
+  name: Trip Run Time
+  type: DURATION_UFIX32_MS

@@ -1,0 +1,29 @@
+pgn: 130071
+id: routeAndWpServiceRouteComment
+description: Route and WP Service - Route Comment
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRouteId
+  name: Start Route ID
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfRoutesWithComments
+  name: Number of Routes with Comments
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- id: comment
+  name: Comment
+  type: STRING_LAU
+repeating1:
+  count: 2
+  start: 5
+  countField: 2

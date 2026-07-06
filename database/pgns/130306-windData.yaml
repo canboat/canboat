@@ -1,0 +1,27 @@
+pgn: 130306
+id: windData
+description: Wind Data
+type: Single
+priority: 2
+interval: 100
+url: https://web.archive.org/web/20181024132013/www.maretron.com/support/manuals/WSO100UM_1.0.pdf#page=15
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: windSpeed
+  name: Wind Speed
+  type: SPEED_UFIX16_CM
+- id: windAngle
+  name: Wind Angle
+  type: ANGLE_UFIX16
+- id: reference
+  name: Reference
+  type: LOOKUP
+  bits: 3
+  lookup: WIND_REFERENCE
+  primaryKey: true
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 21

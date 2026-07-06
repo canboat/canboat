@@ -1,0 +1,19 @@
+pgn: 128000
+id: leewayAngle
+description: Leeway Angle
+type: Single
+explanation: This PGN provides the Nautical Leeway Angle. Nautical leeway angle is defined as the angle between the direction
+  a vessel is heading (pointing) and the direction it is actually travelling (tracking thru the water). It is commonly provided
+  by dual-axis speed sensors.
+url: https://web.archive.org/web/20170609074636/https://www.nmea.org/Assets/20170204%20nmea%202000%20leeway%20pgn%20final.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: leewayAngle
+  name: Leeway Angle
+  type: ANGLE_FIX16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 40

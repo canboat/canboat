@@ -1,0 +1,29 @@
+pgn: 128259
+id: speed
+description: Speed
+type: Single
+priority: 2
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: speedWaterReferenced
+  name: Speed Water Referenced
+  type: SPEED_UFIX16_CM
+- id: speedGroundReferenced
+  name: Speed Ground Referenced
+  type: SPEED_UFIX16_CM
+- id: speedWaterReferencedType
+  name: Speed Water Referenced Type
+  type: LOOKUP
+  bits: 8
+  lookup: WATER_REFERENCE
+- id: speedDirection
+  name: Speed Direction
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 12

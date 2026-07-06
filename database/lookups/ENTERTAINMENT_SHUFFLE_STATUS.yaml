@@ -1,0 +1,7 @@
+name: ENTERTAINMENT_SHUFFLE_STATUS
+kind: pair
+bits: 4
+values:
+  0: 'Off'
+  1: Play queue
+  2: All

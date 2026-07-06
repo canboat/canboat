@@ -1,0 +1,109 @@
+pgn: 129803
+id: aisInterrogation
+description: AIS Interrogation
+type: Fast
+priority: 7
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: destinationId1
+  name: Destination ID 1
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: messageId11
+  name: Message ID 1.1
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: slotOffset11
+  name: Slot Offset 1.1
+  type: UINT16
+- id: spare11
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: messageId12
+  name: Message ID 1.2
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: slotOffset12
+  name: Slot Offset 1.2
+  type: UINT16
+- id: reserved14
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: reserved15
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: destinationId2
+  name: Destination ID 2
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved17
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: messageId21
+  name: Message ID 2.1
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: slotOffset21
+  name: Slot Offset 2.1
+  type: UINT16
+- id: spare20
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: reserved21
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: sid
+  name: SID
+  type: UINT8

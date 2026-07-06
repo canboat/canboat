@@ -1,0 +1,65 @@
+pgn: 65295
+id: bepMarineCzoneAlarm
+description: 'BEP Marine: CZone Alarm'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: CZone alarm/status/acknowledgement message. Payload byte 2 is the device/source module id, byte 3 is the channel/alarm
+  id, bytes 4-5 are the little-endian alarm type, and byte 6 contains packed severity/state flags. Payload byte 7 is reserved.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: deviceId
+  name: Device ID
+  type: UINT8
+  description: Device / source module id
+- id: channel
+  name: Channel
+  type: UINT8
+  description: Channel / alarm id low byte
+- id: alarmType
+  name: Alarm Type
+  type: LOOKUP
+  bits: 16
+  lookup: CZONE_ALARM_TYPE
+- id: severityCode
+  name: Severity Code
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Raw CZone severity code; values 1..5 map to internal severities 4..0
+- id: stateFlag
+  name: State Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: State bit used by CZone to distinguish active vs cleared/acknowledged state
+- id: ackFlag
+  name: Ack Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: Packed and transmitted by CZone, but receive-side action is not confirmed
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 8

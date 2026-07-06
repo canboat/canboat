@@ -1,0 +1,63 @@
+pgn: 130825
+id: navicoAlarm
+description: 'Navico: Alarm'
+type: Fast
+variantOrder: 2
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Navico alarm status record (mfg 275): Alarm Type + Alarm ID identify the fault, Alarm State tracks its lifecycle
+  (Normal -> Active -> Silenced -> Acknowledged), and Alarm Severity classifies it.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+- id: recordId
+  name: Record ID
+  type: UINT8
+- id: alarmType
+  name: Alarm Type
+  type: UINT16
+- id: alarmId
+  name: Alarm ID
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_ALARM_ID
+- id: alarmState
+  name: Alarm State
+  type: LOOKUP
+  bits: 3
+  lookup: ALERT_STATE
+- id: actionFlag
+  name: Action Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: alarmSeverity
+  name: Alarm Severity
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TYPE
+- id: value
+  name: Value
+  type: UINT16

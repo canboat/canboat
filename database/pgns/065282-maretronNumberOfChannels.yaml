@@ -1,0 +1,39 @@
+pgn: 65282
+id: maretronNumberOfChannels
+description: 'Maretron: Number of Channels'
+type: Single
+variantOrder: 1
+priority: 6
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: PGN for which the number of channels is reported
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: numberOfChannels
+  name: Number of Channels
+  type: UINT8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

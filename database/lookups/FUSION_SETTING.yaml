@@ -1,0 +1,82 @@
+name: FUSION_SETTING
+kind: pair
+bits: 32
+values:
+  0: Alpha Search Threshold
+  1: iPod Subtitles
+  2: Zone 2 Linked
+  3: Zone 2 Enabled
+  4: Zone 3 Enabled
+  5: Zone 4 Enabled
+  6: Telemute
+  7: Tuner Region
+  8: Marine Zone
+  9: USB repeat
+  10: USB shuffle
+  11: iPod Album Artwork
+  12: iPod repeat
+  13: iPod shuffle
+  14: AM Preset 0
+  15: AM Preset 1
+  16: AM Preset 2
+  17: AM Preset 3
+  18: AM Preset 4
+  19: AM Preset 5
+  20: AM Preset 6
+  21: AM Preset 7
+  22: AM Preset 8
+  23: AM Preset 9
+  24: AM Preset 10
+  25: AM Preset 11
+  26: AM Preset 12
+  27: AM Preset 13
+  28: AM Preset 14
+  29: FM Preset 0
+  30: FM Preset 1
+  31: FM Preset 2
+  32: FM Preset 3
+  33: FM Preset 4
+  34: FM Preset 5
+  35: FM Preset 6
+  36: FM Preset 7
+  37: FM Preset 8
+  38: FM Preset 9
+  39: FM Preset 10
+  40: FM Preset 11
+  41: FM Preset 12
+  42: FM Preset 13
+  43: FM Preset 14
+  44: VHF Preset 0
+  45: VHF Preset 1
+  46: VHF Preset 2
+  47: VHF Preset 3
+  48: VHF Preset 4
+  49: VHF Preset 5
+  50: VHF Preset 6
+  51: VHF Preset 7
+  52: VHF Preset 8
+  53: VHF Preset 9
+  54: VHF Preset 10
+  55: VHF Preset 11
+  56: VHF Preset 12
+  57: VHF Preset 13
+  58: VHF Preset 14
+  59: Clock Time
+  60: Clock Alarm
+  61: iPod Video Signal
+  62: iPod Monitor Aspect
+  63: Aux Name Index
+  64: AM Enabled
+  65: VHF Enabled
+  66: Language
+  67: Internal Amps On
+  68: MTP Repeat
+  69: MTP Shuffle
+  70: Id Accessory Source
+  71: NMEA Power
+  72: Low Power Mode
+  73: DVD region
+  74: Volume Zone Sync
+  75: Max Volume Start
+  76: BT Auto Connect
+  77: Null Setting

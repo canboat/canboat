@@ -1,0 +1,42 @@
+pgn: 130825
+id: mercuryCommandResponse
+description: 'Mercury: Command/Response'
+type: Fast
+variantOrder: 5
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Opcode-dispatched Mercury command/response channel: the Opcode field selects the sub-function and the following
+  data is opcode-specific. Several opcodes are the proprietary-PGN equivalents of the corresponding Mercury manufacturer commands
+  carried in PGN 126720: opcode 4 (Cruise Control), opcodes 6/7 (Active Trim command/status), opcode 8 (Autopilot), opcode
+  9 (Active Exhaust) and opcodes 12/13 (Oil Level check/reset).'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: opcode
+  name: Opcode
+  type: LOOKUP
+  bits: 8
+  lookup: MERCURY_COMMAND_OPCODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 240

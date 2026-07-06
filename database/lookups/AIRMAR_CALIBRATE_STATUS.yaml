@@ -1,0 +1,10 @@
+name: AIRMAR_CALIBRATE_STATUS
+kind: pair
+bits: 8
+values:
+  0: Queried
+  1: Passed
+  2: Failed - timeout
+  3: Failed - tilt error
+  4: Failed - other
+  5: In progress

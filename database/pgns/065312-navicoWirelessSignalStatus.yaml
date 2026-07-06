@@ -1,0 +1,36 @@
+pgn: 65312
+id: navicoWirelessSignalStatus
+description: 'Navico: Wireless Signal Status'
+type: Single
+priority: 7
+missing:
+- Fields
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: unknown
+  name: Unknown
+  type: UINT8
+- id: signalStrength
+  name: Signal Strength
+  type: PERCENTAGE_UINT8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 32

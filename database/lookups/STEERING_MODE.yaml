@@ -1,0 +1,10 @@
+name: STEERING_MODE
+kind: pair
+bits: 3
+values:
+  0: Main Steering
+  1: Non-Follow-Up Device
+  2: Follow-Up Device
+  3: Heading Control Standalone
+  4: Heading Control
+  5: Track Control

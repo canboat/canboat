@@ -1,0 +1,9 @@
+name: THRUSTER_MOTOR_TYPE
+kind: pair
+bits: 4
+values:
+  0: 12VDC
+  1: 24VDC
+  2: 48VDC
+  3: 24VAC
+  4: Hydraulic

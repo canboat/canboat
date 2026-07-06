@@ -1,0 +1,13 @@
+name: STATION_TYPE
+kind: pair
+bits: 4
+values:
+  0: All types of mobile station
+  2: All types of Class B mobile station
+  3: SAR airborne mobile station
+  4: AtoN station
+  5: Class B CS shipborne mobile station
+  6: Inland waterways
+  7: Regional use 7
+  8: Regional use 8
+  9: Regional use 9

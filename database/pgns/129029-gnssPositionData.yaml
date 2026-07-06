@@ -1,0 +1,91 @@
+pgn: 129029
+id: gnssPositionData
+description: GNSS Position Data
+type: Fast
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: date
+  name: Date
+  type: DATE
+- id: time
+  name: Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX64
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX64
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: altitude
+  name: Altitude
+  type: DISTANCE_FIX64
+  description: Altitude referenced to WGS-84
+- id: gnssType
+  name: GNSS type
+  type: LOOKUP
+  bits: 4
+  lookup: GNS
+- id: method
+  name: Method
+  type: LOOKUP
+  bits: 4
+  lookup: GNS_METHOD
+- id: integrity
+  name: Integrity
+  type: LOOKUP
+  bits: 2
+  lookup: GNS_INTEGRITY
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: numberOfSvs
+  name: Number of SVs
+  type: UINT8
+  description: Number of satellites used in solution
+- id: hdop
+  name: HDOP
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Horizontal dilution of precision
+- id: pdop
+  name: PDOP
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Positional dilution of precision
+- id: geoidalSeparation
+  name: Geoidal Separation
+  type: DISTANCE_FIX32_CM
+  description: Geoidal Separation
+- id: referenceStations
+  name: Reference Stations
+  type: UINT8
+  description: Number of reference stations
+- id: referenceStationType
+  name: Reference Station Type
+  type: LOOKUP
+  bits: 4
+  lookup: GNS
+- id: referenceStationId
+  name: Reference Station ID
+  type: UNSIGNED_INTEGER
+  bits: 12
+- id: ageOfDgnssCorrections
+  name: Age of DGNSS Corrections
+  type: DURATION_UFIX16_CS
+repeating1:
+  count: 3
+  start: 16
+  countField: 15

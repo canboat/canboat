@@ -1,0 +1,7 @@
+name: LINE
+kind: pair
+bits: 2
+values:
+  0: Line 1
+  1: Line 2
+  2: Line 3

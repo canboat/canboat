@@ -1,0 +1,56 @@
+pgn: 65371
+id: seatalkKeypadMessage
+description: 'Seatalk: Keypad Message'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  primaryKey: true
+- id: firstKey
+  name: First key
+  type: UINT8
+- id: secondKey
+  name: Second key
+  type: UINT8
+- id: firstKeyState
+  name: First key state
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: secondKeyState
+  name: Second key state
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: encoderPosition
+  name: Encoder Position
+  type: UINT8
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 8

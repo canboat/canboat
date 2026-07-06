@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "keel"
+description = "CANboat PGN database tool: validate, generate, edit"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+authors = [{ name = "Kees Verruijt", email = "canboat@verruijt.net" }]
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+  "PyYAML>=6.0",
+]
+
+[project.scripts]
+keel = "keel.cli:main"
+
+[tool.setuptools.dynamic]
+version = { attr = "keel.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]

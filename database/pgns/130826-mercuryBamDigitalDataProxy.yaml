@@ -1,0 +1,53 @@
+pgn: 130826
+id: mercuryBamDigitalDataProxy
+description: 'Mercury: BAM Digital-Data Proxy'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing data block is
+  opcode/instance-specific, may be empty, and its block semantics are defined by an external BAM specification rather than
+  being locally decodable.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: type
+  name: Type
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+- id: field4
+  name: Field 4
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: flag
+  name: Flag
+  type: UINT8
+- id: data
+  name: Data
+  type: BINARY
+  bits: 256

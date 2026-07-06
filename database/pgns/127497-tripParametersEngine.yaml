@@ -1,0 +1,25 @@
+pgn: 127497
+id: tripParametersEngine
+description: Trip Parameters, Engine
+type: Fast
+priority: 5
+interval: 1000
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: tripFuelUsed
+  name: Trip Fuel Used
+  type: VOLUME_UFIX16_L
+- id: fuelRateAverage
+  name: Fuel Rate, Average
+  type: VOLUMETRIC_FLOW
+- id: fuelRateEconomy
+  name: Fuel Rate, Economy
+  type: VOLUMETRIC_FLOW
+- id: instantaneousFuelEconomy
+  name: Instantaneous Fuel Economy
+  type: VOLUMETRIC_FLOW

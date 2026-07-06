@@ -1,0 +1,6 @@
+name: AIS_MODE
+kind: pair
+bits: 1
+values:
+  0: Autonomous
+  1: Assigned

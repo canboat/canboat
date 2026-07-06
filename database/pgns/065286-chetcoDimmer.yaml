@@ -1,0 +1,48 @@
+pgn: 65286
+id: chetcoDimmer
+description: 'Chetco: Dimmer'
+type: Single
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Lookups
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Chetco
+  match: 409
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: dimmer1
+  name: Dimmer1
+  type: UINT8
+- id: dimmer2
+  name: Dimmer2
+  type: UINT8
+- id: dimmer3
+  name: Dimmer3
+  type: UINT8
+- id: dimmer4
+  name: Dimmer4
+  type: UINT8
+- id: control
+  name: Control
+  type: UINT8

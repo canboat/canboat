@@ -1,0 +1,102 @@
+pgn: 127233
+id: manOverboardNotification
+description: Man Overboard Notification
+type: Fast
+explanation: |-
+  The MOB PGN is intended to provide notification from a MOB monitoring system. The included position information may be that of the vessel or the MOB device itself as identified in field 'X', position source. Additional information may include the current state of the MOB device, time of activation, and MOB device battery status.
+  This PGN may be used to set a MOB waypoint, or to initiate an alert process.
+  This PGN may be used to command or register a MOB device emitter Ids or other applicable fields in the message with an MOB System or other equipment. If the fields in this PGN are configured over the network, the Command Group Function (PGN 126208) shall be used.
+  Queries for this PGN shall be requested using either the ISO Request (PGN 059904) or the NMEA Request Group Function (PGN 126208).
+  A device receiving an ISO (PGN 059904) for this PGN (127233), shall respond by providing as many of these PGNs (127233) as necessary for every MOB Emitter ID that has associated data fields.
+  If a Request Group Function (PGN 126208) requesting this PGN (127233) is received, the receiving device shall respond in the following manner:
+  * If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.
+  * If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.
+  If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of '0x3 = Access denied.' And the requested MOB Emitter ID field parameter error code (Field 6) of '0x3 = Requested or command parameter out-of- range;'.
+  The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: mobEmitterId
+  name: MOB Emitter ID
+  type: UINT32
+  description: Identifier for each MOB emitter, unique to the vessel
+- id: manOverboardStatus
+  name: Man Overboard Status
+  type: LOOKUP
+  bits: 3
+  lookup: MOB_STATUS
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: activationTime
+  name: Activation Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: positionSource
+  name: Position Source
+  type: LOOKUP
+  bits: 3
+  lookup: MOB_POSITION_SOURCE
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: positionDate
+  name: Position Date
+  type: DATE
+- id: positionTime
+  name: Position Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: cogReference
+  name: COG Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved13
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: mmsiOfVesselOfOrigin
+  name: MMSI of vessel of origin
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: mobEmitterBatteryLowStatus
+  name: MOB Emitter Battery Low Status
+  type: LOOKUP
+  bits: 3
+  lookup: LOW_BATTERY
+- id: reserved18
+  name: Reserved
+  type: RESERVED
+  bits: 5

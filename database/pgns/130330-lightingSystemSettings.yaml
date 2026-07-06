@@ -1,0 +1,51 @@
+pgn: 130330
+id: lightingSystemSettings
+description: Lighting System Settings
+type: Fast
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN provides a lighting controller settings and number of supported capabilities.
+fields:
+- id: globalEnable
+  name: Global Enable
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: defaultSettingsCommand
+  name: Default Settings/Command
+  type: LOOKUP
+  bits: 3
+  lookup: LIGHTING_COMMAND
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: nameOfTheLightingController
+  name: Name of the lighting controller
+  type: STRING_LAU
+- id: maxScenes
+  name: Max Scenes
+  type: UINT8
+- id: maxSceneConfigurationCount
+  name: Max Scene Configuration Count
+  type: UINT8
+- id: maxZones
+  name: Max Zones
+  type: UINT8
+- id: maxColorSequences
+  name: Max Color Sequences
+  type: UINT8
+- id: maxColorSequenceColorCount
+  name: Max Color Sequence Color Count
+  type: UINT8
+- id: numberOfPrograms
+  name: Number of Programs
+  type: UINT8
+- id: controllerCapabilities
+  name: Controller Capabilities
+  type: UINT8
+- id: identifyDevice
+  name: Identify Device
+  type: UINT32

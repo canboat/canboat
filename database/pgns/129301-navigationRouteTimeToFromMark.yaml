@@ -1,0 +1,26 @@
+pgn: 129301
+id: navigationRouteTimeToFromMark
+description: Navigation - Route / Time to+from Mark
+type: Fast
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: timeToMark
+  name: Time to mark
+  type: DURATION_FIX32_MS
+  description: negative = elapsed since event, positive = time to go
+- id: markType
+  name: Mark Type
+  type: LOOKUP
+  bits: 4
+  lookup: MARK_TYPE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: markId
+  name: Mark ID
+  type: UINT32

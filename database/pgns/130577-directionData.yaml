@@ -1,0 +1,42 @@
+pgn: 130577
+id: directionData
+description: Direction Data
+type: Fast
+priority: 3
+interval: 1000
+fields:
+- id: dataMode
+  name: Data Mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: cogReference
+  name: COG Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: sid
+  name: SID
+  type: UINT8
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: heading
+  name: Heading
+  type: ANGLE_UFIX16
+- id: speedThroughWater
+  name: Speed through Water
+  type: SPEED_UFIX16_CM
+- id: set
+  name: Set
+  type: ANGLE_UFIX16
+- id: drift
+  name: Drift
+  type: SPEED_UFIX16_CM

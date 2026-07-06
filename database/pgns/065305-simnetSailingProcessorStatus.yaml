@@ -1,0 +1,47 @@
+pgn: 65305
+id: simnetSailingProcessorStatus
+description: 'Simnet: Sailing Processor Status'
+type: Single
+variantOrder: 5
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN has been seen to be reported by a Sailing Processor.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Sailing Processor Status
+  match: 23
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: data
+  name: Data
+  type: BINARY
+  bits: 32

@@ -1,0 +1,39 @@
+pgn: 65284
+id: maretronProprietaryDcBreakerCurrent
+description: 'Maretron: Proprietary DC Breaker Current'
+type: Single
+variantOrder: 1
+priority: 6
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: bankInstance
+  name: Bank Instance
+  type: UINT8
+  primaryKey: true
+- id: indicatorNumber
+  name: Indicator Number
+  type: UINT8
+- id: breakerCurrent
+  name: Breaker Current
+  type: CURRENT_FIX16_DA
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16

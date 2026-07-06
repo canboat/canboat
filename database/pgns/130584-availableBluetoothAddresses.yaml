@@ -1,0 +1,36 @@
+pgn: 130584
+id: availableBluetoothAddresses
+description: Available Bluetooth addresses
+type: Fast
+missing:
+- SampleData
+fields:
+- id: firstAddress
+  name: First address
+  type: UINT8
+  description: First address in this PGN
+- id: addressCount
+  name: Address count
+  type: UINT8
+- id: totalAddressCount
+  name: Total address count
+  type: UINT8
+- id: bluetoothAddress
+  name: Bluetooth address
+  type: BINARY
+  bits: 48
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 8
+  lookup: BLUETOOTH_STATUS
+- id: deviceName
+  name: Device name
+  type: STRING_LAU
+- id: signalStrength
+  name: Signal strength
+  type: PERCENTAGE_UINT8
+repeating1:
+  count: 4
+  start: 4
+  countField: 2

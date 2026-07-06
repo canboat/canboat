@@ -1,0 +1,6 @@
+name: AIRMAR_TRANSMISSION_INTERVAL
+kind: pair
+bits: 2
+values:
+  0: Measure interval
+  1: Requested by user

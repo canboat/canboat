@@ -1,0 +1,20 @@
+pgn: 127252
+id: heave
+description: Heave
+type: Single
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: heave
+  name: Heave
+  type: DISTANCE_FIX16_CM
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 40

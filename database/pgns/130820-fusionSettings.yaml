@@ -1,0 +1,48 @@
+pgn: 130820
+id: fusionSettings
+description: 'Fusion: Settings'
+type: Fast
+variantOrder: 30
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Settings
+  match: 32789
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: count
+  name: Count
+  type: UINT32
+- id: id
+  name: ID
+  type: LOOKUP
+  bits: 32
+  lookup: FUSION_SETTING
+- id: value
+  name: Value
+  type: UINT32
+repeating1:
+  count: 2
+  start: 6
+  countField: 5

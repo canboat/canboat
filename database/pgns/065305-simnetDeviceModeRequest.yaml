@@ -1,0 +1,44 @@
+pgn: 65305
+id: simnetDeviceModeRequest
+description: 'Simnet: Device Mode Request'
+type: Single
+variantOrder: 4
+interval: 1000
+explanation: This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller)
+  to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Send Mode
+  match: 11
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 32

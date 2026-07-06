@@ -1,0 +1,7 @@
+name: ENTERTAINMENT_DEFAULT_SETTINGS
+kind: pair
+bits: 2
+values:
+  0: Save current settings as user default
+  1: Load user default
+  2: Load manufacturer default

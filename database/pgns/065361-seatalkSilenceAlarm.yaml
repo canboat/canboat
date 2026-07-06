@@ -1,0 +1,37 @@
+pgn: 65361
+id: seatalkSilenceAlarm
+description: 'Seatalk: Silence Alarm'
+type: Single
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: alarmId
+  name: Alarm ID
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_ALARM_ID
+- id: alarmGroup
+  name: Alarm Group
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_ALARM_GROUP
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 32

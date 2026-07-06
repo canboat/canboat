@@ -1,0 +1,26 @@
+name: SIMNET_AP_EVENTS
+kind: pair
+bits: 8
+values:
+  2: Follow/Non Follow
+  6: Standby
+  9: Heading mode
+  10: Nav mode
+  12: No Drift mode
+  13: Non Follow Up mode
+  14: Follow Up mode
+  15: Wind mode
+  17: Tack
+  18: Square (Turn)
+  19: C-Turn
+  20: U-Turn
+  21: Spiral (Turn)
+  22: Zig Zag (Turn)
+  23: Lazy-S (Turn)
+  24: Depth (Turn)
+  26: Change course
+  61: Timer sync
+  107: MOB Activated
+  108: MOB Deactivated
+  112: Ping port end
+  113: Ping starboard end

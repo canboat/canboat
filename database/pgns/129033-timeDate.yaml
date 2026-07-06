@@ -1,0 +1,22 @@
+pgn: 129033
+id: timeDate
+description: Time & Date
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: date
+  name: Date
+  type: DATE
+- id: time
+  name: Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: localOffset
+  name: Local Offset
+  type: DURATION_FIX16_MIN

@@ -1,0 +1,91 @@
+pgn: 130822
+id: navicoUdbDatabaseSourceReport
+description: 'Navico: UDB Database, Source Report'
+type: Fast
+variantOrder: 2
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Per-object value report (Command 1), the form that accounts for essentially all observed 130822 traffic. Each
+  frame reports one object's current 'Object Value' (0xFC00 = no value), addressed by (Address, Source Setting Id, Item).
+  The trailing 'Sub' and 'Token' are the object's identity metadata, byte-identical to the same object's Command 6 dump and
+  constant per object; 'Token' is a stable per-object-definition handle (only a couple dozen distinct values on a typical
+  bus) that tracks the object independently of its local Section/Item address. The selected source DEVICE for each data type
+  is not carried here - it appears only in the Command 6 dump (as a NAME) and in PGN 130840. 'Source Setting Id' uses a different
+  id space from the data-type ids carried by the Command 6 dump and PGN 130845.
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Source Report
+  match: 1
+  primaryKey: true
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: sourceSettingId
+  name: Source Setting Id
+  type: UINT8
+  description: Compacted id selecting which data type this object is for. This is a different id space from the Command 6
+    dump / PGN 130845 data-type ids (NAVICO_DATA_TYPE) - the two use different numbers for the same quantity. Only 0x0F =
+    Heading is mapped so far; see PGN 130840.
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value. This is the field that varies over time.
+- id: instance
+  name: Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: sourceSelectionMaster
+  name: Source Selection Master
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: Auto-select / source-selection-master flag
+- id: spare13
+  name: Spare
+  type: SPARE
+  bits: 3
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes; constant per object (same Sub as the Command 6 dump)
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object (same Token as the Command 6 dump)

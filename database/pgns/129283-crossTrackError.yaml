@@ -1,0 +1,31 @@
+pgn: 129283
+id: crossTrackError
+description: Cross Track Error
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: xteMode
+  name: XTE mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: navigationTerminated
+  name: Navigation Terminated
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: xte
+  name: XTE
+  type: DISTANCE_FIX32_CM
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

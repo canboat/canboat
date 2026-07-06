@@ -1,0 +1,35 @@
+pgn: 130820
+id: fusionSourceCount
+description: 'Fusion: Source Count'
+type: Fast
+variantOrder: 6
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Source Count
+  match: 32771
+  lookup: FUSION_STATUS_MESSAGE_ID
+- id: sourceCount
+  name: Source Count
+  type: UINT8

@@ -1,0 +1,7 @@
+name: GEAR_STATUS
+kind: pair
+bits: 2
+values:
+  0: Forward
+  1: Neutral
+  2: Reverse

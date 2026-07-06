@@ -1,0 +1,6 @@
+name: LOW_BATTERY
+kind: pair
+bits: 3
+values:
+  0: Good
+  1: Low

@@ -1,0 +1,22 @@
+name: FUSION_SOURCE_TYPE
+kind: pair
+bits: 8
+values:
+  0: AM
+  1: FM
+  2: Aux
+  3: Sirius
+  4: Ipod
+  5: USB
+  6: DVD
+  7: VHF
+  8: Invalid
+  9: MTP
+  10: Bluetooth
+  11: ARC
+  12: Android
+  13: Pandora
+  14: DAB
+  15: AirPlay
+  16: UPNP
+  17: Unknown

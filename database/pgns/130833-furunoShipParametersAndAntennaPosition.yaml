@@ -1,0 +1,51 @@
+pgn: 130833
+id: furunoShipParametersAndAntennaPosition
+description: 'Furuno: Ship Parameters and Antenna Position'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: equipmentIdentification
+  name: Equipment Identification
+  type: UINT8
+- id: antennaPositionX
+  name: Antenna position X
+  type: DISTANCE_FIX16_CM
+  description: Athwartship offset
+- id: antennaPositionY
+  name: Antenna position Y
+  type: LENGTH_UFIX16_DM
+- id: antennaPositionZ
+  name: Antenna position Z
+  type: LENGTH_UFIX16_DM
+- id: shipSWidth
+  name: Ship's width
+  type: LENGTH_UFIX16_DM
+- id: shipSLength
+  name: Ship's length
+  type: LENGTH_UFIX16_DM
+- id: shipSHeight
+  name: Ship's height
+  type: LENGTH_UFIX16_DM

@@ -1,0 +1,79 @@
+pgn: 129793
+id: aisUtcAndDateReport
+description: AIS UTC and Date Report
+type: Fast
+priority: 7
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: positionTime
+  name: Position Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+  description: Information used by the TDMA slot allocation algorithm and synchronization information
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: positionDate
+  name: Position Date
+  type: DATE
+- id: reserved13
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: gnssType
+  name: GNSS type
+  type: LOOKUP
+  bits: 4
+  lookup: POSITION_FIX_DEVICE

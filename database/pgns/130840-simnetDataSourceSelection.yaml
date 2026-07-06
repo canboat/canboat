@@ -1,0 +1,70 @@
+pgn: 130840
+id: simnetDataSourceSelection
+description: 'Simnet: Data Source Selection'
+type: Fast
+variantOrder: 2
+priority: 3
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Change-driven broadcast announcing which source is selected for each Data Type across the instrument network;
+  it is the fast-packet answer to the single-frame PGN 65323 poll and shares its Data Type/Source Class namespace. Data Type
+  identifies the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct
+  sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. Source Address is the current
+  NMEA 2000 address of the selected device and Source is that same device's 64-bit NAME (address and NAME both identify the
+  one selected source); Change Counter increments on each selection change. See also the periodic UDB table dump in PGN 130822.
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: dataType
+  name: Data Type
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DATA_SOURCE
+- id: sourceClass
+  name: Source Class
+  type: UINT8
+  description: 'Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources
+    and 100 for autopilot-provided sources'
+- id: sourceAddress
+  name: Source Address
+  type: UINT8
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: changeCounter
+  name: Change Counter
+  type: UINT8
+- id: source
+  name: Source
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 8

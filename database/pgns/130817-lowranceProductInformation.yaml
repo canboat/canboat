@@ -1,0 +1,58 @@
+pgn: 130817
+id: lowranceProductInformation
+description: 'Lowrance: Product Information'
+type: Fast
+variantOrder: 2
+priority: 7
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: productCode
+  name: Product Code
+  type: UINT16
+- id: model
+  name: Model
+  type: STRING_FIX
+  bits: 256
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: UINT8
+- id: c
+  name: C
+  type: UINT8
+- id: firmwareVersion
+  name: Firmware version
+  type: STRING_FIX
+  bits: 80
+- id: firmwareDate
+  name: Firmware date
+  type: STRING_FIX
+  bits: 256
+- id: firmwareTime
+  name: Firmware time
+  type: STRING_FIX
+  bits: 256

@@ -1,0 +1,52 @@
+pgn: 127494
+id: electricDriveInformation
+description: Electric Drive Information
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to provide information about electric motor specifications and ratings.
+fields:
+- id: inverterMotorIdentifier
+  name: Inverter/Motor Identifier
+  type: UINT8
+  primaryKey: true
+- id: motorType
+  name: Motor Type
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: motorVoltageRating
+  name: Motor Voltage Rating
+  type: VOLTAGE_UFIX16_100MV
+- id: maximumContinuousMotorPower
+  name: Maximum Continuous Motor Power
+  type: POWER_UINT32
+- id: maximumBoostMotorPower
+  name: Maximum Boost Motor Power
+  type: POWER_UINT32
+- id: maximumMotorTemperatureRating
+  name: Maximum Motor Temperature Rating
+  type: TEMPERATURE
+- id: ratedMotorSpeed
+  name: Rated Motor Speed
+  type: ROTATION_UFIX16_RPM
+- id: maximumControllerTemperatureRating
+  name: Maximum Controller Temperature Rating
+  type: TEMPERATURE
+- id: motorShaftTorqueRating
+  name: Motor Shaft Torque Rating
+  type: UINT16
+- id: motorDcVoltageDeratingThreshold
+  name: Motor DC-Voltage Derating Threshold
+  type: VOLTAGE_UFIX16_100MV
+- id: motorDcVoltageCutOffThreshold
+  name: Motor DC-Voltage Cut Off Threshold
+  type: VOLTAGE_UFIX16_100MV
+- id: driveMotorHours
+  name: Drive/Motor Hours
+  type: DURATION_UFIX32_S

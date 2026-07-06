@@ -1,0 +1,41 @@
+pgn: 65408
+id: airmarDepthQualityFactor
+description: 'Airmar: Depth Quality Factor'
+type: Single
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: depthQualityFactor
+  name: Depth Quality Factor
+  type: LOOKUP
+  bits: 4
+  lookup: AIRMAR_DEPTH_QUALITY_FACTOR
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 36

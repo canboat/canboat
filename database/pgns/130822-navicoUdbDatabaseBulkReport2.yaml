@@ -1,0 +1,61 @@
+pgn: 130822
+id: navicoUdbDatabaseBulkReport2
+description: 'Navico: UDB Database, Bulk Report 2'
+type: Fast
+variantOrder: 3
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Bulk Report 2
+  match: 2
+  primaryKey: true
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1728
+  description: Bulk variant payload (length-prefixed); layout not yet observed on the wire

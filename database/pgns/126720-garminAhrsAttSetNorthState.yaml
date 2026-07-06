@@ -1,0 +1,53 @@
+pgn: 126720
+id: garminAhrsAttSetNorthState
+description: 'Garmin AHRS ATT: Set North State'
+type: Fast
+variantOrder: 4
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: UINT16
+  description: Garmin ATT transport
+  match: 1900
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '1'
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '2'
+  match: 2
+- id: attMessageId
+  name: ATT Message ID
+  type: UINT16
+  description: ID
+  match: 52
+  primaryKey: true
+- id: setNorthState
+  name: Set North State
+  type: UINT8

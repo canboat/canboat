@@ -1,0 +1,32 @@
+pgn: 130311
+id: environmentalParameters
+description: Environmental Parameters
+type: Single
+priority: 5
+interval: 500
+explanation: This PGN was introduced as a better version of PGN 130310, but it should no longer be generated and separate
+  PGNs in range 130312..130315 should be used
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: temperatureSource
+  name: Temperature Source
+  type: LOOKUP
+  bits: 6
+  lookup: TEMPERATURE_SOURCE
+  primaryKey: true
+- id: humiditySource
+  name: Humidity Source
+  type: LOOKUP
+  bits: 2
+  lookup: HUMIDITY_SOURCE
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE
+- id: humidity
+  name: Humidity
+  type: PERCENTAGE_FIX16
+- id: atmosphericPressure
+  name: Atmospheric Pressure
+  type: PRESSURE_UFIX16_HPA

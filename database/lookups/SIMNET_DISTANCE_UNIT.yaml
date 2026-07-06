@@ -1,0 +1,7 @@
+name: SIMNET_DISTANCE_UNIT
+kind: pair
+bits: 8
+values:
+  0: Nautical miles
+  1: Kilometers
+  2: Miles

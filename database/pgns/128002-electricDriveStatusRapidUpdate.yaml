@@ -1,0 +1,34 @@
+pgn: 128002
+id: electricDriveStatusRapidUpdate
+description: Electric Drive Status, Rapid Update
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to provide the Electric Propulsion Drive System Status.
+fields:
+- id: inverterMotorController
+  name: Inverter/Motor Controller
+  type: UINT8
+- id: activeMotorMode
+  name: Active Motor Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: brakeMode
+  name: Brake Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: rotationalShaftSpeed
+  name: Rotational Shaft Speed
+  type: ROTATION_UFIX16_RPM
+- id: motorDcVoltage
+  name: Motor DC Voltage
+  type: VOLTAGE_UFIX16_100MV
+- id: motorDcCurrent
+  name: Motor DC Current
+  type: CURRENT_FIX16_DA

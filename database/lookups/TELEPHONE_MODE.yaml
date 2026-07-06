@@ -1,0 +1,15 @@
+name: TELEPHONE_MODE
+kind: pair
+bits: 8
+values:
+  0: F3E/G3E simplex, telephone
+  1: F3E/G3E duplex, telephone
+  2: J3E, telephone
+  3: H3E, telephone
+  4: F1B/J2B FEC NBDP, telex/teleprinter
+  5: F1B/J2B ARQ NBDP, telex/teleprinter
+  6: F1B/J2B receive only, teleprinter/DSC
+  7: F1B/J2B, teleprinter/DSC
+  8: A1A Morse, tape recorder
+  9: A1A Morse, Morse key/head set
+  10: F1C/F2C/F3C, FAX machine

@@ -1,0 +1,10 @@
+name: ZONE_SIZE
+kind: pair
+bits: 3
+values:
+  0: 1 nm
+  1: 2 nm
+  2: 3 nm
+  3: 4 nm
+  4: 5 nm
+  5: 6 nm

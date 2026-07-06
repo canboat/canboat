@@ -1,0 +1,7 @@
+name: DIRECTION_RUDDER
+kind: pair
+bits: 3
+values:
+  0: No Order
+  1: Move to starboard
+  2: Move to port

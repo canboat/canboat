@@ -1,0 +1,62 @@
+pgn: 126720
+id: seatalkPilotAutoTurn
+description: 'Seatalk: Pilot Auto Turn'
+type: Fast
+variantOrder: 21
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Pilot Configuration
+  match: 108
+  lookup: SEATALK_MESSAGE_ID
+  primaryKey: true
+- id: command
+  name: command
+  type: LOOKUP
+  bits: 8
+  description: Auto Turn
+  match: 38
+  lookup: SEATALK_COMMAND
+  primaryKey: true
+- id: unknown
+  name: Unknown
+  type: BINARY
+  bits: 8
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+- id: unknown2
+  name: Unknown 2
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+- id: unknown3
+  name: Unknown 3
+  type: BINARY
+  bits: 16

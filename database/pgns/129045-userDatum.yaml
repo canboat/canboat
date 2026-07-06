@@ -1,0 +1,55 @@
+pgn: 129045
+id: userDatum
+description: User Datum
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: deltaX
+  name: Delta X
+  type: DISTANCE_FIX32_CM
+  description: Delta shift in X axis from WGS 84
+- id: deltaY
+  name: Delta Y
+  type: DISTANCE_FIX32_CM
+  description: Delta shift in Y axis from WGS 84
+- id: deltaZ
+  name: Delta Z
+  type: DISTANCE_FIX32_CM
+  description: Delta shift in Z axis from WGS 84
+- id: rotationInX
+  name: Rotation in X
+  type: FLOAT_RAD
+  description: Rotational shift in X axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking
+    along the positive axis towards the origin, counter-clockwise rotations are positive.
+- id: rotationInY
+  name: Rotation in Y
+  type: FLOAT_RAD
+  description: Rotational shift in Y axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking
+    along the positive axis towards the origin, counter-clockwise rotations are positive.
+- id: rotationInZ
+  name: Rotation in Z
+  type: FLOAT_RAD
+  description: Rotational shift in Z axis from WGS 84. Rotations presented use the geodetic sign convention.  When looking
+    along the positive axis towards the origin, counter-clockwise rotations are positive.
+- id: scale
+  name: Scale
+  type: FLOAT_PPM
+  rangeMin: -3.40282346638529e+38
+  rangeMax: 3.40282346638529e+38
+- id: ellipsoidSemiMajorAxis
+  name: Ellipsoid Semi-major Axis
+  type: DISTANCE_FIX32_CM
+  description: Semi-major axis (a) of the User Datum ellipsoid
+- id: ellipsoidFlatteningInverse
+  name: Ellipsoid Flattening Inverse
+  type: FLOAT
+  description: Flattening (1/f) of the User Datum ellipsoid
+  rangeMin: -3.40282346638529e+38
+  rangeMax: 3.40282346638529e+38
+- id: datumName
+  name: Datum Name
+  type: STRING_FIX
+  bits: 32
+  description: 4 character code from IHO Publication S-60,Appendices B and C. First three chars are datum ID as per IHO tables.
+    Fourth char is local datum subdivision code.

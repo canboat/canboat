@@ -1,0 +1,78 @@
+pgn: 126208
+id: nmeaWriteFieldsReplyGroupFunction
+description: NMEA - Write Fields reply group function
+type: Fast
+variantOrder: 8
+priority: 3
+interval: irregular
+explanation: This is the Write Fields Reply variation of this group function PGN. The receiver is responding to a Write Fields
+  request. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how
+  many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for
+  a proprietary PGN
+url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
+fields:
+- id: functionCode
+  name: Function Code
+  type: LOOKUP
+  bits: 8
+  description: Write Fields Reply
+  match: 6
+  lookup: GROUP_FUNCTION
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Commanded PGN
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Only in PGN when Commanded PGN is proprietary
+  lookup: MANUFACTURER_CODE
+  proprietary: true
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+  description: Only in PGN when Commanded PGN is proprietary
+  proprietary: true
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Only in PGN when Commanded PGN is proprietary
+  lookup: INDUSTRY_CODE
+  proprietary: true
+- id: uniqueId
+  name: Unique ID
+  type: UINT8
+- id: numberOfSelectionPairs
+  name: Number of Selection Pairs
+  type: UINT8
+- id: numberOfParameters
+  name: Number of Parameters
+  type: UINT8
+- id: selectionParameter
+  name: Selection Parameter
+  type: FIELD_INDEX
+  description: Parameter index
+- id: selectionValue
+  name: Selection Value
+  type: VARIABLE
+- id: parameter
+  name: Parameter
+  type: FIELD_INDEX
+  description: Parameter index
+- id: value
+  name: Value
+  type: VARIABLE
+repeating1:
+  count: 2
+  start: 9
+  countField: 7
+repeating2:
+  count: 2
+  start: 11
+  countField: 8

@@ -1,0 +1,40 @@
+pgn: 127750
+id: converterStatus
+description: Converter Status
+type: Single
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: connectionNumber
+  name: Connection Number
+  type: UINT8
+- id: operatingState
+  name: Operating State
+  type: LOOKUP
+  bits: 8
+  lookup: CONVERTER_STATE
+- id: temperatureState
+  name: Temperature State
+  type: LOOKUP
+  bits: 2
+  lookup: GOOD_WARNING_ERROR
+- id: overloadState
+  name: Overload State
+  type: LOOKUP
+  bits: 2
+  lookup: GOOD_WARNING_ERROR
+- id: lowDcVoltageState
+  name: Low DC Voltage State
+  type: LOOKUP
+  bits: 2
+  lookup: GOOD_WARNING_ERROR
+- id: rippleState
+  name: Ripple State
+  type: LOOKUP
+  bits: 2
+  lookup: GOOD_WARNING_ERROR
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 32

@@ -1,0 +1,5 @@
+name: SEATALK1_ATT
+kind: pair
+bits: 8
+values:
+  0: Depth Below Transducer

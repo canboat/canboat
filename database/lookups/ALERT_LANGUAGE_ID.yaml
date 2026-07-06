@@ -1,0 +1,24 @@
+name: ALERT_LANGUAGE_ID
+kind: pair
+bits: 8
+values:
+  0: English (US)
+  1: English (UK)
+  2: Arabic
+  3: Chinese (simplified)
+  4: Croatian
+  5: Danish
+  6: Dutch
+  7: Finnish
+  8: French
+  9: German
+  10: Greek
+  11: Italian
+  12: Japanese
+  13: Korean
+  14: Norwegian
+  15: Polish
+  16: Portuguese
+  17: Russian
+  18: Spanish
+  19: Swedish

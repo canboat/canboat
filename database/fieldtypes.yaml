@@ -1,0 +1,1132 @@
+- name: NUMBER
+  description: Number
+  encodingDescription: Binary numbers are little endian. Number fields that are at least two bits in length use the highest
+    positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the
+    highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but
+    there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For
+    signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which
+    is the maximum negative value.
+  url: https://en.wikipedia.org/wiki/Binary_number
+  sentinels: TopOfRange
+  print: fieldPrintNumber
+- name: INTEGER
+  base: NUMBER
+  description: Signed integral number
+  url: https://en.wikipedia.org/wiki/Integer_%28computer_science%29
+  signed: true
+- name: UNSIGNED_INTEGER
+  base: NUMBER
+  description: Unsigned integral number
+  url: https://en.wikipedia.org/wiki/Integer_%28computer_science%29
+  signed: false
+- name: INT8
+  base: INTEGER
+  description: 8 bit signed integer
+  bits: 8
+  signed: true
+- name: UINT8
+  base: UNSIGNED_INTEGER
+  description: 8 bit unsigned integer
+  bits: 8
+  signed: false
+- name: INT16
+  base: INTEGER
+  description: 16 bit signed integer
+  bits: 16
+  signed: true
+- name: UINT16
+  base: UNSIGNED_INTEGER
+  description: 16 bit unsigned integer
+  bits: 16
+  signed: false
+- name: UINT24
+  base: UNSIGNED_INTEGER
+  description: 24 bit unsigned integer
+  bits: 24
+  signed: false
+- name: INT32
+  base: INTEGER
+  description: 32 bit signed integer
+  bits: 32
+  signed: true
+- name: UINT32
+  base: UNSIGNED_INTEGER
+  description: 32 bit unsigned integer
+  bits: 32
+  signed: false
+- name: INT64
+  base: INTEGER
+  description: 64 bit signed integer
+  bits: 64
+  signed: true
+- name: UINT64
+  base: UNSIGNED_INTEGER
+  description: 64 bit unsigned integer
+  bits: 64
+  signed: false
+- name: UNSIGNED_FIXED_POINT_NUMBER
+  base: NUMBER
+  description: An unsigned numeric value where the Least Significant Bit does not encode the integer value 1
+  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength`
+    attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular
+    range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
+  url: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
+  signed: false
+- name: SIGNED_FIXED_POINT_NUMBER
+  base: NUMBER
+  description: A signed numeric value where the Least Significant Bit does not encode the integer value 1
+  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength`
+    attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular
+    range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
+  url: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
+  signed: true
+- name: FIX8
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: 8 bit signed fixed point number
+  bits: 8
+- name: UFIX8
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: 8 bit unsigned fixed point number
+  bits: 8
+- name: FIX16
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: 16 bit signed fixed point number
+  bits: 16
+- name: UFIX16
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: 16 bit unsigned fixed point number
+  bits: 16
+- name: FIX24
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: 24 bit signed fixed point number
+  bits: 24
+- name: UFIX24
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: 24 bit unsigned fixed point number
+  bits: 24
+- name: FIX32
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: 32 bit signed fixed point number
+  bits: 32
+- name: UFIX32
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: 32 bit unsigned fixed point number
+  bits: 32
+- name: FIX64
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: 64 bit signed fixed point number
+  bits: 64
+- name: UFIX64
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: 64 bit unsigned fixed point number
+  bits: 64
+- name: FLOAT
+  description: 32 bit IEEE-754 floating point number
+  url: https://en.wikipedia.org/wiki/IEEE_754
+  bits: 32
+  signed: true
+  sentinels: NaN
+  print: fieldPrintFloat
+- name: FLOAT_RAD
+  base: FLOAT
+  description: 32 bit IEEE-754 floating point angle in radians
+  unit: rad
+  physical: ANGLE
+- name: FLOAT_PPM
+  base: FLOAT
+  description: 32 bit IEEE-754 floating point concentration in ppm
+  unit: ppm
+  physical: CONCENTRATION
+- name: FLOAT_PPT
+  base: FLOAT
+  description: 32 bit IEEE-754 floating point concentration in ppt
+  unit: ppt
+  physical: CONCENTRATION
+- name: FLOAT_RAD_S
+  base: FLOAT
+  description: 32 bit IEEE-754 floating point angular velocity in radians/second
+  unit: rad/s
+  physical: ANGULAR_VELOCITY
+- name: FLOAT_SPEED
+  base: FLOAT
+  description: 32 bit IEEE-754 floating point speed in meters/second
+  unit: m/s
+  physical: SPEED
+- name: DECIMAL
+  description: An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)
+  encodingDescription: Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing
+    0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g.
+    the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).
+  print: fieldPrintDecimal
+  signed: false
+- name: LOOKUP
+  description: Number value where each value encodes for a distinct meaning
+  encodingDescription: Each lookup has a LookupEnumeration defining what the possible values mean
+  comment: 'For almost all lookups the list of values is known with some precision, but it is quite possible that a value
+    occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and
+    Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value
+    pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup
+    fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. '
+  sentinels: TopOfRange
+  print: fieldPrintLookup
+  signed: false
+- name: INDIRECT_LOOKUP
+  description: Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another
+    field
+  encodingDescription: Each lookup has a LookupIndirectEnumeration defining what the possible values mean
+  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs
+    that has no corresponding textual explanation.
+  sentinels: TopOfRange
+  print: fieldPrintLookup
+  signed: false
+- name: BITLOOKUP
+  description: Number value where each bit value encodes for a distinct meaning
+  encodingDescription: Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have
+    any combination of bits set.
+  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs
+    that has no corresponding textual explanation.
+  print: fieldPrintBitLookup
+- name: DYNAMIC_FIELD_KEY
+  description: Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field;
+    generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH
+    field the length is contained in the lookup table
+  encodingDescription: Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean
+  comment: These values have been determined by reverse engineering, given the known values it is anticipated that there are
+    unkown enumeration values and some known values have incorrect datatypes
+  sentinels: TopOfRange
+  print: fieldPrintLookup
+  signed: false
+- name: DYNAMIC_FIELD_LENGTH
+  description: Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field
+  sentinels: TopOfRange
+  print: fieldPrintNumber
+  signed: false
+- name: DYNAMIC_FIELD_VALUE
+  description: Variable field whose type and length is dynamic
+  encodingDescription: The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length
+    is defined by the preceding length field or the length determined by the lookup value.
+  sentinels: Variable
+  print: fieldPrintKeyValue
+- name: MANUFACTURER
+  base: LOOKUP
+  description: Manufacturer
+  bits: 11
+  print: fieldPrintLookup
+- name: INDUSTRY
+  base: LOOKUP
+  description: Industry
+  bits: 3
+  print: fieldPrintLookup
+- name: VERSION
+  base: UFIX16
+  description: Version
+  resolution: 0.001
+- name: FIX16_1
+  base: FIX16
+  description: Fixed point signed with 1 digit resolution
+  resolution: 0.1
+- name: FIX32_2
+  base: FIX32
+  description: Fixed point signed with 2 digits resolution
+  resolution: 0.01
+- name: UFIX32_2
+  base: UFIX32
+  description: Fixed point unsigned with 2 digits resolution
+  resolution: 0.001
+- name: UFIX16_3
+  base: UFIX16
+  description: Fixed point unsigned with 3 digits resolution
+  resolution: 0.001
+- name: UFIX8_2
+  base: UFIX8
+  description: Fixed point unsigned with 2 digits resolution
+  resolution: 0.01
+- name: UFIX16_6
+  base: UFIX16
+  description: Fixed point unsigned with 6 digits resolution
+  resolution: 1.0e-06
+- name: DILUTION_OF_PRECISION_FIX16
+  base: FIX16
+  description: Dilution of precision
+  url: https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)
+  resolution: 0.01
+- name: DILUTION_OF_PRECISION_UFIX16
+  base: UFIX16
+  description: Dilution of precision
+  url: https://en.wikipedia.org/wiki/Dilution_of_precision_(navigation)
+  resolution: 0.01
+- name: SIGNALSTRENGTH_FIX32
+  base: FIX32
+  description: Signal strength expressed in dB with respect to 1 uV/m
+  url: https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications
+  resolution: 0.01
+  physical: SIGNAL_STRENGTH
+- name: SIGNALTONOISERATIO_FIX16
+  base: FIX16
+  description: Signal-to-noise ratio
+  url: https://en.wikipedia.org/wiki/Signal-to-noise_ratio
+  resolution: 0.01
+  physical: SIGNAL_TO_NOISE_RATIO
+- name: SIGNALTONOISERATIO_UFIX16
+  base: UFIX16
+  description: Signal-to-noise ratio
+  url: https://en.wikipedia.org/wiki/Signal-to-noise_ratio
+  resolution: 0.01
+  physical: SIGNAL_TO_NOISE_RATIO
+- name: ANGLE_FIX16
+  base: FIX16
+  description: Angle
+  resolution: 0.0001
+  physical: ANGLE
+- name: ANGLE_FIX16_DDEG
+  base: FIX16
+  description: Angle
+  unit: deg
+  resolution: 0.1
+  physical: ANGLE
+- name: ANGLE_UFIX16
+  base: UFIX16
+  description: Angle
+  resolution: 0.0001
+  physical: ANGLE
+- name: GEO_DELTA_FIX24
+  base: FIX24
+  description: Geographical latitude or longitude delta
+  encodingDescription: The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or
+    about 1 mm when we refer to an Earth position
+  resolution: 2.777777777777778e-09
+  print: fieldPrintNumber
+- name: GEO_LAT_FIX32
+  base: FIX32
+  description: Geographical latitude
+  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about
+    1 cm when we refer to an Earth position
+  resolution: 1.0e-07
+  physical: GEOGRAPHICAL_LATITUDE
+  print: fieldPrintLatLon
+- name: GEO_LON_FIX32
+  base: FIX32
+  description: Geographical longitude
+  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about
+    1 cm when we refer to an Earth position
+  resolution: 1.0e-07
+  physical: GEOGRAPHICAL_LONGITUDE
+  print: fieldPrintLatLon
+- name: GEO_LON_FIX64
+  base: FIX64
+  description: Geographical latitude or longitude, high resolution
+  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we
+    refer to an Earth position
+  resolution: 1.0e-16
+  physical: GEOGRAPHICAL_LONGITUDE
+  print: fieldPrintLatLon
+- name: GEO_LAT_FIX64
+  base: FIX64
+  description: Geographical latitude or longitude, high resolution
+  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we
+    refer to an Earth position
+  resolution: 1.0e-16
+  physical: GEOGRAPHICAL_LATITUDE
+  print: fieldPrintLatLon
+- name: LENGTH_UFIX8_DAM
+  base: UFIX8
+  description: Length, in decameter resolution
+  resolution: 10
+  physical: LENGTH
+- name: LENGTH_UFIX16_DM
+  base: UFIX16
+  description: Length, in decimeter resolution
+  resolution: 0.1
+  physical: LENGTH
+- name: LENGTH_UFIX32_CM
+  base: UFIX32
+  description: Length, in centimeter resolution
+  resolution: 0.01
+  physical: LENGTH
+- name: LENGTH_UFIX32_M
+  base: UFIX32
+  description: Length, in meter resolution
+  resolution: 1
+  physical: LENGTH
+- name: LENGTH_UFIX32_CM
+  base: UFIX32
+  description: Length, in centimeter resolution
+  resolution: 0.01
+  physical: LENGTH
+- name: LENGTH_UFIX32_MM
+  base: UFIX32
+  description: Length, in millimeter resolution
+  resolution: 0.001
+  physical: LENGTH
+- name: LENGTH_UFIX8_DAM
+  base: UFIX8
+  description: Length, byte, unsigned decameters
+  resolution: 10.0
+  physical: LENGTH
+- name: LENGTH_UFIX16_CM
+  base: UFIX16
+  description: Length, unsigned centimeters
+  resolution: 0.01
+  physical: LENGTH
+- name: LENGTH_UFIX16_DM
+  base: UFIX16
+  description: Length, unsigned decimeters
+  resolution: 0.1
+  physical: LENGTH
+- name: LENGTH_UFIX32_MM
+  base: UFIX32
+  description: Length, high range, unsigned millimeters
+  resolution: 0.001
+  physical: LENGTH
+- name: LENGTH_UFIX32_CM
+  base: UFIX32
+  description: Length, high range, unsigned centimeters
+  resolution: 0.01
+  physical: LENGTH
+- name: LENGTH_UFIX32_M
+  base: UFIX32
+  description: Length, high range, meters
+  resolution: 1.0
+  physical: LENGTH
+- name: TEMPERATURE
+  base: UFIX16
+  description: Temperature
+  resolution: 0.01
+  physical: TEMPERATURE
+- name: TEMPERATURE_UINT8_OFFSET
+  base: UINT8
+  description: Temperature
+  offset: 233
+  resolution: 1
+  physical: TEMPERATURE
+- name: TEMPERATURE_HIGH
+  base: UFIX16
+  description: Temperature, high range
+  encodingDescription: This has a higher range but lower resolution than TEMPERATURE
+  resolution: 0.1
+  physical: TEMPERATURE
+- name: TEMPERATURE_UFIX24
+  base: UFIX24
+  description: Temperature, high resolution
+  encodingDescription: This has a higher range and higher resolution than TEMPERATURE (but uses three bytes)
+  resolution: 0.001
+  physical: TEMPERATURE
+- name: TEMPERATURE_DELTA_FIX16
+  base: FIX16
+  description: Temperature difference
+  resolution: 0.001
+  physical: TEMPERATURE
+- name: VOLUMETRIC_FLOW
+  base: FIX16
+  description: Volumetric flow
+  resolution: 0.1
+  physical: VOLUMETRIC_FLOW
+- name: CONCENTRATION_UINT16_PPM
+  base: UINT16
+  description: Concentration of one substance in another, in this context usually the amount of salts in water
+  encodingDescription: Expressed in parts per million
+  resolution: 1
+  physical: CONCENTRATION
+- name: VOLUME_UFIX16_L
+  base: UFIX16
+  description: Volume
+  resolution: 1
+  physical: VOLUME
+- name: VOLUME_UFIX16_DL
+  base: UFIX16
+  description: Volume
+  resolution: 0.1
+  physical: VOLUME
+- name: VOLUME_UFIX32_DL
+  base: UFIX32
+  description: Volume
+  resolution: 0.1
+  physical: VOLUME
+- name: VOLUME_UFIX32_DML
+  base: UFIX32
+  description: Volume
+  resolution: 0.0001
+  physical: VOLUME
+- name: TIME
+  description: Time
+  sentinels: TopOfRange
+  physical: TIME
+  print: fieldPrintTime
+- name: DURATION
+  description: Duration
+  sentinels: TopOfRange
+  physical: DURATION
+  print: fieldPrintTime
+- name: DURATION_UFIX32
+  base: DURATION
+  description: Duration
+  bits: 32
+  resolution: 0.0001
+  signed: false
+- name: DURATION_UFIX16_S
+  base: DURATION
+  description: Time duration, 16 bits with 1 second resolution
+  bits: 16
+  resolution: 1
+  signed: false
+- name: DURATION_UFIX8_5MS
+  base: DURATION
+  description: Time duration, 8 bits with 5 millisecond resolution
+  bits: 8
+  resolution: 0.005
+  signed: false
+- name: DURATION_UFIX8_P12S
+  base: DURATION
+  description: Time duration, 8 bits with 2^12 second resolution
+  bits: 8
+  resolution: 4096.0
+  signed: false
+- name: DURATION_UFIX8_MIN
+  base: DURATION
+  description: Time duration, 8 bits with minute resolution
+  bits: 8
+  resolution: 60
+  signed: false
+- name: DURATION_UFIX4_MIN
+  base: DURATION
+  description: Time duration, 4 bits with minute resolution
+  bits: 4
+  resolution: 60
+  signed: false
+- name: DURATION_UFIX16_MS
+  base: DURATION
+  description: Time duration, 16 bits with millisecond resolution
+  bits: 16
+  resolution: 0.001
+  signed: false
+- name: DURATION_UFIX16_CS
+  base: DURATION
+  description: Time duration, 16 bits with centisecond resolution
+  bits: 16
+  resolution: 0.01
+  signed: false
+- name: DURATION_UFIX16_DS
+  base: DURATION
+  description: Time duration, 16 bits with decisecond resolution
+  bits: 16
+  resolution: 0.1
+  signed: false
+- name: DURATION_UFIX16_MIN
+  base: DURATION
+  description: Time duration, 16 bits with minute resolution
+  bits: 16
+  resolution: 60
+  signed: false
+- name: DURATION_UFIX16_1_11S
+  base: DURATION
+  description: Time duration, 16 bits with 1/11 second resolution
+  bits: 16
+  resolution: 0.09090909090909091
+  signed: false
+- name: DURATION_UFIX16_1_111S
+  base: DURATION
+  description: Time duration, 16 bits with 1/111 second resolution
+  bits: 16
+  resolution: 0.009009009009009009
+  signed: false
+- name: DURATION_UFIX32_MIN
+  base: DURATION
+  description: Time duration, 32 bits with minute resolution
+  bits: 32
+  resolution: 60
+  signed: false
+- name: DURATION_UFIX24_MS
+  base: DURATION
+  description: Time duration, 24 bits with millisecond resolution
+  bits: 24
+  resolution: 0.001
+  signed: false
+- name: DURATION_UFIX32_S
+  base: DURATION
+  description: Time duration, 32 bits with second resolution
+  bits: 32
+  resolution: 1
+  signed: false
+- name: DURATION_UFIX32_MS
+  base: DURATION
+  description: Time duration, 32 bits with millisecond resolution
+  bits: 32
+  resolution: 0.001
+  signed: false
+- name: DURATION_FIX32_MS
+  base: DURATION
+  description: Time duration
+  bits: 32
+  resolution: 0.001
+  signed: true
+- name: DURATION_FIX32_NANO_S
+  base: DURATION
+  description: Time duration
+  bits: 32
+  resolution: 1.0e-09
+  signed: true
+- name: DURATION_FIX16_5CS
+  base: DURATION
+  description: Time duration, 5 centisecond resolution
+  bits: 16
+  resolution: 0.05
+  signed: true
+- name: DURATION_FIX16_MIN
+  base: DURATION
+  description: Time duration, minute resolution
+  bits: 16
+  resolution: 60
+  signed: true
+- name: DATE
+  description: Date
+  encodingDescription: The date, in days since 1 January 1970.
+  bits: 16
+  sentinels: TopOfRange
+  physical: DATE
+  print: fieldPrintDate
+  signed: false
+- name: VOLTAGE_UFIX16_1MV
+  base: UFIX16
+  description: Voltage
+  resolution: 0.001
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_UFIX16_10MV
+  base: UFIX16
+  description: Voltage
+  resolution: 0.01
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_UFIX16_50MV
+  base: UFIX16
+  description: Voltage
+  resolution: 0.05
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_UFIX16_100MV
+  base: UFIX16
+  description: Voltage
+  resolution: 0.1
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_UFIX8_200MV
+  base: UFIX8
+  description: Voltage
+  resolution: 0.2
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_UFIX16_V
+  base: UFIX16
+  description: Voltage
+  resolution: 1
+  physical: POTENTIAL_DIFFERENCE
+- name: VOLTAGE_FIX16_10MV
+  base: FIX16
+  description: Voltage, signed
+  resolution: 0.01
+  physical: POTENTIAL_DIFFERENCE
+- name: CURRENT
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: Electrical current
+  physical: ELECTRICAL_CURRENT
+  signed: false
+- name: CURRENT_UFIX8_A
+  base: UFIX8
+  description: Electrical current
+  resolution: 1
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_UFIX16_A
+  base: UFIX16
+  description: Electrical current
+  resolution: 1
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_UFIX16_DA
+  base: UFIX16
+  description: Electrical current
+  resolution: 0.1
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_FIX16_DA
+  base: FIX16
+  description: Electrical current
+  resolution: 0.1
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_FIX24_CA
+  base: FIX24
+  description: Electrical current
+  resolution: 0.01
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_FIX32_MA
+  base: FIX32
+  description: Electrical current
+  resolution: 0.001
+  physical: ELECTRICAL_CURRENT
+- name: CURRENT_UFIX16_CA
+  base: UFIX16
+  description: Electrical current
+  resolution: 0.01
+  physical: ELECTRICAL_CURRENT
+- name: VOLTAGE_FIX32_10MV
+  base: FIX32
+  description: Voltage
+  resolution: 0.01
+  physical: POTENTIAL_DIFFERENCE
+- name: ELECTRIC_CHARGE_FIX32_DAH
+  base: FIX32
+  description: Electrical charge
+  unit: Ah
+  resolution: 0.1
+  physical: ELECTRICAL_CHARGE
+- name: ENERGY_UFIX32_CKWH
+  base: UFIX32
+  description: Electrical energy
+  resolution: 0.01
+  physical: ELECTRICAL_ENERGY
+- name: POWER_UFIX16_CW
+  base: UFIX16
+  description: Electrical power
+  resolution: 0.01
+  physical: ELECTRICAL_POWER
+- name: POWER_UFIX32_CW
+  base: UFIX32
+  description: Electrical power
+  resolution: 0.01
+  physical: ELECTRICAL_POWER
+- name: POWER_FIX16
+  base: FIX16
+  description: Electrical power
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: DURATION_UFIX16_CHOUR
+  base: DURATION
+  description: Time duration, 0.01 hour resolution
+  bits: 16
+  resolution: 36
+  signed: false
+- name: DURATION_UFIX16_CDAY
+  base: DURATION
+  description: Time duration, 0.01 day resolution
+  bits: 16
+  resolution: 864
+  signed: false
+- name: PERCENTAGE_UFIX16_D
+  base: UFIX16
+  description: Percentage, unsigned, 0.1% resolution
+  unit: '%'
+  resolution: 0.1
+  physical: DIMENSIONLESS_RATIO
+- name: PERCENTAGE_UFIX16_C
+  base: UFIX16
+  description: Percentage, unsigned, 0.01% resolution
+  unit: '%'
+  resolution: 0.01
+  physical: DIMENSIONLESS_RATIO
+- name: ELECTRIC_CHARGE_UFIX16_AH
+  base: UFIX16
+  description: Electrical charge
+  unit: Ah
+  resolution: 1
+  physical: ELECTRICAL_CHARGE
+- name: PEUKERT_EXPONENT
+  base: UFIX8
+  description: Effect of discharge rate on usable battery capacity
+  url: https://en.wikipedia.org/wiki/Peukert's_law
+  offset: 500
+  resolution: 0.002
+- name: CURRENT_SIGNED
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: Electrical current, signed
+  physical: ELECTRICAL_CHARGE
+- name: ENERGY_UINT32
+  base: UINT32
+  description: Electrical energy
+  physical: ELECTRICAL_ENERGY
+- name: POWER_FIX32_OFFSET
+  base: FIX32
+  description: Electrical power
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
+  offset: -2000000000
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_FIX32_OFFSET
+  base: FIX32
+  description: Electrical power
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
+  offset: -2000000000
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_FIX32_VA_OFFSET
+  base: FIX32
+  description: Electrical power, AC apparent power
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
+    Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
+  offset: -2000000000
+  resolution: 1
+  physical: ELECTRICAL_APPARENT_POWER
+- name: POWER_FIX32_VAR_OFFSET
+  base: FIX32
+  description: Electrical power, AC reactive power
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
+    Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
+  offset: -2000000000
+  resolution: 1
+  physical: ELECTRICAL_REACTIVE_POWER
+- name: POWER_UINT8
+  base: UINT8
+  description: Electrical power, either DC or AC Real power, in Watts
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_UINT16
+  base: UINT16
+  description: Electrical power, either DC or AC Real power, in Watts
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_UINT16_VAR
+  base: UINT16
+  description: Electrical power, AC reactive
+  unit: VAR
+  resolution: 1
+  physical: ELECTRICAL_REACTIVE_POWER
+- name: POWER_INT32
+  base: INT32
+  description: Electrical power, either DC or AC Real power, in Watts
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_UINT32
+  base: UINT32
+  description: Electrical power, DC or AC Real power, in Watts
+  resolution: 1
+  physical: ELECTRICAL_POWER
+- name: POWER_UINT32_VA
+  base: UINT32
+  description: Electrical power, AC apparent power in VA.
+  unit: VA
+  resolution: 1
+  physical: ELECTRICAL_APPARENT_POWER
+- name: POWER_UINT32_VAR
+  base: UINT32
+  description: Electrical power, AC reactive power in VAR.
+  unit: VAR
+  resolution: 1
+  physical: ELECTRICAL_REACTIVE_POWER
+- name: PERCENTAGE_UINT8
+  base: UINT8
+  description: Percentage, unsigned
+  unit: '%'
+  physical: DIMENSIONLESS_RATIO
+- name: PERCENTAGE_UINT8_HIGHRES
+  base: UINT8
+  description: Percentage, unsigned
+  unit: '%'
+  physical: DIMENSIONLESS_RATIO
+- name: PERCENTAGE_INT8
+  base: INT8
+  description: Percentage
+  unit: '%'
+  physical: DIMENSIONLESS_RATIO
+- name: PERCENTAGE_FIX16
+  base: FIX16
+  description: Percentage, high precision
+  unit: '%'
+  resolution: 0.004
+  physical: DIMENSIONLESS_RATIO
+- name: PERCENTAGE_FIX16_D
+  base: FIX16
+  description: Percentage, promille range
+  encodingDescription: Percentage in promille (1/10 %)
+  unit: '%'
+  resolution: 0.1
+  physical: DIMENSIONLESS_RATIO
+- name: ROTATION_FIX16
+  base: FIX16
+  description: Rotational speed
+  encodingDescription: Angular rotation in rad/s, in 1/32th of a thousandth radian
+  comment: Whoever came up with 1/32th of 1/1000 of a radian?
+  resolution: 3.125e-05
+  physical: ANGULAR_VELOCITY
+- name: ROTATION_FIX32
+  base: FIX32
+  description: Rotational speed, high resolution
+  encodingDescription: Angular rotation in rad/s, in 1/32th of a millionth radian
+  comment: Whoever came up with 1/32th of 1e-6 of a radian?
+  resolution: 3.125e-08
+  physical: ANGULAR_VELOCITY
+- name: ROTATION_UFIX16_RPM
+  base: UFIX16
+  description: Rotational speed, RPM
+  encodingDescription: Angular rotation in 0.25 rpm
+  unit: rpm
+  resolution: 0.25
+  physical: ANGULAR_VELOCITY
+- name: ROTATION_UFIX16_RPM_HIGHRES
+  base: UFIX16
+  description: Rotational speed, RPM
+  encodingDescription: Angular rotation in 0.125 rpm
+  unit: rpm
+  resolution: 0.125
+  physical: ANGULAR_VELOCITY
+- name: PRESSURE_UFIX16_HPA
+  base: UFIX16
+  description: Pressure, 16 bit unsigned in hectopascal resolution
+  resolution: 100
+  physical: PRESSURE
+- name: PRESSURE_UINT8_2KPA
+  base: UINT8
+  description: Pressure, 8 bit unsigned in 2 kilopascal resolution
+  resolution: 2000
+  physical: PRESSURE
+- name: PRESSURE_UINT8_KPA
+  base: UINT8
+  description: Pressure, 8 bit unsigned in .5 kilopascal resolution
+  resolution: 500
+  physical: PRESSURE
+- name: PRESSURE_UFIX16_KPA
+  base: UFIX16
+  description: Pressure, 16 bit unsigned in kilopascal resolution.
+  resolution: 1000
+  physical: PRESSURE
+- name: PRESSURE_RATE_FIX16_PA
+  base: FIX16
+  description: Pressure change rate, 16 bit signed in decapascal resolution.
+  resolution: 10
+  physical: PRESSURE_RATE
+- name: PRESSURE_FIX16_KPA
+  base: FIX16
+  description: Pressure, 16 bit signed in kilopascal resolution.
+  resolution: 1000
+  physical: PRESSURE
+- name: PRESSURE_UFIX32_DPA
+  base: UFIX32
+  description: Pressure, 32 bit unsigned in decipascal resolution.
+  resolution: 0.1
+  physical: PRESSURE
+- name: PRESSURE_FIX32_DPA
+  base: FIX32
+  description: Pressure, 32 bit signed in decipascal resolution.
+  resolution: 0.1
+  physical: PRESSURE
+- name: RADIO_FREQUENCY_UFIX32
+  base: UFIX32
+  description: Radio frequency
+  physical: FREQUENCY
+- name: FREQUENCY_UFIX16
+  base: UFIX16
+  description: frequency
+  encodingDescription: Various resolutions are used, ranging from 0.01 Hz to 1 Hz
+  physical: FREQUENCY
+- name: SPEED_FIX16_MM
+  base: FIX16
+  description: Speed, with millimeter per second resolution
+  resolution: 0.001
+  physical: SPEED
+- name: SPEED_FIX16_CM
+  base: FIX16
+  description: Speed, with centimeter per second resolution
+  resolution: 0.01
+  physical: SPEED
+- name: SPEED_UFIX16_CM
+  base: UFIX16
+  description: Speed, unsigned, with centimeter per second resolution
+  resolution: 0.01
+  physical: SPEED
+- name: SPEED_UFIX16_DM
+  base: UFIX16
+  description: Speed, unsigned, with decimeter per second resolution
+  resolution: 0.1
+  physical: SPEED
+- name: SPEED_FIX16_DMM
+  base: FIX16
+  description: Speed, with 0.1 millimeter per second resolution
+  resolution: 0.0001
+  physical: SPEED
+- name: DISTANCE_FIX16_M
+  base: FIX16
+  description: Distance, with meter resolution
+  resolution: 1
+  physical: DISTANCE
+- name: DISTANCE_FIX16_CM
+  base: FIX16
+  description: Distance, with centimeter resolution
+  resolution: 0.01
+  physical: DISTANCE
+- name: DISTANCE_FIX16_MM
+  base: FIX16
+  description: Distance, with millimeter resolution
+  resolution: 0.001
+  physical: DISTANCE
+- name: DISTANCE_FIX24_MM
+  base: FIX24
+  description: Distance, with millimeter resolution
+  resolution: 0.001
+  physical: DISTANCE
+- name: DISTANCE_FIX32_MM
+  base: FIX32
+  description: Distance, high range, with millimeter resolution
+  resolution: 0.001
+  physical: DISTANCE
+- name: DISTANCE_FIX32_DMM
+  base: FIX32
+  description: Distance, high range, with 0.1 millimeter resolution
+  resolution: 0.0001
+  physical: DISTANCE
+- name: DISTANCE_FIX32_MMM
+  base: FIX32
+  description: Distance, high range, with 0.01 millimeter resolution
+  resolution: 1.0e-05
+  physical: DISTANCE
+- name: DISTANCE_FIX32_CM
+  base: FIX32
+  description: Distance, high range, with centimeter resolution
+  resolution: 0.01
+  physical: DISTANCE
+- name: DISTANCE_FIX64
+  base: FIX64
+  description: Distance
+  resolution: 1.0e-06
+  physical: DISTANCE
+- name: GAIN_FIX16
+  base: FIX16
+  description: Gain
+  resolution: 0.01
+- name: MAGNETIC_FIELD_FIX16
+  base: FIX16
+  description: Magnetic field
+  resolution: 0.01
+  physical: MAGNETIC_FIELD
+- name: INSTANCE
+  base: UINT8
+  description: Instance
+  comment: Devices that support multiple sensors TODO
+- name: PGN
+  description: Parameter Group Number
+  encodingDescription: A 24 bit number referring to a PGN
+  resolution: 1
+  print: fieldPrintPGN
+- name: ISO_NAME
+  description: ISO NAME field
+  encodingDescription: A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of
+    PGN 60928 to explain the subfields.
+  bits: 64
+  resolution: 1
+  print: fieldPrintName
+- name: POWER_FACTOR_UFIX16
+  base: UFIX16
+  description: Power Factor
+  resolution: 6.103515625e-05
+  physical: POWER_FACTOR
+- name: POWER_FACTOR_UFIX8
+  base: UFIX8
+  description: Power Factor
+  resolution: 0.01
+  physical: POWER_FACTOR
+- name: SIGNED_ALMANAC_PARAMETER
+  base: SIGNED_FIXED_POINT_NUMBER
+  description: Almanac parameter, signed
+  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using
+    an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected
+    by resolution field containing some factor of 2^n or 2^-n.
+  url: https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf
+- name: UNSIGNED_ALMANAC_PARAMETER
+  base: UNSIGNED_FIXED_POINT_NUMBER
+  description: Almanac parameter, unsigned
+  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using
+    an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected
+    by resolution field containing some factor of 2^n or 2^-n.
+  url: https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf
+- name: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
+  base: SIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter in semi-circles, signed
+  unit: semi-circle
+  physical: ANGLE
+- name: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S
+  base: SIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter in semi-circles/s, signed
+  unit: semi-circle/s
+  physical: ANGULAR_VELOCITY
+- name: SIGNED_ALMANAC_PARAMETER_RATIO
+  base: SIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter, dimensionless ratio, signed
+  unit: s/s
+  physical: DIMENSIONLESS_RATIO
+- name: SIGNED_ALMANAC_PARAMETER_DURATION
+  base: SIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter in seconds, signed
+  unit: s
+  physical: DURATION
+- name: UNSIGNED_ALMANAC_PARAMETER_RATIO
+  base: UNSIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter, dimensionless ratio, unsigned
+  unit: m/m
+  physical: DIMENSIONLESS_RATIO
+- name: UNSIGNED_ALMANAC_PARAMETER_DURATION
+  base: UNSIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter in seconds, unsigned
+  unit: s
+  physical: DURATION
+- name: UNSIGNED_ALMANAC_PARAMETER_SQRT_M
+  base: UNSIGNED_ALMANAC_PARAMETER
+  description: Almanac parameter, square root of meters, unsigned
+  unit: sqrt(m)
+  physical: SQUARE_ROOT_LENGTH
+- name: STRING_FIX
+  description: A fixed length string containing single byte codepoints.
+  encodingDescription: 'This always takes up as many bytes as defined in the field definition. Three end-of-string characters
+    are seen: 0xff (255), the standard NMEA 2000 "Unknown" value. ''@'', the standard AIS "Unknown" value for strings. 0x00,
+    the standard C end-of-string marker. It is encouraged to stop the string at the first such character (and not make it
+    part of the string). An empty string can be considered to make the entire field "Unknown".'
+  comment: It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values
+    are supported.
+  sentinels: EmptyString
+  print: fieldPrintStringFix
+- name: STRING_LZ
+  description: A varying length string containing single byte codepoints encoded with a length byte and terminating zero.
+  encodingDescription: The length of the string is determined by a starting length byte. It also contains a terminating zero
+    byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.
+  comment: This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The
+    use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.
+  variableSize: true
+  sentinels: EmptyString
+  print: fieldPrintStringLZ
+- name: STRING_LAU
+  description: A varying length string containing double or single byte codepoints encoded with a length byte and terminating
+    zero.
+  encodingDescription: The length of the string is determined by a starting length byte. This count includes the length and
+    type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.
+  variableSize: true
+  sentinels: EmptyString
+  print: fieldPrintStringLAU
+- name: BINARY
+  description: Binary field
+  encodingDescription: Unspecified content consisting of any number of bits.
+  print: fieldPrintBinary
+- name: RESERVED
+  description: Reserved field
+  encodingDescription: All reserved bits shall be 1
+  comment: NMEA reserved for future expansion and/or to align next data on byte boundary
+  print: fieldPrintReserved
+- name: SPARE
+  description: Spare field
+  encodingDescription: All spare bits shall be 0
+  comment: This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371
+    standard.
+  print: fieldPrintSpare
+- name: MMSI
+  description: MMSI
+  encodingDescription: The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered
+    as a string. The first three or four digits are special, see the USCG link for a detailed explanation.
+  url: https://navcen.uscg.gov/maritime-mobile-service-identity
+  bits: 32
+  resolution: 1
+  print: fieldPrintMMSI
+  rangeMin: 2000000
+  rangeMax: 999999999
+  signed: false
+- name: VARIABLE
+  description: Variable
+  encodingDescription: The definition of the field is that of the reference PGN and reference field, this is totally variable.
+  variableSize: true
+  print: fieldPrintVariable
+- name: FIELD_INDEX
+  description: Field Index
+  encodingDescription: Index of the specified field in the PGN referenced.
+  bits: 8
+  resolution: 1
+  sentinels: TopOfRange
+  print: fieldPrintNumber
+  rangeMin: 0
+  rangeMax: 252
+  signed: false

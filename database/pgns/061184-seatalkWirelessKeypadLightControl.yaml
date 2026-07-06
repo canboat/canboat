@@ -1,0 +1,47 @@
+pgn: 61184
+id: seatalkWirelessKeypadLightControl
+description: 'Seatalk: Wireless Keypad Light Control'
+type: Single
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  description: Wireless Keypad Light Control
+  match: 1
+  primaryKey: true
+- id: variant
+  name: Variant
+  type: UINT8
+- id: wirelessSetting
+  name: Wireless Setting
+  type: UINT8
+- id: wiredSetting
+  name: Wired Setting
+  type: UINT8
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 16

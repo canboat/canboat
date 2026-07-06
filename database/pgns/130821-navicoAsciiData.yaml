@@ -1,0 +1,36 @@
+pgn: 130821
+id: navicoAsciiData
+description: 'Navico: ASCII Data'
+type: Fast
+variantOrder: 1
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: UINT8
+- id: message
+  name: Message
+  type: STRING_FIX
+  bits: 1840

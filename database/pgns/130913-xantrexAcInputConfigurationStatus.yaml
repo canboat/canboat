@@ -1,0 +1,73 @@
+pgn: 130913
+id: xantrexAcInputConfigurationStatus
+description: 'Xantrex: AC Input Configuration Status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Xantrex Technology Inc.
+  match: 168
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: acSourceInstance
+  name: AC Source Instance
+  type: UINT8
+  primaryKey: true
+- id: numberOfLines
+  name: Number of Lines
+  type: UINT8
+- id: line
+  name: Line
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: breakerSize
+  name: Breaker Size
+  type: UINT16
+- id: acLostLevel
+  name: AC Lost Level
+  type: UINT16
+- id: acUvLevel
+  name: AC UV Level
+  type: VOLTAGE_UFIX16_10MV
+- id: acUvWarningLevel
+  name: AC UV Warning Level
+  type: UINT16
+- id: acUvDelay
+  name: AC UV Delay
+  type: UINT16
+- id: acOvLevel
+  name: AC OV Level
+  type: VOLTAGE_UFIX16_10MV
+- id: acOvWarningLevel
+  name: AC OV Warning Level
+  type: UINT16
+- id: acOvDelay
+  name: AC OV Delay
+  type: UINT16
+- id: acUfLevel
+  name: AC UF Level
+  type: UINT16
+- id: acOfLevel
+  name: AC OF Level
+  type: UINT32

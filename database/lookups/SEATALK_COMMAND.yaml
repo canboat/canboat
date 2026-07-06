@@ -1,0 +1,30 @@
+name: SEATALK_COMMAND
+kind: pair
+bits: 8
+values:
+  129: Seatalk1
+  22: Hull Type
+  38: Auto Turn
+  12: Settings
+  2: Rudder Limit
+  3: Rudder Damping
+  4: Rudder Offset
+  6: Reverse Rudder Reference
+  8: Cruise Speed
+  11: Power Steer Mode
+  15: Wind Type
+  17: Auto Turn
+  18: Calibration Lock
+  20: Gybe Inhibit
+  21: Compass Offset
+  23: Drive Type
+  25: Response Level
+  26: Max Compass Deviation
+  27: Hard Over Time
+  29: Debug Level
+  33: Compass Lock
+  34: Speed Input
+  35: Compass Linearisation Progress
+  36: ACU Debug Level
+  37: Wind Shift Alarm
+  39: Auto Turn Timeout

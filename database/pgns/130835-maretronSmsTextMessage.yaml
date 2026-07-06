@@ -1,0 +1,38 @@
+pgn: 130835
+id: maretronSmsTextMessage
+description: 'Maretron: SMS Text Message'
+type: Fast
+variantOrder: 1
+priority: 6
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+- id: phoneNumber
+  name: Phone Number
+  type: STRING_LAU
+- id: message
+  name: Message
+  type: STRING_LAU

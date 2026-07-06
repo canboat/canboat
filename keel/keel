@@ -1,0 +1,15 @@
+#!/bin/sh
+# keel launcher: bootstrap the venv on first use, then run the real keel.
+# Usage: keel/keel <command> [args...]   (or put keel/ on your PATH)
+set -e
+
+KEEL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+VENV="$KEEL_DIR/.venv"
+
+if [ ! -x "$VENV/bin/keel" ] || [ "$KEEL_DIR/pyproject.toml" -nt "$VENV/bin/keel" ]; then
+    echo "keel: setting up virtualenv in $VENV ..." >&2
+    python3 -m venv "$VENV"
+    "$VENV/bin/python" -m pip install --quiet --editable "$KEEL_DIR"
+fi
+
+exec "$VENV/bin/keel" "$@"

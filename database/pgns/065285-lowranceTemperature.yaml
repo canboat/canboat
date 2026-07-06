@@ -1,0 +1,37 @@
+pgn: 65285
+id: lowranceTemperature
+description: 'Lowrance: Temperature'
+type: Single
+variantOrder: 2
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: temperatureSource
+  name: Temperature Source
+  type: LOOKUP
+  bits: 8
+  lookup: TEMPERATURE_SOURCE
+  primaryKey: true
+- id: actualTemperature
+  name: Actual Temperature
+  type: TEMPERATURE
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 24

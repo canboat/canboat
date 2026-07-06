@@ -1,0 +1,6 @@
+name: DOCKING_STATUS
+kind: pair
+bits: 2
+values:
+  0: Not docked
+  1: Fully docked

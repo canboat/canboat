@@ -1,0 +1,7 @@
+name: THRUSTER_RETRACT_CONTROL
+kind: pair
+bits: 2
+values:
+  0: 'Off'
+  1: Extend
+  2: Retract

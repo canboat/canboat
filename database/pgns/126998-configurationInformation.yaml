@@ -1,0 +1,18 @@
+pgn: 126998
+id: configurationInformation
+description: Configuration Information
+type: Fast
+priority: 6
+interval: irregular
+explanation: Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device
+  and installation notes (e.g., calibration data).
+fields:
+- id: installationDescription1
+  name: 'Installation Description #1'
+  type: STRING_LAU
+- id: installationDescription2
+  name: 'Installation Description #2'
+  type: STRING_LAU
+- id: manufacturerInformation
+  name: Manufacturer Information
+  type: STRING_LAU

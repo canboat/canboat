@@ -1,0 +1,29 @@
+pgn: 65350
+id: simnetMagneticField
+description: 'Simnet: Magnetic Field'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- MissingCompanyFields
+fields:
+- id: fieldX
+  name: Field X
+  type: INT16
+  resolution: 0.0001
+- id: fieldY
+  name: Field Y
+  type: INT16
+  resolution: 0.0001
+- id: fieldZ
+  name: Field Z
+  type: INT16
+  resolution: 0.0001
+- id: marker
+  name: Marker
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

@@ -1,0 +1,28 @@
+pgn: 130566
+id: lightingProgram
+description: Lighting Program
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor
+  program.
+fields:
+- id: programId
+  name: Program ID
+  type: UINT8
+- id: nameOfProgram
+  name: Name of Program
+  type: STRING_LAU
+- id: description
+  name: Description
+  type: STRING_LAU
+- id: programCapabilities
+  name: Program Capabilities
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4

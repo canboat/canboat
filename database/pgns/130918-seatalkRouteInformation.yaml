@@ -1,0 +1,56 @@
+pgn: 130918
+id: seatalkRouteInformation
+description: 'SeaTalk: Route Information'
+type: Fast
+priority: 7
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: currentWaypointSequence
+  name: Current Waypoint Sequence
+  type: UINT16
+- id: currentWaypointName
+  name: Current Waypoint Name
+  type: STRING_FIX
+  bits: 128
+- id: nextWaypointSequence
+  name: Next Waypoint Sequence
+  type: UINT16
+- id: nextWaypointName
+  name: Next Waypoint Name
+  type: STRING_FIX
+  bits: 128
+- id: unknown
+  name: Unknown
+  type: UINT8
+- id: distancePositionToNextWaypoint
+  name: Distance, Position to Next Waypoint
+  type: LENGTH_UFIX32_M
+- id: bearingPositionToNextWaypointTrue
+  name: Bearing, Position to Next Waypoint, True
+  type: ANGLE_UFIX16
+- id: bearingCurrentWaypointToNextWaypointTrue
+  name: Bearing, Current Waypoint to Next Waypoint, True
+  type: ANGLE_UFIX16

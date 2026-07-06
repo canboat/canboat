@@ -1,0 +1,17 @@
+pgn: 127251
+id: rateOfTurn
+description: Rate of Turn
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: rate
+  name: Rate
+  type: ROTATION_FIX32
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24

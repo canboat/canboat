@@ -1,0 +1,15 @@
+name: AIRMAR_DEPTH_QUALITY_FACTOR
+kind: pair
+bits: 4
+values:
+  0: Depth unlocked
+  1: Quality 10%
+  2: Quality 20%
+  3: Quality 30%
+  4: Quality 40%
+  5: Quality 50%
+  6: Quality 60%
+  7: Quality 70%
+  8: Quality 80%
+  9: Quality 90%
+  10: Quality 100%

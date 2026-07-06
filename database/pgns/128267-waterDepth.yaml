@@ -1,0 +1,22 @@
+pgn: 128267
+id: waterDepth
+description: Water Depth
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: depth
+  name: Depth
+  type: LENGTH_UFIX32_CM
+  description: Depth below transducer
+- id: offset
+  name: Offset
+  type: DISTANCE_FIX16_MM
+  description: Distance between transducer and surface (positive) or keel (negative)
+- id: range
+  name: Range
+  type: LENGTH_UFIX8_DAM
+  description: Max measurement range

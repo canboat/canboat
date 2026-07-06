@@ -1,0 +1,50 @@
+pgn: 65305
+id: simnetDeviceStatus
+description: 'Simnet: Device Status'
+type: Single
+variantOrder: 1
+interval: 1000
+missing:
+- Lookups
+explanation: This PGN is reported by an Autopilot Computer (AC/NAC)
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Status
+  match: 2
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_AP_STATUS
+- id: spare7
+  name: Spare
+  type: SPARE
+  bits: 24

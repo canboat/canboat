@@ -1,0 +1,43 @@
+pgn: 130817
+id: maretronAnnunciatorCapabilities
+description: 'Maretron: Annunciator Capabilities'
+type: Fast
+variantOrder: 4
+priority: 6
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: annunciatorInstance
+  name: Annunciator Instance
+  type: UINT8
+  primaryKey: true
+- id: numberOfTones
+  name: Number of Tones
+  type: UINT8
+- id: tone
+  name: Tone
+  type: UINT16
+repeating1:
+  count: 1
+  start: 6
+  countField: 5

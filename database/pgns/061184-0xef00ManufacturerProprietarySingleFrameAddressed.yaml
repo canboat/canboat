@@ -1,0 +1,31 @@
+pgn: 61184
+id: 0xef00ManufacturerProprietarySingleFrameAddressed
+description: '0xEF00: Manufacturer Proprietary single-frame addressed'
+type: Single
+fallback: true
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during
+  analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48

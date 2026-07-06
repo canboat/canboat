@@ -1,0 +1,8 @@
+name: SIMNET_WIND_SPEED_UNIT
+kind: pair
+bits: 8
+values:
+  0: Knots
+  1: Meters per second
+  2: Miles per hour
+  3: Kilometers per hour

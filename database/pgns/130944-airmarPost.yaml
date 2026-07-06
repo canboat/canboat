@@ -1,0 +1,52 @@
+pgn: 130944
+id: airmarPost
+description: 'Airmar: POST'
+type: Fast
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 1
+  lookup: AIRMAR_POST_CONTROL
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 7
+- id: numberOfIdTestResultPairsToFollow
+  name: Number of ID/test result pairs to follow
+  type: UINT8
+- id: testId
+  name: Test ID
+  type: LOOKUP
+  bits: 8
+  description: See Airmar docs for table of IDs and failure codes; these lookup values are for DST200
+  lookup: AIRMAR_POST_ID
+- id: testResult
+  name: Test result
+  type: UINT8
+  description: Values other than 0 are failure codes

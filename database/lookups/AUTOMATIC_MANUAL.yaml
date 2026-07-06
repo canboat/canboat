@@ -1,0 +1,6 @@
+name: AUTOMATIC_MANUAL
+kind: pair
+bits: 8
+values:
+  0: Automatic
+  1: Manual

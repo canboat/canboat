@@ -1,0 +1,60 @@
+pgn: 130816
+id: simradTextMessage
+description: 'Simrad: Text Message'
+type: Fast
+variantOrder: 21
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Text
+  match: 50
+  lookup: SIMNET_COMMAND
+  primaryKey: true
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: UINT8
+- id: c
+  name: C
+  type: UINT8
+- id: sid
+  name: SID
+  type: UINT8
+- id: prio
+  name: Prio
+  type: UINT8
+- id: text
+  name: Text
+  type: STRING_FIX
+  bits: 256

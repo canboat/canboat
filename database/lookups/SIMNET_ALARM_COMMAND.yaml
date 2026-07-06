@@ -1,0 +1,12 @@
+name: SIMNET_ALARM_COMMAND
+kind: pair
+bits: 8
+values:
+  56: Deactivate
+  57: Activate
+  58: Acknowledge
+  68: Silence
+  88: Tack/Gybe Confirm
+  104: Alarm History
+  107: MOB Activated
+  108: MOB Cancelled

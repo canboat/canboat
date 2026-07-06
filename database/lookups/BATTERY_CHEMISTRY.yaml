@@ -1,0 +1,9 @@
+name: BATTERY_CHEMISTRY
+kind: pair
+bits: 4
+values:
+  0: Pb (Lead)
+  1: Li
+  2: NiCd
+  3: ZnO
+  4: NiMH

@@ -1,0 +1,36 @@
+pgn: 126992
+id: systemTime
+description: System Time
+type: Single
+priority: 3
+interval: 1000
+explanation: 'The purpose of this PGN is twofold: To provide a regular transmission of UTC time and date. To provide synchronism
+  for measurement data.'
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+  description: An upward counting number used to tie releated information together between different PGNs. For example the
+    SID would be used to tie together the COG, SOG and RAIM values to a given position.
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 4
+  lookup: SYSTEM_TIME
+  primaryKey: true
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: date
+  name: Date
+  type: DATE
+- id: time
+  name: Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0

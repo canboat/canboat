@@ -1,0 +1,61 @@
+pgn: 126720
+id: garminAutopilotHeartbeat
+description: 'Garmin Autopilot: Heartbeat'
+type: Fast
+variantOrder: 16
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: UINT16
+  description: Garmin autopilot transport
+  match: 5904
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '4'
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '4'
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  description: '21'
+  match: 21
+- id: field
+  name: Field
+  type: UINT8
+  description: Heartbeat
+  match: 3
+  primaryKey: true
+- id: heartbeatData
+  name: Heartbeat Data
+  type: BINARY
+  bits: 32
+  description: Fixed helm heartbeat payload (observed 01 00 c8 00)

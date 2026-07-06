@@ -1,0 +1,81 @@
+pgn: 126720
+id: carlingDcConfigurationCommand
+description: 'Carling: DC Configuration Command'
+type: Fast
+variantOrder: 50
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Carling Technologies Inc. (Moritz Aerospace)
+  match: 176
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+- id: breakerMapping1
+  name: Breaker Mapping 1
+  type: UINT8
+- id: breakerMapping2
+  name: Breaker Mapping 2
+  type: UINT8
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: breakerMapping3
+  name: Breaker Mapping 3
+  type: UNSIGNED_INTEGER
+  bits: 3
+- id: inrushDelay
+  name: Inrush Delay
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: tripDelay
+  name: Trip Delay
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: configurationFlags
+  name: Configuration Flags
+  type: UINT8
+- id: currentRating
+  name: Current Rating
+  type: UINT8
+- id: factoryMaxRating
+  name: Factory Max Rating
+  type: UINT8
+- id: scheduleBLoadShedPriority
+  name: Schedule B Load Shed Priority
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: scheduleALoadShedPriority
+  name: Schedule A Load Shed Priority
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: dimValue
+  name: Dim Value
+  type: UINT8
+- id: breakerGroup
+  name: Breaker Group
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: flashMapIndex
+  name: Flash Map Index
+  type: UNSIGNED_INTEGER
+  bits: 4

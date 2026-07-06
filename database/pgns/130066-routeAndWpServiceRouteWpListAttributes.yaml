@@ -1,0 +1,59 @@
+pgn: 130066
+id: routeAndWpServiceRouteWpListAttributes
+description: Route and WP Service - Route/WP-List Attributes
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- id: routeWpListName
+  name: Route/WP-List Name
+  type: STRING_LAU
+- id: routeWpListTimestamp
+  name: Route/WP-List Timestamp
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: routeWpListDatestamp
+  name: Route/WP-List Datestamp
+  type: DATE
+- id: changeAtLastTimestamp
+  name: Change at Last Timestamp
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: WP_CHANGE
+- id: numberOfWpsInTheRouteWpList
+  name: Number of WPs in the Route/WP-List
+  type: UINT16
+- id: criticalSupplementaryParameters
+  name: Critical supplementary parameters
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: WP_CRITICAL_PARAMETERS
+- id: navigationMethod
+  name: Navigation Method
+  type: LOOKUP
+  bits: 2
+  lookup: WP_NAVIGATION_METHOD
+- id: wpIdentificationMethod
+  name: WP Identification Method
+  type: LOOKUP
+  bits: 2
+  lookup: WP_IDENTIFICATION_METHOD
+- id: routeStatus
+  name: Route Status
+  type: LOOKUP
+  bits: 4
+  lookup: WP_ROUTE_STATUS
+- id: xteLimitForTheRoute
+  name: XTE Limit for the Route
+  type: DISTANCE_FIX16_M

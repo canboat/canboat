@@ -1,0 +1,26 @@
+pgn: 127488
+id: engineParametersRapidUpdate
+description: Engine Parameters, Rapid Update
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: speed
+  name: Speed
+  type: ROTATION_UFIX16_RPM
+- id: boostPressure
+  name: Boost Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: tiltTrim
+  name: Tilt/Trim
+  type: PERCENTAGE_INT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

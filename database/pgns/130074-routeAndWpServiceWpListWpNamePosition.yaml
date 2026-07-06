@@ -1,0 +1,43 @@
+pgn: 130074
+id: routeAndWpServiceWpListWpNamePosition
+description: Route and WP Service - WP List - WP Name & Position
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startWpId
+  name: Start WP ID
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfValidWpsInTheWpList
+  name: Number of valid WPs in the WP-List
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: wpId
+  name: WP ID
+  type: UINT16
+- id: wpName
+  name: WP Name
+  type: STRING_LAU
+- id: wpLatitude
+  name: WP Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: wpLongitude
+  name: WP Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+repeating1:
+  count: 4
+  start: 6
+  countField: 2

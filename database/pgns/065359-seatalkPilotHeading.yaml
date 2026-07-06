@@ -1,0 +1,41 @@
+pgn: 65359
+id: seatalkPilotHeading
+description: 'Seatalk: Pilot Heading'
+type: Single
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: headingTrue
+  name: Heading True
+  type: ANGLE_UFIX16
+- id: headingMagnetic
+  name: Heading Magnetic
+  type: ANGLE_UFIX16
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8

@@ -1,0 +1,43 @@
+pgn: 130575
+id: entertainmentParentalControlStatus
+description: Entertainment - Parental Control Status
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: Audio/video parental-control (lock) status. Field lengths and types are inferred from the NMEA 3.002 field-name
+  list and are unconfirmed.
+fields:
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: lockType
+  name: Lock Type
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: lockStatus
+  name: Lock Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: fileStationId
+  name: File / Station ID
+  type: UINT32
+  description: Unique file or station ID
+- id: currentPincode
+  name: Current Pincode
+  type: STRING_LAU
+- id: newPincode
+  name: New Pincode
+  type: STRING_LAU
