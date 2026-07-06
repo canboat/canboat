@@ -9356,6 +9356,24 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Furuno: NavPilot Status",
+     130827,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1855),
+      MATCH_FIELD(PK("Message ID"), BYTES(1), 1, "NavPilot Status"),
+      ANGLE_U16_FIELD("Rudder Angle", NULL),
+      SIMPLE_SIGNED_FIELD("A", BYTES(2)),
+      UINT8_FIELD("B"),
+      ANGLE_U16_FIELD("Commanded Course", NULL),
+      UINT8_FIELD("C"),
+      UINT16_FIELD("D"),
+      END_OF_FIELDS},
+     .explanation = "Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, "
+                    "while engaged, the commanded course to steer; the commanded course reads unset "
+                    "(0xFFFF) in standby. Fields A, B, C, D are not yet fully understood."}
+
+    ,
     {"Simnet: Set Serial Number", 130828, PACKET_INCOMPLETE | PACKET_NOT_SEEN, PACKET_FAST, {COMPANY(1857), END_OF_FIELDS}}
 
     ,
