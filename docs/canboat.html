@@ -1344,6 +1344,34 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65280">0xFF00:
             PGN 65280
+            - Navico: Device Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Low-rate proprietary status broadcast seen from Navico/B&amp;G/Simrad devices (MFDs, autopilots). The first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 5 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Report Type</td><td>Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four times a second, NEON devices at a much lower rate.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Data</td><td>Payload; constant in all observed traffic</td><td/><td>40 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65280">0xFF00:
+            PGN 65280
             - BEP Marine: CZone Circuit Control</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>CZone circuit control command from a plotter (or other commander) to CZone modules. The plotter broadcasts; each module independently checks whether the 16-bit Circuit ID matches one of its own. Observed wire patterns: byte 6 = 0xF1 for ON commands, 0xF2 for OFF: Level Or Value = 1 (ON) or 2 (OFF) with Command Active and several flag bits asserted. The seven Unknown bits in bytes 6-7 have not yet been mapped to specific actions (likely candidates: dim direction, momentary vs latched, transient vs persistent, dim ramp-rate select, source priority).</p><p>

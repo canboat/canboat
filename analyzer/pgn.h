@@ -1721,6 +1721,23 @@ Pgn pgnList[] = {
      {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Navico: Device Status",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Report Type",
+                       "Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this "
+                       "roughly four times a second, NEON devices at a much lower rate."),
+      BINARY_FIELD("Data", BYTES(5), "Payload; constant in all observed traffic"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The "
+                    "first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at "
+                    "about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed "
+                    "traffic, so their meaning is not yet known."}
+
+    ,
     {"BEP Marine: CZone Circuit Control",
      65280,
      PACKET_INCOMPLETE,

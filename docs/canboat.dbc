@@ -271,7 +271,9 @@ BO_ 2566848766 PGN_65280_multiplexed: 8 Vector__XXX
  SG_ m39207_levelOrValue m39207 : 48|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m40767_reserved5 m40767 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_fieldB m39207 : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_data_4 m39187 : 24|40@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_circuitId m39207 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39187_reportType m39187 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39056_data_3 m39056 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39049_data_2 m39049 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39084_data_1 m39084 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
@@ -2126,7 +2128,9 @@ CM_ BO_ 2566848766 "Multiplexed message";
 CM_ SG_ 2566848766 m39207_commandActive "Receiver ignores frame if zero";
 CM_ SG_ 2566848766 m39207_levelOrValue "0x1 for ON, 0x2 for OFF; possibly a control mode";
 CM_ SG_ 2566848766 m39207_fieldB "Purpose unknown; observed 0x0000 in all known traffic";
+CM_ SG_ 2566848766 m39187_data_4 "Payload; constant in all observed traffic";
 CM_ SG_ 2566848766 m39207_circuitId "Low 16 bits of the .zcf-stored 32-bit circuit ID";
+CM_ SG_ 2566848766 m39187_reportType "Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four times a second, NEON devices at a much lower rate.";
 CM_ BO_ 2566849022 "Multiplexed message";
 CM_ BO_ 2566849278 "Multiplexed message";
 CM_ SG_ 2566849278 m39049_pgn "PGN for which the number of channels is reported";
@@ -2744,7 +2748,7 @@ VAL_ 2566781950 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
-VAL_ 2566848766 manufacturerIndustry 40767 "Furuno" 39087 "Honda Marine" 39084 "Yanmar Marine" 39049 "Maretron" 39056 "Mercury Marine" 39207 "BEP Marine 2" ;
+VAL_ 2566848766 manufacturerIndustry 40767 "Furuno" 39087 "Honda Marine" 39084 "Yanmar Marine" 39049 "Maretron" 39056 "Mercury Marine" 39187 "Navico" 39207 "BEP Marine 2" ;
 VAL_ 2566849022 manufacturerIndustry 39084 "Yanmar Marine" 39207 "BEP Marine 2" ;
 VAL_ 2566849278 manufacturerIndustry 39049 "Maretron" 39207 "BEP Marine 2" ;
 VAL_ 2566849534 industryCode 0 "Global" 1 "Highway" 2 "Agriculture" 3 "Construction" 4 "Marine Industry" 5 "Industrial" ;
@@ -3041,7 +3045,9 @@ SG_MUL_VAL_ 2566848766 m39087_data manufacturerIndustry 39087-39087;
 SG_MUL_VAL_ 2566848766 m39084_data_1 manufacturerIndustry 39084-39084;
 SG_MUL_VAL_ 2566848766 m39049_data_2 manufacturerIndustry 39049-39049;
 SG_MUL_VAL_ 2566848766 m39056_data_3 manufacturerIndustry 39056-39056;
+SG_MUL_VAL_ 2566848766 m39187_reportType manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39207_circuitId manufacturerIndustry 39207-39207;
+SG_MUL_VAL_ 2566848766 m39187_data_4 manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39207_fieldB manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m40767_reserved5 manufacturerIndustry 40767-40767;
 SG_MUL_VAL_ 2566848766 m39207_levelOrValue manufacturerIndustry 39207-39207;
