@@ -1,15 +1,39 @@
 #!/bin/sh
-# keel launcher: bootstrap the venv on first use, then run the real keel.
-# Usage: keel/keel <command> [args...]   (or put keel/ on your PATH)
+# keel launcher: run the prebuilt binary, building or downloading it first
+# when needed. Usage: keel/keel <command> [args...]  (or put keel/ on PATH)
 set -e
 
 KEEL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-VENV="$KEEL_DIR/.venv"
+BIN="$KEEL_DIR/target/release/keel"
 
-if [ ! -x "$VENV/bin/keel" ] || [ "$KEEL_DIR/pyproject.toml" -nt "$VENV/bin/keel" ]; then
-    echo "keel: setting up virtualenv in $VENV ..." >&2
-    python3 -m venv "$VENV"
-    "$VENV/bin/python" -m pip install --quiet --editable "$KEEL_DIR"
+stale() {
+    [ ! -x "$BIN" ] && return 0
+    [ "$KEEL_DIR/Cargo.toml" -nt "$BIN" ] && return 0
+    [ -n "$(find "$KEEL_DIR/src" -newer "$BIN" 2>/dev/null | head -1)" ] && return 0
+    return 1
+}
+
+if stale; then
+    if command -v cargo >/dev/null 2>&1; then
+        echo "keel: building (cargo build --release) ..." >&2
+        (cd "$KEEL_DIR" && cargo build --release --quiet)
+    elif [ -x "$BIN" ]; then
+        : # sources newer but no toolchain: run the stale binary rather than fail
+        echo "keel: warning: sources changed but cargo is not installed; running stale binary" >&2
+    else
+        # No toolchain, no binary: fetch a prebuilt release.
+        OS=$(uname | tr '[:upper:]' '[:lower:]')
+        ARCH=$(uname -m)
+        URL="https://github.com/canboat/canboat/releases/latest/download/keel-$OS-$ARCH"
+        echo "keel: no cargo toolchain; downloading $URL ..." >&2
+        mkdir -p "$KEEL_DIR/target/release"
+        if command -v curl >/dev/null 2>&1; then
+            curl -fsSL -o "$BIN" "$URL"
+        else
+            wget -qO "$BIN" "$URL"
+        fi
+        chmod +x "$BIN"
+    fi
 fi
 
-exec "$VENV/bin/keel" "$@"
+exec "$BIN" "$@"
