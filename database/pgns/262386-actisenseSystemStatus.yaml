@@ -1,0 +1,87 @@
+pgn: 262386
+id: actisenseSystemStatus
+description: 'Actisense: System status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: UINT32
+- id: indiChannelCount
+  name: Indi channel count
+  type: UINT8
+- id: ch1RxBandwidth
+  name: Ch1 Rx Bandwidth
+  type: UINT8
+- id: ch1RxLoad
+  name: Ch1 Rx Load
+  type: UINT8
+- id: ch1RxFiltered
+  name: Ch1 Rx Filtered
+  type: UINT8
+- id: ch1RxDropped
+  name: Ch1 Rx Dropped
+  type: UINT8
+- id: ch1TxBandwidth
+  name: Ch1 Tx Bandwidth
+  type: UINT8
+- id: ch1TxLoad
+  name: Ch1 Tx Load
+  type: UINT8
+- id: ch2RxBandwidth
+  name: Ch2 Rx Bandwidth
+  type: UINT8
+- id: ch2RxLoad
+  name: Ch2 Rx Load
+  type: UINT8
+- id: ch2RxFiltered
+  name: Ch2 Rx Filtered
+  type: UINT8
+- id: ch2RxDropped
+  name: Ch2 Rx Dropped
+  type: UINT8
+- id: ch2TxBandwidth
+  name: Ch2 Tx Bandwidth
+  type: UINT8
+- id: ch2TxLoad
+  name: Ch2 Tx Load
+  type: UINT8
+- id: uniChannelCount
+  name: Uni channel count
+  type: UINT8
+- id: ch1Bandwidth
+  name: Ch1 Bandwidth
+  type: UINT8
+- id: ch1Deleted
+  name: Ch1 Deleted
+  type: UINT8
+- id: ch1Bufferloading
+  name: Ch1 BufferLoading
+  type: UINT8
+- id: ch1Pointerloading
+  name: Ch1 PointerLoading
+  type: UINT8
+- id: ch2Bandwidth
+  name: Ch2 Bandwidth
+  type: UINT8
+- id: ch2Deleted
+  name: Ch2 Deleted
+  type: UINT8
+- id: ch2Bufferloading
+  name: Ch2 BufferLoading
+  type: UINT8
+- id: ch2Pointerloading
+  name: Ch2 PointerLoading
+  type: UINT8

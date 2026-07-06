@@ -317,7 +317,7 @@ anything (same policy as `docs/canboat.json` today).
 
 | Artifact | Notes |
 |---|---|
-| `docs/canboat.xml` | **Byte-identical to today's output at switchover.** Quirk-compatible: C `%g` float formatting (needs a small `%g` mimic — Python formats floats differently), the `RangeMax` UINT64_MAX special case, entity escaping, the 4-space `<Priority>` indent bug, element order. After switchover the golden file retires; `contract.py` governs change. |
+| `docs/canboat.xml` | **Byte-identical to today's output at switchover.** Quirk-compatible: C `%g` float formatting (needs a small `%g` mimic — Python formats floats differently), the `RangeMax` UINT64_MAX special case, entity escaping, the 4-space `<Priority>` indent bug, element order. The full quirk inventory with keep/cleanup/fix recommendations lives in **[QUIRKS.md](./QUIRKS.md)**. After switchover the golden file retires; `contract.py` governs change. |
 | `docs/canboat.json`, `.html` | unchanged XSLT chain, still driven from the XML. |
 | `analyzer/pgn.h` | generated `Pgn pgnList[]`. May keep today's initializer shape initially; can later simplify (the `unit="=N"` pun can stay *internal* to the generated C or be replaced together with the runtime code that reads it). |
 | `analyzer/lookup.h` | generated; the six-way X-macro include collapses — only the analyzer's val→string direction is needed once `-DEXPLAIN` dies. Plain static tables are an option. |

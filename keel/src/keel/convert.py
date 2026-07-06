@@ -294,9 +294,14 @@ def _author_overrides(db: Database, pgn: Pgn, original_block: str) -> None:
             f.special_values = want_count
 
 
-def convert(xml_path: str, fieldtype_header: str, verbose: bool = False):
+def convert(xml_path: str, fieldtype_header: str, verbose: bool = False, bem_paths: dict = None):
     """Returns (db, failures): the authored Database and a list of PGN ids
-    whose blocks could not be reproduced (for iterative refinement)."""
+    whose blocks could not be reproduced (for iterative refinement).
+
+    bem_paths: optional {"actisense": path, "ikonvert": path} pointing at
+    -explain-ngt-xml / -explain-ik-xml output; the BEM pseudo-PGNs live in
+    pgnList (the analyzer decodes them at runtime) but not in canboat.xml.
+    """
     import copy
 
     raw = xmlread.parse(xml_path)
@@ -325,6 +330,15 @@ def convert(xml_path: str, fieldtype_header: str, verbose: bool = False):
     for elem, _block in raw.pgn_elements:
         db.pgns.append(build_pgn(picker, db, elem))
 
+    # Actisense/iKonvert BEM pseudo-PGNs, from their own XML documents
+    bem_blocks = []  # [(pgn, block)] joins the reconcile pass below
+    for which, path in (bem_paths or {}).items():
+        bem_raw = xmlread.parse(path)
+        for elem, block in bem_raw.pgn_elements:
+            pgn = build_pgn(picker, db, elem)
+            db.pgns.append(pgn)
+            bem_blocks.append((pgn, block))
+
     # Variant precedence: when one PGN number has multiple entries, their
     # order is semantic - runtime matching precedence (pgn.c getMatchingPgn)
     # - so it is authored. Fallback entries take part: their position in the
@@ -341,7 +355,9 @@ def convert(xml_path: str, fieldtype_header: str, verbose: bool = False):
     derive.fill(db)
 
     failures = []
-    for pgn, (_elem, block) in zip(db.pgns, raw.pgn_elements):
+    normal_pairs = list(zip(db.pgns, raw.pgn_elements))
+    all_blocks = [(pgn, block) for pgn, (_elem, block) in normal_pairs] + bem_blocks
+    for pgn, block in all_blocks:
         if not reconcile_pgn(db, pgn, block):
             failures.append(pgn.id)
             if verbose:

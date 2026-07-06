@@ -39,8 +39,10 @@ def parse(path: str) -> RawXml:
     version = root.findtext("Version")
     schema_version = root.findtext("SchemaVersion")
 
+    # The Actisense/iKonvert BEM documents (-explain-ngt-xml / -explain-ik-xml)
+    # contain only the header and <PGNs>; all other sections are absent.
     pqs = []
-    for pq in root.find("PhysicalQuantities"):
+    for pq in root.find("PhysicalQuantities") if root.find("PhysicalQuantities") is not None else []:
         pqs.append(
             PhysicalQuantity(
                 name=pq.get("Name"),
@@ -56,7 +58,11 @@ def parse(path: str) -> RawXml:
     lookup_order = {"pair": [], "triplet": [], "bit": [], "fieldtype": []}
     lookup_fieldtype_raw = {}
 
-    for lk in root.find("LookupEnumerations"):
+    def _section(tag):
+        sec = root.find(tag)
+        return sec if sec is not None else []
+
+    for lk in _section("LookupEnumerations"):
         name = lk.get("Name")
         max_value = int(lk.get("MaxValue"))
         lookups[name] = Lookup(
@@ -67,7 +73,7 @@ def parse(path: str) -> RawXml:
         )
         lookup_order["pair"].append(name)
 
-    for lk in root.find("LookupIndirectEnumerations"):
+    for lk in _section("LookupIndirectEnumerations"):
         name = lk.get("Name")
         max_value = int(lk.get("MaxValue"))
         lookups[name] = Lookup(
@@ -78,7 +84,7 @@ def parse(path: str) -> RawXml:
         )
         lookup_order["triplet"].append(name)
 
-    for lk in root.find("LookupBitEnumerations"):
+    for lk in _section("LookupBitEnumerations"):
         name = lk.get("Name")
         max_value = int(lk.get("MaxValue"))
         lookups[name] = Lookup(
@@ -89,7 +95,7 @@ def parse(path: str) -> RawXml:
         )
         lookup_order["bit"].append(name)
 
-    for lk in root.find("LookupFieldTypeEnumerations"):
+    for lk in _section("LookupFieldTypeEnumerations"):
         name = lk.get("Name")
         max_value = int(lk.get("MaxValue"))
         entries_raw = []
@@ -130,8 +136,12 @@ def parse(path: str) -> RawXml:
     if len(pgn_elems) != len(blocks):
         raise ValueError(f"PGNInfo count mismatch: {len(pgn_elems)} elements vs {len(blocks)} source blocks")
 
-    ft_start = source.index("  <FieldTypes>\n")
-    ft_end = source.index("  </FieldTypes>\n") + len("  </FieldTypes>\n")
+    if "  <FieldTypes>\n" in source:
+        ft_start = source.index("  <FieldTypes>\n")
+        ft_end = source.index("  </FieldTypes>\n") + len("  </FieldTypes>\n")
+        fieldtypes_slice = source[ft_start:ft_end]
+    else:
+        fieldtypes_slice = ""
 
     return RawXml(
         version=version,
@@ -140,7 +150,7 @@ def parse(path: str) -> RawXml:
         lookups=lookups,
         lookup_order=lookup_order,
         pgn_elements=list(zip(pgn_elems, blocks)),
-        fieldtypes_slice=source[ft_start:ft_end],
+        fieldtypes_slice=fieldtypes_slice,
         lookup_fieldtype_raw=lookup_fieldtype_raw,
     )
 

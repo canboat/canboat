@@ -1,0 +1,30 @@
+pgn: 262384
+id: actisenseStartupStatus
+description: 'Actisense: Startup status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: UINT32
+- id: firmwareVersion
+  name: Firmware version
+  type: VERSION
+- id: resetStatus
+  name: Reset status
+  type: UINT8
+- id: a
+  name: A
+  type: UINT8
