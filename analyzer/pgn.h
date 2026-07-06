@@ -9861,6 +9861,22 @@ Pgn pgnList[] = {
       END_OF_FIELDS}}
 
     ,
+    {"Simnet: AIS Silent Mode",
+     130842,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      MATCH_FIELD(PK("Message ID"), 6, 4, "AIS Silent Mode"),
+      LOOKUP_FIELD("Operation", 2, SIMNET_KEY_OPERATION),
+      UINT8_FIELD("D"),
+      UINT8_FIELD("E"),
+      END_OF_FIELDS},
+     .explanation = "Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B "
+                    "static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the "
+                    "AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the "
+                    "observed traffic."}
+
+    ,
     {"Maretron: Windlass Control Command",
      130843,
      PACKET_INCOMPLETE,
