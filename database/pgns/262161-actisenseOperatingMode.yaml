@@ -1,0 +1,20 @@
+pgn: 262161
+id: actisenseOperatingMode
+description: 'Actisense: Operating mode'
+type: Fast
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: UINT32
+- id: operatingMode
+  name: Operating Mode
+  type: UINT16

@@ -28,6 +28,39 @@ def read_versions(root: str):
     return version, schema
 
 
+def _bem_sources(root: str, args) -> dict:
+    """Locate or generate the Actisense/iKonvert BEM XML documents. These are
+    not committed artifacts; the bootstrap needs the C analyzer-explain."""
+    import glob
+    import subprocess
+    import tempfile
+
+    paths = {}
+    explicit = {"actisense": args.actisense_xml, "ikonvert": args.ikonvert_xml}
+    binaries = glob.glob(os.path.join(root, "rel", "*", "analyzer-explain"))
+    flags = {"actisense": "-explain-ngt-xml", "ikonvert": "-explain-ik-xml"}
+    for which, path in explicit.items():
+        if path is not None:
+            paths[which] = path
+        elif binaries:
+            out = subprocess.run(
+                [binaries[0], flags[which], "-camel"], capture_output=True, text=True, check=True
+            ).stdout
+            tmp = tempfile.NamedTemporaryFile(
+                mode="w", suffix=f"-{which}.xml", delete=False, encoding="utf-8"
+            )
+            tmp.write(out)
+            tmp.close()
+            paths[which] = tmp.name
+        else:
+            print(
+                f"keel convert: no --{which}-xml and no rel/*/analyzer-explain binary; "
+                f"{which} BEM pseudo-PGNs are NOT converted",
+                file=sys.stderr,
+            )
+    return paths
+
+
 def cmd_convert(args) -> int:
     from . import convert, derive, emit_xml, yamlio
 
@@ -36,11 +69,8 @@ def cmd_convert(args) -> int:
     header = os.path.join(root, "analyzer", "fieldtype.h")
     out_dir = os.path.join(root, args.out)
 
-    db, failures = convert.convert(xml_path, header, verbose=args.verbose)
-
-    emitted = emit_xml.emit_xml(db)
-    with open(xml_path, encoding="utf-8") as f:
-        original = f.read()
+    bem_paths = _bem_sources(root, args)
+    db, failures = convert.convert(xml_path, header, verbose=args.verbose, bem_paths=bem_paths)
 
     yamlio.write_database(db, out_dir)
     print(f"keel convert: wrote {len(db.pgns)} pgns, {len(db.lookups)} lookups to {out_dir}")
@@ -48,14 +78,22 @@ def cmd_convert(args) -> int:
     if failures:
         print(f"keel convert: {len(failures)} PGN blocks NOT byte-exact: {', '.join(failures[:10])}"
               + (" ..." if len(failures) > 10 else ""), file=sys.stderr)
-    if emitted != original:
-        print("keel convert: full document does not reproduce byte-for-byte yet", file=sys.stderr)
-        if args.diff:
-            _write_diff(original, emitted, args.diff)
-            print(f"keel convert: diff written to {args.diff}", file=sys.stderr)
-        return 1
-    print("keel convert: golden check OK - emitted XML is byte-identical")
-    return 0
+
+    ok = True
+    references = {"normal": xml_path, **bem_paths}
+    for which, path in references.items():
+        emitted = emit_xml.emit_xml(db, which)
+        with open(path, encoding="utf-8") as f:
+            original = f.read()
+        if emitted == original:
+            print(f"keel convert: golden check OK ({which}) - emitted XML is byte-identical")
+        else:
+            ok = False
+            print(f"keel convert: {which} document does not reproduce byte-for-byte yet", file=sys.stderr)
+            if args.diff:
+                _write_diff(original, emitted, f"{args.diff}.{which}")
+                print(f"keel convert: diff written to {args.diff}.{which}", file=sys.stderr)
+    return 0 if ok else 1
 
 
 def cmd_generate(args) -> int:
@@ -108,6 +146,8 @@ def main(argv=None) -> int:
     p = sub.add_parser("convert", help="bootstrap: convert docs/canboat.xml to database/ YAML")
     p.add_argument("--out", default="database", help="output directory relative to repo root")
     p.add_argument("--diff", help="write unified diff of non-reproducing output to this file")
+    p.add_argument("--actisense-xml", help="analyzer-explain -explain-ngt-xml output (default: run the binary)")
+    p.add_argument("--ikonvert-xml", help="analyzer-explain -explain-ik-xml output (default: run the binary)")
     p.add_argument("--verbose", action="store_true")
     p.set_defaults(func=cmd_convert)
 

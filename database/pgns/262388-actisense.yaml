@@ -1,0 +1,18 @@
+pgn: 262388
+id: actisense
+description: 'Actisense: ?'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32

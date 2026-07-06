@@ -1,0 +1,23 @@
+pgn: 262400
+id: nmea2000GatewayNetworkStatus
+description: 'NMEA 2000 gateway: network status'
+type: Fast
+fields:
+- id: canNetworkLoad
+  name: CAN network load
+  type: UINT8
+- id: errors
+  name: Errors
+  type: UINT32
+- id: deviceCount
+  name: Device count
+  type: UINT8
+- id: uptime
+  name: Uptime
+  type: DURATION_UFIX32_S
+- id: gatewayAddress
+  name: Gateway address
+  type: UINT8
+- id: rejectedTxRequests
+  name: Rejected TX requests
+  type: UINT32
