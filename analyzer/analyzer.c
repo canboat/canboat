@@ -1577,6 +1577,19 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
   repetition               = 0;
   *variableFields          = 0;
 
+  // Start each PGN with clean dynamic-field state. Two ways stale state can leak into a fresh message:
+  //  - g_ftf: probing candidate PGNs in getMatchingPgn() can leave it pointing at a UINT16/etc. field, which
+  //    would make the first DYNAMIC_FIELD_VALUE of a PGN that has no preceding DYNAMIC_FIELD_KEY (e.g. the
+  //    PGN 130823 / 130822 directory records) decode its raw bytes as that stale type.
+  //  - g_length/g_lengthValid: a DYNAMIC_FIELD_LENGTH sets these for the following DYNAMIC_FIELD_VALUE, but if a
+  //    message is truncated right after the length field (the value field is never reached) the flag survives and
+  //    the next message's first value inherits a bogus length -> spurious "insufficient bytes".
+  // Both are always re-established within a well-formed message (Key/length field before each Value), so clearing
+  // them here only discards cross-message leakage.
+  g_ftf         = NULL;
+  g_length      = 0;
+  g_lengthValid = false;
+
   for (i = 0, startBit = 0; (startBit >> 3) < length; i++)
   {
     const Field *field = &pgn->fieldList[i];

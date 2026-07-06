@@ -15357,16 +15357,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>17</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
             PGN 130817
-            - Navico: Unknown</h3><p>
+            - Navico: Feature Unlock</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded here) and two trailing bytes.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
             7
-            bytes long and contains 8 fields.
+            bytes long and contains 6 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -15379,19 +15379,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Feature Id</td><td>Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester asks the target to report a specific feature).</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Record Count</td><td>Number of 3-byte records that follow; 0 in every observed broadcast</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>C</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>E</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Data</td><td>Trailing value (observed only with Record Count 0)</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
@@ -18524,7 +18518,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130823
             - Navico: Data Type Source Directory</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>5</td></tr></table></p><p>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's 8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing it). The data type values themselves are not carried here.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>5</td></tr></table></p><p>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -18532,12 +18526,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN is
             
               at least 7
-            bytes long and contains 13 fields.
+            bytes long and contains 12 fields.
 
             
-        The 5 fields starting at field 
+        The 4 fields starting at field 
         9 
-        (with name "Data Type")
+        (with name "Length")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
       </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
                   Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -18558,21 +18552,67 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
-                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Length</td><td>Bytes following in this record: a type byte, a 16-bit data-type id and the value</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Type</td><td>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Source Length</td><td>Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Source</td><td>Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME</td><td> </td><td>
+                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value</td><td>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</td><td> </td><td>
                     Variable length
-                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value Type</td><td>Encoding of the data type's value (e.g. 4 = float32)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+            PGN 130823
+            - Navico: Data Type Source Directory, Full Report</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>275</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Report Type</td><td>6</td></tr></table></p><p>Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record list, but covering every data type the reporting object owns rather than a summary subset, so it typically carries the bound-source NAME entries. Uses the identical record format as Report Type 5 and the PGN 130822 Command 6 Object Dump.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 7
+            bytes long and contains 12 fields.
+
+            
+        The 4 fields starting at field 
+        9 
+        (with name "Length")
+        form repeating set 1. The set is repeated until there is no more data in the PGN.
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>275:
+                  Navico</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>6</td><td>Report Type</td><td>6:
+                  Data-type source directory (full report)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">13<div>Set 1</div></td><td>Instance</td><td>Data instance the entry refers to</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Part</td><td>Sequence/part number of the directory report</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Length</td><td>Bytes following in this record: a type byte, a 16-bit data-type id and the value</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Type</td><td>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Data Type</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-NAVICO_DATA_TYPE">NAVICO_DATA_TYPE</a></td><td/></tr><tr><td class="repeating">12<div>Set 1</div></td><td>Value</td><td>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</td><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h3 id="pgn-130823">0x1FF07:
             PGN 130823
             - Navico: Boat Speed Polar Table</h3><p>
               This PGN description applies when the following field(s) match:
@@ -20427,7 +20467,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130846
             - Simnet: Key Value - Long</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations capture corpus.</p><p>
               For a detailed explanation see:
               <a href="navico_alarms_and_commands.html">navico_alarms_and_commands.html</a></p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:

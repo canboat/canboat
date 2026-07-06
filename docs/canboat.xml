@@ -61231,9 +61231,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
     </PGNInfo>
     <PGNInfo>
       <PGN>130817</PGN>
-      <Id>navicoUnknown</Id>
-      <Description>Navico: Unknown</Description>
+      <Id>navicoFeatureUnlock</Id>
+      <Description>Navico: Feature Unlock</Description>
     <Priority>7</Priority>
+      <Explanation>Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded here) and two trailing bytes.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -61242,7 +61243,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>8</FieldCount>
+      <FieldCount>6</FieldCount>
       <Length>7</Length>
       <Fields>
         <Field>
@@ -61289,40 +61290,26 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>a</Id>
-          <Name>A</Name>
-          <BitLength>8</BitLength>
+          <Id>featureId</Id>
+          <Name>Feature Id</Name>
+          <Description>Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester asks the target to report a specific feature).</Description>
+          <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>b</Id>
-          <Name>B</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>24</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
-          <Id>c</Id>
-          <Name>C</Name>
+          <Id>recordCount</Id>
+          <Name>Record Count</Name>
+          <Description>Number of 3-byte records that follow; 0 in every observed broadcast</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -61336,35 +61323,20 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>d</Id>
-          <Name>D</Name>
-          <BitLength>8</BitLength>
+          <Order>6</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <Description>Trailing value (observed only with Record Count 0)</Description>
+          <BitLength>16</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
-          <Id>e</Id>
-          <Name>E</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>48</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -72256,7 +72228,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130823</PGN>
       <Id>navicoDataTypeSourceDirectory</Id>
       <Description>Navico: Data Type Source Directory</Description>
-      <Explanation>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's 8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing it). The data type values themselves are not carried here.</Explanation>
+      <Explanation>Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -72265,9 +72237,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
+      <FieldCount>12</FieldCount>
       <MinLength>7</MinLength>
-      <RepeatingFieldSet1Size>5</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
       <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
       <Fields>
         <Field>
@@ -72376,10 +72348,45 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>9</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Bytes following in this record: a type byte, a 16-bit data-type id and the value</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <DynamicFieldLengthOverhead>3</DynamicFieldLengthOverhead>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
           <Id>dataType</Id>
           <Name>Data Type</Name>
           <BitLength>16</BitLength>
-          <BitOffset>56</BitOffset>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -72392,15 +72399,150 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <LookupEnumeration>NAVICO_DATA_TYPE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>10</Order>
-          <Id>sourceLength</Id>
-          <Name>Source Length</Name>
-          <Description>Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present</Description>
+          <Order>12</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130823</PGN>
+      <Id>navicoDataTypeSourceDirectoryFullReport</Id>
+      <Description>Navico: Data Type Source Directory, Full Report</Description>
+      <Explanation>Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record list, but covering every data type the reporting object owns rather than a summary subset, so it typically carries the bound-source NAME entries. Uses the identical record format as Report Type 5 and the PGN 130822 Command 6 Object Dump.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>12</FieldCount>
+      <MinLength>7</MinLength>
+      <RepeatingFieldSet1Size>4</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Navico</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>275</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>reserved4</Id>
+          <Name>Reserved</Name>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>spare5</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reportType</Id>
+          <Name>Report Type</Name>
+          <Description>Data-type source directory (full report)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>6</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>part</Id>
+          <Name>Part</Name>
+          <Description>Sequence/part number of the directory report</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>spare8</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>length</Id>
+          <Name>Length</Name>
+          <Description>Bytes following in this record: a type byte, a 16-bit data-type id and the value</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <DynamicFieldLengthOverhead>3</DynamicFieldLengthOverhead>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
           <UnknownValue>255</UnknownValue>
@@ -72409,44 +72551,48 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>DYNAMIC_FIELD_LENGTH</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
-          <Id>source</Id>
-          <Name>Source</Name>
-          <Description>Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME</Description>
-          <BitLengthVariable>true</BitLengthVariable>
-          <BitOffset>80</BitOffset>
+          <Order>10</Order>
+          <Id>type</Id>
+          <Name>Type</Name>
+          <Description>Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
-          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>dataType</Id>
+          <Name>Data Type</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>NAVICO_DATA_TYPE</LookupEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
-          <Id>valueType</Id>
-          <Name>Value Type</Name>
-          <Description>Encoding of the data type's value (e.g. 4 = float32)</Description>
-          <BitLength>8</BitLength>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>13</Order>
-          <Id>instance</Id>
-          <Name>Instance</Name>
-          <Description>Data instance the entry refers to</Description>
-          <BitLength>8</BitLength>
-          <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.</Description>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -78962,7 +79108,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <PGN>130846</PGN>
       <Id>simnetParameterSet</Id>
       <Description>Simnet: Key Value - Long</Description>
-      <Explanation>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.</Explanation>
+      <Explanation>Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations capture corpus.</Explanation>
       <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>

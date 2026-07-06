@@ -1620,7 +1620,19 @@ extern bool fieldPrintKeyValue(const Field   *field,
   }
   else
   {
-    logError("PGN %u key-value has insufficient bytes for field %s\n", field->pgn ? field->pgn->pgn : 0, fieldName);
+    // The declared value runs past the end of the packet: the frame ended mid-record. This is the normal
+    // way a repeating-to-end key/value group terminates -- the device packs as many records as fit and the
+    // trailing one is cut off (e.g. a PGN 130822 Command 6 "Object Dump" whose object list exceeds the
+    // 223-byte fast-packet limit). Most such truncations already stop silently because the field loop runs
+    // out at a record boundary; when the cut instead lands inside a value field, skip that partial value
+    // cleanly and stop rather than aborting the whole PGN. Consume the remaining bytes so the caller's loop
+    // terminates.
+    logDebug("PGN %u key-value: value for field %s runs past end of packet; stopping at the partial record\n",
+             field->pgn ? field->pgn->pgn : 0,
+             fieldName);
+    g_skip = true;
+    *bits  = (dataLen * 8 > startBit) ? (dataLen * 8 - startBit) : 0;
+    r      = true;
   }
 
   g_ftf         = NULL;
