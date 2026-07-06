@@ -2110,6 +2110,29 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Lowrance: GPS Configuration",
+     65293,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      SIMPLE_FIELD("C", 4),
+      SIMPLE_FIELD("D", 2),
+      RESERVED_FIELD(2),
+      UINT8_FIELD("E"),
+      SIMPLE_FIELD("F", 4),
+      SIMPLE_FIELD("G", 1),
+      RESERVED_FIELD(3),
+      SIMPLE_FIELD("H", 4),
+      SIMPLE_FIELD("I", 4),
+      END_OF_FIELDS},
+     .explanation = "GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer "
+                    "counterpart of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual "
+                    "settings are not yet identified. The first byte matches the sender's source address in the observed "
+                    "traffic."}
+
+    ,
     {"Diverse Yacht Services: Load Cell",
      65293,
      PACKET_RESOLUTION_UNKNOWN,
