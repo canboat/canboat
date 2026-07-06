@@ -3731,6 +3731,7 @@
           {"Name":"Activate", "Value":57},
           {"Name":"Acknowledge", "Value":58},
           {"Name":"Silence", "Value":68},
+          {"Name":"Tack/Gybe Confirm", "Value":88},
           {"Name":"Alarm History", "Value":104},
           {"Name":"MOB Activated", "Value":107},
           {"Name":"MOB Cancelled", "Value":108}
