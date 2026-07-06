@@ -3201,6 +3201,7 @@ LOOKUP(SIMNET_ALARM_COMMAND, 56, "Deactivate")
 LOOKUP(SIMNET_ALARM_COMMAND, 57, "Activate")
 LOOKUP(SIMNET_ALARM_COMMAND, 58, "Acknowledge")
 LOOKUP(SIMNET_ALARM_COMMAND, 68, "Silence")
+LOOKUP(SIMNET_ALARM_COMMAND, 88, "Tack/Gybe Confirm")  // no Alarm ID; the AP48 head brackets each 130850 Command AP Tack with this (confirm prompt shown/cleared)
 LOOKUP(SIMNET_ALARM_COMMAND, 104, "Alarm History")
 LOOKUP(SIMNET_ALARM_COMMAND, 107, "MOB Activated")  // broadcast to all groups, no Alarm ID; the MOB position rides the standard PGN 127233
 LOOKUP(SIMNET_ALARM_COMMAND, 108, "MOB Cancelled")

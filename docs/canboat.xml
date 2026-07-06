@@ -3013,6 +3013,7 @@ limitations under the License.
       <EnumPair Value='57' Name='Activate' />
       <EnumPair Value='58' Name='Acknowledge' />
       <EnumPair Value='68' Name='Silence' />
+      <EnumPair Value='88' Name='Tack/Gybe Confirm' />
       <EnumPair Value='104' Name='Alarm History' />
       <EnumPair Value='107' Name='MOB Activated' />
       <EnumPair Value='108' Name='MOB Cancelled' />
