@@ -1,0 +1,8 @@
+name: ACCEPTABILITY
+kind: pair
+bits: 2
+values:
+  0: Bad level
+  1: Bad frequency
+  2: Being qualified
+  3: Good

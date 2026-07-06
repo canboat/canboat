@@ -1,0 +1,23 @@
+pgn: 127508
+id: batteryStatus
+description: Battery Status
+type: Single
+priority: 6
+interval: 1500
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: voltage
+  name: Voltage
+  type: VOLTAGE_FIX16_10MV
+- id: current
+  name: Current
+  type: CURRENT_FIX16_DA
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE
+- id: sid
+  name: SID
+  type: UINT8

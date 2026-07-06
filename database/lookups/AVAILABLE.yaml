@@ -1,0 +1,6 @@
+name: AVAILABLE
+kind: pair
+bits: 1
+values:
+  0: Available
+  1: Not available

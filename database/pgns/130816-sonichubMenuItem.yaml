@@ -1,0 +1,62 @@
+pgn: 130816
+id: sonichubMenuItem
+description: 'SonicHub: Menu Item'
+type: Fast
+variantOrder: 13
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Menu Item
+  match: 19
+  lookup: SONICHUB_COMMAND
+  primaryKey: true
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_CONTROL
+- id: item
+  name: Item
+  type: UINT32
+- id: c
+  name: C
+  type: UINT8
+- id: d
+  name: D
+  type: UINT8
+- id: e
+  name: E
+  type: UINT8
+- id: text
+  name: Text
+  type: STRING_LZ
+  bits: 256

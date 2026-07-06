@@ -1,0 +1,57 @@
+pgn: 130320
+id: tideStationData
+description: Tide Station Data
+type: Fast
+priority: 6
+interval: 1000
+fields:
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: tideTendency
+  name: Tide Tendency
+  type: LOOKUP
+  bits: 2
+  lookup: TIDE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: measurementDate
+  name: Measurement Date
+  type: DATE
+- id: measurementTime
+  name: Measurement Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: stationLatitude
+  name: Station Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: stationLongitude
+  name: Station Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: tideLevel
+  name: Tide Level
+  type: DISTANCE_FIX16_MM
+  description: Relative to MLLW
+- id: tideLevelStandardDeviation
+  name: Tide Level standard deviation
+  type: LENGTH_UFIX16_CM
+- id: stationId
+  name: Station ID
+  type: STRING_LAU
+  primaryKey: true
+- id: stationName
+  name: Station Name
+  type: STRING_LAU

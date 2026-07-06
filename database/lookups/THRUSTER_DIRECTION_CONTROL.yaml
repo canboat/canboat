@@ -1,0 +1,8 @@
+name: THRUSTER_DIRECTION_CONTROL
+kind: pair
+bits: 4
+values:
+  0: 'Off'
+  1: Ready
+  2: To Port
+  3: To Starboard

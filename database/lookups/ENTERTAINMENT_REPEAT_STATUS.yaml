@@ -1,0 +1,7 @@
+name: ENTERTAINMENT_REPEAT_STATUS
+kind: pair
+bits: 4
+values:
+  0: 'Off'
+  1: One
+  2: All

@@ -1,0 +1,63 @@
+pgn: 130836
+id: maretronSwitchStatusCounter
+description: 'Maretron: Switch Status Counter'
+type: Fast
+variantOrder: 2
+priority: 6
+interval: 15000
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: indicatorNumber
+  name: Indicator Number
+  type: UINT8
+- id: startDate
+  name: Start Date
+  type: DATE
+- id: startTime
+  name: Start Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: offCounter
+  name: OFF Counter
+  type: UINT32
+- id: onCounter
+  name: ON Counter
+  type: UINT32
+- id: errorCounter
+  name: ERROR Counter
+  type: UINT32
+- id: switchStatus
+  name: Switch Status
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 6

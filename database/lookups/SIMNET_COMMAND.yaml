@@ -1,0 +1,5 @@
+name: SIMNET_COMMAND
+kind: pair
+bits: 8
+values:
+  50: Text

@@ -1,0 +1,44 @@
+pgn: 65303
+id: lowranceVesselSetupEngineAndTankConfiguration
+description: 'Lowrance: Vessel Setup - Engine and Tank Configuration'
+type: Single
+variantOrder: 2
+explanation: Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of engines,
+  number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a capture where the values were
+  changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L).
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: numberOfEngines
+  name: Number of Engines
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Engine count configured on the display's Vessel Setup page
+- id: numberOfFuelTanks
+  name: Number of Fuel Tanks
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Fuel-tank count configured on the display's Vessel Setup page
+- id: totalFuelCapacity
+  name: Total Fuel Capacity
+  type: VOLUME_UFIX16_DL
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 24

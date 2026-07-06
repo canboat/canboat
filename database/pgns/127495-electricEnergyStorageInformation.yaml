@@ -1,0 +1,65 @@
+pgn: 127495
+id: electricEnergyStorageInformation
+description: Electric Energy Storage Information
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and
+  has not been observed yet; field lengths and precisions are guesses.
+fields:
+- id: energyStorageIdentifier
+  name: Energy Storage Identifier
+  type: UINT8
+  primaryKey: true
+- id: motorType
+  name: Motor Type
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: storageChemistryConversion
+  name: Storage Chemistry/Conversion
+  type: UINT8
+- id: maximumTemperatureDerating
+  name: Maximum Temperature Derating
+  type: TEMPERATURE
+- id: maximumTemperatureShutOff
+  name: Maximum Temperature Shut Off
+  type: TEMPERATURE
+- id: minimumTemperatureDerating
+  name: Minimum Temperature Derating
+  type: TEMPERATURE
+- id: minimumTemperatureShutOff
+  name: Minimum Temperature Shut Off
+  type: TEMPERATURE
+- id: usableBatteryEnergy
+  name: Usable Battery Energy
+  type: ENERGY_UINT32
+- id: stateOfHealth
+  name: State of Health
+  type: UINT8
+- id: batteryCycleCounter
+  name: Battery Cycle Counter
+  type: UINT16
+- id: batteryFullStatus
+  name: Battery Full Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: batteryEmptyStatus
+  name: Battery Empty Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved14
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: maximumChargeSoc
+  name: Maximum Charge (SOC)
+  type: UINT8
+- id: minimumChargeSoc
+  name: Minimum Charge (SOC)
+  type: UINT8

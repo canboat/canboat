@@ -1,0 +1,96 @@
+pgn: 126983
+id: alert
+description: Alert
+type: Fast
+fields:
+- id: alertType
+  name: Alert Type
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TYPE
+- id: alertCategory
+  name: Alert Category
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_CATEGORY
+- id: alertSystem
+  name: Alert System
+  type: UINT8
+- id: alertSubSystem
+  name: Alert Sub-System
+  type: UINT8
+- id: alertId
+  name: Alert ID
+  type: UINT16
+- id: dataSourceNetworkIdName
+  name: Data Source Network ID NAME
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: dataSourceInstance
+  name: Data Source Instance
+  type: UINT8
+  primaryKey: true
+- id: dataSourceIndexSource
+  name: Data Source Index-Source
+  type: UINT8
+- id: alertOccurrenceNumber
+  name: Alert Occurrence Number
+  type: UINT8
+- id: temporarySilenceStatus
+  name: Temporary Silence Status
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: acknowledgeStatus
+  name: Acknowledge Status
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: escalationStatus
+  name: Escalation Status
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: temporarySilenceSupport
+  name: Temporary Silence Support
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: acknowledgeSupport
+  name: Acknowledge Support
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: escalationSupport
+  name: Escalation Support
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: acknowledgeSourceNetworkIdName
+  name: Acknowledge Source Network ID NAME
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: triggerCondition
+  name: Trigger Condition
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TRIGGER_CONDITION
+- id: thresholdStatus
+  name: Threshold Status
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_THRESHOLD_STATUS
+- id: alertPriority
+  name: Alert Priority
+  type: UINT8
+- id: alertState
+  name: Alert State
+  type: LOOKUP
+  bits: 8
+  lookup: ALERT_STATE

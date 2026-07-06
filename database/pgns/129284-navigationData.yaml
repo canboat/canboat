@@ -1,0 +1,70 @@
+pgn: 129284
+id: navigationData
+description: Navigation Data
+type: Fast
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: distanceToWaypoint
+  name: Distance to Waypoint
+  type: LENGTH_UFIX32_CM
+- id: courseBearingReference
+  name: Course/Bearing reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: perpendicularCrossed
+  name: Perpendicular Crossed
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: arrivalCircleEntered
+  name: Arrival Circle Entered
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: calculationType
+  name: Calculation Type
+  type: LOOKUP
+  bits: 2
+  lookup: BEARING_MODE
+- id: etaTime
+  name: ETA Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: etaDate
+  name: ETA Date
+  type: DATE
+- id: bearingOriginToDestinationWaypoint
+  name: Bearing, Origin to Destination Waypoint
+  type: ANGLE_UFIX16
+- id: bearingPositionToDestinationWaypoint
+  name: Bearing, Position to Destination Waypoint
+  type: ANGLE_UFIX16
+- id: originWaypointNumber
+  name: Origin Waypoint Number
+  type: UINT32
+- id: destinationWaypointNumber
+  name: Destination Waypoint Number
+  type: UINT32
+- id: destinationLatitude
+  name: Destination Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: destinationLongitude
+  name: Destination Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: waypointClosingVelocity
+  name: Waypoint Closing Velocity
+  type: SPEED_FIX16_CM

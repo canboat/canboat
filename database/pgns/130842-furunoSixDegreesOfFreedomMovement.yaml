@@ -1,0 +1,55 @@
+pgn: 130842
+id: furunoSixDegreesOfFreedomMovement
+description: 'Furuno: Six Degrees Of Freedom Movement'
+type: Fast
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: INT32
+- id: b
+  name: B
+  type: INT32
+- id: c
+  name: C
+  type: INT32
+- id: d
+  name: D
+  type: INT8
+- id: e
+  name: E
+  type: INT32
+- id: f
+  name: F
+  type: INT32
+- id: g
+  name: G
+  type: INT16
+- id: h
+  name: H
+  type: INT16
+- id: i
+  name: I
+  type: INT16

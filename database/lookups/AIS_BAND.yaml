@@ -1,0 +1,6 @@
+name: AIS_BAND
+kind: pair
+bits: 1
+values:
+  0: Top 525 kHz of marine band
+  1: Entire marine band

@@ -1,0 +1,39 @@
+pgn: 130921
+id: carlingBreakerStatusAndConfiguration
+description: 'Carling: Breaker Status and Configuration'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Multi-purpose Carling digital switching fast-packet PGN with 8+ message types: breaker status with electrical
+  values, breaker configuration, discrete I/O configuration, solenoid drive sequence, system alarm and alert messages. The
+  Message Type field selects the variant.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Carling Technologies Inc. (Moritz Aerospace)
+  match: 176
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+  primaryKey: true
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1752
+  description: Payload varies by Message Type.

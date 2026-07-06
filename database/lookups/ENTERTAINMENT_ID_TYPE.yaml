@@ -1,0 +1,8 @@
+name: ENTERTAINMENT_ID_TYPE
+kind: pair
+bits: 8
+values:
+  0: Group
+  1: File
+  2: Encrypted group
+  3: Encrypted file

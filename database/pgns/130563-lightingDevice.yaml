@@ -1,0 +1,68 @@
+pgn: 130563
+id: lightingDevice
+description: Lighting Device
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual
+  device connected to a lighting controller or physical device on the network.
+fields:
+- id: deviceId
+  name: Device ID
+  type: UINT32
+- id: deviceCapabilities
+  name: Device Capabilities
+  type: UINT8
+- id: colorCapabilities
+  name: Color Capabilities
+  type: UINT8
+- id: zoneIndex
+  name: Zone Index
+  type: UINT8
+- id: nameOfLightingDevice
+  name: Name of Lighting Device
+  type: STRING_LAU
+- id: status
+  name: Status
+  type: UINT8
+- id: redComponent
+  name: Red Component
+  type: UINT8
+- id: greenComponent
+  name: Green Component
+  type: UINT8
+- id: blueComponent
+  name: Blue Component
+  type: UINT8
+- id: colorTemperature
+  name: Color Temperature
+  type: UINT16
+- id: intensity
+  name: Intensity
+  type: UINT8
+- id: programId
+  name: Program ID
+  type: UINT8
+- id: programColorSequenceIndex
+  name: Program Color Sequence Index
+  type: UINT8
+- id: programIntensity
+  name: Program Intensity
+  type: UINT8
+- id: programRate
+  name: Program Rate
+  type: UINT8
+- id: programColorSequenceRate
+  name: Program Color Sequence Rate
+  type: UINT8
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6

@@ -1,0 +1,11 @@
+name: DSC_FORMAT
+kind: pair
+bits: 8
+values:
+  102: Geographical area
+  112: Distress
+  114: Common interest
+  116: All ships
+  120: Individual stations
+  121: Non-calling purpose
+  123: Individual station automatic

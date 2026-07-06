@@ -1,0 +1,38 @@
+pgn: 65293
+id: diverseYachtServicesLoadCell
+description: 'Diverse Yacht Services: Load Cell'
+type: Single
+variantOrder: 2
+priority: 2
+missing:
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Diverse Yacht Services
+  match: 641
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: loadCell
+  name: Load Cell
+  type: UINT32

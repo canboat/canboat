@@ -1,0 +1,42 @@
+pgn: 130843
+id: furunoHeelAngleRollInformation
+description: 'Furuno: Heel Angle, Roll Information'
+type: Fast
+variantOrder: 2
+interval: 100
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: heel
+  name: Heel
+  type: ANGLE_FIX16
+  description: Live heel/roll; verified == PGN 127257 Roll
+- id: field4
+  name: Field 4
+  type: ANGLE_FIX16
+- id: field6
+  name: Field 6
+  type: ANGLE_FIX16
+- id: field8
+  name: Field 8
+  type: ANGLE_FIX16

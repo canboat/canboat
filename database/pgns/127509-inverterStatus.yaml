@@ -1,0 +1,37 @@
+pgn: 127509
+id: inverterStatus
+description: Inverter Status
+type: Fast
+priority: 6
+interval: 1500
+explanation: 'The NMEA wrote in the link in the URL that this PGN is obsolete and superceded by PGN 127751, but that PGN reference
+  is obviously incorrect. They probably meant PGN 127511. The other interesting thing is that this PGN is only four bytes
+  long but still referenced as a Fast PGN, which matches various sources; see github issue #428.'
+url: https://web.archive.org/web/20140913025729/https://www.nmea.org/Assets/20140102%20nmea-2000-127509%20pgn%20corrigendum.pdf
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: acInstance
+  name: AC Instance
+  type: UINT8
+  primaryKey: true
+- id: dcInstance
+  name: DC Instance
+  type: UINT8
+  primaryKey: true
+- id: operatingState
+  name: Operating State
+  type: LOOKUP
+  bits: 4
+  lookup: INVERTER_STATE
+- id: inverterEnable
+  name: Inverter Enable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2

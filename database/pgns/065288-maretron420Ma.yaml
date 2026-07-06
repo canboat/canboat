@@ -1,0 +1,43 @@
+pgn: 65288
+id: maretron420Ma
+description: 'Maretron: 4-20 mA'
+type: Single
+variantOrder: 2
+priority: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: dataInstance
+  name: Data Instance
+  type: UINT8
+  primaryKey: true
+- id: 420MaData
+  name: 4-20 mA Data
+  type: UINT16
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16

@@ -1,0 +1,44 @@
+pgn: 127491
+id: electricEnergyStorageStatusDynamic
+description: Electric Energy Storage Status, Dynamic
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to provide electric propulsion motor status and relevant data.
+fields:
+- id: energyStorageIdentifier
+  name: Energy Storage Identifier
+  type: UINT8
+  primaryKey: true
+- id: stateOfCharge
+  name: State of Charge
+  type: PERCENTAGE_UINT8
+- id: timeRemaining
+  name: Time Remaining
+  type: DURATION_UFIX16_MIN
+  description: Time remaining at current rate of discharge
+- id: highestCellTemperature
+  name: Highest Cell Temperature
+  type: TEMPERATURE
+- id: lowestCellTemperature
+  name: Lowest Cell Temperature
+  type: TEMPERATURE
+- id: averageCellTemperature
+  name: Average Cell Temperature
+  type: TEMPERATURE
+- id: maxDischargeCurrent
+  name: Max Discharge Current
+  type: CURRENT_FIX16_DA
+- id: maxChargeCurrent
+  name: Max Charge Current
+  type: CURRENT_FIX16_DA
+- id: coolingSystemStatus
+  name: Cooling System Status
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: heatingSystemStatus
+  name: Heating System Status
+  type: UNSIGNED_INTEGER
+  bits: 4

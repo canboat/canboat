@@ -1,0 +1,38 @@
+pgn: 126720
+id: maretronSlaveResponse
+description: 'Maretron: Slave Response'
+type: Fast
+variantOrder: 48
+missing:
+- Lookups
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: productCode
+  name: Product code
+  type: UINT16
+- id: softwareCode
+  name: Software code
+  type: UINT16
+- id: command
+  name: Command
+  type: UINT8
+- id: status
+  name: Status
+  type: UINT8

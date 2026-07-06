@@ -1,0 +1,59 @@
+pgn: 127504
+id: acOutputStatus
+description: AC Output Status
+type: Fast
+priority: 6
+interval: 1500
+url: https://web.archive.org/web/20161130030724/http://www.nmea.org/Assets/nmea-2000-corrigendum-1-2010-1.pdf
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: numberOfLines
+  name: Number of Lines
+  type: UINT8
+- id: line
+  name: Line
+  type: LOOKUP
+  bits: 2
+  lookup: LINE
+- id: waveform
+  name: Waveform
+  type: LOOKUP
+  bits: 3
+  lookup: WAVEFORM
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: voltage
+  name: Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: current
+  name: Current
+  type: CURRENT_UFIX16_DA
+- id: frequency
+  name: Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.01
+- id: breakerSize
+  name: Breaker Size
+  type: CURRENT_UFIX16_DA
+- id: realPower
+  name: Real Power
+  type: POWER_UINT32
+- id: reactivePower
+  name: Reactive Power
+  type: POWER_UINT32_VAR
+- id: powerFactor
+  name: Power factor
+  type: INT8
+  resolution: 0.01
+  unit: Cos Phi
+  rangeMin: -1.0
+  rangeMax: 1.0
+repeating1:
+  count: 10
+  start: 3
+  countField: 2

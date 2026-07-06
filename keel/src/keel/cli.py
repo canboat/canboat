@@ -1,0 +1,124 @@
+"""keel command line interface. See DESIGN.md §4 for the command set;
+during migration step 1 only `convert` and `generate [--check]` exist."""
+
+from __future__ import annotations
+
+import argparse
+import os
+import re
+import sys
+
+
+def find_repo_root(start: str = ".") -> str:
+    path = os.path.abspath(start)
+    while True:
+        if os.path.isdir(os.path.join(path, "analyzer")) and os.path.isdir(os.path.join(path, "docs")):
+            return path
+        parent = os.path.dirname(path)
+        if parent == path:
+            raise SystemExit("keel: cannot find canboat repository root (looked for analyzer/ and docs/)")
+        path = parent
+
+
+def read_versions(root: str):
+    with open(os.path.join(root, "common", "version.h"), encoding="utf-8") as f:
+        text = f.read()
+    version = re.search(r'#define VERSION "([^"]+)"', text).group(1)
+    schema = re.search(r'#define SCHEMA_VERSION "([^"]+)"', text).group(1)
+    return version, schema
+
+
+def cmd_convert(args) -> int:
+    from . import convert, derive, emit_xml, yamlio
+
+    root = find_repo_root(args.root)
+    xml_path = os.path.join(root, "docs", "canboat.xml")
+    header = os.path.join(root, "analyzer", "fieldtype.h")
+    out_dir = os.path.join(root, args.out)
+
+    db, failures = convert.convert(xml_path, header, verbose=args.verbose)
+
+    emitted = emit_xml.emit_xml(db)
+    with open(xml_path, encoding="utf-8") as f:
+        original = f.read()
+
+    yamlio.write_database(db, out_dir)
+    print(f"keel convert: wrote {len(db.pgns)} pgns, {len(db.lookups)} lookups to {out_dir}")
+
+    if failures:
+        print(f"keel convert: {len(failures)} PGN blocks NOT byte-exact: {', '.join(failures[:10])}"
+              + (" ..." if len(failures) > 10 else ""), file=sys.stderr)
+    if emitted != original:
+        print("keel convert: full document does not reproduce byte-for-byte yet", file=sys.stderr)
+        if args.diff:
+            _write_diff(original, emitted, args.diff)
+            print(f"keel convert: diff written to {args.diff}", file=sys.stderr)
+        return 1
+    print("keel convert: golden check OK - emitted XML is byte-identical")
+    return 0
+
+
+def cmd_generate(args) -> int:
+    from . import derive, emit_xml, yamlio
+
+    root = find_repo_root(args.root)
+    version, schema = read_versions(root)
+    db_dir = os.path.join(root, "database")
+    if not os.path.isdir(db_dir):
+        raise SystemExit(f"keel: no database/ tree at {db_dir} (run `keel convert` first)")
+
+    db = yamlio.load_database(db_dir, version, schema)
+    derive.fill(db)
+    emitted = emit_xml.emit_xml(db)
+
+    xml_path = os.path.join(root, "docs", "canboat.xml")
+    if args.check:
+        with open(xml_path, encoding="utf-8") as f:
+            original = f.read()
+        if emitted != original:
+            print("keel generate --check: docs/canboat.xml is NOT up to date with database/", file=sys.stderr)
+            if args.diff:
+                _write_diff(original, emitted, args.diff)
+            return 1
+        print("keel generate --check: docs/canboat.xml is up to date")
+        return 0
+
+    with open(xml_path, "w", encoding="utf-8") as f:
+        f.write(emitted)
+    print(f"keel generate: wrote {xml_path}")
+    return 0
+
+
+def _write_diff(original: str, emitted: str, path: str) -> None:
+    import difflib
+
+    diff = difflib.unified_diff(
+        original.splitlines(keepends=True), emitted.splitlines(keepends=True),
+        fromfile="docs/canboat.xml", tofile="emitted",
+    )
+    with open(path, "w", encoding="utf-8") as f:
+        f.writelines(diff)
+
+
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(prog="keel", description="CANboat PGN database tool")
+    parser.add_argument("--root", default=".", help="repository root (default: auto-detect upward)")
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    p = sub.add_parser("convert", help="bootstrap: convert docs/canboat.xml to database/ YAML")
+    p.add_argument("--out", default="database", help="output directory relative to repo root")
+    p.add_argument("--diff", help="write unified diff of non-reproducing output to this file")
+    p.add_argument("--verbose", action="store_true")
+    p.set_defaults(func=cmd_convert)
+
+    p = sub.add_parser("generate", help="generate artifacts from database/")
+    p.add_argument("--check", action="store_true", help="verify committed artifacts are current; write nothing")
+    p.add_argument("--diff", help="write unified diff on --check failure to this file")
+    p.set_defaults(func=cmd_generate)
+
+    args = parser.parse_args(argv)
+    return args.func(args)
+
+
+if __name__ == "__main__":
+    sys.exit(main())

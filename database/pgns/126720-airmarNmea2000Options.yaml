@@ -1,0 +1,43 @@
+pgn: 126720
+id: airmarNmea2000Options
+description: 'Airmar: NMEA 2000 options'
+type: Fast
+variantOrder: 45
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: NMEA 2000 options
+  match: 46
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: transmissionInterval
+  name: Transmission Interval
+  type: LOOKUP
+  bits: 2
+  lookup: AIRMAR_TRANSMISSION_INTERVAL
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 22

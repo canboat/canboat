@@ -1,0 +1,6 @@
+name: BANDWIDTH
+kind: pair
+bits: 1
+values:
+  0: Default
+  1: 12.5 kHz

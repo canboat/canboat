@@ -1,0 +1,9 @@
+name: LIGHTING_COMMAND
+kind: pair
+bits: 3
+values:
+  0: Idle
+  1: Detect Devices
+  2: Reboot
+  3: Factory Reset
+  4: Powering Up

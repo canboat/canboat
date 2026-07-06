@@ -1,0 +1,41 @@
+pgn: 130816
+id: furunoStatusAndVersionReport
+description: 'Furuno: Status and Version Report'
+type: Fast
+variantOrder: 20
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: UINT8
+  description: Version Report
+  match: 0
+  primaryKey: true
+- id: a
+  name: A
+  type: UINT8
+- id: status
+  name: Status
+  type: STRING_LAU

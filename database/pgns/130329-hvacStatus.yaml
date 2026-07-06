@@ -1,0 +1,100 @@
+pgn: 130329
+id: hvacStatus
+description: HVAC Status
+type: Fast
+priority: 6
+interval: 5000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: hvacIdentifier
+  name: HVAC Identifier
+  type: UINT8
+  primaryKey: true
+- id: location
+  name: Location
+  type: UINT8
+- id: operatingMode
+  name: Operating Mode
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: controlOperatingState
+  name: Control Operating State
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: power
+  name: Power
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: fanSpeedModeChangeable
+  name: Fan Speed Mode Changeable
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: fanSpeedMode
+  name: Fan Speed Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: fanOperationMode
+  name: Fan Operation Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: fanSpeedAvailable
+  name: Fan Speed Available
+  type: UINT8
+- id: fanSpeed
+  name: Fan Speed
+  type: UINT8
+- id: setpointType
+  name: Setpoint Type
+  type: UINT8
+- id: lowerTemperatureSetpoint
+  name: Lower Temperature Setpoint
+  type: TEMPERATURE
+- id: upperTemperatureSetpoint
+  name: Upper Temperature Setpoint
+  type: TEMPERATURE
+- id: lowerHumiditySetpoint
+  name: Lower Humidity Setpoint
+  type: INT8
+- id: upperHumiditySetpoint
+  name: Upper Humidity Setpoint
+  type: INT8
+- id: auxiliaryHeatControlSupported
+  name: Auxiliary Heat Control Supported
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: auxiliaryHeatAutomaticMode
+  name: Auxiliary Heat Automatic Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: auxiliaryHeatState
+  name: Auxiliary Heat State
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: currentTemperature
+  name: Current Temperature
+  type: TEMPERATURE
+- id: currentHumidity
+  name: Current Humidity
+  type: INT8
+- id: supportedModes
+  name: Supported Modes
+  type: UINT16
+- id: seaWaterTemperature
+  name: Sea Water Temperature
+  type: TEMPERATURE
+- id: loopTemperature
+  name: Loop Temperature
+  type: TEMPERATURE
+- id: evaporatorTemperature
+  name: Evaporator Temperature
+  type: TEMPERATURE
+- id: inletTemperature
+  name: Inlet Temperature
+  type: TEMPERATURE
+- id: inletHumidity
+  name: Inlet Humidity
+  type: INT8

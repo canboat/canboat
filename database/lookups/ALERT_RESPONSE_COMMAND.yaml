@@ -1,0 +1,8 @@
+name: ALERT_RESPONSE_COMMAND
+kind: pair
+bits: 2
+values:
+  0: Acknowledge
+  1: Temporary Silence
+  2: Test Command off
+  3: Test Command on

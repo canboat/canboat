@@ -1,0 +1,131 @@
+pgn: 128538
+id: elevatorCarStatus
+description: Elevator Car Status
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: This PGN provides the status information of an elevator car. This includes the elevator car id and type, sensors
+  for load and weight limits, smoke detection, door status, motor status, and brake status. Also provided are weight and speed
+  measurements, current and destination deck location, proximity switch status, inertial measurement unit status and Emergency
+  button and buzzer status.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: elevatorCarId
+  name: Elevator Car ID
+  type: UINT8
+- id: elevatorCarUsage
+  name: Elevator Car Usage
+  type: UINT8
+- id: smokeSensorStatus
+  name: Smoke Sensor Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: limitSwitchSensorStatus
+  name: Limit Switch Sensor Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: proximitySwitchSensorStatus
+  name: Proximity Switch Sensor Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: inertialMeasurementUnitImuSensorStatus
+  name: Inertial Measurement Unit (IMU) Sensor Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadLimitStatus
+  name: Elevator Load Limit Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadBalanceStatus
+  name: Elevator Load Balance Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadSensor1Status
+  name: Elevator Load Sensor 1 Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadSensor2Status
+  name: Elevator Load Sensor 2 Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadSensor3Status
+  name: Elevator Load Sensor 3 Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorLoadSensor4Status
+  name: Elevator Load Sensor 4 Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: elevatorCarMotionStatus
+  name: Elevator Car Motion Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorCarDoorStatus
+  name: Elevator Car Door Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorCarEmergencyButtonStatus
+  name: Elevator Car Emergency Button Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorCarBuzzerStatus
+  name: Elevator Car Buzzer Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: openDoorButtonStatus
+  name: Open Door Button Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: closeDoorButtonStatus
+  name: Close Door Button Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved21
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: currentDeck
+  name: Current Deck
+  type: UINT8
+- id: destinationDeck
+  name: Destination Deck
+  type: UINT8
+- id: totalNumberOfDecks
+  name: Total Number of Decks
+  type: UINT8
+- id: weightOfLoadCell1
+  name: Weight of Load Cell 1
+  type: UINT16
+- id: weightOfLoadCell2
+  name: Weight of Load Cell 2
+  type: UINT16
+- id: weightOfLoadCell3
+  name: Weight of Load Cell 3
+  type: UINT16
+- id: weightOfLoadCell4
+  name: Weight of Load Cell 4
+  type: UINT16
+- id: speedOfElevatorCar
+  name: Speed of Elevator Car
+  type: SPEED_FIX16_CM
+- id: elevatorBrakeStatus
+  name: Elevator Brake Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: elevatorMotorRotationControlStatus
+  name: Elevator Motor rotation control Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved32
+  name: Reserved
+  type: RESERVED
+  bits: 4

@@ -1,0 +1,69 @@
+pgn: 128776
+id: windlassControlStatus
+description: Windlass Control Status
+type: Single
+url: https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: windlassId
+  name: Windlass ID
+  type: UINT8
+- id: windlassDirectionControl
+  name: Windlass Direction Control
+  type: LOOKUP
+  bits: 2
+  lookup: WINDLASS_DIRECTION
+- id: anchorDockingControl
+  name: Anchor Docking Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: speedControlType
+  name: Speed Control Type
+  type: LOOKUP
+  bits: 2
+  lookup: SPEED_TYPE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: speedControl
+  name: Speed Control
+  type: BINARY
+  bits: 8
+  description: 0=Off,Single speed:1-100=On,Dual Speed:1-49=Slow/50-100=Fast,Proportional:10-100
+- id: powerEnable
+  name: Power Enable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: mechanicalLock
+  name: Mechanical Lock
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: deckAndAnchorWash
+  name: Deck and Anchor Wash
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: anchorLight
+  name: Anchor Light
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: commandTimeout
+  name: Command Timeout
+  type: DURATION_UFIX8_5MS
+  description: If timeout elapses the thruster stops operating and reverts to static mode
+- id: windlassControlEvents
+  name: Windlass Control Events
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: WINDLASS_CONTROL
+- id: reserved14
+  name: Reserved
+  type: RESERVED
+  bits: 12

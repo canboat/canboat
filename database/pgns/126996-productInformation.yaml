@@ -1,0 +1,42 @@
+pgn: 126996
+id: productInformation
+description: Product Information
+type: Fast
+priority: 6
+interval: irregular
+explanation: Provides product information onto the network that could be important for determining quality of data coming
+  from this product.
+fields:
+- id: nmea2000Version
+  name: NMEA 2000 Version
+  type: VERSION
+  description: Binary number containing a decimal number of format AABBB, where AA is the major and BBB is the minor release.
+    The decimal point position is assumed.
+- id: productCode
+  name: Product Code
+  type: UINT16
+- id: modelId
+  name: Model ID
+  type: STRING_FIX
+  bits: 256
+- id: softwareVersionCode
+  name: Software Version Code
+  type: STRING_FIX
+  bits: 256
+- id: modelVersion
+  name: Model Version
+  type: STRING_FIX
+  bits: 256
+- id: modelSerialCode
+  name: Model Serial Code
+  type: STRING_FIX
+  bits: 256
+- id: certificationLevel
+  name: Certification Level
+  type: LOOKUP
+  bits: 8
+  lookup: CERTIFICATION_LEVEL
+- id: loadEquivalency
+  name: Load Equivalency
+  type: UINT8
+  description: Garantueed maximum power consumption, 50 mA per LEN

@@ -1,0 +1,38 @@
+pgn: 129799
+id: radioFrequencyModePower
+description: Radio Frequency/Mode/Power
+type: Fast
+priority: 3
+interval: irregular
+explanation: The Radio Channel is NOT a numeric field, it has been observed to contain values such as 9000L1-L3 and 9000F1-F3
+  (indicating private channels as allowed in some countries.)
+fields:
+- id: rxFrequency
+  name: Rx Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: txFrequency
+  name: Tx Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: radioChannel
+  name: Radio Channel
+  type: STRING_FIX
+  bits: 48
+  description: MF/HF telephone channels to have first digit 3 followed by ITU channel numbers with leading zeros as required.
+    MF/HF teletype channels to have first digit 4; the send and third digit give the frequency bads; and the fourth to sixth
+    digits ITU channel numbers; each with leading zeros as required. VHF channels to have the first digit 9 followed by zero.
+    The next digit is 1 indicating the ship stations transmit frequency is being used as a simplex channel frequency, or 2
+    indicating the cost stations transmit frequency is being used as a simplex channel frequency, 0 otherwise. THe remaining
+    three numbers are the VHF channel numbers with leading zeros as required.
+- id: txPower
+  name: Tx Power
+  type: POWER_UINT16
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 8
+  lookup: TELEPHONE_MODE
+- id: channelBandwidth
+  name: Channel Bandwidth
+  type: FREQUENCY_UFIX16

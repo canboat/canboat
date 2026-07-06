@@ -1,0 +1,6 @@
+name: OFF_ON
+kind: pair
+bits: 2
+values:
+  0: 'Off'
+  1: 'On'

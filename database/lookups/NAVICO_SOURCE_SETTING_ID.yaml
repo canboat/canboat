@@ -1,0 +1,25 @@
+name: NAVICO_SOURCE_SETTING_ID
+kind: fieldtype
+bits: 8
+values:
+- value: 17
+  name: Wind Source Count
+  type: UINT8
+- value: 18
+  name: Wind Source 1
+  type: ISO_NAME
+- value: 19
+  name: Wind Source 2
+  type: ISO_NAME
+- value: 20
+  name: Boat Speed Source Count
+  type: UINT8
+- value: 21
+  name: Port Boat Speed Source
+  type: ISO_NAME
+- value: 22
+  name: Starboard Boat Speed Source
+  type: ISO_NAME
+- value: 24
+  name: True Wind Direction Damping
+  type: DURATION_UFIX16_S

@@ -1,0 +1,60 @@
+pgn: 129285
+id: navigationRouteWpInformation
+description: Navigation - Route/WP Information
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- id: navigationDirectionInRoute
+  name: Navigation direction in route
+  type: LOOKUP
+  bits: 3
+  lookup: DIRECTION
+- id: supplementaryRouteWpDataAvailable
+  name: Supplementary Route/WP data available
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: routeName
+  name: Route Name
+  type: STRING_LAU
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: wpId
+  name: WP ID
+  type: UINT16
+- id: wpName
+  name: WP Name
+  type: STRING_LAU
+- id: wpLatitude
+  name: WP Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: wpLongitude
+  name: WP Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+repeating1:
+  count: 4
+  start: 10
+  countField: 2

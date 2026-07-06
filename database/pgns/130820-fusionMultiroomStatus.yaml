@@ -1,0 +1,38 @@
+pgn: 130820
+id: fusionMultiroomStatus
+description: 'Fusion: Multiroom Status'
+type: Fast
+variantOrder: 18
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Multiroom Status
+  match: 32825
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: available
+  name: Available
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO

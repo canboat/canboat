@@ -1,0 +1,56 @@
+pgn: 130833
+id: bGUserAndRemoteRename
+description: 'B&G: User and Remote rename'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: B & G
+  match: 381
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: dataType
+  name: Data Type
+  type: DYNAMIC_FIELD_KEY
+  bits: 12
+  lookupFieldtype: BANDG_KEY_VALUE
+  primaryKey: true
+- id: length
+  name: Length
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Length of field 8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: decimals
+  name: Decimals
+  type: LOOKUP
+  bits: 8
+  lookup: BANDG_DECIMALS
+- id: shortName
+  name: Short name
+  type: STRING_FIX
+  bits: 64
+- id: longName
+  name: Long name
+  type: STRING_FIX
+  bits: 128

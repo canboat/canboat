@@ -1,0 +1,51 @@
+pgn: 127513
+id: batteryConfigurationStatus
+description: Battery Configuration Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: batteryType
+  name: Battery Type
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_TYPE
+- id: supportsEqualization
+  name: Supports Equalization
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: nominalVoltage
+  name: Nominal Voltage
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_VOLTAGE
+- id: chemistry
+  name: Chemistry
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_CHEMISTRY
+- id: capacity
+  name: Capacity
+  type: ELECTRIC_CHARGE_UFIX16_AH
+- id: temperatureCoefficient
+  name: Temperature Coefficient
+  type: PERCENTAGE_INT8
+- id: peukertExponent
+  name: Peukert Exponent
+  type: UINT8
+  resolution: 0.002
+  offset: 500
+  rangeMin: 1.0
+  rangeMax: 1.5
+- id: chargeEfficiencyFactor
+  name: Charge Efficiency Factor
+  type: PERCENTAGE_INT8

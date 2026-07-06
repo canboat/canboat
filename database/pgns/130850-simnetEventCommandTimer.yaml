@@ -1,0 +1,71 @@
+pgn: 130850
+id: simnetEventCommandTimer
+description: 'Simnet: Event Command: Timer'
+type: Fast
+variantOrder: 9
+priority: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Race and trip timer commands sent by a Navico MFD, all observed live: race start/stop/sync/reset and trip enable/disable/reset,
+  with Parameter 1 selecting the trip (0 = Trip 1, 1 = Trip 2). Broadcast to a display group, so every device in the group
+  acts.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device, used for autopilot events
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: eventType
+  name: Event Type
+  type: LOOKUP
+  bits: 8
+  description: Timer
+  match: 23
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: event
+  name: Event
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_TIMER_EVENT
+- id: parameter1
+  name: Parameter 1
+  type: UINT8
+  description: Event dependent; for the trip timer 0 = Trip 1, 1 = Trip 2
+- id: parameter2
+  name: Parameter 2
+  type: UINT16
+  description: Event dependent
+- id: parameter3
+  name: Parameter 3
+  type: UINT8
+  description: Event dependent

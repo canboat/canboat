@@ -1,0 +1,6 @@
+name: SIMNET_NIGHT_MODE
+kind: pair
+bits: 8
+values:
+  2: Day
+  4: Night

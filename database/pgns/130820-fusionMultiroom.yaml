@@ -1,0 +1,50 @@
+pgn: 130820
+id: fusionMultiroom
+description: 'Fusion: Multiroom'
+type: Fast
+variantOrder: 17
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Multiroom
+  match: 32824
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+- id: ipAddress1
+  name: IP Address 1
+  type: UINT8
+- id: ipAddress2
+  name: IP Address 2
+  type: UINT8
+- id: ipAddress3
+  name: IP Address 3
+  type: UINT8
+- id: ipAddress4
+  name: IP Address 4
+  type: UINT8

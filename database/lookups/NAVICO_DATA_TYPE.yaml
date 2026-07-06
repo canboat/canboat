@@ -1,0 +1,731 @@
+name: NAVICO_DATA_TYPE
+kind: pair
+bits: 16
+values:
+  0: Altitude
+  1: Position
+  2: Position Error
+  3: HDOP
+  4: VDOP
+  5: TDOP
+  6: PDOP
+  7: Geoidal Seperation
+  8: COG
+  9: Position Quality
+  10: Position Integrity
+  11: Sats In View
+  12: Waas Status
+  13: Bearing
+  14: Course
+  15: CDI Graphic
+  16: Course To Steer
+  17: Cross Track
+  18: Velocity Made Good
+  19: Destination
+  20: Distance To Turn
+  21: Distance To Dest
+  22: Time To Turn
+  23: Time To Dest
+  24: ETA At Turn
+  25: ETA At Dest
+  26: Total Distance
+  27: Steer Arrow
+  28: Odometer
+  29: Trip Distance
+  30: Trip Time
+  31: Date
+  32: Time
+  33: UTC Date
+  34: UTC Time
+  35: Local Time Offset
+  36: Heading
+  37: Was Voltage
+  38: Current Set
+  39: Current Drift
+  40: Speed SOG
+  41: Speed Water
+  42: Speed Pitot
+  43: Speed Trip Avg
+  44: Speed Trip Max
+  45: Speed Wind App
+  46: Speed Wind True
+  47: Temp Water
+  48: Temp Outside
+  49: Temp Inside
+  50: Temp Engine Room
+  51: Temp Main Cabin
+  52: Temp Live Well
+  53: Temp Bait Well
+  54: Temp Refrigeration
+  55: Temp Heating System
+  56: Temp Dew Point
+  57: Temp Wind Chill App
+  58: Temp Wind Chill Theoretic
+  59: Temp Heat Index
+  60: Temp Freezer
+  61: Engine Temp
+  62: Engine Air Temp
+  63: Engine Oil Temp
+  64: Temp Battery
+  65: Pressure Atmospheric
+  66: Engine Boost Pres
+  67: Engine Oil Pres
+  68: Engine Water Pres
+  69: Engine Fuel Pres
+  70: Engine Manifold Pres
+  71: Pressure Steam
+  72: Pressure Compr Air
+  73: Pressure Hydraulic
+  74: Was Generic Pressure Lo
+  75: Was Generic Pressure Hi
+  76: Depth
+  77: Water Distance
+  78: Engine RPM
+  79: Engine Trim
+  80: Engine Alternator Potential
+  81: Engine Fuel Rate
+  82: Engine Percent Load
+  83: Engine Percent Torque
+  84: Was Suzuki Alarm Lev Lo
+  85: Was Suzuki Alarm Lev High
+  86: Tank Fuel Level
+  87: Fluid Level Fresh Water
+  88: Fluid Level Gray Water
+  89: Fluid Level Live Well
+  90: Fluid Level Oil
+  91: Fluid Level Black Water
+  92: Tank Fuel Remaining
+  93: Fluid Volume Fresh Water
+  94: Fluid Volume Gray Water
+  95: Fluid Volume Live Well
+  96: Fluid Volume Oil
+  97: Fluid Volume Black Water
+  98: Gen Fluid Volume
+  99: Was Tank Fuel Level Lo
+  100: Was Fluid Level Lo Fresh Water
+  101: Was Fluid Level Lo Gray Water
+  102: Was Fluid Level Lo Live Well
+  103: Was Fluid Level Lo Oil
+  104: Gen Tank Capacity
+  105: Tank Fuel Capacity
+  106: Tank Capacity Fresh Water
+  107: Tank Capacity Gray Water
+  108: Tank Capacity Live Well
+  109: Tank Capacity Oil
+  110: Tank Capacity Black Water
+  111: Was Tank Fuel Used
+  112: Engine Fuel Used
+  113: Engine Fuel Used Trip
+  114: Engine Fuel Used Seasonal
+  115: Engine Fuel K Value
+  116: Battery Potential
+  117: Battery Current
+  118: Trim Tab
+  119: Was Trim Stbd Tab
+  120: Rate Of Turn
+  121: Attitude Yaw
+  122: Attitude Pitch
+  123: Attitude Roll
+  124: Magnetic Variation
+  125: Deviation
+  126: Fuel Economy Wtr
+  127: Fuel Economy GPS
+  128: Was Fuel Remaining
+  129: Was Fuel Range Wtr
+  130: Was Fuel Range GPS
+  131: Engine Hours Used
+  132: Engine Type
+  133: Vessel Fuel Rate
+  134: Vessel Fuel Economy Wtr
+  135: Vessel Fuel Economy GPS
+  136: Vessel Fuel Remaining
+  137: Vessel Fuel Range Wtr
+  138: Vessel Fuel Range GPS
+  139: Wind App Angle
+  140: Wind True Angle
+  141: Wind True Direction
+  142: Humidity Inside
+  143: Humidity Outside
+  144: Set Humidity
+  145: Rudder Angle
+  146: Trans Gear
+  147: Trans Oil Pressure
+  148: Trans Oil Temp
+  149: Cmd Rudder Angle
+  150: Rudder Limit
+  151: Off Heading Lim
+  152: Radius Of Turn Order
+  153: Rate Of Turn Order
+  154: Off Track Lim
+  155: Logging Time Remaining
+  156: Position Fix Type
+  157: Engine Discrete Status
+  158: Transmission Discrete Status
+  159: GPS Best Of Four Snr
+  160: Gen Fluid Level
+  161: Gen Pressure
+  162: Gen Temperature
+  163: Internal Voltage
+  164: Depth Offset
+  165: Structure Depth
+  166: Loran Position
+  167: Vessel Status
+  168: Battery DC Type
+  169: Battery State Of Charge
+  170: Battery State Of Health
+  171: Battery Time Remaining
+  172: Battery Ripple Voltage
+  173: Ac1 Acceptability
+  174: Ac2 Acceptability
+  175: Ac3 Acceptability
+  176: Ac1 Voltage
+  177: Ac2 Voltage
+  178: Ac3 Voltage
+  179: Ac1 Current
+  180: Ac2 Current
+  181: Ac3 Current
+  182: Ac1 Frequency
+  183: Ac2 Frequency
+  184: Ac3 Frequency
+  185: Ac1 Breaker Size
+  186: Ac2 Breaker Size
+  187: Ac3 Breaker Size
+  188: Ac1 Real Power
+  189: Ac2 Real Power
+  190: Ac3 Real Power
+  191: Ac1 Reactive Power
+  192: Ac2 Reactive Power
+  193: Ac3 Reactive Power
+  194: Ac1 Power Factor
+  195: Ac2 Power Factor
+  196: Ac3 Power Factor
+  197: Switch State
+  198: Switch Current
+  199: Switch Fault
+  200: Switch Dim Level
+  201: Previous Cmd Heading
+  202: Cmd Wind Angle
+  203: Was Cmd Bearing Offset
+  204: Cmd Bearing
+  205: Cmd Depth Contour
+  206: Cmd Course Change
+  207: Pilot Drift
+  208: Pilot Distance To Turn
+  209: Pilot Time To Turn
+  210: Pilot Reference Position
+  211: DC Status
+  212: Ac1 Status
+  213: Was Switch Voltage
+  214: Battery Capacity Remaining
+  215: Pilot Heading Reference
+  216: B And G Linear 1
+  217: B And G Linear 2
+  218: B And G Linear 3
+  219: Boom Position
+  220: Sailing Course
+  221: Daggerboard Position
+  222: B And G Linear 4
+  223: Heading On Next Tack
+  224: Keel Angle
+  225: Leeway
+  226: Mast Angle
+  227: Target True Wind Angle
+  228: Keel Trim Tab
+  229: Race Timer
+  230: Canard Angle
+  231: Next Leg Apparent Wind Angle
+  232: Next Leg Apparent Wind Speed
+  233: Target Boat Speed
+  234: VMG To Wind
+  235: Time To Laylines
+  236: Distance To Laylines
+  237: Aft Depth
+  238: Forestay
+  239: Polar Speed
+  240: Polar Performance
+  241: Tacking Performance
+  242: Wind Angle To Mast
+  243: Can Bus Voltage
+  244: Internal Temperature
+  245: Engage Current
+  246: Uref Voltage
+  247: Supply Voltage
+  248: Destination Position
+  249: Compass Heading Reference
+  250: Cmd Rudder Direction
+  251: Was Engine Sync State
+  252: Engine General Maintenance
+  253: Engine Percent Throttle
+  254: Engine Steering Angle
+  255: Engine Break In Reqd
+  256: GPS All
+  257: Engine Break In Accum
+  258: Engine Trim Status
+  259: Pilot Present
+  260: Ac1 Out Waveform
+  261: Ac2 Out Waveform
+  262: Ac3 Out Waveform
+  263: Ac1 Out Voltage
+  264: Ac2 Out Voltage
+  265: Ac3 Out Voltage
+  266: Ac1 Out Current
+  267: Ac2 Out Current
+  268: Ac3 Out Current
+  269: Ac1 Out Frequency
+  270: Ac2 Out Frequency
+  271: Ac3 Out Frequency
+  272: Ac1 Out Breaker Size
+  273: Ac2 Out Breaker Size
+  274: Ac3 Out Breaker Size
+  275: Ac1 Out Real Power
+  276: Ac2 Out Real Power
+  277: Ac3 Out Real Power
+  278: Ac1 Out Reactive Power
+  279: Ac2 Out Reactive Power
+  280: Ac3 Out Reactive Power
+  281: Ac1 Out Power Factor
+  282: Ac2 Out Power Factor
+  283: Ac3 Out Power Factor
+  284: Ac2 Status
+  285: Ac3 Status
+  286: Ac1 Out Status
+  287: Ac2 Out Status
+  288: Ac3 Out Status
+  289: Switch Manual Override
+  290: Switch Reverse Polarity
+  291: Switch Acsource Available
+  292: Switch Accontactor Systemsonstate
+  293: Charger Battery Instance
+  294: Charger Operating State
+  295: Charger Mode
+  296: Charger Enabled
+  297: Charger Equalization Pending
+  298: Charger Equalization Time Remaining
+  299: Inverter AC Instance
+  300: Inverter DC Instance
+  301: Inverter Operating State
+  302: Inverter Enabled
+  303: Thruster Power
+  304: Fuel To Turn
+  305: Engine Mil
+  306: Engine Warning Flags
+  307: Speed Stw
+  308: Engine Performance SOG
+  309: Engine Performance Stw
+  310: Engine Control Flags
+  311: Engine Troll RPM Setpoint
+  312: Active Helm
+  313: Cruise RPM Setpoint
+  314: Cruise Speed Setpoint
+  315: Cmd Pattern Dir
+  316: Smart Contextual
+  317: Sailing Time To Waypoint
+  318: Sailing Distance To Waypoint
+  319: Sailing ETA
+  320: Generator Temp
+  321: Generator Oil Temp
+  322: Generator Oil Pres
+  323: Generator Water Pres
+  324: Generator Fuel Pres
+  325: Generator Fuel Rate
+  326: Generator Hours Used
+  327: Generator Discrete Status
+  328: Generator Percent Load
+  329: Generator Percent Torque
+  330: Generator Battery Voltage
+  331: Generator Average Voltage
+  332: Generator Average Frequency
+  333: Generator Average Current
+  334: Pilot Mode
+  335: Pilot Response Level
+  336: Cruise Smarttow Overshoot
+  337: Pilot Cmd Heading
+  338: MOB Dr Position
+  339: MOB Dr Range
+  340: MOB Dr Bearing
+  341: Bow Position
+  342: Start Line Bearing
+  343: Start Line Bias
+  344: Distance To Start Line
+  345: Distance To Start Line Port End
+  346: Distance To Start Line Stbd End
+  347: Start Line Port Position
+  348: Start Line Stbd Position
+  349: Start Line Boat Length Advantage
+  350: Distance To Start Line Boat Lengths
+  351: Backstay
+  352: Boom Angle
+  353: Boom Vang
+  354: Chain Length
+  355: Cunningham
+  356: Inner Forestay Load
+  357: Inner Forestay Halyard Load
+  358: Jib Furl
+  359: Jib Halyard Load
+  360: Optimum Wind Angle
+  361: Outhaul Load
+  362: Pitch Rate
+  363: Plow Angle
+  364: Roll Rate
+  365: VMG Performance
+  366: B And G Linear 5
+  367: B And G Linear 6
+  368: B And G Linear 7
+  369: B And G Linear 8
+  370: B And G Linear 9
+  371: B And G Linear 10
+  372: B And G Linear 11
+  373: B And G Linear 12
+  374: B And G Linear 13
+  375: B And G Linear 14
+  376: B And G Linear 15
+  377: B And G Linear 16
+  378: Keel Draught
+  379: Pool Temperature
+  380: Jacuzzi Temperature
+  381: Trip Dr Bearing
+  382: Trip Dr Distance
+  383: Code Zero Load
+  384: B And G MOB Position
+  385: Distance Behind Start Line
+  386: Distance Behind Start Line Boat Lengths
+  387: Bias Advantage
+  388: Opposite Tack COG
+  389: Opposite Tack Target Heading
+  390: Mast Rake
+  391: Next Leg Bearing
+  392: Next Leg Target Speed
+  393: Ground Wind Direction
+  394: Ground Wind Speed
+  395: Mast Cant Angle
+  396: Rudder Toe In
+  397: Daggerboard Port
+  398: Daggerboard Starboard
+  399: B And G Remote 0
+  400: B And G Remote 1
+  401: B And G Remote 2
+  402: B And G Remote 3
+  403: B And G Remote 4
+  404: B And G Remote 5
+  405: B And G Remote 6
+  406: B And G Remote 7
+  407: B And G Remote 8
+  408: B And G Remote 9
+  409: Forward Depth
+  410: Critical Range
+  411: Caution Range
+  412: Max Range
+  413: Generator Alternator Voltage
+  414: Trolling Prop Rate
+  415: Trolling Cruise Control Speed
+  416: Vessel Fuel Used
+  417: Suzuki Engine Baro Pressure
+  418: Suzuki Cylinder Temperature
+  419: Suzuki Intake Air Temperature
+  420: Suzuki Ignition Timing
+  421: Suzuki Fuel Injector Pulse Width
+  422: Was Suzuki Injected Fuel Amount
+  423: Suzuki Iac Valve Duty
+  424: Suzuki Discrete Status 1
+  425: Suzuki Discrete Status 2
+  426: Suzuki Discrete Status 3
+  427: Suzuki Discrete Status 4
+  428: Fuel Economy Pit
+  429: Vessel Fuel Economy Pit
+  430: Vessel Fuel Range Pit
+  431: Waypoint
+  432: Average Wind Direction
+  433: Wind Phase
+  434: Wind Lift
+  435: Fuel Range Seasonal Average
+  436: Fuel Range Instantaneous
+  437: Vessel Fuel Economy
+  438: Average Fuel Economy Seasonal
+  439: Average Fuel Economy Trip
+  440: Best Fuel Economy Seasonal
+  441: Best Fuel Economy Trip
+  442: Vessel Fuel Level
+  443: Vessel Fuel Used Trip
+  444: B And G Linear 17
+  445: B And G Linear 18
+  446: B And G Linear 19
+  447: B And G Linear 20
+  448: B And G Linear 21
+  449: B And G Linear 22
+  450: B And G Linear 23
+  451: B And G Linear 24
+  452: B And G Linear 25
+  453: B And G Linear 26
+  454: B And G Linear 27
+  455: B And G Linear 28
+  456: B And G Linear 29
+  457: B And G Linear 30
+  458: B And G Linear 31
+  459: B And G Linear 32
+  460: Origin Way Point Number
+  461: Dest Way Point Number
+  462: Arrival Notification
+  463: Arrival Circle Notification
+  464: Was Nav Terminated
+  465: Bobstay
+  466: J1
+  467: J2
+  468: J3
+  469: Mast Base
+  470: Mainsheet
+  471: D0 Port
+  472: D0 Starboard
+  473: Runner Port
+  474: Runner Starboard
+  475: Foil Port
+  476: Foil Starboard
+  477: Sailtack Port
+  478: Sailtack Starboard
+  479: Deflect Port
+  480: Deflect Starboard
+  481: Rudder Load Port
+  482: Rudder Load Starboard
+  483: D1 Port
+  484: D1 Starboard
+  485: V0 Port
+  486: V0 Starboard
+  487: V1 Port
+  488: V1 Starboard
+  489: Gnss System
+  490: Sv Count
+  491: Gnss Op Mode
+  492: Dgnss Mode
+  493: Suzuki Fuel Pump Duty
+  494: Speed Log Water Longitudinal
+  495: Speed Log Water Transverse
+  496: Speed Log Water Resultant
+  497: Speed Log Water Angle
+  498: Speed Log Ground Longitudinal
+  499: Speed Log Ground Transverse
+  500: Speed Log Ground Resultant
+  501: Speed Log Ground Angle
+  502: Speed Log Stern Water Transverse
+  503: Speed Log Stern Ground Transverse
+  504: Position Datum
+  505: Speed Boat
+  506: Was Engine Fuel Used Mercury
+  507: Heave
+  508: Speed Trip Max RPM
+  509: Honda Engine Status Params
+  510: Pilot Features
+  511: Pilot Setpoint Heading
+  512: Idle Speed Control Mode
+  513: Idle Speed Control Value
+  514: Trolling Mode
+  515: Immobilizer Lock Status
+  516: Engine Discrete Params 1
+  517: Engine Discrete Params 2
+  518: Engine Discrete Params 3
+  519: Engine Discrete Params 4
+  520: Engine Discrete Params 5
+  521: Engine Discrete Params 6
+  522: Idle Speed Limit Low
+  523: Idle Speed Limit High
+  524: Was Trolling Variable RPM Info
+  525: Idle Speed Control Target Rev
+  526: Idle Control
+  527: Idle Feedback
+  528: Immediately After Starting Control
+  529: Gateway Params
+  530: Gateway Protocol
+  531: Engine Wall Temp
+  532: Substitute Battery Voltage
+  533: Yamaha Engine M6 Diag Code
+  534: Wireless Sensor Battery Status
+  535: Wireless Sensor Battery Charge Status
+  536: Wireless Sensor Battery Status Voltage
+  537: Wireless Sensor Battery Charge Status Current
+  538: Fluid Type Mode
+  539: Datetime
+  540: Reacher Load
+  541: Blade Load
+  542: Staysail Load
+  543: Tack Load
+  544: J4 Load
+  545: Solent Load
+  546: Tack Port Load
+  547: Tack Starboard Load
+  548: Deflect Upper Load
+  549: Deflect Lower Load
+  550: Winch Port Load
+  551: Winch Starboard Load
+  552: Spin Halyard Port Load
+  553: Spin Halyard Starboard Load
+  554: Main Halyward
+  555: Load 1 Load
+  556: Load 2 Load
+  557: Mast Base 2 Load
+  558: Pilot Active Perf Mode
+  559: Pilot Gust
+  560: Pilot Tws Response
+  561: Pilot Heel Comp
+  562: Pilot Net Course
+  563: Pilot Target Wind Angle
+  564: Pilot Weather Helm
+  565: Pilot Mean Heel
+  566: Propeller Shaft Pitch Angle
+  567: Propeller Shaft Pitch Percent
+  568: Propeller Shaft RPM
+  569: Thruster Pitch Angle
+  570: Thruster Pitch Percent
+  571: Ground Wind Angle
+  572: Fuel Flow Offset
+  573: Fluid Level Gasoline
+  574: Fluid Volume Gasoline
+  575: Tank Capacity Gasoline
+  576: Cmd Xte Offset
+  577: Engine 4Stroke Oil
+  578: Wireless Sensor Signal Strength
+  579: Wireless Sensor Software Update Progress
+  580: Trolling Status
+  581: Mercury Exhaust Valve
+  582: Mercury Exhaust Status
+  583: Yanmar Engine Ecu Alarms
+  584: Yanmar Helm Ecu Alarms
+  585: Yanmar Drive Ecu Alarms
+  586: Dgps Correction Data
+  587: Dgps Reference Station Id
+  588: Dgps Reference Station Health
+  589: Dgps Signal Snr
+  590: Dgps Signal Frequency
+  591: Dgps Signal Strength
+  592: Engine Fuel Temp
+  593: Depth Quality
+  594: Number Of Active Dtc
+  595: Yanmar Fuel Level Tank1 Port
+  596: Yanmar Fuel Level Tank2 Port
+  597: Yanmar Fuel Level Tank1 Stbd
+  598: Yanmar Fuel Level Tank2 Stbd
+  599: Yanmar Fuel Level Tank1 Center
+  600: Yanmar Fuel Level Tank2 Center
+  601: Yanmar Fresh Water Level Tank1 Port
+  602: Yanmar Fresh Water Level Tank2 Port
+  603: Yanmar Fresh Water Level Tank1 Stbd
+  604: Yanmar Fresh Water Level Tank2 Stbd
+  605: Yanmar Fresh Water Level Tank1 Center
+  606: Yanmar Fresh Water Level Tank2 Center
+  607: Yanmar Gray Water Level Tank1 Port
+  608: Yanmar Gray Water Level Tank2 Port
+  609: Yanmar Gray Water Level Tank1 Stbd
+  610: Yanmar Gray Water Level Tank2 Stbd
+  611: Yanmar Gray Water Level Tank1 Center
+  612: Yanmar Gray Water Level Tank2 Center
+  613: Rudder Angle Percentage
+  614: Troll Active Helm
+  615: Tides Graphic
+  616: Anchor Distance
+  617: Anchor Size
+  618: Anchor Depth
+  619: Anchor Bearing
+  620: Honda Engine Warning Params
+  621: Honda Engine Discrete Params 1
+  622: Honda Engine Discrete Params 2
+  623: Honda Engine Discrete Params 3
+  624: Honda Engine Discrete Params 4
+  625: Mainsail Head Load
+  626: Mainsail Clew Load
+  627: Mainsail Tack Load
+  628: J1 Head Load
+  629: J1 Clew Load
+  630: J1 Tack Load
+  631: J2 Head Load
+  632: J2 Clew Load
+  633: J2 Tack Load
+  634: J3 Head Load
+  635: J3 Clew Load
+  636: J3 Tack Load
+  637: Code Zero Head Load
+  638: Code Zero Clew Load
+  639: Code Zero Tack Load
+  640: Suzuki Engine Alert I
+  641: Engine Oil Life
+  642: Engine Oil Level Status
+  643: Trans Fluid Status
+  644: Honda Eco Status All Engines
+  645: Output RPM
+  646: Suzuki Engine Alert A
+  647: Suzuki Engine Alert B
+  648: Suzuki Engine Alert C
+  649: Suzuki Engine Alert D
+  650: Suzuki Engine Alert E
+  651: Suzuki Engine Alert F
+  652: Suzuki Engine Alert G
+  653: Suzuki Engine Alert H
+  654: Suzuki Engine Alert J
+  655: Suzuki Bcm Fault
+  656: Suzuki Bcm Mode
+  657: Suzuki Engine Kls Status
+  658: Suzuki Switch Fault
+  659: Suzuki Shift Position Status
+  660: Vessel Fuel Used Seasonal
+  661: Vessel Fuel Capacity
+  662: Suzuki Engine Auto Trim Status
+  663: Trolling Mode Active
+  664: Trolling Mode Active Master
+  665: Keyless Communication State
+  666: Linear Actuator Position
+  667: Engine Exhaust Temp
+  668: Engine Guardian Power Limit
+  669: Engine State
+  670: Sailing Time To Burn
+  671: Mast Twist
+  672: VHF Channel
+  673: Trolling Lower Unit Direction
+  674: Propulsion Battery Status
+  675: Propulsion Battery Isolation Status
+  676: Propulsion Battery Error
+  677: Propulsion Battery Voltage
+  678: Propulsion Battery Current
+  679: Propulsion Battery State Of Charge
+  680: Propulsion Battery Time Remaining
+  681: Propulsion Battery Highest Cell Temperature
+  682: Propulsion Battery Lowest Cell Temperature
+  683: Propulsion Battery Average Cell Temperature
+  684: Propulsion Battery Maximum Discharge Current
+  685: Propulsion Battery Maximum Charge Current
+  686: Propulsion Battery Cooling System Status
+  687: Propulsion Battery Heating System Status
+  688: Propulsion Battery Storage Mode
+  689: Propulsion Battery Chemistry
+  690: Propulsion Battery Maximum Temperature Derating
+  691: Propulsion Battery Maximum Temperature Shutoff
+  692: Propulsion Battery Minimum Temperature Derating
+  693: Propulsion Battery Minimum Temperature Shutoff
+  694: Propulsion Battery Usable Energy
+  695: Propulsion Battery State Of Health
+  696: Propulsion Battery Discharge Cycles Count
+  697: Propulsion Battery Full Status
+  698: Propulsion Battery Empty Status
+  699: Propulsion Battery Maximum Charge Soc
+  700: Propulsion Battery Minimum Discharge Soc
+  701: Active Motor Mode
+  702: Motor Brake Mode
+  703: Motor Rotational Shaft Speed
+  704: Motor Voltage
+  705: Motor Current
+  706: Motor Operating Mode
+  707: Motor Temperature
+  708: Motor Inverter Temperature
+  709: Motor Coolant Temperature
+  710: Motor Gear Temperature
+  711: Motor Shaft Torque Percent
+  712: Motor Voltage Type
+  713: Motor Voltage Rating
+  714: Motor Max Continuous Power
+  715: Motor Max Boost Power
+  716: Motor Max Temperature Rating
+  717: Motor Rated Speed
+  718: Motor Max Controller Temperature Rating
+  719: Motor Shaft Torque Rating
+  720: Motor DC Voltage Derating Threshold
+  721: Motor DC Voltage Cutoff Threshold
+  722: Motor Runtime
+  723: Sailing Ping Time Port
+  724: Sailing Ping Time Stbd
+  725: Heading Source
+  726: Invalid

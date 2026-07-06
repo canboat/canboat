@@ -1,0 +1,6 @@
+name: AIRMAR_FILTER
+kind: pair
+bits: 4
+values:
+  0: No filter
+  1: Basic IIR filter

@@ -1,0 +1,9 @@
+name: TRANSMISSION_INTERVAL
+kind: pair
+bits: 4
+values:
+  0: Acknowledge
+  1: Transmit Interval/Priority not supported
+  2: Transmit Interval too low
+  3: Access denied
+  4: Not supported

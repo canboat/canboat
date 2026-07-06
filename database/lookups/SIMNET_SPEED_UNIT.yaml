@@ -1,0 +1,7 @@
+name: SIMNET_SPEED_UNIT
+kind: pair
+bits: 8
+values:
+  0: Knots
+  1: Kilometers per hour
+  2: Miles per hour

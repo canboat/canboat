@@ -1,0 +1,56 @@
+pgn: 127510
+id: chargerConfigurationStatus
+description: Charger Configuration Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: batteryInstance
+  name: Battery Instance
+  type: UINT8
+  primaryKey: true
+- id: chargerEnableDisable
+  name: Charger Enable/Disable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: chargeCurrentLimit
+  name: Charge Current Limit
+  type: PERCENTAGE_UINT8
+- id: chargingAlgorithm
+  name: Charging Algorithm
+  type: LOOKUP
+  bits: 4
+  lookup: CHARGING_ALGORITHM
+- id: chargerMode
+  name: Charger Mode
+  type: LOOKUP
+  bits: 4
+  lookup: CHARGER_MODE
+- id: estimatedTemperature
+  name: Estimated Temperature
+  type: LOOKUP
+  bits: 4
+  description: If there is no battery temperature sensor the charger will use this field to steer the charging algorithm
+  lookup: DEVICE_TEMP_STATE
+- id: equalizeOneTimeEnableDisable
+  name: Equalize One Time Enable/Disable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: overChargeEnableDisable
+  name: Over Charge Enable/Disable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: equalizeTime
+  name: Equalize Time
+  type: DURATION_UFIX16_MIN

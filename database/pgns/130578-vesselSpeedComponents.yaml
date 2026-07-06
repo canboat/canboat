@@ -1,0 +1,25 @@
+pgn: 130578
+id: vesselSpeedComponents
+description: Vessel Speed Components
+type: Fast
+priority: 2
+interval: 250
+fields:
+- id: longitudinalSpeedWaterReferenced
+  name: Longitudinal Speed, Water-referenced
+  type: SPEED_FIX16_MM
+- id: transverseSpeedWaterReferenced
+  name: Transverse Speed, Water-referenced
+  type: SPEED_FIX16_MM
+- id: longitudinalSpeedGroundReferenced
+  name: Longitudinal Speed, Ground-referenced
+  type: SPEED_FIX16_MM
+- id: transverseSpeedGroundReferenced
+  name: Transverse Speed, Ground-referenced
+  type: SPEED_FIX16_MM
+- id: sternSpeedWaterReferenced
+  name: Stern Speed, Water-referenced
+  type: SPEED_FIX16_MM
+- id: sternSpeedGroundReferenced
+  name: Stern Speed, Ground-referenced
+  type: SPEED_FIX16_MM

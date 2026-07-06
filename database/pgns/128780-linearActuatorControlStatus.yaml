@@ -1,0 +1,33 @@
+pgn: 128780
+id: linearActuatorControlStatus
+description: Linear Actuator Control/Status
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Actuator is a broad description of any device that embodies moving an object between two fixed limits, such as
+  raising or lowering an outboard engine assembly. In the context of this PGN, the word "Device" refers to the object being
+  moved. In the case of multiple Actuators per controller, the Actuator Identifier field specifies which Actuator the PGN
+  message is intended for, and all following data fields refer only to that Actuator. This PGN supports manufacturer calibrated
+  systems and retrofit systems where it is impractical for the installer to enter the Maximum Travel distance of the device.
+fields:
+- id: actuatorIdentifier
+  name: Actuator Identifier
+  type: UINT8
+- id: commandedDevicePosition
+  name: Commanded Device Position
+  type: UINT8
+- id: devicePosition
+  name: Device Position
+  type: UINT8
+- id: maximumDeviceTravel
+  name: Maximum Device Travel
+  type: UINT16
+- id: directionOfTravel
+  name: Direction of Travel
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

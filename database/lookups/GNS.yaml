@@ -1,0 +1,13 @@
+name: GNS
+kind: pair
+bits: 4
+values:
+  0: GPS
+  1: GLONASS
+  2: GPS+GLONASS
+  3: GPS+SBAS/WAAS
+  4: GPS+SBAS/WAAS+GLONASS
+  5: Chayka
+  6: integrated
+  7: surveyed
+  8: Galileo

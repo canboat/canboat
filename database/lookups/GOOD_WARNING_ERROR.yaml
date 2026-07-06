@@ -1,0 +1,7 @@
+name: GOOD_WARNING_ERROR
+kind: pair
+bits: 2
+values:
+  0: Good
+  1: Warning
+  2: Error

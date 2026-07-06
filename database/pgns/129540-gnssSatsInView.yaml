@@ -1,0 +1,50 @@
+pgn: 129540
+id: gnssSatsInView
+description: GNSS Sats in View
+type: Fast
+priority: 6
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: rangeResidualMode
+  name: Range Residual Mode
+  type: LOOKUP
+  bits: 2
+  lookup: RANGE_RESIDUAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: satsInView
+  name: Sats in View
+  type: UINT8
+- id: prn
+  name: PRN
+  type: UINT8
+- id: elevation
+  name: Elevation
+  type: ANGLE_FIX16
+- id: azimuth
+  name: Azimuth
+  type: ANGLE_UFIX16
+- id: snr
+  name: SNR
+  type: SIGNALTONOISERATIO_FIX16
+- id: rangeResiduals
+  name: Range residuals
+  type: DISTANCE_FIX32_MMM
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 4
+  lookup: SATELLITE_STATUS
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 4
+repeating1:
+  count: 7
+  start: 5
+  countField: 4

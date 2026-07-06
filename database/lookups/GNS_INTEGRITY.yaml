@@ -1,0 +1,8 @@
+name: GNS_INTEGRITY
+kind: pair
+bits: 2
+values:
+  0: No integrity checking
+  1: Safe
+  2: Caution
+  3: Unsafe

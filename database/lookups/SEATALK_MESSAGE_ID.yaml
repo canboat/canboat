@@ -1,0 +1,7 @@
+name: SEATALK_MESSAGE_ID
+kind: pair
+bits: 8
+values:
+  240: Seatalk 1 Encoded
+  140: Display
+  108: Pilot Configuration

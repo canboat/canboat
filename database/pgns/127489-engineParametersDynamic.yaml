@@ -1,0 +1,57 @@
+pgn: 127489
+id: engineParametersDynamic
+description: Engine Parameters, Dynamic
+type: Fast
+priority: 2
+interval: 500
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: oilPressure
+  name: Oil pressure
+  type: PRESSURE_UFIX16_HPA
+- id: oilTemperature
+  name: Oil temperature
+  type: TEMPERATURE_HIGH
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE
+- id: alternatorPotential
+  name: Alternator Potential
+  type: VOLTAGE_FIX16_10MV
+- id: fuelRate
+  name: Fuel Rate
+  type: VOLUMETRIC_FLOW
+- id: totalEngineHours
+  name: Total Engine hours
+  type: DURATION_UFIX32_S
+- id: coolantPressure
+  name: Coolant Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: fuelPressure
+  name: Fuel Pressure
+  type: PRESSURE_UFIX16_KPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: discreteStatus1
+  name: Discrete Status 1
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: ENGINE_STATUS_1
+- id: discreteStatus2
+  name: Discrete Status 2
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: ENGINE_STATUS_2
+- id: engineLoad
+  name: Engine Load
+  type: PERCENTAGE_INT8
+- id: engineTorque
+  name: Engine Torque
+  type: PERCENTAGE_INT8

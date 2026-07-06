@@ -1,0 +1,7 @@
+name: SIMNET_BARO_PRESSURE_UNIT
+kind: pair
+bits: 8
+values:
+  0: Millibar
+  2: Hectopascal
+  5: Inches of mercury

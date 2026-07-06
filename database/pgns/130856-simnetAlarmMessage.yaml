@@ -1,0 +1,45 @@
+pgn: 130856
+id: simnetAlarmMessage
+description: 'Simnet: Alarm Message'
+type: Fast
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Usually accompanied by a PGN 130850 ''Simnet: Alarm'' message with the same information in binary form.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: alarmId
+  name: Alarm ID
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_ALARM_ID
+- id: b
+  name: B
+  type: UINT8
+- id: c
+  name: C
+  type: UINT8
+- id: text
+  name: Text
+  type: STRING_FIX
+  bits: 1784

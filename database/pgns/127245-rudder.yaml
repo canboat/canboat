@@ -1,0 +1,30 @@
+pgn: 127245
+id: rudder
+description: Rudder
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: directionOrder
+  name: Direction Order
+  type: LOOKUP
+  bits: 3
+  lookup: DIRECTION_RUDDER
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: angleOrder
+  name: Angle Order
+  type: ANGLE_FIX16
+- id: position
+  name: Position
+  type: ANGLE_FIX16
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

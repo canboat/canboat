@@ -1,0 +1,46 @@
+pgn: 130820
+id: fusionEq
+description: 'Fusion: EQ'
+type: Fast
+variantOrder: 35
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Tone
+  match: 32795
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+  primaryKey: true
+- id: bass
+  name: Bass
+  type: INT8
+- id: mid
+  name: Mid
+  type: INT8
+- id: treble
+  name: Treble
+  type: INT8

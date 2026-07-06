@@ -1,0 +1,6 @@
+name: RAIM_FLAG
+kind: pair
+bits: 1
+values:
+  0: not in use
+  1: in use

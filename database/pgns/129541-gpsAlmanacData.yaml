@@ -1,0 +1,103 @@
+pgn: 129541
+id: gpsAlmanacData
+description: GPS Almanac Data
+type: Fast
+priority: 6
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20250720113839/www.gps.gov/technical/icwg/ICD-GPS-200C.pdf
+fields:
+- id: prn
+  name: PRN
+  type: UINT8
+- id: gpsWeekNumber
+  name: GPS Week number
+  type: UINT16
+- id: svHealthBits
+  name: SV Health Bits
+  type: BINARY
+  bits: 8
+- id: eccentricity
+  name: Eccentricity
+  type: UNSIGNED_ALMANAC_PARAMETER_RATIO
+  bits: 16
+  resolution: 4.76837e-07
+  description: '''e'' in table 20-VI in ICD-GPS-200'
+  rangeMin: 0.0
+  rangeMax: 0.0312480926513672
+- id: almanacReferenceTime
+  name: Almanac Reference Time
+  type: UNSIGNED_ALMANAC_PARAMETER_DURATION
+  bits: 8
+  resolution: 4096.0
+  description: '''t oa'' in table 20-VI in ICD-GPS-200'
+- id: inclinationAngle
+  name: Inclination Angle
+  type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
+  bits: 16
+  resolution: 1.90735e-06
+  description: '''delta i'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -0.0624980926513672
+  rangeMax: 0.0624923706054688
+- id: rateOfRightAscension
+  name: Rate of Right Ascension
+  type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S
+  bits: 16
+  resolution: 3.63798e-12
+  description: '''OMEGADOT'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -1.19205651571974e-07
+  rangeMax: 1.19194737635553e-07
+- id: rootOfSemiMajorAxis
+  name: Root of Semi-major Axis
+  type: UNSIGNED_ALMANAC_PARAMETER_SQRT_M
+  bits: 24
+  resolution: 0.000488281
+  description: '''(A)^0.5'' in table 20-VI in ICD-GPS-200'
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 8191.998046875
+- id: argumentOfPerigee
+  name: Argument of Perigee
+  type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
+  bits: 24
+  resolution: 1.19209e-07
+  description: '''(OMEGA)0'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -0.99999988079071
+  rangeMax: 0.999999523162842
+- id: longitudeOfAscensionNode
+  name: Longitude of Ascension Node
+  type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
+  bits: 24
+  resolution: 1.19209e-07
+  description: '''small-omega'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -0.99999988079071
+  rangeMax: 0.999999523162842
+- id: meanAnomaly
+  name: Mean Anomaly
+  type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
+  bits: 24
+  resolution: 1.19209e-07
+  description: '''M 0'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -0.99999988079071
+  rangeMax: 0.999999523162842
+- id: clockParameter1
+  name: Clock Parameter 1
+  type: SIGNED_ALMANAC_PARAMETER_DURATION
+  bits: 11
+  resolution: 9.53674e-07
+  description: '''a f0'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -0.000975608825683594
+  rangeMax: 0.000972747802734375
+- id: clockParameter2
+  name: Clock Parameter 2
+  type: SIGNED_ALMANAC_PARAMETER_RATIO
+  bits: 11
+  resolution: 3.63798e-12
+  description: '''a f1'' in table 20-VI in ICD-GPS-200'
+  rangeMin: -3.72165231965482e-09
+  rangeMax: 3.71073838323355e-09
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2

@@ -1,0 +1,53 @@
+pgn: 65290
+id: bepMarineCzoneModuleAnnounce
+description: 'BEP Marine: CZone Module Announce'
+type: Single
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'CZone module''s ''I''m here'' announce. A module sends one shortly after coming online. The plotter uses it
+  to populate its list of CZone-recognised modules. The 20-bit Unique field should be stable across restarts of the same module
+  so the plotter''s ''have I seen this before'' logic stays consistent. Field B (18 bits) and Field C (2 bits) have not been
+  observed populated; semantics unknown. The Dipswitch byte order on the wire is direct (no bit-reverse): the binary string
+  ''00011000'' shown in the CZone Configuration Tool corresponds to byte value 0x18 = 24.'
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65290.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: unique
+  name: Unique
+  type: UNSIGNED_INTEGER
+  bits: 20
+  description: Stable identifier set by the module; opaque to the plotter
+- id: fieldB
+  name: Field B
+  type: UNSIGNED_INTEGER
+  bits: 18
+  description: Purpose unknown; observed = 0 in YDAB-01
+- id: fieldC
+  name: Field C
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Purpose unknown; observed = 0 in YDAB-01
+- id: dipswitch
+  name: Dipswitch
+  type: UINT8
+  description: 8-bit dipswitch this module is claiming

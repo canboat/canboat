@@ -1,0 +1,44 @@
+pgn: 65304
+id: lowranceVesselSetupEngineAndTankConfigurationBroadcast
+description: 'Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast'
+type: Single
+variantOrder: 3
+explanation: Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total
+  fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200
+  L) by autopilot-computer and display devices.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: numberOfEngines
+  name: Number of Engines
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Engine count configured on the display's Vessel Setup page
+- id: numberOfFuelTanks
+  name: Number of Fuel Tanks
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Fuel-tank count configured on the display's Vessel Setup page
+- id: totalFuelCapacity
+  name: Total Fuel Capacity
+  type: VOLUME_UFIX16_DL
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 24

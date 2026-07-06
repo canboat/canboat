@@ -1,0 +1,42 @@
+pgn: 61184
+id: seatalkWirelessKeypadControl
+description: 'Seatalk: Wireless Keypad Control'
+type: Single
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: PID
+  name: Proprietary ID
+  type: UINT8
+  primaryKey: true
+- id: variant
+  name: Variant
+  type: UINT8
+- id: beepControl
+  name: Beep Control
+  type: UINT8
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 24

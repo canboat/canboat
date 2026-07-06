@@ -1,0 +1,98 @@
+pgn: 129038
+id: aisClassAPositionReport
+description: AIS Class A Position Report
+type: Fast
+priority: 4
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  description: 0-59 = UTC second when the report was generated
+  lookup: TIME_STAMP
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+  description: Information used by the TDMA slot allocation algorithm and synchronization information
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: heading
+  name: Heading
+  type: ANGLE_UFIX16
+  description: True heading
+- id: rateOfTurn
+  name: Rate of Turn
+  type: ROTATION_FIX16
+- id: navStatus
+  name: Nav Status
+  type: LOOKUP
+  bits: 4
+  lookup: NAV_STATUS
+- id: specialManeuverIndicator
+  name: Special Maneuver Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: AIS_SPECIAL_MANEUVER
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: spare18
+  name: Spare
+  type: SPARE
+  bits: 3
+- id: reserved19
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8

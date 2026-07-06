@@ -1,0 +1,58 @@
+pgn: 130852
+id: navicoDiagnosticData
+description: 'Navico: Diagnostic Data'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Device diagnostic report, returned in reply to a PGN 126208 Request Group Function for PGN 130852 that carries
+  the Navico manufacturer (275) and Marine industry parameters. Emitted by both NEON- and Triton-generation Navico devices.
+  After the manufacturer field and an Instance/channel byte, the frame carries a list of {Field ID, Length, Value} records
+  to the end of the fast-packet; Length is the value width (1, 2 or 4 bytes). Field IDs index a set of CAN bus diagnostic
+  counters; ids 4/5/7 (Rx Messages, Tx Messages, Fast Packet Errors) are confirmed against a device's on-screen bus statistics.
+  Ids 0-3 are the rx/tx overflow and error counters (zero on a healthy bus, so their order is not yet distinguished) and id
+  22 relates to bus state; those are shown numerically. Bus Load shown in the device UI is computed locally and is not carried
+  here.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  description: Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)
+- id: fieldId
+  name: Field ID
+  type: DYNAMIC_FIELD_KEY
+  bits: 8
+  lookupFieldtype: NAVICO_DIAGNOSTIC
+  primaryKey: true
+- id: length
+  name: Length
+  type: DYNAMIC_FIELD_LENGTH
+  bits: 8
+  description: Value width in bytes (observed 1, 2 or 4)
+  dynamicFieldLength: true
+- id: value
+  name: Value
+  type: DYNAMIC_FIELD_VALUE
+  description: Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise
+repeating1:
+  count: 3
+  start: 5

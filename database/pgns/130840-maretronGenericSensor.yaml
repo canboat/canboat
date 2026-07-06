@@ -1,0 +1,39 @@
+pgn: 130840
+id: maretronGenericSensor
+description: 'Maretron: Generic Sensor'
+type: Fast
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: dataInstance
+  name: Data Instance
+  type: UINT8
+  primaryKey: true
+- id: dataFormat
+  name: Data Format
+  type: UINT16
+- id: value
+  name: Value
+  type: BINARY
+  bits: 32

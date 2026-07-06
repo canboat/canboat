@@ -1,0 +1,6 @@
+name: HUMIDITY_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Inside
+  1: Outside

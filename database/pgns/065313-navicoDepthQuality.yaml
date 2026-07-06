@@ -1,0 +1,35 @@
+pgn: 65313
+id: navicoDepthQuality
+description: 'Navico: Depth Quality'
+type: Single
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+- id: depthQuality
+  name: Depth Quality
+  type: INT8
+  resolution: 0.01
+  description: Depth signal quality ratio (0 = no bottom lock .. ~1.0 = good)
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 32

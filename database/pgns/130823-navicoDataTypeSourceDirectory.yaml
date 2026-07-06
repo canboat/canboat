@@ -1,0 +1,83 @@
+pgn: 130823
+id: navicoDataTypeSourceDirectory
+description: 'Navico: Data Type Source Directory'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast
+  by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report
+  Type 5 and a part number, the frame carries a list of {Data Type, Source Length, Source, Value Type, Instance} records that
+  run to the end of the fast-packet. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries
+  have no source assigned (Source Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source
+  device''s 8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing it).
+  The data type values themselves are not carried here.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: spare5
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: reportType
+  name: Report Type
+  type: UINT8
+  description: Data-type source directory
+  match: 5
+- id: part
+  name: Part
+  type: UINT8
+  description: Sequence/part number of the directory report
+- id: spare8
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: dataType
+  name: Data Type
+  type: LOOKUP
+  bits: 16
+  lookup: NAVICO_DATA_TYPE
+- id: sourceLength
+  name: Source Length
+  type: DYNAMIC_FIELD_LENGTH
+  bits: 8
+  description: 'Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present'
+  dynamicFieldLength: true
+- id: source
+  name: Source
+  type: DYNAMIC_FIELD_VALUE
+  description: Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's
+    NMEA 2000 NAME
+- id: valueType
+  name: Value Type
+  type: UINT8
+  description: Encoding of the data type's value (e.g. 4 = float32)
+- id: instance
+  name: Instance
+  type: UINT8
+  description: Data instance the entry refers to
+repeating1:
+  count: 5
+  start: 9

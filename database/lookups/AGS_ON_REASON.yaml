@@ -1,0 +1,15 @@
+name: AGS_ON_REASON
+kind: pair
+bits: 8
+values:
+  0: Not on
+  1: DC voltage low
+  2: Battery state of charge low
+  3: AC current high
+  4: Contact closed
+  5: Manual on
+  6: Exercise
+  7: Non Quiet time
+  8: External on via AGS
+  9: External on via generator
+  10: Unable to stop

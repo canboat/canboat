@@ -1,0 +1,5 @@
+name: MARETRON_COMMAND
+kind: pair
+bits: 8
+values:
+  80: Deviation calibration

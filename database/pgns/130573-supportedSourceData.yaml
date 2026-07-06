@@ -1,0 +1,73 @@
+pgn: 130573
+id: supportedSourceData
+description: Supported Source Data
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
+fields:
+- id: idOffset
+  name: ID offset
+  type: UINT16
+  description: First ID in this PGN
+- id: idCount
+  name: ID count
+  type: UINT16
+  description: Number of IDs in this PGN
+- id: totalIdCount
+  name: Total ID count
+  type: UINT16
+  description: Total IDs in group
+- id: id
+  name: ID
+  type: UINT8
+  description: Source ID
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: name
+  name: Name
+  type: STRING_LAU
+- id: playSupport
+  name: Play support
+  type: BITLOOKUP
+  bits: 32
+  lookupBits: ENTERTAINMENT_PLAY_STATUS_BITFIELD
+- id: browseSupport
+  name: Browse support
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: ENTERTAINMENT_GROUP_BITFIELD
+- id: thumbsSupport
+  name: Thumbs support
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: connected
+  name: Connected
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: repeatSupport
+  name: Repeat support
+  type: BITLOOKUP
+  bits: 2
+  lookupBits: ENTERTAINMENT_REPEAT_BITFIELD
+- id: shuffleSupport
+  name: Shuffle support
+  type: BITLOOKUP
+  bits: 2
+  lookupBits: ENTERTAINMENT_SHUFFLE_BITFIELD
+repeating1:
+  count: 10
+  start: 4
+  countField: 2

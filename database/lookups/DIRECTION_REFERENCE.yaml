@@ -1,0 +1,7 @@
+name: DIRECTION_REFERENCE
+kind: pair
+bits: 2
+values:
+  0: 'True'
+  1: Magnetic
+  2: Error

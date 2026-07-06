@@ -1,0 +1,9 @@
+name: GARMIN_COLOR
+kind: pair
+bits: 8
+values:
+  0: Day full color
+  1: Day high contrast
+  2: Night full color
+  3: Night red/black
+  4: Night green/black

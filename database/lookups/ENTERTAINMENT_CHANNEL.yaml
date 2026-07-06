@@ -1,0 +1,17 @@
+name: ENTERTAINMENT_CHANNEL
+kind: pair
+bits: 8
+values:
+  0: All channels
+  1: Stereo full range
+  2: Stereo front
+  3: Stereo back
+  4: Stereo surround
+  5: Center
+  6: Subwoofer
+  7: Front left
+  8: Front right
+  9: Back left
+  10: Back right
+  11: Surround left
+  12: Surround right

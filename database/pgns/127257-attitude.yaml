@@ -1,0 +1,23 @@
+pgn: 127257
+id: attitude
+description: Attitude
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: yaw
+  name: Yaw
+  type: ANGLE_FIX16
+- id: pitch
+  name: Pitch
+  type: ANGLE_FIX16
+- id: roll
+  name: Roll
+  type: ANGLE_FIX16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

@@ -1,0 +1,17 @@
+pgn: 129025
+id: positionRapidUpdate
+description: Position, Rapid Update
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0

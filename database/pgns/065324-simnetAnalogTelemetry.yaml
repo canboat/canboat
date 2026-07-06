@@ -1,0 +1,46 @@
+pgn: 65324
+id: simnetAnalogTelemetry
+description: 'Simnet: Analog Telemetry'
+type: Single
+priority: 3
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+explanation: Diagnostic telemetry emitted by the AutoPilot Computer, one analog channel per frame in round-robin. The Channel
+  field selects the quantity (drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle, ...)
+  and Value carries its raw reading. Used by commissioning and diagnostic tools; observed in live captures.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subType
+  name: Sub-Type
+  type: UINT8
+  description: 0x40 = telemetry
+- id: channel
+  name: Channel
+  type: UINT8
+  description: Selects which analog quantity is reported (e.g. drive/heatsink temperature, drive supply voltage, drive current,
+    rudder-feedback angle)
+- id: value
+  name: Value
+  type: UINT32
+  description: Raw channel reading; 0x7FFF or 0xFFFF means not available

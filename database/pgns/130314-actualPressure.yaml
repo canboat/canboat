@@ -1,0 +1,27 @@
+pgn: 130314
+id: actualPressure
+description: Actual Pressure
+type: Single
+priority: 5
+interval: 2000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: PRESSURE_SOURCE
+  primaryKey: true
+- id: pressure
+  name: Pressure
+  type: PRESSURE_FIX32_DPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

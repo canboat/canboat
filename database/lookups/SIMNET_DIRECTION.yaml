@@ -1,0 +1,8 @@
+name: SIMNET_DIRECTION
+kind: pair
+bits: 8
+values:
+  2: Port
+  3: Starboard
+  4: Left rudder (port)
+  5: Right rudder (starboard)

@@ -1,0 +1,30 @@
+pgn: 130313
+id: humidity
+description: Humidity
+type: Single
+priority: 5
+interval: 2000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: HUMIDITY_SOURCE
+  primaryKey: true
+- id: actualHumidity
+  name: Actual Humidity
+  type: PERCENTAGE_FIX16
+- id: setHumidity
+  name: Set Humidity
+  type: PERCENTAGE_FIX16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

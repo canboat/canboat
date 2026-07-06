@@ -1,0 +1,42 @@
+pgn: 65302
+id: simnetApUnknown1
+description: 'Simnet: AP Unknown 1'
+type: Single
+priority: 7
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Broadcast by the AC (AutoPilot Computer): a constant 0x0A followed by a single 32-bit value (purpose not yet
+  identified) and a trailing 0xFF. Observed emitted by the AC-42; the newer NAC-3 does not emit it.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: type
+  name: Type
+  type: UINT8
+  description: Always 0x0A
+- id: value
+  name: Value
+  type: UINT32
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 8

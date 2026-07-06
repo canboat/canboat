@@ -1,0 +1,42 @@
+pgn: 127507
+id: chargerStatus
+description: Charger Status
+type: Fast
+priority: 6
+interval: 1500
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: batteryInstance
+  name: Battery Instance
+  type: UINT8
+  primaryKey: true
+- id: operatingState
+  name: Operating State
+  type: LOOKUP
+  bits: 4
+  lookup: CHARGER_STATE
+- id: chargeMode
+  name: Charge Mode
+  type: LOOKUP
+  bits: 4
+  lookup: CHARGER_MODE
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: equalizationPending
+  name: Equalization Pending
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: equalizationTimeRemaining
+  name: Equalization Time Remaining
+  type: DURATION_UFIX16_MIN

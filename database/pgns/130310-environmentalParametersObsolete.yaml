@@ -1,0 +1,25 @@
+pgn: 130310
+id: environmentalParametersObsolete
+description: Environmental Parameters (obsolete)
+type: Single
+priority: 5
+interval: 500
+explanation: This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315
+  should be used
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: waterTemperature
+  name: Water Temperature
+  type: TEMPERATURE
+- id: outsideAmbientAirTemperature
+  name: Outside Ambient Air Temperature
+  type: TEMPERATURE
+- id: atmosphericPressure
+  name: Atmospheric Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

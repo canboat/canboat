@@ -1,0 +1,7 @@
+name: DEVICE_TEMP_STATE
+kind: pair
+bits: 4
+values:
+  0: Cold
+  1: Warm
+  2: Hot

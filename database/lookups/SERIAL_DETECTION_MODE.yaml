@@ -1,0 +1,6 @@
+name: SERIAL_DETECTION_MODE
+kind: pair
+bits: 3
+values:
+  0: Auto bit rate
+  1: Manual bit rate

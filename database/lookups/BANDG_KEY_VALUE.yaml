@@ -1,0 +1,523 @@
+name: BANDG_KEY_VALUE
+kind: fieldtype
+bits: 12
+values:
+- value: 0
+  name: Altitude
+  type: INT16
+- value: 11
+  name: Rudder Angle
+  type: ANGLE_FIX16
+- value: 16
+  name: User 5
+  type: FIX32_2
+- value: 17
+  name: User 6
+  type: FIX32_2
+- value: 18
+  name: User 7
+  type: FIX32_2
+- value: 19
+  name: User 8
+  type: FIX32_2
+- value: 20
+  name: User 9
+  type: FIX32_2
+- value: 21
+  name: User 10
+  type: FIX32_2
+- value: 22
+  name: User 11
+  type: FIX32_2
+- value: 23
+  name: User 12
+  type: FIX32_2
+- value: 24
+  name: User 13
+  type: FIX32_2
+- value: 25
+  name: User 14
+  type: FIX32_2
+- value: 26
+  name: User 15
+  type: FIX32_2
+- value: 27
+  name: User 16
+  type: FIX32_2
+- value: 28
+  name: Outside Temperature
+  type: TEMPERATURE
+- value: 29
+  name: Outside Temperature
+  type: TEMPERATURE
+- value: 30
+  name: Outside Temperature
+  type: TEMPERATURE
+- value: 31
+  name: Water Temperature
+  type: TEMPERATURE
+- value: 50
+  name: Tacking Performance
+  type: PERCENTAGE_FIX16_D
+- value: 52
+  name: Magnetic Variation
+  type: ANGLE_FIX16
+- value: 53
+  name: Optimum Wind Angle
+  type: ANGLE_FIX16
+- value: 56
+  name: User 1
+  type: FIX32_2
+- value: 57
+  name: User 2
+  type: FIX32_2
+- value: 58
+  name: User 3
+  type: FIX32_2
+- value: 59
+  name: User 4
+  type: FIX32_2
+- value: 60
+  name: Roll Rate
+  type: ANGLE_FIX16
+- value: 64
+  name: Forestay
+  type: UFIX32_2
+- value: 65
+  name: Water Speed
+  type: SPEED_UFIX16_CM
+- value: 73
+  name: Current Set
+  type: ANGLE_UFIX16
+- value: 77
+  name: Wind Speed Apparent
+  type: SPEED_UFIX16_CM
+- value: 79
+  name: Wind Speed True
+  type: SPEED_UFIX16_CM
+- value: 81
+  name: Wind Angle True
+  type: ANGLE_FIX16
+- value: 83
+  name: Target TWA
+  type: ANGLE_FIX16
+- value: 85
+  name: Wind Speed True
+  type: SPEED_UFIX16_CM
+- value: 86
+  name: Water Temperature
+  type: SPEED_UFIX16_CM
+- value: 89
+  name: True Wind Direction
+  type: ANGLE_FIX16
+- value: 100
+  name: Trip 1 Speed Avg
+  type: SPEED_UFIX16_CM
+- value: 102
+  name: Keel Angle
+  type: ANGLE_FIX16
+- value: 103
+  name: Canard Angle
+  type: ANGLE_FIX16
+- value: 104
+  name: Keel Trim Tab Angle
+  type: ANGLE_FIX16
+- value: 105
+  name: Course
+  type: ANGLE_FIX16
+- value: 109
+  name: Wind Direction
+  type: ANGLE_FIX16
+- value: 111
+  name: Next Leg AWA
+  type: ANGLE_FIX16
+- value: 113
+  name: Next Leg AWS
+  type: SPEED_UFIX16_CM
+- value: 117
+  name: Race Timer
+  type: DURATION_FIX32_MS
+- value: 124
+  name: Polar Performance
+  type: PERCENTAGE_FIX16_D
+- value: 125
+  name: Target Boat Speed
+  type: SPEED_FIX16_CM
+- value: 126
+  name: Polar Speed
+  type: SPEED_UFIX16_CM
+- value: 127
+  name: VMG to Wind
+  type: SPEED_UFIX16_CM
+- value: 129
+  name: DR Distance
+  type: LENGTH_UFIX32_CM
+- value: 130
+  name: Leeway Angle
+  type: ANGLE_FIX16
+- value: 131
+  name: Current Drift
+  type: SPEED_UFIX16_CM
+- value: 132
+  name: Current Set
+  type: ANGLE_FIX16
+- value: 135
+  name: Barometric Pressure
+  type: PRESSURE_UFIX16_HPA
+- value: 152
+  name: Distance to Start Line
+  type: DISTANCE_FIX32_CM
+- value: 154
+  name: Heading on Opposite Tack
+  type: ANGLE_FIX16
+- value: 155
+  name: Attitude Roll
+  type: ANGLE_FIX16
+- value: 156
+  name: Mast Angle
+  type: ANGLE_FIX16
+- value: 157
+  name: Wind Angle to Mast
+  type: ANGLE_FIX16
+- value: 158
+  name: Pitch Angle
+  type: ANGLE_FIX16
+- value: 163
+  name: Daggerboard Position
+  type: UINT16
+- value: 164
+  name: Boom Position
+  type: UINT16
+- value: 185
+  name: MOB DR Bearing
+  type: ANGLE_FIX16
+- value: 186
+  name: MOB DR Range
+  type: LENGTH_UFIX32_CM
+- value: 194
+  name: Depth
+  type: LENGTH_UFIX32_CM
+- value: 195
+  name: Depth
+  type: LENGTH_UFIX32_CM
+- value: 199
+  name: Aft Depth
+  type: LENGTH_UFIX32_CM
+- value: 205
+  name: Odometer
+  type: LENGTH_UFIX32_CM
+- value: 207
+  name: Trip Distance
+  type: LENGTH_UFIX32_CM
+- value: 208
+  name: Trip 2 Distance
+  type: LENGTH_UFIX32_CM
+- value: 211
+  name: DR Bearing
+  type: ANGLE_FIX16
+- value: 233
+  name: Course Over Ground
+  type: ANGLE_FIX16
+- value: 235
+  name: Water Speed
+  type: SPEED_UFIX16_CM
+- value: 239
+  name: Remote 0
+  type: VERSION
+- value: 240
+  name: Remote 1
+  type: VERSION
+- value: 241
+  name: Remote 2
+  type: VERSION
+- value: 242
+  name: Remote 3
+  type: VERSION
+- value: 243
+  name: Remote 4
+  type: VERSION
+- value: 244
+  name: Remote 5
+  type: VERSION
+- value: 245
+  name: Remote 6
+  type: VERSION
+- value: 246
+  name: Remote 7
+  type: VERSION
+- value: 247
+  name: Remote 8
+  type: VERSION
+- value: 248
+  name: Remote 9
+  type: VERSION
+- value: 256
+  name: Layline Time
+  type: DURATION_UFIX32_MS
+- value: 258
+  name: Layline Distance
+  type: LENGTH_UFIX32_CM
+- value: 259
+  name: Layline Distance
+  type: LENGTH_UFIX32_CM
+- value: 260
+  name: Sailing Time to Waypoint
+  type: DURATION_UFIX32_MS
+- value: 261
+  name: Sailing Distance to Waypoint
+  type: LENGTH_UFIX32_CM
+- value: 262
+  name: Sailing ETA
+  type: DURATION_UFIX32_MS
+- value: 263
+  name: Start Line Latitude
+  type: GEO_LAT_FIX32
+- value: 264
+  name: Start Line Longitude
+  type: GEO_LAT_FIX32
+- value: 265
+  name: Trip Time
+  type: DURATION_UFIX32_MS
+- value: 266
+  name: Trip 1 Speed Max
+  type: SPEED_UFIX16_CM
+- value: 267
+  name: Trip 2 Time
+  type: DURATION_UFIX32_MS
+- value: 268
+  name: Trip 2 Speed Max
+  type: SPEED_UFIX16_CM
+- value: 269
+  name: Trip 2 Speed Avg
+  type: SPEED_UFIX16_CM
+- value: 270
+  name: Bow Latitude
+  type: GEO_LAT_FIX32
+- value: 271
+  name: Bow Longitude
+  type: GEO_LAT_FIX32
+- value: 272
+  name: Start Line Bearing
+  type: ANGLE_FIX16
+- value: 273
+  name: Start Line Bias
+  type: ANGLE_FIX16
+- value: 274
+  name: Distance to Start Line Port
+  type: LENGTH_UFIX32_CM
+- value: 275
+  name: Distance to Start Line Starboard
+  type: LENGTH_UFIX32_CM
+- value: 276
+  name: Start Line Port Latitude
+  type: GEO_LAT_FIX32
+- value: 277
+  name: Start Line Port Longitude
+  type: GEO_LAT_FIX32
+- value: 278
+  name: Start Line Starboard Latitude
+  type: GEO_LAT_FIX32
+- value: 279
+  name: Start Line Starboard Longitude
+  type: GEO_LAT_FIX32
+- value: 280
+  name: Bias Advantage in Boat Lengths
+  type: FIX16_1
+- value: 281
+  name: Distance to Start Line in Boat Lengths
+  type: FIX16_1
+- value: 282
+  name: Backstay
+  type: UFIX32_2
+- value: 283
+  name: Boom Vang
+  type: UFIX32_2
+- value: 284
+  name: Chain Length
+  type: LENGTH_UFIX32_CM
+- value: 285
+  name: VMG Performance
+  type: PERCENTAGE_FIX16_D
+- value: 286
+  name: Inner Forestay Load
+  type: UFIX32_2
+- value: 287
+  name: Inner Forestay Halyard Load
+  type: UFIX32_2
+- value: 288
+  name: Jib Furl
+  type: LENGTH_UFIX32_CM
+- value: 289
+  name: Jib Halyard Load
+  type: UFIX32_2
+- value: 290
+  name: Outhaul Load
+  type: UFIX32_2
+- value: 291
+  name: Plow Angle
+  type: ANGLE_FIX16
+- value: 292
+  name: Cunningham
+  type: UFIX32_2
+- value: 293
+  name: Jacuzzi Temperature
+  type: TEMPERATURE
+- value: 294
+  name: Pool Temperature
+  type: TEMPERATURE
+- value: 296
+  name: Keel Draught
+  type: DISTANCE_FIX16_CM
+- value: 297
+  name: Boom Angle
+  type: ANGLE_FIX16
+- value: 298
+  name: Code Zero Load
+  type: UFIX32_2
+- value: 299
+  name: MOB Latitude
+  type: GEO_LAT_FIX32
+- value: 300
+  name: MOB Longitude
+  type: GEO_LAT_FIX32
+- value: 301
+  name: Distance Behind Start Line
+  type: DISTANCE_FIX32_CM
+- value: 302
+  name: Distance Behind Start Line in Boat Lengths
+  type: FIX16_1
+- value: 305
+  name: Bias Advantage
+  type: LENGTH_UFIX32_CM
+- value: 306
+  name: Opposite Tack COG
+  type: ANGLE_FIX16
+- value: 307
+  name: Opposite Tack Target Heading
+  type: ANGLE_FIX16
+- value: 308
+  name: Mast Rake
+  type: ANGLE_FIX16
+- value: 309
+  name: Next Leg Bearing
+  type: ANGLE_FIX16
+- value: 310
+  name: Next Leg Target Speed
+  type: SPEED_FIX16_CM
+- value: 311
+  name: Ground Wind Direction
+  type: ANGLE_FIX16
+- value: 312
+  name: Ground Wind Speed
+  type: SPEED_FIX16_CM
+- value: 313
+  name: Mast Cant Angle
+  type: ANGLE_FIX16
+- value: 314
+  name: Rudder Toe In
+  type: ANGLE_FIX16
+- value: 315
+  name: Daggerboard Port
+  type: UINT16
+- value: 316
+  name: Daggerboard Starboard
+  type: UINT16
+- value: 317
+  name: User 17
+  type: FIX32_2
+- value: 318
+  name: User 18
+  type: FIX32_2
+- value: 319
+  name: User 19
+  type: FIX32_2
+- value: 320
+  name: User 20
+  type: FIX32_2
+- value: 321
+  name: User 21
+  type: FIX32_2
+- value: 322
+  name: User 22
+  type: FIX32_2
+- value: 323
+  name: User 23
+  type: FIX32_2
+- value: 324
+  name: User 24
+  type: FIX32_2
+- value: 325
+  name: User 25
+  type: FIX32_2
+- value: 326
+  name: User 26
+  type: FIX32_2
+- value: 327
+  name: User 27
+  type: FIX32_2
+- value: 328
+  name: User 28
+  type: FIX32_2
+- value: 329
+  name: User 29
+  type: FIX32_2
+- value: 330
+  name: User 30
+  type: FIX32_2
+- value: 331
+  name: User 31
+  type: FIX32_2
+- value: 332
+  name: User 32
+  type: FIX32_2
+- value: 336
+  name: Average True Wind Direction
+  type: ANGLE_FIX16
+- value: 337
+  name: Wind Phase
+  type: ANGLE_FIX16
+- value: 338
+  name: Wind Lift
+  type: ANGLE_FIX16
+- value: 364
+  name: Start Line Distance To Port (Boat Lengths)
+  type: FIX16_1
+- value: 365
+  name: Start Line Distance To Starboard (Boat Lengths)
+  type: FIX16_1
+- value: 380
+  name: Active Perf Mode
+  type: INT16
+- value: 381
+  name: Gust Bear Away
+  type: ANGLE_FIX16
+- value: 382
+  name: TWS Bear Away
+  type: ANGLE_FIX16
+- value: 383
+  name: Heel Compensation
+  type: ANGLE_FIX16
+- value: 384
+  name: Pilot Net Course
+  type: ANGLE_FIX16
+- value: 385
+  name: Pilot Target Wind Angle
+  type: ANGLE_FIX16
+- value: 386
+  name: Pilot Weather Helm
+  type: ANGLE_FIX16
+- value: 387
+  name: Pilot Mean Heel
+  type: ANGLE_FIX16
+- value: 409
+  name: Time To Burn
+  type: DURATION_FIX32_MS
+- value: 410
+  name: Mast Twist
+  type: ANGLE_FIX16
+- value: 411
+  name: Port End Ping Time
+  type: DURATION_FIX32_MS
+- value: 412
+  name: Starboard End Ping Time
+  type: DURATION_FIX32_MS

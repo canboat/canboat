@@ -1,0 +1,47 @@
+pgn: 126208
+id: nmeaAcknowledgeGroupFunction
+description: NMEA - Acknowledge group function
+type: Fast
+variantOrder: 4
+priority: 3
+interval: irregular
+explanation: This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt
+  to perform the command (change its parameters) and reply positively or negatively.
+url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
+fields:
+- id: functionCode
+  name: Function Code
+  type: LOOKUP
+  bits: 8
+  description: Acknowledge
+  match: 2
+  lookup: GROUP_FUNCTION
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Commanded PGN
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: pgnErrorCode
+  name: PGN error code
+  type: LOOKUP
+  bits: 4
+  lookup: PGN_ERROR_CODE
+- id: transmissionIntervalPriorityErrorCode
+  name: Transmission interval/Priority error code
+  type: LOOKUP
+  bits: 4
+  lookup: TRANSMISSION_INTERVAL
+- id: numberOfParameters
+  name: Number of Parameters
+  type: UINT8
+- id: parameter
+  name: Parameter
+  type: LOOKUP
+  bits: 4
+  lookup: PARAMETER_FIELD
+repeating1:
+  count: 1
+  start: 6
+  countField: 5

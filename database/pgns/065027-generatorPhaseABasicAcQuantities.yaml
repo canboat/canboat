@@ -1,0 +1,19 @@
+pgn: 65027
+id: generatorPhaseABasicAcQuantities
+description: Generator Phase A Basic AC Quantities
+type: Single
+priority: 3
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: acRmsCurrent
+  name: AC RMS Current
+  type: CURRENT_UFIX16_A

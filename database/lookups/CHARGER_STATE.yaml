@@ -1,0 +1,14 @@
+name: CHARGER_STATE
+kind: pair
+bits: 4
+values:
+  0: Not charging
+  1: Bulk
+  2: Absorption
+  3: Overcharge
+  4: Equalise
+  5: Float
+  6: No float
+  7: Constant VI
+  8: Disabled
+  9: Fault

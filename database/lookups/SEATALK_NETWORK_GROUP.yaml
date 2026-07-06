@@ -1,0 +1,15 @@
+name: SEATALK_NETWORK_GROUP
+kind: pair
+bits: 8
+values:
+  0: None
+  1: Helm 1
+  2: Helm 2
+  3: Cockpit
+  4: Flybridge
+  5: Mast
+  6: Group 1
+  7: Group 2
+  8: Group 3
+  9: Group 4
+  10: Group 5

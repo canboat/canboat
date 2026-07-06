@@ -1,0 +1,12 @@
+pgn: 65026
+id: generatorPhaseAAcPower
+description: Generator Phase A AC Power
+type: Single
+priority: 3
+fields:
+- id: realPower
+  name: Real Power
+  type: POWER_FIX32_OFFSET
+- id: apparentPower
+  name: Apparent Power
+  type: POWER_FIX32_VA_OFFSET

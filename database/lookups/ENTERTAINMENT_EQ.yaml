@@ -1,0 +1,15 @@
+name: ENTERTAINMENT_EQ
+kind: pair
+bits: 8
+values:
+  0: Flat
+  1: Rock
+  2: Hall
+  3: Jazz
+  4: Pop
+  5: Live
+  6: Classic
+  7: Vocal
+  8: Arena
+  9: Cinema
+  10: Custom

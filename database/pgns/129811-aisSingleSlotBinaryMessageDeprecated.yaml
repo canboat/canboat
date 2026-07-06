@@ -1,0 +1,61 @@
+pgn: 129811
+id: aisSingleSlotBinaryMessageDeprecated
+description: AIS Single Slot Binary Message (Deprecated)
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: Deprecated single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from the
+  NMEA 3.002 field-name list and are unconfirmed.
+fields:
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: destinationIndicator
+  name: Destination Indicator
+  type: LOOKUP
+  bits: 1
+  lookup: BROADCAST_INDICATOR
+- id: binaryDataFlag
+  name: Binary data flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: destinationId
+  name: Destination ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: numberOfBitsInBinaryDataField
+  name: Number of bits in Binary Data Field
+  type: UINT16
+- id: binaryData
+  name: Binary Data
+  type: BINARY

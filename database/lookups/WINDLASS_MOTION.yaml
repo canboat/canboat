@@ -1,0 +1,7 @@
+name: WINDLASS_MOTION
+kind: pair
+bits: 2
+values:
+  0: Windlass stopped
+  1: Deployment occurring
+  2: Retrieval occurring

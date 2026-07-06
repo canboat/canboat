@@ -1,0 +1,21 @@
+pgn: 127748
+id: acVoltageFrequencyPhaseB
+description: AC Voltage / Frequency - Phase B
+type: Single
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: connectionNumber
+  name: Connection Number
+  type: UINT8
+- id: acVoltageLineToNeutral
+  name: AC Voltage Line to Neutral
+  type: VOLTAGE_UFIX16_100MV
+- id: acVoltageLineToLine
+  name: AC Voltage Line to Line
+  type: VOLTAGE_UFIX16_100MV
+- id: frequency
+  name: Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.1

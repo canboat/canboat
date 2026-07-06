@@ -1,0 +1,95 @@
+pgn: 130822
+id: navicoUdbDatabaseObjectDump
+description: 'Navico: UDB Database, Object Dump'
+type: Fast
+variantOrder: 7
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Verbose dump (Command 6) of a source-selection object: it carries the same Value and Token as the Command 1
+  report for the object, followed by a list of every data type the object covers and the selected source for each. Each record
+  is a length, a constant class byte, a data-type id and the selected source''s value.'
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Dump
+  match: 6
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8
+- id: objectValue
+  name: Object Value
+  type: UINT16
+  description: Current value (A); 0xFC00 means no value
+- id: sub
+  name: Sub
+  type: BINARY
+  bits: 24
+  description: Sub-index and auxiliary bytes
+- id: token
+  name: Token
+  type: UINT16
+  description: Per-object identity/CRC-like token (B), constant per object
+- id: length
+  name: Length
+  type: DYNAMIC_FIELD_LENGTH
+  bits: 8
+  description: 'Bytes following in this record: a class byte, a 16-bit data-type id and the value'
+  dynamicFieldLength: true
+  dynamicFieldLengthOverhead: 3
+- id: class
+  name: Class
+  type: UINT8
+  description: Record class, always 0x02
+- id: dataType
+  name: Data Type
+  type: LOOKUP
+  bits: 16
+  lookup: NAVICO_DATA_TYPE
+- id: value
+  name: Value
+  type: DYNAMIC_FIELD_VALUE
+  description: Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's
+    64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.
+repeating1:
+  count: 4
+  start: 13

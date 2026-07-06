@@ -1,0 +1,30 @@
+pgn: 129026
+id: cogSogRapidUpdate
+description: COG & SOG, Rapid Update
+type: Single
+priority: 2
+interval: 250
+url: https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: cogReference
+  name: COG Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

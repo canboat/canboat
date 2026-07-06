@@ -1,0 +1,74 @@
+pgn: 130845
+id: furunoMultiSatsInViewExtended
+description: 'Furuno: Multi Sats In View Extended'
+type: Fast
+variantOrder: 2
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reportType
+  name: Report type
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: antenna
+  name: Antenna
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: pageType
+  name: Page type
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: page
+  name: Page
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: satsInUse
+  name: Sats in Use
+  type: UINT8
+- id: satsInView
+  name: Sats in View
+  type: UINT8
+- id: prn
+  name: PRN
+  type: UINT8
+  description: 1-32 GPS, 33-64 SBAS, 65-96 GLONASS (R=PRN-64), 132-167 Galileo (E=PRN-131), 193-202 QZSS, 201+ BeiDou
+- id: elevation
+  name: Elevation
+  type: ANGLE_FIX16
+- id: azimuth
+  name: Azimuth
+  type: ANGLE_FIX16
+- id: snr
+  name: SNR
+  type: SIGNALTONOISERATIO_FIX16
+- id: rangeResidual
+  name: Range residual
+  type: DISTANCE_FIX32_MMM
+- id: baselineStatus
+  name: Baseline status
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: FURUNO_BASELINE_STATUS
+repeating1:
+  count: 6
+  start: 11

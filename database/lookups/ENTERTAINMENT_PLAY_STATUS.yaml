@@ -1,0 +1,29 @@
+name: ENTERTAINMENT_PLAY_STATUS
+kind: pair
+bits: 16
+values:
+  0: Play
+  1: Pause
+  2: Stop
+  3: FF 1x
+  4: FF 2x
+  5: FF 3x
+  6: FF 4x
+  7: RW 1x
+  8: RW 2x
+  9: RW 3x
+  10: RW 4x
+  11: Skip ahead
+  12: Skip back
+  13: Jog ahead
+  14: Jog back
+  15: Seek up
+  16: Seek down
+  17: Scan up
+  18: Scan down
+  19: Tune up
+  20: Tune down
+  21: Slow motion .75x
+  22: Slow motion .5x
+  23: Slow motion .25x
+  24: Slow motion .125x

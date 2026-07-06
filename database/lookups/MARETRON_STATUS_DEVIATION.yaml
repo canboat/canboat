@@ -1,0 +1,10 @@
+name: MARETRON_STATUS_DEVIATION
+kind: pair
+bits: 8
+values:
+  1: Started
+  2: Completed successfully
+  3: Failed to complete
+  4: Turning too fast
+  5: Turning too slow
+  6: Invalid movement

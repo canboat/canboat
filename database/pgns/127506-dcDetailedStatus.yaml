@@ -1,0 +1,36 @@
+pgn: 127506
+id: dcDetailedStatus
+description: DC Detailed Status
+type: Fast
+priority: 6
+interval: 1500
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: dcType
+  name: DC Type
+  type: LOOKUP
+  bits: 8
+  lookup: DC_SOURCE
+  primaryKey: true
+- id: stateOfCharge
+  name: State of Charge
+  type: PERCENTAGE_UINT8
+- id: stateOfHealth
+  name: State of Health
+  type: PERCENTAGE_UINT8
+- id: timeRemaining
+  name: Time Remaining
+  type: DURATION_UFIX16_MIN
+  description: Time remaining at current rate of discharge
+- id: rippleVoltage
+  name: Ripple Voltage
+  type: VOLTAGE_UFIX16_1MV
+- id: remainingCapacity
+  name: Remaining capacity
+  type: ELECTRIC_CHARGE_UFIX16_AH

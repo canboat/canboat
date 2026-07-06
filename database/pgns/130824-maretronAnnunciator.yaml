@@ -1,0 +1,44 @@
+pgn: 130824
+id: maretronAnnunciator
+description: 'Maretron: Annunciator'
+type: Fast
+variantOrder: 2
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: field4
+  name: Field 4
+  type: UINT8
+- id: field5
+  name: Field 5
+  type: UINT8
+- id: field6
+  name: Field 6
+  type: UINT16
+- id: field7
+  name: Field 7
+  type: UINT8
+- id: field8
+  name: Field 8
+  type: UINT16

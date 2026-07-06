@@ -1,0 +1,45 @@
+pgn: 130820
+id: bepMarineCzoneAlarmStringResponse
+description: 'BEP Marine: CZone Alarm String Response'
+type: Fast
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from
+  the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is
+  not yet confirmed.
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: deviceId
+  name: Device ID
+  type: UINT8
+  description: Device / source module id, echoed from the triggering PGN 65299
+- id: channel
+  name: Channel
+  type: UINT16
+  description: Channel / alarm id, echoed from the triggering PGN 65299
+- id: string
+  name: String
+  type: BINARY
+  bits: 1736
+  description: Variable-length NUL-terminated alarm string (up to 217 bytes); ASCII or UTF-8 not yet confirmed

@@ -1,0 +1,70 @@
+pgn: 65240
+id: isoCommandedAddress
+description: ISO Commanded Address
+type: ISO
+priority: 6
+explanation: ISO 11783 defined this message to provide a mechanism for assigning a network address to a node. The NAME information
+  in the data portion of the message must match the name information of the node whose network address is to be set. ISO 11783-5
+  requires that this mesage to be sent using the BAM Transport Protocol method. The appropriate response to this message is
+  defined in section 5.2.3 of 11783-5.
+fields:
+- id: uniqueNumber
+  name: Unique Number
+  type: BINARY
+  bits: 21
+  description: ISO Identity Number
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: deviceInstanceLower
+  name: Device Instance Lower
+  type: UNSIGNED_INTEGER
+  bits: 3
+  description: ISO ECU Instance
+  specialValues: 0
+  rangeMin: 0.0
+  rangeMax: 7.0
+- id: deviceInstanceUpper
+  name: Device Instance Upper
+  type: UNSIGNED_INTEGER
+  bits: 5
+  description: ISO Function Instance
+  specialValues: 0
+  rangeMin: 0.0
+  rangeMax: 31.0
+- id: deviceFunction
+  name: Device Function
+  type: INDIRECT_LOOKUP
+  bits: 8
+  description: ISO Function
+  lookupIndirect:
+    name: DEVICE_FUNCTION
+    order: 7
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: deviceClass
+  name: Device Class
+  type: LOOKUP
+  bits: 7
+  lookup: DEVICE_CLASS
+- id: systemInstance
+  name: System Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: ISO Device Class Instance
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: newSourceAddress
+  name: New Source Address
+  type: UINT8

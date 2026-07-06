@@ -1,0 +1,57 @@
+pgn: 130561
+id: lightingZone
+description: Lighting Zone
+type: Fast
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled
+  by a Scene. This PGN is only sent upon request.
+fields:
+- id: zoneIndex
+  name: Zone Index
+  type: UINT8
+- id: zoneName
+  name: Zone Name
+  type: STRING_LAU
+- id: redComponent
+  name: Red Component
+  type: UINT8
+- id: greenComponent
+  name: Green Component
+  type: UINT8
+- id: blueComponent
+  name: Blue Component
+  type: UINT8
+- id: colorTemperature
+  name: Color Temperature
+  type: UINT16
+- id: intensity
+  name: Intensity
+  type: UINT8
+- id: programId
+  name: Program ID
+  type: UINT8
+- id: programColorSequenceIndex
+  name: Program Color Sequence Index
+  type: UINT8
+- id: programIntensity
+  name: Program Intensity
+  type: UINT8
+- id: programRate
+  name: Program Rate
+  type: UINT8
+- id: programColorSequence
+  name: Program Color Sequence
+  type: UINT8
+- id: zoneEnabled
+  name: Zone Enabled
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6

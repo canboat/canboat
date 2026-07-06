@@ -1,0 +1,8 @@
+name: REPEAT_INDICATOR
+kind: pair
+bits: 2
+values:
+  0: Initial
+  1: First retransmission
+  2: Second retransmission
+  3: Final retransmission

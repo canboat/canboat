@@ -1,0 +1,26 @@
+pgn: 130580
+id: systemConfigurationDeprecated
+description: System Configuration (deprecated)
+type: Fast
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: power
+  name: Power
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: defaultSettings
+  name: Default Settings
+  type: LOOKUP
+  bits: 2
+  lookup: ENTERTAINMENT_DEFAULT_SETTINGS
+- id: tunerRegions
+  name: Tuner regions
+  type: LOOKUP
+  bits: 4
+  lookup: ENTERTAINMENT_REGIONS
+- id: maxFavorites
+  name: Max favorites
+  type: UINT8

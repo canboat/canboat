@@ -1,0 +1,53 @@
+pgn: 129538
+id: gnssControlStatus
+description: GNSS Control Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: svElevationMask
+  name: SV Elevation Mask
+  type: ANGLE_FIX16
+  description: Will not use SV below this elevation
+- id: pdopMask
+  name: PDOP Mask
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Will not report position above this PDOP
+- id: pdopSwitch
+  name: PDOP Switch
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Will report 2D position above this PDOP
+- id: snrMask
+  name: SNR Mask
+  type: SIGNALTONOISERATIO_FIX16
+  description: Will not use SV below this SNR
+- id: gnssModeDesired
+  name: GNSS Mode (desired)
+  type: LOOKUP
+  bits: 3
+  lookup: GNSS_MODE
+- id: dgnssModeDesired
+  name: DGNSS Mode (desired)
+  type: LOOKUP
+  bits: 3
+  lookup: DGNSS_MODE
+- id: positionVelocityFilter
+  name: Position/Velocity Filter
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: maxCorrectionAge
+  name: Max Correction Age
+  type: DURATION_UFIX16_CS
+- id: antennaAltitudeFor2dMode
+  name: Antenna Altitude for 2D Mode
+  type: DISTANCE_FIX32_CM
+- id: useAntennaAltitudeFor2dMode
+  name: Use Antenna Altitude for 2D Mode
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6

@@ -1,0 +1,7 @@
+name: POWER_FACTOR
+kind: pair
+bits: 2
+values:
+  0: Leading
+  1: Lagging
+  2: Error

@@ -1,0 +1,55 @@
+pgn: 130586
+id: zoneConfiguration
+description: Zone Configuration
+type: Fast
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: zoneId
+  name: Zone ID
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_ZONE
+- id: volumeLimit
+  name: Volume limit
+  type: PERCENTAGE_UINT8
+- id: fade
+  name: Fade
+  type: PERCENTAGE_INT8
+- id: balance
+  name: Balance
+  type: PERCENTAGE_INT8
+- id: subVolume
+  name: Sub volume
+  type: PERCENTAGE_UINT8
+- id: eqTreble
+  name: EQ - Treble
+  type: PERCENTAGE_INT8
+- id: eqMidRange
+  name: EQ - Mid range
+  type: PERCENTAGE_INT8
+- id: eqBass
+  name: EQ - Bass
+  type: PERCENTAGE_INT8
+- id: presetType
+  name: Preset type
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_EQ
+- id: audioFilter
+  name: Audio filter
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_FILTER
+- id: highPassFilterFrequency
+  name: High pass filter frequency
+  type: FREQUENCY_UFIX16
+- id: lowPassFilterFrequency
+  name: Low pass filter frequency
+  type: FREQUENCY_UFIX16
+- id: channel
+  name: Channel
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_CHANNEL

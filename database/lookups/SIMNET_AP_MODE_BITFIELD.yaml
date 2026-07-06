@@ -1,0 +1,9 @@
+name: SIMNET_AP_MODE_BITFIELD
+kind: bit
+bits: 16
+values:
+  3: Standby
+  4: Heading
+  6: Nav
+  8: No Drift
+  10: Wind

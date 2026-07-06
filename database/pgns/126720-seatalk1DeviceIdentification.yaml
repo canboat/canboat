@@ -1,0 +1,61 @@
+pgn: 126720
+id: seatalk1DeviceIdentification
+description: 'Seatalk1: Device Identification'
+type: Fast
+variantOrder: 22
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Seatalk 1 Encoded
+  match: 240
+  lookup: SEATALK_MESSAGE_ID
+  primaryKey: true
+- id: command
+  name: command
+  type: LOOKUP
+  bits: 8
+  description: Seatalk1
+  match: 129
+  lookup: SEATALK_COMMAND
+  primaryKey: true
+- id: seatalk1Command
+  name: Seatalk1 Command
+  type: LOOKUP
+  bits: 8
+  description: Device Indentification
+  match: 144
+  lookup: SEATALK1_COMMAND
+  primaryKey: true
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: device
+  name: device
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_DEVICE_ID

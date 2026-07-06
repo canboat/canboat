@@ -1,0 +1,91 @@
+pgn: 130842
+id: simnetAisClassBStaticDataMsg24PartB
+description: 'Simnet: AIS Class B static data (msg 24 Part B)'
+type: Fast
+variantOrder: 4
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Msg 24 Part B
+  match: 1
+  primaryKey: true
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: d
+  name: D
+  type: UINT8
+- id: e
+  name: E
+  type: UINT8
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: typeOfShip
+  name: Type of ship
+  type: LOOKUP
+  bits: 8
+  lookup: SHIP_TYPE
+- id: vendorId
+  name: Vendor ID
+  type: STRING_FIX
+  bits: 56
+- id: callsign
+  name: Callsign
+  type: STRING_FIX
+  bits: 56
+- id: length
+  name: Length
+  type: LENGTH_UFIX16_DM
+- id: beam
+  name: Beam
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromStarboard
+  name: Position reference from Starboard
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromBow
+  name: Position reference from Bow
+  type: LENGTH_UFIX16_DM
+- id: mothershipUserId
+  name: Mothership User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: spare17
+  name: Spare
+  type: SPARE
+  bits: 6
+- id: reserved18
+  name: Reserved
+  type: RESERVED
+  bits: 2

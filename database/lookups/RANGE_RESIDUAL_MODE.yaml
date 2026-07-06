@@ -1,0 +1,6 @@
+name: RANGE_RESIDUAL_MODE
+kind: pair
+bits: 2
+values:
+  0: Range residuals were used to calculate data
+  1: Range residuals were calculated after the position

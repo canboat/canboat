@@ -1,0 +1,74 @@
+pgn: 130817
+id: furunoSvControl
+description: 'Furuno: SV control'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: f4
+  name: F4
+  type: BINARY
+  bits: 8
+  description: Unknown
+- id: f5
+  name: F5
+  type: BINARY
+  bits: 8
+  description: Unknown
+- id: sbasMode
+  name: SBAS mode
+  type: LOOKUP
+  bits: 8
+  lookup: AUTOMATIC_MANUAL
+- id: sbasSatellite
+  name: SBAS satellite
+  type: LOOKUP
+  bits: 8
+  lookup: SBAS_SV
+- id: f8
+  name: F8
+  type: BINARY
+  bits: 16
+  description: Unknown
+- id: gpsDisable
+  name: GPS disable
+  type: BITLOOKUP
+  bits: 32
+  lookupBits: DISABLED_SATELLITES
+- id: glonassDisable
+  name: GLONASS disable
+  type: BITLOOKUP
+  bits: 32
+  lookupBits: DISABLED_SATELLITES
+- id: galileoDisable
+  name: Galileo disable
+  type: BITLOOKUP
+  bits: 40
+  lookupBits: DISABLED_SATELLITES
+- id: qzssDisable
+  name: QZSS disable
+  type: BITLOOKUP
+  bits: 24
+  lookupBits: DISABLED_SATELLITES
