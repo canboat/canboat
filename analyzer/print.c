@@ -1463,11 +1463,16 @@ extern bool fieldPrintStringLAU(const Field   *field,
     len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
     data = utf8;
   }
-  else if (control > 1)
+  else if (control > 1 && control != 0xff)
   {
     logError("Unhandled string type %d in PGN\n", control);
     return false;
   }
+  // control == 1 is ASCII. control == 0xff marks an unset field: the length byte is
+  // present but the encoding byte and the content are 0xff filler (seen on the H5000
+  // pilot in PGN 126998, samples/h5000_pilot_126998.raw). printString() trims the
+  // trailing 0xff run to an empty string, so let it fall through rather than aborting
+  // the whole PGN.
 
   r = printString(fieldName, data, len);
   if (utf8 != NULL)
