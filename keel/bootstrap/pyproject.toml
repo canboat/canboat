@@ -3,8 +3,8 @@ requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "keel"
-description = "CANboat PGN database tool: validate, generate, edit"
+name = "keel-bootstrap"
+description = "CANboat PGN database bootstrap converter (throwaway; dies at migration switchover)"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 authors = [{ name = "Kees Verruijt", email = "canboat@verruijt.net" }]
@@ -15,10 +15,10 @@ dependencies = [
 ]
 
 [project.scripts]
-keel = "keel.cli:main"
+keel-bootstrap = "keel_bootstrap.cli:main"
 
 [tool.setuptools.dynamic]
-version = { attr = "keel.__version__" }
+version = { attr = "keel_bootstrap.__version__" }
 
 [tool.setuptools.packages.find]
 where = ["src"]
