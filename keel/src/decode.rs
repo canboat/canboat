@@ -42,6 +42,10 @@ pub struct DecodedField {
     pub name: String,
     pub instance: u32, // 1-based, for repeating sets
     pub value: Value,
+    /// Bit span actually consumed in the payload (variable fields differ
+    /// from the declared width) - powers the editor's evidence grid.
+    pub bit_offset: usize,
+    pub bits: usize,
 }
 
 /// Pick the PGN variant whose match fields all match the payload
@@ -145,6 +149,7 @@ fn decode_one(
     instance: u32,
     out: &mut Vec<DecodedField>,
 ) -> Result<()> {
+    let start_bit = ctx.bit;
     let ft = &db.fieldtypes[f.ft];
     let root = ft.root_name.as_str();
     let declared_bits = f.res_bits as usize;
@@ -251,6 +256,8 @@ fn decode_one(
         name: f.name.clone(),
         instance,
         value,
+        bit_offset: start_bit,
+        bits: ctx.bit - start_bit,
     });
     Ok(())
 }
