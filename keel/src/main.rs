@@ -264,7 +264,8 @@ fn run() -> Result<i32, String> {
                             } else {
                                 String::new()
                             };
-                            println!("  {}{} = {}", d.id, inst, d.value);
+                            let unit = d.unit.as_deref().map(|u| format!(" {u}")).unwrap_or_default();
+                            println!("  {}{} = {}{}", d.id, inst, d.value, unit);
                         }
                     }
                 }
