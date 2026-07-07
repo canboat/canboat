@@ -350,17 +350,20 @@ fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
         "triplet" => lk
             .triplets
             .iter()
-            .map(|(a, b, n)| format!("{{\"value\":\"{a},{b}\",\"name\":{}}}", js(n)))
+            .map(|(a, b, n)| format!("{{\"v1\":{a},\"v2\":{b},\"name\":{}}}", js(n)))
             .collect(),
         _ => lk
             .fieldtypes
             .iter()
             .map(|e| {
                 format!(
-                    "{{\"value\":{},\"name\":{},\"type\":{}}}",
+                    "{{\"value\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupKind\":{}}}",
                     e.value,
                     js(&e.name),
-                    js(&e.fieldtype)
+                    js(&e.fieldtype),
+                    e.bits.map(|b| b.to_string()).unwrap_or_else(|| "null".into()),
+                    e.lookup.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    e.lookup_kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
                 )
             })
             .collect(),
