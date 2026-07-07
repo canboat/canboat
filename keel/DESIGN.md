@@ -291,7 +291,8 @@ Shape (JSON Schema over the YAML):
 
 Intra-PGN semantics:
 * R02 PGN number lies in a valid `pgnRange`; PDU1 PGNs end in 0x00.
-* R03 field bit sizes up to the first repeating field sum to whole bytes.
+* R03 field bit sizes up to the first repeating field sum to whole bytes
+      (enforced as a hard error in derive - every length depends on it).
 * R04 fixed single-frame PGNs are exactly 8 bytes (59904 excepted);
       variable single-frame ≤ 8 bytes; packet `type` agrees with the
       range's type (ISO-TP / mixed exceptions).
@@ -302,20 +303,24 @@ Intra-PGN semantics:
       overhead sane.
 * R07 proprietary-range PGNs start with Manufacturer Code / reserved /
       Industry Code, or carry `missing: [MissingCompanyFields]`.
-* R08 lookup references resolve; field `bits` equals the lookup's declared
-      width.
+* R08 lookup references resolve with the right kind; a named value that
+      cannot fit the field is an error (dead table entry; shared *bit*
+      enumerations excepted); a mere width disagreement with the declared
+      lookup width is a warning (inherited pgn.h laxity, see FINDINGS.md).
 * R09 sentinel logic: `specialValues` override in range; lookups naming
       values in the sentinel region reduce the reserved count; no
       sentinels on match fields or 64-bit fields.
 * R10 fieldtype constraints: resolution/offset/unit may not contradict the
-      base type; unit implies a known physical quantity.
+      base type; unit implies a known physical quantity (hard error in
+      derive - it poisons every resolved attribute).
 * R11 max 33 fields (raiseable, but enforced to match the C runtime).
 * R12 `reserved`/`spare` id suffix convention.
 
 Cross-file:
-* R20 (pgn, match-set) combinations are unique; `match` fields present on
-      all variants when a PGN number has multiple entries; fallback
-      entries unique per range.
+* R20 (pgn, match-set) combinations are unique (a duplicate makes the
+      later variant unreachable at runtime); at most one match-less
+      catch-all per PGN number. Temporarily a warning: two inherited
+      duplicates exist (FINDINGS.md F1); re-harden once resolved.
 * R21 ids unique per scope (PGN ids globally; field ids within a PGN).
 * R22 every lookup file is referenced (warning), every reference resolves
       (error).

@@ -51,6 +51,9 @@ pub struct FieldType {
     pub physical: Option<String>,
     pub print_function: Option<String>,
     /// Inert in C (QUIRKS.md Q11); kept to regenerate fieldtype.h faithfully.
+    /// range_min becomes readable once the fieldtype.h generator (migration
+    /// step 3) lands; range_max already participates in the Q11 guard.
+    #[allow(dead_code)]
     pub range_min_authored: Option<f64>,
     pub range_max_authored: Option<f64>,
 
