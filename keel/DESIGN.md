@@ -178,7 +178,8 @@ repeating1:
 Other field-level keys, replacing today's macro zoo: `signed`, `offset`
 (excess-K), `precision`, `primaryKey: true`, `proprietary: true` (field only
 present in proprietary range), `specialValues: N` (the `SPECIAL_VALUES`
-sentinel override), `dynamicFieldLength: {overhead: N}`,
+sentinel override), `allowLookupWidthMismatch: true` (R08 opt-in for
+shared/narrowed lookups), `dynamicFieldLength: {overhead: N}`,
 `lookupIndirect: {name: ..., order: N}`, `lookupBits`, `lookupFieldtype`,
 `description`, `condition`. PGN-level: `fallback: true`, `url`,
 `researchDoc`, `notes`, `repeating2`.
@@ -303,10 +304,12 @@ Intra-PGN semantics:
       overhead sane.
 * R07 proprietary-range PGNs start with Manufacturer Code / reserved /
       Industry Code, or carry `missing: [MissingCompanyFields]`.
-* R08 lookup references resolve with the right kind; a named value that
-      cannot fit the field is an error (dead table entry; shared *bit*
-      enumerations excepted); a mere width disagreement with the declared
-      lookup width is a warning (inherited pgn.h laxity, see FINDINGS.md).
+* R08 lookup references resolve with the right kind; a width that
+      differs from the lookup's declared width is an error unless the
+      field opts in with `allowLookupWidthMismatch: true`; a named value
+      that cannot fit the field is an error even then (except out-of-width
+      bit positions in opted-in shared bit enumerations); a stale opt-in
+      (widths agree) is a warning. See FINDINGS.md F2.
 * R09 sentinel logic: `specialValues` override in range; lookups naming
       values in the sentinel region reduce the reserved count; no
       sentinels on match fields or 64-bit fields.

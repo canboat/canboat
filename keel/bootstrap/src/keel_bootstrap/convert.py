@@ -354,6 +354,18 @@ def convert(xml_path: str, fieldtype_header: str, verbose: bool = False, bem_pat
 
     derive.fill(db)
 
+    # R08 opt-in: the inherited pgn.h data uses lookups at differing widths
+    # (YES_NO in 1-bit flags, DISABLED_SATELLITES shared over 32/24 bits).
+    # Mark those fields explicitly so `keel check` treats any NEW mismatch
+    # as an error (FINDINGS.md F2).
+    for pgn in db.pgns:
+        for f in pgn.fields:
+            ref = f.lookup_ref()
+            if ref is not None:
+                lk = db.lookups.get(ref[1])
+                if lk is not None and f.res_bits != lk.bits:
+                    f.allow_lookup_width_mismatch = True
+
     failures = []
     normal_pairs = list(zip(db.pgns, raw.pgn_elements))
     all_blocks = [(pgn, block) for pgn, (_elem, block) in normal_pairs] + bem_blocks

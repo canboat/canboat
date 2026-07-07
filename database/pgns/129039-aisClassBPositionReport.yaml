@@ -86,11 +86,13 @@ fields:
   bits: 1
   description: Whether the unit can show messages 12 and 14
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: dsc
   name: DSC
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: band
   name: Band
   type: LOOKUP
@@ -101,6 +103,7 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: aisMode
   name: AIS mode
   type: LOOKUP

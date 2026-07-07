@@ -130,6 +130,7 @@ class Field_:
     lookup_fieldtype: Optional[str] = None  # fieldtype enumeration
     primary_key: bool = False
     proprietary: bool = False  # field only present when PGN is in proprietary range
+    allow_lookup_width_mismatch: bool = False  # R08 opt-in (FINDINGS.md F2)
     special_values: Optional[int] = None  # SPECIAL_VALUES override (reservedOverride - 1)
     dynamic_field_length: bool = False
     dynamic_field_length_overhead: int = 0

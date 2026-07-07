@@ -70,3 +70,4 @@ fields:
   description: Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices.
     Could be 0 for J1939 device claims
   lookup: YES_NO
+  allowLookupWidthMismatch: true

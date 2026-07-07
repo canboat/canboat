@@ -103,6 +103,10 @@ pub struct Field {
     pub lookup_fieldtype: Option<String>,
     pub primary_key: bool,
     pub proprietary: bool,
+    /// Explicit opt-in for a field width that differs from its lookup's
+    /// declared width (R08): shared enumerations (DISABLED_SATELLITES over
+    /// 32/24-bit constellations) and flag idioms (YES_NO in 1 bit).
+    pub allow_lookup_width_mismatch: bool,
     pub special_values: Option<u32>,
     pub dynamic_field_length: bool,
     pub dynamic_field_length_overhead: u32,

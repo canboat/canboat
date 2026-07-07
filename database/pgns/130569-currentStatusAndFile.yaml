@@ -32,6 +32,7 @@ fields:
   type: LOOKUP
   bits: 8
   lookup: ENTERTAINMENT_PLAY_STATUS
+  allowLookupWidthMismatch: true
 - id: elapsedTrackTime
   name: Elapsed Track Time
   type: DURATION_UFIX16_S

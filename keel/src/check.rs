@@ -257,49 +257,59 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                             ),
                         });
                     }
-                    // Width policy: a named value that cannot fit the field
-                    // is unreachable - error. A mere width disagreement is
-                    // inherited pgn.h laxity (the C never checked; YES_NO is
-                    // declared 2 bits and idiomatically used in 1-bit flags)
-                    // - warning, candidate for cleanup.
+                    // Width policy: a width that differs from the lookup's
+                    // declared width is an ERROR unless the field explicitly
+                    // opts in with `allowLookupWidthMismatch: true` (shared
+                    // enumerations, flag idioms - FINDINGS.md F2). A named
+                    // *value* that cannot fit the field is always an error
+                    // (dead table entry), except out-of-width *bit* positions
+                    // in an opted-in shared bit enumeration.
                     let named_max = match lk.kind.as_str() {
-                        "pair" => lk.pairs.iter().map(|(v, _)| *v).max(),
-                        "bit" => lk.pairs.iter().map(|(v, _)| *v).max(),
+                        "pair" | "bit" => lk.pairs.iter().map(|(v, _)| *v).max(),
                         "triplet" => lk.triplets.iter().map(|(_, v2, _)| *v2).max(),
                         _ => lk.fieldtypes.iter().map(|e| e.value).max(),
                     };
-                    if let Some(named_max) = named_max {
-                        let reachable = if lk.kind == "bit" {
-                            named_max < f.res_bits as u64 // bit index within width
+                    let mismatch = f.res_bits != lk.bits;
+                    let unreachable = named_max.is_some_and(|named_max| {
+                        if lk.kind == "bit" {
+                            named_max >= f.res_bits as u64 // bit index beyond width
                         } else {
-                            f.res_bits >= 64 || named_max < (1u64 << f.res_bits)
-                        };
-                        if !reachable {
-                            // Bit enumerations are legitimately shared across
-                            // fields of different widths (DISABLED_SATELLITES:
-                            // 40 positions over 32/24-bit constellations); an
-                            // out-of-width *bit* simply never occurs. An
-                            // out-of-range *value* is a dead table entry.
-                            v.push(Violation {
-                                rule: "R08",
-                                error: lk.kind != "bit",
-                                location: pgn_loc(p),
-                                message: format!(
-                                    "field '{}' is {} bits; lookup '{name}' names unreachable value {named_max}",
-                                    f.id, f.res_bits
-                                ),
-                            });
-                        } else if f.res_bits != lk.bits {
-                            v.push(Violation {
-                                rule: "R08",
-                                error: false,
-                                location: pgn_loc(p),
-                                message: format!(
-                                    "field '{}' is {} bits but lookup '{name}' declares {}",
-                                    f.id, f.res_bits, lk.bits
-                                ),
-                            });
+                            f.res_bits < 64 && named_max >= (1u64 << f.res_bits)
                         }
+                    });
+                    if unreachable && !(lk.kind == "bit" && f.allow_lookup_width_mismatch) {
+                        v.push(Violation {
+                            rule: "R08",
+                            error: true,
+                            location: pgn_loc(p),
+                            message: format!(
+                                "field '{}' is {} bits; lookup '{name}' names unreachable value {}",
+                                f.id,
+                                f.res_bits,
+                                named_max.unwrap()
+                            ),
+                        });
+                    } else if mismatch && !f.allow_lookup_width_mismatch {
+                        v.push(Violation {
+                            rule: "R08",
+                            error: true,
+                            location: pgn_loc(p),
+                            message: format!(
+                                "field '{}' is {} bits but lookup '{name}' declares {}; \
+                                 add allowLookupWidthMismatch: true if deliberate",
+                                f.id, f.res_bits, lk.bits
+                            ),
+                        });
+                    } else if !mismatch && f.allow_lookup_width_mismatch {
+                        v.push(Violation {
+                            rule: "R08",
+                            error: false,
+                            location: pgn_loc(p),
+                            message: format!(
+                                "field '{}': unnecessary allowLookupWidthMismatch (widths agree)",
+                                f.id
+                            ),
+                        });
                     }
                 }
             }

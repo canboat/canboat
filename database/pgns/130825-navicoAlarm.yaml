@@ -49,6 +49,7 @@ fields:
   type: LOOKUP
   bits: 3
   lookup: ALERT_STATE
+  allowLookupWidthMismatch: true
 - id: actionFlag
   name: Action Flag
   type: UNSIGNED_INTEGER
