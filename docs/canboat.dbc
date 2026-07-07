@@ -1897,7 +1897,7 @@ BO_ 2583628542 PGN_130826_fast: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2583628798 PGN_130827_lowranceUnknown: 8 Vector__XXX
+BO_ 2583628798 PGN_130827_fast: 8 Vector__XXX
  SG_ fastPacketData : 8|56@1+ (1,0) [0|0] "" Vector__XXX
  SG_ fastPacketSequenceCounter : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -2568,7 +2568,7 @@ CM_ BO_ 2583627774 "Fast packet (multiple variants)";
 CM_ BO_ 2583628030 "Fast packet (multiple variants)";
 CM_ BO_ 2583628286 "Fast packet (multiple variants)";
 CM_ BO_ 2583628542 "Fast packet (multiple variants)";
-CM_ BO_ 2583628798 "Lowrance: unknown";
+CM_ BO_ 2583628798 "Fast packet (multiple variants)";
 CM_ BO_ 2583629054 "Fast packet (multiple variants)";
 CM_ BO_ 2583629310 "Mercury: Engine Status";
 CM_ BO_ 2583629566 "Fast packet (multiple variants)";
