@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotManeuver
 description: 'Garmin Autopilot: Maneuver'
 type: Fast
-variantOrder: 17
+variantOrder: 18
 priority: 7
 missing:
 - Fields

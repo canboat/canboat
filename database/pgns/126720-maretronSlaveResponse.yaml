@@ -2,7 +2,7 @@ pgn: 126720
 id: maretronSlaveResponse
 description: 'Maretron: Slave Response'
 type: Fast
-variantOrder: 48
+variantOrder: 49
 missing:
 - Lookups
 fields:

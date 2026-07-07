@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAhrsAttDeviceFlags
 description: 'Garmin AHRS ATT: Device Flags'
 type: Fast
-variantOrder: 2
+variantOrder: 3
 missing:
 - Fields
 - FieldLengths

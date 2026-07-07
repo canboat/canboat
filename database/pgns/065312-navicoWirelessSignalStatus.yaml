@@ -30,7 +30,10 @@ fields:
 - id: signalStrength
   name: Signal Strength
   type: PERCENTAGE_UINT8
-- id: reserved6
+- id: a
+  name: A
+  type: INT8
+- id: reserved7
   name: Reserved
   type: RESERVED
-  bits: 32
+  bits: 24

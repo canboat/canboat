@@ -1,20 +1,15 @@
 pgn: 130823
-id: navicoDataTypeSourceDirectory
-description: 'Navico: Data Type Source Directory'
+id: navicoDataTypeSourceDirectoryFullReport
+description: 'Navico: Data Type Source Directory, Full Report'
 type: Fast
-variantOrder: 2
+variantOrder: 3
 missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast
-  by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report
-  Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the
-  fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type
-  indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a
-  NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or
-  none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches
-  the layout observed across all captured traffic.
+explanation: 'Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record list, but
+  covering every data type the reporting object owns rather than a summary subset, so it typically carries the bound-source
+  NAME entries. Uses the identical record format as Report Type 5 and the PGN 130822 Command 6 Object Dump.'
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -45,8 +40,8 @@ fields:
 - id: reportType
   name: Report Type
   type: UINT8
-  description: Data-type source directory
-  match: 5
+  description: Data-type source directory (full report)
+  match: 6
 - id: part
   name: Part
   type: UINT8

@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotModeState
 description: 'Garmin Autopilot: Mode State'
 type: Fast
-variantOrder: 15
+variantOrder: 16
 priority: 7
 missing:
 - Fields

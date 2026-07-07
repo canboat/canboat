@@ -1,0 +1,72 @@
+pgn: 65293
+id: lowranceGpsConfiguration
+description: 'Lowrance: GPS Configuration'
+type: Single
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer counterpart
+  of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual settings are not yet identified.
+  The first byte matches the sender's source address in the observed traffic.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: UINT8
+- id: c
+  name: C
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: d
+  name: D
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: e
+  name: E
+  type: UINT8
+- id: f
+  name: F
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: g
+  name: G
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: h
+  name: H
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: i
+  name: I
+  type: UNSIGNED_INTEGER
+  bits: 4

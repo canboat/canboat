@@ -3,7 +3,7 @@ id: 0x1ef00ManufacturerProprietaryFastPacketAddressed
 description: '0x1EF00: Manufacturer Proprietary fast-packet addressed'
 type: Fast
 fallback: true
-variantOrder: 18
+variantOrder: 1
 missing:
 - Fields
 - FieldLengths

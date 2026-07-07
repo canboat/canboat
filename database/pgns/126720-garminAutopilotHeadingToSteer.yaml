@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotHeadingToSteer
 description: 'Garmin Autopilot: Heading to Steer'
 type: Fast
-variantOrder: 5
+variantOrder: 6
 priority: 7
 missing:
 - Fields

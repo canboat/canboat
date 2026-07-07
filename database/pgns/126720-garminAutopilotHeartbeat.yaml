@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotHeartbeat
 description: 'Garmin Autopilot: Heartbeat'
 type: Fast
-variantOrder: 16
+variantOrder: 17
 priority: 7
 missing:
 - Fields

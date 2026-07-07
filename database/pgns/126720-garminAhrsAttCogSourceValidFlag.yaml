@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAhrsAttCogSourceValidFlag
 description: 'Garmin AHRS ATT: COG Source Valid Flag'
 type: Fast
-variantOrder: 1
+variantOrder: 2
 missing:
 - Fields
 - FieldLengths

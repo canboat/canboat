@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAhrsAttSetNorthState
 description: 'Garmin AHRS ATT: Set North State'
 type: Fast
-variantOrder: 4
+variantOrder: 5
 missing:
 - Fields
 - FieldLengths

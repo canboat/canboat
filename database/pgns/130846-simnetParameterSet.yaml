@@ -10,9 +10,9 @@ missing:
 - Resolution
 explanation: 'Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display
   Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit
-  Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter''s
-  value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against
-  the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.'
+  Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter''s value will
+  not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations
+  capture corpus.'
 researchDoc: navico_alarms_and_commands
 fields:
 - id: manufacturerCode

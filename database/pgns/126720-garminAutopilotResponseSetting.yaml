@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotResponseSetting
 description: 'Garmin Autopilot: Response Setting'
 type: Fast
-variantOrder: 14
+variantOrder: 15
 priority: 7
 missing:
 - Fields

@@ -2,7 +2,7 @@ pgn: 130817
 id: navicoUnknown
 description: 'Navico: Unknown'
 type: Fast
-variantOrder: 1
+variantOrder: 2
 priority: 7
 missing:
 - Fields

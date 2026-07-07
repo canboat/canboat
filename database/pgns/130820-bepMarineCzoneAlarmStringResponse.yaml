@@ -9,7 +9,9 @@ missing:
 - Resolution
 explanation: Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from
   the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is
-  not yet confirmed.
+  not yet confirmed. This is the only BEP Marine (manufacturer 295) variant of PGN 130820, so it matches on the manufacturer
+  code alone and will also catch other BEP 130820 traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated
+  telemetry such as "1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,..." rather than an alarm string.
 url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md
 fields:
 - id: manufacturerCode

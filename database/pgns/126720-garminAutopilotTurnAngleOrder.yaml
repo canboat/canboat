@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotTurnAngleOrder
 description: 'Garmin Autopilot: Turn Angle Order'
 type: Fast
-variantOrder: 10
+variantOrder: 11
 priority: 7
 missing:
 - Fields

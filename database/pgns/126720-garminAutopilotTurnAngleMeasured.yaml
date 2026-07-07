@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotTurnAngleMeasured
 description: 'Garmin Autopilot: Turn Angle Measured'
 type: Fast
-variantOrder: 11
+variantOrder: 12
 priority: 7
 missing:
 - Fields

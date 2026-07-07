@@ -1,9 +1,0 @@
-name: FUSION_SIRIUS_ALERT
-kind: pair
-bits: 8
-values:
-  255: Unknown
-  1: None
-  2: Antenna
-  3: NoSignal
-  4: Subscription Update

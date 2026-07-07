@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotSpeed
 description: 'Garmin Autopilot: Speed'
 type: Fast
-variantOrder: 8
+variantOrder: 9
 priority: 7
 missing:
 - Fields

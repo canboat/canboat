@@ -244,6 +244,23 @@ Pgn pgnList[] = {
      .priority = 2,
      .explanation = "Addresses up to 19 breakers on a Carling digital switching panel via three bitmap fields. Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, and 17 to 19 in Breaker Mapping 3."},
 
+    {"Simnet: Keep Alive",
+     61184,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=1857", .description = "Simrad", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Command", .camelName = "command", .fieldType = "UNSIGNED_INTEGER", .size = 14, .resolution = 1.0, .description = "Command selector; 49 keeps the addressed device awake"},
+      {.name = "Reserved", .camelName = "reserved5", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
+      {.name = "Reply", .camelName = "reply", .fieldType = "UNSIGNED_INTEGER", .size = 1, .resolution = 1.0, .description = "0 = request, 1 = reply"},
+      {.name = "Value", .camelName = "value", .fieldType = "BINARY", .size = 32, .resolution = 1.0, .description = "Only meaningful in a reply (carries a status); left unset (0xFF) in a request"}
+     },
+     .camelDescription = "simnetKeepAlive",
+     .priority = 7,
+     .explanation = "Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status."},
+
     {"0xF000-0xFEFF: Standardized single-frame non-addressed",
      61440,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -725,6 +742,21 @@ Pgn pgnList[] = {
      },
      .camelDescription = "mercuryEngineData"},
 
+    {"Navico: Device Status",
+     65280,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=275", .description = "Navico", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Report Type", .camelName = "reportType", .fieldType = "UINT8", .resolution = 1.0, .description = "Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four times a second, NEON devices at a much lower rate."},
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 40, .resolution = 1.0, .description = "Payload; constant in all observed traffic"}
+     },
+     .camelDescription = "navicoDeviceStatus",
+     .priority = 7,
+     .explanation = "Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known."},
+
     {"BEP Marine: CZone Circuit Control",
      65280,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -1168,6 +1200,29 @@ Pgn pgnList[] = {
      },
      .camelDescription = "simnetLgc2000Configuration"},
 
+    {"Lowrance: GPS Configuration",
+     65293,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=140", .description = "Lowrance", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "C", .camelName = "c", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0},
+      {.name = "D", .camelName = "d", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "E", .camelName = "e", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "F", .camelName = "f", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0},
+      {.name = "G", .camelName = "g", .fieldType = "UNSIGNED_INTEGER", .size = 1, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved12", .fieldType = "RESERVED", .size = 3, .resolution = 1.0},
+      {.name = "H", .camelName = "h", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0},
+      {.name = "I", .camelName = "i", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0}
+     },
+     .camelDescription = "lowranceGpsConfiguration",
+     .explanation = "GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer counterpart of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual settings are not yet identified. The first byte matches the sender's source address in the observed traffic."},
+
     {"Diverse Yacht Services: Load Cell",
      65293,
      PACKET_RESOLUTION_UNKNOWN,
@@ -1534,7 +1589,8 @@ Pgn pgnList[] = {
       {.name = "Status", .camelName = "status", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Battery Status", .camelName = "batteryStatus", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0},
       {.name = "Battery Charge Status", .camelName = "batteryChargeStatus", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
+      {.name = "A", .camelName = "a", .fieldType = "INT16", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "navicoWirelessBatteryStatus",
      .priority = 7},
@@ -1573,7 +1629,8 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Unknown", .camelName = "unknown", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Signal Strength", .camelName = "signalStrength", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
+      {.name = "A", .camelName = "a", .fieldType = "INT8", .resolution = 1.0, .hasSign = true},
+      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
      },
      .camelDescription = "navicoWirelessSignalStatus",
      .priority = 7},
@@ -2306,6 +2363,20 @@ Pgn pgnList[] = {
      .repeatingStart1 = 2,
      .repeatingField1 = 255},
 
+    {"0x1EF00: Manufacturer Proprietary fast-packet addressed",
+     126720,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}
+     },
+     .camelDescription = "0x1ef00ManufacturerProprietaryFastPacketAddressed",
+     .fallback = true,
+     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet."},
+
     {"Garmin AHRS ATT: COG Source Valid Flag",
      126720,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -2615,20 +2686,6 @@ Pgn pgnList[] = {
      },
      .camelDescription = "garminAutopilotManeuver",
      .priority = 7},
-
-    {"0x1EF00: Manufacturer Proprietary fast-packet addressed",
-     126720,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
-     PACKET_FAST,
-     {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}
-     },
-     .camelDescription = "0x1ef00ManufacturerProprietaryFastPacketAddressed",
-     .fallback = true,
-     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
     {"Seatalk1: Pilot Mode",
      126720,
@@ -3104,21 +3161,6 @@ Pgn pgnList[] = {
      .camelDescription = "maretronDeviationCalibrationResponse",
      .url = "https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html"},
 
-    {"Maretron: Slave Response",
-     126720,
-     PACKET_LOOKUPS_UNKNOWN,
-     PACKET_FAST,
-     {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=137", .description = "Maretron", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Product code", .camelName = "productCode", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Software code", .camelName = "softwareCode", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Command", .camelName = "command", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Status", .camelName = "status", .fieldType = "UINT8", .resolution = 1.0}
-     },
-     .camelDescription = "maretronSlaveResponse"},
-
     {"Maretron: Proprietary Configuration",
      126720,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -3133,6 +3175,21 @@ Pgn pgnList[] = {
       {.name = "Payload", .camelName = "payload", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
      .camelDescription = "maretronProprietaryConfiguration"},
+
+    {"Maretron: Slave Response",
+     126720,
+     PACKET_LOOKUPS_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=137", .description = "Maretron", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Product code", .camelName = "productCode", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Software code", .camelName = "softwareCode", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Command", .camelName = "command", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Status", .camelName = "status", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "maretronSlaveResponse"},
 
     {"Carling: DC Configuration Command",
      126720,
@@ -7374,6 +7431,22 @@ Pgn pgnList[] = {
      },
      .camelDescription = "seaRecoveryWatermakerStatus"},
 
+    {"Navico: Feature Unlock",
+     130817,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=275", .description = "Navico", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Feature Id", .camelName = "featureId", .fieldType = "UINT16", .resolution = 1.0, .description = "Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester asks the target to report a specific feature)."},
+      {.name = "Record Count", .camelName = "recordCount", .fieldType = "UINT8", .resolution = 1.0, .description = "Number of 3-byte records that follow; 0 in every observed broadcast"},
+      {.name = "Data", .camelName = "data", .fieldType = "UINT16", .resolution = 1.0, .description = "Trailing value (observed only with Record Count 0)"}
+     },
+     .camelDescription = "navicoFeatureUnlock",
+     .priority = 7,
+     .explanation = "Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded here) and two trailing bytes."},
+
     {"Navico: Unknown",
      130817,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -7661,7 +7734,7 @@ Pgn pgnList[] = {
       {.name = "String", .camelName = "string", .fieldType = "BINARY", .size = 1736, .resolution = 1.0, .description = "Variable-length NUL-terminated alarm string (up to 217 bytes); ASCII or UTF-8 not yet confirmed"}
      },
      .camelDescription = "bepMarineCzoneAlarmStringResponse",
-     .explanation = "Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.",
+     .explanation = "Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed. This is the only BEP Marine (manufacturer 295) variant of PGN 130820, so it matches on the manufacturer code alone and will also catch other BEP 130820 traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated telemetry such as \"1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,...\" rather than an alarm string.",
      .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md"},
 
     {"Simnet: Reprogram Status",
@@ -8787,17 +8860,40 @@ Pgn pgnList[] = {
       {.name = "Report Type", .camelName = "reportType", .fieldType = "UINT8", .resolution = 1.0, .unit = "=5", .description = "Data-type source directory"},
       {.name = "Part", .camelName = "part", .fieldType = "UINT8", .resolution = 1.0, .description = "Sequence/part number of the directory report"},
       {.name = "Spare", .camelName = "spare8", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
+      {.name = "Length", .camelName = "length", .fieldType = "DYNAMIC_FIELD_LENGTH", .size = 8, .resolution = 1.0, .description = "Bytes following in this record: a type byte, a 16-bit data-type id and the value", .dynamicFieldLength = true, .dynamicFieldLengthOverhead = 3},
+      {.name = "Type", .camelName = "type", .fieldType = "UINT8", .resolution = 1.0, .description = "Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)"},
       {.name = "Data Type", .camelName = "dataType", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupNAVICO_DATA_TYPE, .lookup.name = "NAVICO_DATA_TYPE"},
-      {.name = "Source Length", .camelName = "sourceLength", .fieldType = "DYNAMIC_FIELD_LENGTH", .size = 8, .resolution = 1.0, .description = "Byte length of the Source descriptor: 0 = no source assigned, 10 = source device NAME present", .dynamicFieldLength = true},
-      {.name = "Source", .camelName = "source", .fieldType = "DYNAMIC_FIELD_VALUE", .description = "Selected source device for this data type; when present (Source Length 10) bytes 1-8 are the source device's NMEA 2000 NAME"},
-      {.name = "Value Type", .camelName = "valueType", .fieldType = "UINT8", .resolution = 1.0, .description = "Encoding of the data type's value (e.g. 4 = float32)"},
-      {.name = "Instance", .camelName = "instance", .fieldType = "UINT8", .resolution = 1.0, .description = "Data instance the entry refers to"}
+      {.name = "Value", .camelName = "value", .fieldType = "DYNAMIC_FIELD_VALUE", .description = "Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values."}
      },
      .camelDescription = "navicoDataTypeSourceDirectory",
-     .repeatingCount1 = 5,
+     .repeatingCount1 = 4,
      .repeatingStart1 = 9,
      .repeatingField1 = 255,
-     .explanation = "Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Data Type, Source Length, Source, Value Type, Instance} records that run to the end of the fast-packet. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). Most entries have no source assigned (Source Length 0); when a source is bound, Source Length is 10 and the descriptor embeds the source device's 8-byte NMEA 2000 NAME (verified: the Rudder Limit entry carries the NAME of the NAC-3 autopilot providing it). The data type values themselves are not carried here."},
+     .explanation = "Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic."},
+
+    {"Navico: Data Type Source Directory, Full Report",
+     130823,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=275", .description = "Navico", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Reserved", .camelName = "reserved4", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
+      {.name = "Spare", .camelName = "spare5", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
+      {.name = "Report Type", .camelName = "reportType", .fieldType = "UINT8", .resolution = 1.0, .unit = "=6", .description = "Data-type source directory (full report)"},
+      {.name = "Part", .camelName = "part", .fieldType = "UINT8", .resolution = 1.0, .description = "Sequence/part number of the directory report"},
+      {.name = "Spare", .camelName = "spare8", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
+      {.name = "Length", .camelName = "length", .fieldType = "DYNAMIC_FIELD_LENGTH", .size = 8, .resolution = 1.0, .description = "Bytes following in this record: a type byte, a 16-bit data-type id and the value", .dynamicFieldLength = true, .dynamicFieldLengthOverhead = 3},
+      {.name = "Type", .camelName = "type", .fieldType = "UINT8", .resolution = 1.0, .description = "Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)"},
+      {.name = "Data Type", .camelName = "dataType", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupNAVICO_DATA_TYPE, .lookup.name = "NAVICO_DATA_TYPE"},
+      {.name = "Value", .camelName = "value", .fieldType = "DYNAMIC_FIELD_VALUE", .description = "Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values."}
+     },
+     .camelDescription = "navicoDataTypeSourceDirectoryFullReport",
+     .repeatingCount1 = 4,
+     .repeatingStart1 = 9,
+     .repeatingField1 = 255,
+     .explanation = "Fuller counterpart to the Report Type 5 directory: the same {Length, Type, Data Type, Value} record list, but covering every data type the reporting object owns rather than a summary subset, so it typically carries the bound-source NAME entries. Uses the identical record format as Report Type 5 and the PGN 130822 Command 6 Object Dump."},
 
     {"Navico: Boat Speed Polar Table",
      130823,
@@ -9026,6 +9122,25 @@ Pgn pgnList[] = {
       {.name = "F", .camelName = "f", .fieldType = "UINT16", .resolution = 1.0}
      },
      .camelDescription = "lowranceUnknown"},
+
+    {"Furuno: NavPilot Status",
+     130827,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=1855", .description = "Furuno", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message ID", .camelName = "messageId", .fieldType = "UINT8", .resolution = 1.0, .unit = "=1", .description = "NavPilot Status", .partOfPrimaryKey = true},
+      {.name = "Rudder Angle", .camelName = "rudderAngle", .fieldType = "ANGLE_UFIX16"},
+      {.name = "A", .camelName = "a", .fieldType = "INT16", .resolution = 1.0, .hasSign = true},
+      {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Commanded Course", .camelName = "commandedCourse", .fieldType = "ANGLE_UFIX16"},
+      {.name = "C", .camelName = "c", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "D", .camelName = "d", .fieldType = "UINT16", .resolution = 1.0}
+     },
+     .camelDescription = "furunoNavpilotStatus",
+     .explanation = "Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood."},
 
     {"Simnet: Set Serial Number",
      130828,
@@ -9550,6 +9665,22 @@ Pgn pgnList[] = {
      },
      .camelDescription = "simnetAisClassBStaticDataMsg24PartB"},
 
+    {"Simnet: AIS Silent Mode",
+     130842,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "=1857", .description = "Simrad", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .unit = "=4", .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message ID", .camelName = "messageId", .fieldType = "UNSIGNED_INTEGER", .size = 6, .resolution = 1.0, .unit = "=4", .description = "AIS Silent Mode", .partOfPrimaryKey = true},
+      {.name = "Operation", .camelName = "operation", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_KEY_OPERATION, .lookup.name = "SIMNET_KEY_OPERATION"},
+      {.name = "D", .camelName = "d", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "E", .camelName = "e", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "simnetAisSilentMode",
+     .explanation = "Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the observed traffic."},
+
     {"Maretron: Windlass Control Command",
      130843,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -9680,7 +9811,7 @@ Pgn pgnList[] = {
      },
      .camelDescription = "simnetParameterSet",
      .interval = UINT16_MAX,
-     .explanation = "Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. The Navico/Simrad firmware switches from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Confirmed against the NAC3 1.1.07.02 firmware encoder and the nac3-operations capture corpus.",
+     .explanation = "Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter's value will not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations capture corpus.",
      .researchDoc = "navico_alarms_and_commands"},
 
     {"Maretron: Battery Amp Hour Record",
