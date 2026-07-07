@@ -195,13 +195,17 @@
                oninput="this.value=this.value.toUpperCase()"></label>
       </div>
       <div class="row">
-        <label>kind <select id="lk_kind"><option>pair</option><option>bit</option></select></label>
+        <label>kind <select id="lk_kind" onchange="lkKindChanged()">
+          <option value="pair">pair (value → name)</option>
+          <option value="bit">bit (bit → name)</option>
+          <option value="triplet">triplet (v1, v2 → name)</option>
+          <option value="fieldtype">fieldtype (value → name + datatype)</option>
+        </select></label>
         <label>bits <input id="lk_bits" size="4"></label>
         <span class="hint" id="lkHint"></span>
       </div>
-      <table id="lkValues"><thead><tr><th style="width:90px">value</th><th>name</th><th></th></tr></thead>
-        <tbody></tbody></table>
-      <button onclick="lkAddRow('','')">＋ value</button>
+      <table id="lkValues"><thead id="lkHead"></thead><tbody></tbody></table>
+      <button id="lkAddBtn" onclick="lkAddRow({})">＋ value</button>
     </div>
     <footer>
       <span class="hint" id="lkFile"></span>
@@ -242,6 +246,7 @@ async function init() {
     document.body.appendChild(d);
   };
   dl("dl_lookups", MODEL.lookups.filter(l => l.kind === "pair").map(l => l.name));
+  dl("dl_ft", MODEL.fieldtypes.map(f => f.name));
   renderPgnList("");
   $("search").addEventListener("input", e => renderPgnList(e.target.value));
 }
@@ -651,7 +656,8 @@ function openNewLookup() {
     $("lkTitle").textContent = n || "New lookup";
     $("lkFile").textContent = `database/lookups/${n || "…"}.yaml`;
   };
-  lkAddRow("0", "");
+  lkRenderHead();
+  lkAddRow({ value: 0 });
   $("lkOverlay").style.display = "flex";
   $("lk_name").focus();
 }
@@ -674,44 +680,76 @@ async function openLookup(name, suggestedBits, seed) {
     $("lk_kind").disabled = false;
     $("lk_bits").value = suggestedBits || "";
     $("lkHint").textContent = "new enumeration — will be created on save";
-    (seed && seed.length ? seed : [0]).forEach(v => lkAddRow(String(v), ""));
+    lkRenderHead();
+    (seed && seed.length ? seed : [0]).forEach(v => lkAddRow({ value: v }));
   } else {
     lkBaseYaml = r.yaml;
-    lkReadOnly = !(r.kind === "pair" || r.kind === "bit");
-    $("lk_kind").value = r.kind === "bit" ? "bit" : "pair";
-    $("lk_kind").disabled = true;
+    lkReadOnly = false;
+    $("lk_kind").value = r.kind;
+    $("lk_kind").disabled = true;   // kind is fixed for an existing enumeration
     $("lk_bits").value = r.bits;
-    $("lkHint").textContent = lkReadOnly
-      ? `${r.kind} enumeration — view only (edit the YAML file directly)` : r.kind;
-    (r.values || []).forEach(v => lkAddRow(v.value, v.name + (v.type ? `  [${v.type}]` : "")));
+    $("lkHint").textContent = r.kind;
+    lkRenderHead();
+    (r.values || []).forEach(v => lkAddRow(v));
     // append rows for any evidence values not already present, ready to name
-    if (seed && !lkReadOnly) {
+    if (seed) {
       const have = new Set((r.values || []).map(v => Number(v.value)));
       const fresh = [...new Set(seed.map(Number))].filter(v => !have.has(v)).sort((a, b) => a - b);
       if (fresh.length) {
-        fresh.forEach(v => lkAddRow(String(v), ""));
+        fresh.forEach(v => lkAddRow({ value: v }));
         $("lkHint").textContent = `${r.kind} — ${fresh.length} value(s) from your samples added below, name them`;
       }
     }
   }
-  $("lkSave").style.display = lkReadOnly ? "none" : "";
+  $("lkSave").style.display = "";
   $("lkOverlay").style.display = "flex";
 }
 
-function lkAddRow(value, name) {
+// Columns per lookup kind. `k` is both the input's data-key and the
+// entry field name coming back from /api/lookup.
+function lkCols(kind) {
+  switch (kind) {
+    case "bit": return [{ k: "value", label: "bit", size: 6 }, { k: "name" }];
+    case "triplet": return [{ k: "v1", size: 6 }, { k: "v2", size: 6 }, { k: "name" }];
+    case "fieldtype": return [
+      { k: "value", size: 6 }, { k: "name" },
+      { k: "type", label: "datatype", size: 16, list: "dl_ft" },
+      { k: "bits", label: "length", size: 6 },
+      { k: "lookup", size: 14, list: "dl_lookups" }];
+    default: return [{ k: "value", size: 6 }, { k: "name" }]; // pair
+  }
+}
+
+function lkRenderHead() {
+  const cols = lkCols(lkKind());
+  $("lkHead").innerHTML = "<tr>" +
+    cols.map(c => `<th>${esc(c.label || c.k)}</th>`).join("") + "<th></th></tr>";
+}
+
+function lkKind() { return $("lk_kind").value; }
+
+// Called when the kind selector changes (only possible for new lookups).
+function lkKindChanged() {
+  $("lkValues").querySelector("tbody").innerHTML = "";
+  lkRenderHead();
+  lkAddRow({});
+}
+
+function lkAddRow(entry) {
   const tb = $("lkValues").querySelector("tbody");
   const tr = document.createElement("tr");
-  const mk = (v, size) => {
+  lkCols(lkKind()).forEach(c => {
     const td = document.createElement("td");
     const inp = document.createElement("input");
-    inp.value = v;
-    if (size) inp.size = size;
+    inp.dataset.k = c.k;
+    inp.value = entry[c.k] != null ? entry[c.k] : "";
+    if (c.size) inp.size = c.size;
+    if (c.list) inp.setAttribute("list", c.list);
+    if (c.label && c.k === "bits") inp.placeholder = "default";
     inp.readOnly = lkReadOnly;
     td.appendChild(inp);
-    return td;
-  };
-  tr.appendChild(mk(value, 8));
-  tr.appendChild(mk(name));
+    tr.appendChild(td);
+  });
   const del = document.createElement("td");
   if (!lkReadOnly) {
     del.innerHTML = "<button class='lkbtn'>✕</button>";
@@ -732,12 +770,41 @@ async function saveLookup() {
     if (!Number($("lk_bits").value)) return flash("set the bit width", false);
     lkName = n;
   }
-  const rows = [...$("lkValues").querySelectorAll("tbody tr")]
-    .map(tr => [...tr.querySelectorAll("input")].map(i => i.value.trim()))
-    .filter(([v, n]) => v !== "" && n !== "");
-  if (!rows.length) return flash("add at least one value", false);
-  rows.sort((a, b) => Number(a[0]) - Number(b[0]));
-  let block = "values:\n" + rows.map(([v, n]) => `  ${Number(v)}: ${yq(n)}`).join("\n") + "\n";
+  const kind = $("lk_kind").value;
+  // read each row into an object keyed by column (value, name, v1, v2, type, bits, lookup)
+  const rows = [...$("lkValues").querySelectorAll("tbody tr")].map(tr => {
+    const e = {};
+    tr.querySelectorAll("input").forEach(i => { e[i.dataset.k] = i.value.trim(); });
+    return e;
+  });
+  let block, err;
+  if (kind === "triplet") {
+    const rs = rows.filter(e => e.v1 !== "" && e.v2 !== "" && e.name !== "");
+    if (!rs.length) err = "add at least one v1, v2, name row";
+    block = "values:\n" + rs.map(e =>
+      `- - ${Number(e.v1)}\n  - ${Number(e.v2)}\n  - ${yq(e.name)}`).join("\n") + "\n";
+  } else if (kind === "fieldtype") {
+    const rs = rows.filter(e => e.value !== "" && e.name !== "" && e.type !== "");
+    if (!rs.length) err = "each row needs value, name and datatype";
+    rs.sort((a, b) => Number(a.value) - Number(b.value));
+    block = "values:\n" + rs.map(e => {
+      let s = `- value: ${Number(e.value)}\n  name: ${yq(e.name)}\n  type: ${e.type}`;
+      if (e.bits) s += `\n  bits: ${Number(e.bits)}`;
+      if (e.lookup) {
+        s += `\n  lookup: ${e.lookup}`;
+        // carry the nested lookup's kind when it isn't the default 'pair'
+        const nl = MODEL.lookups.find(l => (l.name || l) === e.lookup);
+        if (nl && nl.kind && nl.kind !== "pair") s += `\n  lookupKind: ${nl.kind}`;
+      }
+      return s;
+    }).join("\n") + "\n";
+  } else { // pair | bit
+    const rs = rows.filter(e => e.value !== "" && e.name !== "");
+    if (!rs.length) err = "add at least one value";
+    rs.sort((a, b) => Number(a.value) - Number(b.value));
+    block = "values:\n" + rs.map(e => `  ${Number(e.value)}: ${yq(e.name)}`).join("\n") + "\n";
+  }
+  if (err) return flash(err, false);
   let yaml;
   if (lkBaseYaml) {
     const m = lkBaseYaml.match(/\nvalues:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
