@@ -437,18 +437,46 @@ function renderFields() {
     (total % 8 ? " — not byte-aligned (R03)" : "");
 }
 
+function fieldSpans() {
+  // Prefer exact spans from the last decode (handles variable-length
+  // fields and repeating instances); fall back to declared-width math.
+  const decoded = lastDecode && lastDecode.samples && lastDecode.samples[0]
+    && lastDecode.samples[0].fields;
+  if (decoded && decoded.length && decoded[0].bits !== undefined) {
+    return decoded.map(f => ({
+      id: f.id + (f.instance > 1 ? "." + f.instance : ""),
+      from: f.bitOffset, to: f.bitOffset + f.bits,
+    }));
+  }
+  const spans = [];
+  let bit = 0;
+  fieldsState.forEach(f => {
+    const bits = fieldBits(f);
+    spans.push({ id: f.id, from: bit, to: bit + bits });
+    bit += bits;
+  });
+  return spans;
+}
+
 function renderGrid() {
   const g = $("grid");
   g.innerHTML = "";
   if (!samplesHex.length) return;
   const maxBytes = Math.max(...samplesHex.map(h => h.length / 2));
+  const spans = fieldSpans();
 
-  // classification per byte
+  // which bytes are covered by a defined field?
+  const covered = Array.from({length: maxBytes}, (_, b) =>
+    spans.some(s => s.from < (b + 1) * 8 && s.to > b * 8));
+
+  // classification per byte: a byte inside a field is never "unclaimed",
+  // even when it is 0xFF in every sample
   const cls = [];
   for (let b = 0; b < maxBytes; b++) {
     const vals = samplesHex.map(h => h.substr(b * 2, 2) || "");
     const allSame = vals.every(v => v === vals[0] && v !== "");
-    cls.push(vals.every(v => v === "ff") ? "unset" : allSame ? "const" : "vary");
+    cls.push(!covered[b] && vals.every(v => v === "ff") ? "unset"
+             : allSame ? "const" : "vary");
   }
 
   const head = document.createElement("tr");
@@ -464,22 +492,26 @@ function renderGrid() {
     g.appendChild(tr);
   });
 
-  // field span row
-  const spans = [];
-  let bit = 0;
-  fieldsState.forEach(f => {
-    const bits = fieldBits(f);
-    spans.push({ id: f.id, from: bit, to: bit + bits });
-    bit += bits;
-  });
+  // field row: coalesce consecutive bytes covered by the same field(s)
+  // into one colspan cell, so the name appears exactly once per span
+  const keyAt = (b) =>
+    spans.filter(s => s.from < (b + 1) * 8 && s.to > b * 8).map(s => s.id).join(" ");
   const tr = document.createElement("tr");
   tr.className = "fieldrow";
-  let cells = "<th>fields</th>";
-  for (let b = 0; b < maxBytes; b++) {
-    const here = spans.filter(s => s.from < (b + 1) * 8 && s.to > b * 8).map(s => s.id);
-    cells += `<td>${esc(here.join(" "))||""}</td>`;
+  const th = document.createElement("th");
+  th.textContent = "fields";
+  tr.appendChild(th);
+  let b = 0;
+  while (b < maxBytes) {
+    let e = b + 1;
+    while (e < maxBytes && keyAt(e) === keyAt(b)) e++;
+    const td = document.createElement("td");
+    td.colSpan = e - b;
+    td.textContent = keyAt(b);
+    td.title = keyAt(b);
+    tr.appendChild(td);
+    b = e;
   }
-  tr.innerHTML = cells;
   g.appendChild(tr);
 }
 
@@ -632,6 +664,7 @@ async function refresh() {
     $("decodeTable").innerHTML = "";
     return;
   }
+  renderGrid();
   vio.innerHTML = (r.violations || [])
     .map(v => `<div class="${v.error ? "err" : "warn"}">${v.rule} ${esc(v.message)}</div>`)
     .join("") || `<div style="color:var(--ok)">✓ rules pass</div>`;
