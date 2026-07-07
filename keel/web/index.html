@@ -74,6 +74,14 @@
   #lkModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
                     display: flex; gap: 10px; justify-content: flex-end; }
   .lkbtn { padding: 1px 7px; font-size: 12px; margin-left: 3px; }
+  #dlgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+                align-items: flex-start; justify-content: center; padding-top: 12vh; z-index: 30; }
+  #dlg { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+         width: min(520px, 92vw); padding: 16px 18px; }
+  #dlg h3 { margin: 0 0 8px; font-size: 15px; }
+  #dlgMsg { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 12.5px;
+            max-height: 40vh; overflow-y: auto; margin-bottom: 12px; }
+  #dlgBtns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
   #typeCombo { position: fixed; z-index: 20; background: var(--bg); border: 1px solid var(--line);
                border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.25); max-height: 340px;
                overflow-y: auto; width: min(520px, 90vw); display: none; }
@@ -158,6 +166,13 @@
   </section>
 </div>
 
+<div id="dlgOverlay">
+  <div id="dlg">
+    <h3 id="dlgTitle"></h3>
+    <div id="dlgMsg"></div>
+    <div id="dlgBtns"></div>
+  </div>
+</div>
 <div id="typeCombo"></div>
 <div id="lkOverlay" onclick="if(event.target===this) closeLookup()">
   <div id="lkModal">
@@ -807,14 +822,50 @@ function adoptExpectations() {
   scheduleRefresh();
 }
 
+function dialog(title, message, buttons) {
+  $("dlgTitle").textContent = title;
+  $("dlgMsg").textContent = message;
+  const btns = $("dlgBtns");
+  btns.innerHTML = "";
+  buttons.forEach(([label, primary, fn]) => {
+    const b = document.createElement("button");
+    b.textContent = label;
+    if (primary) b.className = "primary";
+    b.onclick = () => fn();
+    btns.appendChild(b);
+  });
+  $("dlgOverlay").style.display = "flex";
+}
+function closeDialog() { $("dlgOverlay").style.display = "none"; }
+
 async function save() {
   const file = $("savePath").textContent.trim();
   if (!file) return flash("no target file (set PGN + id first)", false);
   const r = await api("/api/save?file=" + encodeURIComponent(file), $("yamlText").value);
-  if (r.error) return flash(r.error, false);
-  flash(`saved ${r.saved} — run 'keel generate' before committing`, true);
+  if (r.error) {
+    dialog("Not saved", r.error, [
+      ["Back to editing", true, closeDialog],
+    ]);
+    return;
+  }
   MODEL = await api("/api/model", null, "GET");
   renderPgnList($("search").value);
+  dialog("Saved", `${r.saved}\n\nkeel check passed. The generated artifacts\n` +
+    `(canboat.xml, analyzer tables) are now out of date until regenerated.`, [
+    ["Regenerate artifacts", true, async () => {
+      $("dlgMsg").textContent = "regenerating…";
+      const g = await api("/api/generate", "");
+      if (g.error) {
+        $("dlgMsg").textContent = g.error;
+      } else {
+        $("dlgMsg").textContent = "Regenerated:\n" + g.written.join("\n") +
+          "\n\nReview with git diff, then commit the database and\nartifacts together.";
+        $("dlgTitle").textContent = "Saved + regenerated";
+      }
+    }],
+    ["Keep editing this PGN", false, closeDialog],
+    ["Start a new PGN", false, () => { closeDialog(); newWizard(); }],
+  ]);
 }
 
 init();

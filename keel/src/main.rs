@@ -13,6 +13,7 @@ mod edit;
 mod emit_c;
 mod emit_text;
 mod emit_xml;
+mod generate;
 mod model;
 mod samples;
 mod yamlio;
