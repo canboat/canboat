@@ -1301,7 +1301,7 @@ static bool printField(const Field   *field,
 
   if (fieldName == NULL)
   {
-    fieldName = field->camelName ? field->camelName : (char *) field->name;
+    fieldName = (showCamel && field->camelName) ? field->camelName : (char *) field->name;
   }
 
   resolution = field->resolution;
@@ -1487,7 +1487,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   if (showJson)
   {
-    if (pgn->camelDescription)
+    if (showCamel)
     {
       mprintf("{\"%s\":", pgn->camelDescription);
     }
@@ -1507,7 +1507,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       }
       mprintf("\"");
     }
-    if (pgn->camelDescription)
+    if (showCamel)
     {
       strcpy(closingBraces, "}}");
     }
@@ -1667,7 +1667,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (repetition >= 1 && !showJson)
     {
-      strcat(fieldName, field->camelName ? "_" : " ");
+      strcat(fieldName, showCamel ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }
 
