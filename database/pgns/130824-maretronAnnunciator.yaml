@@ -42,3 +42,4 @@ fields:
 - id: field8
   name: Field 8
   type: UINT16
+notes: M/V Dirona

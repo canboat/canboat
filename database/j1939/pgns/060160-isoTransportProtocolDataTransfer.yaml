@@ -13,3 +13,19 @@ fields:
   name: Data
   type: BINARY
   bits: 56
+notes: |-
+  For a good explanation of ISO 11783 Transport Protocol (as used in J1939) see
+  https://web.archive.org/web/20220207184927/www.simmasoftware.com/j1939-presentation.pdf
+
+  First: Transmit a RTS message to the specific address that says:
+    1. I'm about to send the following PGN in multiple packets.
+    2. I'm sending X amount of data.
+    3. I'm sending Y number of packets.
+    4. I can send Z number of packets at once.
+  Second: Wait for CTS: CTS says:
+    1. I can receive M number of packets at once.
+    2. Start sending with sequence number N.
+  Third: Send data. Then repeat steps starting with #2. When all data sent, wait for ACK.
+
+  ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data
+  bytes. This PGN represents a single packet of a multipacket message.

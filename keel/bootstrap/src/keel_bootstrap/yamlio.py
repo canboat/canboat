@@ -67,6 +67,7 @@ def field_to_dict(f: Field_) -> dict:
         "unit": f.unit,
         "offset": f.offset,
         "description": f.description,
+        "note": getattr(f, "note", None),
         "match": f.match,
         "lookup": f.lookup,
         "lookupIndirect": None,
@@ -103,6 +104,7 @@ def pgn_to_dict(p: Pgn) -> dict:
         "explanation": p.explanation,
         "url": p.url,
         "researchDoc": p.research_doc,
+        "notes": getattr(p, "notes", None),
         "fields": [field_to_dict(f) for f in p.fields],
     }
     for n in (1, 2):
@@ -176,6 +178,28 @@ def pq_to_dict(pq: PhysicalQuantity) -> dict:
     )
 
 
+def _preserve_notes(d: dict, path: str) -> dict:
+    """Research notes are authored in the YAML (migration step 4), not in the
+    XML the converter reads - carry them over when regenerating a file."""
+    if not os.path.exists(path):
+        return d
+    old = _load(path)
+    if not isinstance(old, dict):
+        return d
+    if "notes" in old and "notes" not in d:
+        d["notes"] = old["notes"]
+    if "note" in old and "note" not in d:
+        d["note"] = old["note"]
+    if "valueNotes" in old and "valueNotes" not in d:
+        d["valueNotes"] = old["valueNotes"]
+    old_fields = {f.get("id"): f for f in old.get("fields", [])} if "fields" in old else {}
+    for f in d.get("fields", []):
+        of = old_fields.get(f.get("id"))
+        if of and "note" in of and "note" not in f:
+            f["note"] = of["note"]
+    return d
+
+
 def write_database(db: Database, out_dir: str) -> None:
     _dump([pq_to_dict(pq) for pq in db.physical_quantities], os.path.join(out_dir, "physicalquantities.yaml"))
     # derive.fill() percolates base/physical attributes into the FieldType
@@ -184,15 +208,18 @@ def write_database(db: Database, out_dir: str) -> None:
     _dump([fieldtype_to_dict(ft) for ft in fieldtypes], os.path.join(out_dir, "fieldtypes.yaml"))
 
     for lk in db.lookups.values():
-        _dump(lookup_to_dict(lk), os.path.join(out_dir, "lookups", f"{lk.name}.yaml"))
+        path = os.path.join(out_dir, "lookups", f"{lk.name}.yaml")
+        _dump(_preserve_notes(lookup_to_dict(lk), path), path)
     # Temporary manifest: preserves lookup.h emission order for the golden
     # byte-diff. Dies post-switchover in favor of sorted order (DESIGN.md).
     _dump(dict(db.lookup_order), os.path.join(out_dir, "lookups.order.yaml"))
 
     for p in db.pgns:
-        _dump(pgn_to_dict(p), os.path.join(out_dir, "pgns", f"{p.pgn:06d}-{p.id}.yaml"))
+        path = os.path.join(out_dir, "pgns", f"{p.pgn:06d}-{p.id}.yaml")
+        _dump(_preserve_notes(pgn_to_dict(p), path), path)
     for p in getattr(db, "pgns_j1939", []):
-        _dump(pgn_to_dict(p), os.path.join(out_dir, "j1939", "pgns", f"{p.pgn:06d}-{p.id}.yaml"))
+        path = os.path.join(out_dir, "j1939", "pgns", f"{p.pgn:06d}-{p.id}.yaml")
+        _dump(_preserve_notes(pgn_to_dict(p), path), path)
 
 
 # --------------------------------------------------------------------------

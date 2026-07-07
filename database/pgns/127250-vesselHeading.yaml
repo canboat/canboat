@@ -26,3 +26,9 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 6
+notes: |-
+  NMEA + Simrad AT10
+
+  https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf
+
+  molly_rose_E80start.kees

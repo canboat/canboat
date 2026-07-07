@@ -45,3 +45,4 @@ fields:
 - id: buildNumber
   name: Build Number
   type: UINT8
+notes: Fusion

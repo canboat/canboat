@@ -51,3 +51,7 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 6
+notes: |-
+  https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+
+  Haven't seen this yet (no way to send PGN 059904 yet) so lengths unknown

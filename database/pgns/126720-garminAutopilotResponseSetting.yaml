@@ -61,3 +61,9 @@ fields:
 - id: responseSetting
   name: Response Setting
   type: INT8
+notes: |-
+  Garmin autopilot command plane: directed helm->CCU control messages, the complement of the scalar
+  broadcast above (which the source emits from address 0). They share the same envelope and are
+  distinguished by their Field Group + Field selectors. Decode-only: this recognises and decodes a
+  command, it is not a transmit path. The source address is not matched (canboat MATCH cannot see it),
+  but the selectors are disjoint from the broadcast scalars so decoding stays unambiguous.

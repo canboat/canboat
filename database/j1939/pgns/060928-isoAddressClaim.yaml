@@ -35,6 +35,7 @@ fields:
   lookupIndirect:
     name: DEVICE_FUNCTION
     order: 7
+  note: Device Class
 - id: spare
   name: Spare
   type: SPARE
@@ -60,3 +61,9 @@ fields:
   bits: 1
   description: Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices.
     Could be 0 for J1939 device claims
+  note: |-
+    "Arbitrary address capable" is explained at
+    https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
+notes: |-
+  "Arbitrary address capable" is explained at
+  https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable

@@ -20,3 +20,4 @@ fields:
   name: Range
   type: LENGTH_UFIX8_DAM
   description: Max measurement range
+notes: https://web.archive.org/web/20070107131536/www.maretron.com/support/manuals/DST100UM_1.2.pdf

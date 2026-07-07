@@ -4,3 +4,5 @@ bits: 2
 values:
   0: 'Off'
   1: 'On'
+valueNotes:
+  1: Note that Error and Unknown are automatically decoded

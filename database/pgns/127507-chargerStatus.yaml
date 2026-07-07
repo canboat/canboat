@@ -40,3 +40,4 @@ fields:
 - id: equalizationTimeRemaining
   name: Equalization Time Remaining
   type: DURATION_UFIX16_MIN
+notes: https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf

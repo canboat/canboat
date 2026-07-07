@@ -28,3 +28,7 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 16
+notes: |-
+  NMEA + Simrad AT10
+
+  https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf

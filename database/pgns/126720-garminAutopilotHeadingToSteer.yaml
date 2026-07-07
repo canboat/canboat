@@ -62,3 +62,7 @@ fields:
   name: Heading to Steer
   type: FLOAT_RAD
   description: Values at or above 1000 rad signal no active order
+notes: |-
+  Garmin autopilot scalar transport: a separate Garmin sub-protocol (ID 5904) that carries a single named
+  scalar per frame, selected by the Field Group + Field bytes. Structure inferred from the canboat-py-gh
+  extended decoder; the byte between the Field selector and the value is not yet identified.

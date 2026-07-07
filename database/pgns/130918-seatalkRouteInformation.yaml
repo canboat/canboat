@@ -45,6 +45,7 @@ fields:
 - id: unknown
   name: Unknown
   type: UINT8
+  note: Maybe DIRECTION_REFERENCE? I've never seen Raymarine originate a magnetic yet
 - id: distancePositionToNextWaypoint
   name: Distance, Position to Next Waypoint
   type: LENGTH_UFIX32_M

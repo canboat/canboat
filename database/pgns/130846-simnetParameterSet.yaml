@@ -79,3 +79,4 @@ fields:
   name: Value
   type: DYNAMIC_FIELD_VALUE
   description: Variable-width value; width given by Length, datatype resolved per Key
+notes: 'Pin the historic <Id> (shipped in v7.0.0 as "Simnet: Parameter Set"); only the display Name changed.'

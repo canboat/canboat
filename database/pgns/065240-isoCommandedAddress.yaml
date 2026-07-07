@@ -42,6 +42,7 @@ fields:
   lookupIndirect:
     name: DEVICE_FUNCTION
     order: 7
+  note: Device Class
 - id: reserved
   name: Reserved
   type: RESERVED

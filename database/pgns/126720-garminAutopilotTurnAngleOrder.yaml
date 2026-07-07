@@ -64,3 +64,6 @@ fields:
   resolution: 9.58738e-05
   unit: rad
   description: Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)
+notes: |-
+  Turn Angle Order/Measured are a full-circle u16 angle pair (raw * 2*pi/65536 rad, wrapping 0..2*pi),
+  the same order/measured relationship as the Rate of Turn pair above.

@@ -55,3 +55,7 @@ fields:
 - id: engineTorque
   name: Engine Torque
   type: PERCENTAGE_INT8
+notes: |-
+  https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
+  samples/susteranna-actisense-serial.raw:
+  2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f

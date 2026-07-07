@@ -60,3 +60,8 @@ fields:
 - id: binaryData
   name: Binary Data
   type: BINARY
+notes: |-
+  The following PGNs are taken from the field-name list in the NMEA Network Message Database
+  Version 3.002, Appendix A/B. That document lists only field names, so the field lengths,
+  datatypes and any reserved/spare padding below are a best guess and are flagged
+  PACKET_PDF_ONLY (not seen live; lengths/datatypes/lookups unconfirmed).

@@ -18,3 +18,7 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 16
+notes: |-
+  Maretron ACM 100 manual documents PGN 65001-65030
+
+  https://web.archive.org/web/20230512042813/www.maretron.com/support/manuals/ACM100UM_1.3.pdf

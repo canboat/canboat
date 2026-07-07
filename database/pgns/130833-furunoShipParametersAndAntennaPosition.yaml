@@ -49,3 +49,12 @@ fields:
 - id: shipSHeight
   name: Ship's height
   type: LENGTH_UFIX16_DM
+notes: |-
+  Furuno SCX-20 satellite-compass config group (130818/130819/130833/130834).
+  The SC_Setting_Tool reads these by broadcasting a PGN 126208 Request, and writes a
+  single setting with a PGN 126208 Command (Function Code 1) addressed to the device:
+    Command, target PGN, priority, #params, then for each param: <field number><value>.
+  The value width is taken from the target PGN's field at that field number, so these
+  field layouts must match for the command parameters to decode. E.g. to set Ship's Width
+  to 9.0 m: Command -> 130833, params {1=1855 (mfr), 3=4 (industry), 8=90 (0.1 m)}.
+  The device also broadcasts these PGNs as status with the same field order.

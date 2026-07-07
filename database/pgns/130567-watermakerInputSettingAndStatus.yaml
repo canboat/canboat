@@ -100,3 +100,10 @@ fields:
 - id: runTime
   name: Run Time
   type: DURATION_UFIX32_S
+notes: |-
+  https://web.archive.org/web/20200918142919/www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+
+  This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN
+  126208 is used perform the following: start/stop a production, start/stop rinse or flush operation, start/stop low and high
+  pressure pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to
+  request this PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.

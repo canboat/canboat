@@ -44,6 +44,7 @@ fields:
   lookupIndirect:
     name: DEVICE_FUNCTION
     order: 7
+  note: Device Class
 - id: spare
   name: Spare
   type: SPARE
@@ -71,3 +72,9 @@ fields:
     Could be 0 for J1939 device claims
   lookup: YES_NO
   allowLookupWidthMismatch: true
+  note: |-
+    "Arbitrary address capable" is explained at
+    https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
+notes: |-
+  "Arbitrary address capable" is explained at
+  https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable

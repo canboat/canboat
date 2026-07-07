@@ -43,3 +43,4 @@ fields:
 - id: zone4
   name: Zone 4
   type: UINT8
+notes: 'Range: 0 to +24'

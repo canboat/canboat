@@ -41,3 +41,4 @@ fields:
 - id: newPincode
   name: New Pincode
   type: STRING_LAU
+notes: From the NMEA 3.002 field-name list; lengths/datatypes a best guess, flagged PACKET_PDF_ONLY.

@@ -58,3 +58,4 @@ fields:
 - id: i
   name: I
   type: INT8
+notes: Seen when HDS8 configures EP65R

@@ -42,3 +42,4 @@ fields:
 - id: e
   name: E
   type: UINT8
+notes: M/V Dirona

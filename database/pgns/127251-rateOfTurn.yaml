@@ -15,3 +15,7 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+notes: |-
+  https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf
+
+  Lengths observed from Simrad RC42

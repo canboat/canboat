@@ -30,6 +30,7 @@ fields:
   name: Antenna
   type: UNSIGNED_INTEGER
   bits: 4
+  note: 0..3 = antenna 1..4
 - id: pageType
   name: Page type
   type: UNSIGNED_INTEGER
@@ -45,9 +46,11 @@ fields:
 - id: satsInUse
   name: Sats in Use
   type: UINT8
+  note: SVs used in the solution (subset of Sats in View)
 - id: satsInView
   name: Sats in View
   type: UINT8
+  note: total SVs this cycle; drives the multi-page record assembly
 - id: prn
   name: PRN
   type: UINT8
@@ -72,3 +75,7 @@ fields:
 repeating1:
   count: 6
   start: 11
+notes: |-
+  Each 12-byte SV record is PRN, Elevation, Azimuth, SNR, Range residual, Baseline status. "Sats in
+  Use"/"Sats in View" are device totals across pages, not this frame's record count, so the repeating
+  set runs to end of data (UINT8_MAX). Reverse-engineered from SCX-20 captures. See #722.
