@@ -16,8 +16,8 @@ pub struct Violation {
     pub message: String,
 }
 
-fn pgn_loc(p: &Pgn) -> String {
-    format!("pgns/{:06}-{}.yaml", p.pgn, p.id)
+fn pgn_loc(prefix: &str, p: &Pgn) -> String {
+    format!("{prefix}pgns/{:06}-{}.yaml", p.pgn, p.id)
 }
 
 /// pgn.h pgnRange[]: (start, end, step, who, type)
@@ -41,25 +41,29 @@ pub fn check(db: &Database) -> Vec<Violation> {
     let mut v = Vec::new();
 
     check_fieldtypes(db, &mut v); // R23
-    check_lookup_wiring(db, &mut v); // R08, R22
-    for pgn in &db.pgns {
-        check_pgn_range(pgn, &mut v); // R02
-        check_frame_length(pgn, &mut v); // R04
-        check_repeating(pgn, &mut v); // R05
-        check_dynamic_length(db, pgn, &mut v); // R06
-        check_proprietary(db, pgn, &mut v); // R07
-        check_special_values(pgn, &mut v); // R09
-        check_field_count(pgn, &mut v); // R11
-        check_reserved_ids(pgn, &mut v); // R12
+    check_lookup_wiring(db, &mut v); // R08, R22 (references from BOTH trees)
+    // The marine and J1939 lists are separate namespaces (both contain the
+    // ISO PGNs), so variant and id uniqueness are checked per tree.
+    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+        for pgn in list {
+            check_pgn_range(prefix, pgn, &mut v); // R02
+            check_frame_length(prefix, pgn, &mut v); // R04
+            check_repeating(prefix, pgn, &mut v); // R05
+            check_dynamic_length(prefix, db, pgn, &mut v); // R06
+            check_proprietary(prefix, db, pgn, &mut v); // R07
+            check_special_values(prefix, pgn, &mut v); // R09
+            check_field_count(prefix, pgn, &mut v); // R11
+            check_reserved_ids(prefix, pgn, &mut v); // R12
+        }
+        check_variants(prefix, list, &mut v); // R20
+        check_unique_ids(prefix, list, &mut v); // R21
     }
-    check_variants(db, &mut v); // R20
-    check_unique_ids(db, &mut v); // R21
     v
 }
 
 // R02: PGN number in a valid range; PDU1 PGNs end in 0x00; packet type
 // agrees with the range (pgn.c checkPgnList).
-fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_pgn_range(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.pgn >= ACTISENSE_BEM {
         return; // BEM pseudo-PGNs live outside the wire ranges by design
     }
@@ -68,7 +72,7 @@ fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R02",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("PGN {} is beyond every known PGN range", p.pgn),
         });
         return;
@@ -77,7 +81,7 @@ fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R02",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("PGN {} is not part of a valid PGN range", p.pgn),
         });
         return;
@@ -86,7 +90,7 @@ fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R02",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("PGN {} (0x{:x}) is PDU1 and must end in 0x00", p.pgn, p.pgn),
         });
     }
@@ -94,7 +98,7 @@ fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R02",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!(
                 "PGN {} is in a {rtype} range but has packet type {}",
                 p.pgn, p.type_
@@ -105,7 +109,7 @@ fn check_pgn_range(p: &Pgn, v: &mut Vec<Violation>) {
 
 // R04: fixed single-frame PGNs are exactly 8 bytes (ISO Request 59904
 // excepted); a variable single-frame PGN's fixed part must fit the frame.
-fn check_frame_length(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_frame_length(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.type_ != "Single" {
         return;
     }
@@ -113,7 +117,7 @@ fn check_frame_length(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R04",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("single-frame PGN is {} bytes, must be exactly 8", p.length),
         });
     }
@@ -121,14 +125,14 @@ fn check_frame_length(p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R04",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("{} fixed bytes do not fit a single 8-byte frame", p.length),
         });
     }
 }
 
 // R05: repeating sets are self-consistent.
-fn check_repeating(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_repeating(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     let nfields = p.fields.len() as u32;
     for (n, rep) in [(1, &p.repeating1), (2, &p.repeating2)] {
         let Some(rep) = rep else { continue };
@@ -148,14 +152,16 @@ fn check_repeating(p: &Pgn, v: &mut Vec<Violation>) {
         }
         if let Some(cf) = rep.count_field {
             if cf == 0 || cf >= rep.start {
-                bad.push(format!("countField {cf} must reference a field before the set"));
+                bad.push(format!(
+                    "countField {cf} must reference a field before the set"
+                ));
             }
         }
         for msg in bad {
             v.push(Violation {
                 rule: "R05",
                 error: true,
-                location: pgn_loc(p),
+                location: pgn_loc(prefix, p),
                 message: format!("repeating set {n}: {msg}"),
             });
         }
@@ -164,7 +170,7 @@ fn check_repeating(p: &Pgn, v: &mut Vec<Violation>) {
 
 // R06: DYNAMIC_FIELD_VALUE needs an earlier length source; overhead only on
 // length fields; dynamicFieldLength only on DYNAMIC_FIELD_LENGTH fields.
-fn check_dynamic_length(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+fn check_dynamic_length(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
     let mut have_length_source = false;
     for f in &p.fields {
         let root = &db.fieldtypes[f.ft].root_name;
@@ -172,7 +178,7 @@ fn check_dynamic_length(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
             v.push(Violation {
                 rule: "R06",
                 error: true,
-                location: pgn_loc(p),
+                location: pgn_loc(prefix, p),
                 message: format!("field '{}': dynamicFieldLength on a {root} field", f.id),
             });
         }
@@ -180,7 +186,7 @@ fn check_dynamic_length(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
             v.push(Violation {
                 rule: "R06",
                 error: true,
-                location: pgn_loc(p),
+                location: pgn_loc(prefix, p),
                 message: format!("field '{}': overhead without dynamicFieldLength", f.id),
             });
         }
@@ -191,7 +197,7 @@ fn check_dynamic_length(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
             v.push(Violation {
                 rule: "R06",
                 error: true,
-                location: pgn_loc(p),
+                location: pgn_loc(prefix, p),
                 message: format!(
                     "field '{}': DYNAMIC_FIELD_VALUE without an earlier DYNAMIC_FIELD_LENGTH or DYNAMIC_FIELD_KEY",
                     f.id
@@ -203,7 +209,7 @@ fn check_dynamic_length(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
 
 // R07: manufacturer-proprietary PGNs open with Manufacturer Code / reserved /
 // Industry Code, or explicitly declare missing: [MissingCompanyFields].
-fn check_proprietary(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+fn check_proprietary(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
     if !is_manufacturer_pgn(p.pgn) || p.fallback {
         return;
     }
@@ -221,7 +227,7 @@ fn check_proprietary(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
         v.push(Violation {
             rule: "R07",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: "proprietary PGN must start with Manufacturer Code (11 bits) / \
                       Reserved (2) / Industry Code (3), or declare missing: [MissingCompanyFields]"
                 .into(),
@@ -234,54 +240,57 @@ fn check_proprietary(db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
 fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
     let mut referenced: std::collections::HashSet<&str> = std::collections::HashSet::new();
 
-    for p in &db.pgns {
-        for f in &p.fields {
-            let Some((kind, name)) = f.lookup_ref() else { continue };
-            match db.lookups.get(name) {
-                None => v.push(Violation {
-                    rule: "R08",
-                    error: true,
-                    location: pgn_loc(p),
-                    message: format!("field '{}': unknown lookup '{name}'", f.id),
-                }),
-                Some(lk) => {
-                    referenced.insert(&lk.name);
-                    if lk.kind != kind {
-                        v.push(Violation {
+    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+        for p in list {
+            for f in &p.fields {
+                let Some((kind, name)) = f.lookup_ref() else {
+                    continue;
+                };
+                match db.lookups.get(name) {
+                    None => v.push(Violation {
+                        rule: "R08",
+                        error: true,
+                        location: pgn_loc(prefix, p),
+                        message: format!("field '{}': unknown lookup '{name}'", f.id),
+                    }),
+                    Some(lk) => {
+                        referenced.insert(&lk.name);
+                        if lk.kind != kind {
+                            v.push(Violation {
                             rule: "R08",
                             error: true,
-                            location: pgn_loc(p),
+                            location: pgn_loc(prefix, p),
                             message: format!(
                                 "field '{}': lookup '{name}' is a {} enumeration, referenced as {kind}",
                                 f.id, lk.kind
                             ),
                         });
-                    }
-                    // Width policy: a width that differs from the lookup's
-                    // declared width is an ERROR unless the field explicitly
-                    // opts in with `allowLookupWidthMismatch: true` (shared
-                    // enumerations, flag idioms - FINDINGS.md F2). A named
-                    // *value* that cannot fit the field is always an error
-                    // (dead table entry), except out-of-width *bit* positions
-                    // in an opted-in shared bit enumeration.
-                    let named_max = match lk.kind.as_str() {
-                        "pair" | "bit" => lk.pairs.iter().map(|(v, _)| *v).max(),
-                        "triplet" => lk.triplets.iter().map(|(_, v2, _)| *v2).max(),
-                        _ => lk.fieldtypes.iter().map(|e| e.value).max(),
-                    };
-                    let mismatch = f.res_bits != lk.bits;
-                    let unreachable = named_max.is_some_and(|named_max| {
-                        if lk.kind == "bit" {
-                            named_max >= f.res_bits as u64 // bit index beyond width
-                        } else {
-                            f.res_bits < 64 && named_max >= (1u64 << f.res_bits)
                         }
-                    });
-                    if unreachable && !(lk.kind == "bit" && f.allow_lookup_width_mismatch) {
-                        v.push(Violation {
+                        // Width policy: a width that differs from the lookup's
+                        // declared width is an ERROR unless the field explicitly
+                        // opts in with `allowLookupWidthMismatch: true` (shared
+                        // enumerations, flag idioms - FINDINGS.md F2). A named
+                        // *value* that cannot fit the field is always an error
+                        // (dead table entry), except out-of-width *bit* positions
+                        // in an opted-in shared bit enumeration.
+                        let named_max = match lk.kind.as_str() {
+                            "pair" | "bit" => lk.pairs.iter().map(|(v, _)| *v).max(),
+                            "triplet" => lk.triplets.iter().map(|(_, v2, _)| *v2).max(),
+                            _ => lk.fieldtypes.iter().map(|e| e.value).max(),
+                        };
+                        let mismatch = f.res_bits != lk.bits;
+                        let unreachable = named_max.is_some_and(|named_max| {
+                            if lk.kind == "bit" {
+                                named_max >= f.res_bits as u64 // bit index beyond width
+                            } else {
+                                f.res_bits < 64 && named_max >= (1u64 << f.res_bits)
+                            }
+                        });
+                        if unreachable && !(lk.kind == "bit" && f.allow_lookup_width_mismatch) {
+                            v.push(Violation {
                             rule: "R08",
                             error: true,
-                            location: pgn_loc(p),
+                            location: pgn_loc(prefix, p),
                             message: format!(
                                 "field '{}' is {} bits; lookup '{name}' names unreachable value {}",
                                 f.id,
@@ -289,27 +298,28 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                                 named_max.unwrap()
                             ),
                         });
-                    } else if mismatch && !f.allow_lookup_width_mismatch {
-                        v.push(Violation {
-                            rule: "R08",
-                            error: true,
-                            location: pgn_loc(p),
-                            message: format!(
-                                "field '{}' is {} bits but lookup '{name}' declares {}; \
+                        } else if mismatch && !f.allow_lookup_width_mismatch {
+                            v.push(Violation {
+                                rule: "R08",
+                                error: true,
+                                location: pgn_loc(prefix, p),
+                                message: format!(
+                                    "field '{}' is {} bits but lookup '{name}' declares {}; \
                                  add allowLookupWidthMismatch: true if deliberate",
-                                f.id, f.res_bits, lk.bits
-                            ),
-                        });
-                    } else if !mismatch && f.allow_lookup_width_mismatch {
-                        v.push(Violation {
+                                    f.id, f.res_bits, lk.bits
+                                ),
+                            });
+                        } else if !mismatch && f.allow_lookup_width_mismatch {
+                            v.push(Violation {
                             rule: "R08",
                             error: false,
-                            location: pgn_loc(p),
+                            location: pgn_loc(prefix, p),
                             message: format!(
                                 "field '{}': unnecessary allowLookupWidthMismatch (widths agree)",
                                 f.id
                             ),
                         });
+                        }
                     }
                 }
             }
@@ -360,16 +370,23 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
 }
 
 // R09: SPECIAL_VALUES overrides stay within the sentinel model.
-fn check_special_values(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_special_values(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     for f in &p.fields {
         if let Some(sv) = f.special_values {
-            let max = if f.res_bits == 0 { 0 } else { (1u64 << f.res_bits.min(63)) - 1 };
+            let max = if f.res_bits == 0 {
+                0
+            } else {
+                (1u64 << f.res_bits.min(63)) - 1
+            };
             if sv > 3 || (sv as u64) > max {
                 v.push(Violation {
                     rule: "R09",
                     error: true,
-                    location: pgn_loc(p),
-                    message: format!("field '{}': specialValues {sv} out of range (0-3, < 2^bits)", f.id),
+                    location: pgn_loc(prefix, p),
+                    message: format!(
+                        "field '{}': specialValues {sv} out of range (0-3, < 2^bits)",
+                        f.id
+                    ),
                 });
             }
         }
@@ -377,19 +394,19 @@ fn check_special_values(p: &Pgn, v: &mut Vec<Violation>) {
 }
 
 // R11: the C runtime's fieldList array holds 33 entries.
-fn check_field_count(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_field_count(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.fields.len() > 33 {
         v.push(Violation {
             rule: "R11",
             error: true,
-            location: pgn_loc(p),
+            location: pgn_loc(prefix, p),
             message: format!("{} fields exceed the C runtime limit of 33", p.fields.len()),
         });
     }
 }
 
 // R12: Reserved/Spare fields follow the id convention.
-fn check_reserved_ids(p: &Pgn, v: &mut Vec<Violation>) {
+fn check_reserved_ids(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     for f in &p.fields {
         let want = match f.name.as_str() {
             "Reserved" => "reserved",
@@ -402,8 +419,11 @@ fn check_reserved_ids(p: &Pgn, v: &mut Vec<Violation>) {
             v.push(Violation {
                 rule: "R12",
                 error: true,
-                location: pgn_loc(p),
-                message: format!("field '{}' named '{}' must have id '{want}[N]'", f.id, f.name),
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "field '{}' named '{}' must have id '{want}[N]'",
+                    f.id, f.name
+                ),
             });
         }
     }
@@ -411,9 +431,9 @@ fn check_reserved_ids(p: &Pgn, v: &mut Vec<Violation>) {
 
 // R20: multiple variants of one PGN must be distinguishable: every variant
 // carries match fields except at most one catch-all, and match sets differ.
-fn check_variants(db: &Database, v: &mut Vec<Violation>) {
+fn check_variants(prefix: &str, pgns: &[Pgn], v: &mut Vec<Violation>) {
     let mut by_pgn: std::collections::BTreeMap<u32, Vec<&Pgn>> = Default::default();
-    for p in &db.pgns {
+    for p in pgns {
         if !p.fallback {
             by_pgn.entry(p.pgn).or_default().push(p);
         }
@@ -444,7 +464,7 @@ fn check_variants(db: &Database, v: &mut Vec<Violation>) {
                 v.push(Violation {
                     rule: "R20",
                     error: false,
-                    location: pgn_loc(p),
+                    location: pgn_loc(prefix, p),
                     message: format!(
                         "match set [{key}] duplicates variant '{other}' of PGN {pgn}; the later variant is unreachable"
                     ),
@@ -455,7 +475,7 @@ fn check_variants(db: &Database, v: &mut Vec<Violation>) {
             v.push(Violation {
                 rule: "R20",
                 error: true,
-                location: format!("pgns/{pgn:06}-*.yaml"),
+                location: format!("{prefix}pgns/{pgn:06}-*.yaml"),
                 message: format!(
                     "PGN {pgn} has {} variants without match fields ({}); at most one catch-all is decodable",
                     matchless.len(),
@@ -467,14 +487,14 @@ fn check_variants(db: &Database, v: &mut Vec<Violation>) {
 }
 
 // R21: ids are unique - PGN ids globally, field ids within a PGN.
-fn check_unique_ids(db: &Database, v: &mut Vec<Violation>) {
+fn check_unique_ids(prefix: &str, pgns: &[Pgn], v: &mut Vec<Violation>) {
     let mut pgn_ids: std::collections::HashMap<&str, u32> = Default::default();
-    for p in &db.pgns {
+    for p in pgns {
         if let Some(other) = pgn_ids.insert(&p.id, p.pgn) {
             v.push(Violation {
                 rule: "R21",
                 error: true,
-                location: pgn_loc(p),
+                location: pgn_loc(prefix, p),
                 message: format!("PGN id '{}' already used by PGN {other}", p.id),
             });
         }
@@ -484,7 +504,7 @@ fn check_unique_ids(db: &Database, v: &mut Vec<Violation>) {
                 v.push(Violation {
                     rule: "R21",
                     error: true,
-                    location: pgn_loc(p),
+                    location: pgn_loc(prefix, p),
                     message: format!("duplicate field id '{}'", f.id),
                 });
             }

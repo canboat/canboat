@@ -27,7 +27,9 @@ fn find_repo_root(start: &Path) -> Result<PathBuf, String> {
             return Ok(path);
         }
         if !path.pop() {
-            return Err("cannot find canboat repository root (looked for analyzer/ and docs/)".into());
+            return Err(
+                "cannot find canboat repository root (looked for analyzer/ and docs/)".into(),
+            );
         }
     }
 }
@@ -161,7 +163,14 @@ fn run() -> Result<i32, String> {
                     root.join("analyzer/fieldtype-data.h"),
                     emit_c::emit_fieldtype_data_h(&authored_fieldtypes),
                 ),
-                (root.join("analyzer/pgn-data.h"), emit_c::emit_pgn_data_h(&db)),
+                (
+                    root.join("analyzer/pgn-data.h"),
+                    emit_c::emit_pgn_data_h(&db, false),
+                ),
+                (
+                    root.join("analyzer/pgn-j1939-data.h"),
+                    emit_c::emit_pgn_data_h(&db, true),
+                ),
             ];
             let mut stale = 0;
             for (path, emitted) in &artifacts {
@@ -174,10 +183,8 @@ fn run() -> Result<i32, String> {
                             path.display()
                         );
                         if let Some(diff) = &args.diff {
-                            let dpath = format!(
-                                "{diff}.{}",
-                                path.file_name().unwrap().to_string_lossy()
-                            );
+                            let dpath =
+                                format!("{diff}.{}", path.file_name().unwrap().to_string_lossy());
                             write_diff(&original, emitted, &dpath).map_err(|e| e.to_string())?;
                             eprintln!("keel generate --check: diff written to {dpath}");
                         }
@@ -191,7 +198,10 @@ fn run() -> Result<i32, String> {
                 if stale > 0 {
                     return Ok(1);
                 }
-                println!("keel generate --check: all {} artifacts up to date", artifacts.len());
+                println!(
+                    "keel generate --check: all {} artifacts up to date",
+                    artifacts.len()
+                );
             }
             Ok(0)
         }

@@ -1,0 +1,21 @@
+pgn: 61443
+id: ecu2
+description: 'ECU #2'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: throttleLever
+  name: Throttle Lever
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: reserved3
+  name: Reserved
+  type: RESERVED
+  bits: 48

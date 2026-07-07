@@ -83,7 +83,8 @@ impl<'a> Emitter<'a> {
 
     fn xml_u(&mut self, indent: usize, element: &str, value: u64) {
         let pad = " ".repeat(indent);
-        self.out.push_str(&format!("{pad}<{element}>{value}</{element}>\n"));
+        self.out
+            .push_str(&format!("{pad}<{element}>{value}</{element}>\n"));
     }
 
     // ----- sections ------------------------------------------------------
@@ -166,7 +167,10 @@ impl<'a> Emitter<'a> {
                 self.p(&format!("      <Unit>{u}</Unit>\n"));
             }
             if let Some(s) = ft.has_sign {
-                self.p(&format!("      <Signed>{}</Signed>\n", if s { "true" } else { "false" }));
+                self.p(&format!(
+                    "      <Signed>{}</Signed>\n",
+                    if s { "true" } else { "false" }
+                ));
             }
             if ft.resolution != 1.0 && ft.resolution != 0.0 {
                 let r = self.g15(ft.resolution);
@@ -189,15 +193,35 @@ impl<'a> Emitter<'a> {
     fn missing(&mut self) {
         self.p("  <MissingEnumerations>\n");
         for (name, text) in [
-            ("Fields", "The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect"),
-            ("FieldLengths", "The length of one or more fields is likely incorrect"),
-            ("Resolution", "The resolution of one or more fields is likely incorrect"),
-            ("Lookups", "One or more of the lookup fields contain missing or incorrect values"),
-            ("SampleData", "The PGN has not been seen in any logfiles yet"),
+            (
+                "Fields",
+                "The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect",
+            ),
+            (
+                "FieldLengths",
+                "The length of one or more fields is likely incorrect",
+            ),
+            (
+                "Resolution",
+                "The resolution of one or more fields is likely incorrect",
+            ),
+            (
+                "Lookups",
+                "One or more of the lookup fields contain missing or incorrect values",
+            ),
+            (
+                "SampleData",
+                "The PGN has not been seen in any logfiles yet",
+            ),
             ("Interval", "The default transmission interval is not known"),
-            ("MissingCompanyFields", "The manufacturer specific PGN seems to not contain the mandatory Company and Industry fields; this is likely a bug or at least incompatibility in the device"),
+            (
+                "MissingCompanyFields",
+                "The manufacturer specific PGN seems to not contain the mandatory Company and Industry fields; this is likely a bug or at least incompatibility in the device",
+            ),
         ] {
-            self.p(&format!("    <MissingAttribute Name=\"{name}\">{text}</MissingAttribute>\n"));
+            self.p(&format!(
+                "    <MissingAttribute Name=\"{name}\">{text}</MissingAttribute>\n"
+            ));
         }
         self.p("  </MissingEnumerations>\n");
     }
@@ -272,7 +296,10 @@ impl<'a> Emitter<'a> {
 
     /// explainFieldtypeXMLv2, including the Signed newline quirk (QUIRKS Q2).
     fn enum_fieldtype(&mut self, entry: &crate::model::FieldTypeLookupEntry) {
-        let fti = self.db.fieldtype(&entry.fieldtype).expect("lookup fieldtype");
+        let fti = self
+            .db
+            .fieldtype(&entry.fieldtype)
+            .expect("lookup fieldtype");
         let ft = &self.db.fieldtypes[fti];
         self.p(&format!(
             "      <EnumFieldType Value='{}' Name='{}'",
@@ -310,7 +337,11 @@ impl<'a> Emitter<'a> {
             "bit" => self.xml(10, "LookupBitEnumeration", Some(name)),
             "triplet" => {
                 self.xml(10, "LookupIndirectEnumeration", Some(name));
-                self.xml_u(10, "LookupIndirectEnumerationFieldOrder", order.unwrap_or(0) as u64);
+                self.xml_u(
+                    10,
+                    "LookupIndirectEnumerationFieldOrder",
+                    order.unwrap_or(0) as u64,
+                );
             }
             "fieldtype" => self.xml(10, "LookupFieldTypeEnumeration", Some(name)),
             _ => {}
@@ -332,7 +363,11 @@ impl<'a> Emitter<'a> {
         self.xml(6, "URL", pgn.url.as_deref());
         self.xml(6, "ResearchDoc", pgn.research_doc.as_deref());
         self.xml(6, "Type", Some(&pgn.type_));
-        self.xml(6, "Complete", Some(if pgn.is_complete() { "true" } else { "false" }));
+        self.xml(
+            6,
+            "Complete",
+            Some(if pgn.is_complete() { "true" } else { "false" }),
+        );
         if pgn.fallback {
             self.xml(6, "Fallback", Some("true"));
         }
@@ -357,7 +392,11 @@ impl<'a> Emitter<'a> {
             if let Some(rep) = rep {
                 if rep.count > 0 {
                     self.xml_u(6, &format!("RepeatingFieldSet{n}Size"), rep.count as u64);
-                    self.xml_u(6, &format!("RepeatingFieldSet{n}StartField"), rep.start as u64);
+                    self.xml_u(
+                        6,
+                        &format!("RepeatingFieldSet{n}StartField"),
+                        rep.start as u64,
+                    );
                     if let Some(cf) = rep.count_field {
                         self.xml_u(6, &format!("RepeatingFieldSet{n}CountField"), cf as u64);
                     }
@@ -386,7 +425,10 @@ impl<'a> Emitter<'a> {
     fn field(&mut self, f: &Field, mut bit_offset: u32, mut show_bit_offset: bool) -> (u32, bool) {
         let ft = &self.db.fieldtypes[f.ft];
         let lookup_ref = f.lookup_ref().map(|(k, n)| (k, n.to_string()));
-        self.p(&format!("        <Field>\n          <Order>{}</Order>\n", f.order));
+        self.p(&format!(
+            "        <Field>\n          <Order>{}</Order>\n",
+            f.order
+        ));
         self.xml(10, "Id", Some(&f.id));
         self.xml(10, "Name", Some(&f.name));
 
@@ -432,7 +474,10 @@ impl<'a> Emitter<'a> {
             self.p(&format!("          <Resolution>{r}</Resolution>\n"));
         }
         if let Some(s) = ft.has_sign {
-            self.p(&format!("          <Signed>{}</Signed>\n", if s { "true" } else { "false" }));
+            self.p(&format!(
+                "          <Signed>{}</Signed>\n",
+                if s { "true" } else { "false" }
+            ));
         }
         if f.res_offset != 0 {
             if f.res_resolution == 1.0 || f.res_resolution == 0.0 {
@@ -462,7 +507,11 @@ impl<'a> Emitter<'a> {
         }
 
         if !f.res_range_max.is_nan() {
-            if f.res_resolution == 1.0 && f.res_bits == 64 && ft.has_sign == Some(false) && f.res_offset == 0 {
+            if f.res_resolution == 1.0
+                && f.res_bits == 64
+                && ft.has_sign == Some(false)
+                && f.res_offset == 0
+            {
                 self.p(&format!("          <RangeMax>{}</RangeMax>\n", u64::MAX));
             } else {
                 let r = self.g15(f.res_range_max);
@@ -487,10 +536,16 @@ impl<'a> Emitter<'a> {
             let raw = (1u64 << highbit) - 1;
             self.p(&format!("          <UnknownValue>{raw}</UnknownValue>\n"));
             if f.reserved_count >= 2 {
-                self.p(&format!("          <OutOfRangeValue>{}</OutOfRangeValue>\n", raw - 1));
+                self.p(&format!(
+                    "          <OutOfRangeValue>{}</OutOfRangeValue>\n",
+                    raw - 1
+                ));
             }
             if f.reserved_count >= 3 {
-                self.p(&format!("          <ReservedValue>{}</ReservedValue>\n", raw - 2));
+                self.p(&format!(
+                    "          <ReservedValue>{}</ReservedValue>\n",
+                    raw - 2
+                ));
             }
         }
 
@@ -540,17 +595,23 @@ impl<'a> Emitter<'a> {
 
     pub fn emit(mut self, which: &str) -> String {
         self.header();
-        if which == "normal" {
+        if which == "normal" || which == "j1939" {
+            // The J1939 document is the "normal" layout of the J1939 build
+            // (analyzer-explain-j1939): full sections, its own pgnList.
             self.physical_quantities();
             self.fieldtypes();
             self.missing();
             self.lookup_sections();
         }
         self.p("  <PGNs>\n");
-        let pgns: Vec<Pgn> = self.db.pgns.clone();
+        let pgns: Vec<Pgn> = if which == "j1939" {
+            self.db.pgns_j1939.clone()
+        } else {
+            self.db.pgns.clone()
+        };
         for pgn in &pgns {
             let include = match which {
-                "normal" => pgn.pgn < ACTISENSE_BEM,
+                "normal" | "j1939" => pgn.pgn < ACTISENSE_BEM,
                 "actisense" => (ACTISENSE_BEM..IKONVERT_BEM).contains(&pgn.pgn),
                 "ikonvert" => pgn.pgn >= IKONVERT_BEM,
                 _ => false,

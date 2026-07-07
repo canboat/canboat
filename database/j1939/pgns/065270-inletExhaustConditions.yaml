@@ -1,0 +1,23 @@
+pgn: 65270
+id: inletExhaustConditions
+description: Inlet/Exhaust Conditions
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: intakeManifoldTemp
+  name: Intake Manifold Temp
+  type: TEMPERATURE_UINT8_OFFSET
+- id: airInletPressure
+  name: Air Inlet Pressure
+  type: PRESSURE_UINT8_2KPA
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 32

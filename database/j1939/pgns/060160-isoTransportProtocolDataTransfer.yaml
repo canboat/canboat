@@ -1,0 +1,15 @@
+pgn: 60160
+id: isoTransportProtocolDataTransfer
+description: ISO Transport Protocol, Data Transfer
+type: Single
+interval: irregular
+explanation: ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have
+  9 or more data bytes. This PGN represents a single packet of a multipacket message.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: data
+  name: Data
+  type: BINARY
+  bits: 56

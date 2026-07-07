@@ -52,6 +52,24 @@ field must state so explicitly.** Implemented as the per-field key
 The bootstrap converter stamped the key onto the 40 inherited fields, so
 the baseline carries the intent explicitly and any *new* mismatch fails.
 
+## F4 — J1939: the XML document had never been emittable (fixed)
+
+`analyzer-explain-j1939 -explain-xml` had always aborted mid-document (no
+Makefile target ever exercised it, so it went unnoticed): 46 of 57 PGNs
+emitted, then a fatal length error. Fixed in `pgn-j1939.h` during the
+J1939 conversion, all proven by the test suite:
+
+- **65226 DM1 "Active Trouble Codes"**: the DTC quad (SPN/FMI/CM/OC) now
+  repeats until data exhausted (SAE J1939-73) — previously 6 fixed bytes,
+  which both aborted the emitter and decoded only one DTC.
+- **Five partial single-frame definitions** (65262 Engine Temp #1, 65266
+  Fuel Economy, 65269 Ambient Conditions, 65270 Inlet/Exhaust Conditions,
+  65271 Vehicle Electrical Power) padded with trailing reserved fields to
+  the 8-byte frame.
+- **61142 → 61442 "Electronic Transmission Controller 1"**: transposition
+  typo caught by rule R02 (61142 = 0xEED6 is not a valid PGN number; SAE
+  ETC1 is 61442 = 0xF002). Real ETC1 frames had been hitting the fallback.
+
 ## F3 — R22: unreferenced lookup enumerations (3 warnings)
 
 `AIRMAR_FILTER`, `FUSION_SIRIUS_ALERT`, `SEATALK1_ATT` are defined in

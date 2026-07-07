@@ -1,0 +1,56 @@
+pgn: 65226
+id: activeTroubleCodes
+description: Active Trouble Codes
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: malfunctionLampStatus
+  name: Malfunction Lamp Status
+  type: BINARY
+  bits: 2
+  description: Fault Lamps
+- id: redStopLampStatus
+  name: Red Stop Lamp Status
+  type: BINARY
+  bits: 2
+  description: Fault Lamps
+- id: amberWarningLampStatus
+  name: Amber Warning Lamp Status
+  type: BINARY
+  bits: 2
+  description: Fault Lamps
+- id: protectLampStatus
+  name: Protect Lamp Status
+  type: BINARY
+  bits: 2
+  description: Fault Lamps
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: spn
+  name: SPN
+  type: BINARY
+  bits: 19
+  description: Suspect Parameter Number
+- id: fmi
+  name: FMI
+  type: BINARY
+  bits: 5
+  description: Fault Mode Indicator
+- id: cm
+  name: CM
+  type: BINARY
+  bits: 1
+  description: SPN Conversion Method
+- id: oc
+  name: OC
+  type: BINARY
+  bits: 7
+  description: Occurance Count
+repeating1:
+  count: 4
+  start: 6

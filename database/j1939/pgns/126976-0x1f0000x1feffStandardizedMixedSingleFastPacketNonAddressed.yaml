@@ -1,0 +1,16 @@
+pgn: 126976
+id: 0x1f0000x1feffStandardizedMixedSingleFastPacketNonAddressed
+description: '0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed'
+type: Mixed
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815).
+  When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1784

@@ -21,7 +21,10 @@ fn load_file(path: &Path) -> Result<Yaml> {
     let mut docs =
         YamlLoader::load_from_str(&text).map_err(|e| format!("{}: {e}", path.display()))?;
     if docs.len() != 1 {
-        return Err(format!("{}: expected exactly one YAML document", path.display()));
+        return Err(format!(
+            "{}: expected exactly one YAML document",
+            path.display()
+        ));
     }
     Ok(docs.remove(0))
 }
@@ -36,7 +39,9 @@ fn get<'a>(hash: &'a Yaml, key: &str) -> Option<&'a Yaml> {
 }
 
 fn opt_str(hash: &Yaml, key: &str) -> Option<String> {
-    get(hash, key).and_then(|y| y.as_str()).map(|s| s.to_string())
+    get(hash, key)
+        .and_then(|y| y.as_str())
+        .map(|s| s.to_string())
 }
 
 fn req_str(hash: &Yaml, key: &str, ctx: &str) -> Result<String> {
@@ -120,8 +125,13 @@ fn lookup(y: &Yaml, ctx: &str) -> Result<Lookup> {
                 return Err(format!("{ctx}: values must be a map"));
             };
             for (k, v) in h {
-                let key = k.as_i64().ok_or_else(|| format!("{ctx}: non-integer value key"))? as u64;
-                let name = v.as_str().ok_or_else(|| format!("{ctx}: non-string value name"))?;
+                let key = k
+                    .as_i64()
+                    .ok_or_else(|| format!("{ctx}: non-integer value key"))?
+                    as u64;
+                let name = v
+                    .as_str()
+                    .ok_or_else(|| format!("{ctx}: non-string value name"))?;
                 lk.pairs.push((key, name.to_string()));
             }
         }
@@ -217,7 +227,10 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
         Some(other) => return Err(format!("{ctx}: bad interval {other:?}")),
     };
     let missing = match get(y, "missing") {
-        Some(Yaml::Array(a)) => a.iter().filter_map(|m| m.as_str().map(String::from)).collect(),
+        Some(Yaml::Array(a)) => a
+            .iter()
+            .filter_map(|m| m.as_str().map(String::from))
+            .collect(),
         _ => Vec::new(),
     };
     let fields = match get(y, "fields") {
@@ -271,7 +284,8 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
         return Err("physicalquantities.yaml: expected a list".into());
     };
     for p in pqs {
-        db.physical_quantities.push(physical_quantity(p, "physicalquantities.yaml")?);
+        db.physical_quantities
+            .push(physical_quantity(p, "physicalquantities.yaml")?);
     }
 
     let ft_doc = load_file(&db_dir.join("fieldtypes.yaml"))?;
@@ -293,7 +307,10 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
         for (k, v) in h {
             let kind = k.as_str().unwrap_or_default().to_string();
             let names = match v {
-                Yaml::Array(a) => a.iter().filter_map(|n| n.as_str().map(String::from)).collect(),
+                Yaml::Array(a) => a
+                    .iter()
+                    .filter_map(|n| n.as_str().map(String::from))
+                    .collect(),
                 _ => Vec::new(),
             };
             db.lookup_order.insert(kind, names);
@@ -307,6 +324,15 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
     // Emission order: PGN ascending, then authored variant order (which
     // includes fallback entries - their in-group position is semantic).
     db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
+
+    let j1939_dir = db_dir.join("j1939/pgns");
+    if j1939_dir.is_dir() {
+        for path in sorted_yaml_files(&j1939_dir)? {
+            let doc = load_file(&path)?;
+            db.pgns_j1939.push(pgn(&doc, &path.display().to_string())?);
+        }
+        db.pgns_j1939.sort_by_key(|p| (p.pgn, p.variant_order));
+    }
 
     Ok(db)
 }

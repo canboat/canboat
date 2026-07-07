@@ -219,6 +219,8 @@ pub struct Database {
     pub lookups: HashMap<String, Lookup>,
     pub lookup_order: HashMap<String, Vec<String>>, // kind -> names, emission order
     pub pgns: Vec<Pgn>,
+    /// The parallel J1939 list (pgn-j1939.h); shares every other section.
+    pub pgns_j1939: Vec<Pgn>,
     pub version: String,
     pub schema_version: String,
 }

@@ -1,0 +1,53 @@
+pgn: 61442
+id: electronicTransmissionController1
+description: Electronic Transmission Controller 1
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: J1939 ETC1 - Electronic Transmission Controller 1. Reports transmission status including driveline engagement,
+  torque converter lockup, output/input shaft speeds, and clutch slip.
+fields:
+- id: transmissionDrivelineEngaged
+  name: Transmission Driveline Engaged
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: torqueConverterLockupEngaged
+  name: Torque Converter Lockup Engaged
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: transmissionShiftInProgress
+  name: Transmission Shift in Progress
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: torqueConverterLockupTransitionInProgress
+  name: Torque Converter Lockup Transition in Progress
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: transmissionOutputShaftSpeed
+  name: Transmission Output Shaft Speed
+  type: ROTATION_UFIX16_RPM
+- id: percentClutchSlip
+  name: Percent Clutch Slip
+  type: UINT8
+- id: engineMomentaryOverspeedEnable
+  name: Engine Momentary Overspeed Enable
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: progressiveShiftDisable
+  name: Progressive Shift Disable
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: transmissionInputShaftSpeed
+  name: Transmission Input Shaft Speed
+  type: UINT16
+- id: sourceAddressOfControllingDeviceForTransmissionControl
+  name: Source Address of Controlling Device for Transmission Control
+  type: UINT8

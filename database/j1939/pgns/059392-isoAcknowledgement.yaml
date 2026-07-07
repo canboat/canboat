@@ -1,0 +1,27 @@
+pgn: 59392
+id: isoAcknowledgement
+description: ISO Acknowledgement
+type: Single
+variantOrder: 2
+interval: irregular
+explanation: This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This
+  message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific
+  command to indicate compliance or failure.
+fields:
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: ISO_CONTROL
+- id: groupFunction
+  name: Group Function
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Parameter Group Number of requested information

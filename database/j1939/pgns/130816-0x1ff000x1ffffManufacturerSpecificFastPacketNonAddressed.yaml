@@ -1,0 +1,16 @@
+pgn: 130816
+id: 0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed
+description: '0x1FF00-0x1FFFF: Manufacturer Specific fast-packet non-addressed'
+type: Fast
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00
+  to 0x1FFFF (130816 - 131071). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1784
