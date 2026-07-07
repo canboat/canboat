@@ -374,29 +374,79 @@ Version stamping (`fixup-version.py`, `SCHEMA_VERSION`) moves into
 
 **Local web only.** `keel edit` starts a small local HTTP server (a
 minimal Rust HTTP crate, no async framework) in the clone and opens the
-browser:
+browser. Frontend: a single HTML file, vanilla JS, no build step —
+contributors to a C project should not need npm. Served straight from
+`keel/web/`.
 
-* Backend endpoints: `GET /model` (the loaded database), `POST /validate`
-  (run the rule engine on a candidate document, return rule violations
-  with YAML paths), `POST /save` (canonicalize + write + full check),
-  `GET /lookups`, `GET /fieldtypes` (populate pickers).
-* Frontend: a single HTML file, vanilla JS, no build step — contributors to
-  a C project should not need npm. Served straight from `keel/web/`.
-* Centerpiece: a **live bit-layout grid** — the frame drawn byte by byte,
-  fields packing left to right as you add them, byte boundaries visible,
-  misalignment red (with "add N reserved bits" one click away), sentinel
-  regions shaded, repeating sets bracketed. This is the guidance a
-  starting developer actually needs.
-* Pickers over free text everywhere sensible: fieldtypes, units/physical
-  quantities, existing lookup enumerations (searchable — steering people
-  to reuse `YES_NO` instead of minting `ENABLED_DISABLED`).
-* Templates: proprietary-PGN scaffold with the company preamble
-  pre-filled; fast/single defaults by PGN range.
-* Save is gated: a file that fails any rule cannot be written (the CLI can
-  `--force` for work-in-progress; the editor does not).
+### 7.1 Wizard: evidence first
+
+Creating or extending a PGN is a **wizard** that leads with sample
+records — real captures, pasted early, at least one and preferably many:
+
+1. **Paste samples** (formats auto-detected per line, mixable): the
+   canboat PLAIN/FAST format that `samples/` already holds, candump
+   (`can0 18EAFF00#...`), and raw assembled hex; Actisense N2K ASCII /
+   YDWG-02 can follow. keel reassembles fast-packet frames (a small port
+   of the C reassembly — also the foundation for a future `keel decode`).
+   The wizard derives PGN number, priority and single/fast from the
+   samples. Skipping the step is allowed but nagged — some definitions
+   come from vendor documentation, not captures.
+2. **Evidence grid**: the bit-layout grid shows the actual payload bytes
+   of *every sample stacked*, not an empty frame. Differential analysis
+   guides the carving: bytes constant across samples are match/reserved
+   candidates (an 11-bit value in the proprietary preamble position gets
+   recognized against MANUFACTURER_CODE and pre-filled as match fields);
+   all-0xFF regions are unclaimed; varying bytes are data.
+3. **Live decode**: every field carved decodes immediately in *all*
+   samples, side by side. Width/sign/resolution/lookup questions answer
+   themselves on sight — plausible values confirm a hypothesis, a
+   constant 6553.1 reveals the 0xFFFF sentinel, garbage refutes it.
+   Decoding uses keel's own field decoder (bit extraction + resolution +
+   lookup naming), shared with the sample tests below.
+4. **Save**: gated by the rule engine (a failing file cannot be written;
+   the CLI keeps `--force` for WIP, the editor does not). The wizard
+   offers — checkbox on by default — to store the pasted records under
+   `samples/` and cite them in the PGN's `notes:`, so the evidence rule
+   (CONTRIBUTING.md) holds by construction. Opt out for captures that
+   should not be published (e.g. private positions).
 
 Because the editor calls the same rule engine as `keel check` and CI, its
 green state *is* PR readiness.
+
+### 7.2 Sample expectations: captures as regression tests
+
+The wizard's samples do not stop at authoring: the decoded values the
+contributor visually approved become an **expectation block** in the PGN's
+YAML, and `keel check` re-decodes them forever after:
+
+```yaml
+samples:
+  - raw: "2016-04-09T16:41:39.628Z,2,127489,16,255,8,..."
+    expects:
+      oilPressure: 1.583
+      temperature: 23.52
+```
+
+* `expects` is partial — assert the fields that matter, ignore the rest.
+* A later edit to the field layout, a lookup, or a fieldtype that changes
+  any expected decode fails `keel check` (rule R40) with a
+  value-level diff.
+* This complements (not replaces) the C golden tests in `analyzer/tests`:
+  keel's decoder and the C decoder are independent implementations, which
+  enables a **differential mode** later — decode the whole `samples/`
+  corpus through both and diff, catching bugs in either.
+
+### 7.3 Editing existing PGNs
+
+The same grid and live decode, seeded from the stored definition and its
+`samples:` block. Pickers over free text everywhere sensible: fieldtypes,
+units/physical quantities, existing lookup enumerations (searchable —
+steering people to reuse `YES_NO` instead of minting `ENABLED_DISABLED`).
+
+Backend endpoints: `GET /model`, `POST /validate` (rule engine on a
+candidate document), `POST /decode` (samples against a candidate
+definition — powers the live grid), `POST /save`, `GET /lookups`,
+`GET /fieldtypes`.
 
 ## 8. Contribution workflows
 
