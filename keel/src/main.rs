@@ -8,6 +8,7 @@ mod cformat;
 mod check;
 mod derive;
 mod emit_c;
+mod emit_text;
 mod emit_xml;
 mod model;
 mod yamlio;
@@ -17,6 +18,11 @@ use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
 use emit_xml::FloatStyle;
+
+// Die silently on SIGPIPE (keel explain | head) instead of a Rust panic.
+unsafe extern "C" {
+    fn signal(signum: i32, handler: usize) -> usize;
+}
 
 fn find_repo_root(start: &Path) -> Result<PathBuf, String> {
     let mut path = start
@@ -84,7 +90,7 @@ fn parse_args() -> Result<Args, String> {
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
+        return Err("usage: keel <check|generate|emit|explain> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
     }
     Ok(args)
 }
@@ -205,6 +211,10 @@ fn run() -> Result<i32, String> {
             }
             Ok(0)
         }
+        "explain" => {
+            print!("{}", emit_text::emit_text(&db, args.which == "j1939"));
+            Ok(0)
+        }
         "emit" => {
             // Emit any document to stdout (dev tool; also the BEM documents)
             print!("{}", emit_xml::emit_xml(&db, &args.which, args.float_style));
@@ -215,6 +225,9 @@ fn run() -> Result<i32, String> {
 }
 
 fn main() -> ExitCode {
+    unsafe {
+        signal(13, 0); // SIGPIPE, SIG_DFL
+    }
     match run() {
         Ok(code) => ExitCode::from(code as u8),
         Err(e) => {

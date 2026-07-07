@@ -205,7 +205,6 @@ struct FieldType
   uint32_t    size;                // Size in bits
   Bool        variableSize;        // True if size varies per instance of PGN
   char       *baseFieldType;       // Some field types are variations of others
-  char       *v1Type;              // Type as printed in v1 xml/json
   bool        external;            // True when printed in XML
 
   // The following are only set for numbers

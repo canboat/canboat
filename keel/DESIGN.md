@@ -1,6 +1,10 @@
 # keel — design for the PGN database refactor
 
-Status: **draft for discussion** — no code exists yet.
+Status: **implemented through migration step 5** (switchover done on the
+`refactor_pgn_database` branch): the YAML database is the source of truth,
+keel generates canboat.xml and the analyzer's C tables, analyzer-explain and
+the `-DEXPLAIN`/v1/macro-DSL machinery are deleted. Remaining: step 6 (the
+editor), the pre-merge cleanups in FINDINGS.md, and the QUIRKS.md review.
 
 `keel` is the tool that will own the CANboat PGN database: a set of YAML
 source files that replace `analyzer/pgn.h`, `analyzer/lookup.h` and
