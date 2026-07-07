@@ -48,6 +48,9 @@ pub struct DecodedField {
     /// Resolved SI unit of the value, if any (e.g. "rad", "m/s") - lets
     /// the editor annotate the live decode.
     pub unit: Option<String>,
+    /// Root fieldtype when it wants a human rendering the raw number
+    /// hides (DATE -> yyyy.mm.dd, TIME/DURATION -> hh:mm:ss).
+    pub kind: Option<String>,
     /// Bit span actually consumed in the payload (variable fields differ
     /// from the declared width) - powers the editor's evidence grid.
     pub bit_offset: usize,
@@ -294,12 +297,17 @@ fn decode_one(
         Value::Number { .. } => f.res_unit.clone(),
         _ => None,
     };
+    let kind = match (&value, root) {
+        (Value::Number { .. }, "DATE" | "TIME" | "DURATION") => Some(root.to_string()),
+        _ => None,
+    };
     out.push(DecodedField {
         id: f.id.clone(),
         name: f.name.clone(),
         instance,
         value,
         unit,
+        kind,
         bit_offset: start_bit,
         bits: ctx.bit - start_bit,
     });
