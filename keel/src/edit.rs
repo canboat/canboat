@@ -142,6 +142,10 @@ fn route(
             Ok(j) => ("200 OK", json, j),
             Err(e) => ("200 OK", json, err_json(&e)),
         },
+        ("GET", "/api/lookup") => match api_lookup(server, query) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
         _ => ("404 Not Found", "text/plain", "not found".into()),
     }
 }
@@ -240,11 +244,100 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .ok_or("missing id=")?;
     let path = find_pgn_file(server, id)?;
     let yaml = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let def = yamlio::parse_pgn_str(&yaml, id)?;
+    let fields: Vec<String> = def
+        .fields
+        .iter()
+        .map(|f| {
+            let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
+            format!(
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"primaryKey\":{}}}",
+                js(&f.id),
+                js(&f.name),
+                js(&f.type_),
+                f.bits.map(|b| b.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.lookup),
+                opt_s(&f.lookup_bits),
+                opt_s(&f.lookup_fieldtype),
+                opt_s(&f.match_),
+                opt_s(&f.unit),
+                f.resolution.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.primary_key,
+            )
+        })
+        .collect();
     Ok(format!(
-        "{{\"path\":{},\"yaml\":{}}}",
+        "{{\"path\":{},\"yaml\":{},\"def\":{{\"pgn\":{},\"id\":{},\"description\":{},\"type\":{},\"priority\":{},\"fields\":[{}]}}}}",
         js(&path.display().to_string()),
-        js(&yaml)
+        js(&yaml),
+        def.pgn,
+        js(&def.id),
+        js(&def.description),
+        js(&def.type_),
+        def.priority,
+        fields.join(",")
     ))
+}
+
+/// GET /api/lookup?name=NAME -> the lookup file (yaml + structured values).
+fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
+    let name = query
+        .split('&')
+        .find_map(|kv| kv.strip_prefix("name="))
+        .ok_or("missing name=")?;
+    if !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return Err("bad lookup name".into());
+    }
+    let path = server.root.join(format!("database/lookups/{name}.yaml"));
+    let yaml = std::fs::read_to_string(&path).map_err(|e| format!("{name}: {e}"))?;
+    let lk = yamlio::parse_lookup_str(&yaml, name)?;
+    let values: Vec<String> = match lk.kind.as_str() {
+        "pair" | "bit" => lk
+            .pairs
+            .iter()
+            .map(|(v, n)| format!("{{\"value\":{v},\"name\":{}}}", js(n)))
+            .collect(),
+        "triplet" => lk
+            .triplets
+            .iter()
+            .map(|(a, b, n)| format!("{{\"value\":\"{a},{b}\",\"name\":{}}}", js(n)))
+            .collect(),
+        _ => lk
+            .fieldtypes
+            .iter()
+            .map(|e| {
+                format!(
+                    "{{\"value\":{},\"name\":{},\"type\":{}}}",
+                    e.value,
+                    js(&e.name),
+                    js(&e.fieldtype)
+                )
+            })
+            .collect(),
+    };
+    Ok(format!(
+        "{{\"name\":{},\"kind\":{},\"bits\":{},\"yaml\":{},\"values\":[{}]}}",
+        js(&lk.name),
+        js(&lk.kind),
+        lk.bits,
+        js(&yaml),
+        values.join(",")
+    ))
+}
+
+/// Keep database/lookups.order.yaml in step when the editor adds a lookup.
+fn sync_lookup_order(server: &EditServer, db: &Database) -> Result<(), String> {
+    let mut out = String::new();
+    for kind in ["pair", "triplet", "bit", "fieldtype"] {
+        out.push_str(kind);
+        out.push_str(":\n");
+        for name in db.lookup_order.get(kind).into_iter().flatten() {
+            out.push_str("- ");
+            out.push_str(name);
+            out.push('\n');
+        }
+    }
+    std::fs::write(server.root.join("database/lookups.order.yaml"), out).map_err(|e| e.to_string())
 }
 
 fn find_pgn_file(server: &EditServer, id: &str) -> Result<PathBuf, String> {
@@ -368,13 +461,32 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
     if !file.ends_with(".yaml") || file.contains("..") || !file.starts_with("database/") {
         return Err("file must be database/**.yaml".into());
     }
-    let candidate = yamlio::parse_pgn_str(body, &file)?;
-    let cand_id = candidate.id.clone();
-
-    let mut db = load_db(server)?;
-    db.pgns.retain(|p| p.id != cand_id);
-    db.pgns.push(candidate);
-    db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
+    let mut db = yamlio::load_database(
+        &server.root.join("database"),
+        &server.version,
+        &server.schema_version,
+    )?;
+    if file.starts_with("database/lookups/") {
+        let candidate = yamlio::parse_lookup_str(body, &file)?;
+        let expect = format!("database/lookups/{}.yaml", candidate.name);
+        if file != expect {
+            return Err(format!("lookup '{}' must be saved as {expect}", candidate.name));
+        }
+        if !db.lookups.contains_key(&candidate.name) {
+            // new lookup: emission order manifest must list it
+            db.lookup_order
+                .entry(candidate.kind.clone())
+                .or_default()
+                .push(candidate.name.clone());
+        }
+        db.lookups.insert(candidate.name.clone(), candidate);
+    } else {
+        let candidate = yamlio::parse_pgn_str(body, &file)?;
+        let cand_id = candidate.id.clone();
+        db.pgns.retain(|p| p.id != cand_id);
+        db.pgns.push(candidate);
+        db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
+    }
     derive::fill(&mut db)?;
     let violations = check::check(&db);
     let errors: Vec<&check::Violation> = violations.iter().filter(|v| v.error).collect();
@@ -391,5 +503,8 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
     std::fs::write(&path, body).map_err(|e| e.to_string())?;
+    if file.starts_with("database/lookups/") {
+        sync_lookup_order(server, &db)?;
+    }
     Ok(format!("{{\"saved\":{}}}", js(&file)))
 }

@@ -443,15 +443,24 @@ samples:
 
 ### 7.3 Editing existing PGNs
 
-The same grid and live decode, seeded from the stored definition and its
-`samples:` block. Pickers over free text everywhere sensible: fieldtypes,
-units/physical quantities, existing lookup enumerations (searchable —
-steering people to reuse `YES_NO` instead of minting `ENABLED_DISABLED`).
+Opening a stored PGN seeds the same form, grid and live decode from its
+definition. Newly pasted captures of that PGN become evidence with one
+click — "check my 129540 samples against the database" is the front door,
+and adopting the decodes appends a `samples:` block. Field refinement
+through the form performs **surgery on the `fields:` block only**: notes,
+samples, repeating sets and every other authored key in the YAML survive
+untouched (the textarea remains hand-editable and authoritative).
 
-Backend endpoints: `GET /model`, `POST /validate` (rule engine on a
-candidate document), `POST /decode` (samples against a candidate
-definition — powers the live grid), `POST /save`, `GET /lookups`,
-`GET /fieldtypes`.
+Lookup names are clickable everywhere they appear: a modal shows the
+enumeration, pair/bit kinds are editable in place (triplet/fieldtype are
+view-only), a not-yet-existing name offers creation, and saves go through
+the same rule gate (`values:`-block surgery keeps `valueNotes` intact).
+
+Backend endpoints: `GET /api/model`, `GET /api/pgn` (yaml + structured
+definition), `GET /api/lookup`, `POST /api/analyze`, `POST /api/decode`
+(candidate YAML + payloads → decoded fields per sample + rule
+violations), `POST /api/save` (PGN or lookup files, refused while any
+error-level violation exists).
 
 ## 8. Contribution workflows
 

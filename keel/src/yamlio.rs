@@ -298,6 +298,15 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
     })
 }
 
+/// Parse a single lookup definition from YAML text (editor candidates).
+pub fn parse_lookup_str(text: &str, ctx: &str) -> Result<Lookup> {
+    let mut docs = YamlLoader::load_from_str(text).map_err(|e| format!("{ctx}: {e}"))?;
+    if docs.len() != 1 {
+        return Err(format!("{ctx}: expected exactly one YAML document"));
+    }
+    lookup(&docs.remove(0), ctx)
+}
+
 /// Parse a single PGN definition from YAML text (the editor's candidate
 /// documents - the same text that gets saved).
 pub fn parse_pgn_str(text: &str, ctx: &str) -> Result<Pgn> {
