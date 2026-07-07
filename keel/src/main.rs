@@ -9,6 +9,7 @@ mod cformat;
 mod check;
 mod decode;
 mod derive;
+mod edit;
 mod emit_c;
 mod emit_text;
 mod emit_xml;
@@ -59,6 +60,7 @@ fn read_versions(root: &Path) -> Result<(String, String), String> {
 struct Args {
     command: String,
     check: bool,
+    port: Option<u16>,
     diff: Option<String>,
     float_style: FloatStyle,
     which: String,
@@ -69,6 +71,7 @@ fn parse_args() -> Result<Args, String> {
     let mut args = Args {
         command: String::new(),
         check: false,
+        port: None,
         diff: None,
         float_style: FloatStyle::C,
         which: "normal".into(),
@@ -78,6 +81,14 @@ fn parse_args() -> Result<Args, String> {
     while let Some(a) = it.next() {
         match a.as_str() {
             "--check" => args.check = true,
+            "--port" => {
+                args.port = Some(
+                    it.next()
+                        .ok_or("--port needs a number")?
+                        .parse()
+                        .map_err(|e| format!("--port: {e}"))?,
+                )
+            }
             "--diff" => args.diff = Some(it.next().ok_or("--diff needs a path")?),
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
             "--which" => args.which = it.next().ok_or("--which needs normal|actisense|ikonvert")?,
@@ -93,7 +104,7 @@ fn parse_args() -> Result<Args, String> {
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode|edit> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
     }
     Ok(args)
 }
@@ -257,6 +268,18 @@ fn run() -> Result<i32, String> {
                     }
                 }
             }
+            Ok(0)
+        }
+        "edit" => {
+            let port = args.port.unwrap_or(8020);
+            edit::serve(
+                edit::EditServer {
+                    root: root.clone(),
+                    version: version.clone(),
+                    schema_version: schema.clone(),
+                },
+                port,
+            )?;
             Ok(0)
         }
         "explain" => {
