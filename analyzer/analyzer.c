@@ -689,6 +689,7 @@ static void printCanRaw(const RawMessage *msg)
 {
   size_t i;
   FILE  *f = stdout;
+  char   ts[DATE_LENGTH];
 
   if (showJson)
   {
@@ -697,7 +698,8 @@ static void printCanRaw(const RawMessage *msg)
 
   if (showRaw && (!onlyPgn || onlyPgn == msg->pgn))
   {
-    fprintf(f, "%s,%u,%u,%u,%u,%u", msg->timestamp, msg->prio, msg->pgn, msg->src, msg->dst, msg->len);
+    normalizeTimestamp(msg->timestamp, ts, sizeof(ts));
+    fprintf(f, "%s,%u,%u,%u,%u,%u", ts, msg->prio, msg->pgn, msg->src, msg->dst, msg->len);
     for (i = 0; i < msg->len; i++)
     {
       fprintf(f, ",%02x", msg->data[i]);
@@ -1451,11 +1453,13 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   size_t i;
   bool   r;
   size_t variableFields = 0; // How many variable fields remain (product of repetition count * # of fields)
+  char   ts[DATE_LENGTH];
 
   if (msg == NULL)
   {
     return false;
   }
+  normalizeTimestamp(msg->timestamp, ts, sizeof(ts));
   pgn = getMatchingPgn(msg->pgn, data, length);
   if (!pgn)
   {
@@ -1471,14 +1475,14 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       f = stderr;
     }
 
-    fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
       fprintf(f, " %2.02X", data[i]);
     }
     putc('\n', f);
 
-    fprintf(f, "%s %u %3u %3u %6u %s: ", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     for (i = 0; i < length; i++)
     {
       fprintf(f, "  %c", isalnum(data[i]) ? data[i] : '.');
@@ -1492,7 +1496,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       mprintf("{\"%s\":", pgn->camelDescription);
     }
     mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"",
-            msg->timestamp,
+            ts,
             msg->prio,
             msg->src,
             msg->dst,
@@ -1519,7 +1523,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   else
   {
-    mprintf("%s %u %3u %3u %6u %s:", msg->timestamp, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+    mprintf("%s %u %3u %3u %6u %s:", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
     sep = " ";
   }
   r = printFields(pgn, data, length, showData, showJson, &variableFields);
