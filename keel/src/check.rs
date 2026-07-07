@@ -6,7 +6,9 @@
 //! computed without them: R03 (byte alignment feeds every length) and R10
 //! (fieldtype overrule conflicts poison resolution/size/offset).
 
-use crate::model::{ACTISENSE_BEM, Database, Pgn};
+use crate::decode;
+use crate::model::{ACTISENSE_BEM, Database, Expected, Pgn};
+use crate::samples;
 
 #[derive(Debug)]
 pub struct Violation {
@@ -57,8 +59,120 @@ pub fn check(db: &Database) -> Vec<Violation> {
         }
         check_variants(prefix, list, &mut v); // R20
         check_unique_ids(prefix, list, &mut v); // R21
+        for pgn in list.iter() {
+            check_samples(prefix, db, pgn, prefix == "j1939/", &mut v); // R40
+        }
     }
     v
+}
+
+// R40: every stored sample must decode against THIS variant and satisfy its
+// (partial) expectations. Captures become regression tests (DESIGN.md §7.2).
+fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<Violation>) {
+    for (si, spec) in p.samples.iter().enumerate() {
+        let loc = || format!("{} sample {}", pgn_loc(prefix, p), si + 1);
+        let mut fail = |msg: String| {
+            v.push(Violation {
+                rule: "R40",
+                error: true,
+                location: loc(),
+                message: msg,
+            })
+        };
+
+        let mut frames = Vec::new();
+        let mut bad = false;
+        for line in &spec.raw {
+            match samples::parse_line(line) {
+                Ok(f) => frames.push(f),
+                Err(e) => {
+                    fail(format!("cannot parse raw line: {e}"));
+                    bad = true;
+                }
+            }
+        }
+        if bad || frames.is_empty() {
+            continue;
+        }
+        let assembled = match samples::reassemble(&frames, |pgn| {
+            (if j1939 { &db.pgns_j1939 } else { &db.pgns })
+                .iter()
+                .any(|q| q.pgn == pgn && q.type_ == "Fast")
+        }) {
+            Ok(a) => a,
+            Err(e) => {
+                fail(e);
+                continue;
+            }
+        };
+        if assembled.len() != 1 {
+            fail(format!("expected exactly one message, got {}", assembled.len()));
+            continue;
+        }
+        let a = &assembled[0];
+        if a.pgn != p.pgn {
+            fail(format!("sample is PGN {}, file defines {}", a.pgn, p.pgn));
+            continue;
+        }
+        match decode::select_variant(db, a.pgn, &a.data, j1939) {
+            Some(sel) if sel.id == p.id => {}
+            Some(sel) => {
+                fail(format!("sample selects variant '{}', not '{}'", sel.id, p.id));
+                continue;
+            }
+            None => {
+                fail("no variant matches the sample".into());
+                continue;
+            }
+        }
+        let decoded = match decode::decode(db, p, &a.data) {
+            Ok(d) => d,
+            Err(e) => {
+                fail(format!("decode failed: {e}"));
+                continue;
+            }
+        };
+        for (key, expected) in &spec.expects {
+            let (id, instance) = match key.rsplit_once('.') {
+                Some((base, n)) if n.chars().all(|c| c.is_ascii_digit()) => {
+                    (base, n.parse::<u32>().unwrap_or(1))
+                }
+                _ => (key.as_str(), 1),
+            };
+            let Some(d) = decoded.iter().find(|d| d.id == id && d.instance == instance) else {
+                fail(format!("expected field '{key}' was not decoded"));
+                continue;
+            };
+            if let Some(diff) = expect_mismatch(expected, &d.value) {
+                fail(format!("field '{key}': {diff}"));
+            }
+        }
+    }
+}
+
+/// None = match; Some(message) = value-level diff.
+fn expect_mismatch(expected: &Expected, got: &decode::Value) -> Option<String> {
+    use decode::Value as V;
+    let ok = match (expected, got) {
+        (Expected::Unavailable, V::Unavailable) => true,
+        (Expected::Number(e), V::Number(g)) => {
+            let tol = (e.abs() * 1e-9).max(1e-12);
+            (e - g).abs() <= tol
+        }
+        (Expected::Number(e), V::Lookup { value, .. }) => *e == *value as f64,
+        (Expected::Str(e), V::Str(g)) => e == g,
+        (Expected::Str(e), V::Lookup { name: Some(n), .. }) => e == n,
+        (Expected::Str(e), V::Binary(h)) => e.trim_start_matches("0x") == h,
+        (Expected::Str(e), V::OutOfRange) => e == "OutOfRange",
+        (Expected::Str(e), V::Reserved) => e == "Reserved",
+        (Expected::List(e), V::Bits(g)) => e == g,
+        _ => false,
+    };
+    if ok {
+        None
+    } else {
+        Some(format!("expected {expected:?}, decoded {got}"))
+    }
 }
 
 // R02: PGN number in a valid range; PDU1 PGNs end in 0x00; packet type

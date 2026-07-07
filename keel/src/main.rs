@@ -4,13 +4,16 @@
 //! (canboat.xml -> database/) lives in keel/bootstrap/ (Python) and dies at
 //! migration switchover.
 
+mod bits;
 mod cformat;
 mod check;
+mod decode;
 mod derive;
 mod emit_c;
 mod emit_text;
 mod emit_xml;
 mod model;
+mod samples;
 mod yamlio;
 
 use std::fs;
@@ -90,7 +93,7 @@ fn parse_args() -> Result<Args, String> {
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
     }
     Ok(args)
 }
@@ -208,6 +211,51 @@ fn run() -> Result<i32, String> {
                     "keel generate --check: all {} artifacts up to date",
                     artifacts.len()
                 );
+            }
+            Ok(0)
+        }
+        "decode" => {
+            // Read sample lines from stdin, reassemble, decode, print.
+            let j1939 = args.which == "j1939";
+            let mut fast: std::collections::HashSet<u32> = Default::default();
+            for p in if j1939 { &db.pgns_j1939 } else { &db.pgns } {
+                if p.type_ == "Fast" {
+                    fast.insert(p.pgn);
+                }
+            }
+            let mut frames = Vec::new();
+            for (n, line) in std::io::read_to_string(std::io::stdin())
+                .map_err(|e| e.to_string())?
+                .lines()
+                .enumerate()
+            {
+                if line.trim().is_empty() || line.trim_start().starts_with('#') {
+                    continue;
+                }
+                frames.push(
+                    samples::parse_line(line).map_err(|e| format!("line {}: {e}", n + 1))?,
+                );
+            }
+            let (assembled, warnings) =
+                samples::reassemble_lenient(&frames, |pgn| fast.contains(&pgn))?;
+            for w in &warnings {
+                eprintln!("keel decode: warning: {w}");
+            }
+            for a in &assembled {
+                match decode::select_variant(&db, a.pgn, &a.data, j1939) {
+                    None => println!("PGN {}: unknown", a.pgn),
+                    Some(p) => {
+                        println!("PGN {} {} (src {}):", a.pgn, p.id, a.src);
+                        for d in decode::decode(&db, p, &a.data)? {
+                            let inst = if d.instance > 1 {
+                                format!(".{}", d.instance)
+                            } else {
+                                String::new()
+                            };
+                            println!("  {}{} = {}", d.id, inst, d.value);
+                        }
+                    }
+                }
             }
             Ok(0)
         }
