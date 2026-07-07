@@ -247,6 +247,13 @@ function newWizard() {
   window.scrollTo(0, 0);
 }
 
+function loadEvidence(msgs) {
+  samplesHex = msgs.map(m => m.hex);
+  renderGrid();
+  scheduleRefresh();
+  flash(`${msgs.length} sample(s) loaded as evidence — see the grid and live decode`, true);
+}
+
 async function openExisting(id) {
   const r = await api(`/api/pgn?id=${encodeURIComponent(id)}`, null, "GET");
   if (r.error) return flash(r.error, false);
@@ -280,8 +287,13 @@ async function openExisting(id) {
 async function analyze() {
   const r = await api("/api/analyze", $("sampleInput").value);
   if (r.error) return flash(r.error, false);
+  // group by matched variant (falls back to the PGN number for unknowns),
+  // so a mixed capture yields one evidence button per definition
   const byPgn = {};
-  r.messages.forEach(m => (byPgn[m.pgn] = byPgn[m.pgn] || []).push(m));
+  r.messages.forEach(m => {
+    const key = m.variant ? `${m.pgn}\u0000${m.variant}` : String(m.pgn);
+    (byPgn[key] = byPgn[key] || []).push(m);
+  });
   const el = $("messages");
   el.innerHTML = "";
   (r.warnings || []).forEach(w => {
@@ -289,21 +301,28 @@ async function analyze() {
     d.className = "hint"; d.textContent = "⚠ " + w;
     el.appendChild(d);
   });
-  Object.entries(byPgn).forEach(([pgn, msgs]) => {
+  Object.entries(byPgn).forEach(([key, msgs]) => {
+    const pgn = msgs[0].pgn;
+    const variant = msgs[0].variant;
     const btn = document.createElement("button");
-    const v = msgs[0].variant ? ` — existing: ${msgs[0].variant}` : " — unknown PGN";
-    if (currentPgn && Number(pgn) === currentPgn) {
+    if (currentPgn && pgn === currentPgn) {
+      // this definition is already open: adopt directly
       btn.textContent = `Use ${msgs.length} sample(s) of PGN ${pgn} as evidence for this definition`;
       btn.className = "primary";
-      btn.onclick = () => {
-        samplesHex = msgs.map(m => m.hex);
-        renderGrid();
-        scheduleRefresh();
-        flash(`${msgs.length} sample(s) loaded — see the evidence grid and live decode`, true);
+      btn.onclick = () => loadEvidence(msgs);
+    } else if (variant) {
+      // known PGN: open its stored definition WITH these pastes as evidence
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — check against existing '${variant}'`;
+      btn.className = "primary";
+      btn.onclick = async () => {
+        const keep = $("sampleInput").value;
+        await openExisting(variant);
+        $("sampleInput").value = keep;      // openExisting resets the paste box
+        loadEvidence(msgs);
       };
     } else {
-      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s)${v}`;
-      btn.onclick = () => startDefinition(Number(pgn), msgs);
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — unknown, start a new definition`;
+      btn.onclick = () => startDefinition(pgn, msgs);
     }
     btn.style.margin = "6px 6px 0 0";
     el.appendChild(btn);
