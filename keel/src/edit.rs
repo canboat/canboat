@@ -481,14 +481,23 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
         let items: Vec<String> = fields
             .iter()
             .map(|d| {
+                let unnamed = d
+                    .unnamed
+                    .iter()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",");
                 format!(
-                    "{{\"id\":{},\"name\":{},\"instance\":{},\"value\":{},\"unit\":{},\"kind\":{},\"bitOffset\":{},\"bits\":{}}}",
+                    "{{\"id\":{},\"name\":{},\"instance\":{},\"value\":{},\"unit\":{},\"kind\":{},\"lookup\":{},\"lookupKind\":{},\"unnamed\":[{}],\"bitOffset\":{},\"bits\":{}}}",
                     js(&d.id),
                     js(&d.name),
                     d.instance,
                     js(&d.value.to_string()),
                     d.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
                     d.kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    d.lookup.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    d.lookup_kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    unnamed,
                     d.bit_offset,
                     d.bits
                 )

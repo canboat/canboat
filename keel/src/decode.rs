@@ -51,6 +51,14 @@ pub struct DecodedField {
     /// Root fieldtype when it wants a human rendering the raw number
     /// hides (DATE -> yyyy.mm.dd, TIME/DURATION -> hh:mm:ss).
     pub kind: Option<String>,
+    /// Enumeration this field decodes against, when it is a simple pair
+    /// or bit lookup that the editor could extend from evidence.
+    pub lookup: Option<String>,
+    /// "pair" or "bit" for `lookup` above.
+    pub lookup_kind: Option<String>,
+    /// Values (pair) or set bit positions (bit) seen here that are not
+    /// named in the enumeration - i.e. evidence of missing entries.
+    pub unnamed: Vec<u64>,
     /// Bit span actually consumed in the payload (variable fields differ
     /// from the declared width) - powers the editor's evidence grid.
     pub bit_offset: usize,
@@ -176,6 +184,11 @@ fn decode_one(
         declared_bits
     };
 
+    // Filled by the lookup arms so the caller can flag unnamed values
+    // (evidence of missing enumeration entries) to the editor.
+    let mut lookup_ref: Option<(String, String)> = None; // (name, kind)
+    let mut unnamed: Vec<u64> = Vec::new();
+
     let value = match root {
         "STRING_FIX" => {
             let v = slice_bytes(data, ctx.bit, bits / 8);
@@ -209,10 +222,18 @@ fn decode_one(
                     ctx.by_order.insert(f.order, e.value);
                     match sentinel(f, ft.has_sign, e.raw, bits) {
                         Some(s) => s,
-                        None => Value::Lookup {
-                            value: e.raw,
-                            name: lookup_name(db, f, e.raw, &ctx.by_order),
-                        },
+                        None => {
+                            let name = lookup_name(db, f, e.raw, &ctx.by_order);
+                            // Only pair enumerations can be extended in place;
+                            // triplet/fieldtype/indirect need more context.
+                            if let Some(("pair", n)) = f.lookup_ref() {
+                                lookup_ref = Some((n.to_string(), "pair".into()));
+                                if name.is_none() {
+                                    unnamed.push(e.raw);
+                                }
+                            }
+                            Value::Lookup { value: e.raw, name }
+                        }
                     }
                 }
             }
@@ -223,11 +244,24 @@ fn decode_one(
             match e {
                 None => Value::Unavailable,
                 Some(e) => {
+                    if let Some(n) = &f.lookup_bits {
+                        lookup_ref = Some((n.clone(), "bit".into()));
+                    }
+                    let named: std::collections::HashMap<u64, &str> = f
+                        .lookup_bits
+                        .as_ref()
+                        .and_then(|n| db.lookups.get(n))
+                        .map(|lk| lk.pairs.iter().map(|(b, n)| (*b, n.as_str())).collect())
+                        .unwrap_or_default();
                     let mut names = Vec::new();
-                    if let Some(lk) = f.lookup_bits.as_ref().and_then(|n| db.lookups.get(n)) {
-                        for (b, name) in &lk.pairs {
-                            if *b < 64 && e.raw & (1u64 << b) != 0 {
-                                names.push(name.clone());
+                    for b in 0..(bits as u64).min(64) {
+                        if e.raw & (1u64 << b) != 0 {
+                            match named.get(&b) {
+                                Some(n) => names.push(n.to_string()),
+                                None => {
+                                    names.push(format!("bit {b}"));
+                                    unnamed.push(b);
+                                }
                             }
                         }
                     }
@@ -301,6 +335,10 @@ fn decode_one(
         (Value::Number { .. }, "DATE" | "TIME" | "DURATION") => Some(root.to_string()),
         _ => None,
     };
+    let (lookup, lookup_kind) = match lookup_ref {
+        Some((n, k)) => (Some(n), Some(k)),
+        None => (None, None),
+    };
     out.push(DecodedField {
         id: f.id.clone(),
         name: f.name.clone(),
@@ -308,6 +346,9 @@ fn decode_one(
         value,
         unit,
         kind,
+        lookup,
+        lookup_kind,
+        unnamed,
         bit_offset: start_bit,
         bits: ctx.bit - start_bit,
     });

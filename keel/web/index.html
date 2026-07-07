@@ -61,6 +61,10 @@
   .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin: 6px 0; }
   .row label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
   #decodeTable td.unavail { color: var(--muted); font-style: italic; }
+  #decodeTable td.unnamed { background: rgba(230,160,30,.18); }
+  #decodeTable th .addname { margin-left: 6px; font-size: 11px; padding: 0 5px;
+                             border: 1px solid rgba(230,160,30,.7); border-radius: 4px;
+                             color: var(--accent); cursor: pointer; white-space: nowrap; }
   .scroll { overflow-x: auto; }
   #lkOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
                align-items: flex-start; justify-content: center; padding-top: 6vh; z-index: 10; }
@@ -620,7 +624,9 @@ function yq(s) {
 
 // ---- lookup viewer / editor -------------------------------------------------
 
-async function openLookup(name, suggestedBits) {
+// seed: values (pair) or bit positions (bit) to pre-add for naming,
+// e.g. unnamed values a pasted sample just revealed.
+async function openLookup(name, suggestedBits, seed) {
   const r = await api(`/api/lookup?name=${encodeURIComponent(name)}`, null, "GET");
   const tb = $("lkValues").querySelector("tbody");
   tb.innerHTML = "";
@@ -635,7 +641,7 @@ async function openLookup(name, suggestedBits) {
     $("lk_kind").disabled = false;
     $("lk_bits").value = suggestedBits || "";
     $("lkHint").textContent = "new enumeration — will be created on save";
-    lkAddRow("0", "");
+    (seed && seed.length ? seed : [0]).forEach(v => lkAddRow(String(v), ""));
   } else {
     lkBaseYaml = r.yaml;
     lkReadOnly = !(r.kind === "pair" || r.kind === "bit");
@@ -645,6 +651,15 @@ async function openLookup(name, suggestedBits) {
     $("lkHint").textContent = lkReadOnly
       ? `${r.kind} enumeration — view only (edit the YAML file directly)` : r.kind;
     (r.values || []).forEach(v => lkAddRow(v.value, v.name + (v.type ? `  [${v.type}]` : "")));
+    // append rows for any evidence values not already present, ready to name
+    if (seed && !lkReadOnly) {
+      const have = new Set((r.values || []).map(v => Number(v.value)));
+      const fresh = [...new Set(seed.map(Number))].filter(v => !have.has(v)).sort((a, b) => a - b);
+      if (fresh.length) {
+        fresh.forEach(v => lkAddRow(String(v), ""));
+        $("lkHint").textContent = `${r.kind} — ${fresh.length} value(s) from your samples added below, name them`;
+      }
+    }
   }
   $("lkSave").style.display = lkReadOnly ? "none" : "";
   $("lkOverlay").style.display = "flex";
@@ -773,8 +788,11 @@ async function refresh() {
   sampleResults.forEach((s, si) => {
     (s.fields || []).forEach(f => {
       const key = f.id + (f.instance > 1 ? "." + f.instance : "");
-      rows[key] = rows[key] || { name: f.name, unit: f.unit, kind: f.kind, values: [] };
+      rows[key] = rows[key] ||
+        { name: f.name, unit: f.unit, kind: f.kind, lookup: null, lookupKind: null, unnamed: new Set(), values: [] };
       rows[key].values[si] = f.value;
+      if (f.lookup) { rows[key].lookup = f.lookup; rows[key].lookupKind = f.lookupKind; }
+      (f.unnamed || []).forEach(u => rows[key].unnamed.add(u));
     });
   });
   const head = document.createElement("tr");
@@ -782,13 +800,39 @@ async function refresh() {
   t.appendChild(head);
   Object.entries(rows).forEach(([key, row]) => {
     const tr = document.createElement("tr");
-    tr.innerHTML = `<th title="${esc(row.name)}">${esc(key)}</th>` +
-      row.values.map(v => {
-        const unavail = v === "Unavailable";
-        return `<td class="${unavail ? "unavail" : ""}">${esc(fmtDecoded(v, row.unit, row.kind))}</td>`;
-      }).join("");
+    const th = document.createElement("th");
+    th.title = row.name;
+    th.textContent = key;
+    if (row.unnamed.size && row.lookup) {
+      const n = row.unnamed.size;
+      const badge = document.createElement("span");
+      badge.className = "addname";
+      badge.textContent = row.lookupKind === "bit"
+        ? `⚠ name ${n} bit${n > 1 ? "s" : ""}` : `⚠ name ${n} value${n > 1 ? "s" : ""}`;
+      badge.title = `${row.lookup}: ${[...row.unnamed].join(", ")} not in the enumeration`;
+      badge.onclick = () => openLookup(row.lookup, null, [...row.unnamed]);
+      th.appendChild(badge);
+    }
+    tr.appendChild(th);
+    row.values.forEach(v => {
+      const td = document.createElement("td");
+      const cls = [];
+      if (v === "Unavailable") cls.push("unavail");
+      if (cellHasUnnamed(v, row)) cls.push("unnamed");
+      td.className = cls.join(" ");
+      td.textContent = fmtDecoded(v, row.unit, row.kind);
+      tr.appendChild(td);
+    });
     t.appendChild(tr);
   });
+}
+
+// Does this decoded cell carry a value not named in its enumeration?
+function cellHasUnnamed(v, row) {
+  if (!row.unnamed.size || v == null) return false;
+  if (row.lookupKind === "pair") return row.unnamed.has(Number(v));
+  if (row.lookupKind === "bit") return /\bbit \d+\b/.test(v);   // "[..., bit 5]"
+  return false;
 }
 
 function hms(sec) {
