@@ -100,3 +100,13 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 5
+notes: |-
+  PERIODIC DATA PGNs
+
+  https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf
+
+  https://web.archive.org/web/20070709202204/www.maretron.com/support/manuals/USB100UM_1.2.pdf
+
+  https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf
+
+  https://web.archive.org/web/20190921125506/www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf

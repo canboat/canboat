@@ -17,6 +17,7 @@ fields:
   type: BINARY
   bits: 2
   description: Fault Lamps
+  note: 10 = flashing 1Hz, 11 = flashing 2Hz
 - id: amberWarningLampStatus
   name: Amber Warning Lamp Status
   type: BINARY
@@ -36,16 +37,19 @@ fields:
   type: BINARY
   bits: 19
   description: Suspect Parameter Number
+  note: These four fields comprise a Diagnostic Trouble Code (DTC)
 - id: fmi
   name: FMI
   type: BINARY
   bits: 5
   description: Fault Mode Indicator
+  note: If there is more han one DTC the message is sent using TP
 - id: cm
   name: CM
   type: BINARY
   bits: 1
   description: SPN Conversion Method
+  note: Not sure how to handle that actually...
 - id: oc
   name: OC
   type: BINARY
@@ -54,3 +58,7 @@ fields:
 repeating1:
   count: 4
   start: 6
+notes: |-
+  J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/
+
+  Lamp modes are: 0 = off, 01 = on

@@ -23,7 +23,10 @@ fields:
 - id: marker
   name: Marker
   type: UINT8
+  note: observed constant 2
 - id: reserved
   name: Reserved
   type: RESERVED
   bits: 8
+  note: observed constant 0xff
+notes: Normalized magnetometer field unit-vector (|X,Y,Z| ~= 1.0); signed 1e-4/bit, dimensionless.

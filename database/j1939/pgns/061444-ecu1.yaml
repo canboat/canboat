@@ -18,3 +18,4 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+notes: 'J1939 ECU #1 PGN 61444'

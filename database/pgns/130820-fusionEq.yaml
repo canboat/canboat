@@ -44,3 +44,4 @@ fields:
 - id: treble
   name: Treble
   type: INT8
+notes: 'Range: -15 to +15'

@@ -10,3 +10,6 @@ values:
   104: Alarm History
   107: MOB Activated
   108: MOB Cancelled
+valueNotes:
+  88: no Alarm ID; the AP48 head brackets each 130850 Command AP Tack with this (confirm prompt shown/cleared)
+  107: broadcast to all groups, no Alarm ID; the MOB position rides the standard PGN 127233

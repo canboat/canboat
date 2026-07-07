@@ -17,3 +17,4 @@ fields:
   name: Data
   type: BINARY
   bits: 1784
+notes: Only 0x1ED00 and 0x1EE00 seem to be used?

@@ -44,3 +44,7 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 34
+notes: |-
+  https://web.archive.org/web/20170609023206/www.nmea.org/Assets/20140102%20nmea-2000-126993%20heartbeat%20pgn%20corrigendum.pdf
+
+  http://www.nmea.org/Assets/20190624%20NMEA%20Heartbeat%20Information%20Amendment%20AT%2020190623HB.pdf

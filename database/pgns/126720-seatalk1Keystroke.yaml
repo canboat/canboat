@@ -66,3 +66,10 @@ fields:
   name: Unknown data
   type: BINARY
   bits: 112
+  note: xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF
+    FF | FF FF FF FF FF | 42 00 F8 02 05])
+notes: |-
+  Seatalk1 code from http://thomasknauf.de/rap/seatalk2.htm
+
+  xx xx xx xx xx c1 c2 cd 64 80 d3 42 f1 c8 (if xx=0xff =>working or xx xx xx xx xx = [A5 FF FF FF FF | 00 00 00 FF FF |
+  FF FF FF FF FF | 42 00 F8 02 05])

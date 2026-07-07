@@ -123,3 +123,15 @@ fields:
 repeating1:
   count: 2
   start: 21
+notes: |-
+  https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf
+
+  This is like the worst PGN ever.
+  1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
+  2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
+  3. Field 12 'MMSI of ship in destress' may have multiple interpretations.
+  4. Field 22 'DSC expansion field data' depends on field 21 for its meaning.
+  5. It contains a variable length field 'Telephone number', which means that bit offsets for subsequent fields
+     depend on this field's length.
+
+  We solve #1 here by having two definitions.

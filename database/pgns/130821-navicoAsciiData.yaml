@@ -34,3 +34,6 @@ fields:
   name: Message
   type: STRING_FIX
   bits: 1840
+notes: |-
+  NAC-3 sends this once a second, with (decoded) data like this:
+  \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,

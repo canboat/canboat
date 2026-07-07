@@ -62,3 +62,4 @@ fields:
 - id: escalationPeriod
   name: Escalation Period
   type: UINT8
+notes: Unknown field lengths past this point, except Alert Control is likely 2 bits

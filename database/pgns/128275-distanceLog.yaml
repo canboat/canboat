@@ -25,3 +25,4 @@ fields:
   name: Trip Log
   type: LENGTH_UFIX32_M
   description: Distance since last reset
+notes: https://web.archive.org/web/20220705131506/www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf

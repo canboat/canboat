@@ -26,3 +26,4 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+notes: Observed from EP65R

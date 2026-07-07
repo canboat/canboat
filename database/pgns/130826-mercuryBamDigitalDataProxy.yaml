@@ -51,3 +51,4 @@ fields:
   name: Data
   type: BINARY
   bits: 256
+notes: Uwe Lovas has seen this from EP-70R

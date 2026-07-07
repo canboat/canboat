@@ -24,3 +24,6 @@ values:
   108: MOB Deactivated
   112: Ping port end
   113: Ping starboard end
+valueNotes:
+  107: '0x6b, see #409'
+  108: '0x6c, see #409'

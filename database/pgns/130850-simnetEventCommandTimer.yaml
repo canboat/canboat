@@ -69,3 +69,8 @@ fields:
   name: Parameter 3
   type: UINT8
   description: Event dependent
+notes: |-
+  Navico MFD timer event. PGN 130850 has a single fixed byte layout, confirmed live:
+  byte 2 = Address, byte 3 = reserved, byte 4 = Network/Display Group, byte 5 = Event Type, byte
+  6 = command. The broadcast-event families (Timer = Event Type 23, Alarm = Event Type 255) are
+  distinguished by byte 5, so they are mutually exclusive and order-independent. See issue #409.

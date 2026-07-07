@@ -97,3 +97,4 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 3
+notes: https://web.archive.org/web/20100527193521/www.navcen.uscg.gov/enav/ais/AIS_messages.htm
