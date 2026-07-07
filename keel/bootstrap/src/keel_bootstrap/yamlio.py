@@ -191,6 +191,8 @@ def write_database(db: Database, out_dir: str) -> None:
 
     for p in db.pgns:
         _dump(pgn_to_dict(p), os.path.join(out_dir, "pgns", f"{p.pgn:06d}-{p.id}.yaml"))
+    for p in getattr(db, "pgns_j1939", []):
+        _dump(pgn_to_dict(p), os.path.join(out_dir, "j1939", "pgns", f"{p.pgn:06d}-{p.id}.yaml"))
 
 
 # --------------------------------------------------------------------------
