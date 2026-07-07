@@ -45,6 +45,9 @@ pub struct DecodedField {
     pub name: String,
     pub instance: u32, // 1-based, for repeating sets
     pub value: Value,
+    /// Resolved SI unit of the value, if any (e.g. "rad", "m/s") - lets
+    /// the editor annotate the live decode.
+    pub unit: Option<String>,
     /// Bit span actually consumed in the payload (variable fields differ
     /// from the declared width) - powers the editor's evidence grid.
     pub bit_offset: usize,
@@ -229,6 +232,38 @@ fn decode_one(
                 }
             }
         }
+        "DECIMAL" => {
+            // Each byte holds a binary 0..99 (NOT BCD); concatenate as
+            // two-digit groups, skipping bytes >= 100 (mirrors C
+            // fieldPrintDecimal).
+            let mut s = String::new();
+            for i in 0..(bits / 8) {
+                if let Some(e) = extract_bits(data, ctx.bit + i * 8, 8, false, 0) {
+                    let b = e.raw as u8;
+                    if b < 100 {
+                        s.push_str(&format!("{b:02}"));
+                    }
+                }
+            }
+            ctx.bit += bits;
+            Value::Str(s)
+        }
+        "FLOAT" => {
+            // 32-bit IEEE-754, no resolution scaling; NaN = unavailable
+            let e = extract_bits(data, ctx.bit, bits, false, 0);
+            ctx.bit += bits;
+            match e {
+                Some(e) => {
+                    let v = f32::from_bits(e.raw as u32);
+                    if v.is_nan() {
+                        Value::Unavailable
+                    } else {
+                        Value::Number { value: v as f64, decimals: 4 }
+                    }
+                }
+                None => Value::Unavailable,
+            }
+        }
         _ => {
             // numeric family (NUMBER, TIME, DURATION, DATE, PGN, MMSI, ...)
             let signed = ft.has_sign == Some(true);
@@ -255,11 +290,16 @@ fn decode_one(
         }
     };
 
+    let unit = match &value {
+        Value::Number { .. } => f.res_unit.clone(),
+        _ => None,
+    };
     out.push(DecodedField {
         id: f.id.clone(),
         name: f.name.clone(),
         instance,
         value,
+        unit,
         bit_offset: start_bit,
         bits: ctx.bit - start_bit,
     });

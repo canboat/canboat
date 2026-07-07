@@ -773,7 +773,7 @@ async function refresh() {
   sampleResults.forEach((s, si) => {
     (s.fields || []).forEach(f => {
       const key = f.id + (f.instance > 1 ? "." + f.instance : "");
-      rows[key] = rows[key] || { name: f.name, values: [] };
+      rows[key] = rows[key] || { name: f.name, unit: f.unit, values: [] };
       rows[key].values[si] = f.value;
     });
   });
@@ -783,9 +783,29 @@ async function refresh() {
   Object.entries(rows).forEach(([key, row]) => {
     const tr = document.createElement("tr");
     tr.innerHTML = `<th title="${esc(row.name)}">${esc(key)}</th>` +
-      row.values.map(v => `<td class="${v === "Unavailable" ? "unavail" : ""}">${esc(v ?? "")}</td>`).join("");
+      row.values.map(v => {
+        const unavail = v === "Unavailable";
+        return `<td class="${unavail ? "unavail" : ""}">${esc(fmtDecoded(v, row.unit))}</td>`;
+      }).join("");
     t.appendChild(tr);
   });
+}
+
+// Live-decode display: append the SI unit, and for radians also the
+// human-friendly degrees (e.g. "2.7274 rad (156.3°)").
+function fmtDecoded(value, unit) {
+  if (value == null || value === "" || value === "Unavailable") return value ?? "";
+  const num = Number(value);
+  if (!unit || Number.isNaN(num)) return value;
+  if (unit === "rad") {
+    const deg = num * 180 / Math.PI;
+    return `${value} rad (${deg.toFixed(1)}°)`;
+  }
+  if (unit === "K") {
+    const c = num - 273.15;
+    return `${value} K (${c.toFixed(2)}°C)`;
+  }
+  return `${value} ${unit}`;
 }
 
 // ---- expectations + save ------------------------------------------------------

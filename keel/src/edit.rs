@@ -482,11 +482,12 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
             .iter()
             .map(|d| {
                 format!(
-                    "{{\"id\":{},\"name\":{},\"instance\":{},\"value\":{},\"bitOffset\":{},\"bits\":{}}}",
+                    "{{\"id\":{},\"name\":{},\"instance\":{},\"value\":{},\"unit\":{},\"bitOffset\":{},\"bits\":{}}}",
                     js(&d.id),
                     js(&d.name),
                     d.instance,
                     js(&d.value.to_string()),
+                    d.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
                     d.bit_offset,
                     d.bits
                 )
