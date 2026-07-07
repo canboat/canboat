@@ -101,7 +101,10 @@
   <header>
     <h1>keel — CANboat PGN database</h1>
     <input id="search" placeholder="filter PGNs…">
-    <div style="margin-top:8px"><button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button></div>
+    <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
+      <button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button>
+      <button onclick="openNewLookup()">＋ New Lookup</button>
+    </div>
   </header>
   <div id="pgnlist"></div>
 </div>
@@ -187,6 +190,10 @@
       <button onclick="closeLookup()">✕</button>
     </header>
     <div id="lkBody">
+      <div class="row" id="lkNameRow" style="display:none">
+        <label>name <input id="lk_name" size="28" placeholder="UPPER_SNAKE_CASE"
+               oninput="this.value=this.value.toUpperCase()"></label>
+      </div>
       <div class="row">
         <label>kind <select id="lk_kind"><option>pair</option><option>bit</option></select></label>
         <label>bits <input id="lk_bits" size="4"></label>
@@ -624,9 +631,35 @@ function yq(s) {
 
 // ---- lookup viewer / editor -------------------------------------------------
 
+// Brand-new enumeration from scratch: name is entered in the modal.
+function openNewLookup() {
+  $("lkValues").querySelector("tbody").innerHTML = "";
+  lkBaseYaml = null;
+  lkReadOnly = false;
+  lkName = "";
+  $("lkNameRow").style.display = "";
+  $("lk_name").value = "";
+  $("lkTitle").textContent = "New lookup";
+  $("lkFile").textContent = "database/lookups/…yaml";
+  $("lk_kind").value = "pair";
+  $("lk_kind").disabled = false;
+  $("lk_bits").value = "";
+  $("lkHint").textContent = "new enumeration — pick a kind, width, and values";
+  $("lkSave").style.display = "";
+  $("lk_name").oninput = () => {
+    const n = ($("lk_name").value = $("lk_name").value.toUpperCase());
+    $("lkTitle").textContent = n || "New lookup";
+    $("lkFile").textContent = `database/lookups/${n || "…"}.yaml`;
+  };
+  lkAddRow("0", "");
+  $("lkOverlay").style.display = "flex";
+  $("lk_name").focus();
+}
+
 // seed: values (pair) or bit positions (bit) to pre-add for naming,
 // e.g. unnamed values a pasted sample just revealed.
 async function openLookup(name, suggestedBits, seed) {
+  $("lkNameRow").style.display = "none";   // name is fixed for existing/targeted
   const r = await api(`/api/lookup?name=${encodeURIComponent(name)}`, null, "GET");
   const tb = $("lkValues").querySelector("tbody");
   tb.innerHTML = "";
@@ -691,9 +724,18 @@ function lkAddRow(value, name) {
 function closeLookup() { $("lkOverlay").style.display = "none"; }
 
 async function saveLookup() {
+  // brand-new enumeration: take the name from the modal and validate
+  if ($("lkNameRow").style.display !== "none") {
+    const n = $("lk_name").value.trim();
+    if (!/^[A-Z][A-Z0-9_]*$/.test(n)) return flash("name must be UPPER_SNAKE_CASE", false);
+    if (MODEL.lookups.some(l => (l.name || l) === n)) return flash(`lookup ${n} already exists`, false);
+    if (!Number($("lk_bits").value)) return flash("set the bit width", false);
+    lkName = n;
+  }
   const rows = [...$("lkValues").querySelectorAll("tbody tr")]
     .map(tr => [...tr.querySelectorAll("input")].map(i => i.value.trim()))
     .filter(([v, n]) => v !== "" && n !== "");
+  if (!rows.length) return flash("add at least one value", false);
   rows.sort((a, b) => Number(a[0]) - Number(b[0]));
   let block = "values:\n" + rows.map(([v, n]) => `  ${Number(v)}: ${yq(n)}`).join("\n") + "\n";
   let yaml;
