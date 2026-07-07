@@ -48,5 +48,6 @@ int  parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absol
 int  parseRawFormatYDWG02(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson);
 bool parseTimestamp(const char *msg, uint64_t *when);
+void normalizeTimestamp(const char *in, char *out, size_t outLen);
 
 #endif
