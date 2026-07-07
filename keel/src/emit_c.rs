@@ -47,29 +47,6 @@ fn c_double(v: f64) -> String {
     format!("{v:?}")
 }
 
-/// Port of pgn.c camelize(str, upperCamelCase=false, order): lowerCamelCase,
-/// ASCII-only alpha/digit, Reserved/Spare numbered by 1-based field position.
-fn camelize(s: &str, order: usize) -> String {
-    let mut out = String::with_capacity(s.len());
-    let mut last_is_alpha = true; // !upperCamelCase
-    for c in s.chars() {
-        if c.is_ascii_alphanumeric() {
-            if last_is_alpha {
-                out.push(c.to_ascii_lowercase());
-            } else {
-                out.push(c.to_ascii_uppercase());
-                last_is_alpha = true;
-            }
-        } else {
-            last_is_alpha = false;
-        }
-    }
-    if order > 0 && (s == "Reserved" || s == "Spare") {
-        out.push_str(&order.to_string());
-    }
-    out
-}
-
 fn sentinel_symbol(name: &str) -> &'static str {
     match name {
         "TopOfRange" => "SENTINEL_TOP_OF_RANGE",
@@ -328,16 +305,16 @@ fn packet_type_symbol(t: &str) -> &'static str {
     }
 }
 
-fn emit_field(db: &Database, f: &Field, derived_id: &str) -> String {
+fn emit_field(db: &Database, f: &Field) -> String {
     let ft = &db.fieldtypes[f.ft];
-    let mut parts: Vec<String> = vec![format!(".name = {}", c_str(&f.name))];
-    // .camelName only when the id is pinned (diverges from what camelCase()
-    // derives). An always-set camelName changes analyzer text output: the
-    // repeating-set suffix separator keys on it (analyzer.c:1657, "_N" vs " N").
-    if f.id != derived_id {
-        parts.push(format!(".camelName = {}", c_str(&f.id)));
-    }
-    parts.push(format!(".fieldType = {}", c_str(&f.type_)));
+    // camelName (the frozen <Id>) is explicit on every field, like the YAML;
+    // analyzer.c keys naming decisions on the showCamel mode, never on
+    // camelName presence.
+    let mut parts: Vec<String> = vec![
+        format!(".name = {}", c_str(&f.name)),
+        format!(".camelName = {}", c_str(&f.id)),
+        format!(".fieldType = {}", c_str(&f.type_)),
+    ];
     if let Some(bits) = f.bits {
         parts.push(format!(".size = {bits}"));
     }
@@ -419,25 +396,11 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
         complete_expr(p),
         packet_type_symbol(&p.type_)
     ));
-    // Derived ids track pgn.c camelCase(): Reserved/Spare fields after the
-    // first spare-or-reserved get their 1-based position appended.
-    let mut have_earlier_spare_or_reserved = false;
-    let mut fields: Vec<String> = Vec::with_capacity(p.fields.len());
-    for (j, f) in p.fields.iter().enumerate() {
-        let order = if have_earlier_spare_or_reserved { j + 1 } else { 0 };
-        let derived_id = camelize(&f.name, order);
-        fields.push(emit_field(db, f, &derived_id));
-        if f.name == "Reserved" || f.name == "Spare" {
-            have_earlier_spare_or_reserved = true;
-        }
-    }
+    let fields: Vec<String> = p.fields.iter().map(|f| emit_field(db, f)).collect();
     out.push_str(&fields.join(",\n"));
     out.push_str("\n     },\n");
 
-    let mut named: Vec<String> = Vec::new();
-    if p.id != camelize(&p.description, 0) {
-        named.push(format!(".camelDescription = {}", c_str(&p.id)));
-    }
+    let mut named: Vec<String> = vec![format!(".camelDescription = {}", c_str(&p.id))];
     if p.fallback {
         named.push(".fallback = true".into());
     }

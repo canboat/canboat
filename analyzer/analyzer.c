@@ -1302,6 +1302,8 @@ static bool printField(const Field   *field,
 
   if (fieldName == NULL)
   {
+    // Defensive only: both callers pass a name. Key on the mode, not on
+    // camelName presence - the generated tables set camelName everywhere.
     fieldName = (showCamel && field->camelName) ? field->camelName : (char *) field->name;
   }
 
@@ -1490,6 +1492,10 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   if (showJson)
   {
+    // The camel-id wrapper follows the -camel mode. This used to key on
+    // camelDescription presence as a proxy, which wrapped pinned-id PGNs
+    // even in plain JSON and broke down once the generated tables set
+    // camelDescription on every PGN.
     if (showCamel)
     {
       mprintf("{\"%s\":", pgn->camelDescription);
@@ -1670,6 +1676,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (repetition >= 1 && !showJson)
     {
+      // The separator follows the naming style in use ("windSpeed_2" vs
+      // "Wind Speed 2"). This used to key on camelName presence as a cheap
+      // proxy for the -camel mode, which broke down once every field
+      // carries an explicit camelName (id) from the generated tables.
       strcat(fieldName, showCamel ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }

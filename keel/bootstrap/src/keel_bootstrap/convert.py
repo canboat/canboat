@@ -298,13 +298,17 @@ def _author_overrides(db: Database, pgn: Pgn, original_block: str) -> None:
             f.special_values = want_count
 
 
-def convert(xml_path: str, fieldtype_header: str, verbose: bool = False, bem_paths: dict = None):
+def convert(xml_path: str, fieldtype_header: str, verbose: bool = False, bem_paths: dict = None,
+            j1939_xml: str = None):
     """Returns (db, failures): the authored Database and a list of PGN ids
     whose blocks could not be reproduced (for iterative refinement).
 
     bem_paths: optional {"actisense": path, "ikonvert": path} pointing at
     -explain-ngt-xml / -explain-ik-xml output; the BEM pseudo-PGNs live in
     pgnList (the analyzer decodes them at runtime) but not in canboat.xml.
+    j1939_xml: optional analyzer-explain-j1939 -explain-xml output; converts
+    the parallel J1939 pgnList (pgn-j1939.h) into database/j1939/pgns/.
+    The J1939 tree shares lookups/fieldtypes/physical quantities.
     """
     import copy
 
@@ -378,6 +382,43 @@ def convert(xml_path: str, fieldtype_header: str, verbose: bool = False, bem_pat
             failures.append(pgn.id)
             if verbose:
                 _report_block_diff(db, pgn, block)
+
+    # J1939: a parallel Pgn list sharing every other section
+    db.pgns_j1939 = []
+    if j1939_xml is not None:
+        raw_j = xmlread.parse(j1939_xml)
+        db_j = Database(
+            physical_quantities=db.physical_quantities,
+            fieldtypes=db.fieldtypes,
+            lookups=db.lookups,
+            lookup_order=db.lookup_order,
+            version=raw_j.version,
+            schema_version=raw_j.schema_version,
+        )
+        for elem, _block in raw_j.pgn_elements:
+            db_j.pgns.append(build_pgn(picker, db_j, elem))
+        by_pgn = {}
+        for p in db_j.pgns:
+            by_pgn.setdefault(p.pgn, []).append(p)
+        for group in by_pgn.values():
+            if len(group) > 1:
+                for n, p in enumerate(group, start=1):
+                    p.variant_order = n
+        derive.fill(db_j)
+        for f in (f for p in db_j.pgns for f in p.fields):
+            ref = f.lookup_ref()
+            if ref is not None:
+                lk = db_j.lookups.get(ref[1])
+                if lk is not None and f.res_bits != lk.bits:
+                    f.allow_lookup_width_mismatch = True
+        derive.fill(db_j)
+        for pgn, (_elem, block) in zip(db_j.pgns, raw_j.pgn_elements):
+            if not reconcile_pgn(db_j, pgn, block):
+                failures.append(f"j1939:{pgn.id}")
+                if verbose:
+                    _report_block_diff(db_j, pgn, block)
+        db.pgns_j1939 = db_j.pgns
+        db.j1939_db = db_j
 
     return db, failures
 

@@ -70,7 +70,24 @@ def cmd_convert(args) -> int:
     out_dir = os.path.join(root, args.out)
 
     bem_paths = _bem_sources(root, args)
-    db, failures = convert.convert(xml_path, header, verbose=args.verbose, bem_paths=bem_paths)
+    j1939_xml = args.j1939_xml
+    if j1939_xml is None:
+        import glob as _glob
+        import subprocess as _sp
+        import tempfile as _tf
+
+        binaries = _glob.glob(os.path.join(root, "rel", "*", "analyzer-explain-j1939"))
+        if binaries:
+            out = _sp.run([binaries[0], "-explain-xml", "-camel"], capture_output=True, text=True, check=True).stdout
+            tmp = _tf.NamedTemporaryFile(mode="w", suffix="-j1939.xml", delete=False, encoding="utf-8")
+            tmp.write(out)
+            tmp.close()
+            j1939_xml = tmp.name
+        else:
+            print("keel convert: no --j1939-xml and no analyzer-explain-j1939 binary; J1939 NOT converted",
+                  file=sys.stderr)
+    db, failures = convert.convert(xml_path, header, verbose=args.verbose, bem_paths=bem_paths,
+                                   j1939_xml=j1939_xml)
 
     yamlio.write_database(db, out_dir)
     print(f"keel convert: wrote {len(db.pgns)} pgns, {len(db.lookups)} lookups to {out_dir}")
@@ -81,8 +98,11 @@ def cmd_convert(args) -> int:
 
     ok = True
     references = {"normal": xml_path, **bem_paths}
+    if j1939_xml is not None:
+        references["j1939"] = j1939_xml
     for which, path in references.items():
-        emitted = emit_xml.emit_xml(db, which)
+        source_db = getattr(db, "j1939_db", None) if which == "j1939" else db
+        emitted = emit_xml.emit_xml(source_db, "normal" if which == "j1939" else which)
         with open(path, encoding="utf-8") as f:
             original = f.read()
         if emitted == original:
@@ -148,6 +168,7 @@ def main(argv=None) -> int:
     p.add_argument("--diff", help="write unified diff of non-reproducing output to this file")
     p.add_argument("--actisense-xml", help="analyzer-explain -explain-ngt-xml output (default: run the binary)")
     p.add_argument("--ikonvert-xml", help="analyzer-explain -explain-ik-xml output (default: run the binary)")
+    p.add_argument("--j1939-xml", help="analyzer-explain-j1939 -explain-xml output (default: run the binary)")
     p.add_argument("--verbose", action="store_true")
     p.set_defaults(func=cmd_convert)
 
