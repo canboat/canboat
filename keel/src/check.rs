@@ -155,8 +155,18 @@ fn expect_mismatch(expected: &Expected, got: &decode::Value) -> Option<String> {
     use decode::Value as V;
     let ok = match (expected, got) {
         (Expected::Unavailable, V::Unavailable) => true,
-        (Expected::Number(e), V::Number { value: g, .. }) => {
-            let tol = (e.abs() * 1e-9).max(1e-12);
+        (Expected::Number(e), V::Number { value: g, decimals }) => {
+            // Expectations are authored at the field's display precision
+            // (a FLOAT_RAD shown as 2.7307 hides a full-precision f64), so
+            // a nanoscale tolerance would reject every rounded value.
+            // Allow one displayed unit-in-the-last-place; integer-precision
+            // fields (decimals == 0) keep an effectively exact match.
+            let slop = (e.abs() * 1e-9).max(1e-12);
+            let tol = if *decimals > 0 {
+                10f64.powi(-(*decimals as i32)) + slop
+            } else {
+                slop
+            };
             (e - g).abs() <= tol
         }
         (Expected::Number(e), V::Lookup { value, .. }) => *e == *value as f64,
