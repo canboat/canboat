@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>keel — CANboat PGN editor</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #667; --line: #d8dce2;
+    --panel: #f5f7fa; --accent: #0a6cbd; --ok: #1a7f37; --err: #c62828;
+    --warn: #9a6700; --const: #dbe9f6; --unset: #eceff1; --vary: #e6f4e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181d; --fg: #e6e8eb; --muted: #99a; --line: #33383f;
+      --panel: #1e2127; --accent: #58a6ff; --ok: #4caf50; --err: #ef5350;
+      --warn: #e3b341; --const: #1d3a5f; --unset: #2a2e35; --vary: #1e3d1e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--fg);
+         display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+  #sidebar { border-right: 1px solid var(--line); background: var(--panel); display: flex;
+             flex-direction: column; overflow: hidden; }
+  #sidebar header { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  #sidebar h1 { font-size: 15px; margin: 0 0 8px; }
+  #search { width: 100%; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px;
+            background: var(--bg); color: var(--fg); }
+  #pgnlist { overflow-y: auto; flex: 1; }
+  #pgnlist div { padding: 4px 12px; cursor: pointer; white-space: nowrap; overflow: hidden;
+                 text-overflow: ellipsis; }
+  #pgnlist div:hover { background: var(--const); }
+  #pgnlist b { font-variant-numeric: tabular-nums; margin-right: 6px; }
+  #main { overflow-y: auto; padding: 16px 20px 60px; }
+  h2 { font-size: 16px; margin: 18px 0 8px; }
+  .step { color: var(--accent); font-weight: 600; margin-right: 6px; }
+  textarea { width: 100%; font: 12px/1.4 ui-monospace, monospace; background: var(--bg);
+             color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+  button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+           background: var(--panel); color: var(--fg); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  input, select { padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px;
+                  background: var(--bg); color: var(--fg); }
+  table { border-collapse: collapse; margin: 8px 0; }
+  th, td { border: 1px solid var(--line); padding: 3px 7px; font-size: 13px; }
+  th { background: var(--panel); font-weight: 600; text-align: left; }
+  #grid td { font: 12px ui-monospace, monospace; text-align: center; padding: 2px 5px; }
+  #grid td.const { background: var(--const); }
+  #grid td.unset { background: var(--unset); color: var(--muted); }
+  #grid td.vary { background: var(--vary); }
+  #grid tr.fieldrow td { font-size: 10px; color: var(--muted); border-top: 2px solid var(--accent); }
+  #fields input, #fields select { width: 100%; min-width: 60px; }
+  #fields td { padding: 2px 4px; }
+  .violations div { padding: 2px 0; font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .violations .err { color: var(--err); }
+  .violations .warn { color: var(--warn); }
+  .flash { padding: 8px 12px; border-radius: 6px; margin: 10px 0; display: none; }
+  .flash.ok { background: var(--vary); color: var(--ok); display: block; }
+  .flash.bad { background: var(--unset); color: var(--err); display: block; white-space: pre-wrap;
+               font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .hint { color: var(--muted); font-size: 12.5px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin: 6px 0; }
+  .row label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
+  #decodeTable td.unavail { color: var(--muted); font-style: italic; }
+  .scroll { overflow-x: auto; }
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <header>
+    <h1>keel — PGN database</h1>
+    <input id="search" placeholder="filter PGNs…">
+    <div style="margin-top:8px"><button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button></div>
+  </header>
+  <div id="pgnlist"></div>
+</div>
+<div id="main">
+  <div id="flash" class="flash"></div>
+
+  <section id="stepSamples">
+    <h2><span class="step">1</span>Evidence — paste sample records</h2>
+    <p class="hint">canboat PLAIN (<code>ts,prio,pgn,src,dst,len,hh,…</code>) or candump
+      (<code>can0 18EAFF00#…</code>). One or more, ideally several of the same PGN.
+      Skip only for documentation-derived definitions.</p>
+    <textarea id="sampleInput" rows="6" spellcheck="false"></textarea>
+    <div class="row">
+      <button class="primary" onclick="analyze()">Analyze</button>
+      <span id="analyzeStatus" class="hint"></span>
+    </div>
+    <div id="messages"></div>
+  </section>
+
+  <section id="stepDefine" style="display:none">
+    <h2><span class="step">2</span>Definition</h2>
+    <div class="row">
+      <label>PGN <input id="m_pgn" size="8"></label>
+      <label>Id (frozen) <input id="m_id" size="26"></label>
+      <label>Description <input id="m_desc" size="34"></label>
+      <label>Type <select id="m_type"><option>Single</option><option>Fast</option><option>ISO</option></select></label>
+      <label>Priority <input id="m_prio" size="3"></label>
+    </div>
+
+    <h2>Evidence grid</h2>
+    <p class="hint">Samples stacked byte by byte — <span style="background:var(--const)">constant</span>
+      bytes suggest match/reserved fields, <span style="background:var(--unset)">0xFF</span> is unclaimed,
+      <span style="background:var(--vary)">varying</span> is data. Field spans are marked under the grid.</p>
+    <div class="scroll"><table id="grid"></table></div>
+
+    <h2>Fields</h2>
+    <div class="scroll">
+    <table id="fields">
+      <thead><tr><th>id</th><th>name</th><th>type</th><th>bits</th><th>lookup</th><th>match</th>
+        <th>unit</th><th>resolution</th><th>PK</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div class="row">
+      <button onclick="addField()">＋ field</button>
+      <button onclick="addField('reserved')">＋ reserved</button>
+      <button onclick="addProprietaryPreamble()">＋ proprietary preamble</button>
+      <span class="hint" id="bitBudget"></span>
+    </div>
+
+    <h2>Live decode <span class="hint">— every sample, every edit</span></h2>
+    <div class="scroll"><table id="decodeTable"></table></div>
+    <div class="violations" id="violations"></div>
+  </section>
+
+  <section id="stepSave" style="display:none">
+    <h2><span class="step">3</span>YAML &amp; save</h2>
+    <div class="row">
+      <button onclick="adoptExpectations()">Adopt current decodes as expectations</button>
+      <label><input type="checkbox" id="citeSamples" checked style="width:auto"> cite samples in notes</label>
+    </div>
+    <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; scheduleRefresh()"></textarea>
+    <div class="row">
+      <span class="hint" id="savePath"></span>
+      <button class="primary" onclick="save()">Save (gated by keel check)</button>
+    </div>
+  </section>
+</div>
+
+<script>
+"use strict";
+let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
+let samplesHex = [];         // assembled payloads (hex strings)
+let fieldsState = [];        // wizard field rows
+let lastDecode = null;       // last /api/decode response
+let yamlDirty = false;       // textarea hand-edited: it wins over the form
+let refreshTimer = null;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+async function api(path, body, method="POST") {
+  const r = await fetch(path, { method, body });
+  return r.json();
+}
+
+async function init() {
+  MODEL = await api("/api/model", null, "GET");
+  const dl = (id, items) => {
+    const d = document.createElement("datalist");
+    d.id = id;
+    items.forEach(v => { const o = document.createElement("option"); o.value = v; d.appendChild(o); });
+    document.body.appendChild(d);
+  };
+  dl("dl_types", MODEL.fieldtypes.map(f => f.name));
+  dl("dl_lookups", MODEL.lookups.filter(l => l.kind === "pair").map(l => l.name));
+  renderPgnList("");
+  $("search").addEventListener("input", e => renderPgnList(e.target.value));
+}
+
+function renderPgnList(filter) {
+  const f = filter.toLowerCase();
+  const el = $("pgnlist");
+  el.innerHTML = "";
+  MODEL.pgns
+    .filter(p => !f || String(p.pgn).includes(f) || p.id.toLowerCase().includes(f)
+              || p.description.toLowerCase().includes(f))
+    .slice(0, 400)
+    .forEach(p => {
+      const d = document.createElement("div");
+      d.innerHTML = `<b>${p.pgn}</b>${esc(p.description)}`;
+      d.title = p.id;
+      d.onclick = () => openExisting(p.id);
+      el.appendChild(d);
+    });
+}
+
+function flash(msg, ok) {
+  const f = $("flash");
+  f.textContent = msg;
+  f.className = "flash " + (ok ? "ok" : "bad");
+  if (ok) setTimeout(() => f.className = "flash", 4000);
+}
+
+function newWizard() {
+  samplesHex = []; fieldsState = []; yamlDirty = false;
+  $("sampleInput").value = ""; $("messages").innerHTML = "";
+  $("stepDefine").style.display = "none";
+  $("stepSave").style.display = "none";
+  $("stepSamples").style.display = "";
+  ["m_pgn","m_id","m_desc","m_prio"].forEach(id => $(id).value = "");
+  window.scrollTo(0, 0);
+}
+
+async function openExisting(id) {
+  const r = await api(`/api/pgn?id=${encodeURIComponent(id)}`, null, "GET");
+  if (r.error) return flash(r.error, false);
+  newWizard();
+  $("stepSamples").style.display = "none";
+  $("stepDefine").style.display = "none";
+  $("stepSave").style.display = "";
+  $("yamlText").value = r.yaml;
+  yamlDirty = true;                       // textarea is the source of truth
+  $("savePath").textContent = r.path.replace(/^.*database\//, "database/");
+  scheduleRefresh();
+}
+
+async function analyze() {
+  const r = await api("/api/analyze", $("sampleInput").value);
+  if (r.error) return flash(r.error, false);
+  const byPgn = {};
+  r.messages.forEach(m => (byPgn[m.pgn] = byPgn[m.pgn] || []).push(m));
+  const el = $("messages");
+  el.innerHTML = "";
+  (r.warnings || []).forEach(w => {
+    const d = document.createElement("div");
+    d.className = "hint"; d.textContent = "⚠ " + w;
+    el.appendChild(d);
+  });
+  Object.entries(byPgn).forEach(([pgn, msgs]) => {
+    const btn = document.createElement("button");
+    const v = msgs[0].variant ? ` — existing: ${msgs[0].variant}` : " — unknown PGN";
+    btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s)${v}`;
+    btn.style.margin = "6px 6px 0 0";
+    btn.onclick = () => startDefinition(Number(pgn), msgs);
+    el.appendChild(btn);
+  });
+  $("analyzeStatus").textContent = `${r.messages.length} message(s)`;
+}
+
+function startDefinition(pgn, msgs) {
+  samplesHex = msgs.map(m => m.hex);
+  fieldsState = [];
+  yamlDirty = false;
+  $("m_pgn").value = pgn;
+  $("m_prio").value = msgs[0].prio;
+  $("m_type").value = samplesHex.some(h => h.length > 16) ? "Fast" : "Single";
+  $("stepDefine").style.display = "";
+  $("stepSave").style.display = "";
+  $("savePath").textContent = "";
+  if ((pgn >= 0xff00 && pgn <= 0xffff) || pgn === 0x1ef00 || (pgn >= 0x1ff00 && pgn <= 0x1ffff)) {
+    addProprietaryPreamble();
+  }
+  renderAll();
+}
+
+function addField(kind) {
+  const n = fieldsState.length + 1;
+  if (kind === "reserved") {
+    fieldsState.push({ id: "reserved", name: "Reserved", type: "RESERVED", bits: 8 });
+  } else {
+    fieldsState.push({ id: `field${n}`, name: `Field ${n}`, type: "UINT8", bits: "" });
+  }
+  renderAll();
+}
+
+function addProprietaryPreamble() {
+  fieldsState.unshift(
+    { id: "manufacturerCode", name: "Manufacturer Code", type: "LOOKUP", bits: 11,
+      lookup: "MANUFACTURER_CODE", match: detectPreamble(0, 11) },
+    { id: "reserved", name: "Reserved", type: "RESERVED", bits: 2 },
+    { id: "industryCode", name: "Industry Code", type: "LOOKUP", bits: 3,
+      lookup: "INDUSTRY_CODE", match: detectPreamble(13, 3) },
+  );
+  renderAll();
+}
+
+function detectPreamble(bitOff, bits) {
+  // constant across all samples? then it is the match value
+  const vals = samplesHex.map(h => extractBits(h, bitOff, bits));
+  return vals.length && vals.every(v => v === vals[0]) ? vals[0] : "";
+}
+
+function extractBits(hex, bitOff, bits) {
+  let v = 0n;
+  for (let i = 0; i < bits; i++) {
+    const bit = bitOff + i;
+    const byte = parseInt(hex.substr((bit >> 3) * 2, 2) || "ff", 16);
+    if (byte & (1 << (bit & 7))) v |= 1n << BigInt(i);
+  }
+  return Number(v);
+}
+
+function fieldBits(f) {
+  if (f.bits) return Number(f.bits);
+  const ft = MODEL.fieldtypes.find(t => t.name === f.type);
+  return ft && ft.bits ? ft.bits : 0;
+}
+
+function renderAll() {
+  renderFields();
+  renderGrid();
+  regenerateYaml();
+  scheduleRefresh();
+}
+
+function renderFields() {
+  const tb = $("fields").querySelector("tbody");
+  tb.innerHTML = "";
+  fieldsState.forEach((f, i) => {
+    const tr = document.createElement("tr");
+    const cell = (key, size, listId) => {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.value = f[key] ?? "";
+      inp.size = size;
+      if (listId) inp.setAttribute("list", listId);
+      inp.oninput = () => { f[key] = inp.value; regenerateYaml(); scheduleRefresh(); };
+      inp.onchange = () => renderGrid();
+      td.appendChild(inp);
+      return td;
+    };
+    tr.appendChild(cell("id", 16));
+    tr.appendChild(cell("name", 18));
+    tr.appendChild(cell("type", 14, "dl_types"));
+    tr.appendChild(cell("bits", 4));
+    tr.appendChild(cell("lookup", 16, "dl_lookups"));
+    tr.appendChild(cell("match", 6));
+    tr.appendChild(cell("unit", 5));
+    tr.appendChild(cell("resolution", 8));
+    const pk = document.createElement("td");
+    const pkc = document.createElement("input");
+    pkc.type = "checkbox"; pkc.checked = !!f.primaryKey; pkc.style.width = "auto";
+    pkc.onchange = () => { f.primaryKey = pkc.checked; regenerateYaml(); scheduleRefresh(); };
+    pk.appendChild(pkc);
+    tr.appendChild(pk);
+    const del = document.createElement("td");
+    del.innerHTML = "<button title='remove'>✕</button>";
+    del.firstChild.onclick = () => { fieldsState.splice(i, 1); renderAll(); };
+    tr.appendChild(del);
+    tb.appendChild(tr);
+  });
+  const total = fieldsState.reduce((a, f) => a + fieldBits(f), 0);
+  const frame = $("m_type").value === "Single" ? 64 : null;
+  $("bitBudget").textContent =
+    `${total} bits (${(total / 8).toFixed(1)} bytes)` +
+    (frame ? ` of ${frame} — ${frame - total >= 0 ? (frame - total) + " left" : "OVER by " + (total - frame)}` : "") +
+    (total % 8 ? " — not byte-aligned (R03)" : "");
+}
+
+function renderGrid() {
+  const g = $("grid");
+  g.innerHTML = "";
+  if (!samplesHex.length) return;
+  const maxBytes = Math.max(...samplesHex.map(h => h.length / 2));
+
+  // classification per byte
+  const cls = [];
+  for (let b = 0; b < maxBytes; b++) {
+    const vals = samplesHex.map(h => h.substr(b * 2, 2) || "");
+    const allSame = vals.every(v => v === vals[0] && v !== "");
+    cls.push(vals.every(v => v === "ff") ? "unset" : allSame ? "const" : "vary");
+  }
+
+  const head = document.createElement("tr");
+  head.innerHTML = "<th></th>" + Array.from({length: maxBytes}, (_, b) => `<th>${b}</th>`).join("");
+  g.appendChild(head);
+
+  samplesHex.forEach((h, si) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<th>#${si + 1}</th>` + Array.from({length: maxBytes}, (_, b) => {
+      const v = h.substr(b * 2, 2);
+      return `<td class="${cls[b]}">${v || "·"}</td>`;
+    }).join("");
+    g.appendChild(tr);
+  });
+
+  // field span row
+  const spans = [];
+  let bit = 0;
+  fieldsState.forEach(f => {
+    const bits = fieldBits(f);
+    spans.push({ id: f.id, from: bit, to: bit + bits });
+    bit += bits;
+  });
+  const tr = document.createElement("tr");
+  tr.className = "fieldrow";
+  let cells = "<th>fields</th>";
+  for (let b = 0; b < maxBytes; b++) {
+    const here = spans.filter(s => s.from < (b + 1) * 8 && s.to > b * 8).map(s => s.id);
+    cells += `<td>${esc(here.join(" "))||""}</td>`;
+  }
+  tr.innerHTML = cells;
+  g.appendChild(tr);
+}
+
+// ---- YAML generation (wizard mode) -----------------------------------------
+
+function yq(s) {
+  s = String(s);
+  return /^[A-Za-z0-9][A-Za-z0-9 _.\/#()+-]*$/.test(s) && !/^\d+$/.test(s) && !s.includes(": ")
+    ? s : JSON.stringify(s);
+}
+
+function regenerateYaml() {
+  if (yamlDirty) return;
+  const pgn = Number($("m_pgn").value || 0);
+  let y = `pgn: ${pgn}\n`;
+  y += `id: ${yq($("m_id").value || "newPgn")}\n`;
+  y += `description: ${yq($("m_desc").value || "New PGN")}\n`;
+  y += `type: ${$("m_type").value}\n`;
+  y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
+  if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
+  y += "fields:\n";
+  fieldsState.forEach(f => {
+    y += `- id: ${yq(f.id)}\n  name: ${yq(f.name)}\n  type: ${f.type}\n`;
+    if (f.bits) y += `  bits: ${Number(f.bits)}\n`;
+    if (f.lookup) y += `  lookup: ${f.lookup}\n`;
+    if (f.match !== undefined && f.match !== "") y += `  match: ${Number(f.match)}\n`;
+    if (f.unit) y += `  unit: ${yq(f.unit)}\n`;
+    if (f.resolution) y += `  resolution: ${Number(f.resolution)}\n`;
+    if (f.primaryKey) y += `  primaryKey: true\n`;
+  });
+  $("yamlText").value = y;
+  const id = $("m_id").value || "newPgn";
+  $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+}
+
+// ---- live decode ------------------------------------------------------------
+
+function scheduleRefresh() {
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(refresh, 350);
+}
+
+async function refresh() {
+  const yaml = $("yamlText").value;
+  if (!yaml.trim()) return;
+  const qs = samplesHex.map(h => "data=" + h).join("&");
+  const r = await api("/api/decode" + (qs ? "?" + qs : ""), yaml);
+  lastDecode = r;
+  const vio = $("violations");
+  if (r.error) {
+    vio.innerHTML = `<div class="err">parse: ${esc(r.error)}</div>`;
+    $("decodeTable").innerHTML = "";
+    return;
+  }
+  vio.innerHTML = (r.violations || [])
+    .map(v => `<div class="${v.error ? "err" : "warn"}">${v.rule} ${esc(v.message)}</div>`)
+    .join("") || `<div style="color:var(--ok)">✓ rules pass</div>`;
+
+  const t = $("decodeTable");
+  t.innerHTML = "";
+  const sampleResults = r.samples || [];
+  if (!sampleResults.length) return;
+  const rows = {};
+  sampleResults.forEach((s, si) => {
+    (s.fields || []).forEach(f => {
+      const key = f.id + (f.instance > 1 ? "." + f.instance : "");
+      rows[key] = rows[key] || { name: f.name, values: [] };
+      rows[key].values[si] = f.value;
+    });
+  });
+  const head = document.createElement("tr");
+  head.innerHTML = "<th>field</th>" + sampleResults.map((_, i) => `<th>#${i + 1}</th>`).join("");
+  t.appendChild(head);
+  Object.entries(rows).forEach(([key, row]) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<th title="${esc(row.name)}">${esc(key)}</th>` +
+      row.values.map(v => `<td class="${v === "Unavailable" ? "unavail" : ""}">${esc(v ?? "")}</td>`).join("");
+    t.appendChild(tr);
+  });
+}
+
+// ---- expectations + save ------------------------------------------------------
+
+function adoptExpectations() {
+  if (!lastDecode || !lastDecode.samples || !samplesHex.length)
+    return flash("analyze + decode some samples first", false);
+  const lines = $("sampleInput").value.split("\n").map(s => s.trim())
+    .filter(s => s && !s.startsWith("#"));
+  let y = "samples:\n";
+  lastDecode.samples.forEach((s, si) => {
+    // crude but honest: cite the pasted lines verbatim; multi-frame pastes
+    // become a raw list
+    const mine = lines.length === lastDecode.samples.length ? [lines[si]] : lines;
+    if (mine.length === 1) {
+      y += `- raw: ${JSON.stringify(mine[0])}\n`;
+    } else {
+      y += `- raw:\n` + mine.map(l => `  - ${JSON.stringify(l)}`).join("\n") + "\n";
+    }
+    y += "  expects:\n";
+    (s.fields || []).forEach(f => {
+      if (f.id.startsWith("reserved") || f.id.startsWith("spare")) return;
+      const key = f.id + (f.instance > 1 ? "." + f.instance : "");
+      let v = f.value;
+      if (v === "Unavailable") v = "~";
+      else if (/^\[.*\]$/.test(v)) v = "[" + v.slice(1, -1).split(", ").filter(Boolean).map(x => yq(x)).join(", ") + "]";
+      else if (/ \(\d+\)$/.test(v)) v = yq(v.replace(/ \(\d+\)$/, ""));   // lookup name
+      else if (/^".*"$/.test(v)) v = v;                                   // string
+      else if (!isNaN(Number(v))) v = v;                                  // number
+      else v = yq(v);
+      y += `    ${key}: ${v}\n`;
+    });
+  });
+  yamlDirty = true;
+  $("yamlText").value = $("yamlText").value.trimEnd() + "\n" + y;
+  scheduleRefresh();
+}
+
+async function save() {
+  const file = $("savePath").textContent.trim();
+  if (!file) return flash("no target file (set PGN + id first)", false);
+  const r = await api("/api/save?file=" + encodeURIComponent(file), $("yamlText").value);
+  if (r.error) return flash(r.error, false);
+  flash(`saved ${r.saved} — run 'keel generate' before committing`, true);
+  MODEL = await api("/api/model", null, "GET");
+  renderPgnList($("search").value);
+}
+
+init();
+</script>
+</body>
+</html>

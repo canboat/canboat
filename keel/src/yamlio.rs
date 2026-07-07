@@ -298,6 +298,16 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
     })
 }
 
+/// Parse a single PGN definition from YAML text (the editor's candidate
+/// documents - the same text that gets saved).
+pub fn parse_pgn_str(text: &str, ctx: &str) -> Result<Pgn> {
+    let mut docs = YamlLoader::load_from_str(text).map_err(|e| format!("{ctx}: {e}"))?;
+    if docs.len() != 1 {
+        return Err(format!("{ctx}: expected exactly one YAML document"));
+    }
+    pgn(&docs.remove(0), ctx)
+}
+
 // ---- tree loader ----------------------------------------------------------
 
 fn sorted_yaml_files(dir: &Path) -> Result<Vec<std::path::PathBuf>> {
