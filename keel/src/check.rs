@@ -155,7 +155,7 @@ fn expect_mismatch(expected: &Expected, got: &decode::Value) -> Option<String> {
     use decode::Value as V;
     let ok = match (expected, got) {
         (Expected::Unavailable, V::Unavailable) => true,
-        (Expected::Number(e), V::Number(g)) => {
+        (Expected::Number(e), V::Number { value: g, .. }) => {
             let tol = (e.abs() * 1e-9).max(1e-12);
             (e - g).abs() <= tol
         }

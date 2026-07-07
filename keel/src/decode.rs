@@ -10,7 +10,10 @@ type Result<T> = std::result::Result<T, String>;
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum Value {
-    Number(f64),
+    /// value with display precision derived from the field resolution
+    /// (mirrors the C: resolution 0.0001 prints 4 decimals - the raw f64
+    /// would show binary noise like 0.19190000000000002)
+    Number { value: f64, decimals: u8 },
     Lookup { value: u64, name: Option<String> },
     Bits(Vec<String>),
     Str(String),
@@ -23,7 +26,7 @@ pub enum Value {
 impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            Value::Number(n) => write!(f, "{n}"),
+            Value::Number { value, decimals } => write!(f, "{:.*}", *decimals as usize, value),
             Value::Lookup { value, name: Some(n) } => write!(f, "{n} ({value})"),
             Value::Lookup { value, name: None } => write!(f, "{value}"),
             Value::Bits(names) => write!(f, "[{}]", names.join(", ")),
@@ -241,10 +244,11 @@ fn decode_one(
                     }
                     match sentinel(f, ft.has_sign, e.raw, bits) {
                         Some(s) => s,
-                        None if f.res_resolution != 0.0 => {
-                            Value::Number(e.value as f64 * f.res_resolution)
-                        }
-                        None => Value::Number(e.value as f64),
+                        None if f.res_resolution != 0.0 => Value::Number {
+                            value: e.value as f64 * f.res_resolution,
+                            decimals: decimals_for(f.res_resolution),
+                        },
+                        None => Value::Number { value: e.value as f64, decimals: 0 },
                     }
                 }
             }
@@ -264,6 +268,16 @@ fn decode_one(
 
 /// Top-of-range sentinel classification, mirroring the emitter/analyzer
 /// (fieldtype.c reservedCount + explainPGNXML emission conditions).
+/// Display decimals for a resolution, like the C printers: enough digits
+/// to show the resolution's granularity, none for integer resolutions.
+fn decimals_for(resolution: f64) -> u8 {
+    if resolution >= 1.0 || resolution <= 0.0 {
+        0
+    } else {
+        (-resolution.log10()).ceil().clamp(0.0, 9.0) as u8
+    }
+}
+
 fn sentinel(f: &Field, has_sign: Option<bool>, raw: u64, bits: usize) -> Option<Value> {
     if f.reserved_count == 0 || bits == 0 || bits >= 64 || f.match_.is_some() {
         return None;
