@@ -4641,7 +4641,7 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td>true</td></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 262143</div></td><td>24 bits
-                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin AHRS ATT: COG Source Valid Flag</h3><p>
               This PGN description applies when the following field(s) match:
@@ -5425,7 +5425,7 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Value</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Seatalk1: Pilot Mode</h3><p>
               This PGN description applies when the following field(s) match:
@@ -6506,40 +6506,6 @@ limitations under the License.
                       <a href="#lookup-MARETRON_STATUS_DEVIATION">MARETRON_STATUS_DEVIATION</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html">https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html</a></p><h3 id="pgn-126720">0x1EF00:
-            PGN 126720
-            - Maretron: Slave Response</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>137</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            8
-            bytes long and contains 7 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>137:
-                  Maretron</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Product code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Software code</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Status</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Maretron: Proprietary Configuration</h3><p>
               This PGN description applies when the following field(s) match:
@@ -16081,7 +16047,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             PGN 130820
             - BEP Marine: CZone Alarm String Response</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed. This is the only BEP Marine (manufacturer 295) variant of PGN 130820, so it matches on the manufacturer code alone and will also catch other BEP 130820 traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated telemetry such as "1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,..." rather than an alarm string.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -17892,30 +17858,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-ALERT_RESPONSE_COMMAND">ALERT_RESPONSE_COMMAND</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>6 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
-            PGN 130820
-            - BEP Marine: Proprietary PGN 130820</h3><p>
-              This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>295</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
-                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
-            This
-             fast-packet 
-            PGN is
-            223
-            bytes long and contains 4 fields.
-
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>295:
-                  BEP Marine 2</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
-                  
-                      lookup
-                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
-                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
-                  
-                      lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>1768 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -22686,9 +22629,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>129</td><td>Seatalk1</td></tr><tr><td>22</td><td>Hull Type</td></tr><tr><td>38</td><td>Auto Turn</td></tr><tr><td>12</td><td>Settings</td></tr><tr><td>2</td><td>Rudder Limit</td></tr><tr><td>3</td><td>Rudder Damping</td></tr><tr><td>4</td><td>Rudder Offset</td></tr><tr><td>6</td><td>Reverse Rudder Reference</td></tr><tr><td>8</td><td>Cruise Speed</td></tr><tr><td>11</td><td>Power Steer Mode</td></tr><tr><td>15</td><td>Wind Type</td></tr><tr><td>17</td><td>Auto Turn</td></tr><tr><td>18</td><td>Calibration Lock</td></tr><tr><td>20</td><td>Gybe Inhibit</td></tr><tr><td>21</td><td>Compass Offset</td></tr><tr><td>23</td><td>Drive Type</td></tr><tr><td>25</td><td>Response Level</td></tr><tr><td>26</td><td>Max Compass Deviation</td></tr><tr><td>27</td><td>Hard Over Time</td></tr><tr><td>29</td><td>Debug Level</td></tr><tr><td>33</td><td>Compass Lock</td></tr><tr><td>34</td><td>Speed Input</td></tr><tr><td>35</td><td>Compass Linearisation Progress</td></tr><tr><td>36</td><td>ACU Debug Level</td></tr><tr><td>37</td><td>Wind Shift Alarm</td></tr><tr><td>39</td><td>Auto Turn Timeout</td></tr></table><h3 id="lookup-SEATALK1_COMMAND">SEATALK1_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr><tr><td>1</td><td>Equipment ID</td></tr><tr><td>5</td><td>Engine RPM and PITCH</td></tr><tr><td>16</td><td>Apparent Wind Angle</td></tr><tr><td>17</td><td>Apparent Wind Speed</td></tr><tr><td>32</td><td>Speed through water</td></tr><tr><td>33</td><td>Trip Mileage</td></tr><tr><td>34</td><td>Total Mileage</td></tr><tr><td>35</td><td>Water temperature (ST50)</td></tr><tr><td>36</td><td>Display units for Mileage &amp; Speed</td></tr><tr><td>37</td><td>Total &amp; Trip Log</td></tr><tr><td>38</td><td>Speed through water (with average)</td></tr><tr><td>39</td><td>Water temperature</td></tr><tr><td>48</td><td>Set lamp Intensity</td></tr><tr><td>54</td><td>Cancel MOB (Man Over Board) condition</td></tr><tr><td>56</td><td>Codelock data</td></tr><tr><td>80</td><td>LAT position</td></tr><tr><td>81</td><td>LON position</td></tr><tr><td>82</td><td>Speed over Ground</td></tr><tr><td>83</td><td>Course over Ground (COG)</td></tr><tr><td>84</td><td>GMT-time</td></tr><tr><td>85</td><td>TRACK keystroke on GPS unit</td></tr><tr><td>86</td><td>Date</td></tr><tr><td>87</td><td>Sat Info</td></tr><tr><td>88</td><td>LAT/LON (raw unfiltered)</td></tr><tr><td>89</td><td>Set Count Down Timer</td></tr><tr><td>97</td><td>Issued by E-80 multifunction display at initialization</td></tr><tr><td>101</td><td>Select Fathom display units for depth display</td></tr><tr><td>102</td><td>Wind alarm</td></tr><tr><td>104</td><td>Alarm acknowledgment keystroke</td></tr><tr><td>108</td><td>Second equipment-ID datagram</td></tr><tr><td>110</td><td>MOB (Man Over Board)</td></tr><tr><td>112</td><td>Keystroke on Raymarine A25006 ST60 Maxiview Remote Control</td></tr><tr><td>128</td><td>Set Lamp Intensity</td></tr><tr><td>129</td><td>Sent by course computer during setup</td></tr><tr><td>130</td><td>Target waypoint name</td></tr><tr><td>131</td><td>Sent by course computer</td></tr><tr><td>132</td><td>Compass heading Autopilot course and Rudder position</td></tr><tr><td>133</td><td>Navigation to waypoint information</td></tr><tr><td>134</td><td>Keystroke</td></tr><tr><td>135</td><td>Set Response level</td></tr><tr><td>136</td><td>Autopilot Parameter</td></tr><tr><td>137</td><td>Compass heading sent by ST40 compass instrument</td></tr><tr><td>144</td><td>Device Indentification</td></tr><tr><td>145</td><td>Set Rudder gain</td></tr><tr><td>146</td><td>Set Autopilot Parameter</td></tr><tr><td>147</td><td>Enter AP-Setup</td></tr><tr><td>149</td><td>Replaces command 84 while autopilot is in value setting mode</td></tr><tr><td>153</td><td>Compass variation</td></tr><tr><td>154</td><td>Version String</td></tr><tr><td>156</td><td>Compass heading and Rudder position</td></tr><tr><td>158</td><td>Waypoint definition</td></tr><tr><td>161</td><td>Destination Waypoint Info</td></tr><tr><td>162</td><td>Arrival Info</td></tr><tr><td>164</td><td>Broadcast query/response to identify devices</td></tr><tr><td>165</td><td>GPS and DGPS Info</td></tr><tr><td>167</td><td>Unknown meaning</td></tr><tr><td>168</td><td>Alarm ON/OFF for Guard</td></tr><tr><td>171</td><td>Alarm ON/OFF for Guard</td></tr></table><h3 id="lookup-SEATALK1_ATT">SEATALK1_ATT
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth Below Transducer</td></tr><tr><td>1</td><td>Equipment ID</td></tr><tr><td>5</td><td>Engine RPM and PITCH</td></tr><tr><td>16</td><td>Apparent Wind Angle</td></tr><tr><td>17</td><td>Apparent Wind Speed</td></tr><tr><td>32</td><td>Speed through water</td></tr><tr><td>33</td><td>Trip Mileage</td></tr><tr><td>34</td><td>Total Mileage</td></tr><tr><td>35</td><td>Water temperature (ST50)</td></tr><tr><td>36</td><td>Display units for Mileage &amp; Speed</td></tr><tr><td>37</td><td>Total &amp; Trip Log</td></tr><tr><td>38</td><td>Speed through water (with average)</td></tr><tr><td>39</td><td>Water temperature</td></tr><tr><td>48</td><td>Set lamp Intensity</td></tr><tr><td>54</td><td>Cancel MOB (Man Over Board) condition</td></tr><tr><td>56</td><td>Codelock data</td></tr><tr><td>80</td><td>LAT position</td></tr><tr><td>81</td><td>LON position</td></tr><tr><td>82</td><td>Speed over Ground</td></tr><tr><td>83</td><td>Course over Ground (COG)</td></tr><tr><td>84</td><td>GMT-time</td></tr><tr><td>85</td><td>TRACK keystroke on GPS unit</td></tr><tr><td>86</td><td>Date</td></tr><tr><td>87</td><td>Sat Info</td></tr><tr><td>88</td><td>LAT/LON (raw unfiltered)</td></tr><tr><td>89</td><td>Set Count Down Timer</td></tr><tr><td>97</td><td>Issued by E-80 multifunction display at initialization</td></tr><tr><td>101</td><td>Select Fathom display units for depth display</td></tr><tr><td>102</td><td>Wind alarm</td></tr><tr><td>104</td><td>Alarm acknowledgment keystroke</td></tr><tr><td>108</td><td>Second equipment-ID datagram</td></tr><tr><td>110</td><td>MOB (Man Over Board)</td></tr><tr><td>112</td><td>Keystroke on Raymarine A25006 ST60 Maxiview Remote Control</td></tr><tr><td>128</td><td>Set Lamp Intensity</td></tr><tr><td>129</td><td>Sent by course computer during setup</td></tr><tr><td>130</td><td>Target waypoint name</td></tr><tr><td>131</td><td>Sent by course computer</td></tr><tr><td>132</td><td>Compass heading Autopilot course and Rudder position</td></tr><tr><td>133</td><td>Navigation to waypoint information</td></tr><tr><td>134</td><td>Keystroke</td></tr><tr><td>135</td><td>Set Response level</td></tr><tr><td>136</td><td>Autopilot Parameter</td></tr><tr><td>137</td><td>Compass heading sent by ST40 compass instrument</td></tr><tr><td>144</td><td>Device Indentification</td></tr><tr><td>145</td><td>Set Rudder gain</td></tr><tr><td>146</td><td>Set Autopilot Parameter</td></tr><tr><td>147</td><td>Enter AP-Setup</td></tr><tr><td>149</td><td>Replaces command 84 while autopilot is in value setting mode</td></tr><tr><td>153</td><td>Compass variation</td></tr><tr><td>154</td><td>Version String</td></tr><tr><td>156</td><td>Compass heading and Rudder position</td></tr><tr><td>158</td><td>Waypoint definition</td></tr><tr><td>161</td><td>Destination Waypoint Info</td></tr><tr><td>162</td><td>Arrival Info</td></tr><tr><td>164</td><td>Broadcast query/response to identify devices</td></tr><tr><td>165</td><td>GPS and DGPS Info</td></tr><tr><td>167</td><td>Unknown meaning</td></tr><tr><td>168</td><td>Alarm ON/OFF for Guard</td></tr><tr><td>171</td><td>Alarm ON/OFF for Guard</td></tr></table><h3 id="lookup-SEATALK_ALARM_STATUS">SEATALK_ALARM_STATUS
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Alarm condition not met</td></tr><tr><td>1</td><td>Alarm condition met and not silenced</td></tr><tr><td>2</td><td>Alarm condition met and silenced</td></tr></table><h3 id="lookup-SEATALK_ALARM_ID">SEATALK_ALARM_ID
         (0 - 255)
@@ -22774,9 +22715,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Queried</td></tr><tr><td>1</td><td>Passed</td></tr><tr><td>2</td><td>Failed - timeout</td></tr><tr><td>3</td><td>Failed - tilt error</td></tr><tr><td>4</td><td>Failed - other</td></tr><tr><td>5</td><td>In progress</td></tr></table><h3 id="lookup-AIRMAR_TEMPERATURE_INSTANCE">AIRMAR_TEMPERATURE_INSTANCE
         (0 - 3)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Device Sensor</td></tr><tr><td>1</td><td>Onboard Water Sensor</td></tr><tr><td>2</td><td>Optional Water Sensor</td></tr></table><h3 id="lookup-AIRMAR_FILTER">AIRMAR_FILTER
-        (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No filter</td></tr><tr><td>1</td><td>Basic IIR filter</td></tr></table><h3 id="lookup-CONTROLLER_STATE">CONTROLLER_STATE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Device Sensor</td></tr><tr><td>1</td><td>Onboard Water Sensor</td></tr><tr><td>2</td><td>Optional Water Sensor</td></tr></table><h3 id="lookup-CONTROLLER_STATE">CONTROLLER_STATE
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Error Active</td></tr><tr><td>1</td><td>Error Passive</td></tr><tr><td>2</td><td>Bus Off</td></tr></table><h3 id="lookup-EQUIPMENT_STATUS">EQUIPMENT_STATUS
         (0 - 3)
@@ -22944,9 +22883,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>Ipod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_SIRIUS_COM_STATE">FUSION_SIRIUS_COM_STATE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>2</td><td>Initialising</td></tr><tr><td>3</td><td>On</td></tr></table><h3 id="lookup-FUSION_SIRIUS_ALERT">FUSION_SIRIUS_ALERT
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>None</td></tr><tr><td>2</td><td>Antenna</td></tr><tr><td>3</td><td>NoSignal</td></tr><tr><td>4</td><td>Subscription Update</td></tr></table><h3 id="lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>255</td><td>Unknown</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>2</td><td>Initialising</td></tr><tr><td>3</td><td>On</td></tr></table><h3 id="lookup-FUSION_SIRIUS_TUNING_MODE">FUSION_SIRIUS_TUNING_MODE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Normal</td></tr><tr><td>2</td><td>Category</td></tr><tr><td>3</td><td>Preset</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
         (0 - 65535)

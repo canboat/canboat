@@ -1555,13 +1555,6 @@
         ]
       },
       {
-        "Name":"SEATALK1_ATT",
-        "MaxValue":255,
-        "EnumValues":[
-          {"Name":"Depth Below Transducer", "Value":0}
-        ]
-      },
-      {
         "Name":"SEATALK_ALARM_STATUS",
         "MaxValue":255,
         "EnumValues":[
@@ -2204,14 +2197,6 @@
           {"Name":"Device Sensor", "Value":0},
           {"Name":"Onboard Water Sensor", "Value":1},
           {"Name":"Optional Water Sensor", "Value":2}
-        ]
-      },
-      {
-        "Name":"AIRMAR_FILTER",
-        "MaxValue":15,
-        "EnumValues":[
-          {"Name":"No filter", "Value":0},
-          {"Name":"Basic IIR filter", "Value":1}
         ]
       },
       {
@@ -4049,17 +4034,6 @@
           {"Name":"Off", "Value":1},
           {"Name":"Initialising", "Value":2},
           {"Name":"On", "Value":3}
-        ]
-      },
-      {
-        "Name":"FUSION_SIRIUS_ALERT",
-        "MaxValue":255,
-        "EnumValues":[
-          {"Name":"Unknown", "Value":255},
-          {"Name":"None", "Value":1},
-          {"Name":"Antenna", "Value":2},
-          {"Name":"NoSignal", "Value":3},
-          {"Name":"Subscription Update", "Value":4}
         ]
       },
       {
@@ -20396,6 +20370,73 @@
       },
       {
         "PGN":126720,
+        "Id":"0x1ef00ManufacturerProprietaryFastPacketAddressed",
+        "Description":"0x1EF00: Manufacturer Proprietary fast-packet addressed",
+        "Explanation":"Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.",
+        "Type":"Fast",
+        "Complete":false,
+        "Fallback":true,
+        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        ],
+        "FieldCount":4,
+        "Length":223,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "UnknownValue":2047,
+            "OutOfRangeValue":2046,
+            "ReservedValue":2045,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "UnknownValue":7,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"data",
+            "Name":"Data",
+            "BitLength":1768,
+            "BitOffset":16,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
         "Id":"garminAhrsAttCogSourceValidFlag",
         "Description":"Garmin AHRS ATT: COG Source Valid Flag",
         "Type":"Fast",
@@ -22973,73 +23014,6 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"NUMBER"
-          }
-        ]
-      },
-      {
-        "PGN":126720,
-        "Id":"0x1ef00ManufacturerProprietaryFastPacketAddressed",
-        "Description":"0x1EF00: Manufacturer Proprietary fast-packet addressed",
-        "Explanation":"Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.",
-        "Type":"Fast",
-        "Complete":false,
-        "Fallback":true,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":4,
-        "Length":223,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "UnknownValue":2047,
-            "OutOfRangeValue":2046,
-            "ReservedValue":2045,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "UnknownValue":7,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"data",
-            "Name":"Data",
-            "BitLength":1768,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"BINARY"
           }
         ]
       },
@@ -26654,125 +26628,6 @@
             "ReservedValue":253,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"MARETRON_STATUS_DEVIATION"
-          }
-        ]
-      },
-      {
-        "PGN":126720,
-        "Id":"maretronSlaveResponse",
-        "Description":"Maretron: Slave Response",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Lookups","Interval"
-        ],
-        "FieldCount":7,
-        "Length":8,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"Maretron",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":137,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"productCode",
-            "Name":"Product code",
-            "BitLength":16,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":5,
-            "Id":"softwareCode",
-            "Name":"Software code",
-            "BitLength":16,
-            "BitOffset":32,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":6,
-            "Id":"command",
-            "Name":"Command",
-            "BitLength":8,
-            "BitOffset":48,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
-          },
-          {
-            "Order":7,
-            "Id":"status",
-            "Name":"Status",
-            "BitLength":8,
-            "BitOffset":56,
-            "BitStart":0,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
           }
         ]
       },
@@ -63527,7 +63382,7 @@
         "PGN":130820,
         "Id":"bepMarineCzoneAlarmStringResponse",
         "Description":"BEP Marine: CZone Alarm String Response",
-        "Explanation":"Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed.",
+        "Explanation":"Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed back from the request, followed by the matching alarm string text. The string is NUL-terminated; the encoding (ASCII vs UTF-8) is not yet confirmed. This is the only BEP Marine (manufacturer 295) variant of PGN 130820, so it matches on the manufacturer code alone and will also catch other BEP 130820 traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated telemetry such as \"1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,...\" rather than an alarm string.",
         "URL":"https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md",
         "Type":"Fast",
         "Complete":false,
@@ -69399,71 +69254,6 @@
             "BitStart":2,
             "Resolution":1,
             "FieldType":"RESERVED"
-          }
-        ]
-      },
-      {
-        "PGN":130820,
-        "Id":"bepMarineProprietaryPgn130820",
-        "Description":"BEP Marine: Proprietary PGN 130820",
-        "Type":"Fast",
-        "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
-        ],
-        "FieldCount":4,
-        "Length":223,
-        "Fields":[
-          {
-            "Order":1,
-            "Id":"manufacturerCode",
-            "Name":"Manufacturer Code",
-            "Description":"BEP Marine 2",
-            "BitLength":11,
-            "BitOffset":0,
-            "BitStart":0,
-            "Match":295,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":2044,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"MANUFACTURER_CODE"
-          },
-          {
-            "Order":2,
-            "Id":"reserved",
-            "Name":"Reserved",
-            "BitLength":2,
-            "BitOffset":11,
-            "BitStart":3,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":3,
-            "Id":"industryCode",
-            "Name":"Industry Code",
-            "Description":"Marine Industry",
-            "BitLength":3,
-            "BitOffset":13,
-            "BitStart":5,
-            "Match":4,
-            "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":6,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"INDUSTRY_CODE"
-          },
-          {
-            "Order":4,
-            "Id":"data",
-            "Name":"Data",
-            "BitLength":1768,
-            "BitOffset":16,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"BINARY"
           }
         ]
       },

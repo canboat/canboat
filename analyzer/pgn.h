@@ -3062,7 +3062,20 @@ Pgn pgnList[] = {
      .priority        = 6}
 
     /* proprietary PDU1 (addressed) fast-packet PGN 0x1EF00 (126720 ) */
+    /* The fallback catch-all MUST be the first entry of this PGN group: searchForPgn() steps past a
+       leading fallback, and getMatchingPgn() returns the first no-fixed-field entry it reaches while
+       scanning forward. A fallback placed mid-list would shadow every specific variant below it. */
 
+
+    ,
+    {"0x1EF00: Manufacturer Proprietary fast-packet addressed",
+     126720,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
+     .fallback    = true,
+     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720)."
+                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"Garmin AHRS ATT: COG Source Valid Flag",
@@ -3345,16 +3358,6 @@ Pgn pgnList[] = {
       UINT8_FIELD("Value"),
       END_OF_FIELDS },
      .priority    = 7}
-
-    ,
-    {"0x1EF00: Manufacturer Proprietary fast-packet addressed",
-     126720,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {MANUFACTURER_FIELDS, BINARY_FIELD("Data", BYTES(221), NULL), END_OF_FIELDS},
-     .fallback    = true,
-     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720)."
-                    "When this is shown during analysis it means the PGN is not reverse engineered yet."}
 
     ,
     {"Seatalk1: Pilot Mode",
@@ -3754,18 +3757,6 @@ Pgn pgnList[] = {
       LOOKUP_FIELD("Status", BYTES(1), MARETRON_STATUS_DEVIATION),
       END_OF_FIELDS},
      .url = "https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html"}
-
-    ,
-    {"Maretron: Slave Response",
-     126720,
-     PACKET_LOOKUPS_UNKNOWN,
-     PACKET_FAST,
-     {COMPANY(137),
-      UINT16_FIELD("Product code"),
-      UINT16_FIELD("Software code"),
-      UINT8_FIELD("Command"),
-      UINT8_FIELD("Status"),
-      END_OF_FIELDS}}
 
     ,
     {"Maretron: Proprietary Configuration",
@@ -8253,8 +8244,10 @@ Pgn pgnList[] = {
      .url         = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130820.md",
      .explanation = "Response form of PGN 65299 (CZone alarm string request). The device and channel/alarm id are echoed "
                     "back from the request, followed by the matching alarm string text. The string is NUL-terminated; the "
-                    "encoding (ASCII vs UTF-8) is not "
-                    "yet confirmed."}
+                    "encoding (ASCII vs UTF-8) is not yet confirmed. This is the only BEP Marine (manufacturer 295) variant "
+                    "of PGN 130820, so it matches on the manufacturer code alone and will also catch other BEP 130820 "
+                    "traffic; e.g. a NAC-3 autopilot emits 130820 once a second carrying comma-separated telemetry such as "
+                    "\"1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,...\" rather than an alarm string."}
 
     ,
     {"Simnet: Reprogram Status",
@@ -8878,14 +8871,6 @@ Pgn pgnList[] = {
      .priority = 7}
 
 
-    ,
-    {"BEP Marine: Proprietary PGN 130820",
-     130820,
-     PACKET_INCOMPLETE,
-     PACKET_FAST,
-     {COMPANY(295), BINARY_FIELD("Data", BYTES(221), ""), END_OF_FIELDS}}
-    // NAC-3 sends this once a second, with (decoded) data like this:
-    // \r\n1720.0,3,0.0,0.1,0.0,1.8,0.00,358.0,0.00,359.9,0.36,0.09,4.1,4.0,0,1.71,0.0,0.50,0.90,51.00,17.10,4.00,-7.43,231.28,4.06,1.8,0.00,0.0,0.0,0.0,0.0,
     ,
     {"Navico: ASCII Data",
      130821,
