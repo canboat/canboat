@@ -12,7 +12,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use crate::model::Database;
-use crate::{check, decode, derive, samples, yamlio};
+use crate::{check, decode, derive, emit_xml, generate, samples, yamlio};
 
 pub struct EditServer {
     pub root: PathBuf,
@@ -134,6 +134,10 @@ fn route(
             Ok(j) => ("200 OK", json, j),
             Err(e) => ("200 OK", json, err_json(&e)),
         },
+        ("POST", "/api/generate") => match api_generate(server) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
         ("POST", "/api/save") => match api_save(server, query, body) {
             Ok(j) => ("200 OK", json, j),
             Err(e) => ("200 OK", json, err_json(&e)),
@@ -148,6 +152,34 @@ fn route(
         },
         _ => ("404 Not Found", "text/plain", "not found".into()),
     }
+}
+
+/// Regenerate every artifact from the current database tree (the editor's
+/// post-save action). Same output as `keel generate`.
+fn api_generate(server: &EditServer) -> Result<String, String> {
+    let mut db = yamlio::load_database(
+        &server.root.join("database"),
+        &server.version,
+        &server.schema_version,
+    )?;
+    let authored = db.fieldtypes.clone();
+    derive::fill(&mut db)?;
+    let violations = check::check(&db);
+    if let Some(v) = violations.iter().find(|v| v.error) {
+        return Err(format!("not generated - {} {}: {}", v.rule, v.location, v.message));
+    }
+    let mut written = Vec::new();
+    for (path, content) in generate::emit_artifacts(&server.root, &db, &authored, emit_xml::FloatStyle::C) {
+        std::fs::write(&path, content).map_err(|e| format!("{}: {e}", path.display()))?;
+        written.push(js(
+            &path
+                .strip_prefix(&server.root)
+                .unwrap_or(&path)
+                .display()
+                .to_string(),
+        ));
+    }
+    Ok(format!("{{\"written\":[{}]}}", written.join(",")))
 }
 
 fn load_db(server: &EditServer) -> Result<Database, String> {
