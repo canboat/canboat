@@ -161,7 +161,7 @@ static unsigned int    getMessageByteCount(const char *const msg);
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
          "-format <fmt> "
          "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -173,7 +173,6 @@ static void usage(char **argv, char **av)
   printf("     -empty            Modified json format where empty values are shown as NULL\n");
   printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
-  printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("     -q                Print logging from level ERROR\n");
   printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
@@ -224,12 +223,9 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
+      // ids (camelName/camelDescription) are compiled into the generated
+      // tables; this only selects them for output
       showCamel = true;
-      camelCase(false);
-    }
-    else if (strcasecmp(av[1], "-upper-camel") == 0)
-    {
-      camelCase(true);
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {

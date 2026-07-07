@@ -21,9 +21,8 @@ BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 ANALYZER=$(TARGETDIR)/analyzer
 ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
-ANALYZER_EXPLAIN=$(TARGETDIR)/analyzer-explain
-ANALYZER_EXPLAIN_J1939=$(TARGETDIR)/analyzer-explain-j1939
-TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_J1939)
+TARGETS=$(ANALYZER) $(ANALYZER_J1939)
+KEEL=../keel/keel
 NMEA_JSONFILE=../sources/nmea_1300.json
 RECONCILE=../tools/nmea-pdf/reconcile.py
 XSL2FILE=../docs/canboat.xsl
@@ -36,11 +35,6 @@ HEADERS=analyzer.h pgn.h lookup.h fieldtype.h $(GENERATED_DATA)
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h physicalquantity-data.h fieldtype-data.h pgn-j1939-data.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
-ANALYZER_EXPLAIN_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
-ANALYZER_EXPLAIN_J1939_SOURCES=analyzer-explain.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
-ANALYZER_EXPLAIN_DEP=$(ANALYZER_EXPLAIN) $(ANALYZER_EXPLAIN_SOURCES)
-ANALYZER_EXPLAIN_J1939_DEP=$(ANALYZER_EXPLAIN_J1939) $(ANALYZER_EXPLAIN_J1939_SOURCES)
-
 CFLAGS?=-Wall -O2
 LDLIBS=-lm
 
@@ -56,19 +50,18 @@ $(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
-$(ANALYZER_EXPLAIN): $(ANALYZER_EXPLAIN_SOURCES)
-	@mkdir -p $(TARGETDIR)
-	$(CC) -DEXPLAIN $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
-
-$(ANALYZER_EXPLAIN_J1939): $(ANALYZER_EXPLAIN_J1939_SOURCES)
-	@mkdir -p $(TARGETDIR)
-	$(CC) -DEXPLAIN -DJ1939 $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_EXPLAIN_J1939) -I$(COMMONDIR) pgn.c analyzer-explain.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
-
-$(XML2FILE): $(ANALYZER_EXPLAIN_DEP) $(XSD2FILE) fixup-version.py
+# canboat.xml AND the analyzer's data tables (lookup.h, *-data.h) are
+# generated from ../database by keel (see keel/DESIGN.md). The keel shim
+# builds the keel binary with cargo on first use. keel-generate is phony:
+# keel itself is a fast no-op-detector, and the CI gate is a git diff.
+.PHONY: keel-generate
+keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
 	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
-	$(ANALYZER_EXPLAIN) -explain-xml -camel >$(XML2FILE)
+	$(KEEL) generate
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
+
+$(XML2FILE): keel-generate
 
 $(HTML2FILE): $(XSL2FILE) $(XML2FILE)
 	xsltproc $(XSL2FILE) $(XML2FILE) | ./fixup-html.sh > $(HTML2FILE)
