@@ -1312,6 +1312,23 @@ Pgn pgnList[] = {
                     "Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, "
                     "and 17 to 19 in Breaker Mapping 3."}
 
+    ,
+    {"Simnet: Keep Alive",
+     61184,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(1857),
+      SIMPLE_DESC_FIELD("Command", 14, "Command selector; 49 keeps the addressed device awake"),
+      RESERVED_FIELD(1),
+      SIMPLE_DESC_FIELD("Reply", 1, "0 = request, 1 = reply"),
+      BINARY_FIELD("Value", BYTES(4), "Only meaningful in a reply (carries a status); left unset (0xFF) in a request"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to "
+                    "keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically "
+                    "and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the "
+                    "reply carries a status."}
+
     /* PDU2 non-addressed single-frame PGN range 0xF000 - 0xFEFF (61440 - 65279) */
 
     ,
@@ -1721,6 +1738,23 @@ Pgn pgnList[] = {
      {COMPANY(144), BINARY_FIELD("Data", BYTES(6), ""), END_OF_FIELDS}}
 
     ,
+    {"Navico: Device Status",
+     65280,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(275),
+      UINT8_DESC_FIELD("Report Type",
+                       "Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this "
+                       "roughly four times a second, NEON devices at a much lower rate."),
+      BINARY_FIELD("Data", BYTES(5), "Payload; constant in all observed traffic"),
+      END_OF_FIELDS},
+     .priority    = 7,
+     .explanation = "Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The "
+                    "first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at "
+                    "about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed "
+                    "traffic, so their meaning is not yet known."}
+
+    ,
     {"BEP Marine: CZone Circuit Control",
      65280,
      PACKET_INCOMPLETE,
@@ -2076,6 +2110,29 @@ Pgn pgnList[] = {
      {COMPANY(1857), RESERVED_FIELD(BYTES(6)), END_OF_FIELDS}}
 
     ,
+    {"Lowrance: GPS Configuration",
+     65293,
+     PACKET_INCOMPLETE,
+     PACKET_SINGLE,
+     {COMPANY(140),
+      UINT8_FIELD("A"),
+      UINT8_FIELD("B"),
+      SIMPLE_FIELD("C", 4),
+      SIMPLE_FIELD("D", 2),
+      RESERVED_FIELD(2),
+      UINT8_FIELD("E"),
+      SIMPLE_FIELD("F", 4),
+      SIMPLE_FIELD("G", 1),
+      RESERVED_FIELD(3),
+      SIMPLE_FIELD("H", 4),
+      SIMPLE_FIELD("I", 4),
+      END_OF_FIELDS},
+     .explanation = "GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer "
+                    "counterpart of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual "
+                    "settings are not yet identified. The first byte matches the sender's source address in the observed "
+                    "traffic."}
+
+    ,
     {"Diverse Yacht Services: Load Cell",
      65293,
      PACKET_RESOLUTION_UNKNOWN,
@@ -2352,7 +2409,8 @@ Pgn pgnList[] = {
       UINT8_FIELD("Status"),
       PERCENTAGE_U8_FIELD("Battery Status"),
       PERCENTAGE_U8_FIELD("Battery Charge Status"),
-      RESERVED_FIELD(BYTES(3)),
+      RESERVED_FIELD(BYTES(1)),
+      SIMPLE_SIGNED_FIELD("A", BYTES(2)),
       END_OF_FIELDS},
      .priority = 7}
 
@@ -2375,7 +2433,12 @@ Pgn pgnList[] = {
      65312,
      PACKET_FIELDS_UNKNOWN,
      PACKET_SINGLE,
-     {COMPANY(275), UINT8_FIELD("Unknown"), PERCENTAGE_U8_FIELD("Signal Strength"), RESERVED_FIELD(BYTES(4)), END_OF_FIELDS},
+     {COMPANY(275),
+      UINT8_FIELD("Unknown"),
+      PERCENTAGE_U8_FIELD("Signal Strength"),
+      SIMPLE_SIGNED_FIELD("A", BYTES(1)),
+      RESERVED_FIELD(BYTES(3)),
+      END_OF_FIELDS},
      .priority = 7}
 
     ,
@@ -9819,6 +9882,22 @@ Pgn pgnList[] = {
       SPARE_FIELD(6),
       RESERVED_FIELD(2),
       END_OF_FIELDS}}
+
+    ,
+    {"Simnet: AIS Silent Mode",
+     130842,
+     PACKET_INCOMPLETE,
+     PACKET_FAST,
+     {COMPANY(1857),
+      MATCH_FIELD(PK("Message ID"), 6, 4, "AIS Silent Mode"),
+      LOOKUP_FIELD("Operation", 2, SIMNET_KEY_OPERATION),
+      UINT8_FIELD("D"),
+      UINT8_FIELD("E"),
+      END_OF_FIELDS},
+     .explanation = "Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B "
+                    "static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the "
+                    "AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the "
+                    "observed traffic."}
 
     ,
     {"Maretron: Windlass Control Command",
