@@ -188,6 +188,8 @@ def _preserve_notes(d: dict, path: str) -> dict:
         return d
     if "notes" in old and "notes" not in d:
         d["notes"] = old["notes"]
+    if "samples" in old and "samples" not in d:
+        d["samples"] = old["samples"]
     if "note" in old and "note" not in d:
         d["note"] = old["note"]
     if "valueNotes" in old and "valueNotes" not in d:

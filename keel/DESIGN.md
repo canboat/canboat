@@ -264,6 +264,8 @@ keel fmt         canonicalize YAML in place
 keel new         scaffold a new PGN file (e.g. keel new 130846 --manufacturer=Furuno)
 keel edit        start the local web editor (serves SPA + validation API)
 keel explain     the old analyzer-explain text output, from YAML
+keel decode      stdin sample lines (PLAIN/candump) -> decoded fields;
+                 keel's own decoder, independent of the C analyzer
 keel diff        contract-level diff of two database states (wraps tools/contract.py)
 ```
 
@@ -428,6 +430,9 @@ samples:
 ```
 
 * `expects` is partial — assert the fields that matter, ignore the rest.
+  Values are **strict SI** (Pa, K, seconds, radians — what `analyzer -si`
+  shows), lookups by name, bit enumerations as lists, `~` (null) asserts
+  Unavailable. `id.N` addresses the Nth instance in a repeating set.
 * A later edit to the field layout, a lookup, or a fieldtype that changes
   any expected decode fails `keel check` (rule R40) with a
   value-level diff.

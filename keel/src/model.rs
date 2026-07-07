@@ -144,6 +144,25 @@ impl Field {
     }
 }
 
+/// One captured sample plus (partial) decode expectations (R40).
+#[derive(Debug, Clone, Default)]
+pub struct SampleSpec {
+    /// Sample lines: PLAIN / candump frames (reassembled), or one
+    /// pre-assembled coalesced PLAIN line.
+    pub raw: Vec<String>,
+    /// field id (optionally `id.N` for the Nth repeating instance) ->
+    /// expected value. Partial: unlisted fields are not checked.
+    pub expects: Vec<(String, Expected)>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Expected {
+    Number(f64),
+    Str(String),
+    List(Vec<String>),
+    Unavailable, // YAML null
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub enum Interval {
     Unknown,
@@ -182,6 +201,7 @@ pub struct Pgn {
     pub repeating2: Option<Repeating>,
     pub variant_order: u32,
     pub fields: Vec<Field>,
+    pub samples: Vec<SampleSpec>,
 
     // --- filled by derive::fill ---
     pub field_count: u32,

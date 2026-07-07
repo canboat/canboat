@@ -10,8 +10,8 @@ use std::path::Path;
 use yaml_rust2::{Yaml, YamlLoader};
 
 use crate::model::{
-    Database, Field, FieldType, FieldTypeLookupEntry, Interval, Lookup, Pgn, PhysicalQuantity,
-    Repeating,
+    Database, Expected, Field, FieldType, FieldTypeLookupEntry, Interval, Lookup, Pgn,
+    PhysicalQuantity, Repeating, SampleSpec,
 };
 
 type Result<T> = std::result::Result<T, String>;
@@ -211,6 +211,36 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
     })
 }
 
+fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
+    let raw = match get(y, "raw") {
+        Some(Yaml::String(s)) => vec![s.clone()],
+        Some(Yaml::Array(a)) => a.iter().filter_map(|l| l.as_str().map(String::from)).collect(),
+        _ => return Err(format!("{ctx}: sample needs raw (string or list)")),
+    };
+    let mut expects = Vec::new();
+    if let Some(Yaml::Hash(h)) = get(y, "expects") {
+        for (k, v) in h {
+            let key = match k {
+                Yaml::String(s) => s.clone(),
+                other => format!("{other:?}"),
+            };
+            let e = match v {
+                Yaml::Null => Expected::Unavailable,
+                Yaml::Integer(i) => Expected::Number(*i as f64),
+                Yaml::Real(_) => Expected::Number(yaml_f64(v).unwrap_or(f64::NAN)),
+                Yaml::String(s) => Expected::Str(s.clone()),
+                Yaml::Boolean(b) => Expected::Str(if *b { "Yes" } else { "No" }.into()),
+                Yaml::Array(a) => Expected::List(
+                    a.iter().filter_map(|x| x.as_str().map(String::from)).collect(),
+                ),
+                other => return Err(format!("{ctx}: unsupported expected value {other:?}")),
+            };
+            expects.push((key, e));
+        }
+    }
+    Ok(SampleSpec { raw, expects })
+}
+
 fn repeating(y: &Yaml) -> Repeating {
     Repeating {
         count: opt_i64(y, "count").unwrap_or(0) as u32,
@@ -240,6 +270,13 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
             .collect::<Result<Vec<_>>>()?,
         _ => Vec::new(),
     };
+    let samples = match get(y, "samples") {
+        Some(Yaml::Array(a)) => a
+            .iter()
+            .map(|s| sample(s, ctx))
+            .collect::<Result<Vec<_>>>()?,
+        _ => Vec::new(),
+    };
     Ok(Pgn {
         pgn: opt_i64(y, "pgn").ok_or_else(|| format!("{ctx}: missing pgn"))? as u32,
         id: req_str(y, "id", ctx)?,
@@ -256,6 +293,7 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
         repeating2: get(y, "repeating2").map(repeating),
         variant_order: opt_i64(y, "variantOrder").unwrap_or(0) as u32,
         fields,
+        samples,
         ..Default::default()
     })
 }
