@@ -161,6 +161,8 @@
     <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; scheduleRefresh()"></textarea>
     <div class="row">
       <span class="hint" id="savePath"></span>
+      <label class="hint" title="Validate through keel check but do not write any file — for trying things out">
+        <input type="checkbox" id="scratchMode"> scratch (don't write)</label>
       <button class="primary" onclick="save()">Save (gated by keel check)</button>
     </div>
   </section>
@@ -838,12 +840,48 @@ function dialog(title, message, buttons) {
 }
 function closeDialog() { $("dlgOverlay").style.display = "none"; }
 
+async function undoSave() {
+  const r = await api("/api/undo", "");
+  if (r.error) return flash(r.error, false);
+  MODEL = await api("/api/model", null, "GET");
+  renderPgnList($("search").value);
+  dialog("Reverted", `${r.undone}\n\n` + (r.deleted
+    ? "The file this edit created was removed."
+    : "The file was restored to its previous content.") +
+    "\n\nRegenerate artifacts to bring canboat.xml and the\nanalyzer tables back in sync.", [
+    ["Regenerate artifacts", true, () => regenFromDialog()],
+    ["Close", false, closeDialog],
+  ]);
+}
+
+async function regenFromDialog() {
+  $("dlgMsg").textContent = "regenerating…";
+  const g = await api("/api/generate", "");
+  if (g.error) {
+    $("dlgMsg").textContent = g.error;
+  } else {
+    $("dlgMsg").textContent = "Regenerated:\n" + g.written.join("\n") +
+      "\n\nReview with git diff, then commit the database and\nartifacts together.";
+    $("dlgTitle").textContent += " + regenerated";
+  }
+}
+
 async function save() {
   const file = $("savePath").textContent.trim();
   if (!file) return flash("no target file (set PGN + id first)", false);
-  const r = await api("/api/save?file=" + encodeURIComponent(file), $("yamlText").value);
+  const scratch = $("scratchMode").checked;
+  const r = await api("/api/save?file=" + encodeURIComponent(file) + (scratch ? "&scratch=1" : ""),
+    $("yamlText").value);
   if (r.error) {
-    dialog("Not saved", r.error, [
+    dialog(scratch ? "Would not save" : "Not saved", r.error, [
+      ["Back to editing", true, closeDialog],
+    ]);
+    return;
+  }
+  if (r.scratch) {
+    dialog("Scratch — validated, not written",
+      `${r.saved}\n\nkeel check passed. Nothing was written to disk\n` +
+      `(scratch mode). Uncheck "scratch" to save for real.`, [
       ["Back to editing", true, closeDialog],
     ]);
     return;
@@ -852,17 +890,8 @@ async function save() {
   renderPgnList($("search").value);
   dialog("Saved", `${r.saved}\n\nkeel check passed. The generated artifacts\n` +
     `(canboat.xml, analyzer tables) are now out of date until regenerated.`, [
-    ["Regenerate artifacts", true, async () => {
-      $("dlgMsg").textContent = "regenerating…";
-      const g = await api("/api/generate", "");
-      if (g.error) {
-        $("dlgMsg").textContent = g.error;
-      } else {
-        $("dlgMsg").textContent = "Regenerated:\n" + g.written.join("\n") +
-          "\n\nReview with git diff, then commit the database and\nartifacts together.";
-        $("dlgTitle").textContent = "Saved + regenerated";
-      }
-    }],
+    ["Regenerate artifacts", true, () => regenFromDialog()],
+    ["Undo the changes made by this edit", false, undoSave],
     ["Keep editing this PGN", false, closeDialog],
     ["Start a new PGN", false, () => { closeDialog(); newWizard(); }],
   ]);

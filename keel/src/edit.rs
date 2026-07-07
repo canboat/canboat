@@ -18,6 +18,19 @@ pub struct EditServer {
     pub root: PathBuf,
     pub version: String,
     pub schema_version: String,
+    /// Snapshot of the last real (non-scratch) save, so the editor can
+    /// offer "undo this edit". Restores the file (or removes it if the
+    /// edit created it) and the lookup-order manifest.
+    pub last_save: std::sync::Mutex<Option<UndoEntry>>,
+}
+
+pub struct UndoEntry {
+    pub file: String,
+    /// Previous file content; None if the save created the file.
+    pub prev: Option<String>,
+    /// Previous lookups.order.yaml, captured only when a lookup save
+    /// rewrote it.
+    pub prev_order: Option<String>,
 }
 
 const INDEX_HTML: &str = include_str!("../web/index.html");
@@ -135,6 +148,10 @@ fn route(
             Err(e) => ("200 OK", json, err_json(&e)),
         },
         ("POST", "/api/generate") => match api_generate(server) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("POST", "/api/undo") => match api_undo(server) {
             Ok(j) => ("200 OK", json, j),
             Err(e) => ("200 OK", json, err_json(&e)),
         },
@@ -496,6 +513,8 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
     if !file.ends_with(".yaml") || file.contains("..") || !file.starts_with("database/") {
         return Err("file must be database/**.yaml".into());
     }
+    // scratch mode: run the full gate but touch nothing on disk
+    let scratch = query.split('&').any(|kv| kv == "scratch=1");
     let mut db = yamlio::load_database(
         &server.root.join("database"),
         &server.version,
@@ -533,13 +552,63 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         return Err(format!("not saved - {} error(s):\n{}", errors.len(), list.join("\n")));
     }
 
+    if scratch {
+        // validated, wrote nothing
+        return Ok(format!("{{\"scratch\":true,\"saved\":{}}}", js(&file)));
+    }
+
     let path = server.root.join(&file);
+    let prev = std::fs::read_to_string(&path).ok();
+    let order_path = server.root.join("database/lookups.order.yaml");
+    let is_lookup = file.starts_with("database/lookups/");
+    let prev_order = if is_lookup { std::fs::read_to_string(&order_path).ok() } else { None };
+
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
     std::fs::write(&path, body).map_err(|e| e.to_string())?;
-    if file.starts_with("database/lookups/") {
+    if is_lookup {
         sync_lookup_order(server, &db)?;
     }
-    Ok(format!("{{\"saved\":{}}}", js(&file)))
+    *server.last_save.lock().unwrap() = Some(UndoEntry { file: file.clone(), prev, prev_order });
+    Ok(format!(
+        "{{\"saved\":{},\"canUndo\":true,\"created\":{}}}",
+        js(&file),
+        server
+            .last_save
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map(|u| u.prev.is_none())
+            .unwrap_or(false)
+    ))
+}
+
+/// Revert the most recent real save: restore the file's prior content (or
+/// delete it if the save created it) plus the lookup-order manifest.
+fn api_undo(server: &EditServer) -> Result<String, String> {
+    let entry = server
+        .last_save
+        .lock()
+        .unwrap()
+        .take()
+        .ok_or("nothing to undo")?;
+    let path = server.root.join(&entry.file);
+    match &entry.prev {
+        Some(content) => std::fs::write(&path, content).map_err(|e| e.to_string())?,
+        None => {
+            if path.exists() {
+                std::fs::remove_file(&path).map_err(|e| e.to_string())?;
+            }
+        }
+    }
+    if let Some(order) = &entry.prev_order {
+        std::fs::write(server.root.join("database/lookups.order.yaml"), order)
+            .map_err(|e| e.to_string())?;
+    }
+    Ok(format!(
+        "{{\"undone\":{},\"deleted\":{}}}",
+        js(&entry.file),
+        entry.prev.is_none()
+    ))
 }

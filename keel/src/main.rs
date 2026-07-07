@@ -278,6 +278,7 @@ fn run() -> Result<i32, String> {
                     root: root.clone(),
                     version: version.clone(),
                     schema_version: schema.clone(),
+                    last_save: std::sync::Mutex::new(None),
                 },
                 port,
             )?;
