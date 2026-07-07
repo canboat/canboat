@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 tests
 
 all:	tests
 
@@ -208,4 +208,22 @@ test20:
 	diff $(TEMPDIR)/pgn-126998-lau-ff.out pgn-126998-lau-ff.out
 	diff $(TEMPDIR)/pgn-126998-lau-ff.err pgn-126998-lau-ff.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20
+test21:
+	$(ANALYZER) -json -nv < pgn-130823-directory.in > $(TEMPDIR)/pgn-130823-directory.out -fixtime pgn-130823-directory 2> $(TEMPDIR)/pgn-130823-directory.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-130823-directory.out
+	diff $(TEMPDIR)/pgn-130823-directory.out pgn-130823-directory.out
+	diff $(TEMPDIR)/pgn-130823-directory.err pgn-130823-directory.err
+
+test22:
+	$(ANALYZER) -json -nv < pgn-126208-request-130817.in > $(TEMPDIR)/pgn-126208-request-130817.out -fixtime pgn-126208-request-130817 2> $(TEMPDIR)/pgn-126208-request-130817.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-126208-request-130817.out
+	diff $(TEMPDIR)/pgn-126208-request-130817.out pgn-126208-request-130817.out
+	diff $(TEMPDIR)/pgn-126208-request-130817.err pgn-126208-request-130817.err
+
+test23:
+	$(ANALYZER) -json -nv < pgn-130823-truncated.in > $(TEMPDIR)/pgn-130823-truncated.out -fixtime pgn-130823-truncated 2> $(TEMPDIR)/pgn-130823-truncated.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-130823-truncated.out
+	diff $(TEMPDIR)/pgn-130823-truncated.out pgn-130823-truncated.out
+	diff $(TEMPDIR)/pgn-130823-truncated.err pgn-130823-truncated.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23
