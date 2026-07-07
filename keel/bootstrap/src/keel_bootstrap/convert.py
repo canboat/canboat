@@ -79,8 +79,14 @@ class FieldTypePicker:
                     continue
                 if ft.unit is None and unit is not None and ft.root().name != root:
                     continue
-            if ft.offset != 0 and ft.offset != offset:
-                continue
+            if ft.offset != 0:
+                # xml Offset prints (int64)(offset * res) when res not in
+                # (0, 1); compare in printed form (the raw offset is only
+                # recoverable after the type is known)
+                res = ft.resolution if ft.resolution != 0.0 else resolution
+                printed = ft.offset if res in (0.0, 1.0) else int(ft.offset * res)
+                if printed != offset:
+                    continue
             score = (
                 (ft.size != 0)
                 + (ft.resolution != 0.0)
@@ -119,13 +125,13 @@ def build_field(picker, db: Database, fe, pgn_id: str) -> Field_:
             f"bits={bits} res={resolution} unit={unit} physical={raw['PhysicalQuantity']}"
         )
 
-    # raw offset recovery: XML prints (int64)(offset * res) when res not in (0, 1)
-    offset = xml_offset
-    eff_res = ft.resolution if ft.resolution != 0.0 else resolution
-    if xml_offset != 0 and eff_res not in (0.0, 1.0):
-        offset = int(round(xml_offset / eff_res))
-        if int(offset * eff_res) != xml_offset:
-            raise ConvertError(f"{pgn_id} field '{raw['Name']}': cannot invert offset {xml_offset} / {eff_res}")
+    # Offsets live only on fieldtypes: the C aborts on any field-level
+    # offset differing from its type (fieldtype.c:384), so the picker must
+    # have found an offset-bearing type.
+    if xml_offset != 0 and ft.offset == 0:
+        raise ConvertError(
+            f"{pgn_id} field '{raw['Name']}': offset {xml_offset} but no fieldtype carries it"
+        )
 
     f = Field_(
         id=raw["Id"],
@@ -144,8 +150,6 @@ def build_field(picker, db: Database, fe, pgn_id: str) -> Field_:
         f.resolution = resolution
     if not is_match and unit is not None and ft.unit is None:
         f.unit = unit
-    if offset != 0 and ft.offset == 0:
-        f.offset = offset
     if raw["DynamicFieldLengthOverhead"] is not None:
         f.dynamic_field_length = True
         f.dynamic_field_length_overhead = int(raw["DynamicFieldLengthOverhead"])

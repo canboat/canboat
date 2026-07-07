@@ -182,11 +182,12 @@ def fill_field(db: Database, pgn: Pgn, f: Field_, order: int) -> None:
         raise ValueError(f"PGN {pgn.pgn} field '{f.name}': cannot overrule size of '{ft.name}'")
     f.res_bits = bits
 
-    # offset
+    # offset: lives only on the fieldtype (C aborts on any field-level
+    # offset differing from the type, fieldtype.c:384)
     offset = f.offset if f.offset is not None else 0
     if ft.offset != 0 and offset == 0:
         offset = ft.offset
-    if ft.offset != 0 and ft.offset != offset:
+    if ft.offset != offset:
         raise ValueError(f"PGN {pgn.pgn} field '{f.name}': cannot overrule offset of '{ft.name}'")
     f.res_offset = offset
 
