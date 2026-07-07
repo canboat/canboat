@@ -229,9 +229,20 @@ _PQ_DEF_RE = re.compile(
 
 
 def parse_fieldtypes(path: str) -> list:
-    """Parse fieldTypeList[] from analyzer/fieldtype.h into FieldType objects."""
+    """Parse fieldTypeList[] from analyzer/fieldtype.h into FieldType objects.
+
+    After migration step 3 the array lives in the generated
+    analyzer/fieldtype-data.h (fieldtype.h #includes it); fall back to that
+    file so the converter keeps working on the refactor branch while still
+    working on master (pre-carve fieldtype.h)."""
     with open(path, encoding="utf-8") as f:
         text = _strip_comments(f.read())
+    if "FieldType fieldTypeList[] =" not in text:
+        import os
+
+        data = os.path.join(os.path.dirname(path), "fieldtype-data.h")
+        with open(data, encoding="utf-8") as f:
+            text += _strip_comments(f.read())
 
     # .physical = &GEO_LATITUDE references the C variable; the XML and the
     # model use the .name string ("GEOGRAPHICAL_LATITUDE"). Map var -> name.

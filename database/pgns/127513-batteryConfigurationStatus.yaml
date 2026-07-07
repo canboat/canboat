@@ -41,9 +41,7 @@ fields:
   type: PERCENTAGE_INT8
 - id: peukertExponent
   name: Peukert Exponent
-  type: UINT8
-  resolution: 0.002
-  offset: 500
+  type: PEUKERT_EXPONENT
   rangeMin: 1.0
   rangeMax: 1.5
 - id: chargeEfficiencyFactor

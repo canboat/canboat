@@ -331,7 +331,7 @@
 - name: LENGTH_UFIX8_DAM
   base: UFIX8
   description: Length, in decameter resolution
-  resolution: 10
+  resolution: 10.0
   physical: LENGTH
 - name: LENGTH_UFIX16_DM
   base: UFIX16
@@ -346,7 +346,7 @@
 - name: LENGTH_UFIX32_M
   base: UFIX32
   description: Length, in meter resolution
-  resolution: 1
+  resolution: 1.0
   physical: LENGTH
 - name: LENGTH_UFIX32_CM
   base: UFIX32
@@ -397,7 +397,7 @@
   base: UINT8
   description: Temperature
   offset: 233
-  resolution: 1
+  resolution: 1.0
   physical: TEMPERATURE
 - name: TEMPERATURE_HIGH
   base: UFIX16
@@ -425,12 +425,12 @@
   base: UINT16
   description: Concentration of one substance in another, in this context usually the amount of salts in water
   encodingDescription: Expressed in parts per million
-  resolution: 1
+  resolution: 1.0
   physical: CONCENTRATION
 - name: VOLUME_UFIX16_L
   base: UFIX16
   description: Volume
-  resolution: 1
+  resolution: 1.0
   physical: VOLUME
 - name: VOLUME_UFIX16_DL
   base: UFIX16
@@ -467,7 +467,7 @@
   base: DURATION
   description: Time duration, 16 bits with 1 second resolution
   bits: 16
-  resolution: 1
+  resolution: 1.0
   signed: false
 - name: DURATION_UFIX8_5MS
   base: DURATION
@@ -485,13 +485,13 @@
   base: DURATION
   description: Time duration, 8 bits with minute resolution
   bits: 8
-  resolution: 60
+  resolution: 60.0
   signed: false
 - name: DURATION_UFIX4_MIN
   base: DURATION
   description: Time duration, 4 bits with minute resolution
   bits: 4
-  resolution: 60
+  resolution: 60.0
   signed: false
 - name: DURATION_UFIX16_MS
   base: DURATION
@@ -515,7 +515,7 @@
   base: DURATION
   description: Time duration, 16 bits with minute resolution
   bits: 16
-  resolution: 60
+  resolution: 60.0
   signed: false
 - name: DURATION_UFIX16_1_11S
   base: DURATION
@@ -533,7 +533,7 @@
   base: DURATION
   description: Time duration, 32 bits with minute resolution
   bits: 32
-  resolution: 60
+  resolution: 60.0
   signed: false
 - name: DURATION_UFIX24_MS
   base: DURATION
@@ -545,7 +545,7 @@
   base: DURATION
   description: Time duration, 32 bits with second resolution
   bits: 32
-  resolution: 1
+  resolution: 1.0
   signed: false
 - name: DURATION_UFIX32_MS
   base: DURATION
@@ -575,7 +575,7 @@
   base: DURATION
   description: Time duration, minute resolution
   bits: 16
-  resolution: 60
+  resolution: 60.0
   signed: true
 - name: DATE
   description: Date
@@ -613,7 +613,7 @@
 - name: VOLTAGE_UFIX16_V
   base: UFIX16
   description: Voltage
-  resolution: 1
+  resolution: 1.0
   physical: POTENTIAL_DIFFERENCE
 - name: VOLTAGE_FIX16_10MV
   base: FIX16
@@ -628,12 +628,12 @@
 - name: CURRENT_UFIX8_A
   base: UFIX8
   description: Electrical current
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_CURRENT
 - name: CURRENT_UFIX16_A
   base: UFIX16
   description: Electrical current
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_CURRENT
 - name: CURRENT_UFIX16_DA
   base: UFIX16
@@ -689,19 +689,19 @@
 - name: POWER_FIX16
   base: FIX16
   description: Electrical power
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: DURATION_UFIX16_CHOUR
   base: DURATION
   description: Time duration, 0.01 hour resolution
   bits: 16
-  resolution: 36
+  resolution: 36.0
   signed: false
 - name: DURATION_UFIX16_CDAY
   base: DURATION
   description: Time duration, 0.01 day resolution
   bits: 16
-  resolution: 864
+  resolution: 864.0
   signed: false
 - name: PERCENTAGE_UFIX16_D
   base: UFIX16
@@ -719,7 +719,7 @@
   base: UFIX16
   description: Electrical charge
   unit: Ah
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_CHARGE
 - name: PEUKERT_EXPONENT
   base: UFIX8
@@ -740,14 +740,14 @@
   description: Electrical power
   encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
   offset: -2000000000
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_FIX32_OFFSET
   base: FIX32
   description: Electrical power
   encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
   offset: -2000000000
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_FIX32_VA_OFFSET
   base: FIX32
@@ -755,7 +755,7 @@
   encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
     Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
   offset: -2000000000
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_APPARENT_POWER
 - name: POWER_FIX32_VAR_OFFSET
   base: FIX32
@@ -763,45 +763,45 @@
   encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
     Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
   offset: -2000000000
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_REACTIVE_POWER
 - name: POWER_UINT8
   base: UINT8
   description: Electrical power, either DC or AC Real power, in Watts
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_UINT16
   base: UINT16
   description: Electrical power, either DC or AC Real power, in Watts
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_UINT16_VAR
   base: UINT16
   description: Electrical power, AC reactive
   unit: VAR
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_REACTIVE_POWER
 - name: POWER_INT32
   base: INT32
   description: Electrical power, either DC or AC Real power, in Watts
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_UINT32
   base: UINT32
   description: Electrical power, DC or AC Real power, in Watts
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_POWER
 - name: POWER_UINT32_VA
   base: UINT32
   description: Electrical power, AC apparent power in VA.
   unit: VA
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_APPARENT_POWER
 - name: POWER_UINT32_VAR
   base: UINT32
   description: Electrical power, AC reactive power in VAR.
   unit: VAR
-  resolution: 1
+  resolution: 1.0
   physical: ELECTRICAL_REACTIVE_POWER
 - name: PERCENTAGE_UINT8
   base: UINT8
@@ -862,32 +862,32 @@
 - name: PRESSURE_UFIX16_HPA
   base: UFIX16
   description: Pressure, 16 bit unsigned in hectopascal resolution
-  resolution: 100
+  resolution: 100.0
   physical: PRESSURE
 - name: PRESSURE_UINT8_2KPA
   base: UINT8
   description: Pressure, 8 bit unsigned in 2 kilopascal resolution
-  resolution: 2000
+  resolution: 2000.0
   physical: PRESSURE
 - name: PRESSURE_UINT8_KPA
   base: UINT8
   description: Pressure, 8 bit unsigned in .5 kilopascal resolution
-  resolution: 500
+  resolution: 500.0
   physical: PRESSURE
 - name: PRESSURE_UFIX16_KPA
   base: UFIX16
   description: Pressure, 16 bit unsigned in kilopascal resolution.
-  resolution: 1000
+  resolution: 1000.0
   physical: PRESSURE
 - name: PRESSURE_RATE_FIX16_PA
   base: FIX16
   description: Pressure change rate, 16 bit signed in decapascal resolution.
-  resolution: 10
+  resolution: 10.0
   physical: PRESSURE_RATE
 - name: PRESSURE_FIX16_KPA
   base: FIX16
   description: Pressure, 16 bit signed in kilopascal resolution.
-  resolution: 1000
+  resolution: 1000.0
   physical: PRESSURE
 - name: PRESSURE_UFIX32_DPA
   base: UFIX32
@@ -936,7 +936,7 @@
 - name: DISTANCE_FIX16_M
   base: FIX16
   description: Distance, with meter resolution
-  resolution: 1
+  resolution: 1.0
   physical: DISTANCE
 - name: DISTANCE_FIX16_CM
   base: FIX16
@@ -994,14 +994,14 @@
 - name: PGN
   description: Parameter Group Number
   encodingDescription: A 24 bit number referring to a PGN
-  resolution: 1
+  resolution: 1.0
   print: fieldPrintPGN
 - name: ISO_NAME
   description: ISO NAME field
   encodingDescription: A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of
     PGN 60928 to explain the subfields.
   bits: 64
-  resolution: 1
+  resolution: 1.0
   print: fieldPrintName
 - name: POWER_FACTOR_UFIX16
   base: UFIX16
@@ -1110,10 +1110,10 @@
     as a string. The first three or four digits are special, see the USCG link for a detailed explanation.
   url: https://navcen.uscg.gov/maritime-mobile-service-identity
   bits: 32
-  resolution: 1
+  resolution: 1.0
   print: fieldPrintMMSI
-  rangeMin: 2000000
-  rangeMax: 999999999
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
   signed: false
 - name: VARIABLE
   description: Variable
@@ -1124,9 +1124,9 @@
   description: Field Index
   encodingDescription: Index of the specified field in the PGN referenced.
   bits: 8
-  resolution: 1
+  resolution: 1.0
   sentinels: TopOfRange
   print: fieldPrintNumber
-  rangeMin: 0
-  rangeMax: 252
+  rangeMin: 0.0
+  rangeMax: 252.0
   signed: false

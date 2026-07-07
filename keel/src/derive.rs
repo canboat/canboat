@@ -231,12 +231,13 @@ pub fn fill(db: &mut Database) -> Result<(), String> {
             }
             f.res_bits = bits;
 
-            // offset
+            // offset: lives only on the fieldtype - the C aborts on any
+            // field-level offset differing from the type (fieldtype.c:384)
             let mut offset = f.offset.unwrap_or(0);
             if ft.offset != 0 && offset == 0 {
                 offset = ft.offset;
             }
-            if ft.offset != 0 && ft.offset != offset {
+            if ft.offset != offset {
                 return Err(format!(
                     "PGN {} field '{}': cannot overrule offset of '{}'",
                     pgn.pgn, f.name, ft.name

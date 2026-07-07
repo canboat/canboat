@@ -7,6 +7,7 @@
 mod cformat;
 mod check;
 mod derive;
+mod emit_c;
 mod emit_xml;
 mod model;
 mod yamlio;
@@ -119,6 +120,8 @@ fn run() -> Result<i32, String> {
     }
 
     let mut db = yamlio::load_database(&db_dir, &version, &schema)?;
+    // fieldtype-data.h is emitted from the authored (pre-percolation) state
+    let authored_fieldtypes = db.fieldtypes.clone();
     derive::fill(&mut db)?;
 
     match args.command.as_str() {
@@ -144,22 +147,51 @@ fn run() -> Result<i32, String> {
             Ok(if errors > 0 { 1 } else { 0 })
         }
         "generate" => {
-            let emitted = emit_xml::emit_xml(&db, "normal", args.float_style);
-            let xml_path = root.join("docs/canboat.xml");
-            if args.check {
-                let original = fs::read_to_string(&xml_path).map_err(|e| e.to_string())?;
-                if emitted != original {
-                    eprintln!("keel generate --check: docs/canboat.xml is NOT up to date with database/");
-                    if let Some(diff) = &args.diff {
-                        write_diff(&original, &emitted, diff).map_err(|e| e.to_string())?;
-                        eprintln!("keel generate --check: diff written to {diff}");
+            let artifacts: Vec<(PathBuf, String)> = vec![
+                (
+                    root.join("docs/canboat.xml"),
+                    emit_xml::emit_xml(&db, "normal", args.float_style),
+                ),
+                (root.join("analyzer/lookup.h"), emit_c::emit_lookup_h(&db)),
+                (
+                    root.join("analyzer/physicalquantity-data.h"),
+                    emit_c::emit_physicalquantity_data_h(&db),
+                ),
+                (
+                    root.join("analyzer/fieldtype-data.h"),
+                    emit_c::emit_fieldtype_data_h(&authored_fieldtypes),
+                ),
+                (root.join("analyzer/pgn-data.h"), emit_c::emit_pgn_data_h(&db)),
+            ];
+            let mut stale = 0;
+            for (path, emitted) in &artifacts {
+                if args.check {
+                    let original = fs::read_to_string(path).unwrap_or_default();
+                    if emitted != &original {
+                        stale += 1;
+                        eprintln!(
+                            "keel generate --check: {} is NOT up to date with database/",
+                            path.display()
+                        );
+                        if let Some(diff) = &args.diff {
+                            let dpath = format!(
+                                "{diff}.{}",
+                                path.file_name().unwrap().to_string_lossy()
+                            );
+                            write_diff(&original, emitted, &dpath).map_err(|e| e.to_string())?;
+                            eprintln!("keel generate --check: diff written to {dpath}");
+                        }
                     }
+                } else {
+                    fs::write(path, emitted).map_err(|e| e.to_string())?;
+                    println!("keel generate: wrote {}", path.display());
+                }
+            }
+            if args.check {
+                if stale > 0 {
                     return Ok(1);
                 }
-                println!("keel generate --check: docs/canboat.xml is up to date");
-            } else {
-                fs::write(&xml_path, emitted).map_err(|e| e.to_string())?;
-                println!("keel generate: wrote {}", xml_path.display());
+                println!("keel generate --check: all {} artifacts up to date", artifacts.len());
             }
             Ok(0)
         }

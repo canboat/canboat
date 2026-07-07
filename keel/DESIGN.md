@@ -175,11 +175,15 @@ repeating1:
   countField: 5            # absent = repeat until data exhausted
 ```
 
-Other field-level keys, replacing today's macro zoo: `signed`, `offset`
-(excess-K), `precision`, `primaryKey: true`, `proprietary: true` (field only
+Other field-level keys, replacing today's macro zoo: `signed`, `precision`,
+`primaryKey: true`, `proprietary: true` (field only
 present in proprietary range), `specialValues: N` (the `SPECIAL_VALUES`
 sentinel override), `allowLookupWidthMismatch: true` (R08 opt-in for
-shared/narrowed lookups), `dynamicFieldLength: {overhead: N}`,
+shared/narrowed lookups), `dynamicFieldLength: {overhead: N}`.
+Excess-K offsets live on the *fieldtype*, never on a field: the C runtime
+aborts on any field-level offset differing from its type (fieldtype.c:384),
+so a new offset means a new (derived) fieldtype.
+Remaining keys:
 `lookupIndirect: {name: ..., order: N}`, `lookupBits`, `lookupFieldtype`,
 `description`, `condition`. PGN-level: `fallback: true`, `url`,
 `researchDoc`, `notes`, `repeating2`.
