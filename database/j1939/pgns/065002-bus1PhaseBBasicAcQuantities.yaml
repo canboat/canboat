@@ -1,0 +1,19 @@
+pgn: 65002
+id: bus1PhaseBBasicAcQuantities
+description: 'Bus #1 Phase B Basic AC Quantities'
+type: Single
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

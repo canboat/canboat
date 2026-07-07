@@ -121,21 +121,38 @@ pub fn emit_lookup_h(db: &Database) -> String {
         out.push_str("LOOKUP_END\n\n");
     }
     for lk in db.ordered_lookups("triplet") {
-        out.push_str(&format!("LOOKUP_TYPE_TRIPLET({}, BITS({}))\n", lk.name, lk.bits));
+        out.push_str(&format!(
+            "LOOKUP_TYPE_TRIPLET({}, BITS({}))\n",
+            lk.name, lk.bits
+        ));
         for (v1, v2, name) in &lk.triplets {
-            out.push_str(&format!("LOOKUP_TRIPLET({}, {v1}, {v2}, {})\n", lk.name, c_str(name)));
+            out.push_str(&format!(
+                "LOOKUP_TRIPLET({}, {v1}, {v2}, {})\n",
+                lk.name,
+                c_str(name)
+            ));
         }
         out.push_str("LOOKUP_END\n\n");
     }
     for lk in db.ordered_lookups("bit") {
-        out.push_str(&format!("LOOKUP_TYPE_BITFIELD({}, BITS({}))\n", lk.name, lk.bits));
+        out.push_str(&format!(
+            "LOOKUP_TYPE_BITFIELD({}, BITS({}))\n",
+            lk.name, lk.bits
+        ));
         for (bit, name) in &lk.pairs {
-            out.push_str(&format!("LOOKUP_BITFIELD({}, {bit}, {})\n", lk.name, c_str(name)));
+            out.push_str(&format!(
+                "LOOKUP_BITFIELD({}, {bit}, {})\n",
+                lk.name,
+                c_str(name)
+            ));
         }
         out.push_str("LOOKUP_END\n\n");
     }
     for lk in db.ordered_lookups("fieldtype") {
-        out.push_str(&format!("LOOKUP_TYPE_FIELDTYPE({}, BITS({}))\n", lk.name, lk.bits));
+        out.push_str(&format!(
+            "LOOKUP_TYPE_FIELDTYPE({}, BITS({}))\n",
+            lk.name, lk.bits
+        ));
         for e in &lk.fieldtypes {
             let ft = &db.fieldtypes[db.fieldtype(&e.fieldtype).expect("checked")];
             match &e.lookup {
@@ -417,7 +434,10 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
             if rep.count > 0 {
                 named.push(format!(".repeatingCount{n} = {}", rep.count));
                 named.push(format!(".repeatingStart{n} = {}", rep.start));
-                named.push(format!(".repeatingField{n} = {}", rep.count_field.unwrap_or(255)));
+                named.push(format!(
+                    ".repeatingField{n} = {}",
+                    rep.count_field.unwrap_or(255)
+                ));
             }
         }
     }
@@ -434,11 +454,12 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
     out
 }
 
-pub fn emit_pgn_data_h(db: &Database) -> String {
+pub fn emit_pgn_data_h(db: &Database, j1939: bool) -> String {
+    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
     let mut out = String::with_capacity(2 << 20);
     out.push_str(BANNER);
     out.push_str("Pgn pgnList[] = {\n");
-    let pgns: Vec<String> = db.pgns.iter().map(|p| emit_pgn(db, p)).collect();
+    let pgns: Vec<String> = list.iter().map(|p| emit_pgn(db, p)).collect();
     out.push_str(&pgns.join(",\n\n"));
     out.push_str("\n};\n");
     out

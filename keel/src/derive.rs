@@ -97,9 +97,12 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
 
     for ft in db.fieldtypes.iter_mut() {
         if let Some(phys) = &ft.physical {
-            let (unit, url) = pq_units
-                .get(phys)
-                .ok_or_else(|| format!("FieldType '{}' has unlisted physical quantity '{phys}'", ft.name))?;
+            let (unit, url) = pq_units.get(phys).ok_or_else(|| {
+                format!(
+                    "FieldType '{}' has unlisted physical quantity '{phys}'",
+                    ft.name
+                )
+            })?;
             if ft.unit.is_none() {
                 ft.unit = unit.clone();
             }
@@ -118,9 +121,12 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
     let mut seen: std::collections::HashMap<String, usize> = std::collections::HashMap::new();
     for i in 0..db.fieldtypes.len() {
         if let Some(base_name) = db.fieldtypes[i].base.clone() {
-            let b = *seen
-                .get(&base_name)
-                .ok_or_else(|| format!("baseFieldType '{base_name}' must precede '{}'", db.fieldtypes[i].name))?;
+            let b = *seen.get(&base_name).ok_or_else(|| {
+                format!(
+                    "baseFieldType '{base_name}' must precede '{}'",
+                    db.fieldtypes[i].name
+                )
+            })?;
             let base = db.fieldtypes[b].clone(); // base is already resolved
             let ft = &mut db.fieldtypes[i];
             if ft.physical.is_none() {
@@ -137,8 +143,14 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
             }
             if ft.resolution == 0.0 && base.resolution != 0.0 {
                 ft.resolution = base.resolution;
-            } else if ft.resolution != 0.0 && base.resolution != 0.0 && ft.resolution != base.resolution {
-                return Err(format!("Cannot overrule resolution of '{}' in '{}'", base.name, ft.name));
+            } else if ft.resolution != 0.0
+                && base.resolution != 0.0
+                && ft.resolution != base.resolution
+            {
+                return Err(format!(
+                    "Cannot overrule resolution of '{}' in '{}'",
+                    base.name, ft.name
+                ));
             }
             if ft.print_function.is_none() {
                 ft.print_function = base.print_function.clone();
@@ -190,9 +202,17 @@ fn fixup_unit(unit: &str, has_sign: bool, range_min: &mut f64, range_max: &mut f
 pub fn fill(db: &mut Database) -> Result<(), String> {
     db.index();
     fill_fieldtypes(db)?;
+    fill_pgn_list(db, true)?;
+    fill_pgn_list(db, false)
+}
 
+fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
     // Work around simultaneous &mut pgns / &fieldtypes borrows: take the list.
-    let mut pgns = std::mem::take(&mut db.pgns);
+    let mut pgns = std::mem::take(if marine {
+        &mut db.pgns
+    } else {
+        &mut db.pgns_j1939
+    });
     for pgn in pgns.iter_mut() {
         let mut order = 0u32;
         for f in pgn.fields.iter_mut() {
@@ -266,16 +286,31 @@ pub fn fill(db: &mut Database) -> Result<(), String> {
 
             let pair_lookup = f.lookup.as_ref().and_then(|n| db.lookups.get(n));
             let ft_has_sign = ft.has_sign;
-            if f.res_bits != 0 && f.res_resolution != 0.0 && ft_has_sign.is_some() && f.res_range_max.is_nan() {
-                f.res_range_min = get_min_range(f.res_bits, f.res_resolution, f_has_sign, f.res_offset);
-                f.res_range_max =
-                    get_max_range(f.res_bits, f.res_resolution, f_has_sign, f.res_offset, pair_lookup, count);
+            if f.res_bits != 0
+                && f.res_resolution != 0.0
+                && ft_has_sign.is_some()
+                && f.res_range_max.is_nan()
+            {
+                f.res_range_min =
+                    get_min_range(f.res_bits, f.res_resolution, f_has_sign, f.res_offset);
+                f.res_range_max = get_max_range(
+                    f.res_bits,
+                    f.res_resolution,
+                    f_has_sign,
+                    f.res_offset,
+                    pair_lookup,
+                    count,
+                );
             }
 
             // reservedCount (fieldtype.c lines 448-462)
             if f.special_values.is_some() {
                 f.reserved_count = count;
-            } else if f.res_bits != 0 && f.res_bits < 64 && f.res_resolution > 0.0 && !f.res_range_max.is_nan() {
+            } else if f.res_bits != 0
+                && f.res_bits < 64
+                && f.res_resolution > 0.0
+                && !f.res_range_max.is_nan()
+            {
                 let raw_max: u64 = (1u64 << f.res_bits) - 1;
                 let raw_range_max = (f.res_range_max / f.res_resolution + 0.5) as u64;
                 f.reserved_count = if raw_range_max >= raw_max {
@@ -292,7 +327,11 @@ pub fn fill(db: &mut Database) -> Result<(), String> {
 
         fill_pgn_length(pgn)?;
     }
-    db.pgns = pgns;
+    if marine {
+        db.pgns = pgns;
+    } else {
+        db.pgns_j1939 = pgns;
+    }
     Ok(())
 }
 
