@@ -69,11 +69,13 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: virtualAtonFlag
   name: Virtual AtoN Flag
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: assignedModeFlag
   name: Assigned Mode Flag
   type: LOOKUP

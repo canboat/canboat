@@ -42,31 +42,37 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: acknowledgeStatus
   name: Acknowledge Status
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: escalationStatus
   name: Escalation Status
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: temporarySilenceSupport
   name: Temporary Silence Support
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: acknowledgeSupport
   name: Acknowledge Support
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: escalationSupport
   name: Escalation Support
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: reserved
   name: Reserved
   type: RESERVED

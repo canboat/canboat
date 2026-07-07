@@ -51,11 +51,13 @@ fields:
   type: LOOKUP
   bits: 8
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: unknown2
   name: Unknown 2
   type: LOOKUP
   bits: 8
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: unknown3
   name: Unknown 3
   type: BINARY

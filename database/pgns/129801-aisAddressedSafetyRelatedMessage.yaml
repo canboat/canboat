@@ -55,6 +55,7 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: YES_NO
+  allowLookupWidthMismatch: true
 - id: spare10
   name: Spare
   type: SPARE

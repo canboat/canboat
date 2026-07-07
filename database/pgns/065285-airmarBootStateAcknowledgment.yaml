@@ -29,6 +29,7 @@ fields:
   type: LOOKUP
   bits: 3
   lookup: BOOT_STATE
+  allowLookupWidthMismatch: true
 - id: reserved5
   name: Reserved
   type: RESERVED

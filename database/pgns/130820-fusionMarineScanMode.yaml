@@ -40,3 +40,4 @@ fields:
   type: LOOKUP
   bits: 8
   lookup: YES_NO
+  allowLookupWidthMismatch: true

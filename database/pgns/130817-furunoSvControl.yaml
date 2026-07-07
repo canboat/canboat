@@ -57,11 +57,13 @@ fields:
   type: BITLOOKUP
   bits: 32
   lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
 - id: glonassDisable
   name: GLONASS disable
   type: BITLOOKUP
   bits: 32
   lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
 - id: galileoDisable
   name: Galileo disable
   type: BITLOOKUP
@@ -72,3 +74,4 @@ fields:
   type: BITLOOKUP
   bits: 24
   lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
