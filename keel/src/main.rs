@@ -5,6 +5,7 @@
 //! migration switchover.
 
 mod cformat;
+mod check;
 mod derive;
 mod emit_xml;
 mod model;
@@ -80,7 +81,7 @@ fn parse_args() -> Result<Args, String> {
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <generate|emit> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
+        return Err("usage: keel <check|generate|emit> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
     }
     Ok(args)
 }
@@ -121,6 +122,27 @@ fn run() -> Result<i32, String> {
     derive::fill(&mut db)?;
 
     match args.command.as_str() {
+        "check" => {
+            let violations = check::check(&db);
+            let errors = violations.iter().filter(|v| v.error).count();
+            let warnings = violations.len() - errors;
+            for v in &violations {
+                println!(
+                    "{} {} {}: {}",
+                    v.rule,
+                    if v.error { "ERROR  " } else { "warning" },
+                    v.location,
+                    v.message
+                );
+            }
+            println!(
+                "keel check: {} pgns, {} lookups, {} fieldtypes: {errors} error(s), {warnings} warning(s)",
+                db.pgns.len(),
+                db.lookups.len(),
+                db.fieldtypes.len()
+            );
+            Ok(if errors > 0 { 1 } else { 0 })
+        }
         "generate" => {
             let emitted = emit_xml::emit_xml(&db, "normal", args.float_style);
             let xml_path = root.join("docs/canboat.xml");
