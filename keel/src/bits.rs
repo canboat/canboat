@@ -149,6 +149,7 @@ pub fn extract_bits(
 ///   - 1-bit fields: no sentinel
 ///   - 2-bit (max=3): top value reserved (N/A)
 ///   - 3+-bit (max>=7): top two values reserved (error & unknown)
+#[allow(dead_code)] // canboat-rs heritage; the differential mode will use these
 pub fn is_unavailable(extracted: Extracted) -> bool {
     let reserved: i64 = if extracted.max >= 7 {
         2
@@ -162,6 +163,7 @@ pub fn is_unavailable(extracted: Extracted) -> bool {
 
 /// One of the four classifications [`classify_sentinel`] returns.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[allow(dead_code)]
 pub enum Sentinel {
     /// Raw value is a legitimate reading.
     None,
@@ -191,6 +193,7 @@ pub enum Sentinel {
 /// full bit width. There is **no fallback to a bit-width heuristic**:
 /// the schema is fully prescriptive, and the pre-2.4.0 heuristic
 /// flagged legitimate near-max values as unavailable.
+#[allow(dead_code)]
 pub fn classify_sentinel(
     extracted: Extracted,
     unknown: Option<u64>,
@@ -211,6 +214,7 @@ pub fn classify_sentinel(
 
 /// Yes/no wrapper around [`classify_sentinel`] — `true` iff `raw`
 /// matches any of the three hint values.
+#[allow(dead_code)]
 pub fn is_unavailable_with(
     extracted: Extracted,
     unknown: Option<u64>,

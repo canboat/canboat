@@ -62,6 +62,18 @@
   .row label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
   #decodeTable td.unavail { color: var(--muted); font-style: italic; }
   .scroll { overflow-x: auto; }
+  #lkOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+               align-items: flex-start; justify-content: center; padding-top: 6vh; z-index: 10; }
+  #lkModal { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+             width: min(560px, 92vw); max-height: 82vh; display: flex; flex-direction: column; }
+  #lkModal header { padding: 10px 14px; border-bottom: 1px solid var(--line);
+                    display: flex; justify-content: space-between; align-items: center; }
+  #lkModal h3 { margin: 0; font-size: 15px; }
+  #lkBody { padding: 10px 14px; overflow-y: auto; }
+  #lkBody input { width: 100%; }
+  #lkModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
+                    display: flex; gap: 10px; justify-content: flex-end; }
+  .lkbtn { padding: 1px 7px; font-size: 12px; margin-left: 3px; }
 </style>
 </head>
 <body>
@@ -139,6 +151,29 @@
   </section>
 </div>
 
+<div id="lkOverlay" onclick="if(event.target===this) closeLookup()">
+  <div id="lkModal">
+    <header>
+      <h3 id="lkTitle">lookup</h3>
+      <button onclick="closeLookup()">✕</button>
+    </header>
+    <div id="lkBody">
+      <div class="row">
+        <label>kind <select id="lk_kind"><option>pair</option><option>bit</option></select></label>
+        <label>bits <input id="lk_bits" size="4"></label>
+        <span class="hint" id="lkHint"></span>
+      </div>
+      <table id="lkValues"><thead><tr><th style="width:90px">value</th><th>name</th><th></th></tr></thead>
+        <tbody></tbody></table>
+      <button onclick="lkAddRow('','')">＋ value</button>
+    </div>
+    <footer>
+      <span class="hint" id="lkFile"></span>
+      <button class="primary" id="lkSave" onclick="saveLookup()">Save lookup</button>
+    </footer>
+  </div>
+</div>
+
 <script>
 "use strict";
 let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
@@ -146,7 +181,13 @@ let samplesHex = [];         // assembled payloads (hex strings)
 let fieldsState = [];        // wizard field rows
 let lastDecode = null;       // last /api/decode response
 let yamlDirty = false;       // textarea hand-edited: it wins over the form
+let baseYaml = null;         // existing PGN: full original YAML (fields: block
+                             // gets surgically replaced, everything else kept)
+let currentPgn = null;       // pgn number being edited (existing mode)
 let refreshTimer = null;
+let lkBaseYaml = null;       // original lookup YAML (values: block surgically replaced)
+let lkName = null;
+let lkReadOnly = false;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
@@ -196,6 +237,8 @@ function flash(msg, ok) {
 
 function newWizard() {
   samplesHex = []; fieldsState = []; yamlDirty = false;
+  baseYaml = null; currentPgn = null;
+  $("sampleInput").placeholder = "";
   $("sampleInput").value = ""; $("messages").innerHTML = "";
   $("stepDefine").style.display = "none";
   $("stepSave").style.display = "none";
@@ -208,12 +251,29 @@ async function openExisting(id) {
   const r = await api(`/api/pgn?id=${encodeURIComponent(id)}`, null, "GET");
   if (r.error) return flash(r.error, false);
   newWizard();
-  $("stepSamples").style.display = "none";
-  $("stepDefine").style.display = "none";
+  baseYaml = r.yaml;
+  currentPgn = r.def.pgn;
+  $("stepSamples").style.display = "";
+  $("stepDefine").style.display = "";
   $("stepSave").style.display = "";
+  $("sampleInput").placeholder =
+    `paste ${r.def.pgn} captures here to check them against this definition …`;
+  $("m_pgn").value = r.def.pgn;
+  $("m_id").value = r.def.id;
+  $("m_desc").value = r.def.description;
+  $("m_type").value = r.def.type;
+  $("m_prio").value = r.def.priority || "";
+  fieldsState = r.def.fields.map(f => ({
+    id: f.id, name: f.name, type: f.type,
+    bits: f.bits ?? "", lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
+    match: f.match ?? "", unit: f.unit ?? "", resolution: f.resolution ?? "",
+    primaryKey: f.primaryKey,
+  }));
   $("yamlText").value = r.yaml;
-  yamlDirty = true;                       // textarea is the source of truth
+  yamlDirty = false;                      // form edits patch the fields: block
   $("savePath").textContent = r.path.replace(/^.*database\//, "database/");
+  renderFields();
+  renderGrid();
   scheduleRefresh();
 }
 
@@ -232,9 +292,20 @@ async function analyze() {
   Object.entries(byPgn).forEach(([pgn, msgs]) => {
     const btn = document.createElement("button");
     const v = msgs[0].variant ? ` — existing: ${msgs[0].variant}` : " — unknown PGN";
-    btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s)${v}`;
+    if (currentPgn && Number(pgn) === currentPgn) {
+      btn.textContent = `Use ${msgs.length} sample(s) of PGN ${pgn} as evidence for this definition`;
+      btn.className = "primary";
+      btn.onclick = () => {
+        samplesHex = msgs.map(m => m.hex);
+        renderGrid();
+        scheduleRefresh();
+        flash(`${msgs.length} sample(s) loaded — see the evidence grid and live decode`, true);
+      };
+    } else {
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s)${v}`;
+      btn.onclick = () => startDefinition(Number(pgn), msgs);
+    }
     btn.style.margin = "6px 6px 0 0";
-    btn.onclick = () => startDefinition(Number(pgn), msgs);
     el.appendChild(btn);
   });
   $("analyzeStatus").textContent = `${r.messages.length} message(s)`;
@@ -326,7 +397,23 @@ function renderFields() {
     tr.appendChild(cell("name", 18));
     tr.appendChild(cell("type", 14, "dl_types"));
     tr.appendChild(cell("bits", 4));
-    tr.appendChild(cell("lookup", 16, "dl_lookups"));
+    {
+      const td = document.createElement("td");
+      td.style.whiteSpace = "nowrap";
+      const inp = document.createElement("input");
+      inp.value = f.lookup ?? "";
+      inp.size = 14;
+      inp.setAttribute("list", "dl_lookups");
+      inp.oninput = () => { f.lookup = inp.value; regenerateYaml(); scheduleRefresh(); };
+      td.appendChild(inp);
+      const view = document.createElement("button");
+      view.className = "lkbtn";
+      view.textContent = "🔍";
+      view.title = "view / edit this enumeration";
+      view.onclick = () => { if (inp.value) openLookup(inp.value, f.bits); };
+      td.appendChild(view);
+      tr.appendChild(td);
+    }
     tr.appendChild(cell("match", 6));
     tr.appendChild(cell("unit", 5));
     tr.appendChild(cell("resolution", 8));
@@ -400,20 +487,95 @@ function renderGrid() {
 
 function yq(s) {
   s = String(s);
-  return /^[A-Za-z0-9][A-Za-z0-9 _.\/#()+-]*$/.test(s) && !/^\d+$/.test(s) && !s.includes(": ")
-    ? s : JSON.stringify(s);
+  // conservative plain-scalar test: no #, no colon-space, no edge spaces
+  return /^[A-Za-z0-9][A-Za-z0-9 _.()\/+-]*[A-Za-z0-9).]$/.test(s) && !/^\d+$/.test(s)
+      && !s.includes(": ") ? s : JSON.stringify(s);
 }
 
-function regenerateYaml() {
-  if (yamlDirty) return;
-  const pgn = Number($("m_pgn").value || 0);
-  let y = `pgn: ${pgn}\n`;
-  y += `id: ${yq($("m_id").value || "newPgn")}\n`;
-  y += `description: ${yq($("m_desc").value || "New PGN")}\n`;
-  y += `type: ${$("m_type").value}\n`;
-  y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
-  if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
-  y += "fields:\n";
+// ---- lookup viewer / editor -------------------------------------------------
+
+async function openLookup(name, suggestedBits) {
+  const r = await api(`/api/lookup?name=${encodeURIComponent(name)}`, null, "GET");
+  const tb = $("lkValues").querySelector("tbody");
+  tb.innerHTML = "";
+  lkName = name;
+  $("lkTitle").textContent = name;
+  $("lkFile").textContent = `database/lookups/${name}.yaml`;
+  if (r.error) {
+    // create mode
+    lkBaseYaml = null;
+    lkReadOnly = false;
+    $("lk_kind").value = "pair";
+    $("lk_kind").disabled = false;
+    $("lk_bits").value = suggestedBits || "";
+    $("lkHint").textContent = "new enumeration — will be created on save";
+    lkAddRow("0", "");
+  } else {
+    lkBaseYaml = r.yaml;
+    lkReadOnly = !(r.kind === "pair" || r.kind === "bit");
+    $("lk_kind").value = r.kind === "bit" ? "bit" : "pair";
+    $("lk_kind").disabled = true;
+    $("lk_bits").value = r.bits;
+    $("lkHint").textContent = lkReadOnly
+      ? `${r.kind} enumeration — view only (edit the YAML file directly)` : r.kind;
+    (r.values || []).forEach(v => lkAddRow(v.value, v.name + (v.type ? `  [${v.type}]` : "")));
+  }
+  $("lkSave").style.display = lkReadOnly ? "none" : "";
+  $("lkOverlay").style.display = "flex";
+}
+
+function lkAddRow(value, name) {
+  const tb = $("lkValues").querySelector("tbody");
+  const tr = document.createElement("tr");
+  const mk = (v, size) => {
+    const td = document.createElement("td");
+    const inp = document.createElement("input");
+    inp.value = v;
+    if (size) inp.size = size;
+    inp.readOnly = lkReadOnly;
+    td.appendChild(inp);
+    return td;
+  };
+  tr.appendChild(mk(value, 8));
+  tr.appendChild(mk(name));
+  const del = document.createElement("td");
+  if (!lkReadOnly) {
+    del.innerHTML = "<button class='lkbtn'>✕</button>";
+    del.firstChild.onclick = () => tr.remove();
+  }
+  tr.appendChild(del);
+  tb.appendChild(tr);
+}
+
+function closeLookup() { $("lkOverlay").style.display = "none"; }
+
+async function saveLookup() {
+  const rows = [...$("lkValues").querySelectorAll("tbody tr")]
+    .map(tr => [...tr.querySelectorAll("input")].map(i => i.value.trim()))
+    .filter(([v, n]) => v !== "" && n !== "");
+  rows.sort((a, b) => Number(a[0]) - Number(b[0]));
+  let block = "values:\n" + rows.map(([v, n]) => `  ${Number(v)}: ${yq(n)}`).join("\n") + "\n";
+  let yaml;
+  if (lkBaseYaml) {
+    const m = lkBaseYaml.match(/\nvalues:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
+    yaml = m
+      ? lkBaseYaml.slice(0, m.index) + "\n" + block.trimEnd() + lkBaseYaml.slice(m.index + m[0].length)
+      : lkBaseYaml.trimEnd() + "\n" + block;
+    // bits may have been edited
+    yaml = yaml.replace(/^bits: \d+$/m, `bits: ${Number($("lk_bits").value)}`);
+  } else {
+    yaml = `name: ${lkName}\nkind: ${$("lk_kind").value}\nbits: ${Number($("lk_bits").value)}\n${block}`;
+  }
+  const r = await api(`/api/save?file=${encodeURIComponent(`database/lookups/${lkName}.yaml`)}`, yaml);
+  if (r.error) return flash(r.error, false);
+  flash(`saved database/lookups/${lkName}.yaml`, true);
+  closeLookup();
+  MODEL = await api("/api/model", null, "GET");
+  scheduleRefresh();   // live decode picks up renamed values immediately
+}
+
+function fieldsYaml() {
+  let y = "fields:\n";
   fieldsState.forEach(f => {
     y += `- id: ${yq(f.id)}\n  name: ${yq(f.name)}\n  type: ${f.type}\n`;
     if (f.bits) y += `  bits: ${Number(f.bits)}\n`;
@@ -423,6 +585,29 @@ function regenerateYaml() {
     if (f.resolution) y += `  resolution: ${Number(f.resolution)}\n`;
     if (f.primaryKey) y += `  primaryKey: true\n`;
   });
+  return y;
+}
+
+function regenerateYaml() {
+  if (yamlDirty) return;
+  if (baseYaml !== null) {
+    // Existing PGN: replace ONLY the fields: block; notes, samples,
+    // repeating sets and every other authored key survive untouched.
+    const m = baseYaml.match(/\nfields:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
+    if (m) {
+      $("yamlText").value =
+        baseYaml.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + baseYaml.slice(m.index + m[0].length);
+    }
+    return;
+  }
+  const pgn = Number($("m_pgn").value || 0);
+  let y = `pgn: ${pgn}\n`;
+  y += `id: ${yq($("m_id").value || "newPgn")}\n`;
+  y += `description: ${yq($("m_desc").value || "New PGN")}\n`;
+  y += `type: ${$("m_type").value}\n`;
+  y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
+  if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
+  y += fieldsYaml();
   $("yamlText").value = y;
   const id = $("m_id").value || "newPgn";
   $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
