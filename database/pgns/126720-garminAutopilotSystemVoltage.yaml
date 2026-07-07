@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotSystemVoltage
 description: 'Garmin Autopilot: System Voltage'
 type: Fast
-variantOrder: 9
+variantOrder: 10
 priority: 7
 missing:
 - Fields

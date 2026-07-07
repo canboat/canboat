@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAhrsAttNonDefaultCalibrationMatrixPresent
 description: 'Garmin AHRS ATT: Non-default Calibration Matrix Present'
 type: Fast
-variantOrder: 3
+variantOrder: 4
 missing:
 - Fields
 - FieldLengths

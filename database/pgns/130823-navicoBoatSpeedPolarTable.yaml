@@ -2,7 +2,7 @@ pgn: 130823
 id: navicoBoatSpeedPolarTable
 description: 'Navico: Boat Speed Polar Table'
 type: Fast
-variantOrder: 3
+variantOrder: 4
 missing:
 - Fields
 - FieldLengths

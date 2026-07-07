@@ -2,6 +2,7 @@ pgn: 130827
 id: lowranceUnknown
 description: 'Lowrance: unknown'
 type: Fast
+variantOrder: 1
 missing:
 - Fields
 - FieldLengths

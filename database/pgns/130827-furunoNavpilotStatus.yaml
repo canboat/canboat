@@ -1,0 +1,54 @@
+pgn: 130827
+id: furunoNavpilotStatus
+description: 'Furuno: NavPilot Status'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course
+  to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: UINT8
+  description: NavPilot Status
+  match: 1
+  primaryKey: true
+- id: rudderAngle
+  name: Rudder Angle
+  type: ANGLE_UFIX16
+- id: a
+  name: A
+  type: INT16
+- id: b
+  name: B
+  type: UINT8
+- id: commandedCourse
+  name: Commanded Course
+  type: ANGLE_UFIX16
+- id: c
+  name: C
+  type: UINT8
+- id: d
+  name: D
+  type: UINT16

@@ -2,7 +2,7 @@ pgn: 130817
 id: bepMarineCzoneStatusExtended
 description: 'BEP Marine: CZone Status Extended'
 type: Fast
-variantOrder: 5
+variantOrder: 6
 missing:
 - Fields
 - FieldLengths

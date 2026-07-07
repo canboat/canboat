@@ -38,4 +38,7 @@ fields:
 - id: reserved7
   name: Reserved
   type: RESERVED
-  bits: 24
+  bits: 8
+- id: a
+  name: A
+  type: INT16

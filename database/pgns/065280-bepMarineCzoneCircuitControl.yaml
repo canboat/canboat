@@ -2,7 +2,7 @@ pgn: 65280
 id: bepMarineCzoneCircuitControl
 description: 'BEP Marine: CZone Circuit Control'
 type: Single
-variantOrder: 7
+variantOrder: 8
 priority: 3
 missing:
 - Fields

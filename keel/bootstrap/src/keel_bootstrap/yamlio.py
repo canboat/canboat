@@ -221,6 +221,23 @@ def write_database(db: Database, out_dir: str) -> None:
         path = os.path.join(out_dir, "j1939", "pgns", f"{p.pgn:06d}-{p.id}.yaml")
         _dump(_preserve_notes(pgn_to_dict(p), path), path)
 
+    # Prune orphans: a resync must also delete files whose PGN entry (or
+    # lookup) disappeared upstream, else the Rust loader keeps emitting them.
+    def prune(directory, expected):
+        if not os.path.isdir(directory):
+            return
+        for name in os.listdir(directory):
+            if name.endswith(".yaml") and name not in expected:
+                os.remove(os.path.join(directory, name))
+                print(f"keel convert: pruned stale {os.path.join(directory, name)}")
+
+    prune(os.path.join(out_dir, "pgns"), {f"{p.pgn:06d}-{p.id}.yaml" for p in db.pgns})
+    prune(
+        os.path.join(out_dir, "j1939", "pgns"),
+        {f"{p.pgn:06d}-{p.id}.yaml" for p in getattr(db, "pgns_j1939", [])},
+    )
+    prune(os.path.join(out_dir, "lookups"), {f"{lk.name}.yaml" for lk in db.lookups.values()})
+
 
 # --------------------------------------------------------------------------
 # load

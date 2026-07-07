@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotRateOfTurnOrder
 description: 'Garmin Autopilot: Rate of Turn Order'
 type: Fast
-variantOrder: 7
+variantOrder: 8
 priority: 7
 missing:
 - Fields

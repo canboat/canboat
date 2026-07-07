@@ -2,7 +2,7 @@ pgn: 65293
 id: diverseYachtServicesLoadCell
 description: 'Diverse Yacht Services: Load Cell'
 type: Single
-variantOrder: 2
+variantOrder: 3
 priority: 2
 missing:
 - Resolution

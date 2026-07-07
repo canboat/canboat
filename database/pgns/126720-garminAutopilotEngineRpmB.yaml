@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotEngineRpmB
 description: 'Garmin Autopilot: Engine RPM B'
 type: Fast
-variantOrder: 13
+variantOrder: 14
 priority: 7
 missing:
 - Fields

@@ -2,7 +2,7 @@ pgn: 126720
 id: maretronProprietaryConfiguration
 description: 'Maretron: Proprietary Configuration'
 type: Fast
-variantOrder: 49
+variantOrder: 48
 missing:
 - Fields
 - FieldLengths

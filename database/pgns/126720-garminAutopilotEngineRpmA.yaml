@@ -2,7 +2,7 @@ pgn: 126720
 id: garminAutopilotEngineRpmA
 description: 'Garmin Autopilot: Engine RPM A'
 type: Fast
-variantOrder: 12
+variantOrder: 13
 priority: 7
 missing:
 - Fields
