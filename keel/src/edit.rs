@@ -220,12 +220,13 @@ fn api_model(server: &EditServer) -> Result<String, String> {
         .iter()
         .map(|ft| {
             format!(
-                "{{\"name\":{},\"root\":{},\"bits\":{},\"unit\":{},\"resolution\":{}}}",
+                "{{\"name\":{},\"root\":{},\"bits\":{},\"unit\":{},\"resolution\":{},\"description\":{}}}",
                 js(&ft.name),
                 js(&ft.root_name),
                 ft.size,
                 ft.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
                 if ft.resolution != 0.0 { format!("{:?}", ft.resolution) } else { "null".into() },
+                ft.description.as_deref().map(js).unwrap_or_else(|| "null".into()),
             )
         })
         .collect();
