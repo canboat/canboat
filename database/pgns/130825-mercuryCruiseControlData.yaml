@@ -60,3 +60,13 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130825,2,255,13,90,98,04,ff,ff,00,ff,ff,ff,ff,ff,ff,ff"  # from mercury-proprietary.raw
+  expects:
+    manufacturerCode: "Mercury Marine"
+    industryCode: "Marine Industry"
+    opcode: "Cruise Control"
+    engineInstance: ~
+    cruiseState: 0
+    cruiseRpmSetpoint: ~
+    cruiseSpeedSetpoint: ~

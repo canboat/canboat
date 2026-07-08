@@ -47,3 +47,11 @@ fields:
 - id: zone
   name: Zone
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130816,10,255,8,00,06,13,99,ff,05,80,01"  # from merrimac-ydwg-2020.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    proprietaryId: "Zone Info"
+    control: "Ack"
+    zone: 1

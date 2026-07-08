@@ -28,3 +28,22 @@ fields:
 - id: a
   name: A
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,0,262384,0,0,14,01,0e,00,ab,b0,01,00,00,00,00,00,8e,08,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763
+    errorId: 0
+    firmwareVersion: 2.190
+    resetStatus: 0
+    a: ~
+- raw: "2023-01-01-00:00:00.000,0,262384,0,0,14,01,0e,00,ac,9f,01,00,00,00,00,00,8e,08,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 106412
+    errorId: 0
+    firmwareVersion: 2.190
+    resetStatus: 0
+    a: ~

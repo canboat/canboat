@@ -96,3 +96,61 @@ fields:
 - id: sequenceId
   name: Sequence ID
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,81,e6,96,0e,eb,4d,3a,03,f7,80,b1,1f,e4,00,00,00,00,e4,10,09,ff,ff,ff,7f,c8,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Scheduled Class A position report"
+    repeatIndicator: "Initial"
+    userId: 244770433
+    longitude: 5.4152683
+    latitude: 53.1726583
+    positionAccuracy: "Low"
+    raim: "not in use"
+    timeStamp: 57
+    cog: 0.0000
+    sog: 0.00
+    communicationState: "0xe41001"
+    aisTransceiverInformation: "Channel B VDL reception"
+    heading: ~
+    rateOfTurn: ~
+    navStatus: "Under way sailing"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,03,d0,dd,ac,0e,fc,bd,06,03,72,a3,c6,1f,f1,96,b8,15,01,e0,41,04,b9,b8,cc,ff,c0,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Interrogated Class A position report"
+    repeatIndicator: "Initial"
+    userId: 246210000
+    longitude: 5.0773500
+    latitude: 53.3111666
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: "Not available"
+    cog: 4.7254
+    sog: 2.77
+    communicationState: "0xe04104"
+    aisTransceiverInformation: "Channel A VDL reception"
+    heading: 4.7289
+    rateOfTurn: -0.00163
+    navStatus: "Under way using engine"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,d1,73,8e,0e,fd,ca,14,03,4d,e9,c0,1f,01,21,0f,c0,02,3a,00,01,5c,10,00,00,c0,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Scheduled Class A position report"
+    repeatIndicator: "Initial"
+    userId: 244216785
+    longitude: 5.1694333
+    latitude: 53.2736333
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: 0
+    cog: 0.3873
+    sog: 7.04
+    communicationState: "0x3a0001"
+    aisTransceiverInformation: "Channel A VDL reception"
+    heading: 0.4188
+    rateOfTurn: 0.00000
+    navStatus: "Under way using engine"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~

@@ -28,3 +28,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,17,00,01,b5,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 23
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.116
+    setHumidity: ~
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,0e,00,01,ca,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 14
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.200
+    setHumidity: ~
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,a6,00,01,df,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 166
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.284
+    setHumidity: ~

@@ -89,3 +89,46 @@ fields:
   name: Token
   type: UINT16
   description: Per-object identity/CRC-like token (B), constant per object (same Token as the Command 6 dump)
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,15,255,15,13,99,ff,01,00,06,03,3a,02,02,85,01,00,a8,93"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 1
+    address: 0
+    sourceSettingId: 6
+    item: 3
+    objectValue: 570
+    instance: 2
+    sourceSelectionMaster: 0
+    sub: "0x850100"
+    token: 37800
+- raw: "2023-01-01-00:00:00.000,3,130822,20,255,15,13,99,ff,01,10,00,00,00,fc,14,6f,00,00,51,ba"  # from susteranna-actisense-serial.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 1
+    address: 16
+    sourceSettingId: 0
+    item: 0
+    objectValue: 64512
+    instance: 4
+    sourceSelectionMaster: 1
+    sub: "0x6f0000"
+    token: 47697
+- raw: "2023-01-01-00:00:00.000,3,130822,34,255,15,13,99,ff,01,00,09,01,ec,0a,12,47,00,00,96,4c"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 1
+    address: 0
+    sourceSettingId: 9
+    item: 1
+    objectValue: 2796
+    instance: 2
+    sourceSelectionMaster: 1
+    sub: "0x470000"
+    token: 19606

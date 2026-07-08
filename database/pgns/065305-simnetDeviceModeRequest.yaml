@@ -42,3 +42,22 @@ fields:
   name: Spare
   type: SPARE
   bits: 32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65305,11,255,8,41,9f,01,0b,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "Other device"
+    report: "Send Mode"
+- raw: "2023-01-01-00:00:00.000,7,65305,10,255,8,41,9f,00,0b,00,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "AC"
+    report: "Send Mode"
+- raw: "2023-01-01-00:00:00.000,7,65305,13,255,8,41,9f,64,0b,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Send Mode"

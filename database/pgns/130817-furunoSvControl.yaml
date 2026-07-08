@@ -75,3 +75,30 @@ fields:
   bits: 24
   lookupBits: DISABLED_SATELLITES
   allowLookupWidthMismatch: true
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130817,28,255,24,3f,9f,f8,00,00,00,00,00,07,00,00,00,00,0e,00,00,00,00,38,00,00,07,00,00"  # from scx20-disable-sv.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    f4: "0xf8"
+    f5: "0x00"
+    sbasMode: "Automatic"
+    sbasSatellite: "120"
+    f8: "0x0000"
+    gpsDisable: ["Disable SV #1", "Disable SV #2", "Disable SV #3"]
+    glonassDisable: ["Disable SV #10", "Disable SV #11", "Disable SV #12"]
+    galileoDisable: ["Disable SV #20", "Disable SV #21", "Disable SV #22"]
+    qzssDisable: ["Disable SV #1", "Disable SV #2", "Disable SV #3"]
+- raw: "2023-01-01-00:00:00.000,7,130817,52,255,24,3f,9f,f8,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00"  # from scx20-setting-tool-sensor-reset.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    f4: "0xf8"
+    f5: "0x00"
+    sbasMode: "Automatic"
+    sbasSatellite: "120"
+    f8: "0x0000"
+    gpsDisable: []
+    glonassDisable: []
+    galileoDisable: []
+    qzssDisable: []

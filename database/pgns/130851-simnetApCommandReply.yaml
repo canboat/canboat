@@ -71,3 +71,34 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130851,2,255,12,41,9f,02,ff,ff,0a,09,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 2
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Heading mode"
+    d: ~
+    value: ~
+- raw: "2023-01-01-00:00:00.000,7,130851,13,255,12,41,9f,0d,ff,ff,0a,1c,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~
+    commandType: "AP Command"
+    event: 28
+    d: ~
+    value: ~
+- raw: "2023-01-01-00:00:00.000,7,130851,4,255,12,41,9f,04,ff,ff,0a,06,00,ff,ff,ff,ff"  # from nac3-reset-dockside-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 4
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Standby"
+    d: ~
+    value: ~

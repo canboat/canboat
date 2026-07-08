@@ -45,3 +45,25 @@ fields:
   name: Data
   type: BINARY
   bits: 32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65305,26,255,8,41,9f,01,17,0c,08,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "Other device"
+    report: "Sailing Processor Status"
+    data: "0x0c080000"
+- raw: "2023-01-01-00:00:00.000,7,65305,40,255,8,41,9f,03,17,00,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: 3
+    report: "Sailing Processor Status"
+    data: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65305,38,255,8,41,9f,01,17,10,09,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "Other device"
+    report: "Sailing Processor Status"
+    data: "0x10090000"

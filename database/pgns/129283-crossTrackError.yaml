@@ -29,3 +29,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,3,129283,13,255,8,5e,30,ff,ff,ff,7f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 94
+    xteMode: "Autonomous"
+    navigationTerminated: "No"
+    xte: ~
+- raw: "2023-01-01-00:00:00.000,3,129283,24,255,8,20,30,00,00,00,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 32
+    xteMode: "Autonomous"
+    navigationTerminated: "No"
+    xte: 0.00
+- raw: "2023-01-01-00:00:00.000,3,129283,24,255,8,1e,30,fe,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 30
+    xteMode: "Autonomous"
+    navigationTerminated: "No"
+    xte: -0.02

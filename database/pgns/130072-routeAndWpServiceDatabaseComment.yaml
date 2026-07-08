@@ -24,3 +24,13 @@ repeating1:
   count: 2
   start: 4
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130072,99,255,47,ff,ff,02,00,03,00,01,00,16,01,53,51,4c,20,53,65,72,76,65,72,20,2d,20,43,6f,6d,6d,65,6e,74,02,00,0f,01,44,42,32,20,2d,20,43,6f,6d,6d,65,6e,74"  # from actisense-522.candump.log
+  expects:
+    startDatabaseId: ~
+    nitems: 2
+    numberOfDatabasesWithComments: 3
+    databaseId: 1
+    comment: "SQL Server - Comment"
+    databaseId.2: 2
+    comment.2: "DB2 - Comment"

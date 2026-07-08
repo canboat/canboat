@@ -57,3 +57,18 @@ fields:
 - id: xteLimitForTheRoute
   name: XTE Limit for the Route
   type: DISTANCE_FIX16_M
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130066,99,255,29,ff,ff,02,00,0b,01,42,65,6e,74,6c,65,69,67,68,10,fb,cf,24,eb,4e,02,18,00,03,f0,1e,00,ff"  # from actisense-522.candump.log
+  expects:
+    databaseId: ~
+    routeId: 2
+    routeWpListName: "Bentleigh"
+    routeWpListTimestamp: 61761.0000
+    routeWpListDatestamp: 20203
+    changeAtLastTimestamp: ["Change in supplementary parameters (or new added)"]
+    numberOfWpsInTheRouteWpList: 24
+    criticalSupplementaryParameters: ["Navigation Method", "XTE Limit"]
+    navigationMethod: "Great Circle"
+    wpIdentificationMethod: "Waypoints in WP list"
+    routeStatus: ~
+    xteLimitForTheRoute: 30

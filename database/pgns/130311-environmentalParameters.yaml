@@ -32,3 +32,28 @@ fields:
 - id: atmosphericPressure
   name: Atmospheric Pressure
   type: PRESSURE_UFIX16_HPA
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130311,17,255,8,ff,ff,ff,ff,ff,7f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    temperatureSource: ~
+    humiditySource: ~
+    temperature: ~
+    humidity: ~
+    atmosphericPressure: ~
+- raw: "2023-01-01-00:00:00.000,5,130311,36,255,8,70,c1,43,71,ff,7f,fe,03"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 112
+    temperatureSource: "Outside Temperature"
+    humiditySource: ~
+    temperature: 289.95
+    humidity: ~
+    atmosphericPressure: 102200
+- raw: "2023-01-01-00:00:00.000,5,130311,35,255,8,b8,c0,4a,73,ff,7f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 184
+    temperatureSource: "Sea Temperature"
+    humiditySource: ~
+    temperature: 295.14
+    humidity: ~
+    atmosphericPressure: ~

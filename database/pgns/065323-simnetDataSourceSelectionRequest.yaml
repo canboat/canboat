@@ -51,3 +51,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65323,19,255,8,41,9f,ff,36,64,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot"
+    sourceClass: 100
+- raw: "2023-01-01-00:00:00.000,3,65323,14,255,8,41,9f,ff,00,01,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Heading"
+    sourceClass: 1
+- raw: "2023-01-01-00:00:00.000,3,65323,19,255,8,41,9f,ff,68,64,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot Control"
+    sourceClass: 100

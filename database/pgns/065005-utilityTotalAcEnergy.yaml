@@ -14,3 +14,8 @@ fields:
 - id: totalEnergyImport
   name: Total Energy Import
   type: ENERGY_UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65005,193,255,8,6f,3a,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    totalEnergyExport: 14959
+    totalEnergyImport: 0

@@ -46,3 +46,14 @@ fields:
 - id: global
   name: Global
   type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Capabilities"
+    zone1: 15
+    zone2: 15
+    zone3: 527
+    zone4: 0
+    global: 464

@@ -40,3 +40,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65302,2,255,8,41,9f,0a,0b,00,00,00,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    type: 10
+    value: 11
+- raw: "2023-01-01-00:00:00.000,7,65302,2,255,8,41,9f,0a,49,00,00,28,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    type: 10
+    value: 671088713
+- raw: "2023-01-01-00:00:00.000,7,65302,2,255,8,41,9f,0a,4b,00,00,00,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    type: 10
+    value: 75

@@ -54,3 +54,31 @@ fields:
   name: Long name
   type: STRING_FIX
   bits: 128
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,3a,00,ff,fe,55,53,45,52,20,33,00,00,55,73,65,72,20,33,00,00,00,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "User 3"
+    length: 0
+    decimals: "Auto"
+    shortName: "USER 3"
+    longName: "User 3"
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,f6,00,ff,fe,52,45,4d,4f,54,45,20,37,52,65,6d,6f,74,65,20,37,00,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "Remote 7"
+    length: 0
+    decimals: "Auto"
+    shortName: "REMOTE 7"
+    longName: "Remote 7"
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,c7,00,ff,fe,4d,49,44,20,44,50,54,00,4d,69,64,20,44,65,70,74,68,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "Aft Depth"
+    length: 0
+    decimals: "Auto"
+    shortName: "MID DPT"
+    longName: "Mid Depth"

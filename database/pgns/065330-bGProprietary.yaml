@@ -30,3 +30,9 @@ fields:
   name: Data
   type: BINARY
   bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65330,5,255,8,7d,99,00,00,ff,ff,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    data: "0x0000ffffffff"

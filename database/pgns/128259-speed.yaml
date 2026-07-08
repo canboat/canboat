@@ -28,3 +28,25 @@ fields:
   type: RESERVED
   bits: 12
 notes: https://web.archive.org/web/20070107131536/www.maretron.com/support/manuals/DST100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,2,128259,26,255,8,00,00,00,ff,ff,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    speedWaterReferenced: 0.00
+    speedGroundReferenced: ~
+    speedWaterReferencedType: "Paddle wheel"
+    speedDirection: ~
+- raw: "2023-01-01-00:00:00.000,2,128259,4,255,8,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: ~
+    speedWaterReferenced: ~
+    speedGroundReferenced: ~
+    speedWaterReferencedType: ~
+    speedDirection: ~
+- raw: "2023-01-01-00:00:00.000,2,128259,35,255,8,5f,05,00,ff,ff,00,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 95
+    speedWaterReferenced: 0.05
+    speedGroundReferenced: ~
+    speedWaterReferencedType: "Paddle wheel"
+    speedDirection: ~

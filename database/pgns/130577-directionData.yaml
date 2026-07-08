@@ -40,3 +40,37 @@ fields:
 - id: drift
   name: Drift
   type: SPEED_UFIX16_CM
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130577,14,255,14,c1,ff,4f,3e,01,00,4e,7a,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    dataMode: "Differential enhanced"
+    cogReference: "True"
+    sid: ~
+    cog: 1.5951
+    sog: 0.01
+    heading: 3.1310
+    speedThroughWater: ~
+    set: ~
+    drift: ~
+- raw: "2023-01-01-00:00:00.000,3,130577,14,255,14,c1,ff,36,33,00,00,f3,79,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    dataMode: "Differential enhanced"
+    cogReference: "True"
+    sid: ~
+    cog: 1.3110
+    sog: 0.00
+    heading: 3.1219
+    speedThroughWater: ~
+    set: ~
+    drift: ~
+- raw: "2023-01-01-00:00:00.000,3,130577,14,255,14,c1,ff,ab,2d,02,00,03,7b,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    dataMode: "Differential enhanced"
+    cogReference: "True"
+    sid: ~
+    cog: 1.1691
+    sog: 0.02
+    heading: 3.1491
+    speedThroughWater: ~
+    set: ~
+    drift: ~

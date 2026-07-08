@@ -41,3 +41,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65410,36,255,8,87,98,2e,0f,7c,ce,04,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 46
+    internalDeviceTemperature: 317.59
+    supplyVoltage: 12.30
+- raw: "2023-01-01-00:00:00.000,7,65410,35,255,8,87,98,ff,78,74,9a,04,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    internalDeviceTemperature: 298.16
+    supplyVoltage: 11.78
+- raw: "2023-01-01-00:00:00.000,7,65410,36,255,8,87,98,31,12,7c,cd,04,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 49
+    internalDeviceTemperature: 317.62
+    supplyVoltage: 12.29

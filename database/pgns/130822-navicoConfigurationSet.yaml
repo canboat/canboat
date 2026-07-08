@@ -90,3 +90,43 @@ fields:
   name: Value
   type: DYNAMIC_FIELD_VALUE
   description: Value for this setting; its type is resolved from Source Setting Id.
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,49,255,17,13,99,ff,03,00,0a,01,00,14,00,00,00,42,b9,01,00,02"  # from navico-measured-sources.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 3
+    address: 0
+    section: 10
+    item: 1
+    sourceSettingId: "Boat Speed Source Count"
+    token: 47426
+    length: 1
+    value: 2
+- raw: "2023-01-01-00:00:00.000,3,130822,49,255,24,13,99,ff,03,00,0a,01,00,15,00,00,00,84,ca,08,00,27,c7,b0,2f,00,9b,78,c0"  # from navico-measured-sources.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 3
+    address: 0
+    section: 10
+    item: 1
+    sourceSettingId: "Port Boat Speed Source"
+    token: 51844
+    length: 8
+    value: "0x27c7b02f009b78c0"
+- raw: "2023-01-01-00:00:00.000,3,130822,49,255,24,13,99,ff,03,00,0a,01,00,13,00,00,00,d8,01,08,00,ff,ff,e0,ff,00,ff,ff,f0"  # from navico-measured-sources.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 3
+    address: 0
+    section: 10
+    item: 1
+    sourceSettingId: "Wind Source 2"
+    token: 472
+    length: 8
+    value: "0xffffe0ff00fffff0"

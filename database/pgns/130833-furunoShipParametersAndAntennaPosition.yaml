@@ -58,3 +58,37 @@ notes: |-
   field layouts must match for the command parameters to decode. E.g. to set Ship's Width
   to 9.0 m: Command -> 130833, params {1=1855 (mfr), 3=4 (industry), 8=90 (0.1 m)}.
   The device also broadcasts these PGNs as status with the same field order.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,3e,fe,a9,00,1b,00,5a,00,ab,00,40,01"  # from scx20-setting-tool-offset_dim_antx_minus4point5.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: -4.50
+    antennaPositionY: 16.9
+    antennaPositionZ: 2.7
+    shipSWidth: 9.0
+    shipSLength: 17.1
+    shipSHeight: 32.0
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,32,00,a8,00,1a,00,32,00,aa,00,28,00"  # from scx20-setting-tool-sensor-reset.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: 0.50
+    antennaPositionY: 16.8
+    antennaPositionZ: 2.6
+    shipSWidth: 5.0
+    shipSLength: 17.0
+    shipSHeight: 4.0
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,28,00,a9,00,1b,00,33,00,ab,00,40,01"  # from scx20-setting-tool-offsets.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: 0.40
+    antennaPositionY: 16.9
+    antennaPositionZ: 2.7
+    shipSWidth: 5.1
+    shipSLength: 17.1
+    shipSHeight: 32.0

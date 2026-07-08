@@ -39,3 +39,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 36
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65408,36,255,8,87,98,16,fa,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 22
+    depthQualityFactor: "Quality 100%"
+- raw: "2023-01-01-00:00:00.000,7,65408,35,255,8,87,98,ff,f4,ff,f3,ff,ff"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    depthQualityFactor: "Quality 40%"
+- raw: "2023-01-01-00:00:00.000,7,65408,35,255,8,87,98,ff,f0,ff,ff,ff,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    depthQualityFactor: "Depth unlocked"

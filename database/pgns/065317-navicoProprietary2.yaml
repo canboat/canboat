@@ -30,3 +30,9 @@ fields:
   name: Data
   type: BINARY
   bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,5,65317,8,255,8,13,99,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    data: "0xffffffffffff"

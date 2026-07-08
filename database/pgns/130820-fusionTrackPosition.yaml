@@ -38,3 +38,25 @@ fields:
 - id: progress
   name: Progress
   type: DURATION_UFIX24_MS
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,9,a3,99,09,80,0b,f5,e6,13,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Progress"
+    sourceId: 11
+    progress: 1304.309
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,9,a3,99,09,80,0b,df,00,14,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Progress"
+    sourceId: 11
+    progress: 1310.943
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,9,a3,99,09,80,0b,e1,01,15,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Progress"
+    sourceId: 11
+    progress: 1376.737

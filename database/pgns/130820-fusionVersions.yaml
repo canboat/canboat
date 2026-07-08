@@ -46,3 +46,14 @@ fields:
   name: Build Number
   type: UINT8
 notes: Fusion
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,12,a3,99,01,80,01,00,17,00,02,00,09,01"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "API Version"
+    hwVersionMajor: 1
+    hwVersionMinor: 23
+    swVersionMajor: 2
+    swVersionMinor: 0
+    buildNumber: 9

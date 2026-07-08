@@ -32,3 +32,25 @@ notes: |-
   https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf
 
   molly_rose_E80start.kees
+samples:
+- raw: "2023-01-01-00:00:00.000,2,127250,20,255,8,00,b2,7a,ff,7f,ff,7f,fd"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    heading: 3.1410
+    deviation: ~
+    variation: ~
+    reference: "Magnetic"
+- raw: "2023-01-01-00:00:00.000,2,127250,14,255,8,ff,fe,79,ff,7f,76,01,fc"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    heading: 3.1230
+    deviation: ~
+    variation: 0.0374
+    reference: "True"
+- raw: "2023-01-01-00:00:00.000,2,127250,14,255,8,ff,59,7a,ff,7f,76,01,fc"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    heading: 3.1321
+    deviation: ~
+    variation: 0.0374
+    reference: "True"

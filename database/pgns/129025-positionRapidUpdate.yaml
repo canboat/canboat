@@ -15,3 +15,16 @@ fields:
   type: GEO_LON_FIX32
   rangeMin: -180.0
   rangeMax: 180.0
+samples:
+- raw: "2023-01-01-00:00:00.000,2,129025,14,255,8,6d,a7,b2,1f,89,51,3c,03"  # from merrimac-2022.raw
+  expects:
+    latitude: 53.1801965
+    longitude: 5.4284681
+- raw: "2023-01-01-00:00:00.000,2,129025,22,255,8,ff,ff,ff,7f,ff,ff,ff,7f"  # from merrimac-2022.raw
+  expects:
+    latitude: ~
+    longitude: ~
+- raw: "2023-01-01-00:00:00.000,2,129025,12,255,8,79,a5,b2,1f,df,50,3c,03"  # from merrimac-2022.raw
+  expects:
+    latitude: 53.1801465
+    longitude: 5.4284511

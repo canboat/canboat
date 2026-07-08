@@ -41,3 +41,16 @@ fields:
   name: Value
   type: DYNAMIC_FIELD_VALUE
   description: Register value; its type is selected by Register Id
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,227,255,8,66,99,02,20,f8,04,00,00"  # from victron-61184-vreg.raw
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "DC Voltage"
+    value: 12.72
+- raw: "2023-01-01-00:00:00.000,7,61184,227,255,8,66,99,1c,20,10,f5,ff,ff"  # from victron-61184-vreg.raw
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "DC Current"
+    value: -2.800

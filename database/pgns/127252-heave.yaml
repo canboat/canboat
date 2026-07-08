@@ -18,3 +18,16 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 40
+samples:
+- raw: "2023-01-01-00:00:00.000,3,127252,14,255,8,ff,07,00,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    heave: 0.07
+- raw: "2023-01-01-00:00:00.000,3,127252,20,255,8,00,45,10,ff,ff,ff,7f,fd"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    heave: 41.65
+- raw: "2023-01-01-00:00:00.000,3,127252,20,255,8,00,9a,0e,ff,ff,ff,02,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    heave: 37.38

@@ -42,3 +42,28 @@ fields:
 - id: a
   name: A
   type: INT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65309,29,255,8,13,99,00,5f,07,ff,ff,7f"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    status: 0
+    batteryStatus: 95
+    batteryChargeStatus: 7
+    a: ~
+- raw: "2023-01-01-00:00:00.000,7,65309,29,255,8,13,99,00,60,08,ff,ff,7f"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    status: 0
+    batteryStatus: 96
+    batteryChargeStatus: 8
+    a: ~
+- raw: "2023-01-01-00:00:00.000,7,65309,26,255,8,13,99,00,5c,05,ff,ff,7f"  # from merrimac-ydwg-2020.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    status: 0
+    batteryStatus: 92
+    batteryChargeStatus: 5
+    a: ~

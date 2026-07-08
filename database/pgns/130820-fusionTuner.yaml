@@ -49,3 +49,34 @@ fields:
 - id: track
   name: Track
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,49,255,20,a3,99,0b,80,01,02,00,c6,3e,05,c7,08,41,56,52,4f,54,52,4f,53"  # from strings.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tuner"
+    sourceId: "FM"
+    scanning: 2
+    frequency: 88000000
+    signalStrength: 199
+    track: "AVROTROS"
+- raw: "2023-01-01-00:00:00.000,7,130820,49,255,21,a3,99,0b,80,01,02,00,c6,3e,05,cd,08,4e,50,4f,20,52,32,20,20,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tuner"
+    sourceId: "FM"
+    scanning: 2
+    frequency: 88000000
+    signalStrength: 205
+    track: "NPO R2  "
+- raw: "2023-01-01-00:00:00.000,7,130820,49,255,21,a3,99,0b,80,01,02,00,c6,3e,05,cd,08,52,41,44,49,4f,20,32,20,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tuner"
+    sourceId: "FM"
+    scanning: 2
+    frequency: 88000000
+    signalStrength: 205
+    track: "RADIO 2 "

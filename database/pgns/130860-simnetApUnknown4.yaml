@@ -49,3 +49,34 @@ fields:
 - id: f
   name: F
   type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130860,3,255,23,41,9f,00,00,00,00,00,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,7f,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    a: 0
+    b: 0
+    c: ~
+    d: ~
+    e: ~
+    f: 0
+- raw: "2023-01-01-00:00:00.000,7,130860,2,255,23,41,9f,ff,ff,ff,ff,7f,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,7f,ff,ff,ff,7f"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    a: ~
+    b: ~
+    c: ~
+    d: ~
+    e: ~
+    f: 2147483647
+- raw: "2023-01-01-00:00:00.000,7,130860,17,255,23,41,9f,00,12,00,00,00,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,7f,06,61,02,57"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    a: 0
+    b: 18
+    c: ~
+    d: ~
+    e: ~
+    f: 1459773702

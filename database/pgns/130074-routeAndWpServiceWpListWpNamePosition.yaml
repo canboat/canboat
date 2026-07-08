@@ -41,3 +41,18 @@ repeating1:
   count: 4
   start: 6
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130074,99,255,48,00,00,02,00,02,00,01,00,ff,ff,6c,00,0a,01,4d,63,4b,69,6e,6e,6f,6e,40,4e,08,ec,c0,96,49,50,5c,00,08,01,4f,72,6d,6f,6e,64,a0,31,1f,ec,60,7e,26,50"  # from actisense-522.candump.log
+  expects:
+    startWpId: 0
+    nitems: 2
+    numberOfValidWpsInTheWpList: 2
+    databaseId: 1
+    wpId: 108
+    wpName: "McKinnon"
+    wpLatitude: -33.5000000
+    wpLongitude: 134.7000000
+    wpId.2: 92
+    wpName.2: "Ormond"
+    wpLatitude.2: -33.3500000
+    wpLongitude.2: 134.4700000

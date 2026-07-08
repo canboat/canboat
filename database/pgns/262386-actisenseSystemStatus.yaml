@@ -85,3 +85,88 @@ fields:
 - id: ch2Pointerloading
   name: Ch2 PointerLoading
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,0,262386,0,0,33,01,0e,00,ac,9f,01,00,00,00,00,00,02,01,00,00,00,00,00,00,00,00,00,00,00,02,01,00,03,0c,01,00,01,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 106412
+    errorId: 0
+    indiChannelCount: 2
+    ch1RxBandwidth: 1
+    ch1RxLoad: 0
+    ch1RxFiltered: 0
+    ch1RxDropped: 0
+    ch1TxBandwidth: 0
+    ch1TxLoad: 0
+    ch2RxBandwidth: 0
+    ch2RxLoad: 0
+    ch2RxFiltered: 0
+    ch2RxDropped: 0
+    ch2TxBandwidth: 0
+    ch2TxLoad: 0
+    uniChannelCount: 2
+    ch1Bandwidth: 1
+    ch1Deleted: 0
+    ch1Bufferloading: 3
+    ch1Pointerloading: 12
+    ch2Bandwidth: 1
+    ch2Deleted: 0
+    ch2Bufferloading: 1
+    ch2Pointerloading: 1
+- raw: "2023-01-01-00:00:00.000,0,262386,0,0,33,01,0e,00,ab,b0,01,00,00,00,00,00,02,00,00,00,00,00,00,07,01,00,01,01,00,02,03,03,2c,64,00,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763
+    errorId: 0
+    indiChannelCount: 2
+    ch1RxBandwidth: 0
+    ch1RxLoad: 0
+    ch1RxFiltered: 0
+    ch1RxDropped: 0
+    ch1TxBandwidth: 0
+    ch1TxLoad: 0
+    ch2RxBandwidth: 7
+    ch2RxLoad: 1
+    ch2RxFiltered: 0
+    ch2RxDropped: 1
+    ch2TxBandwidth: 1
+    ch2TxLoad: 0
+    uniChannelCount: 2
+    ch1Bandwidth: 3
+    ch1Deleted: 3
+    ch1Bufferloading: 44
+    ch1Pointerloading: 100
+    ch2Bandwidth: 0
+    ch2Deleted: 0
+    ch2Bufferloading: 0
+    ch2Pointerloading: 0
+- raw: "2023-01-01-00:00:00.000,0,262386,0,0,33,01,0e,00,ac,9f,01,00,00,00,00,00,02,04,02,00,00,00,00,00,00,00,00,0b,25,02,02,00,00,00,03,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 106412
+    errorId: 0
+    indiChannelCount: 2
+    ch1RxBandwidth: 4
+    ch1RxLoad: 2
+    ch1RxFiltered: 0
+    ch1RxDropped: 0
+    ch1TxBandwidth: 0
+    ch1TxLoad: 0
+    ch2RxBandwidth: 0
+    ch2RxLoad: 0
+    ch2RxFiltered: 0
+    ch2RxDropped: 0
+    ch2TxBandwidth: 11
+    ch2TxLoad: 37
+    uniChannelCount: 2
+    ch1Bandwidth: 2
+    ch1Deleted: 0
+    ch1Bufferloading: 0
+    ch1Pointerloading: 0
+    ch2Bandwidth: 3
+    ch2Deleted: 0
+    ch2Bufferloading: 0
+    ch2Pointerloading: 0

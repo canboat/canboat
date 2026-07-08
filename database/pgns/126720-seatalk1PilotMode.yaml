@@ -70,3 +70,40 @@ fields:
   name: Unknown 2
   type: BINARY
   bits: 80
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,56,55,55,40,00,fb,02,05"  # from candumpSample3.txt
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0x565555"
+    pilotMode: "Standby"
+    subMode: 0
+    pilotModeData: "0xfb"
+    unknown2: "0x0205"
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,36,e7,9f,42,00,0e,02,08"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0x36e79f"
+    pilotMode: "Auto"
+    subMode: 0
+    pilotModeData: "0x0e"
+    unknown2: "0x0208"
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,f6,e6,9b,40,00,00,42,08"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0xf6e69b"
+    pilotMode: "Standby"
+    subMode: 0
+    pilotModeData: "0x00"
+    unknown2: "0x4208"

@@ -84,3 +84,28 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,4,255,12,41,9f,ff,ff,64,0a,2b,00,ff,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: 100
+    commandType: "AP Command"
+    event: 43
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,0d,ff,ff,0a,1c,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~
+    commandType: "AP Command"
+    event: 28
+- raw: "2023-01-01-00:00:00.000,2,130850,10,255,12,41,9f,ff,ff,64,0a,2b,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: 100
+    commandType: "AP Command"
+    event: 43

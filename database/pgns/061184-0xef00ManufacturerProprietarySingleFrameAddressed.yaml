@@ -29,3 +29,14 @@ fields:
   name: Data
   type: BINARY
   bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,0,52,8,3f,9f,00,00,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    data: "0x0000ffffffff"
+- raw: "2023-01-01-00:00:00.000,7,61184,52,0,8,3f,9f,00,03,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    data: "0x0003ffffffff"

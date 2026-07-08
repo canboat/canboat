@@ -41,3 +41,28 @@ fields:
 - id: binaryData
   name: Binary Data
   type: BINARY
+samples:
+- raw: "2023-01-01-00:00:00.000,7,129797,8,255,24,08,65,e8,8b,0e,03,80,00,32,0a,c3,2c,b1,cb,9c,f4,08,20,65,07,c0,0c,80,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Binary broadcast message"
+    repeatIndicator: "Initial"
+    sourceId: 244050021
+    aisTransceiverInformation: "Channel B VDL reception"
+    numberOfBitsInBinaryDataField: 128
+    binaryData: "0x320ac32cb1cb9cf408206507c00c8000"
+- raw: "2023-01-01-00:00:00.000,7,129797,8,255,24,08,f9,d3,95,0e,01,80,00,32,0a,cf,0c,f1,c3,0d,00,0b,b8,6d,07,c5,0f,a0,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Binary broadcast message"
+    repeatIndicator: "Initial"
+    sourceId: 244700153
+    aisTransceiverInformation: "Channel A VDL reception"
+    numberOfBitsInBinaryDataField: 128
+    binaryData: "0x320acf0cf1c30d000bb86d07c50fa000"
+- raw: "2023-01-01-00:00:00.000,7,129797,8,255,24,08,d6,5e,95,0e,01,80,00,32,0a,c3,2c,30,c7,7c,f9,00,00,00,fa,05,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Binary broadcast message"
+    repeatIndicator: "Initial"
+    sourceId: 244670166
+    aisTransceiverInformation: "Channel A VDL reception"
+    numberOfBitsInBinaryDataField: 128
+    binaryData: "0x320ac32c30c77cf9000000fa05000000"

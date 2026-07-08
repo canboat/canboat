@@ -42,3 +42,11 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65303,50,255,8,8c,80,32,d0,07,ff,ff,ff"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    numberOfEngines: 2
+    numberOfFuelTanks: 3
+    totalFuelCapacity: 200.0

@@ -78,3 +78,37 @@ fields:
 notes: |-
   "Arbitrary address capable" is explained at
   https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable
+samples:
+- raw: "2023-01-01-00:00:00.000,6,60928,29,255,8,58,87,b0,2f,00,82,aa,c0"  # from merrimac-2022.raw
+  expects:
+    uniqueNumber: 1083224
+    manufacturerCode: "B & G"
+    deviceInstanceLower: 0
+    deviceInstanceUpper: 0
+    deviceFunction: 130
+    deviceClass: "External Environment"
+    systemInstance: 0
+    industryGroup: "Marine Industry"
+    arbitraryAddressCapable: "Yes"
+- raw: "2023-01-01-00:00:00.000,6,60928,115,255,8,ae,2c,69,e7,19,14,32,c1"  # from susteranna-actisense-serial.raw
+  expects:
+    uniqueNumber: 601262
+    manufacturerCode: "Raymarine"
+    deviceInstanceLower: 1
+    deviceInstanceUpper: 3
+    deviceFunction: 20
+    deviceClass: "Internetwork device"
+    systemInstance: 1
+    industryGroup: "Marine Industry"
+    arbitraryAddressCapable: "Yes"
+- raw: "2023-01-01-00:00:00.000,6,60928,6,255,8,fb,db,70,22,ff,9b,50,c0"  # from merrimac-2022.raw
+  expects:
+    uniqueNumber: 1104891
+    manufacturerCode: "Navico"
+    deviceInstanceLower: 7
+    deviceInstanceUpper: 31
+    deviceFunction: 155
+    deviceClass: "Steering and Control surfaces"
+    systemInstance: 0
+    industryGroup: "Marine Industry"
+    arbitraryAddressCapable: "Yes"

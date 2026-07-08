@@ -48,3 +48,25 @@ fields:
   name: Spare
   type: SPARE
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,1,65305,3,255,8,41,9f,64,02,02,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Status"
+    status: "Manual"
+- raw: "2023-01-01-00:00:00.000,7,65305,2,255,8,41,9f,00,02,10,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "AC"
+    report: "Status"
+    status: "Automatic"
+- raw: "2023-01-01-00:00:00.000,1,65305,17,255,8,41,9f,64,02,10,01,00,00"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Status"
+    status: "Automatic"

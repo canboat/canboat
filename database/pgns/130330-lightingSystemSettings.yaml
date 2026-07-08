@@ -49,3 +49,17 @@ fields:
 - id: identifyDevice
   name: Identify Device
   type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130330,92,255,36,21,18,01,53,43,2d,4c,69,67,68,74,69,6e,67,20,43,6f,6e,74,72,6f,6c,6c,65,72,28,06,06,28,14,07,01,ff,ff,ff,ff"  # from pgn130330.raw
+  expects:
+    globalEnable: 1
+    defaultSettingsCommand: "Idle"
+    nameOfTheLightingController: "SC-Lighting Controller"
+    maxScenes: 40
+    maxSceneConfigurationCount: 6
+    maxZones: 6
+    maxColorSequences: 40
+    maxColorSequenceColorCount: 20
+    numberOfPrograms: 7
+    controllerCapabilities: 1
+    identifyDevice: ~

@@ -17,3 +17,22 @@ fields:
 - id: acRmsCurrent
   name: AC RMS Current
   type: CURRENT_UFIX16_A
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65014,193,255,8,dd,00,dd,00,00,19,14,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 221
+    lineNeutralAcRmsVoltage: 221
+    acFrequency: 50.000
+    acRmsCurrent: 20
+- raw: "2023-01-01-00:00:00.000,3,65014,193,255,8,dd,00,dd,00,fe,18,14,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 221
+    lineNeutralAcRmsVoltage: 221
+    acFrequency: 49.984
+    acRmsCurrent: 20
+- raw: "2023-01-01-00:00:00.000,3,65014,193,255,8,dd,00,dd,00,fc,18,14,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 221
+    lineNeutralAcRmsVoltage: 221
+    acFrequency: 49.969
+    acRmsCurrent: 20

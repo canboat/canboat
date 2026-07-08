@@ -10,3 +10,16 @@ fields:
 - id: apparentPower
   name: Apparent Power
   type: POWER_FIX32_VA_OFFSET
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65026,196,255,8,42,96,35,77,83,96,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 578
+    apparentPower: 643
+- raw: "2023-01-01-00:00:00.000,3,65026,195,255,8,2a,a3,35,77,b7,a3,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 3882
+    apparentPower: 4023
+- raw: "2023-01-01-00:00:00.000,3,65026,194,255,8,00,94,35,77,00,94,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 0
+    apparentPower: 0

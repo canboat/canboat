@@ -29,3 +29,19 @@ fields:
   name: Data
   type: BINARY
   bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65294,29,255,8,27,99,5a,00,00,05,02,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    data: "0x5a00000502ff"
+- raw: "2023-01-01-00:00:00.000,7,65294,0,255,8,27,99,64,ff,00,10,02,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    data: "0x64ff001002ff"
+- raw: "2023-01-01-00:00:00.000,7,65294,29,255,8,27,99,5a,00,00,05,02,7f"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    data: "0x5a000005027f"

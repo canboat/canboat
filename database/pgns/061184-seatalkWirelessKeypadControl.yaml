@@ -40,3 +40,11 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,115,25,8,3b,9f,1d,5a,00,fd,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    PID: 29
+    variant: 90
+    beepControl: 0

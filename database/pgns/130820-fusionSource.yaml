@@ -47,3 +47,34 @@ fields:
 - id: source
   name: Source
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,12,a3,99,02,80,0b,0b,0a,25,02,42,54,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Source"
+    sourceId: 11
+    currentSourceId: 11
+    sourceType: "Bluetooth"
+    flags: 37
+    source: "BT"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,18,a3,99,02,80,04,04,03,05,08,53,69,72,69,75,73,58,4d,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Source"
+    sourceId: 4
+    currentSourceId: 4
+    sourceType: "Sirius"
+    flags: 5
+    source: "SiriusXM"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,17,a3,99,02,80,02,0b,0c,04,07,50,61,6e,64,6f,72,61,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Source"
+    sourceId: 2
+    currentSourceId: 11
+    sourceType: "Android"
+    flags: 4
+    source: "Pandora"

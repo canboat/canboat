@@ -16,3 +16,19 @@ fields:
 - id: serialId
   name: Serial ID
   type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,0,262388,0,0,15,01,0e,00,ab,b0,01,00,47,fd,ff,ff,f2,00,04,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763
+- raw: "2023-01-01-00:00:00.000,0,262388,0,0,15,01,0e,00,ab,b0,01,00,47,fd,ff,ff,81,ff,01,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763
+- raw: "2023-01-01-00:00:00.000,0,262388,0,0,15,01,0e,00,ab,b0,01,00,47,fd,ff,ff,00,ee,00,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763

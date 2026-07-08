@@ -68,3 +68,55 @@ fields:
 - id: waypointClosingVelocity
   name: Waypoint Closing Velocity
   type: SPEED_FIX16_CM
+samples:
+- raw: "2023-01-01-00:00:00.000,3,129284,13,255,34,5e,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,7f,ff,ff,ff,7f,ff,7f"  # from merrimac-2022.raw
+  expects:
+    sid: 94
+    distanceToWaypoint: ~
+    courseBearingReference: ~
+    perpendicularCrossed: ~
+    arrivalCircleEntered: ~
+    calculationType: ~
+    etaTime: ~
+    etaDate: ~
+    bearingOriginToDestinationWaypoint: ~
+    bearingPositionToDestinationWaypoint: ~
+    originWaypointNumber: ~
+    destinationWaypointNumber: ~
+    destinationLatitude: ~
+    destinationLongitude: ~
+    waypointClosingVelocity: ~
+- raw: "2023-01-01-00:00:00.000,3,129284,24,255,34,1e,2b,02,03,00,00,ff,ff,ff,ff,ff,ff,94,9f,94,9f,00,00,00,00,01,00,00,00,dd,10,b1,1f,43,a9,38,03,00,00"  # from merrimac-2022.raw
+  expects:
+    sid: 30
+    distanceToWaypoint: 1971.63
+    courseBearingReference: "True"
+    perpendicularCrossed: "No"
+    arrivalCircleEntered: "No"
+    calculationType: "Great Circle"
+    etaTime: ~
+    etaDate: ~
+    bearingOriginToDestinationWaypoint: 4.0852
+    bearingPositionToDestinationWaypoint: 4.0852
+    originWaypointNumber: 0
+    destinationWaypointNumber: 1
+    destinationLatitude: 53.1697885
+    destinationLongitude: 5.4044995
+    waypointClosingVelocity: 0.00
+- raw: "2023-01-01-00:00:00.000,3,129284,25,255,34,ae,ff,ff,ff,ff,10,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,00,00,00,01,00,00,00,dd,10,b1,1f,43,a9,38,03,ff,7f"  # from merrimac-2022.raw
+  expects:
+    sid: 174
+    distanceToWaypoint: ~
+    courseBearingReference: "True"
+    perpendicularCrossed: "No"
+    arrivalCircleEntered: "Yes"
+    calculationType: "Great Circle"
+    etaTime: ~
+    etaDate: ~
+    bearingOriginToDestinationWaypoint: ~
+    bearingPositionToDestinationWaypoint: ~
+    originWaypointNumber: 0
+    destinationWaypointNumber: 1
+    destinationLatitude: 53.1697885
+    destinationLongitude: 5.4044995
+    waypointClosingVelocity: ~

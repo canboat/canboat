@@ -148,3 +148,97 @@ fields:
   type: LOOKUP
   bits: 2
   lookup: OFF_ON
+samples:
+- raw: "2023-01-01-00:00:00.000,3,127501,3,255,8,00,01,00,00,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    instance: 0
+    indicator1: "On"
+    indicator2: "Off"
+    indicator3: "Off"
+    indicator4: "Off"
+    indicator5: "Off"
+    indicator6: "Off"
+    indicator7: "Off"
+    indicator8: "Off"
+    indicator9: "Off"
+    indicator10: "Off"
+    indicator11: "Off"
+    indicator12: "Off"
+    indicator13: "Off"
+    indicator14: "Off"
+    indicator15: "Off"
+    indicator16: "Off"
+    indicator17: "Off"
+    indicator18: "Off"
+    indicator19: "Off"
+    indicator20: "Off"
+    indicator21: "Off"
+    indicator22: "Off"
+    indicator23: "Off"
+    indicator24: "Off"
+    indicator25: "Off"
+    indicator26: "Off"
+    indicator27: "Off"
+    indicator28: "Off"
+- raw: "2023-01-01-00:00:00.000,3,127501,60,255,8,01,fc,ff,ff,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 1
+    indicator1: "Off"
+    indicator2: ~
+    indicator3: ~
+    indicator4: ~
+    indicator5: ~
+    indicator6: ~
+    indicator7: ~
+    indicator8: ~
+    indicator9: ~
+    indicator10: ~
+    indicator11: ~
+    indicator12: ~
+    indicator13: ~
+    indicator14: ~
+    indicator15: ~
+    indicator16: ~
+    indicator17: ~
+    indicator18: ~
+    indicator19: ~
+    indicator20: ~
+    indicator21: ~
+    indicator22: ~
+    indicator23: ~
+    indicator24: ~
+    indicator25: ~
+    indicator26: ~
+    indicator27: ~
+    indicator28: ~
+- raw: "2023-01-01-00:00:00.000,3,127501,208,255,8,0a,40,00,20,45,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 10
+    indicator1: "Off"
+    indicator2: "Off"
+    indicator3: "Off"
+    indicator4: "On"
+    indicator5: "Off"
+    indicator6: "Off"
+    indicator7: "Off"
+    indicator8: "Off"
+    indicator9: "Off"
+    indicator10: "Off"
+    indicator11: 2
+    indicator12: "Off"
+    indicator13: "On"
+    indicator14: "On"
+    indicator15: "Off"
+    indicator16: "On"
+    indicator17: "Off"
+    indicator18: "Off"
+    indicator19: "Off"
+    indicator20: "Off"
+    indicator21: "Off"
+    indicator22: "Off"
+    indicator23: "Off"
+    indicator24: "Off"
+    indicator25: "Off"
+    indicator26: "Off"
+    indicator27: "Off"
+    indicator28: "Off"

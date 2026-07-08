@@ -76,3 +76,61 @@ fields:
 - id: vesselHeading
   name: Vessel Heading
   type: ANGLE_UFIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,2,127237,3,255,21,30,38,ff,ff,7f,ff,ff,ff,ff,0b,11,a3,0d,ff,7f,ff,7f,ff,7f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    rudderLimitExceeded: "No"
+    offHeadingLimitExceeded: "No"
+    offTrackLimitExceeded: ~
+    override: "No"
+    steeringMode: "Main Steering"
+    turnMode: ~
+    headingReference: "True"
+    commandedRudderDirection: ~
+    commandedRudderAngle: ~
+    headingToSteerCourse: ~
+    track: ~
+    rudderLimit: 0.4363
+    offHeadingLimit: 0.3491
+    radiusOfTurnOrder: ~
+    rateOfTurnOrder: ~
+    offTrackLimit: ~
+    vesselHeading: ~
+- raw: "2023-01-01-00:00:00.000,2,127237,0,255,21,00,4d,3f,ff,7f,cf,81,cf,81,ff,ff,ff,ff,ff,7f,ff,7f,ff,7f,14,7f"  # from furuno-fap7011c-autopilot-off-then-on.raw
+  expects:
+    rudderLimitExceeded: "No"
+    offHeadingLimitExceeded: "No"
+    offTrackLimitExceeded: "No"
+    override: "No"
+    steeringMode: "Track Control"
+    turnMode: "Turn rate controlled"
+    headingReference: "Magnetic"
+    commandedRudderDirection: "Move to starboard"
+    commandedRudderAngle: ~
+    headingToSteerCourse: 3.3231
+    track: 3.3231
+    rudderLimit: ~
+    offHeadingLimit: ~
+    radiusOfTurnOrder: ~
+    rateOfTurnOrder: ~
+    offTrackLimit: ~
+    vesselHeading: 3.2532
+- raw: "2023-01-01-00:00:00.000,2,127237,2,255,21,ff,7f,ff,ff,7f,68,21,00,00,ff,ff,ff,ff,ff,7f,ff,7f,ff,7f,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    rudderLimitExceeded: ~
+    offHeadingLimitExceeded: ~
+    offTrackLimitExceeded: ~
+    override: ~
+    steeringMode: ~
+    turnMode: ~
+    headingReference: "Magnetic"
+    commandedRudderDirection: ~
+    commandedRudderAngle: ~
+    headingToSteerCourse: 0.8552
+    track: 0.0000
+    rudderLimit: ~
+    offHeadingLimit: ~
+    radiusOfTurnOrder: ~
+    rateOfTurnOrder: ~
+    offTrackLimit: ~
+    vesselHeading: ~

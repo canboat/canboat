@@ -42,3 +42,22 @@ fields:
 - id: angle
   name: Angle
   type: ANGLE_UFIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65341,3,255,8,41,9f,ff,ff,02,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "Heading"
+    angle: ~
+- raw: "2023-01-01-00:00:00.000,6,65341,2,255,8,41,9f,ff,ff,0b,ff,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "No Drift"
+    angle: 0.0000
+- raw: "2023-01-01-00:00:00.000,6,65341,17,255,8,41,9f,ff,ff,03,ff,0a,5c"  # from simrad_event_timer2.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "Wind"
+    angle: 2.3562

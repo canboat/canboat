@@ -45,3 +45,28 @@ fields:
   type: BINARY
   bits: 32
   description: 32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,68,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 3
+    statusBitmap: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,48,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 2
+    statusBitmap: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,28,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 1
+    statusBitmap: "0x00000000"

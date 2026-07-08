@@ -72,3 +72,37 @@ fields:
   name: Value
   type: DYNAMIC_FIELD_VALUE
   description: Always 4 bytes on the bus but actual width and datatype defined per key
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130845,26,255,14,41,9f,ff,ff,01,ff,04,05,00,01,00,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: ~
+    networkGroup: "Default"
+    source: ~
+    key: 1284
+    operation: "Set"
+    value: "0x0000ffff"
+- raw: "2023-01-01-00:00:00.000,3,130845,3,255,14,41,9f,ff,00,ff,98,18,78,00,02,a3,0d,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 152
+    key: 30744
+    operation: "Reply"
+    value: "0xa30d0000"
+- raw: "2023-01-01-00:00:00.000,3,130845,4,255,14,41,9f,03,00,ff,ff,18,79,00,00,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 3
+    instance: 0
+    networkGroup: ~
+    source: ~
+    key: 31000
+    operation: "Read"
+    value: "0xffffffff"

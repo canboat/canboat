@@ -49,3 +49,14 @@ fields:
 - id: ipAddress4
   name: IP Address 4
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,13,255,9,a3,99,38,80,00,00,00,00,00"  # from fusion-130820-status.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Multiroom"
+    enabled: "No"
+    ipAddress1: 0
+    ipAddress2: 0
+    ipAddress3: 0
+    ipAddress4: 0

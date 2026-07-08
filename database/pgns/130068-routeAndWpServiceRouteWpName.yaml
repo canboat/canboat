@@ -30,3 +30,17 @@ repeating1:
   count: 2
   start: 6
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130068,99,255,59,ff,ff,03,00,64,00,ff,ff,02,00,01,00,0b,01,42,65,6e,74,6c,65,69,67,68,21,00,10,01,45,61,73,74,20,42,65,6e,74,6c,65,69,67,68,63,00,10,01,46,61,77,6b,6e,65,72,20,42,65,61,63,6f,6e"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 3
+    numberOfWpsInTheRouteWpList: 100
+    databaseId: ~
+    routeId: 2
+    wpId: 1
+    wpName: "Bentleigh"
+    wpId.2: 33
+    wpName.2: "East Bentleigh"
+    wpId.3: 99
+    wpName.3: "Fawkner Beacon"

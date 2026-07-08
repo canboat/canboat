@@ -37,3 +37,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65312,29,255,8,13,99,00,2a,7f,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    unknown: 0
+    signalStrength: 42
+    a: ~
+- raw: "2023-01-01-00:00:00.000,7,65312,29,255,8,13,99,00,2b,7f,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    unknown: 0
+    signalStrength: 43
+    a: ~
+- raw: "2023-01-01-00:00:00.000,7,65312,29,255,8,13,99,00,26,7f,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    unknown: 0
+    signalStrength: 38
+    a: ~

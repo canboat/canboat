@@ -44,3 +44,11 @@ fields:
   type: BINARY
   bits: 32
   description: 32-bit bitmap of circuits, LSB-first; bit n set => circuit at slot n is ON
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65284,1,255,8,27,99,ff,08,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    dipswitch: ~
+    type: 8
+    bitmap: "0x00000000"

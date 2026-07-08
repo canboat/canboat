@@ -73,3 +73,37 @@ fields:
 - id: g
   name: G
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,15,255,12,41,9f,ff,ff,01,ff,39,00,44,00,03,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Alarm"
+    command: "Activate"
+    alarmId: "Engine water flow"
+    f: 3
+    g: 0
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,ff,ff,64,ff,61,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: 100
+    eventType: "Alarm"
+    command: 97
+    alarmId: ~
+    f: ~
+    g: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,50,255,12,41,9f,ff,ff,01,ff,38,00,16,00,01,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Alarm"
+    command: "Deactivate"
+    alarmId: "Heading missing"
+    f: 1
+    g: 0

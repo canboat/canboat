@@ -38,3 +38,25 @@ fields:
 - id: name
   name: Name
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,2d,80,00,07,43,6f,63,6b,70,69,74,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Zone Name"
+    number: 0
+    name: "Cockpit"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,12,a3,99,2d,80,01,05,43,61,62,69,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Zone Name"
+    number: 1
+    name: "Cabin"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,13,a3,99,2d,80,02,06,5a,6f,6e,65,20,33,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Zone Name"
+    number: 2
+    name: "Zone 3"

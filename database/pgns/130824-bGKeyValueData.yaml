@@ -47,3 +47,91 @@ fields:
 repeating1:
   count: 3
   start: 4
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130824,26,255,14,7d,99,50,21,d2,08,51,21,23,fd,52,21,dd,02"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    key: "Average True Wind Direction"
+    length: 2
+    value: 0.2258
+    key.2: "Wind Phase"
+    length.2: 2
+    value.2: -0.0733
+    key.3: "Wind Lift"
+    length.3: 2
+    value.3: 0.0733
+- raw: "2023-01-01-00:00:00.000,3,130824,26,255,84,7d,99,64,20,53,00,0d,21,67,00,0e,41,6d,a1,b2,1f,0f,41,9c,51,3c,03,69,20,5f,7a,d3,20,38,21,81,40,70,d3,02,00,9a,20,58,88,82,20,00,00,0a,21,98,02,0c,21,b8,02,75,40,20,6c,fb,ff,09,41,ff,ff,ff,ff,0b,41,ff,ff,ff,ff,d0,40,30,0e,a4,0d,7f,20,00,00,9d,20,1c,a6"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    key: "Trip 1 Speed Avg"
+    length: 2
+    value: 0.83
+    key.2: "Trip 2 Speed Avg"
+    length.2: 2
+    value.2: 1.03
+    key.3: "Bow Latitude"
+    length.3: 4
+    value.3: 53.1800429
+    key.4: "Bow Longitude"
+    length.4: 4
+    value.4: 5.4284700
+    key.5: "Course"
+    length.5: 2
+    value.5: 3.1327
+    key.6: "DR Bearing"
+    length.6: 2
+    value.6: 0.8504
+    key.7: "DR Distance"
+    length.7: 4
+    value.7: 1852.00
+    key.8: "Heading on Opposite Tack"
+    length.8: 2
+    value.8: -3.0632
+    key.9: "Leeway Angle"
+    length.9: 2
+    value.9: 0.0000
+    key.10: "Trip 1 Speed Max"
+    length.10: 2
+    value.10: 6.64
+    key.11: "Trip 2 Speed Max"
+    length.11: 2
+    value.11: 6.96
+    key.12: "Race Timer"
+    length.12: 4
+    value.12: "0x206cfbff"
+    key.13: "Trip Time"
+    length.13: 4
+    value.13: "0xffffffff"
+    key.14: "Trip 2 Time"
+    length.14: 4
+    value.14: "0xffffffff"
+    key.15: "Trip 2 Distance"
+    length.15: 4
+    value.15: 2288553.44
+    key.16: "VMG to Wind"
+    length.16: 2
+    value.16: 0.00
+    key.17: "Wind Angle to Mast"
+    length.17: 2
+    value.17: -2.3012
+- raw: "2023-01-01-00:00:00.000,3,130824,24,255,32,7d,99,05,41,2b,02,03,00,02,41,63,e7,05,00,03,41,00,00,00,00,00,41,00,0d,1e,e7,01,41,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    key: "Sailing Distance to Waypoint"
+    length: 4
+    value: 1971.63
+    key.2: "Layline Distance"
+    length.2: 4
+    value.2: 3869.15
+    key.3: "Layline Distance"
+    length.3: 4
+    value.3: 0.00
+    key.4: "Layline Time"
+    length.4: 4
+    value.4: "0x000d1ee7"
+    key.5: 257
+    length.5: 4
+    value.5: "0x00000000"
