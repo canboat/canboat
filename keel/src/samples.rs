@@ -21,10 +21,29 @@ pub struct RawFrame {
 /// Parse one sample line; format auto-detected:
 ///  - canboat PLAIN: `<ts>,<prio>,<pgn>,<src>,<dst>,<len>,<hh>,<hh>,...`
 ///  - candump:       `[(ts)] [ifname] <8-hex-ID>#<hexdata>` (29-bit id)
+///  - YDWG RAW:      `<hh:mm:ss.ddd> <R|T> <8-hex-ID> <hh> <hh> ...`
 pub fn parse_line(line: &str) -> Result<RawFrame> {
     let line = line.trim();
     if line.is_empty() || line.starts_with('#') {
         return Err("empty line".into());
+    }
+    // YDWG RAW: "<time> R|T <29-bit-hex-id> <space-separated hex bytes>"
+    // (Yacht Devices gateway log). Detect the R/T direction marker plus an
+    // 8-hex-digit CAN id; the leading timestamp is ignored like PLAIN's.
+    {
+        let tok: Vec<&str> = line.split_whitespace().collect();
+        if tok.len() >= 3
+            && (tok[1] == "R" || tok[1] == "T")
+            && tok[2].len() == 8
+            && tok[2].bytes().all(|b| b.is_ascii_hexdigit())
+        {
+            let id = u32::from_str_radix(tok[2], 16).map_err(|e| format!("ydwg id: {e}"))?;
+            let data = tok[3..]
+                .iter()
+                .map(|b| u8::from_str_radix(b, 16).map_err(|e| format!("ydwg hex: {e}")))
+                .collect::<Result<Vec<u8>>>()?;
+            return Ok(from_can_id(id, data));
+        }
     }
     if let Some(hash) = line.find('#') {
         // candump: the token immediately before '#' is the CAN id
@@ -217,6 +236,16 @@ mod tests {
         assert_eq!(f.pgn, 0x1F514);
         assert_eq!(f.src, 0x23);
         assert_eq!(f.prio, 6);
+    }
+
+    #[test]
+    fn ydwg_raw() {
+        // 0x0DF11313: prio 3, PF 0xF1, PS 0x13 -> PGN 0x1F113, src 0x13
+        let f = parse_line("00:29:58.626 R 0DF11313 00 9D F3 FC FF FF 7F FD").unwrap();
+        assert_eq!(f.pgn, 0x1F113);
+        assert_eq!(f.src, 0x13);
+        assert_eq!(f.prio, 3);
+        assert_eq!(f.data, vec![0x00, 0x9d, 0xf3, 0xfc, 0xff, 0xff, 0x7f, 0xfd]);
     }
 
     #[test]
