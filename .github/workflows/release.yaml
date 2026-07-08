@@ -174,16 +174,22 @@ jobs:
           cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
           zip "../canboat-windows-x86_64-${GITHUB_REF##*/}.zip" *.exe *.dll
 
+      # Upload the C-tool archive before building keel, so a keel build issue
+      # can never block the archive.
+      - name: Add canboat archive
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: rel/*.zip
+
       - name: Build keel (MSVC)
         shell: pwsh
         run: |
           cargo build --release --manifest-path keel/Cargo.toml
           Copy-Item keel/target/release/keel.exe keel-windows-x86_64.exe
 
-      - name: Add release assets
+      - name: Add keel asset
         uses: softprops/action-gh-release@v1
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
-          files: |
-            rel/*.zip
-            keel-windows-x86_64.exe
+          files: keel-windows-x86_64.exe
