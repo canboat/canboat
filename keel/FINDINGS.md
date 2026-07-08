@@ -3,26 +3,29 @@
 What `keel check` (the DESIGN.md §5 rule engine) reports against the
 database as converted from today's `pgn.h` — i.e. **defects and oddities
 inherited from the C source**, surfaced for review, not introduced by the
-migration. Current baseline: **0 errors, 5 warnings** (F1's two duplicate
-variants + F3's three dead lookups).
+migration. Current baseline: **0 errors, 0 warnings** — F1 (duplicate
+variants) and F3 (dead lookups) were resolved by the resync from master;
+F2 (lookup width) is carried explicitly per-field. See each finding below.
 
-## F1 — R20: unreachable PGN variants (2, softened to warning)
+## F1 — R20: unreachable PGN variants (RESOLVED, R20 back to error)
 
 Runtime matching (`pgn.c getMatchingPgn`) returns the *first* variant whose
 match fields all match; a later variant with an identical match set can
-never be selected:
+never be selected. Three such duplicates were inherited from `pgn.h`:
 
-- PGN 126720: `maretronProprietaryConfiguration` duplicates the match set
-  `[Manufacturer=137, Industry=4]` of `maretronSlaveResponse`.
-- PGN 130820: `bepMarineProprietaryPgn130820` duplicates
+- PGN 126720: `maretronSlaveResponse` duplicated the match set
+  `[Manufacturer=137, Industry=4]` of `maretronProprietaryConfiguration`.
+- PGN 130820: `bepMarineProprietaryPgn130820` duplicated
   `[Manufacturer=295, Industry=4]` of `bepMarineCzoneAlarmStringResponse`.
+- PGN 130817: `navicoUnknown` duplicated `[Manufacturer=275, Industry=4]`
+  of `navicoFeatureUnlock` (a stale placeholder superseded by the decoded
+  variant).
 
-Both later variants look like intended catch-alls ("proprietary, not
-further decoded") that in fact are dead.
-
-**Decision (Kees, 2026-07-07): to be fixed in canboat main before this
-branch ever merges.** R20 returns to error once main's fix flows back
-into this branch's database.
+**Resolved.** Upstream removed the first two (#744) and the third (#741,
+Navico Unknown → Feature Unlock). The branch carried them as orphans until
+the resync from master pruned all three (the resync now converts from
+master's canonical `canboat.xml` via `keel convert --xml`, so a variant
+master deleted no longer survives). R20 is a hard **error** again.
 
 ## F2 — R08: lookup width disagreements (37 warnings)
 

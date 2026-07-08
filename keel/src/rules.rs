@@ -180,14 +180,13 @@ pub const RULES: &[Rule] = &[
     Rule {
         id: "R20",
         scope: Scope::CrossFile,
-        severity: "warning (temporary; error once FINDINGS F1 is resolved)",
+        severity: "error",
         enforced_in: "check::check_variants",
         title: "PGN variants are distinguishable; at most one catch-all per PGN.",
         detail: "Each (pgn, match-set) combination is unique — a later variant \
-                 with an identical match set is unreachable at runtime — and a \
-                 PGN number has at most one match-less catch-all. Softened to a \
-                 warning while two inherited duplicates remain (FINDINGS.md F1); \
-                 re-hardened to an error once main's fix flows back.",
+                 with an identical match set is unreachable at runtime \
+                 (getMatchingPgn returns the first match) — and a PGN number \
+                 has at most one match-less catch-all. See FINDINGS.md F1.",
     },
     Rule {
         id: "R21",
