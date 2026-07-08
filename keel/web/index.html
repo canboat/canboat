@@ -100,7 +100,7 @@
 <div id="sidebar">
   <header>
     <h1>keel — CANboat PGN database</h1>
-    <input id="search" placeholder="filter PGNs…">
+    <input id="search" placeholder="filter PGNs &amp; enumerations…">
     <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
       <button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button>
       <button onclick="openNewLookup()">＋ New Lookup</button>
@@ -287,6 +287,25 @@ function renderPgnList(filter) {
       d.onclick = () => openExisting(p.id);
       el.appendChild(d);
     });
+  // enumerations: shown when filtering (so the default view stays PGN-focused)
+  const lks = f
+    ? MODEL.lookups.filter(l => (l.name || l).toLowerCase().includes(f))
+    : [];
+  if (lks.length) {
+    const h = document.createElement("div");
+    h.className = "hint";
+    h.style.cssText = "padding:4px 12px;border-top:1px solid var(--line);position:sticky;top:0";
+    h.textContent = "enumerations";
+    el.appendChild(h);
+    lks.slice(0, 200).forEach(l => {
+      const name = l.name || l;
+      const d = document.createElement("div");
+      d.innerHTML = `<b style="color:var(--accent)">⚙</b>${esc(name)} <span class="hint">${esc(l.kind || "")}</span>`;
+      d.title = `edit enumeration ${name}`;
+      d.onclick = () => openLookup(name);
+      el.appendChild(d);
+    });
+  }
 }
 
 function flash(msg, ok) {
@@ -666,12 +685,18 @@ function renderFields() {
     {
       const td = document.createElement("td");
       td.style.whiteSpace = "nowrap";
+      td.style.display = "flex";
+      td.style.alignItems = "center";
+      td.style.gap = "2px";
       const inp = document.createElement("input");
       inp.value = f.lookup ?? "";
       inp.size = 14;
+      inp.style.flex = "1";
+      inp.style.minWidth = "40px";
       inp.setAttribute("list", "dl_lookups");
       const view = document.createElement("button");
       view.className = "lkbtn";
+      view.style.flex = "0 0 auto";
       const knownLookup = () => inp.value && MODEL.lookups.some(l => (l.name || l) === inp.value);
       const syncBtn = () => {
         view.textContent = knownLookup() ? "🔍" : "＋";
