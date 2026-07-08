@@ -63,10 +63,16 @@ keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 
 $(XML2FILE): keel-generate
 
-$(HTML2FILE): $(XSL2FILE) $(XML2FILE)
+# canboat.html/json derive from canboat.xml via xsltproc. They depend on the
+# phony keel-generate (not on canboat.xml) on purpose: keel rewrites the xml
+# in the same pass, and the recipe-less xml target does not reliably
+# propagate that to downstream mtime checks under make 3.81 (the stock macOS
+# make), leaving the html/json stale after a database change. Depending on
+# keel-generate forces them to rebuild from the freshly written xml.
+$(HTML2FILE): keel-generate $(XSL2FILE)
 	xsltproc $(XSL2FILE) $(XML2FILE) | ./fixup-html.sh > $(HTML2FILE)
 
-$(JSON2FILE): $(XML2FILE) canboat2json.xslt validate-json.py
+$(JSON2FILE): keel-generate canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
 	python3 validate-json.py --range $(@)
 
