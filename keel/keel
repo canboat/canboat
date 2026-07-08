@@ -24,13 +24,29 @@ if stale; then
         # No toolchain, no binary: fetch a prebuilt release.
         OS=$(uname | tr '[:upper:]' '[:lower:]')
         ARCH=$(uname -m)
-        URL="https://github.com/canboat/canboat/releases/latest/download/keel-$OS-$ARCH"
-        echo "keel: no cargo toolchain; downloading $URL ..." >&2
+        ASSET="keel-$OS-$ARCH"
+        REPO="https://github.com/canboat/canboat"
         mkdir -p "$KEEL_DIR/target/release"
-        if command -v curl >/dev/null 2>&1; then
-            curl -fsSL -o "$BIN" "$URL"
-        else
-            wget -qO "$BIN" "$URL"
+        get() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1"; else wget -qO- "$1"; fi; }
+        dl() { if command -v curl >/dev/null 2>&1; then curl -fsSL -o "$BIN" "$1"; else wget -qO "$BIN" "$1"; fi; }
+
+        echo "keel: no cargo toolchain; downloading prebuilt $ASSET ..." >&2
+        if ! dl "$REPO/releases/latest/download/$ASSET"; then
+            # keel first ships in the 8.0.0 series. While 8.0.0 is a
+            # pre-release, GitHub's "latest" points at the 7.x line, which
+            # carries no keel asset - so fall back to the newest v8.0.0*
+            # release that does. Newest first: the API lists releases in
+            # reverse-chronological order.
+            echo "keel: not under 'latest'; looking for a v8.0.0 release ..." >&2
+            url=$(get "https://api.github.com/repos/canboat/canboat/releases" 2>/dev/null \
+                | grep -o "$REPO/releases/download/v8\.0\.0[^\"]*/$ASSET" \
+                | head -1)
+            if [ -z "$url" ] || ! dl "$url"; then
+                echo "keel: could not download $ASSET from 'latest' or any v8.0.0 release." >&2
+                echo "keel: install a Rust toolchain and re-run, or build it with" >&2
+                echo "keel:   (cd $KEEL_DIR && cargo build --release)" >&2
+                exit 1
+            fi
         fi
         chmod +x "$BIN"
     fi
