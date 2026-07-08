@@ -145,6 +145,10 @@ struct Ctx {
     /// pending byte length for the next DYNAMIC_FIELD_VALUE (already
     /// overhead-corrected), set when a dynamicFieldLength field decodes
     dyn_len: Option<usize>,
+    /// (fieldtype name, explicit bits, nested lookup) selected by the last
+    /// DYNAMIC_FIELD_KEY, applied to the next DYNAMIC_FIELD_VALUE - the
+    /// key-value idiom where the key names the value's type and length.
+    pending_value: Option<(String, Option<u32>, Option<String>)>,
 }
 
 pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>> {
@@ -153,6 +157,7 @@ pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>
         bit: 0,
         by_order: Default::default(),
         dyn_len: None,
+        pending_value: None,
     };
 
     let (rep_start, rep_count) = pgn
@@ -230,8 +235,70 @@ fn decode_one(
     // (evidence of missing enumeration entries) to the editor.
     let mut lookup_ref: Option<(String, String)> = None; // (name, kind)
     let mut unnamed: Vec<u64> = Vec::new();
+    // Unit taken from a key-selected fieldtype (DYNAMIC_FIELD_VALUE).
+    let mut unit_override: Option<String> = None;
 
     let value = match root {
+        "DYNAMIC_FIELD_VALUE" => {
+            match ctx.pending_value.take() {
+                Some((ftname, ebits, nested)) => {
+                    let vft = db.fieldtypes.iter().find(|t| t.name == ftname);
+                    let vroot = vft.map(|t| t.root_name.as_str()).unwrap_or("BINARY");
+                    let vbits = ebits
+                        .map(|b| b as usize)
+                        .or_else(|| vft.map(|t| t.size as usize).filter(|&s| s > 0))
+                        .unwrap_or(remaining)
+                        .min(remaining);
+                    unit_override = vft.and_then(|t| t.unit.clone());
+                    let val = if let Some(nl) = &nested {
+                        // the key also names a nested pair enumeration for the value
+                        match extract_bits(data, ctx.bit, vbits, false, 0) {
+                            Some(e) => {
+                                let nm = db.lookups.get(nl).and_then(|lk| {
+                                    lk.pairs.iter().find(|(v, _)| *v == e.raw).map(|(_, n)| n.clone())
+                                });
+                                Value::Lookup { value: e.raw, name: nm }
+                            }
+                            None => Value::Unavailable,
+                        }
+                    } else if vroot == "FLOAT" {
+                        match extract_bits(data, ctx.bit, vbits, false, 0) {
+                            Some(e) => {
+                                let fv = f32::from_bits(e.raw as u32);
+                                if fv.is_nan() {
+                                    Value::Unavailable
+                                } else {
+                                    Value::Number { value: fv as f64, decimals: 4 }
+                                }
+                            }
+                            None => Value::Unavailable,
+                        }
+                    } else if vroot == "NUMBER" {
+                        let signed = vft.and_then(|t| t.has_sign) == Some(true);
+                        let off = vft.map(|t| t.offset as i64).unwrap_or(0);
+                        let res = vft.map(|t| t.resolution).unwrap_or(0.0);
+                        match extract_bits(data, ctx.bit, vbits, signed, off) {
+                            Some(e) if res != 0.0 => Value::Number {
+                                value: e.value as f64 * res,
+                                decimals: decimals_for(res),
+                            },
+                            Some(e) => Value::Number { value: e.value as f64, decimals: 0 },
+                            None => Value::Unavailable,
+                        }
+                    } else {
+                        Value::Binary(hex(&slice_bits(data, ctx.bit, vbits)))
+                    };
+                    ctx.bit += vbits;
+                    val
+                }
+                None => {
+                    // no key type: fall back to length hint or the remainder
+                    let v = slice_bits(data, ctx.bit, bits);
+                    ctx.bit += bits;
+                    Value::Binary(hex(&v))
+                }
+            }
+        }
         "STRING_FIX" => {
             let v = slice_bytes(data, ctx.bit, bits / 8);
             ctx.bit += bits;
@@ -250,7 +317,7 @@ fn decode_one(
             ctx.bit += total.max(2) * 8;
             Value::Str(String::from_utf8_lossy(&v).trim_end_matches('\0').to_string())
         }
-        "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "DYNAMIC_FIELD_VALUE" | "ISO_NAME" => {
+        "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
             let v = slice_bits(data, ctx.bit, bits);
             ctx.bit += bits;
             Value::Binary(hex(&v))
@@ -272,6 +339,22 @@ fn decode_one(
                                 lookup_ref = Some((n.to_string(), "pair".into()));
                                 if name.is_none() {
                                     unnamed.push(e.raw);
+                                }
+                            }
+                            // key-value idiom: the key names the type + length of
+                            // the following DYNAMIC_FIELD_VALUE.
+                            if matches!(root, "DYNAMIC_FIELD_KEY" | "LOOKUP_TYPE_FIELDTYPE") {
+                                ctx.pending_value = f
+                                    .lookup_fieldtype
+                                    .as_ref()
+                                    .and_then(|n| db.lookups.get(n))
+                                    .and_then(|lk| lk.fieldtypes.iter().find(|en| en.value == e.raw))
+                                    .map(|en| (en.fieldtype.clone(), en.bits, en.lookup.clone()));
+                                if let Some(("fieldtype", n)) = f.lookup_ref() {
+                                    lookup_ref = Some((n.to_string(), "fieldtype".into()));
+                                    if name.is_none() {
+                                        unnamed.push(e.raw);
+                                    }
                                 }
                             }
                             Value::Lookup { value: e.raw, name }
@@ -370,7 +453,8 @@ fn decode_one(
     };
 
     let unit = match &value {
-        Value::Number { .. } => f.res_unit.clone(),
+        // a key-selected value carries its type's unit, not the field's
+        Value::Number { .. } => unit_override.or_else(|| f.res_unit.clone()),
         _ => None,
     };
     let kind = match (&value, root) {
