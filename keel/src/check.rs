@@ -594,13 +594,14 @@ fn check_variants(prefix: &str, pgns: &[Pgn], v: &mut Vec<Violation>) {
             }
             let key = set.join(",");
             if let Some(other) = seen_sets.insert(key.clone(), &p.id) {
-                // Warning (not error) for now: two inherited pgn.h cases
-                // exist (Maretron 126720, BEP 130820) where the later
-                // variant is unreachable at runtime. Re-harden to error
-                // once those are resolved. See keel/FINDINGS.md.
+                // A later variant with an identical match set is unreachable
+                // at runtime (getMatchingPgn returns the first match), so this
+                // is an error. The inherited duplicates that once softened it
+                // (Maretron 126720, BEP 130820, Navico 130817) were pruned in
+                // the resync from master. See keel/FINDINGS.md F1.
                 v.push(Violation {
                     rule: "R20",
-                    error: false,
+                    error: true,
                     location: pgn_loc(prefix, p),
                     message: format!(
                         "match set [{key}] duplicates variant '{other}' of PGN {pgn}; the later variant is unreachable"
