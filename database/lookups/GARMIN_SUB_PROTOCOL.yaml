@@ -1,5 +1,0 @@
-name: GARMIN_SUB_PROTOCOL
-kind: pair
-bits: 16
-values:
-  5904: Autopilot heading to steer

@@ -13,8 +13,9 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  lookup: MANUFACTURER_CODE
+  description: Garmin
   match: 229
+  lookup: MANUFACTURER_CODE
 - id: reserved
   name: Reserved
   type: RESERVED
@@ -23,29 +24,34 @@ fields:
   name: Industry Code
   type: LOOKUP
   bits: 3
-  lookup: INDUSTRY_CODE
+  description: Marine Industry
   match: 4
+  lookup: INDUSTRY_CODE
 - id: subProtocolId
   name: Sub-protocol ID
   type: UINT16
-  lookup: GARMIN_SUB_PROTOCOL
+  description: Garmin autopilot transport
   match: 5904
   primaryKey: true
 - id: wrapperByte1
   name: Wrapper Byte 1
   type: UINT8
+  description: '4'
   match: 4
 - id: wrapperByte2
   name: Wrapper Byte 2
   type: UINT8
+  description: '4'
   match: 4
 - id: fieldGroup
   name: Field Group
   type: UINT8
+  description: '0'
   match: 0
 - id: field
   name: Field
   type: UINT8
+  description: Heading to Steer
   match: 11
   primaryKey: true
 - id: reserved9
@@ -55,18 +61,8 @@ fields:
 - id: headingToSteer
   name: Heading to Steer
   type: FLOAT_RAD
+  description: Values at or above 1000 rad signal no active order
 notes: |-
   Garmin autopilot scalar transport: a separate Garmin sub-protocol (ID 5904) that carries a single named
   scalar per frame, selected by the Field Group + Field bytes. Structure inferred from the canboat-py-gh
   extended decoder; the byte between the Field selector and the value is not yet identified.
-samples:
-- raw: "2026-07-07T18:51:54.262Z,7,126720,0,255,13,e5,98,10,17,04,04,00,0b,00,98,c3,2e,40"
-  expects:
-    manufacturerCode: Garmin
-    industryCode: Marine Industry
-    subProtocolId: 5904
-    wrapperByte1: 4
-    wrapperByte2: 4
-    fieldGroup: 0
-    field: 11
-    headingToSteer: 2.7307
