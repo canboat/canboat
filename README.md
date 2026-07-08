@@ -61,6 +61,24 @@ the [`samples/`](./samples) directory.
 In [Wiki](https://github.com/canboat/canboat/wiki) you can find instructions on how to build the programs on your own computer 
 and how to start extending the PGN database. Short instructions are also found in [BUILDING.md](./BUILDING.md).
 
+## Adding or fixing a PGN
+
+PGN definitions live as YAML under [`database/`](./database) (one file per PGN
+variant in `pgns/`, one per enumeration in `lookups/`). The easiest way to add
+a new message or correct an existing one is the built-in, evidence-first
+editor:
+
+```sh
+keel/keel edit
+```
+
+Paste one or more real captures, and the local web editor stacks the bytes,
+decodes them live as you define fields, suggests an existing definition to
+clone when your frame nearly matches one, and lets you save your captures as
+regression tests — all rule-checked before it will write. See
+[AGENTS.md §9](./AGENTS.md) for the full workflow (editor and by-hand) and
+[CONTRIBUTING.md](./CONTRIBUTING.md) for the evidence and commit rules.
+
 ## Contributing
 
 Pull requests are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to write your PR title

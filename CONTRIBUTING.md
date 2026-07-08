@@ -88,6 +88,27 @@ chore: add real-world Fusion and Victron sample captures
 - **Marking database work as `chore`** — new PGN/field support is `feat`; a
   wrong decode is `fix`.
 
+## Adding or fixing a PGN
+
+The recommended path is the evidence-first editor:
+
+```sh
+keel/keel edit          # local web editor, no network, no npm
+```
+
+Paste real captures (canboat PLAIN, candump, or raw hex) and the editor
+reassembles them, stacks the bytes so structure stands out, and decodes them
+live as you build the field list. If your frame nearly matches an existing
+definition it offers to **clone** that variant so you don't redefine shared
+fields. Enumerations (pair/bit/triplet/fieldtype) are editable in place, and
+unnamed values a sample reveals are flagged. Saving is refused while any rule
+fails, and you can adopt the decodes as regression expectations that
+`keel check` re-verifies forever.
+
+You can also edit the YAML under `database/` by hand and run `keel/keel check`.
+Either way, author only the observed data — order, bit offsets, lengths, ranges
+and sentinels are derived. AGENTS.md §9 has the full workflow.
+
 ## Database changes should be backed by evidence
 
 New or corrected decodes should be justified by a real capture (add it under
