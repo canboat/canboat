@@ -281,37 +281,35 @@ they ask about the JS encoder/decoder → that's **canboatjs**.
 
 ## 8. The PGN database data model
 
-The database is a **C99 designated-initializer** data model; macros expand to
-`struct Field` / `struct Pgn` initializers. The field macros (`UINT8_FIELD`,
-`LOOKUP_FIELD`, `ANGLE_U16_FIELD`, `RESERVED_FIELD`, `END_OF_FIELDS`, …) are all
-`#define`d in **`analyzer/pgn.h`** itself (which also `#include`s `fieldtype.h`
-and `lookup.h`).
+The database is a **YAML tree** under `database/`, one file per PGN variant in
+`pgns/` and one per enumeration in `lookups/`. You author only the real,
+observed data; `keel` derives everything computable (order, bit offsets,
+lengths, ranges, sentinels) and generates the C tables. The old C-macro DSL in
+`pgn.h`/`lookup.h` is gone — `analyzer/pgn.h` now holds only the hand-written
+struct definitions and `#include`s the generated data.
 
 Essential facts before editing:
 
-- **Field sizes are ALWAYS in bits.** Use `BITS(n)`; `BYTES(n)` = `8*n`.
-  `.size = 2` means 2 bits. `LEN_VARIABLE` (0) = variable-length. Fields are
-  contiguous bit-packed — no implicit alignment; use `RESERVED_FIELD(bits)` for
-  gaps.
-- **Every field list MUST end with `END_OF_FIELDS`.** The list array is capped
-  at 33 entries *including* the terminator; a PGN needing more requires bumping
-  the constant in `pgn.h`.
-- A `Pgn` entry's positional leading members are `description`, `pgn` (PRN),
-  `complete` (`PacketComplete` bits), `type` (`PacketType`), `fieldList`. You
-  set designated members `.interval`, `.priority`, `.explanation`, `.url`, and
-  `.repeating*`. Members like `.fieldCount`, `.bitOffset`, `.camelName`, `.ft`
-  are filled by C — do not set them directly (the one exception is `.camelName`
-  via the `ID_AND_NAME` macro, see below).
-- **`complete`:** use `PACKET_COMPLETE` only when fully reverse-engineered;
-  otherwise OR the unknown-status bits (`PACKET_INCOMPLETE` =
-  fields|lengths|resolution unknown, `PACKET_INCOMPLETE_LOOKUP`, etc.).
-- **`type`:** `PACKET_SINGLE` (8-byte single frame) vs `PACKET_FAST` (NMEA
-  fast-packet multi-frame); also `PACKET_ISO_TP`, `PACKET_MIXED`.
-- `.interval` is **milliseconds** (0 = unknown, `UINT16_MAX` = on-request);
-  `.priority` is the default N2K priority.
-- **Repeating sets:** `.repeatingField1` = 1-based index of the count field,
-  `.repeatingCount1` = how many fields repeat, `.repeatingStart1` = first field
-  of the repeating block (255 = no count field).
+- **Field sizes are ALWAYS in bits.** A field's `bits:` is a bit count; omit it
+  to inherit the field type's default. Fields are contiguous bit-packed — no
+  implicit alignment; use a `RESERVED` field for gaps. Variable-length fields
+  (strings, `DYNAMIC_FIELD_VALUE`) carry no fixed `bits`.
+- A PGN file's top-level keys are `pgn` (PRN), `id`, `description`, `type`, and
+  the field list under `fields:`. You may set `priority`, `interval`,
+  `explanation`, `url`, `missing`, `repeating1`/`repeating2`, `notes:`, and
+  `samples:`. Derived members (field count, bit offsets, ranges) are never
+  authored.
+- **`missing:`** lists what is not yet reverse-engineered (`Fields`,
+  `FieldLengths`, `Resolution`, `SampleData`, …); an empty/absent list means
+  fully known. Keep it honest until the decode is verified.
+- **`type:`** is `Single` (8-byte single frame), `Fast` (NMEA fast-packet
+  multi-frame), `ISO`, or `Mixed`.
+- `interval` is **milliseconds** (absent = unknown, on-request handled via
+  `missing`/interval sentinels); `priority` is the default N2K priority.
+- **Repeating sets:** a `repeating1:`/`repeating2:` block has `count` (how many
+  consecutive fields repeat), `start` (1-based order of the first repeating
+  field), and an optional `countField` (1-based order of the field holding the
+  repetition count). At most two, both trailing, the second after the first.
 - **Special (sentinel) values:** NMEA 2000 reserves the top of an integer range
   as non-data sentinels — most-positive = *Unknown* (data not available), max-1 =
   *OutOfRange*, max-2 = *Reserved*. The count is derived from the bit width (3 for
@@ -333,35 +331,33 @@ Essential facts before editing:
   is the single source of truth for which fields emit top-of-range markers — the
   per-field emission keys off `.sentinels == TopOfRange`, so don't add a separate
   exclusion list.
-- **`Id` is the frozen contract; `Name` is the display label.** Each field emits
-  `<Id>` (the camelCase `.camelName`, the key downstream decoders use as the
-  property name) and `<Name>` (the human label, `.name`). `Id` is normally
-  derived from `Name` by `camelize()`, so naively re-wording a `Name` silently
-  changes its `Id` and **breaks consumers**. As of the changelog note "no
-  changes to Id fields", `Id` is a stable contract. To re-word a field's `Name`
-  (or fix a typo) without moving its `Id`, pin both with the **`ID_AND_NAME(id,
-  nam)`** macro (or **`PK_ID_AND_NAME`** when the field is also a primary key) —
-  e.g. `UINT8_FIELD(ID_AND_NAME("sid", "SID"))`. These wrap the `.name`/
-  `.camelName` pair and are the only sanctioned way to set `.camelName` by hand
-  (it is otherwise C-filled). The macros use a one-stage `DEFER()` trick, so they
-  do **not** compose with `PK()` — use the combined `PK_ID_AND_NAME` instead of
-  nesting.
+- **`id` is the frozen contract; `name` is the display label.** Each field
+  carries an explicit `id:` (the camelCase key downstream decoders use as the
+  property name) and a `name:` (the human label). Because the `id` is authored
+  explicitly, re-wording a `name` no longer changes the `id` — but the `id`
+  itself is a **stable contract**: don't rename an existing field's `id`, or
+  you break consumers. (The editor treats the `id` of an existing PGN as
+  frozen; a new definition lets you set it.)
 
-**Enumerations** (`lookup.h`) are an X-macro stream: `LOOKUP_TYPE(NAME, BITS(n))`
-… `LOOKUP(NAME, value, "text")` … `LOOKUP_END`, with variants
-`LOOKUP_BITFIELD`, `LOOKUP_TRIPLET`, `LOOKUP_FIELDTYPE`. A field references an
-enum by token-paste: `LOOKUP_FIELD("Name", BITS(n), MY_ENUM)` → `lookupMY_ENUM`.
-The NAME must exactly match a `LOOKUP_TYPE`, or you get an **undefined-symbol
-link error** (not a clear message).
+**Enumerations** are `database/lookups/<NAME>.yaml`, one file per enum, with a
+`kind:` of `pair` (value→name), `bit` (bit position→name), `triplet`
+(two-value key→name), or `fieldtype` (value→name + a per-entry datatype/length,
+used by `DYNAMIC_FIELD_KEY`). A field references one by the key that matches
+its kind: `lookup:` (pair), `lookupBits:` (bit), `lookupFieldtype:`
+(fieldtype), or `lookupIndirect:` (triplet). Mismatching the key to the enum's
+kind is rule R08. The referenced `NAME` must be an existing lookup file.
 
-**Field types** (`fieldtype.h`): each `Field.fieldType` is a **string** matching
-a `.name` in `fieldTypeList[]`, which supplies the print fn, units, resolution,
-sign, and base-type chain. Add a new FieldType **before** referencing it.
+**Field types** are `database/fieldtypes.yaml`: each field's `type:` names a
+FieldType that supplies the print fn, unit, resolution, sign, and base-type
+chain. Add a new FieldType **before** referencing it.
 
-**Proprietary PGNs:** start fields with `COMPANY(<mfgId>)` (the id must already
-exist as `LOOKUP(MANUFACTURER_CODE, id, "Name")` in `lookup.h`). When multiple
-messages share a PRN, disambiguate with `MATCH_FIELD`/`MATCH_LOOKUP_FIELD` (the
-`=id` discriminator lives inside the macro — don't write `.unit` by hand).
+**Proprietary PGNs** start with the company preamble — `manufacturerCode`
+(11 bits, `lookup: MANUFACTURER_CODE`), `reserved` (2), `industryCode`
+(3, `lookup: INDUSTRY_CODE`) — each with a `match:` value and `primaryKey:
+true`. The editor inserts this automatically from the PGN range. When several
+messages share a PRN, disambiguate with a `match:` value on the discriminating
+field(s); a variant with no match fields is the greedy fallback and must sort
+last.
 
 **`keel check` is the first-line validator** (rule engine, exit 1 on any
 error). The C startup validators (`logAbort`, exit 2) remain as cheap runtime
@@ -372,26 +368,68 @@ range violations, missing repeating-field markers.
 
 ## 9. How to change the PGN database (the common task)
 
-1. Edit the relevant C header in `analyzer/`:
-   - new/changed **enum value** → `lookup.h` (`LOOKUP(...)`); widen the
-     `LOOKUP_TYPE` `BITS(len)` if the value won't fit.
-   - new/changed **PGN or field** → `pgn.h`, with the field macros in **bit
-     order**, terminated by `END_OF_FIELDS`; set `.interval`, `.priority`,
-     `complete`, and `PACKET_SINGLE`/`_FAST`. Downgrade `complete` unless fully
-     verified.
-   - new **field encoding** → `fieldtype.h` (add the FieldType first).
-   - **J1939** PGN → `analyzer/pgn-j1939.h` (shares lookup/fieldtype).
-2. **Cite the evidence** in a source comment — a manufacturer-manual URL and/or
-   a `samples/` capture path. This is an established convention; existing
-   entries do it.
-3. `make` and exercise it: `rel/<platform>/analyzer < samples/<file>`. Startup
-   validators will abort on inconsistency.
-4. `make generated` — regenerates `docs/*` + `canboat.dbc` and validates the schema.
-5. `make tests`; regenerate intentional golden diffs (manual `cp` + review, §5).
-6. **Commit the regenerated `docs/` + `canboat.dbc` together with the header
-   change, in the same PR.** CI enforces this — the `build-ubuntu` job
-   regenerates and runs `git diff --exit-code`, so a PR with stale generated
-   files fails (§6).
+Definitions are authored two ways; both write the same YAML under
+`database/` and both are validated by `keel check`. **Never edit the
+generated C headers** (`pgn-data.h`, `lookup.h`, …) — they are output.
+
+### 9a. The editor — recommended, evidence-first
+
+`keel/keel edit` starts a local web editor (no network, no npm) and opens a
+browser at `http://127.0.0.1:8020`:
+
+```sh
+keel/keel edit
+```
+
+- **Add a new PGN:** paste one or more real captures (canboat PLAIN, candump,
+  or raw hex) into the wizard's evidence box. It reassembles fast-packets and
+  stacks the bytes so constant vs. varying fields stand out. If the frame
+  looks like an existing definition with a single discriminator different, it
+  offers to **clone** that variant so you don't redefine the shared fields —
+  you only change the one match field and the trailing content. Build the
+  field list; the **live decode** re-runs against every sample as you edit
+  (angles show degrees, Kelvin shows Celsius, dates/times are humanised).
+  When it reads correctly, "adopt current decodes as expectations" writes a
+  `samples:` block that R40 re-checks forever.
+- **Fix an existing PGN:** filter for it in the sidebar and open it; edit the
+  fields (notes, samples and repeating sets are preserved). Paste fresh
+  captures to check them against the stored definition before changing
+  anything.
+- **Enumerations:** click a field's lookup (🔍/＋), or search the sidebar, to
+  view/create/edit any enumeration — `pair`, `bit`, `triplet`, or `fieldtype`
+  (per-entry datatype + length, e.g. for `DYNAMIC_FIELD_KEY`). Values a
+  sample carries that the enumeration doesn't name yet are flagged so you can
+  name them straight from the evidence. Lookup values are decimal (a `0x…`
+  prefix is accepted); a `bit` enum's value is the bit position.
+- **Repeating field sets:** "+ repeating field set" marks the trailing fields
+  that repeat (at most two, second after first) and its optional count field.
+- **Saving is rule-gated:** the editor refuses to write while any rule fails,
+  names the target file from the PGN + `id`, and then offers to regenerate the
+  artifacts. Scratch mode validates without writing; undo reverts the last save.
+
+### 9b. By hand
+
+Edit the YAML directly and run `keel/keel check`:
+
+- new/changed **PGN or field** → `database/pgns/<pgn:06>-<id>.yaml`;
+- new/changed **enumeration value** → `database/lookups/<NAME>.yaml`;
+- new **field encoding** → `database/fieldtypes.yaml` (add it before use);
+- **J1939** PGN → `database/j1939/pgns/`.
+
+Author only the **real data**: `id`, `name`, `type`, per-field `type` and any
+non-default `bits`/`unit`/`resolution`/`match`/`lookup*`. Order, bit offsets,
+lengths, ranges and sentinels are **derived** — do not write them.
+
+### 9c. Then, either way
+
+1. **Cite the evidence** — add the capture under `samples/` and reference it in
+   the PGN's `notes:` key, or cite public documentation. A decode should be
+   grounded in observation, not guesswork.
+2. `make generated` — regenerates `docs/*`, `canboat.dbc` and the analyzer's C
+   data tables, and runs the test suite.
+3. **Commit the regenerated artifacts in the same commit** as the database
+   change. CI enforces the lockstep — the `build-ubuntu` job regenerates and
+   runs `git diff --exit-code`, so a PR with stale generated files fails (§6).
 
 ---
 
