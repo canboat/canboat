@@ -68,9 +68,6 @@ jobs:
           - runner: macos-latest
             os: darwin
             arch: arm64
-          - runner: macos-13
-            os: darwin
-            arch: x86_64
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
@@ -98,6 +95,36 @@ jobs:
           files: |
             canboat-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
             keel-${{ matrix.os }}-${{ matrix.arch }}
+
+  # Intel macOS: cross-built on the Apple-Silicon runner (-arch x86_64), so we
+  # do not depend on the deprecated/slow macos-13 Intel runner pool.
+  macos-x86_64:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Build C tools (x86_64)
+        run: make PLATFORM=darwin-x86_64 CFLAGS="-Wall -O2 -arch x86_64" LDFLAGS="-arch x86_64"
+
+      - name: Package canboat archive
+        run: tar czf "canboat-darwin-x86_64-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C rel/darwin-x86_64 .
+
+      - name: Build keel (x86_64)
+        run: |
+          rustup target add x86_64-apple-darwin
+          cargo build --release --manifest-path keel/Cargo.toml --target x86_64-apple-darwin
+          cp keel/target/x86_64-apple-darwin/release/keel keel-darwin-x86_64
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-darwin-x86_64-${{ github.ref_name }}.tar.gz
+            keel-darwin-x86_64
 
   # 32-bit ARM (e.g. Raspberry Pi): static musl cross-build of both the C tools
   # and keel, mirroring the ci.yml build-armv7-musl setup.
