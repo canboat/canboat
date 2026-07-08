@@ -264,6 +264,7 @@ keel fmt         canonicalize YAML in place
 keel new         scaffold a new PGN file (e.g. keel new 130846 --manufacturer=Furuno)
 keel edit        start the local web editor (serves SPA + validation API)
 keel explain     the old analyzer-explain text output, from YAML
+keel rules       print the rule inventory (text, or `md` for docs); §5
 keel decode      stdin sample lines (PLAIN/candump/YDWG) -> decoded fields;
                  keel's own decoder, independent of the C analyzer
 keel harvest     batch-decode capture files and append `samples:` blocks to
@@ -295,56 +296,25 @@ R03 pgns/130306-windData.yaml fields: bit sizes sum to 52; a PGN must fill
     whole bytes (add reserved bits: 4 missing)
 ```
 
-## 5. The rules (initial inventory)
+## 5. The rules
 
 Ported from `pgn.c`, `fieldtype.c`, `analyzer-explain.c` and convention.
-Numbering is illustrative; the set will grow.
 
-Shape (JSON Schema over the YAML):
-* R01 required keys, allowed keys, types, enum values per object.
+The canonical inventory lives **in the source**, next to the checks it
+describes: [`keel/src/rules.rs`](src/rules.rs). Print the current set with
 
-Intra-PGN semantics:
-* R02 PGN number lies in a valid `pgnRange`; PDU1 PGNs end in 0x00.
-* R03 field bit sizes up to the first repeating field sum to whole bytes
-      (enforced as a hard error in derive - every length depends on it).
-* R04 fixed single-frame PGNs are exactly 8 bytes (59904 excepted);
-      variable single-frame ≤ 8 bytes; packet `type` agrees with the
-      range's type (ISO-TP / mixed exceptions).
-* R05 repeating sets are self-consistent (start/count in range,
-      `countField` references an integer field before the set, or is
-      absent for repeat-until-exhausted).
-* R06 `dynamicFieldLength` precedes its `DYNAMIC_FIELD_VALUE` field;
-      overhead sane.
-* R07 proprietary-range PGNs start with Manufacturer Code / reserved /
-      Industry Code, or carry `missing: [MissingCompanyFields]`.
-* R08 lookup references resolve with the right kind; a width that
-      differs from the lookup's declared width is an error unless the
-      field opts in with `allowLookupWidthMismatch: true`; a named value
-      that cannot fit the field is an error even then (except out-of-width
-      bit positions in opted-in shared bit enumerations); a stale opt-in
-      (widths agree) is a warning. See FINDINGS.md F2.
-* R09 sentinel logic: `specialValues` override in range; lookups naming
-      values in the sentinel region reduce the reserved count; no
-      sentinels on match fields or 64-bit fields.
-* R10 fieldtype constraints: resolution/offset/unit may not contradict the
-      base type; unit implies a known physical quantity (hard error in
-      derive - it poisons every resolved attribute).
-* R11 max 33 fields (raiseable, but enforced to match the C runtime).
-* R12 `reserved`/`spare` id suffix convention.
+```
+keel rules        # grouped text
+keel rules md     # markdown, for docs
+```
 
-Cross-file:
-* R20 (pgn, match-set) combinations are unique (a duplicate makes the
-      later variant unreachable at runtime); at most one match-less
-      catch-all per PGN number. Temporarily a warning: two inherited
-      duplicates exist (FINDINGS.md F1); re-harden once resolved.
-* R21 ids unique per scope (PGN ids globally; field ids within a PGN).
-* R22 every lookup file is referenced (warning), every reference resolves
-      (error).
-* R23 fieldtype hierarchy is a DAG rooted in types with print functions.
-
-Cross-release (CI only):
-* R30 `tools/contract.py` classification against the previous release —
-      frozen ids, wire-encoding changes, etc. Unchanged from today.
+so this document never drifts from what `keel check` actually enforces.
+The groups: **shape** (R01, schema over the YAML), **intra-PGN semantics**
+(R02–R12), **cross-file** (R20–R23), **samples** (R40, see §7.2), and the
+CI-only **cross-release** contract check (R30). Each rule states its
+severity and where it is enforced (loader, derive pass, `check.rs`, or CI);
+a few (R01/R03/R10 in the loader and derive, R30 in CI) are guaranteed
+before or outside `keel check` proper.
 
 Sort order of the output is *imposed* by the generator (PGN ascending,
 fallback first), so today's "list must be sorted" invariant disappears
