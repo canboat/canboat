@@ -62,3 +62,34 @@ fields:
   name: Mode State
   type: UINT8
   description: Engage/standby state command (observed 2 = Standby, 5 = Engaged)
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,11,e5,98,10,17,04,04,05,0a,00,05,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 5
+    field: 10
+    modeState: 5
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,05,0a,00,03,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 5
+    field: 10
+    modeState: 3
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,11,e5,98,10,17,04,04,05,0a,00,02,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 5
+    field: 10
+    modeState: 2

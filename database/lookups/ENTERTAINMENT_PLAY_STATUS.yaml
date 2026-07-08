@@ -1,6 +1,6 @@
 name: ENTERTAINMENT_PLAY_STATUS
 kind: pair
-bits: 16
+bits: 8
 values:
   0: Play
   1: Pause

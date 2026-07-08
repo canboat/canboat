@@ -52,8 +52,7 @@ fields:
   name: Retransmit flag
   type: LOOKUP
   bits: 1
-  lookup: YES_NO
-  allowLookupWidthMismatch: true
+  lookup: YES_NO_1BIT
 - id: reserved10
   name: Reserved
   type: RESERVED

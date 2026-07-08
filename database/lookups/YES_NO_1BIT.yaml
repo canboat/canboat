@@ -1,0 +1,6 @@
+name: YES_NO_1BIT
+kind: pair
+bits: 1
+values:
+  0: 'No'
+  1: 'Yes'

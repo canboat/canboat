@@ -1,6 +1,6 @@
 name: BOOT_STATE
 kind: pair
-bits: 4
+bits: 3
 values:
   0: in Startup Monitor
   1: running Bootloader

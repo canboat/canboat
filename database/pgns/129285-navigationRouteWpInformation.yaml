@@ -22,7 +22,6 @@ fields:
   type: LOOKUP
   bits: 3
   lookup: DIRECTION
-  allowLookupWidthMismatch: true
 - id: supplementaryRouteWpDataAvailable
   name: Supplementary Route/WP data available
   type: LOOKUP

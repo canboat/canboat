@@ -62,3 +62,34 @@ fields:
   name: System Voltage
   type: VERSION
   unit: V
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,9e,0c,2e,05"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 158
+    systemVoltage: 1.326
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,9e,0c,ef,04"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 158
+    systemVoltage: 1.263
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,9e,0c,32,05"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 158
+    systemVoltage: 1.330

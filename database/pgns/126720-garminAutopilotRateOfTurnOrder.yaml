@@ -63,3 +63,34 @@ fields:
   type: FLOAT_RAD_S
   rangeMin: -3.40282346638529e+38
   rangeMax: 3.40282346638529e+38
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,73,17,bf,e5,17,b8"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 115
+    rateOfTurnOrder: -0.0000
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,73,17,8d,89,c4,3c"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 115
+    rateOfTurnOrder: 0.0240
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,73,17,da,3a,63,3d"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 115
+    rateOfTurnOrder: 0.0555

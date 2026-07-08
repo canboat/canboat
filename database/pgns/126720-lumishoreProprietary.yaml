@@ -2,7 +2,7 @@ pgn: 126720
 id: lumishoreProprietary
 description: 'Lumishore: Proprietary'
 type: Fast
-variantOrder: 51
+variantOrder: 50
 missing:
 - Fields
 - FieldLengths

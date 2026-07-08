@@ -68,14 +68,12 @@ fields:
   name: Off Position Indicator
   type: LOOKUP
   bits: 1
-  lookup: YES_NO
-  allowLookupWidthMismatch: true
+  lookup: YES_NO_1BIT
 - id: virtualAtonFlag
   name: Virtual AtoN Flag
   type: LOOKUP
   bits: 1
-  lookup: YES_NO
-  allowLookupWidthMismatch: true
+  lookup: YES_NO_1BIT
 - id: assignedModeFlag
   name: Assigned Mode Flag
   type: LOOKUP
