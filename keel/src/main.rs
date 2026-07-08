@@ -27,6 +27,8 @@ use std::process::ExitCode;
 use emit_xml::FloatStyle;
 
 // Die silently on SIGPIPE (keel explain | head) instead of a Rust panic.
+// Unix only: Windows has no SIGPIPE and no libc `signal` to link against.
+#[cfg(unix)]
 unsafe extern "C" {
     fn signal(signum: i32, handler: usize) -> usize;
 }
@@ -328,6 +330,7 @@ fn run() -> Result<i32, String> {
 }
 
 fn main() -> ExitCode {
+    #[cfg(unix)]
     unsafe {
         signal(13, 0); // SIGPIPE, SIG_DFL
     }
