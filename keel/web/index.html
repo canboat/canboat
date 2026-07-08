@@ -127,11 +127,11 @@
   <section id="stepDefine" style="display:none">
     <h2><span class="step">2</span>Definition</h2>
     <div class="row">
-      <label>PGN <input id="m_pgn" size="8"></label>
-      <label>Id (frozen) <input id="m_id" size="26"></label>
-      <label>Description <input id="m_desc" size="34"></label>
-      <label>Type <select id="m_type"><option>Single</option><option>Fast</option><option>ISO</option></select></label>
-      <label>Priority <input id="m_prio" size="3"></label>
+      <label>PGN <input id="m_pgn" size="8" oninput="onMetaEdit()"></label>
+      <label>Id <input id="m_id" size="26" oninput="onMetaEdit()"></label>
+      <label>Description <input id="m_desc" size="34" oninput="onMetaEdit()"></label>
+      <label>Type <select id="m_type" onchange="onMetaEdit()"><option>Single</option><option>Fast</option><option>ISO</option></select></label>
+      <label>Priority <input id="m_prio" size="3" oninput="onMetaEdit()"></label>
     </div>
 
     <h2>Evidence grid</h2>
@@ -166,7 +166,7 @@
       <button onclick="adoptExpectations()">Adopt current decodes as expectations</button>
       <label><input type="checkbox" id="citeSamples" checked style="width:auto"> cite samples in notes</label>
     </div>
-    <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; scheduleRefresh()"></textarea>
+    <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; syncSavePath(); scheduleRefresh()"></textarea>
     <div class="row">
       <span class="hint" id="savePath"></span>
       <label class="hint" title="Validate through keel check but do not write any file — for trying things out">
@@ -1064,8 +1064,26 @@ function stripBlock(yaml, key) {
   return yaml.replace(new RegExp(`\\n${key}:\\n[\\s\\S]*?(?=\\n[A-Za-z][A-Za-z0-9]*:|$)`), "");
 }
 
+// Metadata field edited: in wizard mode the form drives the YAML (and the
+// save path); for an existing PGN the id/pgn are fixed to its file.
+function onMetaEdit() {
+  if (baseYaml !== null) return;
+  regenerateYaml();
+  scheduleRefresh();
+}
+
+// Keep the save target in step with the document's pgn+id, even when the
+// YAML was hand-edited (so renaming the id renames the file).
+function syncSavePath() {
+  if (baseYaml !== null) return;   // existing PGN keeps its own file
+  const y = $("yamlText").value;
+  const pgn = (y.match(/^pgn:\s*(\d+)/m) || [])[1];
+  const id = (y.match(/^id:\s*(\S+)/m) || [])[1];
+  if (pgn && id) $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+}
+
 function regenerateYaml() {
-  if (yamlDirty) return;
+  if (yamlDirty) { syncSavePath(); return; }
   if (baseYaml !== null) {
     // Existing PGN: replace the fields: block and regenerate repeating1/2
     // from the form; notes, samples and every other authored key survive.

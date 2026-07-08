@@ -586,6 +586,15 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         db.lookups.insert(candidate.name.clone(), candidate);
     } else {
         let candidate = yamlio::parse_pgn_str(body, &file)?;
+        // the filename must match the document's pgn + id, so editing the id
+        // renames the file instead of silently overwriting another variant
+        let expect = format!("database/pgns/{:06}-{}.yaml", candidate.pgn, candidate.id);
+        if file != expect {
+            return Err(format!(
+                "id '{}' (PGN {}) must be saved as {expect}, not {file} — set the Id to match, or this would overwrite another variant",
+                candidate.id, candidate.pgn
+            ));
+        }
         let cand_id = candidate.id.clone();
         db.pgns.retain(|p| p.id != cand_id);
         db.pgns.push(candidate);
