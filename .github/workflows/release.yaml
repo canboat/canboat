@@ -1,14 +1,15 @@
 name: Upload release assets
 
-# this flow will be run only when new tags are pushed that match our pattern
+# Runs on release tags (vX.Y.Z) and pre-release tags (vX.Y.Z-alpha.1, -beta, -rc).
 on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
-      - "v[0-9]+.[0-9]+.[0-9]+-*" # pre-releases: v8.0.0-alpha.1, -beta.2, -rc.1
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
 
 jobs:
-  build:
+  # Version gate + the generated database docs (needs xsltproc/libxml2).
+  docs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -50,20 +51,26 @@ jobs:
             docs/canboat.xml
             docs/canboat.xsd
 
-  # keel (the Rust database tool) ships as a prebuilt binary per platform so a
-  # checkout without a cargo toolchain can still generate/check. Asset names
-  # must match keel/keel's `keel-$(uname|lc)-$(uname -m)`.
-  build-keel:
+  # Native linux/macOS: the full C-tool archive plus the keel binary, one
+  # runner per platform. Asset names match keel/keel's expected
+  # keel-$(uname|lc)-$(uname -m) and the Makefile's rel/<platform>/ layout.
+  native:
     strategy:
       fail-fast: false
       matrix:
         include:
           - runner: ubuntu-latest
-            asset: keel-linux-x86_64
+            os: linux
+            arch: x86_64
+          - runner: ubuntu-24.04-arm
+            os: linux
+            arch: aarch64
           - runner: macos-latest
-            asset: keel-darwin-arm64
+            os: darwin
+            arch: arm64
           - runner: macos-13
-            asset: keel-darwin-x86_64
+            os: darwin
+            arch: x86_64
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
@@ -71,23 +78,84 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Build keel (release)
+      - name: Build C tools
+        run: make
+
+      - name: Package canboat archive
+        run: |
+          plat="${{ matrix.os }}-${{ matrix.arch }}"
+          tar czf "canboat-${plat}-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C "rel/${plat}" .
+
+      - name: Build keel
         run: |
           cargo build --release --manifest-path keel/Cargo.toml
-          cp keel/target/release/keel "${{ matrix.asset }}"
+          cp keel/target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
 
-      - name: Add release asset
+      - name: Add release assets
         uses: softprops/action-gh-release@v1
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
-          files: ${{ matrix.asset }}
+          files: |
+            canboat-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
+            keel-${{ matrix.os }}-${{ matrix.arch }}
 
-  build-windows:
+  # 32-bit ARM (e.g. Raspberry Pi): static musl cross-build of both the C tools
+  # and keel, mirroring the ci.yml build-armv7-musl setup.
+  armv7:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TARGET: armv7l-linux-musleabihf
+      RUST_TARGET: armv7-unknown-linux-musleabihf
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y make autoconf
+
+      - name: Setup musl cross compiler
+        run: |
+          mkdir "$HOME/musl" && cd "$HOME/musl"
+          wget "https://keversoft.com/downloads/${TARGET}-cross.tgz"
+          tar xf "${TARGET}-cross.tgz"
+
+      - name: Build C tools (musl)
+        run: |
+          export PATH="$PATH:$HOME/musl/${TARGET}-cross/bin"
+          export CC="$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc"
+          export BUILDDIR="rel/${TARGET}"
+          make
+
+      - name: Package canboat archive
+        run: |
+          tar czf "canboat-linux-armv7l-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C "rel/${TARGET}" .
+
+      - name: Build keel (static musl)
+        run: |
+          rustup target add "${RUST_TARGET}"
+          cc="$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc"
+          export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER="$cc"
+          export CC_armv7_unknown_linux_musleabihf="$cc"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${RUST_TARGET}"
+          cp "keel/target/${RUST_TARGET}/release/keel" keel-linux-armv7l
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-linux-armv7l-${{ github.ref_name }}.tar.gz
+            keel-linux-armv7l
+
+  windows:
     runs-on: windows-latest
+    permissions:
+      contents: write
     defaults:
         run:
           shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-
     steps:
       - name: checkout repo
         uses: actions/checkout@v3
@@ -104,8 +172,13 @@ jobs:
       - name: zip
         run: |
           cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
-          zip 
           zip "../canboat-windows-x86_64-${GITHUB_REF##*/}.zip" *.exe *.dll
+
+      - name: Build keel (MSVC)
+        shell: pwsh
+        run: |
+          cargo build --release --manifest-path keel/Cargo.toml
+          Copy-Item keel/target/release/keel.exe keel-windows-x86_64.exe
 
       - name: Add release assets
         uses: softprops/action-gh-release@v1
@@ -113,3 +186,4 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             rel/*.zip
+            keel-windows-x86_64.exe

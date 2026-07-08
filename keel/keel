@@ -4,7 +4,11 @@
 set -e
 
 KEEL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-BIN="$KEEL_DIR/target/release/keel"
+EXE=
+case "$(uname -s 2>/dev/null)" in
+    CYGWIN*|MINGW*|MSYS*) EXE=.exe ;;
+esac
+BIN="$KEEL_DIR/target/release/keel$EXE"
 
 stale() {
     [ ! -x "$BIN" ] && return 0
@@ -24,7 +28,8 @@ if stale; then
         # No toolchain, no binary: fetch a prebuilt release.
         OS=$(uname | tr '[:upper:]' '[:lower:]')
         ARCH=$(uname -m)
-        ASSET="keel-$OS-$ARCH"
+        case "$OS" in cygwin*|mingw*|msys*) OS=windows ;; esac
+        ASSET="keel-$OS-$ARCH$EXE"
         REPO="https://github.com/canboat/canboat"
         mkdir -p "$KEEL_DIR/target/release"
         get() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1"; else wget -qO- "$1"; fi; }
