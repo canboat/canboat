@@ -8,6 +8,10 @@
 use std::ffi::c_char;
 use std::ffi::c_int;
 
+// On MSVC, snprintf is inline-only in the UCRT headers - there is no importable
+// symbol, so a raw FFI reference fails to link (LNK2019). legacy_stdio_definitions
+// provides the real definition. Other targets (glibc, musl, mingw) export it.
+#[cfg_attr(target_env = "msvc", link(name = "legacy_stdio_definitions"))]
 unsafe extern "C" {
     fn snprintf(s: *mut c_char, n: usize, format: *const c_char, ...) -> c_int;
 }
