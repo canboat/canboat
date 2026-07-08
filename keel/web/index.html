@@ -237,16 +237,28 @@ async function api(path, body, method="POST") {
   return r.json();
 }
 
-async function init() {
-  MODEL = await api("/api/model", null, "GET");
-  const dl = (id, items) => {
-    const d = document.createElement("datalist");
-    d.id = id;
+// Rebuild the autocomplete datalists from the current MODEL. Re-callable:
+// updates the existing <datalist> in place so a lookup/fieldtype created
+// this session is immediately offered in field pickers.
+function rebuildDatalists() {
+  const set = (id, items) => {
+    let d = $(id);
+    if (!d) { d = document.createElement("datalist"); d.id = id; document.body.appendChild(d); }
+    d.innerHTML = "";
     items.forEach(v => { const o = document.createElement("option"); o.value = v; d.appendChild(o); });
-    document.body.appendChild(d);
   };
-  dl("dl_lookups", MODEL.lookups.filter(l => l.kind === "pair").map(l => l.name));
-  dl("dl_ft", MODEL.fieldtypes.map(f => f.name));
+  set("dl_lookups", MODEL.lookups.filter(l => l.kind === "pair").map(l => l.name));
+  set("dl_ft", MODEL.fieldtypes.map(f => f.name));
+}
+
+// Refresh MODEL and everything derived from it.
+async function refreshModel() {
+  MODEL = await api("/api/model", null, "GET");
+  rebuildDatalists();
+}
+
+async function init() {
+  await refreshModel();
   renderPgnList("");
   $("search").addEventListener("input", e => renderPgnList(e.target.value));
 }
@@ -820,7 +832,7 @@ async function saveLookup() {
   if (r.error) return flash(r.error, false);
   flash(`saved database/lookups/${lkName}.yaml`, true);
   closeLookup();
-  MODEL = await api("/api/model", null, "GET");
+  await refreshModel();
   scheduleRefresh();   // live decode picks up renamed values immediately
 }
 
@@ -1031,7 +1043,7 @@ function closeDialog() { $("dlgOverlay").style.display = "none"; }
 async function undoSave() {
   const r = await api("/api/undo", "");
   if (r.error) return flash(r.error, false);
-  MODEL = await api("/api/model", null, "GET");
+  await refreshModel();
   renderPgnList($("search").value);
   dialog("Reverted", `${r.undone}\n\n` + (r.deleted
     ? "The file this edit created was removed."
@@ -1074,7 +1086,7 @@ async function save() {
     ]);
     return;
   }
-  MODEL = await api("/api/model", null, "GET");
+  await refreshModel();
   renderPgnList($("search").value);
   dialog("Saved", `${r.saved}\n\nkeel check passed. The generated artifacts\n` +
     `(canboat.xml, analyzer tables) are now out of date until regenerated.`, [
