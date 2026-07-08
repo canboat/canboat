@@ -342,7 +342,7 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Arbitrary address capable</td><td>Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices. Could be 0 for J1939 device claims</td><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><p>
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf">https://web.archive.org/web/20150910070107/http://www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf</a></p><h2 id="pgn-61184">0xEF00: Manufacturer Proprietary single-frame addressed</h2><p>Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-61184">0xEF00:
             PGN 61184
@@ -3268,7 +3268,7 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Neutral</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>6 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>6 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
@@ -6805,22 +6805,22 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Temporary Silence Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>11</td><td>Acknowledge Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>11</td><td>Acknowledge Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>12</td><td>Escalation Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>12</td><td>Escalation Status</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>13</td><td>Temporary Silence Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>13</td><td>Temporary Silence Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>14</td><td>Acknowledge Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>14</td><td>Acknowledge Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>15</td><td>Escalation Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>15</td><td>Escalation Support</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>2 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>2 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Acknowledge Source Network ID NAME</td><td/><td><div class="xs">0 .. 1.84467440737096e+19</div></td><td>64 bits
                   <a href="#ft-ISO_NAME">ISO_NAME</a></td><td/></tr><tr><td>18</td><td>Trigger Condition</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
@@ -9085,7 +9085,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-TRACKING">TRACKING</a></td><td/></tr><tr><td>4</td><td>Reported Target</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>5</td><td>Target Acquisition</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>5</td><td>Target Acquisition</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-TARGET_ACQUISITION">TARGET_ACQUISITION</a></td><td/></tr><tr><td>6</td><td>Bearing Reference</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
@@ -9758,16 +9758,16 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-AIS_TYPE">AIS_TYPE</a></td><td/></tr><tr><td>17</td><td>Integrated Display</td><td>Whether the unit can show messages 12 and 14</td><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>18</td><td>DSC</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>18</td><td>DSC</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>19</td><td>Band</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>19</td><td>Band</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_BAND">AIS_BAND</a></td><td/></tr><tr><td>20</td><td>Can handle Msg 22</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>21</td><td>AIS mode</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>21</td><td>AIS mode</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_MODE">AIS_MODE</a></td><td/></tr><tr><td>22</td><td>AIS communication state</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
@@ -9918,10 +9918,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-ATON_TYPE">ATON_TYPE</a></td><td/></tr><tr><td>14</td><td>Off Position Indicator</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>15</td><td>Virtual AtoN Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>15</td><td>Virtual AtoN Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>16</td><td>Assigned Mode Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>16</td><td>Assigned Mode Flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
                       <a href="#lookup-AIS_ASSIGNED_MODE">AIS_ASSIGNED_MODE</a></td><td/></tr><tr><td>17</td><td>Spare</td><td/><td/><td>1 bits
@@ -10981,7 +10981,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Number of Bits in Binary Data Field</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -11238,7 +11238,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Retransmit flag</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>1 bits
+                      <a href="#lookup-YES_NO_1BIT">YES_NO_1BIT</a></td><td/></tr><tr><td>10</td><td>Spare</td><td/><td/><td>1 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Safety Related Text</td><td/><td> </td><td>
                     Variable length
                   <a href="#ft-STRING_LAU">STRING_LAU</a></td><td/></tr></table><p>
@@ -22591,6 +22591,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Paddle wheel</td></tr><tr><td>1</td><td>Pitot tube</td></tr><tr><td>2</td><td>Doppler</td></tr><tr><td>3</td><td>Correlation (ultra sound)</td></tr><tr><td>4</td><td>Electro Magnetic</td></tr></table><h3 id="lookup-YES_NO">YES_NO
         (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No</td></tr><tr><td>1</td><td>Yes</td></tr></table><h3 id="lookup-YES_NO_1BIT">YES_NO_1BIT
+        (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No</td></tr><tr><td>1</td><td>Yes</td></tr></table><h3 id="lookup-OK_WARNING">OK_WARNING
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>OK</td></tr><tr><td>1</td><td>Warning</td></tr></table><h3 id="lookup-OFF_ON">OFF_ON

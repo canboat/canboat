@@ -1080,6 +1080,10 @@ limitations under the License.
       <EnumPair Value='0' Name='No' />
       <EnumPair Value='1' Name='Yes' />
     </LookupEnumeration>
+    <LookupEnumeration Name='YES_NO_1BIT' MaxValue='1'>
+      <EnumPair Value='0' Name='No' />
+      <EnumPair Value='1' Name='Yes' />
+    </LookupEnumeration>
     <LookupEnumeration Name='OK_WARNING' MaxValue='3'>
       <EnumPair Value='0' Name='OK' />
       <EnumPair Value='1' Name='Warning' />
@@ -5915,7 +5919,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -15839,7 +15843,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -27773,7 +27777,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>11</Order>
@@ -27787,7 +27791,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
@@ -27801,7 +27805,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>13</Order>
@@ -27815,7 +27819,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>14</Order>
@@ -27829,7 +27833,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>15</Order>
@@ -27843,7 +27847,7 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>16</Order>
@@ -36698,7 +36702,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>5</Order>
@@ -39515,7 +39519,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>18</Order>
@@ -39529,7 +39533,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>19</Order>
@@ -39557,7 +39561,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>21</Order>
@@ -40242,7 +40246,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>15</Order>
@@ -40256,7 +40260,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>16</Order>
@@ -44527,7 +44531,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>10</Order>
@@ -45445,7 +45449,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <RangeMin>0</RangeMin>
           <RangeMax>1</RangeMax>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO</LookupEnumeration>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
         </Field>
         <Field>
           <Order>10</Order>

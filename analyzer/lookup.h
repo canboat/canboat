@@ -893,6 +893,13 @@ LOOKUP(YES_NO, 0, "No")
 LOOKUP(YES_NO, 1, "Yes") /* Note that Error and Unknown are automatically decoded */
 LOOKUP_END
 
+/* A single-bit boolean. Unlike YES_NO (2 bits, where the two high values auto-decode as Error and
+ * Unknown), a 1-bit field can only ever carry No or Yes, so it gets its own lookup type. */
+LOOKUP_TYPE(YES_NO_1BIT, BITS(1))
+LOOKUP(YES_NO_1BIT, 0, "No")
+LOOKUP(YES_NO_1BIT, 1, "Yes")
+LOOKUP_END
+
 LOOKUP_TYPE(OK_WARNING, BITS(2))
 LOOKUP(OK_WARNING, 0, "OK")
 LOOKUP(OK_WARNING, 1, "Warning")
