@@ -16,6 +16,7 @@ mod emit_xml;
 mod generate;
 mod harvest;
 mod model;
+mod rules;
 mod samples;
 mod yamlio;
 
@@ -118,7 +119,7 @@ fn parse_args() -> Result<Args, String> {
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--per-pgn N] [--root DIR] [files...]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--per-pgn N] [--root DIR] [files...]".into());
     }
     Ok(args)
 }
@@ -145,6 +146,13 @@ fn write_diff(original: &str, emitted: &str, path: &str) -> std::io::Result<()> 
 
 fn run() -> Result<i32, String> {
     let args = parse_args()?;
+    // `rules` is pure documentation — needs neither the repo nor the database,
+    // so it works anywhere (e.g. regenerating docs).
+    if args.command == "rules" {
+        let md = args.rest.iter().any(|a| a == "md" || a == "markdown");
+        print!("{}", if md { rules::render_md() } else { rules::render_text() });
+        return Ok(0);
+    }
     let root = find_repo_root(&args.root)?;
     let (version, schema) = read_versions(&root)?;
     let db_dir = root.join("database");
