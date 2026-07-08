@@ -1,0 +1,16 @@
+name: GARMIN_AP_KEY
+kind: fieldtype
+bits: 8
+values:
+- value: 10
+  name: MyValue16
+  type: NUMBER
+  bits: 16
+- value: 17
+  name: MyValue17
+  type: UNSIGNED_FIXED_POINT_NUMBER
+  bits: 8
+- value: 25
+  name: MyValue25
+  type: UNSIGNED_FIXED_POINT_NUMBER
+  bits: 8

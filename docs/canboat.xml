@@ -3606,35 +3606,6 @@ limitations under the License.
       <EnumPair Value='3' Name='Night red/black' />
       <EnumPair Value='4' Name='Night green/black' />
     </LookupEnumeration>
-    <LookupEnumeration Name='GARMIN_AUTOPILOT_MODE_STATE' MaxValue='255'>
-      <EnumPair Value='2' Name='Standby' />
-      <EnumPair Value='3' Name='Shadow Drive' />
-      <EnumPair Value='5' Name='Engaged' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='GARMIN_MESSAGE_ID' MaxValue='65535'>
-      <EnumPair Value='1900' Name='AHRS ATT transport' />
-      <EnumPair Value='5904' Name='Autopilot transport' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='GARMIN_AUTOPILOT_FIELD' MaxValue='255'>
-      <EnumPair Value='3' Name='Heartbeat' />
-      <EnumPair Value='10' Name='Mode State' />
-      <EnumPair Value='11' Name='Heading to Steer' />
-      <EnumPair Value='62' Name='Response Setting' />
-      <EnumPair Value='114' Name='Rate of Turn' />
-      <EnumPair Value='115' Name='Rate of Turn Order' />
-      <EnumPair Value='116' Name='Turn Angle Order' />
-      <EnumPair Value='158' Name='System Voltage' />
-      <EnumPair Value='161' Name='Turn Angle Measured' />
-      <EnumPair Value='239' Name='Engine RPM B' />
-      <EnumPair Value='240' Name='Engine RPM A' />
-      <EnumPair Value='246' Name='Speed' />
-    </LookupEnumeration>
-    <LookupEnumeration Name='GARMIN_ATT_MESSAGE_ID' MaxValue='65535'>
-      <EnumPair Value='40' Name='Calibration Matrix Present' />
-      <EnumPair Value='52' Name='Set North State' />
-      <EnumPair Value='65' Name='Device Flags' />
-      <EnumPair Value='67' Name='COG Source Valid Flag' />
-    </LookupEnumeration>
     <LookupEnumeration Name='GARMIN_BACKLIGHT_LEVEL' MaxValue='255'>
       <EnumPair Value='0' Name='0%' />
       <EnumPair Value='1' Name='5%' />
@@ -4480,13 +4451,11 @@ limitations under the License.
       <EnumFieldType Value='59' Name='User 4' FieldType='NUMBER' Signed='true'
  Resolution='0.01' Bits='32'/>
       <EnumFieldType Value='60' Name='Roll Rate' FieldType='NUMBER' Signed='true'
- Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
+ Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='64' Name='Forestay' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='32'/>
       <EnumFieldType Value='65' Name='Water Speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
-      <EnumFieldType Value='68' Name='Yaw Rate' FieldType='NUMBER' Signed='true'
- Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
       <EnumFieldType Value='73' Name='Current Set' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='77' Name='Wind Speed Apparent' FieldType='NUMBER' Signed='false'
@@ -4549,8 +4518,8 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='157' Name='Wind Angle to Mast' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='158' Name='Pitch Rate' FieldType='NUMBER' Signed='true'
- Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
+      <EnumFieldType Value='158' Name='Pitch Angle' FieldType='NUMBER' Signed='true'
+ Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='163' Name='Daggerboard Position' FieldType='NUMBER' Signed='false'
  Bits='16'/>
       <EnumFieldType Value='164' Name='Boom Position' FieldType='NUMBER' Signed='false'
@@ -5197,6 +5166,13 @@ limitations under the License.
  Bits='16'/>
       <EnumFieldType Value='529' Name='Engine 1 Exhaust Status' FieldType='NUMBER' Signed='false'
  Bits='16'/>
+    </LookupFieldTypeEnumeration>
+    <LookupFieldTypeEnumeration Name='GARMIN_AP_KEY' MaxValue='255'>
+      <EnumFieldType Value='10' Name='MyValue16' FieldType='NUMBER' Bits='16'/>
+      <EnumFieldType Value='17' Name='MyValue17' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='25' Name='MyValue25' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
     </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
   <PGNs>
@@ -20244,6 +20220,168 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
+      <Id>garminAutopilotKeyValue</Id>
+      <Description>Garmin Autopilot Key Value Data</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <MinLength>8</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>8</RepeatingFieldSet1CountField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Garmin</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>229</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>subProtocolId</Id>
+          <Name>Sub-protocol ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>5904</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>wrapperByte1</Id>
+          <Name>Wrapper Byte 1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wrapperByte2</Id>
+          <Name>Wrapper Byte 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>fieldGroup</Id>
+          <Name>Field Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>17</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>3</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>key</Id>
+          <Name>Key</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
+          <LookupFieldTypeEnumeration>GARMIN_AP_KEY</LookupFieldTypeEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
       <Id>0x1ef00ManufacturerProprietaryFastPacketAddressed</Id>
       <Description>0x1EF00: Manufacturer Proprietary fast-packet addressed</Description>
       <Explanation>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
@@ -20374,7 +20512,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>AHRS ATT transport</Description>
+          <Description>Garmin ATT transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20383,8 +20521,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20421,7 +20558,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>attMessageId</Id>
           <Name>ATT Message ID</Name>
-          <Description>COG Source Valid Flag</Description>
+          <Description>ID</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20430,8 +20567,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_ATT_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20513,7 +20649,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>AHRS ATT transport</Description>
+          <Description>Garmin ATT transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20522,8 +20658,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20560,7 +20695,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>attMessageId</Id>
           <Name>ATT Message ID</Name>
-          <Description>Device Flags</Description>
+          <Description>ID</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20569,8 +20704,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_ATT_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20652,7 +20786,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>AHRS ATT transport</Description>
+          <Description>Garmin ATT transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20661,8 +20795,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20699,7 +20832,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>attMessageId</Id>
           <Name>ATT Message ID</Name>
-          <Description>Calibration Matrix Present</Description>
+          <Description>ID</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20708,8 +20841,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_ATT_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20791,7 +20923,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>AHRS ATT transport</Description>
+          <Description>Garmin ATT transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20800,8 +20932,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20838,7 +20969,7 @@ limitations under the License.
           <Order>7</Order>
           <Id>attMessageId</Id>
           <Name>ATT Message ID</Name>
-          <Description>Set North State</Description>
+          <Description>ID</Description>
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20847,8 +20978,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_ATT_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -20931,7 +21061,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Autopilot heading to steer</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20940,15 +21070,14 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
+          <LookupEnumeration>GARMIN_SUB_PROTOCOL</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20963,7 +21092,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20978,7 +21106,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20993,7 +21120,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>field</Id>
           <Name>Field</Name>
-          <Description>Heading to Steer</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -21002,8 +21128,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21020,7 +21145,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>headingToSteer</Id>
           <Name>Heading to Steer</Name>
-          <Description>Values at or above 1000 rad signal no active order</Description>
           <BitLength>32</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -21096,7 +21220,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21105,8 +21229,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21167,8 +21290,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21260,7 +21382,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21269,8 +21391,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21331,8 +21452,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21424,7 +21544,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21433,8 +21553,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21495,8 +21614,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21588,7 +21706,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21597,8 +21715,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21659,8 +21776,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21681,15 +21797,14 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>V</Unit>
-          <Resolution>0.01</Resolution>
+          <Resolution>0.001</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>655.32</RangeMax>
+          <RangeMax>65.532</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -21755,7 +21870,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21764,8 +21879,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21826,8 +21940,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21918,7 +22031,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -21927,8 +22040,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -21989,8 +22101,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22081,7 +22192,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22090,8 +22201,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22152,8 +22262,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22247,7 +22356,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22256,8 +22365,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22318,8 +22426,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22413,7 +22520,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22422,8 +22529,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22484,8 +22590,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22578,7 +22683,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22587,8 +22692,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22649,8 +22753,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22667,6 +22770,7 @@ limitations under the License.
           <Order>10</Order>
           <Id>modeState</Id>
           <Name>Mode State</Name>
+          <Description>Engage/standby state command (observed 2 = Standby, 5 = Engaged)</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
@@ -22677,8 +22781,7 @@ limitations under the License.
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_MODE_STATE</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22744,7 +22847,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22753,8 +22856,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22815,8 +22917,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>252</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_AUTOPILOT_FIELD</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
@@ -22894,7 +22995,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Autopilot transport</Description>
+          <Description>Garmin autopilot transport</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -22903,8 +23004,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>GARMIN_MESSAGE_ID</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
