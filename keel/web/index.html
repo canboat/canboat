@@ -205,6 +205,9 @@
         <label>bits <input id="lk_bits" size="4"></label>
         <span class="hint" id="lkHint"></span>
       </div>
+      <p class="hint" style="margin:2px 0">Values are the decimal number on the wire
+        (a <code>0x…</code> prefix is also accepted). For a <b>bit</b> enumeration the
+        value is the bit position (0, 1, 2, …), not a mask.</p>
       <table id="lkValues"><thead id="lkHead"></thead><tbody></tbody></table>
       <button id="lkAddBtn" onclick="lkAddRow({})">＋ value</button>
     </div>
@@ -253,7 +256,7 @@ function rebuildDatalists() {
     d.innerHTML = "";
     items.forEach(v => { const o = document.createElement("option"); o.value = v; d.appendChild(o); });
   };
-  set("dl_lookups", MODEL.lookups.filter(l => l.kind === "pair").map(l => l.name));
+  set("dl_lookups", MODEL.lookups.map(l => l.name));   // any kind referencable by a field
   set("dl_ft", MODEL.fieldtypes.map(f => f.name));
 }
 
@@ -667,13 +670,18 @@ function renderFields() {
       inp.value = f.lookup ?? "";
       inp.size = 14;
       inp.setAttribute("list", "dl_lookups");
-      inp.oninput = () => { f.lookup = inp.value; regenerateYaml(); scheduleRefresh(); };
-      td.appendChild(inp);
       const view = document.createElement("button");
       view.className = "lkbtn";
-      view.textContent = "🔍";
-      view.title = "view / edit this enumeration";
+      const knownLookup = () => inp.value && MODEL.lookups.some(l => (l.name || l) === inp.value);
+      const syncBtn = () => {
+        view.textContent = knownLookup() ? "🔍" : "＋";
+        view.title = knownLookup() ? "view / edit this enumeration" : "create this enumeration";
+        view.style.visibility = inp.value ? "visible" : "hidden";
+      };
+      inp.oninput = () => { f.lookup = inp.value; syncBtn(); regenerateYaml(); scheduleRefresh(); };
       view.onclick = () => { if (inp.value) openLookup(inp.value, f.bits); };
+      syncBtn();
+      td.appendChild(inp);
       td.appendChild(view);
       tr.appendChild(td);
     }
@@ -979,6 +987,9 @@ async function saveLookup() {
   flash(`saved database/lookups/${lkName}.yaml`, true);
   closeLookup();
   await refreshModel();
+  // fields now know this enumeration: refresh their button state and
+  // re-emit references with the correct kind (lookup/lookupBits/…)
+  if (fieldsState.length) { renderFields(); regenerateYaml(); }
   scheduleRefresh();   // live decode picks up renamed values immediately
 }
 
@@ -989,7 +1000,18 @@ function fieldsYaml() {
     const ft = ftByName(f.type) || {};
     y += `- id: ${yq(f.id)}\n  name: ${yq(f.name)}\n  type: ${f.type}\n`;
     if (f.bits && Number(f.bits) !== ft.bits) y += `  bits: ${Number(f.bits)}\n`;
-    if (f.lookup) y += `  lookup: ${f.lookup}\n`;
+    if (f.lookup) {
+      // reference key must match the enumeration's kind (R08): a bit enum
+      // is lookupBits, a fieldtype enum lookupFieldtype, a triplet
+      // lookupIndirect, otherwise a plain pair lookup.
+      const lk = MODEL.lookups.find(l => (l.name || l) === f.lookup);
+      const key = !lk ? "lookup"
+        : lk.kind === "bit" ? "lookupBits"
+        : lk.kind === "fieldtype" ? "lookupFieldtype"
+        : lk.kind === "triplet" ? "lookupIndirect"
+        : "lookup";
+      y += `  ${key}: ${f.lookup}\n`;
+    }
     if (f.match !== undefined && f.match !== "") y += `  match: ${Number(f.match)}\n`;
     if (f.unit && f.unit !== ft.unit) y += `  unit: ${yq(f.unit)}\n`;
     if (f.resolution && Number(f.resolution) !== ft.resolution) y += `  resolution: ${Number(f.resolution)}\n`;
