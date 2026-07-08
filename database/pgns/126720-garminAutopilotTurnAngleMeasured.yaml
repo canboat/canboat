@@ -64,3 +64,34 @@ fields:
   resolution: 9.58738e-05
   unit: rad
   description: Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,a1,0c,0e,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 161
+    turnAngleMeasured: 0.00134
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,a1,0c,f2,ff"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 161
+    turnAngleMeasured: 6.28184
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,a1,0c,15,fd"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 161
+    turnAngleMeasured: 6.21157

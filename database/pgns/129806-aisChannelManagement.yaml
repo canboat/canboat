@@ -86,7 +86,6 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: BROADCAST_INDICATOR
-  allowLookupWidthMismatch: true
 - id: channelABandwidth
   name: Channel A Bandwidth
   type: LOOKUP

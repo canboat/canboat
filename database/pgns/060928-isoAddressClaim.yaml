@@ -70,8 +70,7 @@ fields:
   bits: 1
   description: Field indicates whether the device is capable to claim arbitrary source address. Value is 1 for NMEA200 devices.
     Could be 0 for J1939 device claims
-  lookup: YES_NO
-  allowLookupWidthMismatch: true
+  lookup: YES_NO_1BIT
   note: |-
     "Arbitrary address capable" is explained at
     https://embeddedflakes.com/network-management-in-sae-j1939/#Arbitrary_Address_Capable

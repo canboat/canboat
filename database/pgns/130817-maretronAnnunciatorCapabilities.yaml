@@ -2,7 +2,7 @@ pgn: 130817
 id: maretronAnnunciatorCapabilities
 description: 'Maretron: Annunciator Capabilities'
 type: Fast
-variantOrder: 5
+variantOrder: 4
 priority: 6
 missing:
 - Fields

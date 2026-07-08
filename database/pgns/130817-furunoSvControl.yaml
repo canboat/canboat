@@ -2,7 +2,7 @@ pgn: 130817
 id: furunoSvControl
 description: 'Furuno: SV control'
 type: Fast
-variantOrder: 4
+variantOrder: 3
 priority: 7
 missing:
 - Fields

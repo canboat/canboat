@@ -67,3 +67,34 @@ fields:
 notes: |-
   Turn Angle Order/Measured are a full-circle u16 angle pair (raw * 2*pi/65536 rad, wrapping 0..2*pi),
   the same order/measured relationship as the Rate of Turn pair above.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,01,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 0.00010
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,ee,ff"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 6.28146
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,08,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 0.00077

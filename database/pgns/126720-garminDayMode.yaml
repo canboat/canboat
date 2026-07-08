@@ -2,7 +2,7 @@ pgn: 126720
 id: garminDayMode
 description: 'Garmin: Day Mode'
 type: Fast
-variantOrder: 52
+variantOrder: 51
 missing:
 - Fields
 - FieldLengths

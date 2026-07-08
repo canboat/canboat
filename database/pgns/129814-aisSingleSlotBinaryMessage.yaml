@@ -34,7 +34,6 @@ fields:
   type: LOOKUP
   bits: 1
   lookup: BROADCAST_INDICATOR
-  allowLookupWidthMismatch: true
 - id: binaryDataFlag
   name: Binary data flag
   type: UNSIGNED_INTEGER

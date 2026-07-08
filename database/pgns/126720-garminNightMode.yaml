@@ -2,7 +2,7 @@ pgn: 126720
 id: garminNightMode
 description: 'Garmin: Night Mode'
 type: Fast
-variantOrder: 53
+variantOrder: 52
 missing:
 - Fields
 - FieldLengths

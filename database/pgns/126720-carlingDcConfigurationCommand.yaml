@@ -2,7 +2,7 @@ pgn: 126720
 id: carlingDcConfigurationCommand
 description: 'Carling: DC Configuration Command'
 type: Fast
-variantOrder: 50
+variantOrder: 49
 missing:
 - Fields
 - FieldLengths

@@ -2,7 +2,7 @@ pgn: 130817
 id: lowranceProductInformation
 description: 'Lowrance: Product Information'
 type: Fast
-variantOrder: 3
+variantOrder: 2
 priority: 7
 interval: irregular
 missing:

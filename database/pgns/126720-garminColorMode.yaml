@@ -2,7 +2,7 @@ pgn: 126720
 id: garminColorMode
 description: 'Garmin: Color mode'
 type: Fast
-variantOrder: 54
+variantOrder: 53
 missing:
 - Fields
 - FieldLengths

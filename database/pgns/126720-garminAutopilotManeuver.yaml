@@ -59,3 +59,24 @@ fields:
 - id: value
   name: Value
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,02,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: 2
+    value: ~
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,03,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: 3
+    value: ~

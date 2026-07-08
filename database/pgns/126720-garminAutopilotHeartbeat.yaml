@@ -59,3 +59,14 @@ fields:
   type: BINARY
   bits: 32
   description: Fixed helm heartbeat payload (observed 01 00 c8 00)
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,1,0,12,e5,98,10,17,04,04,15,03,04,00,c8,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 21
+    field: 3
+    heartbeatData: "0x0400c800"
