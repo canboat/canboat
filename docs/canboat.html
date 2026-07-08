@@ -4641,7 +4641,66 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-PGN_LIST_FUNCTION">PGN_LIST_FUNCTION</a></td><td>true</td></tr><tr class="repeatmarker"><td class="repeating">2<div>Set 1</div></td><td>PGN</td><td/><td><div class="xs">0 .. 262143</div></td><td>24 bits
-                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
+                  <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Garmin Autopilot Key Value Data</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>5904</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr><tr><td>Field Group</td><td>17</td></tr><tr><td>Count</td><td>3</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            
+              at least 8
+            bytes long and contains 10 fields.
+
+            
+        The 2 fields starting at field 
+        9 
+        (with name "Key")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        8 
+        (with name "Count".)
+      
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>229:
+                  Garmin</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
+                  </td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Wrapper Byte 2</td><td>4:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Field Group</td><td>17:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Count</td><td>3:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">9<div>Set 1</div></td><td>Key</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-GARMIN_AP_KEY">GARMIN_AP_KEY</a>
+                      that defines the next variable field's type.
+                    </td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Value</td><td/><td> </td><td>
+                    Variable length
+                  <a href="#ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE</a></td><td/></tr></table><h2 id="pgn-126720">0x1EF00: Manufacturer Proprietary fast-packet addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin AHRS ATT: COG Source Valid Flag</h3><p>
               This PGN description applies when the following field(s) match:
@@ -4664,10 +4723,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4676,10 +4735,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>67:
-                  COG Source Valid Flag</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>COG Source Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>COG Source Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4705,10 +4764,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4717,10 +4776,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>65:
-                  Device Flags</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Device Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Device Flags</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4746,10 +4805,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4758,10 +4817,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>40:
-                  Calibration Matrix Present</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Calibration Matrix Present</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Calibration Matrix Present</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4787,10 +4846,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>1900:
-                  AHRS ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin ATT transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>2:
                   1</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4799,10 +4858,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>ATT Message ID</td><td>52:
-                  Set North State</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  ID</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID</a></td><td>true</td></tr><tr><td>8</td><td>Set North State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>8</td><td>Set North State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4830,27 +4889,27 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Autopilot heading to steer</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
-                  4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-GARMIN_SUB_PROTOCOL">GARMIN_SUB_PROTOCOL</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Wrapper Byte 2</td><td>4:
-                  4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Field Group</td><td>0:
-                  0</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>11:
-                  Heading to Steer</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Heading to Steer</td><td>Values at or above 1000 rad signal no active order</td><td><a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>32 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Heading to Steer</td><td/><td><a href="#pq-ANGLE">rad</a><div class="xs">-3.1415926 .. 3.1415926</div></td><td>32 bits
                   
                         signed
                       <a href="#ft-FLOAT">FLOAT</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -4878,10 +4937,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4896,8 +4955,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>114:
                   Rate of Turn</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Rate of Turn</td><td/><td><a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -4926,10 +4985,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4944,8 +5003,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>115:
                   Rate of Turn Order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Rate of Turn Order</td><td/><td><a href="#pq-ANGULAR_VELOCITY">rad/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -4974,10 +5033,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -4992,8 +5051,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>246:
                   Speed</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Speed</td><td/><td><a href="#pq-SPEED">m/s</a><div class="xs">-3.40282346638529e+38 .. 3.40282346638529e+38</div></td><td>32 bits
                   
                         signed
@@ -5022,10 +5081,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5040,9 +5099,9 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>158:
                   System Voltage</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>System Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>System Voltage</td><td/><td>0.001 V<div class="xs">0 .. 65.532</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -5070,10 +5129,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5088,8 +5147,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>116:
                   Turn Angle Order</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Turn Angle Order</td><td>Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)</td><td>9.58738e-05 rad</td><td>16 bits
                   
                         unsigned
@@ -5118,10 +5177,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5136,8 +5195,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>161:
                   Turn Angle Measured</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Turn Angle Measured</td><td>Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)</td><td>9.58738e-05 rad</td><td>16 bits
                   
                         unsigned
@@ -5166,10 +5225,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5184,8 +5243,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>240:
                   Engine RPM A</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Engine Speed</td><td/><td>rpm<div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -5214,10 +5273,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5232,8 +5291,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>239:
                   Engine RPM B</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Engine Speed</td><td/><td>rpm<div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -5262,10 +5321,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5280,8 +5339,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>62:
                   Response Setting</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Response Setting</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
                   
                         signed
@@ -5310,10 +5369,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5328,12 +5387,12 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>10:
                   Mode State</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td>Engage/standby state command (observed 2 = Standby, 5 = Engaged)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin Autopilot: Heartbeat</h3><p>
               This PGN description applies when the following field(s) match:
@@ -5358,10 +5417,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -5376,8 +5435,8 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Field</td><td>3:
                   Heartbeat</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Heartbeat Data</td><td>Fixed helm heartbeat payload (observed 01 00 c8 00)</td><td/><td>32 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>9</td><td>Heartbeat Data</td><td>Fixed helm heartbeat payload (observed 01 00 c8 00)</td><td/><td>32 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin Autopilot: Maneuver</h3><p>
@@ -5403,10 +5462,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Sub-protocol ID</td><td>5904:
-                  Autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  Garmin autopilot transport</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
-                      lookup
-                      <a href="#lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>Wrapper Byte 1</td><td>4:
                   4</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -23033,15 +23092,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day</td></tr><tr><td>1</td><td>Night</td></tr><tr><td>13</td><td>Color</td></tr></table><h3 id="lookup-GARMIN_COLOR">GARMIN_COLOR
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day full color</td></tr><tr><td>1</td><td>Day high contrast</td></tr><tr><td>2</td><td>Night full color</td></tr><tr><td>3</td><td>Night red/black</td></tr><tr><td>4</td><td>Night green/black</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Standby</td></tr><tr><td>3</td><td>Shadow Drive</td></tr><tr><td>5</td><td>Engaged</td></tr></table><h3 id="lookup-GARMIN_MESSAGE_ID">GARMIN_MESSAGE_ID
-        (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1900</td><td>AHRS ATT transport</td></tr><tr><td>5904</td><td>Autopilot transport</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD
-        (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>Heartbeat</td></tr><tr><td>10</td><td>Mode State</td></tr><tr><td>11</td><td>Heading to Steer</td></tr><tr><td>62</td><td>Response Setting</td></tr><tr><td>114</td><td>Rate of Turn</td></tr><tr><td>115</td><td>Rate of Turn Order</td></tr><tr><td>116</td><td>Turn Angle Order</td></tr><tr><td>158</td><td>System Voltage</td></tr><tr><td>161</td><td>Turn Angle Measured</td></tr><tr><td>239</td><td>Engine RPM B</td></tr><tr><td>240</td><td>Engine RPM A</td></tr><tr><td>246</td><td>Speed</td></tr></table><h3 id="lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID
-        (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>40</td><td>Calibration Matrix Present</td></tr><tr><td>52</td><td>Set North State</td></tr><tr><td>65</td><td>Device Flags</td></tr><tr><td>67</td><td>COG Source Valid Flag</td></tr></table><h3 id="lookup-GARMIN_BACKLIGHT_LEVEL">GARMIN_BACKLIGHT_LEVEL
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Day full color</td></tr><tr><td>1</td><td>Day high contrast</td></tr><tr><td>2</td><td>Night full color</td></tr><tr><td>3</td><td>Night red/black</td></tr><tr><td>4</td><td>Night green/black</td></tr></table><h3 id="lookup-GARMIN_BACKLIGHT_LEVEL">GARMIN_BACKLIGHT_LEVEL
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>0%</td></tr><tr><td>1</td><td>5%</td></tr><tr><td>2</td><td>10%</td></tr><tr><td>3</td><td>15%</td></tr><tr><td>4</td><td>20%</td></tr><tr><td>5</td><td>25%</td></tr><tr><td>6</td><td>30%</td></tr><tr><td>7</td><td>35%</td></tr><tr><td>8</td><td>40%</td></tr><tr><td>9</td><td>45%</td></tr><tr><td>10</td><td>50%</td></tr><tr><td>11</td><td>55%</td></tr><tr><td>12</td><td>60%</td></tr><tr><td>13</td><td>65%</td></tr><tr><td>14</td><td>70%</td></tr><tr><td>15</td><td>75%</td></tr><tr><td>16</td><td>80%</td></tr><tr><td>17</td><td>85%</td></tr><tr><td>18</td><td>90%</td></tr><tr><td>19</td><td>95%</td></tr><tr><td>20</td><td>100%</td></tr></table><h3 id="lookup-SEATALK_PILOT_MODE_16">SEATALK_PILOT_MODE_16
         (0 - 65535)
@@ -23107,7 +23158,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>120</td></tr><tr><td>1</td><td>121</td></tr><tr><td>2</td><td>122</td></tr><tr><td>3</td><td>123</td></tr><tr><td>4</td><td>124</td></tr><tr><td>5</td><td>125</td></tr><tr><td>6</td><td>126</td></tr><tr><td>7</td><td>127</td></tr><tr><td>8</td><td>128</td></tr><tr><td>9</td><td>129</td></tr><tr><td>10</td><td>130</td></tr><tr><td>11</td><td>131</td></tr><tr><td>12</td><td>132</td></tr><tr><td>13</td><td>133</td></tr><tr><td>14</td><td>134</td></tr><tr><td>15</td><td>135</td></tr><tr><td>16</td><td>136</td></tr><tr><td>17</td><td>137</td></tr><tr><td>18</td><td>138</td></tr></table><h3 id="lookup-MERCURY_COMMAND_OPCODE">MERCURY_COMMAND_OPCODE
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>7</td><td>Active Trim Status</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Horn Control</td></tr><tr><td>1</td><td>Maintenance Reset Command</td></tr><tr><td>2</td><td>Maintenance Reset Response</td></tr><tr><td>4</td><td>Cruise Control</td></tr><tr><td>5</td><td>Global Brightness</td></tr><tr><td>6</td><td>Active Trim Command</td></tr><tr><td>7</td><td>Active Trim Status</td></tr><tr><td>8</td><td>Autopilot Command</td></tr><tr><td>9</td><td>Active Exhaust</td></tr><tr><td>12</td><td>Oil Level Check Command</td></tr><tr><td>13</td><td>Oil Level Reset Response</td></tr></table><h3 id="lookup-GARMIN_SUB_PROTOCOL">GARMIN_SUB_PROTOCOL
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>5904</td><td>Autopilot heading to steer</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h3 id="indirect-lookup-DEVICE_FUNCTION">DEVICE_FUNCTION
         (0 - 255)
       </h3><table><tr><th>Value in other field</th><th>Value</th><th>Description</th></tr><tr><td>10</td><td>130</td><td>Diagnostic</td></tr><tr><td>10</td><td>140</td><td>Bus Traffic Logger</td></tr><tr><td>20</td><td>110</td><td>Alarm Enunciator</td></tr><tr><td>20</td><td>130</td><td>Emergency Position Indicating Radio Beacon (EPIRB)</td></tr><tr><td>20</td><td>135</td><td>Man Overboard</td></tr><tr><td>20</td><td>140</td><td>Voyage Data Recorder</td></tr><tr><td>20</td><td>150</td><td>Camera</td></tr><tr><td>25</td><td>130</td><td>PC Gateway</td></tr><tr><td>25</td><td>131</td><td>NMEA 2000 to Analog Gateway</td></tr><tr><td>25</td><td>132</td><td>Analog to NMEA 2000 Gateway</td></tr><tr><td>25</td><td>133</td><td>NMEA 2000 to Serial Gateway</td></tr><tr><td>25</td><td>135</td><td>NMEA 0183 Gateway</td></tr><tr><td>25</td><td>136</td><td>NMEA Network Gateway</td></tr><tr><td>25</td><td>137</td><td>NMEA 2000 Wireless Gateway</td></tr><tr><td>25</td><td>140</td><td>Router</td></tr><tr><td>25</td><td>150</td><td>Bridge</td></tr><tr><td>25</td><td>160</td><td>Repeater</td></tr><tr><td>30</td><td>130</td><td>Binary Event Monitor</td></tr><tr><td>30</td><td>140</td><td>Load Controller</td></tr><tr><td>30</td><td>141</td><td>AC/DC Input</td></tr><tr><td>30</td><td>150</td><td>Function Controller</td></tr><tr><td>35</td><td>140</td><td>Engine</td></tr><tr><td>35</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>35</td><td>142</td><td>Solar Panel (Solar Array)</td></tr><tr><td>35</td><td>143</td><td>Wind Generator (DC)</td></tr><tr><td>35</td><td>144</td><td>Fuel Cell</td></tr><tr><td>35</td><td>145</td><td>Network Power Supply</td></tr><tr><td>35</td><td>151</td><td>AC Generator</td></tr><tr><td>35</td><td>152</td><td>AC Bus</td></tr><tr><td>35</td><td>153</td><td>AC Mains (Utility/Shore)</td></tr><tr><td>35</td><td>154</td><td>AC Output</td></tr><tr><td>35</td><td>160</td><td>Power Converter - Battery Charger</td></tr><tr><td>35</td><td>161</td><td>Power Converter - Battery Charger+Inverter</td></tr><tr><td>35</td><td>162</td><td>Power Converter - Inverter</td></tr><tr><td>35</td><td>163</td><td>Power Converter - DC</td></tr><tr><td>35</td><td>170</td><td>Battery</td></tr><tr><td>35</td><td>180</td><td>Engine Gateway</td></tr><tr><td>40</td><td>130</td><td>Follow-up Controller</td></tr><tr><td>40</td><td>140</td><td>Mode Controller</td></tr><tr><td>40</td><td>150</td><td>Autopilot</td></tr><tr><td>40</td><td>155</td><td>Rudder</td></tr><tr><td>40</td><td>160</td><td>Heading Sensors</td></tr><tr><td>40</td><td>170</td><td>Trim (Tabs)/Interceptors</td></tr><tr><td>40</td><td>180</td><td>Attitude (Pitch, Roll, Yaw) Control</td></tr><tr><td>50</td><td>130</td><td>Engineroom Monitoring</td></tr><tr><td>50</td><td>140</td><td>Engine</td></tr><tr><td>50</td><td>141</td><td>DC Generator/Alternator</td></tr><tr><td>50</td><td>150</td><td>Engine Controller</td></tr><tr><td>50</td><td>151</td><td>AC Generator</td></tr><tr><td>50</td><td>155</td><td>Motor</td></tr><tr><td>50</td><td>160</td><td>Engine Gateway</td></tr><tr><td>50</td><td>165</td><td>Transmission</td></tr><tr><td>50</td><td>170</td><td>Throttle/Shift Control</td></tr><tr><td>50</td><td>180</td><td>Actuator</td></tr><tr><td>50</td><td>190</td><td>Gauge Interface</td></tr><tr><td>50</td><td>200</td><td>Gauge Large</td></tr><tr><td>50</td><td>210</td><td>Gauge Small</td></tr><tr><td>60</td><td>130</td><td>Bottom Depth</td></tr><tr><td>60</td><td>135</td><td>Bottom Depth/Speed</td></tr><tr><td>60</td><td>136</td><td>Bottom Depth/Speed/Temperature</td></tr><tr><td>60</td><td>140</td><td>Ownship Attitude</td></tr><tr><td>60</td><td>145</td><td>Ownship Position (GNSS)</td></tr><tr><td>60</td><td>150</td><td>Ownship Position (Loran C)</td></tr><tr><td>60</td><td>155</td><td>Speed</td></tr><tr><td>60</td><td>160</td><td>Turn Rate Indicator</td></tr><tr><td>60</td><td>170</td><td>Integrated Navigation</td></tr><tr><td>60</td><td>175</td><td>Integrated Navigation System</td></tr><tr><td>60</td><td>190</td><td>Navigation Management</td></tr><tr><td>60</td><td>195</td><td>Automatic Identification System (AIS)</td></tr><tr><td>60</td><td>200</td><td>Radar</td></tr><tr><td>60</td><td>201</td><td>Infrared Imaging</td></tr><tr><td>60</td><td>205</td><td>ECDIS</td></tr><tr><td>60</td><td>210</td><td>ECS</td></tr><tr><td>60</td><td>220</td><td>Direction Finder</td></tr><tr><td>60</td><td>230</td><td>Voyage Status</td></tr><tr><td>70</td><td>130</td><td>EPIRB</td></tr><tr><td>70</td><td>140</td><td>AIS</td></tr><tr><td>70</td><td>150</td><td>DSC</td></tr><tr><td>70</td><td>160</td><td>Data Receiver/Transceiver</td></tr><tr><td>70</td><td>170</td><td>Satellite</td></tr><tr><td>70</td><td>180</td><td>Radio-telephone (MF/HF)</td></tr><tr><td>70</td><td>190</td><td>Radiotelephone</td></tr><tr><td>75</td><td>130</td><td>Temperature</td></tr><tr><td>75</td><td>140</td><td>Pressure</td></tr><tr><td>75</td><td>150</td><td>Fluid Level</td></tr><tr><td>75</td><td>160</td><td>Flow</td></tr><tr><td>75</td><td>170</td><td>Humidity</td></tr><tr><td>80</td><td>130</td><td>Time/Date Systems</td></tr><tr><td>80</td><td>140</td><td>VDR</td></tr><tr><td>80</td><td>150</td><td>Integrated Instrumentation</td></tr><tr><td>80</td><td>160</td><td>General Purpose Displays</td></tr><tr><td>80</td><td>170</td><td>General Sensor Box</td></tr><tr><td>80</td><td>180</td><td>Weather Instruments</td></tr><tr><td>80</td><td>190</td><td>Transducer/General</td></tr><tr><td>80</td><td>200</td><td>NMEA 0183 Converter</td></tr><tr><td>85</td><td>130</td><td>Atmospheric</td></tr><tr><td>85</td><td>160</td><td>Aquatic</td></tr><tr><td>90</td><td>130</td><td>HVAC</td></tr><tr><td>100</td><td>130</td><td>Scale (Catch)</td></tr><tr><td>110</td><td>130</td><td>Button Interface</td></tr><tr><td>110</td><td>135</td><td>Switch Interface</td></tr><tr><td>110</td><td>140</td><td>Analog Interface</td></tr><tr><td>120</td><td>130</td><td>Display</td></tr><tr><td>120</td><td>140</td><td>Alarm Enunciator</td></tr><tr><td>125</td><td>130</td><td>Multimedia Player</td></tr><tr><td>125</td><td>140</td><td>Multimedia Controller</td></tr></table><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h3 id="lookupbit-STATION_STATUS">STATION_STATUS
         (0 - 2^3-1)
@@ -23381,7 +23434,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>59</td><td>User 4</td><td>0.01 </td><td>32 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>60</td><td>Roll Rate</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>64</td><td>Forestay</td><td>0.001 </td><td>32 bits 
@@ -23390,9 +23443,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>65</td><td>Water Speed</td><td>0.01 m/s</td><td>16 bits 
               
                     unsigned
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>68</td><td>Yaw Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
-              
-                    signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>73</td><td>Current Set</td><td>0.0001 rad</td><td>16 bits 
               
                     unsigned
@@ -23486,7 +23536,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>157</td><td>Wind Angle to Mast</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
-                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Rate</td><td>3.125e-08 rad/s</td><td>32 bits 
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>158</td><td>Pitch Angle</td><td>0.0001 rad</td><td>16 bits 
               
                     signed
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>163</td><td>Daggerboard Position</td><td> </td><td>16 bits 
@@ -24454,6 +24504,15 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>529</td><td>Engine 1 Exhaust Status</td><td> </td><td>16 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h3 id="lookup-GARMIN_AP_KEY">GARMIN_AP_KEY
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th><th>Unit</th><th>Type</th></tr><tr><td>10</td><td>MyValue16</td><td> </td><td>16 bits 
+              <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>17</td><td>MyValue17</td><td> </td><td>8 bits 
+              
+                    unsigned
+                  <a href="#ft-NUMBER">NUMBER</a></td></tr><tr><td>25</td><td>MyValue25</td><td> </td><td>8 bits 
               
                     unsigned
                   <a href="#ft-NUMBER">NUMBER</a></td></tr></table><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>

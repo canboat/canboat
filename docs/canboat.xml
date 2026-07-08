@@ -3923,6 +3923,9 @@ limitations under the License.
       <EnumPair Value='12' Name='Oil Level Check Command' />
       <EnumPair Value='13' Name='Oil Level Reset Response' />
     </LookupEnumeration>
+    <LookupEnumeration Name='GARMIN_SUB_PROTOCOL' MaxValue='65535'>
+      <EnumPair Value='5904' Name='Autopilot heading to steer' />
+    </LookupEnumeration>
   </LookupEnumerations>
   <LookupIndirectEnumerations>
     <LookupIndirectEnumeration Name='DEVICE_FUNCTION' MaxValue='255'>
