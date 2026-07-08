@@ -151,6 +151,7 @@
     <div class="row">
       <button onclick="addField()">＋ field</button>
       <button onclick="addField('reserved')">＋ reserved</button>
+      <button id="addRepBtn" onclick="addRepeatingSet()">＋ repeating field set</button>
       <span class="hint" id="bitBudget"></span>
     </div>
 
@@ -219,6 +220,11 @@
 let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
 let samplesHex = [];         // assembled payloads (hex strings)
 let fieldsState = [];        // wizard field rows
+// Repeating field sets: fieldsState indices >= repAt[k] belong to set k+1.
+// A set is always a contiguous block of trailing fields; at most two, the
+// second following the first. -1 = that set is not defined.
+let repAt = [-1, -1];
+let repCountField = ["", ""]; // per set: id of the field holding the repeat count
 let lastDecode = null;       // last /api/decode response
 let yamlDirty = false;       // textarea hand-edited: it wins over the form
 let baseYaml = null;         // existing PGN: full original YAML (fields: block
@@ -289,6 +295,7 @@ function flash(msg, ok) {
 
 function newWizard() {
   samplesHex = []; fieldsState = []; yamlDirty = false;
+  repAt = [-1, -1]; repCountField = ["", ""];
   baseYaml = null; currentPgn = null;
   $("sampleInput").placeholder = "";
   $("sampleInput").value = ""; $("messages").innerHTML = "";
@@ -328,6 +335,13 @@ async function openExisting(id) {
     match: f.match ?? "", unit: f.unit ?? "", resolution: f.resolution ?? "",
     primaryKey: f.primaryKey,
   }));
+  // seed repeating sets from the stored definition (start is 1-based order)
+  repAt = [-1, -1]; repCountField = ["", ""];
+  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
+    if (!rp) return;
+    repAt[k] = rp.start - 1;
+    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
+  });
   $("yamlText").value = r.yaml;
   yamlDirty = false;                      // form edits patch the fields: block
   $("savePath").textContent = r.path.replace(/^.*database\//, "database/");
@@ -385,6 +399,7 @@ async function analyze() {
 function startDefinition(pgn, msgs) {
   samplesHex = msgs.map(m => m.hex);
   fieldsState = [];
+  repAt = [-1, -1]; repCountField = ["", ""];
   yamlDirty = false;
   $("m_pgn").value = pgn;
   $("m_prio").value = msgs[0].prio;
@@ -406,6 +421,73 @@ function addField(kind) {
     fieldsState.push({ id: `field${n}`, name: `Field ${n}`, type: "UINT8", bits: "" });
   }
   renderAll();
+}
+
+// Highest defined repeating set (0, 1 or 2).
+function repDepth() { return repAt[1] >= 0 ? 2 : repAt[0] >= 0 ? 1 : 0; }
+
+// Begin the next repeating set at the current end of the field list; the
+// fields added after it belong to the set. At most two, and only trailing.
+function addRepeatingSet() {
+  const d = repDepth();
+  if (d >= 2) return flash("a PGN has at most two repeating field sets", false);
+  if (!fieldsState.length) return flash("add the fields first, then mark where the set starts", false);
+  if (d === 1 && fieldsState.length <= repAt[0])
+    return flash("add at least one field to set 1 before starting set 2", false);
+  repAt[d] = fieldsState.length; // set begins after the current last field
+  renderAll();
+}
+
+function removeRepeatingSet(k) {
+  repAt[k] = -1;
+  repCountField[k] = "";
+  renderAll();
+}
+
+function deleteField(i) {
+  fieldsState.splice(i, 1);
+  // keep set boundaries anchored to the same fields
+  for (let k = 0; k < 2; k++) {
+    if (repAt[k] > i) repAt[k]--;
+    if (repAt[k] > fieldsState.length) repAt[k] = fieldsState.length;
+  }
+  renderAll();
+}
+
+// A full-width divider marking the start of repeating set k (0-based),
+// carrying the optional "count from" field and a remove control.
+function repDividerRow(k) {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 10;
+  td.style.background = "var(--panel)";
+  td.style.borderTop = "2px solid var(--accent)";
+  const label = document.createElement("b");
+  label.textContent = `↻ repeating field set ${k + 1} — count from `;
+  td.appendChild(label);
+  const sel = document.createElement("select");
+  sel.style.width = "auto";
+  const none = document.createElement("option");
+  none.value = ""; none.textContent = "(fills remaining bytes)";
+  sel.appendChild(none);
+  fieldsState.forEach((f, i) => {
+    if (i < repAt[k]) {
+      const o = document.createElement("option");
+      o.value = f.id; o.textContent = f.id;
+      sel.appendChild(o);
+    }
+  });
+  sel.value = repCountField[k];
+  sel.onchange = () => { repCountField[k] = sel.value; regenerateYaml(); scheduleRefresh(); };
+  td.appendChild(sel);
+  if (repDepth() === k + 1) {   // only the deepest set is removable (sets stay trailing)
+    const rm = document.createElement("button");
+    rm.className = "lkbtn"; rm.textContent = "✕ remove set"; rm.style.marginLeft = "8px";
+    rm.onclick = () => removeRepeatingSet(k);
+    td.appendChild(rm);
+  }
+  tr.appendChild(td);
+  return tr;
 }
 
 function addProprietaryPreamble() {
@@ -493,6 +575,8 @@ function renderFields() {
   const tb = $("fields").querySelector("tbody");
   tb.innerHTML = "";
   fieldsState.forEach((f, i) => {
+    if (repAt[0] === i) tb.appendChild(repDividerRow(0));
+    if (repAt[1] === i) tb.appendChild(repDividerRow(1));
     const tr = document.createElement("tr");
     const cell = (key, size, listId) => {
       const td = document.createElement("td");
@@ -547,10 +631,15 @@ function renderFields() {
     tr.appendChild(pk);
     const del = document.createElement("td");
     del.innerHTML = "<button title='remove'>✕</button>";
-    del.firstChild.onclick = () => { fieldsState.splice(i, 1); renderAll(); };
+    del.firstChild.onclick = () => { deleteField(i); };
     tr.appendChild(del);
     tb.appendChild(tr);
   });
+  // trailing repeating-set dividers (a set declared but not yet populated)
+  if (repAt[0] === fieldsState.length) tb.appendChild(repDividerRow(0));
+  if (repAt[1] === fieldsState.length) tb.appendChild(repDividerRow(1));
+  const addRep = $("addRepBtn");
+  if (addRep) addRep.disabled = repDepth() >= 2;
   const total = fieldsState.reduce((a, f) => a + fieldBits(f), 0);
   const frame = $("m_type").value === "Single" ? 64 : null;
   $("bitBudget").textContent =
@@ -852,15 +941,37 @@ function fieldsYaml() {
   return y;
 }
 
+// repeating1/repeating2 blocks derived from the set boundaries.
+function repYaml() {
+  let y = "";
+  const ends = [repAt[1] >= 0 ? repAt[1] : fieldsState.length, fieldsState.length];
+  for (let k = 0; k < 2; k++) {
+    if (repAt[k] < 0) continue;
+    const count = ends[k] - repAt[k];
+    if (count <= 0) continue;                 // declared but empty: skip
+    y += `repeating${k + 1}:\n  count: ${count}\n  start: ${repAt[k] + 1}\n`;
+    const ci = fieldsState.findIndex(f => f.id === repCountField[k]);
+    if (repCountField[k] && ci >= 0) y += `  countField: ${ci + 1}\n`;
+  }
+  return y;
+}
+
+function stripBlock(yaml, key) {
+  return yaml.replace(new RegExp(`\\n${key}:\\n[\\s\\S]*?(?=\\n[A-Za-z][A-Za-z0-9]*:|$)`), "");
+}
+
 function regenerateYaml() {
   if (yamlDirty) return;
   if (baseYaml !== null) {
-    // Existing PGN: replace ONLY the fields: block; notes, samples,
-    // repeating sets and every other authored key survive untouched.
-    const m = baseYaml.match(/\nfields:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
+    // Existing PGN: replace the fields: block and regenerate repeating1/2
+    // from the form; notes, samples and every other authored key survive.
+    let base = stripBlock(stripBlock(baseYaml, "repeating2"), "repeating1");
+    const m = base.match(/\nfields:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
     if (m) {
+      const rep = repYaml();
+      const repText = rep ? "\n" + rep.trimEnd() : "";
       $("yamlText").value =
-        baseYaml.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + baseYaml.slice(m.index + m[0].length);
+        base.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + repText + base.slice(m.index + m[0].length);
     }
     return;
   }
@@ -872,6 +983,7 @@ function regenerateYaml() {
   y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
   if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
   y += fieldsYaml();
+  y += repYaml();
   $("yamlText").value = y;
   const id = $("m_id").value || "newPgn";
   $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
