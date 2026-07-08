@@ -264,8 +264,11 @@ keel fmt         canonicalize YAML in place
 keel new         scaffold a new PGN file (e.g. keel new 130846 --manufacturer=Furuno)
 keel edit        start the local web editor (serves SPA + validation API)
 keel explain     the old analyzer-explain text output, from YAML
-keel decode      stdin sample lines (PLAIN/candump) -> decoded fields;
+keel decode      stdin sample lines (PLAIN/candump/YDWG) -> decoded fields;
                  keel's own decoder, independent of the C analyzer
+keel harvest     batch-decode capture files and append `samples:` blocks to
+                 the matching PGN yaml (1-3 diverse per variant); the bulk
+                 form of the editor's "adopt decodes as expectations" (§7.2)
 keel diff        contract-level diff of two database states (wraps tools/contract.py)
 ```
 

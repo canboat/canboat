@@ -14,6 +14,7 @@ mod emit_c;
 mod emit_text;
 mod emit_xml;
 mod generate;
+mod harvest;
 mod model;
 mod samples;
 mod yamlio;
@@ -66,6 +67,8 @@ struct Args {
     float_style: FloatStyle,
     which: String,
     root: PathBuf,
+    per_pgn: usize,
+    rest: Vec<String>,
 }
 
 fn parse_args() -> Result<Args, String> {
@@ -77,6 +80,8 @@ fn parse_args() -> Result<Args, String> {
         float_style: FloatStyle::C,
         which: "normal".into(),
         root: PathBuf::from("."),
+        per_pgn: 3,
+        rest: Vec::new(),
     };
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
@@ -91,6 +96,13 @@ fn parse_args() -> Result<Args, String> {
                 )
             }
             "--diff" => args.diff = Some(it.next().ok_or("--diff needs a path")?),
+            "--per-pgn" => {
+                args.per_pgn = it
+                    .next()
+                    .ok_or("--per-pgn needs a number")?
+                    .parse()
+                    .map_err(|e| format!("--per-pgn: {e}"))?
+            }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
             "--which" => args.which = it.next().ok_or("--which needs normal|actisense|ikonvert")?,
             "--float-style" => {
@@ -101,11 +113,12 @@ fn parse_args() -> Result<Args, String> {
                 }
             }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
+            pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode|edit> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--root DIR]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--per-pgn N] [--root DIR] [files...]".into());
     }
     Ok(args)
 }
@@ -270,6 +283,14 @@ fn run() -> Result<i32, String> {
                     }
                 }
             }
+            Ok(0)
+        }
+        "harvest" => {
+            if args.rest.is_empty() {
+                return Err("usage: keel harvest [--per-pgn N] <capture-file>...".into());
+            }
+            let summary = harvest::harvest(&db, &args.rest, args.per_pgn, &root)?;
+            println!("{summary}");
             Ok(0)
         }
         "edit" => {
