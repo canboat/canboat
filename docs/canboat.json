@@ -1109,7 +1109,7 @@
       },
       {
         "Name":"DIRECTION",
-        "MaxValue":15,
+        "MaxValue":7,
         "EnumValues":[
           {"Name":"Forward", "Value":0},
           {"Name":"Reverse", "Value":1}
@@ -1767,7 +1767,7 @@
       },
       {
         "Name":"ENTERTAINMENT_PLAY_STATUS",
-        "MaxValue":65535,
+        "MaxValue":255,
         "EnumValues":[
           {"Name":"Play", "Value":0},
           {"Name":"Pause", "Value":1},
@@ -2041,7 +2041,7 @@
       },
       {
         "Name":"BOOT_STATE",
-        "MaxValue":15,
+        "MaxValue":7,
         "EnumValues":[
           {"Name":"in Startup Monitor", "Value":0},
           {"Name":"running Bootloader", "Value":1},
@@ -4711,7 +4711,7 @@
       },
       {
         "Name":"BROADCAST_INDICATOR",
-        "MaxValue":15,
+        "MaxValue":1,
         "EnumValues":[
           {"Name":"Broadcast geo area message", "Value":0},
           {"Name":"Addressed message", "Value":1}

@@ -1000,7 +1000,7 @@ limitations under the License.
       <EnumPair Value='1' Name='Neutral' />
       <EnumPair Value='2' Name='Reverse' />
     </LookupEnumeration>
-    <LookupEnumeration Name='DIRECTION' MaxValue='15'>
+    <LookupEnumeration Name='DIRECTION' MaxValue='7'>
       <EnumPair Value='0' Name='Forward' />
       <EnumPair Value='1' Name='Reverse' />
     </LookupEnumeration>
@@ -1502,7 +1502,7 @@ limitations under the License.
       <EnumPair Value='23' Name='HDMI' />
       <EnumPair Value='24' Name='Video' />
     </LookupEnumeration>
-    <LookupEnumeration Name='ENTERTAINMENT_PLAY_STATUS' MaxValue='65535'>
+    <LookupEnumeration Name='ENTERTAINMENT_PLAY_STATUS' MaxValue='255'>
       <EnumPair Value='0' Name='Play' />
       <EnumPair Value='1' Name='Pause' />
       <EnumPair Value='2' Name='Stop' />
@@ -1696,7 +1696,7 @@ limitations under the License.
       <EnumPair Value='3' Name='24VAC' />
       <EnumPair Value='4' Name='Hydraulic' />
     </LookupEnumeration>
-    <LookupEnumeration Name='BOOT_STATE' MaxValue='15'>
+    <LookupEnumeration Name='BOOT_STATE' MaxValue='7'>
       <EnumPair Value='0' Name='in Startup Monitor' />
       <EnumPair Value='1' Name='running Bootloader' />
       <EnumPair Value='2' Name='running Application' />
@@ -3786,7 +3786,7 @@ limitations under the License.
       <EnumPair Value='0' Name='High' />
       <EnumPair Value='1' Name='Low' />
     </LookupEnumeration>
-    <LookupEnumeration Name='BROADCAST_INDICATOR' MaxValue='15'>
+    <LookupEnumeration Name='BROADCAST_INDICATOR' MaxValue='1'>
       <EnumPair Value='0' Name='Broadcast geo area message' />
       <EnumPair Value='1' Name='Addressed message' />
     </LookupEnumeration>
