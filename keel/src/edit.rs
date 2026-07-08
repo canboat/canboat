@@ -432,14 +432,35 @@ fn api_analyze(server: &EditServer, body: &str) -> Result<String, String> {
         .iter()
         .map(|a| {
             let variant = decode::select_variant(&db, a.pgn, &a.data, false);
+            let is_exact = variant.is_some_and(|p| !p.fallback);
+            // only suggest near misses when nothing matched exactly
+            let near: Vec<String> = if is_exact {
+                Vec::new()
+            } else {
+                decode::near_misses(&db, a.pgn, &a.data)
+                    .iter()
+                    .map(|n| {
+                        format!(
+                            "{{\"id\":{},\"field\":{},\"fieldName\":{},\"expected\":{},\"got\":{}}}",
+                            js(&n.pgn.id),
+                            js(&n.field_id),
+                            js(&n.field_name),
+                            n.expected,
+                            n.got
+                        )
+                    })
+                    .collect()
+            };
             format!(
-                "{{\"pgn\":{},\"prio\":{},\"src\":{},\"dst\":{},\"hex\":{},\"variant\":{}}}",
+                "{{\"pgn\":{},\"prio\":{},\"src\":{},\"dst\":{},\"hex\":{},\"variant\":{},\"fallback\":{},\"nearMisses\":[{}]}}",
                 a.pgn,
                 a.prio,
                 a.src,
                 a.dst,
                 js(&a.data.iter().map(|b| format!("{b:02x}")).collect::<String>()),
                 variant.map(|p| js(&p.id)).unwrap_or_else(|| "null".into()),
+                !is_exact,
+                near.join(",")
             )
         })
         .collect();
