@@ -95,6 +95,48 @@ pub fn select_variant<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) 
     list.iter().find(|p| p.pgn == pgn && p.fallback)
 }
 
+/// A variant that agrees with the payload on every match field but one -
+/// i.e. the same message shape with a different discriminator. Lets the
+/// editor offer "this looks like <id>, clone it and change <field>".
+pub struct NearMiss<'a> {
+    pub pgn: &'a Pgn,
+    pub field_id: String,
+    pub field_name: String,
+    pub expected: i64,
+    pub got: i64,
+}
+
+pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8]) -> Vec<NearMiss<'a>> {
+    let mut out = Vec::new();
+    for p in db.pgns.iter().filter(|p| p.pgn == pgn && !p.fallback) {
+        let mut bit = 0usize;
+        let mut diffs: Vec<(String, String, i64, i64, bool)> = Vec::new();
+        for f in &p.fields {
+            if let Some(m) = &f.match_ {
+                let want: i64 = m.parse().unwrap_or(0);
+                let got = extract_bits(data, bit, f.res_bits as usize, false, 0).map(|e| e.value);
+                if got != Some(want) {
+                    // Is this the proprietary preamble (vendor identity)? A
+                    // differing manufacturer/industry means a different
+                    // vendor's message, not the same shape - don't suggest.
+                    let preamble = matches!(
+                        f.lookup.as_deref(),
+                        Some("MANUFACTURER_CODE") | Some("INDUSTRY_CODE")
+                    );
+                    diffs.push((f.id.clone(), f.name.clone(), want, got.unwrap_or(-1), preamble));
+                }
+            }
+            bit += f.res_bits as usize;
+        }
+        // exactly one differing match field, and it isn't the vendor preamble
+        if diffs.len() == 1 && !diffs[0].4 {
+            let (field_id, field_name, expected, got, _) = diffs.into_iter().next().unwrap();
+            out.push(NearMiss { pgn: p, field_id, field_name, expected, got });
+        }
+    }
+    out
+}
+
 /// Decode state threaded through the field walk.
 struct Ctx {
     bit: usize,

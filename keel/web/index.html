@@ -370,14 +370,15 @@ async function analyze() {
   Object.entries(byPgn).forEach(([key, msgs]) => {
     const pgn = msgs[0].pgn;
     const variant = msgs[0].variant;
+    const fallback = msgs[0].fallback;
     const btn = document.createElement("button");
     if (currentPgn && pgn === currentPgn) {
       // this definition is already open: adopt directly
       btn.textContent = `Use ${msgs.length} sample(s) of PGN ${pgn} as evidence for this definition`;
       btn.className = "primary";
       btn.onclick = () => loadEvidence(msgs);
-    } else if (variant) {
-      // known PGN: open its stored definition WITH these pastes as evidence
+    } else if (variant && !fallback) {
+      // exact match: open its stored definition WITH these pastes as evidence
       btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — check against existing '${variant}'`;
       btn.className = "primary";
       btn.onclick = async () => {
@@ -387,13 +388,69 @@ async function analyze() {
         loadEvidence(msgs);
       };
     } else {
-      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — unknown, start a new definition`;
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — no exact match, start a new definition`;
       btn.onclick = () => startDefinition(pgn, msgs);
     }
     btn.style.margin = "6px 6px 0 0";
     el.appendChild(btn);
+
+    // near-miss suggestions: same shape, one differing match field
+    if (!(currentPgn && pgn === currentPgn) && fallback) {
+      const seen = {};
+      msgs.forEach(m => (m.nearMisses || []).forEach(n => { seen[n.id] = n; }));
+      Object.values(seen).forEach(n => {
+        const s = document.createElement("div");
+        s.className = "hint";
+        s.style.margin = "4px 0 0 8px";
+        s.textContent = `↳ looks like '${n.id}' but ${n.fieldName} = ${n.got} (it matches ${n.expected}). `;
+        const c = document.createElement("button");
+        c.textContent = `Clone '${n.id}', set ${n.fieldName}=${n.got}`;
+        c.style.marginLeft = "4px";
+        c.onclick = () => cloneFrom(n.id, pgn, msgs, n.field, n.got);
+        s.appendChild(c);
+        el.appendChild(s);
+      });
+    }
   });
   $("analyzeStatus").textContent = `${r.messages.length} message(s)`;
+}
+
+// Start a NEW definition from an existing variant's field layout (same
+// vendor/shape), pre-setting the one differing match field to the value
+// these samples carry. The user renames id/description and saves a new file.
+async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
+  const r = await api(`/api/pgn?id=${encodeURIComponent(variantId)}`, null, "GET");
+  if (r.error) return flash(r.error, false);
+  samplesHex = msgs.map(m => m.hex);
+  baseYaml = null;            // a brand-new file, not an edit of the source
+  currentPgn = pgn;
+  yamlDirty = false;
+  fieldsState = r.def.fields.map(f => ({
+    id: f.id, name: f.name, type: f.type,
+    bits: f.bits ?? "", lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
+    match: f.match ?? "", unit: f.unit ?? "", resolution: f.resolution ?? "",
+    primaryKey: f.primaryKey,
+  }));
+  // set the one field that discriminates this variant to the observed value
+  const df = fieldsState.find(f => f.id === diffFieldId);
+  if (df) df.match = gotValue;
+  // clone repeating sets too
+  repAt = [-1, -1]; repCountField = ["", ""];
+  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
+    if (!rp) return;
+    repAt[k] = rp.start - 1;
+    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
+  });
+  $("m_pgn").value = pgn;
+  $("m_type").value = r.def.type;
+  $("m_prio").value = r.def.priority || "";
+  $("m_id").value = "";            // must be a new, unique id
+  $("m_desc").value = "";
+  $("stepDefine").style.display = "";
+  $("stepSave").style.display = "";
+  $("savePath").textContent = "";
+  renderAll();
+  flash(`cloned '${variantId}' — give it a new Id and Description, then save`, true);
 }
 
 function startDefinition(pgn, msgs) {
