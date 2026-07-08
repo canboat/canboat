@@ -65,7 +65,12 @@ def cmd_convert(args) -> int:
     from . import convert, derive, emit_xml, yamlio
 
     root = find_repo_root(args.root)
-    xml_path = os.path.join(root, "docs", "canboat.xml")
+    # Default to the committed canboat.xml, but a RESYNC must convert from
+    # master's canonical XML, never the branch's own keel-generated one --
+    # feeding back the generated XML makes orphan variants (ones master
+    # deleted) look "expected" and survive the prune. --xml makes that
+    # explicit: `keel convert --xml <(git show origin/master:docs/canboat.xml)`.
+    xml_path = args.xml or os.path.join(root, "docs", "canboat.xml")
     header = os.path.join(root, "analyzer", "fieldtype.h")
     out_dir = os.path.join(root, args.out)
 
@@ -165,6 +170,8 @@ def main(argv=None) -> int:
 
     p = sub.add_parser("convert", help="bootstrap: convert docs/canboat.xml to database/ YAML")
     p.add_argument("--out", default="database", help="output directory relative to repo root")
+    p.add_argument("--xml", help="source canboat.xml to convert from (default: docs/canboat.xml); "
+                                 "point at master's XML on a resync so orphan variants get pruned")
     p.add_argument("--diff", help="write unified diff of non-reproducing output to this file")
     p.add_argument("--actisense-xml", help="analyzer-explain -explain-ngt-xml output (default: run the binary)")
     p.add_argument("--ikonvert-xml", help="analyzer-explain -explain-ik-xml output (default: run the binary)")
