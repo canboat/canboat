@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 tests
 
 all:	tests
 
@@ -226,4 +226,15 @@ test23:
 	diff $(TEMPDIR)/pgn-130823-truncated.out pgn-130823-truncated.out
 	diff $(TEMPDIR)/pgn-130823-truncated.err pgn-130823-truncated.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23
+#
+# This tests the Garmin GHP Reactor autopilot decode over PGN 126720 (sub-protocol 5904):
+# Mode State lookup (2 Standby, 3 Shadow Drive, 5 Engaged) and System Voltage at 10 mV/bit
+# (~13 V, not the 1.3 V a 1 mV resolution would give). Frames from samples/garmin-ap-reactor-126720.raw.
+#
+test24:
+	$(ANALYZER) -json -nv < pgn-garmin-autopilot.in > $(TEMPDIR)/pgn-garmin-autopilot.out -fixtime pgn-garmin-autopilot 2> $(TEMPDIR)/pgn-garmin-autopilot.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-garmin-autopilot.out
+	diff $(TEMPDIR)/pgn-garmin-autopilot.out pgn-garmin-autopilot.out
+	diff $(TEMPDIR)/pgn-garmin-autopilot.err pgn-garmin-autopilot.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24

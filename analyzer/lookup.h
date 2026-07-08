@@ -4242,6 +4242,47 @@ LOOKUP(GARMIN_COLOR, 3, "Night red/black")
 LOOKUP(GARMIN_COLOR, 4, "Night green/black")
 LOOKUP_END
 
+// Garmin GHP Reactor autopilot engage state, carried in the sub-protocol 5904 scalar transport
+// (Field Group 5, Field 10). Values observed on a real Reactor/Echomap session: 2 Standby, 5 Engaged,
+// and 3 while the helm was manually turned (shadow drive overriding the pilot).
+LOOKUP_TYPE(GARMIN_AUTOPILOT_MODE_STATE, BYTES(1))
+LOOKUP(GARMIN_AUTOPILOT_MODE_STATE, 2, "Standby")
+LOOKUP(GARMIN_AUTOPILOT_MODE_STATE, 3, "Shadow Drive")
+LOOKUP(GARMIN_AUTOPILOT_MODE_STATE, 5, "Engaged")
+LOOKUP_END
+
+// Garmin GMN message id, carried as the first 2 payload bytes of a 126720 Garmin frame (the second
+// argument to the firmware's gmn_send_packet). It selects which Garmin sub-protocol the frame belongs to.
+LOOKUP_TYPE(GARMIN_MESSAGE_ID, BYTES(2))
+LOOKUP(GARMIN_MESSAGE_ID, 1900, "AHRS ATT transport")
+LOOKUP(GARMIN_MESSAGE_ID, 5904, "Autopilot transport")
+LOOKUP_END
+
+// Field selector inside the Garmin autopilot scalar transport (GMN message id 5904). Names confirmed
+// against the Garmin MFD firmware field dictionary; the numeric ids are observational.
+LOOKUP_TYPE(GARMIN_AUTOPILOT_FIELD, BYTES(1))
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 3, "Heartbeat")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 10, "Mode State")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 11, "Heading to Steer")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 62, "Response Setting")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 114, "Rate of Turn")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 115, "Rate of Turn Order")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 116, "Turn Angle Order")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 158, "System Voltage")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 161, "Turn Angle Measured")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 239, "Engine RPM B")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 240, "Engine RPM A")
+LOOKUP(GARMIN_AUTOPILOT_FIELD, 246, "Speed")
+LOOKUP_END
+
+// Message id inside the Garmin AHRS ATT transport (GMN message id 1900).
+LOOKUP_TYPE(GARMIN_ATT_MESSAGE_ID, BYTES(2))
+LOOKUP(GARMIN_ATT_MESSAGE_ID, 40, "Calibration Matrix Present")
+LOOKUP(GARMIN_ATT_MESSAGE_ID, 52, "Set North State")
+LOOKUP(GARMIN_ATT_MESSAGE_ID, 65, "Device Flags")
+LOOKUP(GARMIN_ATT_MESSAGE_ID, 67, "COG Source Valid Flag")
+LOOKUP_END
+
 LOOKUP_TYPE(GARMIN_BACKLIGHT_LEVEL, BYTES(1))
 LOOKUP(GARMIN_BACKLIGHT_LEVEL, 0, "0%")
 LOOKUP(SIMNET_BACKLIGHT_LEVEL, 1, "5%")
