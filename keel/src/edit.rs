@@ -316,8 +316,17 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
             )
         })
         .collect();
+    let rep = |r: &Option<crate::model::Repeating>| match r {
+        Some(r) => format!(
+            "{{\"count\":{},\"start\":{},\"countField\":{}}}",
+            r.count,
+            r.start,
+            r.count_field.map(|c| c.to_string()).unwrap_or_else(|| "null".into())
+        ),
+        None => "null".into(),
+    };
     Ok(format!(
-        "{{\"path\":{},\"yaml\":{},\"def\":{{\"pgn\":{},\"id\":{},\"description\":{},\"type\":{},\"priority\":{},\"fields\":[{}]}}}}",
+        "{{\"path\":{},\"yaml\":{},\"def\":{{\"pgn\":{},\"id\":{},\"description\":{},\"type\":{},\"priority\":{},\"repeating1\":{},\"repeating2\":{},\"fields\":[{}]}}}}",
         js(&path.display().to_string()),
         js(&yaml),
         def.pgn,
@@ -325,6 +334,8 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         js(&def.description),
         js(&def.type_),
         def.priority,
+        rep(&def.repeating1),
+        rep(&def.repeating2),
         fields.join(",")
     ))
 }
