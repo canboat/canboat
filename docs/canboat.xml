@@ -5167,6 +5167,13 @@ limitations under the License.
       <EnumFieldType Value='529' Name='Engine 1 Exhaust Status' FieldType='NUMBER' Signed='false'
  Bits='16'/>
     </LookupFieldTypeEnumeration>
+    <LookupFieldTypeEnumeration Name='GARMIN_AP_KEY' MaxValue='255'>
+      <EnumFieldType Value='10' Name='MyValue16' FieldType='NUMBER' Bits='16'/>
+      <EnumFieldType Value='17' Name='MyValue17' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+      <EnumFieldType Value='25' Name='MyValue25' FieldType='NUMBER' Signed='false'
+ Bits='8'/>
+    </LookupFieldTypeEnumeration>
   </LookupFieldTypeEnumerations>
   <PGNs>
     <PGNInfo>
@@ -20213,6 +20220,168 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
+      <Id>garminAutopilotKeyValue</Id>
+      <Description>Garmin Autopilot Key Value Data</Description>
+    <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>10</FieldCount>
+      <MinLength>8</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>9</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>8</RepeatingFieldSet1CountField>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Garmin</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>229</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>subProtocolId</Id>
+          <Name>Sub-protocol ID</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>5904</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>wrapperByte1</Id>
+          <Name>Wrapper Byte 1</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>wrapperByte2</Id>
+          <Name>Wrapper Byte 2</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>fieldGroup</Id>
+          <Name>Field Group</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>17</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>3</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>key</Id>
+          <Name>Key</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>DYNAMIC_FIELD_KEY</FieldType>
+          <LookupFieldTypeEnumeration>GARMIN_AP_KEY</LookupFieldTypeEnumeration>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>DYNAMIC_FIELD_VALUE</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
       <Id>0x1ef00ManufacturerProprietaryFastPacketAddressed</Id>
       <Description>0x1EF00: Manufacturer Proprietary fast-packet addressed</Description>
       <Explanation>Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
@@ -20892,7 +21061,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>subProtocolId</Id>
           <Name>Sub-protocol ID</Name>
-          <Description>Garmin autopilot transport</Description>
+          <Description>Autopilot heading to steer</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -20902,13 +21071,13 @@ limitations under the License.
           <RangeMin>0</RangeMin>
           <RangeMax>65532</RangeMax>
           <FieldType>NUMBER</FieldType>
+          <LookupEnumeration>GARMIN_SUB_PROTOCOL</LookupEnumeration>
           <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20923,7 +21092,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20938,7 +21106,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20953,7 +21120,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>field</Id>
           <Name>Field</Name>
-          <Description>Heading to Steer</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -20979,7 +21145,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>headingToSteer</Id>
           <Name>Heading to Steer</Name>
-          <Description>Values at or above 1000 rad signal no active order</Description>
           <BitLength>32</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
