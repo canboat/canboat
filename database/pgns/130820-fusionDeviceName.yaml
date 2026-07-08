@@ -34,3 +34,10 @@ fields:
 - id: name
   name: Name
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,13,a3,99,21,80,07,57,69,6c,68,65,6c,6d,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Unit Name"
+    name: "Wilhelm"

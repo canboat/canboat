@@ -135,3 +135,27 @@ notes: |-
      depend on this field's length.
 
   We solve #1 here by having two definitions.
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129808,3,255,83,70,70,33,14,00,5f,1e,6e,64,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,12,01,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,70,69,80,e7,77,b1,3a,68,c0,a6,c1,04,ff,ff,ff,ff,ff,7f,fd,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,64,0a,01,30,38"  # from pgn129808.raw
+  expects:
+    dscFormat: "Distress"
+    dscCategory: "Distress"
+    dscMessageAddress: "5120009530"
+    natureOfDistress: "Man overboard"
+    subsequentCommunicationModeOr2ndTelecommand: "No reason given"
+    proposedRxFrequencyChannel: ""
+    proposedTxFrequencyChannel: ""
+    telephoneNumber: "����������������"
+    latitudeOfVesselReported: -41.1014800
+    longitudeOfVesselReported: 174.8676983
+    timeOfPosition: 7980.0000
+    mmsiOfShipInDistress: ""
+    dscEosSymbol: 127
+    expansionEnabled: "Yes"
+    callingRxFrequencyChannel: ""
+    callingTxFrequencyChannel: ""
+    timeOfReceipt: ~
+    dateOfReceipt: ~
+    dscEquipmentAssignedMessageId: ~
+    dscExpansionFieldSymbol: "Enhanced position"
+    dscExpansionFieldData: "08"

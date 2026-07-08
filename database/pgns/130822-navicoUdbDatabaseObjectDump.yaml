@@ -93,3 +93,208 @@ fields:
 repeating1:
   count: 4
   start: 13
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,26,255,208,13,99,ff,06,00,0a,01,9b,fd,c2,00,00,07,bf,01,00,04,00,00,00,00,01,00,04,33,33,87,41,01,00,04,00,00,00,00,01,00,04,00,00,00,40,01,00,04,00,00,00,00,01,00,01,00,01,00,04,00,00,00,00,01,00,04,25,b3,84,3c,01,00,04,00,00,c8,42,01,00,04,00,00,c8,42,01,00,04,01,00,00,00,01,00,01,00,01,00,01,00,01,00,04,cd,cc,88,41,01,00,04,00,a0,e7,44,01,00,04,00,00,c8,42,01,00,01,01,01,00,01,01,01,00,08,ff,ff,e0,ff,00,ff,ff,f0,01,00,08,58,87,b0,2f,00,82,aa,c0,01,00,01,01,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,01,01,01,00,01,09,01,00,01,00,01,00,04,19,00,38,0a,01,00,01,01,01,00,01,01,01,00,01,00,01,00,01,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 10
+    item: 1
+    objectValue: 64923
+    sub: "0xc20000"
+    token: 48903
+    length: 1
+    class: 0
+    dataType: "VDOP"
+    value: "0x"
+    length.2: 0
+    class.2: 0
+    dataType.2: "GPS All"
+    value.2: "0x"
+    length.3: 0
+    class.3: 4
+    dataType.3: 13107
+    value.3: "0x"
+    length.4: 135
+    class.4: 65
+    dataType.4: "Position"
+    value.4: "0x04000000000100040000004001000400000000010001000100040000000001000425b3843c0100040000c8420100040000c842010004010000000100010001000100010004cdcc884101000400a0e7440100040000c8420100010101000101010008ffffe0ff00fffff00100085887b02f0082aac00100010101000819e8e410008278c0"
+    length.5: 1
+    class.5: 0
+    dataType.5: 6408
+    value.5: "0x"
+    length.6: 232
+    class.6: 228
+    dataType.6: "Course To Steer"
+    value.6: "0x8278c00100010101000109010001000100041900380a01000101010001010100010001000100"
+- raw: "2023-01-01-00:00:00.000,3,130822,38,255,223,13,99,ff,06,00,0f,00,aa,6f,60,04,00,4e,a9,16,00,04,00,00,20,40,04,51,36,cc,3f,04,f2,3e,38,40,04,11,ac,76,40,04,67,3a,86,40,04,9a,99,99,40,04,35,ef,98,40,04,e2,58,97,40,04,eb,73,95,40,04,98,dd,93,40,04,33,33,93,40,04,33,33,86,40,04,33,33,53,40,04,00,00,1a,40,04,00,00,00,40,04,a2,f7,f8,3f,04,3a,44,ec,3f,04,66,66,e6,3f,04,d5,f4,32,40,04,00,00,3c,42,04,66,66,e6,3f,04,00,00,34,43,16,00,04,00,00,a0,40,04,d2,c8,01,40,04,8c,f9,67,40,04,aa,d4,98,40,04,24,d5,a4,40,04,00,00,b8,40,04,9b,55,b7,40,04,48,bf,b5,40,04,51,da,b3,40,04,fe,43,b2,40,04,9a,99,b1,40,04,9a,19,a3,40,04,33,33,83,40,04,9a,99,46,40,04,9a,99,29,40,04,54,53,24,40,04,c6,cc,1a,40,04,66,66,16,40,04,de,fa,5e,40"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 15
+    item: 0
+    objectValue: 28586
+    sub: "0x600400"
+    token: 43342
+    length: 22
+    class: 0
+    dataType: "VDOP"
+    value: "0x002040045136cc3f04f23e38400411ac764004"
+    length.2: 103
+    class.2: 58
+    dataType.2: 16518
+    value.2: "0x049a9999400435ef984004e258974004eb7395400498dd93400433339340043333864004333353400400001a40040000004004a2f7f83f043a44ec3f046666e63f04d5f432400400003c42046666e63f04000034431600040000a04004d2c80140048cf9"
+    length.3: 103
+    class.3: 64
+    dataType.3: 43524
+    value.3: "0xd498400424d5a440040000b840049b55b7400448bfb5400451dab34004fe43b240049a99b140049a19a3400433338340049a994640049a992940045453244004c6cc1a40046666164004defa5e40"
+- raw: "2023-01-01-00:00:00.000,3,130822,32,255,223,13,99,ff,06,00,05,02,d6,52,0b,01,00,2e,9e,04,02,01,00,00,04,02,21,00,00,04,02,22,00,00,04,02,30,01,00,04,02,29,00,00,04,02,4c,00,00,04,02,4d,00,00,04,02,2f,00,00,04,02,24,00,00,04,02,2a,00,00,04,02,78,00,00,0e,02,79,00,0a,00,64,43,e0,e7,00,8c,78,c0,ff,04,02,7a,00,00,04,02,7b,00,00,06,02,85,00,02,07,00,06,02,86,00,02,07,00,06,02,87,00,02,07,00,06,02,88,00,02,07,00,06,02,89,00,02,07,00,06,02,8a,00,02,07,00,0e,02,97,00,0a,00,fb,1b,7d,22,00,96,50,c0,ff,04,02,98,00,00,0e,02,99,00,0a,00,fb,1b,7d,22,00,96,50,c0,ff,04,02,9a,00,00,04,02,2d,00,00,04,02,2e,00,00,04,02,8b,00,00,04,02,8c,00,00,04,02,8d,00,00,04,02,41,00,00,04,02,30,00,00,04,02,38,00,00,04,02,39,00,00,04,02"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 6
+    address: 0
+    section: 5
+    item: 2
+    objectValue: 21206
+    sub: "0x0b0100"
+    token: 40494
+    length: 4
+    class: 2
+    dataType: "Position"
+    value: "0x00"
+    length.2: 4
+    class.2: 2
+    dataType.2: "UTC Date"
+    value.2: "0x00"
+    length.3: 4
+    class.3: 2
+    dataType.3: "UTC Time"
+    value.3: "0x00"
+    length.4: 4
+    class.4: 2
+    dataType.4: "Fuel To Turn"
+    value.4: "0x00"
+    length.5: 4
+    class.5: 2
+    dataType.5: "Speed Water"
+    value.5: "0x00"
+    length.6: 4
+    class.6: 2
+    dataType.6: "Depth"
+    value.6: "0x00"
+    length.7: 4
+    class.7: 2
+    dataType.7: "Water Distance"
+    value.7: "0x00"
+    length.8: 4
+    class.8: 2
+    dataType.8: "Temp Water"
+    value.8: "0x00"
+    length.9: 4
+    class.9: 2
+    dataType.9: "Heading"
+    value.9: "0x00"
+    length.10: 4
+    class.10: 2
+    dataType.10: "Speed Pitot"
+    value.10: "0x00"
+    length.11: 4
+    class.11: 2
+    dataType.11: "Rate Of Turn"
+    value.11: "0x00"
+    length.12: 14
+    class.12: 2
+    dataType.12: "Attitude Yaw"
+    value.12: "0x0a006443e0e7008c78c0ff"
+    length.13: 4
+    class.13: 2
+    dataType.13: "Attitude Pitch"
+    value.13: "0x00"
+    length.14: 4
+    class.14: 2
+    dataType.14: "Attitude Roll"
+    value.14: "0x00"
+    length.15: 6
+    class.15: 2
+    dataType.15: "Vessel Fuel Rate"
+    value.15: "0x020700"
+    length.16: 6
+    class.16: 2
+    dataType.16: "Vessel Fuel Economy Wtr"
+    value.16: "0x020700"
+    length.17: 6
+    class.17: 2
+    dataType.17: "Vessel Fuel Economy GPS"
+    value.17: "0x020700"
+    length.18: 6
+    class.18: 2
+    dataType.18: "Vessel Fuel Remaining"
+    value.18: "0x020700"
+    length.19: 6
+    class.19: 2
+    dataType.19: "Vessel Fuel Range Wtr"
+    value.19: "0x020700"
+    length.20: 6
+    class.20: 2
+    dataType.20: "Vessel Fuel Range GPS"
+    value.20: "0x020700"
+    length.21: 14
+    class.21: 2
+    dataType.21: "Off Heading Lim"
+    value.21: "0x0a00fb1b7d22009650c0ff"
+    length.22: 4
+    class.22: 2
+    dataType.22: "Radius Of Turn Order"
+    value.22: "0x00"
+    length.23: 14
+    class.23: 2
+    dataType.23: "Rate Of Turn Order"
+    value.23: "0x0a00fb1b7d22009650c0ff"
+    length.24: 4
+    class.24: 2
+    dataType.24: "Off Track Lim"
+    value.24: "0x00"
+    length.25: 4
+    class.25: 2
+    dataType.25: "Speed Wind App"
+    value.25: "0x00"
+    length.26: 4
+    class.26: 2
+    dataType.26: "Speed Wind True"
+    value.26: "0x00"
+    length.27: 4
+    class.27: 2
+    dataType.27: "Wind App Angle"
+    value.27: "0x00"
+    length.28: 4
+    class.28: 2
+    dataType.28: "Wind True Angle"
+    value.28: "0x00"
+    length.29: 4
+    class.29: 2
+    dataType.29: "Wind True Direction"
+    value.29: "0x00"
+    length.30: 4
+    class.30: 2
+    dataType.30: "Pressure Atmospheric"
+    value.30: "0x00"
+    length.31: 4
+    class.31: 2
+    dataType.31: "Temp Outside"
+    value.31: "0x00"
+    length.32: 4
+    class.32: 2
+    dataType.32: "Temp Dew Point"
+    value.32: "0x00"
+    length.33: 4
+    class.33: 2
+    dataType.33: "Temp Wind Chill App"
+    value.33: "0x00"

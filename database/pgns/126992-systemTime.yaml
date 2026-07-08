@@ -35,3 +35,22 @@ fields:
   rangeMin: 0.0
   rangeMax: 86401.0
 notes: https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,3,126992,12,255,8,36,f0,2d,4b,10,6d,ff,19"  # from merrimac-2022.raw
+  expects:
+    sid: 54
+    source: "GPS"
+    date: 19245
+    time: 43617.0000
+- raw: "2023-01-01-00:00:00.000,3,126992,22,255,8,93,f0,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 147
+    source: "GPS"
+    date: ~
+    time: ~
+- raw: "2023-01-01-00:00:00.000,3,126992,14,255,8,ff,f0,2d,4b,f0,18,00,1a"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    source: "GPS"
+    date: 19245
+    time: 43621.4000

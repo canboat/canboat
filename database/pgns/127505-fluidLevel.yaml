@@ -27,3 +27,22 @@ fields:
   type: RESERVED
   bits: 8
 notes: Observed from EP65R
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127505,114,255,8,50,ff,7f,be,11,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 0
+    type: "Black water"
+    level: ~
+    capacity: 454.2
+- raw: "2023-01-01-00:00:00.000,6,127505,16,255,8,00,40,5f,ff,ff,ff,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    instance: 0
+    type: "Fuel"
+    level: 97.536
+    capacity: ~
+- raw: "2023-01-01-00:00:00.000,6,127505,5,255,8,0c,00,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 12
+    type: "Fuel"
+    level: 0.000
+    capacity: 0.0

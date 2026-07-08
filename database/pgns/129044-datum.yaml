@@ -30,3 +30,11 @@ fields:
   bits: 32
   description: defined in IHO Publication S-60, Appendices B and C. First three chars are datum ID as per IHO tables. Fourth
     char is local datum subdivision code.
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129044,36,255,20,57,38,34,ff,00,00,00,00,00,00,00,00,00,00,00,00,57,38,34,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    localDatum: "W84"
+    deltaLatitude: 0.0000000
+    deltaLongitude: 0.0000000
+    deltaAltitude: 0.00
+    referenceDatum: "W84"

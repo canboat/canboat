@@ -59,3 +59,24 @@ fields:
   type: LOOKUP
   bits: 8
   lookup: SEATALK_DEVICE_ID
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,126720,0,255,8,00,07,3b,9f,f0,81,90,00"  # from candumpSample3.txt
+  - "2023-01-01-00:00:00.000,7,126720,0,255,2,01,03"
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Device Indentification"
+    device: "S100"
+- raw:
+  - "2023-01-01-00:00:00.000,7,126720,204,255,8,00,07,3b,9f,f0,81,90,10"  # from candumpSample3.txt
+  - "2023-01-01-00:00:00.000,7,126720,204,255,2,01,05"
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Device Indentification"
+    device: "Course Computer"

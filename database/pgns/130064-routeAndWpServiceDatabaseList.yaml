@@ -54,3 +54,25 @@ repeating1:
   count: 9
   start: 4
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130064,99,255,61,ff,ff,02,00,01,00,01,00,0c,01,53,51,4c,20,53,65,72,76,65,72,10,fb,cf,24,eb,4e,f3,02,00,45,00,00,00,00,04,00,00,02,00,05,01,44,42,32,10,fb,cf,24,eb,4e,ff,20,00,60,00,00,00,f3,3f,00,00"  # from actisense-522.candump.log
+  expects:
+    startDatabaseId: ~
+    nitems: 2
+    numberOfDatabasesAvailable: 1
+    databaseId: 1
+    databaseName: "SQL Server"
+    databaseTimestamp: 61761.0000
+    databaseDatestamp: 20203
+    wpPositionResolution: "<0.0001 .. 0.001] min"
+    numberOfRoutesInDatabase: 2
+    numberOfWpsInDatabase: 69
+    numberOfBytesInDatabase: 1024
+    databaseId.2: 2
+    databaseName.2: "DB2"
+    databaseTimestamp.2: 61761.0000
+    databaseDatestamp.2: 20203
+    wpPositionResolution.2: ~
+    numberOfRoutesInDatabase.2: 32
+    numberOfWpsInDatabase.2: 96
+    numberOfBytesInDatabase.2: 16371

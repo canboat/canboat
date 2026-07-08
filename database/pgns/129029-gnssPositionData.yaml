@@ -90,3 +90,52 @@ repeating1:
   start: 16
   countField: 15
 notes: https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,3,129029,12,255,43,37,2d,4b,10,6d,ff,19,00,7a,5b,64,9d,56,61,07,b0,7c,b2,ca,79,db,c0,00,20,6e,bf,02,00,00,00,00,10,fc,0c,46,00,82,00,34,12,00,00,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 55
+    date: 19245
+    time: 43617.0000
+    latitude: 53.180146500
+    longitude: 5.428451167
+    altitude: 46.100000
+    gnssType: "GPS"
+    method: "GNSS fix"
+    integrity: "No integrity checking"
+    numberOfSvs: 12
+    hdop: 0.70
+    pdop: 1.30
+    geoidalSeparation: 46.60
+    referenceStations: ~
+- raw: "2023-01-01-00:00:00.000,3,129029,21,255,43,c4,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,7f,00,fc,09,ff,7f,ff,7f,ff,ff,ff,7f,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 196
+    date: ~
+    time: ~
+    latitude: 922.337203685
+    longitude: 922.337203685
+    altitude: 9223372036854.775391
+    gnssType: "GPS"
+    method: "no GNSS"
+    integrity: "No integrity checking"
+    numberOfSvs: 9
+    hdop: ~
+    pdop: ~
+    geoidalSeparation: ~
+    referenceStations: ~
+- raw: "2023-01-01-00:00:00.000,3,129029,23,255,47,dc,2d,4b,f0,e2,08,1a,40,13,2d,45,09,57,61,07,00,f8,e4,00,fe,da,c0,00,40,e1,33,00,00,00,00,00,14,fc,14,58,00,95,00,da,11,00,00,00,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 220
+    date: 19245
+    time: 43679.0000
+    latitude: 53.180192833
+    longitude: 5.428398000
+    altitude: 3.400000
+    gnssType: "GPS+SBAS/WAAS+GLONASS"
+    method: "GNSS fix"
+    integrity: "No integrity checking"
+    numberOfSvs: 20
+    hdop: 0.88
+    pdop: 1.49
+    geoidalSeparation: 45.70
+    referenceStations: 0

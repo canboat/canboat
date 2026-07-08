@@ -62,3 +62,34 @@ fields:
 - id: satelliteServiceIdNo
   name: Satellite Service ID No.
   type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129551,3,255,20,00,01,01,00,00,00,01,00,01,00,00,00,10,00,00,0c,01,00,64,00"  # from pgn129551.raw
+  expects:
+    sid: 0
+    channel: 1
+    signalStrength: 0.01
+    signalSnr: 0.01
+    frequency: 10
+    stationType: "GPS"
+    referenceStationId: 1
+    differentialSignalBitRate: "25"
+    differentialSignalDetectionMode: "Auto bit rate"
+    usedAsCorrectionSource: "No"
+    differentialSource: "Auto"
+    timeSinceLastSatDifferentialSync: 0.01
+    satelliteServiceIdNo: 100
+- raw: "2023-01-01-00:00:00.000,4,129551,3,255,20,00,01,ff,ff,ff,7f,01,00,01,00,00,00,10,00,00,0c,01,00,64,00"  # from pgn129551.raw
+  expects:
+    sid: 0
+    channel: 1
+    signalStrength: ~
+    signalSnr: 0.01
+    frequency: 10
+    stationType: "GPS"
+    referenceStationId: 1
+    differentialSignalBitRate: "25"
+    differentialSignalDetectionMode: "Auto bit rate"
+    usedAsCorrectionSource: "No"
+    differentialSource: "Auto"
+    timeSinceLastSatDifferentialSync: 0.01
+    satelliteServiceIdNo: 100

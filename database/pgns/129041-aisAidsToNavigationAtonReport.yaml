@@ -111,3 +111,26 @@ fields:
 - id: atonName
   name: AtoN Name
   type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129041,43,255,46,15,78,3c,3a,3b,28,83,62,d2,9b,e5,5f,17,f5,ff,ff,ff,ff,ff,ff,ff,ff,4d,0e,00,00,14,01,53,43,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20"  # from sbender1
+  expects:
+    messageId: "ATON report"
+    repeatIndicator: "Initial"
+    userId: 993672312
+    longitude: -76.5295832
+    latitude: 39.2160667
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: "Manual input mode"
+    lengthDiameter: ~
+    beamDiameter: ~
+    positionReferenceFromStarboardEdge: ~
+    positionReferenceFromTrueNorthFacingEdge: ~
+    atonType: "Fixed beacon: port hand"
+    offPositionIndicator: "No"
+    virtualAtonFlag: "Yes"
+    assignedModeFlag: "Autonomous and continuous"
+    positionFixingDeviceType: "Surveyed"
+    atonStatus: "0x00"
+    aisTransceiverInformation: "Channel A VDL reception"
+    atonName: "SC                "

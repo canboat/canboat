@@ -52,3 +52,13 @@ fields:
   type: BINARY
   bits: 256
 notes: Uwe Lovas has seen this from EP-70R
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130826,2,255,10,90,98,ff,01,00,01,b0,e1,e9,3d"  # from mercury-proprietary.raw
+  expects:
+    manufacturerCode: "Mercury Marine"
+    industryCode: "Marine Industry"
+    type: ~
+    instance: 1
+    field4: 0
+    flag: 1
+    data: "0xb0e1e93d"

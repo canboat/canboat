@@ -23,3 +23,19 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 14
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65012,193,255,8,fa,93,35,77,00,80,fc,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: -6
+    powerFactor: 2.00000
+    powerFactorLagging: "Leading"
+- raw: "2023-01-01-00:00:00.000,3,65012,193,255,8,fc,92,35,77,c0,7f,fc,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: -260
+    powerFactor: 1.99610
+    powerFactorLagging: "Leading"
+- raw: "2023-01-01-00:00:00.000,3,65012,193,255,8,68,90,35,77,80,7e,fc,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: -920
+    powerFactor: 1.97656
+    powerFactorLagging: "Leading"

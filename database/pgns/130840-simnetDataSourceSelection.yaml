@@ -68,3 +68,31 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130840,30,255,17,41,9f,ff,01,01,18,ff,7f,30,7d,ba,2f,00,be,78,c0,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Navigation"
+    sourceClass: 1
+    sourceAddress: 24
+    changeCounter: 127
+    source: "0x307dba2f00be78c0"
+- raw: "2023-01-01-00:00:00.000,3,130840,22,255,17,41,9f,ff,3b,64,fe,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot Function Backup"
+    sourceClass: 100
+    sourceAddress: "OutOfRange"
+    changeCounter: ~
+    source: "0xffffffffffffffff"
+- raw: "2023-01-01-00:00:00.000,3,130840,3,255,17,41,9f,ff,36,64,03,ff,00,fb,1b,7d,22,00,96,50,c0,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot"
+    sourceClass: 100
+    sourceAddress: 3
+    changeCounter: 0
+    source: "0xfb1b7d22009650c0"

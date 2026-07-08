@@ -57,3 +57,43 @@ repeating1:
   count: 10
   start: 3
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127503,1,255,20,00,01,f0,00,05,2c,01,88,13,e8,03,80,15,00,00,80,15,00,00,64"  # from pgn127504.raw
+  expects:
+    instance: 0
+    numberOfLines: 1
+    line: "Line 1"
+    acceptability: "Bad level"
+    voltage: 12.80
+    current: 30.0
+    frequency: 50.00
+    breakerSize: 100.0
+    realPower: 5504
+    reactivePower: 5504
+    powerFactor: 1.00
+- raw: "2023-01-01-00:00:00.000,6,127503,1,255,20,00,01,f5,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,7f"  # from pgn127504.raw
+  expects:
+    instance: 0
+    numberOfLines: 1
+    line: "Line 2"
+    acceptability: "Bad frequency"
+    voltage: 652.80
+    current: ~
+    frequency: ~
+    breakerSize: ~
+    realPower: ~
+    reactivePower: ~
+    powerFactor: ~
+- raw: "2023-01-01-00:00:00.000,6,127503,1,255,20,04,01,f2,ff,ff,ff,ff,ff,ff,fe,ff,ff,ff,ff,ff,ff,ff,00,00,ff"  # from susteranna2020.raw
+  expects:
+    instance: 4
+    numberOfLines: 1
+    line: "Line 3"
+    acceptability: "Bad level"
+    voltage: ~
+    current: ~
+    frequency: ~
+    breakerSize: "OutOfRange"
+    realPower: ~
+    reactivePower: 65535
+    powerFactor: -0.01

@@ -110,3 +110,52 @@ notes: |-
   https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf
 
   https://web.archive.org/web/20190921125506/www.nmea.org/Assets/20130906%20nmea%202000%20%20man%20overboard%20notification%20%28mob%29%20pgn%20127233%20amendment.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,4,127233,99,255,35,a0,12,ab,0f,00,f8,40,c2,93,1e,ff,eb,4e,10,fb,cf,24,3d,85,33,e9,28,5f,40,56,fc,5b,3d,33,00,92,18,d4,39,f8"  # from actisense-522.candump.log
+  expects:
+    sid: 160
+    mobEmitterId: 1026834
+    manOverboardStatus: "MOB Emitter Activated"
+    activationTime: 51300.0000
+    positionSource: ~
+    positionDate: 20203
+    positionTime: 61761.0000
+    latitude: -38.2499523
+    longitude: 144.7059240
+    cogReference: "True"
+    cog: 1.5707
+    sog: 0.51
+    mmsiOfVesselOfOrigin: 970201234
+    mobEmitterBatteryLowStatus: "Good"
+- raw: "2023-01-01-00:00:00.000,3,127233,30,255,35,ff,ff,ff,ff,ff,fb,c9,35,00,00,f9,ff,ff,ff,ff,00,00,f6,ff,6d,0b,04,86,4e,67,ff,98,ec,e8,00,87,12,8c,0e,ff"  # from simrad_mob_quick.raw
+  expects:
+    sid: ~
+    mobEmitterId: ~
+    manOverboardStatus: "MOB Not Active"
+    activationTime: 1.3769
+    positionSource: "Position reported by MOB emitter"
+    positionDate: ~
+    positionTime: 6.5535
+    latitude: 19.1758326
+    longitude: 173.3199364
+    cogReference: ~
+    cog: 6.0568
+    sog: 2.32
+    mmsiOfVesselOfOrigin: 244060807
+    mobEmitterBatteryLowStatus: ~
+- raw: "2023-01-01-00:00:00.000,3,127233,30,255,35,ff,ff,ff,ff,ff,f8,c9,35,00,00,f9,ff,ff,ff,ff,00,00,f6,ff,6d,0b,04,86,4e,67,ff,98,ec,e8,00,87,12,8c,0e,ff"  # from simrad_mob_quick.raw
+  expects:
+    sid: ~
+    mobEmitterId: ~
+    manOverboardStatus: "MOB Emitter Activated"
+    activationTime: 1.3769
+    positionSource: "Position reported by MOB emitter"
+    positionDate: ~
+    positionTime: 6.5535
+    latitude: 19.1758326
+    longitude: 173.3199364
+    cogReference: ~
+    cog: 6.0568
+    sog: 2.32
+    mmsiOfVesselOfOrigin: 244060807
+    mobEmitterBatteryLowStatus: ~

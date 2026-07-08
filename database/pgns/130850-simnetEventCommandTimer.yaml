@@ -74,3 +74,37 @@ notes: |-
   byte 2 = Address, byte 3 = reserved, byte 4 = Network/Display Group, byte 5 = Event Type, byte
   6 = command. The broadcast-event families (Timer = Event Type 23, Alarm = Event Type 255) are
   distinguished by byte 5, so they are mutually exclusive and order-independent. See issue #409.
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,40,255,12,41,9f,ff,ff,00,17,4a,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "None"
+    eventType: "Timer"
+    event: 74
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,26,255,12,41,9f,ff,ff,01,17,49,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Timer"
+    event: 73
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,26,255,12,41,9f,ff,ff,01,17,4a,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Timer"
+    event: 74
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~

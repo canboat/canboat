@@ -62,3 +62,16 @@ fields:
 - id: value
   name: Value
   type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,1,130825,2,255,11,13,99,ff,00,00,10,6d,0c,23,00,00"  # from navico-proprietary.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    instance: ~
+    recordId: 0
+    alarmType: 4096
+    alarmId: 3181
+    alarmState: "Silenced"
+    actionFlag: 0
+    alarmSeverity: "Alarm"
+    value: 0

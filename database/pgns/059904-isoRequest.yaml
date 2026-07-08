@@ -14,3 +14,13 @@ fields:
   bits: 24
   rangeMin: 0.0
   rangeMax: 262143.0
+samples:
+- raw: "2023-01-01-00:00:00.000,6,59904,0,14,3,14,f0,01"  # from merrimac-2022.raw
+  expects:
+    pgn: 126996
+- raw: "2023-01-01-00:00:00.000,6,59904,60,255,8,00,ee,00,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    pgn: 60928
+- raw: "2023-01-01-00:00:00.000,6,59904,20,0,3,00,ee,00"  # from merrimac-2022.raw
+  expects:
+    pgn: 60928

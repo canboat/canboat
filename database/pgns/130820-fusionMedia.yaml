@@ -52,3 +52,37 @@ fields:
 - id: positionInTrack
   name: Position in track
   type: DURATION_UFIX32_MS
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,04,80,0b,02,00,06,00,00,00,07,00,00,00,58,00,2a,00,f5,e6,13,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Info"
+    sourceId: 11
+    flags: "Paused"
+    track: 6
+    trackCount: 7
+    length: 2752.600
+    positionInTrack: 1304.309
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,04,80,0b,01,00,00,00,00,00,00,00,00,00,e5,f3,38,00,2a,02,01,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Info"
+    sourceId: 11
+    flags: "Playing"
+    track: 0
+    trackCount: 0
+    length: 3732.453
+    positionInTrack: 66.090
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,04,80,0b,01,00,06,00,00,00,0d,00,00,00,92,04,1d,00,99,01,00,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Info"
+    sourceId: 11
+    flags: "Playing"
+    track: 6
+    trackCount: 13
+    length: 1901.714
+    positionInTrack: 0.409

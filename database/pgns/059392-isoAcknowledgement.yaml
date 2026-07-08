@@ -40,3 +40,19 @@ notes: |-
   https://web.archive.org/web/20240802130644/www.furunousa.com/-/media/sites/furuno/document_library/documents/manuals/public_manuals/gp330b_nmea_pgns.pdf
 
   https://web.archive.org/web/20150910070107/www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,59392,14,12,8,01,ff,ff,ff,ff,34,ff,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    control: "NAK"
+    groupFunction: ~
+    pgn: 65332
+- raw: "2023-01-01-00:00:00.000,6,59392,5,1,8,02,ff,ff,ff,ff,09,fd,01"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    control: "Access Denied"
+    groupFunction: ~
+    pgn: 130313
+- raw: "2023-01-01-00:00:00.000,6,59392,10,27,8,01,ff,ff,ff,ff,16,f0,01"  # from merrimac-ydwg-2020.raw
+  expects:
+    control: "NAK"
+    groupFunction: ~
+    pgn: 126998

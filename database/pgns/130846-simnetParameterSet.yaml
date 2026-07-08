@@ -80,3 +80,40 @@ fields:
   type: DYNAMIC_FIELD_VALUE
   description: Variable-width value; width given by Length, datatype resolved per Key
 notes: 'Pin the historic <Id> (shipped in v7.0.0 as "Simnet: Parameter Set"); only the display Name changed.'
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130846,19,255,19,41,9f,ff,ff,64,ff,3b,fe,ff,01,08,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: ~
+    networkGroup: 100
+    source: ~
+    key: 16776763
+    operation: "Set"
+    length: 8
+    value: "0xffffffffffffffff"
+- raw: "2023-01-01-00:00:00.000,3,130846,4,255,21,41,9f,ff,00,ff,00,18,08,80,02,0a,45,4e,47,49,4e,45,00,00,00,00"  # from nac3-reset-dockside-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 0
+    key: 8390680
+    operation: "Reply"
+    length: 10
+    value: "0x454e47494e4500000000"
+- raw: "2023-01-01-00:00:00.000,3,130846,22,255,19,41,9f,ff,00,ff,78,14,0a,80,02,08,fb,9b,70,22,00,9b,50,c0"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 120
+    key: 8391188
+    operation: "Reply"
+    length: 8
+    value: "0xfb9b7022009b50c0"

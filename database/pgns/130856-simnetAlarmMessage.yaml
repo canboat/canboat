@@ -43,3 +43,20 @@ fields:
   name: Text
   type: STRING_FIX
   bits: 1784
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130856,18,255,27,41,9f,22,00,17,01,4e,6f,20,61,75,74,6f,70,69,6c,6f,74,20,63,6f,6d,70,75,74,65,72"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    alarmId: "No autopilot computer"
+    b: 23
+    c: 1
+    text: "No autopilot computer"
+- raw: "2023-01-01-00:00:00.000,7,130856,22,255,30,41,9f,16,00,1a,01,53,74,65,65,72,69,6e,67,20,63,6f,6d,70,61,73,73,20,6d,69,73,73,69,6e,67"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    alarmId: "Heading missing"
+    b: 26
+    c: 1
+    text: "Steering compass missing"

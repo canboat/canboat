@@ -49,3 +49,22 @@ fields:
   name: Alarm Priority
   type: BINARY
   bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65288,204,255,8,3b,9f,ff,01,1b,01,00,00"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    sid: ~
+    alarmStatus: "Alarm condition met and not silenced"
+    alarmId: "Pilot CU Disconnected"
+    alarmGroup: "Autopilot"
+    alarmPriority: "0x0000"
+- raw: "2023-01-01-00:00:00.000,7,65288,204,255,8,3b,9f,ff,00,1b,01,00,00"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    sid: ~
+    alarmStatus: "Alarm condition not met"
+    alarmId: "Pilot CU Disconnected"
+    alarmGroup: "Autopilot"
+    alarmPriority: "0x0000"

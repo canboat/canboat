@@ -41,3 +41,28 @@ fields:
 - id: album
   name: Album
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,36,a3,99,07,80,0b,06,00,00,00,19,4d,61,72,63,68,20,32,38,2c,20,32,30,31,37,20,61,74,20,34,3a,34,35,20,41,4d,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Album"
+    sourceId: 11
+    index: 6
+    album: "March 28, 2017 at 4:45 AM"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,54,a3,99,07,80,0b,00,00,00,00,2b,4e,65,77,20,48,61,6d,70,73,68,69,72,65,20,50,75,62,6c,69,63,20,52,61,64,69,6f,20,e2,80,a2,20,41,70,72,20,31,35,2c,20,32,30,31,37,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Album"
+    sourceId: 11
+    index: 0
+    album: "New Hampshire Public Radio • Apr 15, 2017"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,49,a3,99,07,80,0b,00,00,00,00,26,41,6d,65,72,69,63,61,6e,20,50,75,62,6c,69,63,20,4d,65,64,69,61,20,e2,80,a2,20,4e,6f,76,20,32,38,2c,20,32,30,31,36,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Album"
+    sourceId: 11
+    index: 0
+    album: "American Public Media • Nov 28, 2016"

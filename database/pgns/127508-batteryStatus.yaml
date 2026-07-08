@@ -21,3 +21,25 @@ fields:
 - id: sid
   name: SID
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127508,60,255,8,00,1c,0a,07,00,ff,70,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    instance: 0
+    voltage: 25.88
+    current: 0.7
+    temperature: 289.27
+    sid: ~
+- raw: "2023-01-01-00:00:00.000,6,127508,60,255,8,00,33,0a,ed,ff,02,71,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    instance: 0
+    voltage: 26.11
+    current: -1.9
+    temperature: 289.30
+    sid: ~
+- raw: "2023-01-01-00:00:00.000,6,127508,60,255,8,00,1e,0a,0a,00,06,71,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    instance: 0
+    voltage: 25.90
+    current: 1.0
+    temperature: 289.34
+    sid: ~

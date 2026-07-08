@@ -30,3 +30,15 @@ repeating1:
   count: 2
   start: 6
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130070,99,255,53,ff,ff,02,00,64,00,ff,ff,02,00,01,00,13,01,42,65,6e,74,6c,65,69,67,68,2d,43,6f,6d,6d,65,6e,74,02,00,14,01,47,6c,65,6e,68,75,6e,74,6c,79,2d,43,6f,6d,6d,65,6e,74"  # from actisense-522.candump.log
+  expects:
+    startId: ~
+    nitems: 2
+    numberOfWpsWithComments: 100
+    databaseId: ~
+    routeId: 2
+    wpIdRps: 1
+    comment: "Bentleigh-Comment"
+    wpIdRps.2: 2
+    comment.2: "Glenhuntly-Comment"

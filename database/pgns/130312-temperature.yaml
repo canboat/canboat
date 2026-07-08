@@ -28,3 +28,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130312,14,255,8,ff,00,01,c5,72,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    instance: 0
+    source: "Outside Temperature"
+    actualTemperature: 293.81
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130312,17,255,8,88,00,00,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 136
+    instance: 0
+    source: "Sea Temperature"
+    actualTemperature: ~
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130312,4,255,8,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: ~
+    instance: ~
+    source: ~
+    actualTemperature: ~
+    setTemperature: ~

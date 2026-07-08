@@ -36,3 +36,22 @@ fields:
 - id: loadCell
   name: Load Cell
   type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,4c,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1612
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,3f,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1599
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,91,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1681

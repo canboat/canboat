@@ -69,3 +69,49 @@ fields:
 - id: stationName
   name: Station Name
   type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,30,d9,c5,0d,d5,6b,70,1f,c0,a4,16,03,85,00,22,18,fa,ff,ff,fe,03,43,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23107.0000
+    stationLatitude: 52.7461333
+    stationLongitude: 5.1815616
+    windSpeed: 1.33
+    windDirection: 0.6178
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 289.95
+    stationId: ""
+    stationName: ""
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,b0,4f,10,0e,12,6d,70,1f,7e,a4,16,03,06,01,8a,21,fa,ff,ff,fe,03,4d,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23595.0000
+    stationLatitude: 52.7461650
+    stationLongitude: 5.1815550
+    windSpeed: 2.62
+    windDirection: 0.8586
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 290.05
+    stationId: ""
+    stationName: ""
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,f0,71,d1,0d,28,6c,70,1f,4c,a4,16,03,2f,01,3f,23,fa,ff,ff,fe,03,39,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23183.0000
+    stationLatitude: 52.7461416
+    stationLongitude: 5.1815500
+    windSpeed: 3.03
+    windDirection: 0.9023
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 289.85
+    stationId: ""
+    stationName: ""

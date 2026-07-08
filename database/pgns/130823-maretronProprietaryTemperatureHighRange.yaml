@@ -42,3 +42,31 @@ fields:
 - id: setTemperature
   name: Set Temperature
   type: TEMPERATURE_HIGH
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130823,42,255,9,89,98,ae,00,0e,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    sid: 174
+    instance: 0
+    source: "Exhaust Gas Temperature"
+    actualTemperature: ~
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130823,42,255,9,89,98,af,00,0e,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    sid: 175
+    instance: 0
+    source: "Exhaust Gas Temperature"
+    actualTemperature: ~
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130823,42,255,9,89,98,b0,00,0e,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    sid: 176
+    instance: 0
+    source: "Exhaust Gas Temperature"
+    actualTemperature: ~
+    setTemperature: ~

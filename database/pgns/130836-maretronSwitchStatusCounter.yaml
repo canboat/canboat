@@ -61,3 +61,40 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 6
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130836,72,255,23,89,98,02,01,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,fc"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 2
+    indicatorNumber: 1
+    startDate: ~
+    startTime: ~
+    offCounter: ~
+    onCounter: ~
+    errorCounter: ~
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130836,48,255,23,89,98,00,03,65,4d,08,13,6b,24,0f,00,00,00,07,00,00,00,00,00,00,00,fc"  # from maretron_switch_counter_status.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 0
+    indicatorNumber: 3
+    startDate: 19813
+    startTime: 61099.7000
+    offCounter: 15
+    onCounter: 7
+    errorCounter: 0
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130836,209,255,23,89,98,00,06,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 0
+    indicatorNumber: 6
+    startDate: ~
+    startTime: ~
+    offCounter: ~
+    onCounter: ~
+    errorCounter: ~
+    switchStatus: ~

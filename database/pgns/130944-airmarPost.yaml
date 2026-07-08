@@ -50,3 +50,20 @@ fields:
   name: Test result
   type: UINT8
   description: Values other than 0 are failure codes
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130944,35,255,20,87,98,ff,08,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    control: "Generate new values"
+    numberOfIdTestResultPairsToFollow: 8
+    testId: "Format Code"
+    testResult: 0
+- raw: "2023-01-01-00:00:00.000,7,130944,35,255,24,87,98,ff,0a,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00,10,00,14,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    control: "Generate new values"
+    numberOfIdTestResultPairsToFollow: 10
+    testId: "Format Code"
+    testResult: 0

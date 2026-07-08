@@ -41,3 +41,18 @@ repeating1:
   count: 5
   start: 5
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130065,99,255,43,ff,ff,02,00,16,00,ff,ff,01,00,0d,01,48,65,72,65,54,6f,54,68,65,72,65,27,02,00,10,01,41,6e,64,20,42,61,63,6b,20,41,67,61,69,6e,1b"  # from actisense-522.candump.log
+  expects:
+    startRouteId: ~
+    nitems: 2
+    numberOfRoutesInDatabase: 22
+    databaseId: ~
+    routeId: 1
+    routeName: "HereToThere"
+    wpIdentificationMethod: "Waypoints embedded in route"
+    routeStatus: "Deleted"
+    routeId.2: 2
+    routeName.2: "And Back Again"
+    wpIdentificationMethod.2: 2
+    routeStatus.2: "Inactive"

@@ -121,3 +121,27 @@ fields:
 repeating1:
   count: 2
   start: 21
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129808,99,255,78,70,ff,17,32,4c,27,1e,6d,64,39,30,30,30,36,39,39,30,30,30,36,39,0b,01,31,38,30,30,20,48,65,6c,70,c0,66,4a,e9,80,2c,f3,55,10,fb,cf,24,17,32,4c,27,1e,7f,fd,39,30,30,30,37,30,39,30,30,30,37,30,10,fb,cf,24,eb,4e,ff,ff,68,06,01,49,6f,6e,61"  # from actisense-522.candump.log
+  expects:
+    dscFormatSymbol: "Distress"
+    dscCategorySymbol: ~
+    dscMessageAddress: "2350763930"
+    1stTelecommand: "J3E TP"
+    subsequentCommunicationModeOr2ndTelecommand: "No reason given"
+    proposedRxFrequencyChannel: "900069"
+    proposedTxFrequencyChannel: "900069"
+    telephoneNumber: "1800 Help"
+    latitudeOfVesselReported: -38.1000000
+    longitudeOfVesselReported: 144.2000000
+    timeOfPosition: 61761.0000
+    mmsiOfShipInDistress: "2350763930"
+    dscEosSymbol: 127
+    expansionEnabled: "Yes"
+    callingRxFrequencyChannel: "900070"
+    callingTxFrequencyChannel: "900070"
+    timeOfReceipt: 61761.0000
+    dateOfReceipt: 20203
+    dscEquipmentAssignedMessageId: ~
+    dscExpansionFieldSymbol: "Additional station identification"
+    dscExpansionFieldData: "Iona"

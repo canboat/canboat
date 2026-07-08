@@ -28,3 +28,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,2,129026,14,255,8,ff,fc,34,3e,01,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    cogReference: "True"
+    cog: 1.5924
+    sog: 0.01
+- raw: "2023-01-01-00:00:00.000,2,129026,22,255,8,93,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 147
+    cogReference: ~
+    cog: ~
+    sog: ~
+- raw: "2023-01-01-00:00:00.000,2,129026,12,255,8,36,fc,8a,36,04,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 54
+    cogReference: "True"
+    cog: 1.3962
+    sog: 0.04

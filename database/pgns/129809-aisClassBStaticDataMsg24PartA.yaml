@@ -38,3 +38,28 @@ fields:
 - id: sequenceId
   name: Sequence ID
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129809,23,255,27,18,55,81,97,0e,57,49,54,54,45,20,52,41,41,46,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,e1,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 244810069
+    name: "WITTE RAAF"
+    aisTransceiverInformation: "Channel B VDL reception"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,6,129809,23,255,27,18,12,af,a0,0c,53,55,4d,4d,45,52,4a,4f,59,20,20,20,20,20,20,20,20,20,20,20,e0,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 211857170
+    name: "SUMMERJOY"
+    aisTransceiverInformation: "Channel A VDL reception"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,6,129809,0,255,26,18,47,38,8c,0e,56,4c,49,45,47,45,52,40,40,40,40,40,40,40,40,40,40,40,40,40,e0"  # from susteranna-actisense-serial.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 244070471
+    name: "VLIEGER"
+    aisTransceiverInformation: "Channel A VDL reception"
+    sequenceId: ~

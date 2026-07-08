@@ -19,3 +19,16 @@ notes: |-
   https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf
 
   Lengths observed from Simrad RC42
+samples:
+- raw: "2023-01-01-00:00:00.000,3,127251,20,255,8,00,1a,8e,ff,ff,27,02,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    rate: -0.00091119
+- raw: "2023-01-01-00:00:00.000,3,127251,20,255,8,00,8e,2b,00,00,ff,7f,fd"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    rate: 0.00034844
+- raw: "2023-01-01-00:00:00.000,3,127251,20,255,8,00,b5,fd,fe,ff,82,aa,c0"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    rate: -0.00206634

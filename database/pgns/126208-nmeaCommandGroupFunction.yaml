@@ -48,3 +48,28 @@ repeating1:
   count: 2
   start: 6
   countField: 5
+samples:
+- raw: "2023-01-01-00:00:00.000,2,126208,0,67,21,01,16,f0,01,ff,01,02,0e,01,59,44,3a,56,4f,4c,55,4d,45,20,36,30"  # from 126208.raw
+  expects:
+    functionCode: "Command"
+    pgn: 126998
+    priority: ~
+    numberOfParameters: 1
+    parameter: 2
+    value: "0x0e0159443a564f4c554d45203630"
+- raw: "2023-01-01-00:00:00.000,3,126208,0,52,42,01,02,ff,01,f8,0b,01,3f,07,03,04,04,1e,00,05,09,07,06,87,03,07,86,03,0a,e8,03,00,00,0b,d0,07,00,00,0d,64,00,0e,05,00,0f,06,00"  # from scx20-setting-tool-offsets.raw
+  expects:
+    functionCode: "Command"
+    pgn: 130818
+    priority: "Leave unchanged"
+    numberOfParameters: 11
+    parameter: 1
+    value: "0x3f070304041e000509070687030786030ae80300000bd00700000d64000e05000f0600"
+- raw: "2023-01-01-00:00:00.000,3,126208,1,28,31,01,01,ff,01,f8,06,01,3f,07,03,04,09,07,00,00,00,0a,00,0e,00,00,0b,00,00,38,00,00,0c,07,00,00"  # from scx20-disable-sv.raw
+  expects:
+    functionCode: "Command"
+    pgn: 130817
+    priority: "Leave unchanged"
+    numberOfParameters: 6
+    parameter: 1
+    value: "0x3f07030409070000000a000e00000b00003800000c070000"

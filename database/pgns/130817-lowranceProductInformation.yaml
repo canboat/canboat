@@ -56,3 +56,16 @@ fields:
   name: Firmware time
   type: STRING_FIX
   bits: 256
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130817,40,255,113,8c,80,93,02,54,65,6d,70,65,72,61,74,75,72,65,00,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,01,02,00,4d,5a,31,36,39,34,43,00,20,20,44,65,63,20,20,37,20,32,30,31,36,00,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,31,33,3a,35,34,3a,35,35,00,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    productCode: 659
+    model: "Temperature"
+    a: 1
+    b: 2
+    c: 0
+    firmwareVersion: "MZ1694C"
+    firmwareDate: "Dec  7 2016"
+    firmwareTime: "13:54:55"

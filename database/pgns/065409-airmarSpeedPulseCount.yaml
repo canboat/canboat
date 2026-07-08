@@ -36,3 +36,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65409,36,255,8,87,98,2d,e8,03,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 45
+    durationOfInterval: 1.000
+    numberOfPulsesReceived: 0
+- raw: "2023-01-01-00:00:00.000,7,65409,36,255,8,87,98,31,00,00,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 49
+    durationOfInterval: 0.000
+    numberOfPulsesReceived: 0
+- raw: "2023-01-01-00:00:00.000,7,65409,36,255,8,87,98,32,d0,07,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 50
+    durationOfInterval: 2.000
+    numberOfPulsesReceived: 0

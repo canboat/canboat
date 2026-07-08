@@ -40,3 +40,28 @@ fields:
 - id: field8
   name: Field 8
   type: ANGLE_FIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130843,14,255,10,3f,9f,9f,ff,1f,00,62,00,03,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    heel: -0.0097
+    field4: 0.0031
+    field6: 0.0098
+    field8: 0.0003
+- raw: "2023-01-01-00:00:00.000,7,130843,14,255,10,3f,9f,bf,ff,ea,01,43,00,03,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    heel: -0.0065
+    field4: 0.0490
+    field6: 0.0067
+    field8: 0.0003
+- raw: "2023-01-01-00:00:00.000,7,130843,14,255,10,3f,9f,97,ff,13,02,69,00,03,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    heel: -0.0105
+    field4: 0.0531
+    field6: 0.0105
+    field8: 0.0003

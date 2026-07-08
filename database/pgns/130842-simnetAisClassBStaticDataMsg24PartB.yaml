@@ -89,3 +89,55 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130842,8,255,37,41,9f,81,ff,18,88,87,94,0e,24,00,00,00,00,00,00,00,50,49,36,34,34,36,00,6e,00,28,00,1e,00,3c,00,ff,ff,ff,ff,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    messageId: 1
+    repeatIndicator: "Second retransmission"
+    d: ~
+    e: 24
+    userId: 244615048
+    typeOfShip: "Sailing"
+    vendorId: ""
+    callsign: "PI6446"
+    length: 11.0
+    beam: 4.0
+    positionReferenceFromStarboard: 3.0
+    positionReferenceFromBow: 6.0
+    mothershipUserId: ~
+- raw: "2023-01-01-00:00:00.000,6,130842,8,255,37,41,9f,81,ff,18,f6,f3,9a,0c,24,46,45,43,30,30,30,31,44,47,36,31,33,37,20,78,00,28,00,14,00,78,00,ff,ff,ff,ff,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    messageId: 1
+    repeatIndicator: "Second retransmission"
+    d: ~
+    e: 24
+    userId: 211481590
+    typeOfShip: "Sailing"
+    vendorId: "FEC0001"
+    callsign: "DG6137"
+    length: 12.0
+    beam: 4.0
+    positionReferenceFromStarboard: 2.0
+    positionReferenceFromBow: 12.0
+    mothershipUserId: ~
+- raw: "2023-01-01-00:00:00.000,6,130842,8,255,37,41,9f,81,ff,18,4e,c9,6f,0e,24,54,52,55,45,48,44,47,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,ff,ff,ff,ff,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    messageId: 1
+    repeatIndicator: "Second retransmission"
+    d: ~
+    e: 24
+    userId: 242207054
+    typeOfShip: "Sailing"
+    vendorId: "TRUEHDG"
+    callsign: ""
+    length: 0.0
+    beam: 0.0
+    positionReferenceFromStarboard: 0.0
+    positionReferenceFromBow: 0.0
+    mothershipUserId: ~

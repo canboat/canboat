@@ -55,3 +55,16 @@ fields:
 - id: bearingCurrentWaypointToNextWaypointTrue
   name: Bearing, Current Waypoint to Next Waypoint, True
   type: ANGLE_UFIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130918,6,255,47,3b,9f,01,00,57,61,79,70,6f,69,6e,74,20,31,33,34,51,77,65,72,02,00,57,61,79,70,6f,69,6e,74,20,37,34,36,00,3b,a7,02,00,bf,47,1d,00,3a,07,36,d3"  # from raymarine-string.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    currentWaypointSequence: 1
+    currentWaypointName: "Waypoint 134Qwer"
+    nextWaypointSequence: 2
+    nextWaypointName: "Waypoint 746"
+    unknown: 0
+    distancePositionToNextWaypoint: 1918911
+    bearingPositionToNextWaypointTrue: 0.1850
+    bearingCurrentWaypointToNextWaypointTrue: 5.4070

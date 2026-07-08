@@ -41,3 +41,28 @@ fields:
 - id: artist
   name: Artist
   type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,17,a3,99,06,80,0b,06,00,00,00,06,53,2d,54,6f,77,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Artist"
+    sourceId: 11
+    index: 6
+    artist: "S-Town"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,28,a3,99,06,80,0b,00,00,00,00,11,41,75,74,68,6f,72,20,49,6e,74,65,72,76,69,65,77,73,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Artist"
+    sourceId: 11
+    index: 0
+    artist: "Author Interviews"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,27,a3,99,06,80,0b,00,00,00,00,10,4d,75,73,69,63,20,49,6e,74,65,72,76,69,65,77,73,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Artist"
+    sourceId: 11
+    index: 0
+    artist: "Music Interviews"

@@ -48,3 +48,25 @@ fields:
   name: Spare
   type: SPARE
   bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,1,65305,3,255,8,41,9f,64,0a,08,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Mode"
+    mode: ["Standby"]
+- raw: "2023-01-01-00:00:00.000,7,65305,2,255,8,41,9f,00,0a,0a,00,80,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "AC"
+    report: "Mode"
+    mode: ["bit 1", "Standby"]
+- raw: "2023-01-01-00:00:00.000,1,65305,17,255,8,41,9f,64,0a,00,04,00,00"  # from simrad_event_timer2.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Mode"
+    mode: ["Wind"]

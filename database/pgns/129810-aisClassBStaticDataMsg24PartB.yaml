@@ -78,3 +78,52 @@ fields:
 - id: sequenceId
   name: Sequence ID
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129810,23,255,35,18,f6,b5,9c,0c,25,53,52,54,45,51,23,2d,44,44,37,35,35,38,00,82,00,28,00,0a,00,64,00,00,00,00,00,03,e0,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 211596790
+    typeOfShip: "Pleasure"
+    vendorId: "SRTEQ#-"
+    callsign: "DD7558"
+    length: 13.0
+    beam: 4.0
+    positionReferenceFromStarboard: 1.0
+    positionReferenceFromBow: 10.0
+    mothershipUserId: 0
+    gnssType: "Default: undefined"
+    aisTransceiverInformation: "Channel A VDL reception"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,6,129810,0,255,34,18,19,ae,8c,0e,25,54,48,41,46,58,45,46,50,45,35,37,33,38,40,6e,00,28,00,1e,00,32,00,ff,ff,ff,ff,03,e1"  # from strings.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 244100633
+    typeOfShip: "Pleasure"
+    vendorId: "THAFXEF"
+    callsign: "PE5738"
+    length: 11.0
+    beam: 4.0
+    positionReferenceFromStarboard: 3.0
+    positionReferenceFromBow: 5.0
+    mothershipUserId: ~
+    gnssType: "Default: undefined"
+    aisTransceiverInformation: "Channel B VDL reception"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,6,129810,23,255,35,18,95,1d,98,0e,37,41,4d,43,00,ff,ff,ff,50,48,38,35,39,34,20,78,00,1e,00,14,00,28,00,00,00,00,00,03,e1,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Static data report"
+    repeatIndicator: "Initial"
+    userId: 244850069
+    typeOfShip: "Law enforcement"
+    vendorId: "AMC"
+    callsign: "PH8594"
+    length: 12.0
+    beam: 3.0
+    positionReferenceFromStarboard: 2.0
+    positionReferenceFromBow: 4.0
+    mothershipUserId: 0
+    gnssType: "Default: undefined"
+    aisTransceiverInformation: "Channel B VDL reception"
+    sequenceId: ~

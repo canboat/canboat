@@ -40,3 +40,16 @@ fields:
   type: BINARY
   bits: 40
   description: Payload; constant in all observed traffic
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65280,30,255,8,13,99,04,05,00,00,02,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 4
+    data: "0x0500000200"
+- raw: "2023-01-01-00:00:00.000,2,65280,32,255,8,13,99,05,00,00,00,00,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 5
+    data: "0x0000000000"

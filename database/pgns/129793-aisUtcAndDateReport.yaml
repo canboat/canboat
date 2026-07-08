@@ -77,3 +77,46 @@ fields:
   type: LOOKUP
   bits: 4
   lookup: POSITION_FIX_DEVICE
+samples:
+- raw: "2023-01-01-00:00:00.000,7,129793,45,255,27,04,56,06,35,00,56,8e,b1,db,da,74,cb,08,fc,70,81,12,01,0a,80,00,95,47,1f,00,fc,ff"  # from merrimac-ydwg-2020.raw
+  expects:
+    messageId: "Base station report"
+    repeatIndicator: "Initial"
+    userId: 3475030
+    longitude: -60.9120682
+    latitude: 14.7551450
+    positionAccuracy: "Low"
+    raim: "not in use"
+    positionTime: 1799.0000
+    communicationState: "0x0a8000"
+    aisTransceiverInformation: "Channel A VDL reception"
+    positionDate: 18325
+    gnssType: "GPS"
+- raw: "2023-01-01-00:00:00.000,7,129793,0,255,26,04,28,43,25,00,a5,f1,09,03,c3,dc,60,1f,fd,ff,ff,ff,ff,67,c1,0b,ff,ff,7f,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    messageId: "Base station report"
+    repeatIndicator: "Initial"
+    userId: 2442024
+    longitude: 5.0983333
+    latitude: 52.6441667
+    positionAccuracy: "High"
+    raim: "not in use"
+    positionTime: ~
+    communicationState: "0x67c103"
+    aisTransceiverInformation: "Channel B VDL reception"
+    positionDate: ~
+    gnssType: "Surveyed"
+- raw: "2023-01-01-00:00:00.000,7,129793,43,255,27,04,a0,ba,22,00,18,92,45,ff,5e,81,83,1b,01,b0,6f,e6,21,1c,88,09,f3,43,70,00,00,ff"  # from candumpSample3.txt
+  expects:
+    messageId: "Base station report"
+    repeatIndicator: "Initial"
+    userId: 2276000
+    longitude: -1.2217832
+    latitude: 46.1603166
+    positionAccuracy: "High"
+    raim: "not in use"
+    positionTime: 56875.0000
+    communicationState: "0x1c8801"
+    aisTransceiverInformation: "Channel B VDL reception"
+    positionDate: 17395
+    gnssType: "Surveyed"

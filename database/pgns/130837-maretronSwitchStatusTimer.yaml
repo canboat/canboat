@@ -61,3 +61,40 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 6
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130837,72,255,23,89,98,02,01,ff,ff,ff,ff,ff,ff,a5,1c,e5,02,37,49,23,00,0b,00,00,00,fc"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 2
+    indicatorNumber: 1
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 48569509
+    accumulatedOnPeriod: 2312503
+    accumulatedErrorPeriod: 11
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130837,209,255,23,89,98,00,02,ff,ff,ff,ff,ff,ff,ed,8c,87,03,ff,ff,ff,ff,ff,ff,ff,ff,fc"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 0
+    indicatorNumber: 2
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 59215085
+    accumulatedOnPeriod: ~
+    accumulatedErrorPeriod: ~
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130837,72,255,23,89,98,02,02,ff,ff,ff,ff,ff,ff,03,f5,ec,00,3c,cc,52,01,a7,a4,c8,00,fd"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 2
+    indicatorNumber: 2
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 15529219
+    accumulatedOnPeriod: 22203452
+    accumulatedErrorPeriod: 13149351
+    switchStatus: "On"

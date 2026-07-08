@@ -42,3 +42,11 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65304,33,255,8,8c,80,11,e0,2e,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    numberOfEngines: 1
+    numberOfFuelTanks: 1
+    totalFuelCapacity: 1200.0

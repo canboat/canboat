@@ -52,3 +52,37 @@ fields:
 - id: d
   name: D
   type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130827,5,255,13,3f,9f,01,00,00,ff,7f,00,ff,ff,ff,00,00"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    messageId: 1
+    rudderAngle: 0.0000
+    a: ~
+    b: 0
+    commandedCourse: ~
+    c: ~
+    d: 0
+- raw: "2023-01-01-00:00:00.000,7,130827,5,255,13,3f,9f,01,a5,09,75,e7,02,32,78,ff,6e,07"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    messageId: 1
+    rudderAngle: 0.2469
+    a: -6283
+    b: 2
+    commandedCourse: 3.0770
+    c: ~
+    d: 1902
+- raw: "2023-01-01-00:00:00.000,7,130827,5,255,13,3f,9f,01,8d,0c,29,e3,01,a7,6e,ff,ee,08"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    messageId: 1
+    rudderAngle: 0.3213
+    a: -7383
+    b: 1
+    commandedCourse: 2.8327
+    c: ~
+    d: 2286

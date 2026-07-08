@@ -21,3 +21,22 @@ fields:
   type: LENGTH_UFIX8_DAM
   description: Max measurement range
 notes: https://web.archive.org/web/20070107131536/www.maretron.com/support/manuals/DST100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,3,128267,35,255,8,29,36,00,00,00,bc,02,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 41
+    depth: 0.54
+    offset: 0.700
+    range: ~
+- raw: "2023-01-01-00:00:00.000,3,128267,8,255,8,00,ff,ff,ff,ff,00,00,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    depth: ~
+    offset: 0.000
+    range: ~
+- raw: "2023-01-01-00:00:00.000,3,128267,16,255,8,00,2a,00,00,00,00,00,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    depth: 0.42
+    offset: 0.000
+    range: ~

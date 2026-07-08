@@ -58,3 +58,46 @@ fields:
   name: I
   type: UINT8
 notes: M/V Dirona
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130821,8,255,12,3f,9f,13,00,cf,e3,36,11,00,be,a0,c0"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    sid: 19
+    a: 0
+    b: 207
+    c: 227
+    d: 54
+    e: 17
+    f: 0
+    g: 190
+    h: 160
+    i: 192
+- raw: "2023-01-01-00:00:00.000,7,130821,8,255,12,3f,9f,17,00,15,f2,39,11,02,8c,3c,c0"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    sid: 23
+    a: 0
+    b: 21
+    c: 242
+    d: 57
+    e: 17
+    f: 2
+    g: 140
+    h: 60
+    i: 192
+- raw: "2023-01-01-00:00:00.000,7,130821,1,255,12,3f,9f,04,00,1c,45,e2,e7,00,af,78,c0"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    sid: 4
+    a: 0
+    b: 28
+    c: 69
+    d: 226
+    e: 231
+    f: 0
+    g: 175
+    h: 120
+    i: 192

@@ -53,3 +53,43 @@ fields:
 - id: i
   name: I
   type: INT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,fe,ff,ff,ff,0f,00,00,00,e5,ff,ff,ff,00,a6,00,00,00,36,00,00,00,da,ff,ff,ff,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: -2
+    b: 15
+    c: -27
+    d: 0
+    e: 166
+    f: 54
+    g: -38
+    h: -1
+    i: 0
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,0e,00,00,00,fd,ff,ff,ff,0b,00,00,00,00,f7,ff,ff,ff,a6,ff,ff,ff,3d,00,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: 14
+    b: -3
+    c: 11
+    d: 0
+    e: -9
+    f: -90
+    g: 61
+    h: 0
+    i: 0
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,20,00,00,00,db,ff,ff,ff,d2,ff,ff,ff,00,80,00,00,00,42,00,00,00,0f,00,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: 32
+    b: -37
+    c: -46
+    d: 0
+    e: 128
+    f: 66
+    g: 15
+    h: 0
+    i: 0

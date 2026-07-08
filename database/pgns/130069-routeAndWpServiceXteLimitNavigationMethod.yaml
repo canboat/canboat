@@ -39,3 +39,19 @@ repeating1:
   count: 6
   start: 4
   countField: 2
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130069,99,255,20,ff,ff,02,00,64,00,ff,ff,02,00,01,00,1e,00,fc,02,00,14,00,fd"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 2
+    numberOfWpsWithASpecificXteLimitOrNavMethod: 100
+    databaseId: ~
+    routeId: 2
+    rps: 1
+    xteLimitInTheLegAfterWp: 30
+    navMethodInTheLegAfterWp: "Great Circle"
+    databaseId.2: 2
+    routeId.2: 20
+    rps.2: 253
+    xteLimitInTheLegAfterWp.2: ~
+    navMethodInTheLegAfterWp.2: ~

@@ -25,3 +25,22 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130314,14,255,8,ff,00,00,54,79,0f,00,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    instance: 0
+    source: "Atmospheric"
+    pressure: 101410.0
+- raw: "2023-01-01-00:00:00.000,5,130314,89,255,8,b0,10,81,00,00,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 176
+    instance: 16
+    source: 129
+    pressure: 0.0
+- raw: "2023-01-01-00:00:00.000,5,130314,88,255,8,64,00,04,8a,49,0e,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 100
+    instance: 0
+    source: "Hydraulic"
+    pressure: 93633.0

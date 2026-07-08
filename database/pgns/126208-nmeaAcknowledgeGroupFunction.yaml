@@ -45,3 +45,49 @@ repeating1:
   count: 1
   start: 6
   countField: 5
+samples:
+- raw: "2023-01-01-00:00:00.000,3,126208,24,1,9,02,08,ff,01,03,05,00,03,f0"  # from 126208.raw
+  expects:
+    functionCode: "Acknowledge"
+    pgn: 130824
+    pgnErrorCode: "Access denied"
+    transmissionIntervalPriorityErrorCode: "Acknowledge"
+    numberOfParameters: 5
+    parameter: "Acknowledge"
+    parameter.2: "Acknowledge"
+    parameter.3: "Parameter out of range"
+    parameter.4: "Acknowledge"
+    parameter.5: "Acknowledge"
+- raw: "2023-01-01-00:00:00.000,3,126208,52,0,12,02,02,ff,01,30,0b,44,00,00,00,00,00"  # from scx20-setting-tool-offsets.raw
+  expects:
+    functionCode: "Acknowledge"
+    pgn: 130818
+    pgnErrorCode: "Acknowledge"
+    transmissionIntervalPriorityErrorCode: "Access denied"
+    numberOfParameters: 11
+    parameter: "Access denied"
+    parameter.2: "Access denied"
+    parameter.3: "Acknowledge"
+    parameter.4: "Acknowledge"
+    parameter.5: "Acknowledge"
+    parameter.6: "Acknowledge"
+    parameter.7: "Acknowledge"
+    parameter.8: "Acknowledge"
+    parameter.9: "Acknowledge"
+    parameter.10: "Acknowledge"
+    parameter.11: "Acknowledge"
+- raw: "2023-01-01-00:00:00.000,3,126208,52,0,10,02,11,ff,01,30,08,00,00,00,00"  # from scx20-setting-tool-offsets.raw
+  expects:
+    functionCode: "Acknowledge"
+    pgn: 130833
+    pgnErrorCode: "Acknowledge"
+    transmissionIntervalPriorityErrorCode: "Access denied"
+    numberOfParameters: 8
+    parameter: "Acknowledge"
+    parameter.2: "Acknowledge"
+    parameter.3: "Acknowledge"
+    parameter.4: "Acknowledge"
+    parameter.5: "Acknowledge"
+    parameter.6: "Acknowledge"
+    parameter.7: "Acknowledge"
+    parameter.8: "Acknowledge"

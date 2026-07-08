@@ -43,3 +43,18 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65379,204,255,8,3b,9f,00,00,00,00,02,ff"  # from candumpSample3.txt
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    pilotMode: "Standby"
+    subMode: "0x0000"
+    pilotModeData: "0x02"
+- raw: "2023-01-01-00:00:00.000,7,65379,204,255,8,3b,9f,40,00,00,00,02,ff"  # from pgn65379.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    pilotMode: "Auto, compass commanded"
+    subMode: "0x0000"
+    pilotModeData: "0x02"

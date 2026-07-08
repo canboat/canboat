@@ -56,3 +56,118 @@ fields:
 repeating1:
   count: 3
   start: 5
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130852,32,255,57,13,99,00,00,04,00,00,00,00,01,04,00,00,00,00,02,04,00,00,00,00,03,04,00,00,00,00,04,04,a8,6c,d4,05,05,04,f5,dc,64,00,07,04,97,01,00,00,13,01,00,14,01,01,15,01,00,16,01,00"  # from navico-diagnostics-130852.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    instance: 0
+    fieldId: 0
+    length: 4
+    value: "0x00000000"
+    fieldId.2: 1
+    length.2: 4
+    value.2: "0x00000000"
+    fieldId.3: 2
+    length.3: 4
+    value.3: "0x00000000"
+    fieldId.4: 3
+    length.4: 4
+    value.4: "0x00000000"
+    fieldId.5: "Rx Messages"
+    length.5: 4
+    value.5: 97807528
+    fieldId.6: "Tx Messages"
+    length.6: 4
+    value.6: 6610165
+    fieldId.7: "Fast Packet Errors"
+    length.7: 4
+    value.7: 407
+    fieldId.8: 19
+    length.8: 1
+    value.8: "0x00"
+    fieldId.9: 20
+    length.9: 1
+    value.9: "0x01"
+    fieldId.10: 21
+    length.10: 1
+    value.10: "0x00"
+    fieldId.11: 22
+    length.11: 1
+    value.11: "0x00"
+- raw: "2023-01-01-00:00:00.000,7,130852,21,255,57,13,99,00,00,04,00,00,00,00,01,04,00,00,00,00,02,04,00,00,00,00,03,04,00,00,00,00,04,04,f4,31,5f,30,05,04,85,cb,3f,00,07,04,10,0d,00,00,13,01,00,14,01,00,15,01,00,16,01,00"  # from navico-diagnostics-130852.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    instance: 0
+    fieldId: 0
+    length: 4
+    value: "0x00000000"
+    fieldId.2: 1
+    length.2: 4
+    value.2: "0x00000000"
+    fieldId.3: 2
+    length.3: 4
+    value.3: "0x00000000"
+    fieldId.4: 3
+    length.4: 4
+    value.4: "0x00000000"
+    fieldId.5: "Rx Messages"
+    length.5: 4
+    value.5: 811545076
+    fieldId.6: "Tx Messages"
+    length.6: 4
+    value.6: 4180869
+    fieldId.7: "Fast Packet Errors"
+    length.7: 4
+    value.7: 3344
+    fieldId.8: 19
+    length.8: 1
+    value.8: "0x00"
+    fieldId.9: 20
+    length.9: 1
+    value.9: "0x00"
+    fieldId.10: 21
+    length.10: 1
+    value.10: "0x00"
+    fieldId.11: 22
+    length.11: 1
+    value.11: "0x00"
+- raw: "2023-01-01-00:00:00.000,7,130852,28,255,57,13,99,00,00,04,00,00,00,00,01,04,00,00,00,00,02,04,00,00,00,00,03,04,ff,00,00,00,04,04,00,00,00,00,05,04,00,00,00,00,07,04,a9,19,00,00,13,01,00,14,01,01,15,01,00,16,01,00"  # from navico-diagnostics-130852.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    instance: 0
+    fieldId: 0
+    length: 4
+    value: "0x00000000"
+    fieldId.2: 1
+    length.2: 4
+    value.2: "0x00000000"
+    fieldId.3: 2
+    length.3: 4
+    value.3: "0x00000000"
+    fieldId.4: 3
+    length.4: 4
+    value.4: "0xff000000"
+    fieldId.5: "Rx Messages"
+    length.5: 4
+    value.5: 0
+    fieldId.6: "Tx Messages"
+    length.6: 4
+    value.6: 0
+    fieldId.7: "Fast Packet Errors"
+    length.7: 4
+    value.7: 6569
+    fieldId.8: 19
+    length.8: 1
+    value.8: "0x00"
+    fieldId.9: 20
+    length.9: 1
+    value.9: "0x01"
+    fieldId.10: 21
+    length.10: 1
+    value.10: "0x00"
+    fieldId.11: 22
+    length.11: 1
+    value.11: "0x00"

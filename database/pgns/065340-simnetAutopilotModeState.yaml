@@ -53,3 +53,31 @@ fields:
 - id: flags
   name: Flags
   type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,00,00,fe,f8,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Standby"
+    mode: "Standby"
+    c: "OutOfRange"
+    d: 248
+    flags: 128
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,10,01,fe,fa,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Engaged"
+    mode: "Heading"
+    c: "OutOfRange"
+    d: 250
+    flags: 128
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,00,00,fe,f9,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Standby"
+    mode: "Standby"
+    c: "OutOfRange"
+    d: 249
+    flags: 128
