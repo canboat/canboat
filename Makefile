@@ -43,8 +43,14 @@ tests:  compile
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 
-generated: tests research-docs
+# Regenerate FIRST, then test against the fresh output. keel (run inside
+# `analyzer generated`) rewrites the C data tables and canboat.xml from the
+# database; only afterwards do we rebuild the analyzer from those fresh
+# headers and run the golden-file suite. Running tests before regeneration
+# would validate the stale committed tables and never exercise the new output.
+generated: research-docs
 	$(MAKE) -C analyzer generated
+	$(MAKE) tests
 	$(MAKE) -C dbc-exporter
 
 # Run before opening a PR: regenerates the database, then reports how this
