@@ -431,8 +431,12 @@ fn api_analyze(server: &EditServer, body: &str) -> Result<String, String> {
     let msgs: Vec<String> = assembled
         .iter()
         .map(|a| {
-            let variant = decode::select_variant(&db, a.pgn, &a.data, false);
-            let is_exact = variant.is_some_and(|p| !p.fallback);
+            // A fallback catch-all is never a real match for entered data:
+            // treat it as unmatched so the editor guides toward a new
+            // definition (or a near-miss clone) instead.
+            let variant = decode::select_variant(&db, a.pgn, &a.data, false)
+                .filter(|p| !p.fallback);
+            let is_exact = variant.is_some();
             // only suggest near misses when nothing matched exactly
             let near: Vec<String> = if is_exact {
                 Vec::new()
@@ -459,7 +463,7 @@ fn api_analyze(server: &EditServer, body: &str) -> Result<String, String> {
                 a.dst,
                 js(&a.data.iter().map(|b| format!("{b:02x}")).collect::<String>()),
                 variant.map(|p| js(&p.id)).unwrap_or_else(|| "null".into()),
-                !is_exact,
+                !is_exact,   // "fallback": no exact variant (unknown or catch-all only)
                 near.join(",")
             )
         })
