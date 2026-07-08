@@ -79,14 +79,14 @@ source. Genuinely dead enumerations; deleting them removes their
 `<LookupEnumeration>` from canboat.xml (contract: minor). Awaiting a
 delete/keep decision.
 
-## F5 — Garmin editor test data: remove before merge
+## F5 — Garmin editor test data: REMOVED
 
 The Garmin PGN 126720 files added while validating the `keel edit` editor
-(`database/pgns/126720-garminAutopilotKeyValue.yaml`,
-`database/lookups/GARMIN_AP_KEY.yaml`, `database/lookups/GARMIN_SUB_PROTOCOL.yaml`,
-and the `subProtocolId` edit on `126720-garminAutopilotHeadingToSteer.yaml`;
-committed `0d071cd`) are **kept for now but must not merge on this branch**.
-They are PGN-data work, not part of the keel tool refactor, and belong on
-`master` or a separate data PR. Drop them (and re-run `make generated`) before
-finalizing `refactor_pgn_database`. Outstanding on the data itself:
-`GARMIN_AP_KEY` value 10 has a placeholder name and key 17 is undefined.
+(`garminAutopilotKeyValue`, `GARMIN_AP_KEY`, `GARMIN_SUB_PROTOCOL`, and a
+`subProtocolId` edit on `126720-garminAutopilotHeadingToSteer.yaml`; added in
+`0d071cd`) were **removed in `4c3ff09`**, restoring `heading-to-steer` to its
+pre-edit state and regenerating the artifacts (608 pgns, 262 lookups). They
+were editor test data, not part of the keel refactor. If the decode is worth
+keeping it should be reworked on `master` or a separate data PR — and note the
+loose ends it had: `GARMIN_AP_KEY` value 10 was a placeholder name and key 17
+was undefined.
