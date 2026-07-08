@@ -69,7 +69,7 @@ a new message or correct an existing one is the built-in, evidence-first
 editor:
 
 ```sh
-keel/keel edit
+./keel/keel edit
 ```
 
 Paste one or more real captures, and the local web editor stacks the bytes,
@@ -88,6 +88,8 @@ database change needs.
 ## Using the definitions in your own project
 
 If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json).
+We recommend that you pin your retrieval to a particular release. Semantic versioning is used to warn you of major (x.0.0) or minor (0.x.0) changes to the 
+definitions.
 
 ## Version history
 
