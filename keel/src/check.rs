@@ -380,12 +380,25 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                     Some(lk) => {
                         referenced.insert(&lk.name);
                         if lk.kind != kind {
+                            // name the YAML key the field should use instead
+                            let want_key = match lk.kind.as_str() {
+                                "bit" => "lookupBits",
+                                "fieldtype" => "lookupFieldtype",
+                                "triplet" => "lookupIndirect",
+                                _ => "lookup",
+                            };
+                            let have_key = match kind {
+                                "bit" => "lookupBits",
+                                "fieldtype" => "lookupFieldtype",
+                                "triplet" => "lookupIndirect",
+                                _ => "lookup",
+                            };
                             v.push(Violation {
                             rule: "R08",
                             error: true,
                             location: pgn_loc(prefix, p),
                             message: format!(
-                                "field '{}': lookup '{name}' is a {} enumeration, referenced as {kind}",
+                                "field '{}': '{name}' is a {} enumeration but is referenced with '{have_key}:'; use '{want_key}:' instead",
                                 f.id, lk.kind
                             ),
                         });
