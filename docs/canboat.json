@@ -4901,6 +4901,13 @@
           {"Name":"Oil Level Check Command", "Value":12},
           {"Name":"Oil Level Reset Response", "Value":13}
         ]
+      },
+      {
+        "Name":"GARMIN_SUB_PROTOCOL",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"Autopilot heading to steer", "Value":5904}
+        ]
       }
     ],
     "LookupIndirectEnumerations":[
@@ -5781,6 +5788,15 @@
         {"name": "Engine 1 Exhaust Valve", "value": 513, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Bits": "8"},
         {"name": "Engine 0 Exhaust Status", "value": 528, "FieldType": "NUMBER", "Signed": false, "Bits": "16"},
         {"name": "Engine 1 Exhaust Status", "value": 529, "FieldType": "NUMBER", "Signed": false, "Bits": "16"}
+        ]
+      },
+      {
+        "Name":"GARMIN_AP_KEY",
+        "MaxValue":255,
+        "EnumFieldTypeValues":[
+        {"name": "MyValue16", "value": 10, "FieldType": "NUMBER", "Bits": "16"},
+        {"name": "MyValue17", "value": 17, "FieldType": "NUMBER", "Signed": false, "Bits": "8"},
+        {"name": "MyValue25", "value": 25, "FieldType": "NUMBER", "Signed": false, "Bits": "8"}
         ]
       }
     ],
@@ -20378,6 +20394,163 @@
       },
       {
         "PGN":126720,
+        "Id":"garminAutopilotKeyValue",
+        "Description":"Garmin Autopilot Key Value Data",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        ],
+        "FieldCount":10,
+        "MinLength":8,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":9,
+        "RepeatingFieldSet1CountField":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Garmin",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":229,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"subProtocolId",
+            "Name":"Sub-protocol ID",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":5904,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"wrapperByte1",
+            "Name":"Wrapper Byte 1",
+            "BitLength":8,
+            "BitOffset":32,
+            "BitStart":0,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"wrapperByte2",
+            "Name":"Wrapper Byte 2",
+            "BitLength":8,
+            "BitOffset":40,
+            "BitStart":0,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":7,
+            "Id":"fieldGroup",
+            "Name":"Field Group",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Match":17,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":8,
+            "Id":"count",
+            "Name":"Count",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Match":3,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":9,
+            "Id":"key",
+            "Name":"Key",
+            "BitLength":8,
+            "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"DYNAMIC_FIELD_KEY",
+            "LookupFieldTypeEnumeration":"GARMIN_AP_KEY"
+          },
+          {
+            "Order":10,
+            "Id":"value",
+            "Name":"Value",
+            "BitLengthVariable":true,
+            "BitOffset":72,
+            "BitStart":0,
+            "FieldType":"DYNAMIC_FIELD_VALUE"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
         "Id":"0x1ef00ManufacturerProprietaryFastPacketAddressed",
         "Description":"0x1EF00: Manufacturer Proprietary fast-packet addressed",
         "Explanation":"Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.",
@@ -21033,7 +21206,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot heading to steer",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21043,13 +21216,13 @@
             "RangeMin":0,
             "RangeMax":65532,
             "FieldType":"NUMBER",
+            "LookupEnumeration":"GARMIN_SUB_PROTOCOL",
             "PartOfPrimaryKey":true
           },
           {
             "Order":5,
             "Id":"wrapperByte1",
             "Name":"Wrapper Byte 1",
-            "Description":4,
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -21064,7 +21237,6 @@
             "Order":6,
             "Id":"wrapperByte2",
             "Name":"Wrapper Byte 2",
-            "Description":4,
             "BitLength":8,
             "BitOffset":40,
             "BitStart":0,
@@ -21079,7 +21251,6 @@
             "Order":7,
             "Id":"fieldGroup",
             "Name":"Field Group",
-            "Description":0,
             "BitLength":8,
             "BitOffset":48,
             "BitStart":0,
@@ -21094,7 +21265,6 @@
             "Order":8,
             "Id":"field",
             "Name":"Field",
-            "Description":"Heading to Steer",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
@@ -21120,7 +21290,6 @@
             "Order":10,
             "Id":"headingToSteer",
             "Name":"Heading to Steer",
-            "Description":"Values at or above 1000 rad signal no active order",
             "BitLength":32,
             "BitOffset":72,
             "BitStart":0,

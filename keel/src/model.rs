@@ -263,9 +263,28 @@ impl Database {
     }
 
     pub fn ordered_lookups(&self, kind: &str) -> Vec<&Lookup> {
-        self.lookup_order
-            .get(kind)
-            .map(|names| names.iter().map(|n| &self.lookups[n]).collect())
-            .unwrap_or_default()
+        let mut out: Vec<&Lookup> = Vec::new();
+        let mut seen = std::collections::HashSet::new();
+        if let Some(names) = self.lookup_order.get(kind) {
+            for n in names {
+                if let Some(lk) = self.lookups.get(n) {
+                    out.push(lk);
+                    seen.insert(n.as_str());
+                }
+            }
+        }
+        // Append any enumeration of this kind that the order file does not
+        // pin, sorted by name for determinism. Membership follows the actual
+        // lookup set, so a newly-added enum is never silently dropped from
+        // lookup.h while pgn-data.h still references it (which fails the C
+        // build); the order file only *reorders* what already exists.
+        let mut extra: Vec<&Lookup> = self
+            .lookups
+            .values()
+            .filter(|lk| lk.kind == kind && !seen.contains(lk.name.as_str()))
+            .collect();
+        extra.sort_by(|a, b| a.name.cmp(&b.name));
+        out.extend(extra);
+        out
     }
 }
