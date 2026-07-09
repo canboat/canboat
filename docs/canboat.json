@@ -4459,7 +4459,15 @@
         "EnumValues":[
           {"Name":"Standby", "Value":2},
           {"Name":"Shadow Drive", "Value":3},
-          {"Name":"Engaged", "Value":5}
+          {"Name":"Heading Hold", "Value":5},
+          {"Name":"Circles", "Value":8},
+          {"Name":"Zigzag", "Value":9},
+          {"Name":"Williamson Turn", "Value":10},
+          {"Name":"U-turn", "Value":11},
+          {"Name":"Follow Route", "Value":13},
+          {"Name":"Cloverleaf", "Value":14},
+          {"Name":"Orbit", "Value":15},
+          {"Name":"Search", "Value":16}
         ]
       },
       {
