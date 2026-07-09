@@ -32,8 +32,8 @@ typedef struct
   uint32_t pgn;
   uint8_t  dst;
   uint8_t  src;
-  uint8_t  len;
-  uint8_t  data[FASTPACKET_MAX_SIZE];
+  uint16_t len; // Up to MAX_PGN_SIZE, so this does not fit in a uint8_t
+  uint8_t  data[MAX_PGN_SIZE];
 } RawMessage;
 
 bool parseFastFormat(StringBuffer *src, RawMessage *msg);

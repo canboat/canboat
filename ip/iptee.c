@@ -22,7 +22,7 @@ limitations under the License.
 
 #include "common.h"
 
-#define LINESIZE 1024
+#define LINESIZE MAX_MSG_LINE_LENGTH
 
 bool writeonly = false;
 
