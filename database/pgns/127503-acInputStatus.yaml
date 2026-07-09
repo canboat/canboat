@@ -13,50 +13,49 @@ fields:
 - id: numberOfLines
   name: Number of Lines
   type: UINT8
-- id: line
-  name: Line
-  type: LOOKUP
-  bits: 2
-  lookup: AC_LINE
-- id: acceptability
-  name: Acceptability
-  type: LOOKUP
-  bits: 2
-  lookup: ACCEPTABILITY
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 4
-- id: voltage
-  name: Voltage
-  type: VOLTAGE_UFIX16_10MV
-- id: current
-  name: Current
-  type: CURRENT_UFIX16_DA
-- id: frequency
-  name: Frequency
-  type: FREQUENCY_UFIX16
-  resolution: 0.01
-- id: breakerSize
-  name: Breaker Size
-  type: CURRENT_UFIX16_DA
-- id: realPower
-  name: Real Power
-  type: POWER_UINT32
-- id: reactivePower
-  name: Reactive Power
-  type: POWER_UINT32_VAR
-- id: powerFactor
-  name: Power factor
-  type: INT8
-  resolution: 0.01
-  unit: Cos Phi
-  rangeMin: -1.0
-  rangeMax: 1.0
-repeating1:
-  count: 10
-  start: 3
-  countField: 2
+- repeat:
+    countField: numberOfLines
+    fields:
+    - id: line
+      name: Line
+      type: LOOKUP
+      bits: 2
+      lookup: AC_LINE
+    - id: acceptability
+      name: Acceptability
+      type: LOOKUP
+      bits: 2
+      lookup: ACCEPTABILITY
+    - id: reserved
+      name: Reserved
+      type: RESERVED
+      bits: 4
+    - id: voltage
+      name: Voltage
+      type: VOLTAGE_UFIX16_10MV
+    - id: current
+      name: Current
+      type: CURRENT_UFIX16_DA
+    - id: frequency
+      name: Frequency
+      type: FREQUENCY_UFIX16
+      resolution: 0.01
+    - id: breakerSize
+      name: Breaker Size
+      type: CURRENT_UFIX16_DA
+    - id: realPower
+      name: Real Power
+      type: POWER_UINT32
+    - id: reactivePower
+      name: Reactive Power
+      type: POWER_UINT32_VAR
+    - id: powerFactor
+      name: Power factor
+      type: INT8
+      resolution: 0.01
+      unit: Cos Phi
+      rangeMin: -1.0
+      rangeMax: 1.0
 samples:
 - raw: "2023-01-01-00:00:00.000,6,127503,1,255,20,00,01,f0,00,05,2c,01,88,13,e8,03,80,15,00,00,80,15,00,00,64"  # from pgn127504.raw
   expects:

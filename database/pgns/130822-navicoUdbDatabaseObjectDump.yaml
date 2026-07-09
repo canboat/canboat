@@ -69,30 +69,29 @@ fields:
   name: Token
   type: UINT16
   description: Per-object identity/CRC-like token (B), constant per object
-- id: length
-  name: Length
-  type: DYNAMIC_FIELD_LENGTH
-  bits: 8
-  description: 'Bytes following in this record: a class byte, a 16-bit data-type id and the value'
-  dynamicFieldLength: true
-  dynamicFieldLengthOverhead: 3
-- id: class
-  name: Class
-  type: UINT8
-  description: Record class, always 0x02
-- id: dataType
-  name: Data Type
-  type: LOOKUP
-  bits: 16
-  lookup: NAVICO_DATA_TYPE
-- id: value
-  name: Value
-  type: DYNAMIC_FIELD_VALUE
-  description: Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's
-    64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.
-repeating1:
-  count: 4
-  start: 13
+- repeat:
+    fields:
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 8
+      description: 'Bytes following in this record: a class byte, a 16-bit data-type id and the value'
+      dynamicFieldLength: true
+      dynamicFieldLengthOverhead: 3
+    - id: class
+      name: Class
+      type: UINT8
+      description: Record class, always 0x02
+    - id: dataType
+      name: Data Type
+      type: LOOKUP
+      bits: 16
+      lookup: NAVICO_DATA_TYPE
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: Tagged value for this data type. When a source is set it is a NAME wrapper (0x0A 0x00 followed by the source's
+        64-bit NMEA 2000 NAME and a 0xFF terminator); a single 0x00 byte means none/auto; other data types carry small typed values.
 samples:
 - raw: "2023-01-01-00:00:00.000,3,130822,26,255,208,13,99,ff,06,00,0a,01,9b,fd,c2,00,00,07,bf,01,00,04,00,00,00,00,01,00,04,33,33,87,41,01,00,04,00,00,00,00,01,00,04,00,00,00,40,01,00,04,00,00,00,00,01,00,01,00,01,00,04,00,00,00,00,01,00,04,25,b3,84,3c,01,00,04,00,00,c8,42,01,00,04,00,00,c8,42,01,00,04,01,00,00,00,01,00,01,00,01,00,01,00,01,00,04,cd,cc,88,41,01,00,04,00,a0,e7,44,01,00,04,00,00,c8,42,01,00,01,01,01,00,01,01,01,00,08,ff,ff,e0,ff,00,ff,ff,f0,01,00,08,58,87,b0,2f,00,82,aa,c0,01,00,01,01,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,08,19,e8,e4,10,00,82,78,c0,01,00,01,01,01,00,01,09,01,00,01,00,01,00,04,19,00,38,0a,01,00,01,01,01,00,01,01,01,00,01,00,01,00,01,00"  # from merrimac-2022.raw
   expects:

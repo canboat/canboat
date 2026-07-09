@@ -241,12 +241,87 @@ fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
     Ok(SampleSpec { raw, expects })
 }
 
-fn repeating(y: &Yaml) -> Repeating {
-    Repeating {
-        count: opt_i64(y, "count").unwrap_or(0) as u32,
-        start: opt_i64(y, "start").unwrap_or(0) as u32,
-        count_field: opt_i64(y, "countField").map(|c| c as u32),
+/// A `- repeat:` block as authored: `start` and `count` come from its position
+/// and length in the field list, `countField` names a field by id.
+struct RepeatBlock {
+    start: u32,
+    count: u32,
+    count_field: Option<String>,
+}
+
+const REPEAT_KEYS: [&str; 2] = ["countField", "fields"];
+
+/// Parse the value of a `repeat:` key, appending its fields to `fields`.
+fn repeat_block(y: &Yaml, ctx: &str, fields: &mut Vec<Field>) -> Result<RepeatBlock> {
+    let Yaml::Hash(h) = y else {
+        return Err(format!("{ctx}: repeat must be a map"));
+    };
+    for k in h.keys() {
+        match k.as_str() {
+            Some(k) if REPEAT_KEYS.contains(&k) => {}
+            Some(k) => return Err(format!("{ctx}: unknown key '{k}' in repeat block")),
+            None => return Err(format!("{ctx}: non-string key in repeat block")),
+        }
     }
+    let start = fields.len() as u32 + 1;
+    let Some(Yaml::Array(nested)) = get(y, "fields") else {
+        return Err(format!("{ctx}: repeat block needs a fields list"));
+    };
+    if nested.is_empty() {
+        return Err(format!("{ctx}: repeat block has no fields"));
+    }
+    for fy in nested {
+        if get(fy, "repeat").is_some() {
+            return Err(format!("{ctx}: repeat blocks cannot nest"));
+        }
+        fields.push(field(fy, ctx)?);
+    }
+    Ok(RepeatBlock {
+        start,
+        count: nested.len() as u32,
+        count_field: opt_str(y, "countField"),
+    })
+}
+
+/// Flatten the authored field list, lifting `- repeat:` blocks out into the
+/// (at most two) repeating sets the emitters and the C runtime expect.
+fn fields_and_repeats(y: &Yaml, ctx: &str) -> Result<(Vec<Field>, Vec<Repeating>)> {
+    let mut fields = Vec::new();
+    let mut blocks: Vec<RepeatBlock> = Vec::new();
+    if let Some(Yaml::Array(items)) = get(y, "fields") {
+        for item in items {
+            match get(item, "repeat") {
+                Some(rb) => {
+                    if blocks.len() == 2 {
+                        return Err(format!("{ctx}: at most two repeat blocks per PGN"));
+                    }
+                    blocks.push(repeat_block(rb, ctx, &mut fields)?);
+                }
+                None => fields.push(field(item, ctx)?),
+            }
+        }
+    }
+    let repeats = blocks
+        .into_iter()
+        .map(|b| {
+            let count_field = match &b.count_field {
+                None => None,
+                Some(id) => Some(
+                    fields
+                        .iter()
+                        .position(|f| &f.id == id)
+                        .map(|i| i as u32 + 1)
+                        .ok_or_else(|| format!("{ctx}: repeat countField '{id}' is not a field"))?,
+                ),
+            };
+            Ok(Repeating {
+                count: b.count,
+                start: b.start,
+                count_field,
+            })
+        })
+        .collect::<Result<Vec<_>>>()?;
+    Ok((fields, repeats))
 }
 
 fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
@@ -263,13 +338,8 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
             .collect(),
         _ => Vec::new(),
     };
-    let fields = match get(y, "fields") {
-        Some(Yaml::Array(a)) => a
-            .iter()
-            .map(|fy| field(fy, ctx))
-            .collect::<Result<Vec<_>>>()?,
-        _ => Vec::new(),
-    };
+    let (fields, repeats) = fields_and_repeats(y, ctx)?;
+    let mut repeats = repeats.into_iter();
     let samples = match get(y, "samples") {
         Some(Yaml::Array(a)) => a
             .iter()
@@ -289,8 +359,8 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
         research_doc: opt_str(y, "researchDoc"),
         fallback: opt_bool(y, "fallback").unwrap_or(false),
         missing,
-        repeating1: get(y, "repeating1").map(repeating),
-        repeating2: get(y, "repeating2").map(repeating),
+        repeating1: repeats.next(),
+        repeating2: repeats.next(),
         variant_order: opt_i64(y, "variantOrder").unwrap_or(0) as u32,
         fields,
         samples,

@@ -14,46 +14,45 @@ fields:
 - id: numberOfDatabasesAvailable
   name: Number of Databases Available
   type: UINT16
-- id: databaseId
-  name: Database ID
-  type: UINT16
-- id: databaseName
-  name: Database Name
-  type: STRING_LAU
-- id: databaseTimestamp
-  name: Database Timestamp
-  type: TIME
-  bits: 32
-  resolution: 0.0001
-  description: Seconds since midnight
-  specialValues: 3
-  rangeMin: 0.0
-  rangeMax: 86401.0
-- id: databaseDatestamp
-  name: Database Datestamp
-  type: DATE
-- id: wpPositionResolution
-  name: WP Position Resolution
-  type: LOOKUP
-  bits: 4
-  lookup: WP_POSITION_RESOLUTION
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 4
-- id: numberOfRoutesInDatabase
-  name: Number of Routes in Database
-  type: UINT16
-- id: numberOfWpsInDatabase
-  name: Number of WPs in Database
-  type: UINT32
-- id: numberOfBytesInDatabase
-  name: Number of Bytes in Database
-  type: UINT32
-repeating1:
-  count: 9
-  start: 4
-  countField: 2
+- repeat:
+    countField: nitems
+    fields:
+    - id: databaseId
+      name: Database ID
+      type: UINT16
+    - id: databaseName
+      name: Database Name
+      type: STRING_LAU
+    - id: databaseTimestamp
+      name: Database Timestamp
+      type: TIME
+      bits: 32
+      resolution: 0.0001
+      description: Seconds since midnight
+      specialValues: 3
+      rangeMin: 0.0
+      rangeMax: 86401.0
+    - id: databaseDatestamp
+      name: Database Datestamp
+      type: DATE
+    - id: wpPositionResolution
+      name: WP Position Resolution
+      type: LOOKUP
+      bits: 4
+      lookup: WP_POSITION_RESOLUTION
+    - id: reserved
+      name: Reserved
+      type: RESERVED
+      bits: 4
+    - id: numberOfRoutesInDatabase
+      name: Number of Routes in Database
+      type: UINT16
+    - id: numberOfWpsInDatabase
+      name: Number of WPs in Database
+      type: UINT32
+    - id: numberOfBytesInDatabase
+      name: Number of Bytes in Database
+      type: UINT32
 samples:
 - raw: "2023-01-01-00:00:00.000,4,130064,99,255,61,ff,ff,02,00,01,00,01,00,0c,01,53,51,4c,20,53,65,72,76,65,72,10,fb,cf,24,eb,4e,f3,02,00,45,00,00,00,00,04,00,00,02,00,05,01,44,42,32,10,fb,cf,24,eb,4e,ff,20,00,60,00,00,00,f3,3f,00,00"  # from actisense-522.candump.log
   expects:

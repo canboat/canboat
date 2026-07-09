@@ -54,25 +54,23 @@ fields:
 - id: numberOfParameters
   name: Number of Parameters
   type: UINT8
-- id: selectionParameter
-  name: Selection Parameter
-  type: FIELD_INDEX
-  description: Parameter index
-- id: selectionValue
-  name: Selection Value
-  type: VARIABLE
-- id: parameter
-  name: Parameter
-  type: FIELD_INDEX
-  description: Parameter index
-- id: value
-  name: Value
-  type: VARIABLE
-repeating1:
-  count: 2
-  start: 9
-  countField: 7
-repeating2:
-  count: 2
-  start: 11
-  countField: 8
+- repeat:
+    countField: numberOfSelectionPairs
+    fields:
+    - id: selectionParameter
+      name: Selection Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: selectionValue
+      name: Selection Value
+      type: VARIABLE
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: value
+      name: Value
+      type: VARIABLE

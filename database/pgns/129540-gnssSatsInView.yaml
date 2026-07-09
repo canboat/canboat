@@ -20,34 +20,33 @@ fields:
 - id: satsInView
   name: Sats in View
   type: UINT8
-- id: prn
-  name: PRN
-  type: UINT8
-- id: elevation
-  name: Elevation
-  type: ANGLE_FIX16
-- id: azimuth
-  name: Azimuth
-  type: ANGLE_UFIX16
-- id: snr
-  name: SNR
-  type: SIGNALTONOISERATIO_FIX16
-- id: rangeResiduals
-  name: Range residuals
-  type: DISTANCE_FIX32_MMM
-- id: status
-  name: Status
-  type: LOOKUP
-  bits: 4
-  lookup: SATELLITE_STATUS
-- id: reserved11
-  name: Reserved
-  type: RESERVED
-  bits: 4
-repeating1:
-  count: 7
-  start: 5
-  countField: 4
+- repeat:
+    countField: satsInView
+    fields:
+    - id: prn
+      name: PRN
+      type: UINT8
+    - id: elevation
+      name: Elevation
+      type: ANGLE_FIX16
+    - id: azimuth
+      name: Azimuth
+      type: ANGLE_UFIX16
+    - id: snr
+      name: SNR
+      type: SIGNALTONOISERATIO_FIX16
+    - id: rangeResiduals
+      name: Range residuals
+      type: DISTANCE_FIX32_MMM
+    - id: status
+      name: Status
+      type: LOOKUP
+      bits: 4
+      lookup: SATELLITE_STATUS
+    - id: reserved11
+      name: Reserved
+      type: RESERVED
+      bits: 4
 samples:
 - raw: "2023-01-01-00:00:00.000,6,129540,12,255,147,37,fe,0c,01,51,0e,89,63,54,0b,00,00,00,00,f2,03,22,24,a1,3a,1c,0c,00,00,00,00,f2,11,68,12,ce,9c,1c,0c,00,00,00,00,f2,13,39,19,42,b1,48,0d,00,00,00,00,f2,04,73,32,e6,64,b8,0b,00,00,00,00,f2,1f,51,0e,50,1d,54,0b,00,00,00,00,f2,09,ff,1d,da,8f,68,10,00,00,00,00,f2,06,96,1a,f0,cf,e4,0c,00,00,00,00,f2,0b,c5,04,b6,d4,1c,0c,00,00,00,00,f2,47,f4,0c,2d,26,d0,07,00,00,00,00,f2,57,68,21,e6,82,74,0e,00,00,00,00,f2,48,5c,2e,39,19,c4,09,00,00,00,00,f2"  # from merrimac-2022.raw
   expects:

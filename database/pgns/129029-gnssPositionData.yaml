@@ -73,22 +73,21 @@ fields:
   name: Reference Stations
   type: UINT8
   description: Number of reference stations
-- id: referenceStationType
-  name: Reference Station Type
-  type: LOOKUP
-  bits: 4
-  lookup: GNS
-- id: referenceStationId
-  name: Reference Station ID
-  type: UNSIGNED_INTEGER
-  bits: 12
-- id: ageOfDgnssCorrections
-  name: Age of DGNSS Corrections
-  type: DURATION_UFIX16_CS
-repeating1:
-  count: 3
-  start: 16
-  countField: 15
+- repeat:
+    countField: referenceStations
+    fields:
+    - id: referenceStationType
+      name: Reference Station Type
+      type: LOOKUP
+      bits: 4
+      lookup: GNS
+    - id: referenceStationId
+      name: Reference Station ID
+      type: UNSIGNED_INTEGER
+      bits: 12
+    - id: ageOfDgnssCorrections
+      name: Age of DGNSS Corrections
+      type: DURATION_UFIX16_CS
 notes: https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
 samples:
 - raw: "2023-01-01-00:00:00.000,3,129029,12,255,43,37,2d,4b,10,6d,ff,19,00,7a,5b,64,9d,56,61,07,b0,7c,b2,ca,79,db,c0,00,20,6e,bf,02,00,00,00,00,10,fc,0c,46,00,82,00,34,12,00,00,ff"  # from merrimac-2022.raw

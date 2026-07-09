@@ -36,15 +36,14 @@ fields:
 - id: numberOfParameters
   name: Number of Parameters
   type: UINT8
-- id: parameter
-  name: Parameter
-  type: LOOKUP
-  bits: 4
-  lookup: PARAMETER_FIELD
-repeating1:
-  count: 1
-  start: 6
-  countField: 5
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: LOOKUP
+      bits: 4
+      lookup: PARAMETER_FIELD
 samples:
 - raw: "2023-01-01-00:00:00.000,3,126208,24,1,9,02,08,ff,01,03,05,00,03,f0"  # from 126208.raw
   expects:

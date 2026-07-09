@@ -44,21 +44,20 @@ fields:
   name: Total ID count
   type: UINT16
   description: Total IDs in group
-- id: idType
-  name: ID type
-  type: LOOKUP
-  bits: 8
-  lookup: ENTERTAINMENT_ID_TYPE
-- id: id
-  name: ID
-  type: UINT32
-- id: name
-  name: Name
-  type: STRING_LAU
+- repeat:
+    countField: idCount
+    fields:
+    - id: idType
+      name: ID type
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_ID_TYPE
+    - id: id
+      name: ID
+      type: UINT32
+    - id: name
+      name: Name
+      type: STRING_LAU
 - id: artist
   name: Artist
   type: STRING_LAU
-repeating1:
-  count: 3
-  start: 9
-  countField: 7

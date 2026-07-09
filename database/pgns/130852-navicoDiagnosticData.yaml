@@ -37,25 +37,24 @@ fields:
   name: Instance
   type: UINT8
   description: Diagnostic channel/instance the report covers; echoed from the request (0 when unspecified)
-- id: fieldId
-  name: Field ID
-  type: DYNAMIC_FIELD_KEY
-  bits: 8
-  lookupFieldtype: NAVICO_DIAGNOSTIC
-  primaryKey: true
-- id: length
-  name: Length
-  type: DYNAMIC_FIELD_LENGTH
-  bits: 8
-  description: Value width in bytes (observed 1, 2 or 4)
-  dynamicFieldLength: true
-- id: value
-  name: Value
-  type: DYNAMIC_FIELD_VALUE
-  description: Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise
-repeating1:
-  count: 3
-  start: 5
+- repeat:
+    fields:
+    - id: fieldId
+      name: Field ID
+      type: DYNAMIC_FIELD_KEY
+      bits: 8
+      lookupFieldtype: NAVICO_DIAGNOSTIC
+      primaryKey: true
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 8
+      description: Value width in bytes (observed 1, 2 or 4)
+      dynamicFieldLength: true
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: Counter value; rendered as a decimal number for known Field IDs, raw bytes otherwise
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130852,32,255,57,13,99,00,00,04,00,00,00,00,01,04,00,00,00,00,02,04,00,00,00,00,03,04,00,00,00,00,04,04,a8,6c,d4,05,05,04,f5,dc,64,00,07,04,97,01,00,00,13,01,00,14,01,01,15,01,00,16,01,00"  # from navico-diagnostics-130852.raw
   expects:

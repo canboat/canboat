@@ -38,26 +38,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
-- id: wpId
-  name: WP ID
-  type: UINT16
-- id: wpName
-  name: WP Name
-  type: STRING_LAU
-- id: wpLatitude
-  name: WP Latitude
-  type: GEO_LAT_FIX32
-  rangeMin: -90.0
-  rangeMax: 90.0
-- id: wpLongitude
-  name: WP Longitude
-  type: GEO_LON_FIX32
-  rangeMin: -180.0
-  rangeMax: 180.0
-repeating1:
-  count: 4
-  start: 10
-  countField: 2
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpId
+      name: WP ID
+      type: UINT16
+    - id: wpName
+      name: WP Name
+      type: STRING_LAU
+    - id: wpLatitude
+      name: WP Latitude
+      type: GEO_LAT_FIX32
+      rangeMin: -90.0
+      rangeMax: 90.0
+    - id: wpLongitude
+      name: WP Longitude
+      type: GEO_LON_FIX32
+      rangeMin: -180.0
+      rangeMax: 180.0
 samples:
 - raw: "2023-01-01-00:00:00.000,7,129285,25,255,39,ff,ff,02,00,ff,ff,ff,ff,e7,03,01,00,20,00,00,03,01,00,ff,ff,ff,7f,ff,ff,ff,7f,01,00,03,01,00,ff,ff,ff,7f,ff,ff,ff,7f"  # from merrimac-2022.raw
   expects:

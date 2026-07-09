@@ -17,30 +17,29 @@ fields:
 - id: databaseId
   name: Database ID
   type: UINT16
-- id: routeId
-  name: Route ID
-  type: UINT16
-- id: routeName
-  name: Route Name
-  type: STRING_LAU
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 2
-- id: wpIdentificationMethod
-  name: WP Identification Method
-  type: LOOKUP
-  bits: 2
-  lookup: WP_IDENTIFICATION_METHOD
-- id: routeStatus
-  name: Route Status
-  type: LOOKUP
-  bits: 4
-  lookup: WP_ROUTE_STATUS
-repeating1:
-  count: 5
-  start: 5
-  countField: 2
+- repeat:
+    countField: nitems
+    fields:
+    - id: routeId
+      name: Route ID
+      type: UINT16
+    - id: routeName
+      name: Route Name
+      type: STRING_LAU
+    - id: reserved
+      name: Reserved
+      type: RESERVED
+      bits: 2
+    - id: wpIdentificationMethod
+      name: WP Identification Method
+      type: LOOKUP
+      bits: 2
+      lookup: WP_IDENTIFICATION_METHOD
+    - id: routeStatus
+      name: Route Status
+      type: LOOKUP
+      bits: 4
+      lookup: WP_ROUTE_STATUS
 samples:
 - raw: "2023-01-01-00:00:00.000,4,130065,99,255,43,ff,ff,02,00,16,00,ff,ff,01,00,0d,01,48,65,72,65,54,6f,54,68,65,72,65,27,02,00,10,01,41,6e,64,20,42,61,63,6b,20,41,67,61,69,6e,1b"  # from actisense-522.candump.log
   expects:

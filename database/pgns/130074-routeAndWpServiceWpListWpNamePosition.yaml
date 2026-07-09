@@ -21,26 +21,25 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 16
-- id: wpId
-  name: WP ID
-  type: UINT16
-- id: wpName
-  name: WP Name
-  type: STRING_LAU
-- id: wpLatitude
-  name: WP Latitude
-  type: GEO_LAT_FIX32
-  rangeMin: -90.0
-  rangeMax: 90.0
-- id: wpLongitude
-  name: WP Longitude
-  type: GEO_LON_FIX32
-  rangeMin: -180.0
-  rangeMax: 180.0
-repeating1:
-  count: 4
-  start: 6
-  countField: 2
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpId
+      name: WP ID
+      type: UINT16
+    - id: wpName
+      name: WP Name
+      type: STRING_LAU
+    - id: wpLatitude
+      name: WP Latitude
+      type: GEO_LAT_FIX32
+      rangeMin: -90.0
+      rangeMax: 90.0
+    - id: wpLongitude
+      name: WP Longitude
+      type: GEO_LON_FIX32
+      rangeMin: -180.0
+      rangeMax: 180.0
 samples:
 - raw: "2023-01-01-00:00:00.000,4,130074,99,255,48,00,00,02,00,02,00,01,00,ff,ff,6c,00,0a,01,4d,63,4b,69,6e,6e,6f,6e,40,4e,08,ec,c0,96,49,50,5c,00,08,01,4f,72,6d,6f,6e,64,a0,31,1f,ec,60,7e,26,50"  # from actisense-522.candump.log
   expects:

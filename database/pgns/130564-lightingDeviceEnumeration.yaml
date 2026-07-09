@@ -17,13 +17,12 @@ fields:
 - id: numberOfDevices
   name: Number of Devices
   type: UINT16
-- id: deviceId
-  name: Device ID
-  type: UINT32
-- id: status
-  name: Status
-  type: UINT8
-repeating1:
-  count: 2
-  start: 4
-  countField: 3
+- repeat:
+    countField: numberOfDevices
+    fields:
+    - id: deviceId
+      name: Device ID
+      type: UINT32
+    - id: status
+      name: Status
+      type: UINT8

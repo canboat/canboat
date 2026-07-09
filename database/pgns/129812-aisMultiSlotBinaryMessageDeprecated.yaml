@@ -73,12 +73,11 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 5
-- id: numberOfBitsInBinaryDataField
-  name: Number of Bits in Binary Data Field
-  type: UINT16
-- id: binaryData
-  name: Binary Data
-  type: BINARY
-repeating1:
-  count: 2
-  start: 15
+- repeat:
+    fields:
+    - id: numberOfBitsInBinaryDataField
+      name: Number of Bits in Binary Data Field
+      type: UINT16
+    - id: binaryData
+      name: Binary Data
+      type: BINARY

@@ -36,18 +36,17 @@ fields:
   name: Number of Parameters
   type: UINT8
   description: How many parameter pairs will follow
-- id: parameter
-  name: Parameter
-  type: FIELD_INDEX
-  description: Parameter index
-- id: value
-  name: Value
-  type: VARIABLE
-  description: Parameter value
-repeating1:
-  count: 2
-  start: 6
-  countField: 5
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: value
+      name: Value
+      type: VARIABLE
+      description: Parameter value
 samples:
 - raw: "2023-01-01-00:00:00.000,2,126208,0,67,21,01,16,f0,01,ff,01,02,0e,01,59,44,3a,56,4f,4c,55,4d,45,20,36,30"  # from 126208.raw
   expects:

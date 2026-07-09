@@ -35,18 +35,17 @@ fields:
   name: Number of Parameters
   type: UINT8
   description: How many parameter pairs will follow
-- id: parameter
-  name: Parameter
-  type: FIELD_INDEX
-  description: Parameter index
-- id: value
-  name: Value
-  type: VARIABLE
-  description: Parameter value
-repeating1:
-  count: 2
-  start: 6
-  countField: 5
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: value
+      name: Value
+      type: VARIABLE
+      description: Parameter value
 samples:
 - raw: "2023-01-01-00:00:00.000,3,126208,34,255,19,00,01,ff,01,ff,ff,ff,ff,ff,ff,03,01,13,01,03,04,04,cb,d6"  # from merrimac-2022.raw
   expects:

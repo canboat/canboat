@@ -15,22 +15,21 @@ fields:
 - id: totalAddressCount
   name: Total address count
   type: UINT8
-- id: bluetoothAddress
-  name: Bluetooth address
-  type: BINARY
-  bits: 48
-- id: status
-  name: Status
-  type: LOOKUP
-  bits: 8
-  lookup: BLUETOOTH_STATUS
-- id: deviceName
-  name: Device name
-  type: STRING_LAU
-- id: signalStrength
-  name: Signal strength
-  type: PERCENTAGE_UINT8
-repeating1:
-  count: 4
-  start: 4
-  countField: 2
+- repeat:
+    countField: addressCount
+    fields:
+    - id: bluetoothAddress
+      name: Bluetooth address
+      type: BINARY
+      bits: 48
+    - id: status
+      name: Status
+      type: LOOKUP
+      bits: 8
+      lookup: BLUETOOTH_STATUS
+    - id: deviceName
+      name: Device name
+      type: STRING_LAU
+    - id: signalStrength
+      name: Signal strength
+      type: PERCENTAGE_UINT8
