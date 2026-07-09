@@ -172,12 +172,27 @@ fields:
     bits: 3
     lookup: INDUSTRY_CODE
     match: 4
-  # ...
-repeating1:
-  count: 3                 # fields in the repeating set
-  start: 6                 # 1-based order of the first repeating field
-  countField: 5            # absent = repeat until data exhausted
+  - id: pairCount
+    name: Pair Count
+    type: UINT8
+  - repeat:                # a repeating fieldset, in place
+      countField: pairCount  # by id; absent = repeat until data exhausted
+      fields:
+        - id: key
+          name: Key
+          type: DYNAMIC_FIELD_KEY
+        - id: value
+          name: Value
+          type: DYNAMIC_FIELD_VALUE
 ```
+
+A `repeat:` block is an item of `fields:`, like the field it stands among,
+and it *contains* the fields that repeat. The three numbers the C runtime
+wants are derived, never authored: `count` is the length of the nested list,
+`start` its position once flattened, and `countField` the order of the field
+whose id it names. Nesting makes a set that starts mid-field or runs past the
+end unrepresentable rather than merely invalid. At most two blocks per PGN
+(the C carries `repeating1` and `repeating2`); they may not nest.
 
 Other field-level keys, replacing today's macro zoo: `signed`, `precision`,
 `primaryKey: true`, `proprietary: true` (field only
@@ -190,7 +205,7 @@ so a new offset means a new (derived) fieldtype.
 Remaining keys:
 `lookupIndirect: {name: ..., order: N}`, `lookupBits`, `lookupFieldtype`,
 `description`, `condition`. PGN-level: `fallback: true`, `url`,
-`researchDoc`, `notes`, `repeating2`.
+`researchDoc`, `notes`.
 
 The research commentary currently living as block comments in `pgn.h` is
 ported into `notes:` keys (load-bearing prose survives round-tripping
@@ -421,8 +436,10 @@ definition. Newly pasted captures of that PGN become evidence with one
 click — "check my 129540 samples against the database" is the front door,
 and adopting the decodes appends a `samples:` block. Field refinement
 through the form performs **surgery on the `fields:` block only**: notes,
-samples, repeating sets and every other authored key in the YAML survive
-untouched (the textarea remains hand-editable and authoritative).
+samples and every other authored key in the YAML survive untouched (the
+textarea remains hand-editable and authoritative). Repeating sets live
+*inside* `fields:` as `repeat:` blocks, so the form must rewrite them in
+place rather than treating them as a separate top-level key.
 
 Lookup names are clickable everywhere they appear: a modal shows the
 enumeration, pair/bit kinds are editable in place (triplet/fieldtype are

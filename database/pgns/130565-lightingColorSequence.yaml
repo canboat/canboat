@@ -14,25 +14,24 @@ fields:
 - id: colorCount
   name: Color Count
   type: UINT8
-- id: colorIndex
-  name: Color Index
-  type: UINT8
-- id: redComponent
-  name: Red Component
-  type: UINT8
-- id: greenComponent
-  name: Green Component
-  type: UINT8
-- id: blueComponent
-  name: Blue Component
-  type: UINT8
-- id: colorTemperature
-  name: Color Temperature
-  type: UINT16
-- id: intensity
-  name: Intensity
-  type: UINT8
-repeating1:
-  count: 6
-  start: 3
-  countField: 2
+- repeat:
+    countField: colorCount
+    fields:
+    - id: colorIndex
+      name: Color Index
+      type: UINT8
+    - id: redComponent
+      name: Red Component
+      type: UINT8
+    - id: greenComponent
+      name: Green Component
+      type: UINT8
+    - id: blueComponent
+      name: Blue Component
+      type: UINT8
+    - id: colorTemperature
+      name: Color Temperature
+      type: UINT16
+    - id: intensity
+      name: Intensity
+      type: UINT8

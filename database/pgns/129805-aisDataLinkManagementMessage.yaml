@@ -37,23 +37,22 @@ fields:
   name: Spare
   type: SPARE
   bits: 2
-- id: offset
-  name: Offset
-  type: UINT16
-  description: Reserved offset number
-- id: numberOfSlots
-  name: Number of Slots
-  type: UINT8
-  description: Reserved consecutive slots
-- id: timeout
-  name: Timeout
-  type: DURATION_UFIX8_MIN
-- id: increment
-  name: Increment
-  type: UINT16
-repeating1:
-  count: 4
-  start: 7
+- repeat:
+    fields:
+    - id: offset
+      name: Offset
+      type: UINT16
+      description: Reserved offset number
+    - id: numberOfSlots
+      name: Number of Slots
+      type: UINT8
+      description: Reserved consecutive slots
+    - id: timeout
+      name: Timeout
+      type: DURATION_UFIX8_MIN
+    - id: increment
+      name: Increment
+      type: UINT16
 samples:
 - raw: "2023-01-01-00:00:00.000,7,129805,8,255,31,14,28,43,25,00,01,1d,01,02,07,65,04,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c0"  # from merrimac-actisense-serial-2011.raw
   expects:

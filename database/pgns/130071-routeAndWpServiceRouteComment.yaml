@@ -17,16 +17,15 @@ fields:
 - id: databaseId
   name: Database ID
   type: UINT16
-- id: routeId
-  name: Route ID
-  type: UINT16
-- id: comment
-  name: Comment
-  type: STRING_LAU
-repeating1:
-  count: 2
-  start: 5
-  countField: 2
+- repeat:
+    countField: nitems
+    fields:
+    - id: routeId
+      name: Route ID
+      type: UINT16
+    - id: comment
+      name: Comment
+      type: STRING_LAU
 samples:
 - raw: "2023-01-01-00:00:00.000,4,130071,99,255,61,ff,ff,02,00,0f,00,ff,ff,02,00,17,01,48,65,72,65,20,74,6f,20,54,68,65,72,65,2d,43,6f,6d,6d,65,6e,74,05,00,1a,01,41,6e,64,20,42,61,63,6b,20,41,67,61,69,6e,20,2d,20,43,6f,6d,6d,65,6e,74"  # from actisense-522.candump.log
   expects:

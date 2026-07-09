@@ -1018,45 +1018,52 @@ async function saveLookup() {
   scheduleRefresh();   // live decode picks up renamed values immediately
 }
 
-function fieldsYaml() {
-  let y = "fields:\n";
-  fieldsState.forEach(f => {
-    // attributes equal to the fieldtype's own are defaults - omit in YAML
-    const ft = ftByName(f.type) || {};
-    y += `- id: ${yq(f.id)}\n  name: ${yq(f.name)}\n  type: ${f.type}\n`;
-    if (f.bits && Number(f.bits) !== ft.bits) y += `  bits: ${Number(f.bits)}\n`;
-    if (f.lookup) {
-      // reference key must match the enumeration's kind (R08): a bit enum
-      // is lookupBits, a fieldtype enum lookupFieldtype, a triplet
-      // lookupIndirect, otherwise a plain pair lookup.
-      const lk = MODEL.lookups.find(l => (l.name || l) === f.lookup);
-      const key = !lk ? "lookup"
-        : lk.kind === "bit" ? "lookupBits"
-        : lk.kind === "fieldtype" ? "lookupFieldtype"
-        : lk.kind === "triplet" ? "lookupIndirect"
-        : "lookup";
-      y += `  ${key}: ${f.lookup}\n`;
-    }
-    if (f.match !== undefined && f.match !== "") y += `  match: ${Number(f.match)}\n`;
-    if (f.unit && f.unit !== ft.unit) y += `  unit: ${yq(f.unit)}\n`;
-    if (f.resolution && Number(f.resolution) !== ft.resolution) y += `  resolution: ${Number(f.resolution)}\n`;
-    if (f.primaryKey) y += `  primaryKey: true\n`;
-  });
+function fieldYaml(f, pad) {
+  // attributes equal to the fieldtype's own are defaults - omit in YAML
+  const ft = ftByName(f.type) || {};
+  let y = `${pad}- id: ${yq(f.id)}\n${pad}  name: ${yq(f.name)}\n${pad}  type: ${f.type}\n`;
+  if (f.bits && Number(f.bits) !== ft.bits) y += `${pad}  bits: ${Number(f.bits)}\n`;
+  if (f.lookup) {
+    // reference key must match the enumeration's kind (R08): a bit enum
+    // is lookupBits, a fieldtype enum lookupFieldtype, a triplet
+    // lookupIndirect, otherwise a plain pair lookup.
+    const lk = MODEL.lookups.find(l => (l.name || l) === f.lookup);
+    const key = !lk ? "lookup"
+      : lk.kind === "bit" ? "lookupBits"
+      : lk.kind === "fieldtype" ? "lookupFieldtype"
+      : lk.kind === "triplet" ? "lookupIndirect"
+      : "lookup";
+    y += `${pad}  ${key}: ${f.lookup}\n`;
+  }
+  if (f.match !== undefined && f.match !== "") y += `${pad}  match: ${Number(f.match)}\n`;
+  if (f.unit && f.unit !== ft.unit) y += `${pad}  unit: ${yq(f.unit)}\n`;
+  if (f.resolution && Number(f.resolution) !== ft.resolution) y += `${pad}  resolution: ${Number(f.resolution)}\n`;
+  if (f.primaryKey) y += `${pad}  primaryKey: true\n`;
   return y;
 }
 
-// repeating1/repeating2 blocks derived from the set boundaries.
-function repYaml() {
-  let y = "";
+// A repeating set is a `- repeat:` item holding its own fields, so count and
+// start are the block's length and position; only countField is authored.
+function fieldsYaml() {
   const ends = [repAt[1] >= 0 ? repAt[1] : fieldsState.length, fieldsState.length];
+  const opens = new Map();                    // field index -> set number
   for (let k = 0; k < 2; k++) {
-    if (repAt[k] < 0) continue;
-    const count = ends[k] - repAt[k];
-    if (count <= 0) continue;                 // declared but empty: skip
-    y += `repeating${k + 1}:\n  count: ${count}\n  start: ${repAt[k] + 1}\n`;
-    const ci = fieldsState.findIndex(f => f.id === repCountField[k]);
-    if (repCountField[k] && ci >= 0) y += `  countField: ${ci + 1}\n`;
+    if (repAt[k] < 0 || ends[k] - repAt[k] <= 0) continue;   // declared but empty: skip
+    opens.set(repAt[k], k);
   }
+  const firstRep = opens.size ? Math.min(...opens.keys()) : -1;
+
+  let y = "fields:\n";
+  fieldsState.forEach((f, i) => {
+    if (opens.has(i)) {
+      const k = opens.get(i);
+      y += `- repeat:\n`;
+      if (repCountField[k] && fieldsState.some(g => g.id === repCountField[k]))
+        y += `    countField: ${repCountField[k]}\n`;
+      y += `    fields:\n`;
+    }
+    y += fieldYaml(f, firstRep >= 0 && i >= firstRep ? "    " : "");
+  });
   return y;
 }
 
@@ -1085,15 +1092,14 @@ function syncSavePath() {
 function regenerateYaml() {
   if (yamlDirty) { syncSavePath(); return; }
   if (baseYaml !== null) {
-    // Existing PGN: replace the fields: block and regenerate repeating1/2
-    // from the form; notes, samples and every other authored key survive.
+    // Existing PGN: replace the fields: block, repeating sets and all; notes,
+    // samples and every other authored key survive. The repeating1/repeating2
+    // strip only matters for a file predating the nested `repeat:` form.
     let base = stripBlock(stripBlock(baseYaml, "repeating2"), "repeating1");
     const m = base.match(/\nfields:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
     if (m) {
-      const rep = repYaml();
-      const repText = rep ? "\n" + rep.trimEnd() : "";
       $("yamlText").value =
-        base.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + repText + base.slice(m.index + m[0].length);
+        base.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + base.slice(m.index + m[0].length);
     }
     return;
   }
@@ -1105,7 +1111,6 @@ function regenerateYaml() {
   y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
   if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
   y += fieldsYaml();
-  y += repYaml();
   $("yamlText").value = y;
   const id = $("m_id").value || "newPgn";
   $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;

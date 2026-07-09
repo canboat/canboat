@@ -45,24 +45,23 @@ fields:
 - id: numberOfAcknowledgments
   name: Number of Acknowledgments
   type: UINT8
-- id: destinationId
-  name: Destination ID
-  type: MMSI
-  primaryKey: true
-  rangeMin: 2000000.0
-  rangeMax: 999999999.0
-- id: sequenceNumber
-  name: Sequence Number
-  type: UNSIGNED_INTEGER
-  bits: 2
-  specialValues: 0
-  rangeMin: 0.0
-  rangeMax: 3.0
-- id: reserved11
-  name: Reserved
-  type: RESERVED
-  bits: 6
-repeating1:
-  count: 3
-  start: 9
-  countField: 8
+- repeat:
+    countField: numberOfAcknowledgments
+    fields:
+    - id: destinationId
+      name: Destination ID
+      type: MMSI
+      primaryKey: true
+      rangeMin: 2000000.0
+      rangeMax: 999999999.0
+    - id: sequenceNumber
+      name: Sequence Number
+      type: UNSIGNED_INTEGER
+      bits: 2
+      specialValues: 0
+      rangeMin: 0.0
+      rangeMax: 3.0
+    - id: reserved11
+      name: Reserved
+      type: RESERVED
+      bits: 6

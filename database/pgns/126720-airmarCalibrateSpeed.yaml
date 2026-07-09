@@ -36,14 +36,13 @@ fields:
   name: Number of pairs of data points
   type: UINT8
   description: actual range is 0 to 25. 254=restore default speed curve
-- id: inputFrequency
-  name: Input frequency
-  type: FREQUENCY_UFIX16
-  resolution: 0.1
-- id: outputSpeed
-  name: Output speed
-  type: SPEED_UFIX16_CM
-repeating1:
-  count: 2
-  start: 6
-  countField: 5
+- repeat:
+    countField: numberOfPairsOfDataPoints
+    fields:
+    - id: inputFrequency
+      name: Input frequency
+      type: FREQUENCY_UFIX16
+      resolution: 0.1
+    - id: outputSpeed
+      name: Output speed
+      type: SPEED_UFIX16_CM

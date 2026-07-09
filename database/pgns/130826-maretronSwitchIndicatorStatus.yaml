@@ -32,10 +32,9 @@ fields:
 - id: numberOfStatusFields
   name: Number of Status Fields
   type: UINT8
-- id: indicatorStatus
-  name: Indicator Status
-  type: UINT8
-repeating1:
-  count: 1
-  start: 6
-  countField: 5
+- repeat:
+    countField: numberOfStatusFields
+    fields:
+    - id: indicatorStatus
+      name: Indicator Status
+      type: UINT8

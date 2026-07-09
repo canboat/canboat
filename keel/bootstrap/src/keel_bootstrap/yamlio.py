@@ -90,28 +90,51 @@ def field_to_dict(f: Field_) -> dict:
     return _clean(d)
 
 
+def fields_to_list(p: Pgn) -> list:
+    """The authored field list: a repeating set is one `repeat:` item holding
+    its own fields, so `start`/`count` are position and length, not numbers."""
+    reps = {}
+    for rep in (p.repeating1, p.repeating2):
+        if rep is not None and rep.count > 0:
+            reps[rep.start] = rep
+    ids = [f.id for f in p.fields]
+    out, i = [], 0
+    while i < len(p.fields):
+        rep = reps.pop(i + 1, None)
+        if rep is None:
+            out.append(field_to_dict(p.fields[i]))
+            i += 1
+            continue
+        block = {}
+        if rep.count_field:
+            block["countField"] = ids[rep.count_field - 1]
+        block["fields"] = [field_to_dict(f) for f in p.fields[i : i + rep.count]]
+        out.append({"repeat": block})
+        i += rep.count
+    if reps:
+        raise ValueError(f"PGN {p.pgn} '{p.id}': repeating set starts mid-set at field {min(reps)}")
+    return out
+
+
 def pgn_to_dict(p: Pgn) -> dict:
-    d = {
-        "pgn": p.pgn,
-        "id": p.id,
-        "description": p.description,
-        "type": p.type,
-        "fallback": p.fallback,
-        "variantOrder": p.variant_order or None,
-        "priority": p.priority or None,
-        "interval": p.interval,
-        "missing": list(p.missing) or None,
-        "explanation": p.explanation,
-        "url": p.url,
-        "researchDoc": p.research_doc,
-        "notes": getattr(p, "notes", None),
-        "fields": [field_to_dict(f) for f in p.fields],
-    }
-    for n in (1, 2):
-        rep = getattr(p, f"repeating{n}")
-        if rep is not None:
-            d[f"repeating{n}"] = _clean({"count": rep.count, "start": rep.start, "countField": rep.count_field})
-    return _clean(d)
+    return _clean(
+        {
+            "pgn": p.pgn,
+            "id": p.id,
+            "description": p.description,
+            "type": p.type,
+            "fallback": p.fallback,
+            "variantOrder": p.variant_order or None,
+            "priority": p.priority or None,
+            "interval": p.interval,
+            "missing": list(p.missing) or None,
+            "explanation": p.explanation,
+            "url": p.url,
+            "researchDoc": p.research_doc,
+            "notes": getattr(p, "notes", None),
+            "fields": fields_to_list(p),
+        }
+    )
 
 
 def lookup_to_dict(lk: Lookup) -> dict:
@@ -178,6 +201,16 @@ def pq_to_dict(pq: PhysicalQuantity) -> dict:
     )
 
 
+def _walk_fields(items):
+    """Yield every field dict in an authored field list, descending into
+    `repeat:` blocks."""
+    for item in items or []:
+        if "repeat" in item:
+            yield from _walk_fields(item["repeat"].get("fields"))
+        else:
+            yield item
+
+
 def _preserve_notes(d: dict, path: str) -> dict:
     """Research notes are authored in the YAML (migration step 4), not in the
     XML the converter reads - carry them over when regenerating a file."""
@@ -194,8 +227,8 @@ def _preserve_notes(d: dict, path: str) -> dict:
         d["note"] = old["note"]
     if "valueNotes" in old and "valueNotes" not in d:
         d["valueNotes"] = old["valueNotes"]
-    old_fields = {f.get("id"): f for f in old.get("fields", [])} if "fields" in old else {}
-    for f in d.get("fields", []):
+    old_fields = {f["id"]: f for f in _walk_fields(old.get("fields"))}
+    for f in _walk_fields(d.get("fields")):
         of = old_fields.get(f.get("id"))
         if of and "note" in of and "note" not in f:
             f["note"] = of["note"]
@@ -276,7 +309,26 @@ def field_from_dict(d: dict) -> Field_:
     return f
 
 
+def fields_from_list(items: list) -> tuple[list[Field_], list[Repeating]]:
+    """Inverse of fields_to_list(): flatten `repeat:` blocks back to a plain
+    field list plus the repeating sets, resolving countField ids to order."""
+    fields, blocks = [], []
+    for item in items:
+        if "repeat" not in item:
+            fields.append(field_from_dict(item))
+            continue
+        block = item["repeat"]
+        start = len(fields) + 1
+        for fd in block["fields"]:
+            fields.append(field_from_dict(fd))
+        blocks.append((start, len(block["fields"]), block.get("countField")))
+    ids = [f.id for f in fields]
+    reps = [Repeating(count, start, ids.index(cf) + 1 if cf else None) for start, count, cf in blocks]
+    return fields, reps
+
+
 def pgn_from_dict(d: dict) -> Pgn:
+    fields, reps = fields_from_list(d.get("fields", []))
     p = Pgn(
         pgn=d["pgn"],
         id=d["id"],
@@ -290,12 +342,10 @@ def pgn_from_dict(d: dict) -> Pgn:
         fallback=d.get("fallback", False),
         missing=d.get("missing", []),
         variant_order=d.get("variantOrder", 0),
-        fields=[field_from_dict(fd) for fd in d.get("fields", [])],
+        fields=fields,
     )
-    for n in (1, 2):
-        rep = d.get(f"repeating{n}")
-        if rep is not None:
-            setattr(p, f"repeating{n}", Repeating(rep["count"], rep["start"], rep.get("countField")))
+    for n, rep in enumerate(reps, 1):
+        setattr(p, f"repeating{n}", rep)
     return p
 
 

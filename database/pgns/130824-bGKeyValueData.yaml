@@ -28,25 +28,24 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: key
-  name: Key
-  type: DYNAMIC_FIELD_KEY
-  bits: 12
-  lookupFieldtype: BANDG_KEY_VALUE
-  primaryKey: true
-- id: length
-  name: Length
-  type: DYNAMIC_FIELD_LENGTH
-  bits: 4
-  description: Length of field 6
-  dynamicFieldLength: true
-- id: value
-  name: Value
-  type: DYNAMIC_FIELD_VALUE
-  description: Data value
-repeating1:
-  count: 3
-  start: 4
+- repeat:
+    fields:
+    - id: key
+      name: Key
+      type: DYNAMIC_FIELD_KEY
+      bits: 12
+      lookupFieldtype: BANDG_KEY_VALUE
+      primaryKey: true
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 4
+      description: Length of field 6
+      dynamicFieldLength: true
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: Data value
 samples:
 - raw: "2023-01-01-00:00:00.000,3,130824,26,255,14,7d,99,50,21,d2,08,51,21,23,fd,52,21,dd,02"  # from merrimac-2022.raw
   expects:

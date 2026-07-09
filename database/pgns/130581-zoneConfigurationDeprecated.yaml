@@ -18,15 +18,14 @@ fields:
   name: Total zone count
   type: UINT8
   description: Total Zones supported by this device
-- id: zoneId
-  name: Zone ID
-  type: LOOKUP
-  bits: 8
-  lookup: ENTERTAINMENT_ZONE
-- id: zoneName
-  name: Zone name
-  type: STRING_LAU
-repeating1:
-  count: 2
-  start: 4
-  countField: 2
+- repeat:
+    countField: zoneCount
+    fields:
+    - id: zoneId
+      name: Zone ID
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_ZONE
+    - id: zoneName
+      name: Zone name
+      type: STRING_LAU

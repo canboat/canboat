@@ -45,18 +45,17 @@ fields:
   name: Number of Parameters
   type: UINT8
   description: Total Number of Value Parameters
-- id: valueParameterNumber
-  name: Value Parameter Number
-  type: UINT8
-- id: valueDataFormat
-  name: Value Data Format
-  type: UINT8
-- id: valueData
-  name: Value Data
-  type: UINT64
-  rangeMin: 0.0
-  rangeMax: 1.8446744073709552e+19
-repeating1:
-  count: 3
-  start: 11
-  countField: 10
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: valueParameterNumber
+      name: Value Parameter Number
+      type: UINT8
+    - id: valueDataFormat
+      name: Value Data Format
+      type: UINT8
+    - id: valueData
+      name: Value Data
+      type: UINT64
+      rangeMin: 0.0
+      rangeMax: 1.8446744073709552e+19

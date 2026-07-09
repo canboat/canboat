@@ -16,15 +16,14 @@ fields:
 - id: totalPresetCount
   name: Total preset count
   type: UINT8
-- id: presetType
-  name: Preset type
-  type: LOOKUP
-  bits: 8
-  lookup: ENTERTAINMENT_EQ
-- id: presetName
-  name: Preset name
-  type: STRING_LAU
-repeating1:
-  count: 2
-  start: 4
-  countField: 2
+- repeat:
+    countField: presetCount
+    fields:
+    - id: presetType
+      name: Preset type
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_EQ
+    - id: presetName
+      name: Preset name
+      type: STRING_LAU
