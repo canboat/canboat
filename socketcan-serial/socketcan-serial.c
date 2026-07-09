@@ -507,7 +507,7 @@ int main(int argc, char **argv)
     }
     if (!readonly && FD_ISSET(STDIN_FILENO, &rfds))
     {
-      char line[2000];
+      char line[MAX_MSG_LINE_LENGTH];
 
       if (!readIn())
       {
@@ -856,7 +856,7 @@ static bool isFastPacket(uint32_t pgn)
 static void parseAndWriteIn(int sock, const char *cmd)
 {
   RawMessage m;
-  char       copy[2000];
+  char       copy[MAX_MSG_LINE_LENGTH];
 
   if (!cmd || !*cmd || *cmd == '\n' || *cmd == '#')
   {
@@ -874,6 +874,12 @@ static void parseAndWriteIn(int sock, const char *cmd)
   if (m.pgn >= CANBOAT_PGN_START)
   {
     return; /* synthetic status PGNs are not for the bus */
+  }
+  if (m.len > FASTPACKET_MAX_SIZE)
+  {
+    /* Only reassembly, not transmission, of ISO TP messages is implemented */
+    logError("PGN %u length %u exceeds fast packet maximum %u\n", m.pgn, m.len, FASTPACKET_MAX_SIZE);
+    return;
   }
 
   sendN2k(sock, m.prio, m.pgn, (uint8_t) address, m.dst, m.data, m.len, false);

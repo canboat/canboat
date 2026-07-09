@@ -146,9 +146,9 @@ int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
     return 2;
   }
 
-  if (len > FASTPACKET_MAX_SIZE)
+  if (len > MAX_PGN_SIZE)
   {
-    logError("Message size %u exceeds maximum %u: %s", len, FASTPACKET_MAX_SIZE, msg);
+    logError("Message size %u exceeds maximum %u: %s", len, MAX_PGN_SIZE, msg);
     return 2;
   }
 
@@ -466,7 +466,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
 
   char        *p;
   int          i;
-  int          b;
+  unsigned int b;
   unsigned int byt;
   int          r;
 
@@ -486,6 +486,12 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
   r = sscanf(p, ",%u,%u,%u,%u,%u,%n", &prio, &pgn, &src, &dst, &bytes, &i);
   if (r == 5)
   {
+    if (bytes > MAX_PGN_SIZE)
+    {
+      logError("Message size %u exceeds maximum %u: %s\n", bytes, MAX_PGN_SIZE, sbGet(in));
+      return false;
+    }
+
     // now store the timestamp, unchanged
     memset(msg->timestamp, 0, sizeof msg->timestamp);
     memcpy(msg->timestamp, sbGet(in), CB_MIN(p - sbGet(in), sizeof msg->timestamp - 1));
@@ -498,7 +504,7 @@ bool parseFastFormat(StringBuffer *in, RawMessage *msg)
 
     p += i - 1;
 
-    for (b = 0; b < CB_MIN(bytes, FASTPACKET_MAX_SIZE); b++)
+    for (b = 0; b < bytes; b++)
     {
       if ((sscanf(p, ",%x%n", &byt, &i) == 1) && (byt < 256))
       {
@@ -568,7 +574,7 @@ int parseRawFormatActisenseN2KAscii(char *msg, RawMessage *m, bool showJson)
 
   // parse DATA
   p = nexttoken;
-  for (i = 0; i < FASTPACKET_MAX_SIZE; i++)
+  for (i = 0; i < MAX_PGN_SIZE; i++)
   {
     if (*p == '\0' || isspace((unsigned char) *p))
     {

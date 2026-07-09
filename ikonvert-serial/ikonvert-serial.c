@@ -428,18 +428,26 @@ static void processInBuffer(StringBuffer *in, StringBuffer *out)
   {
     if (!readonly && parseFastFormat(in, &msg) && msg.pgn < CANBOAT_PGN_START)
     {
-      // Format msg as iKonvert message
-      sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
-      if (hexMode)
+      if (msg.len > FASTPACKET_MAX_SIZE)
       {
-        sbAppendEncodeHex(out, msg.data, msg.len, 0);
+        // Only reassembly, not transmission, of ISO TP messages is implemented
+        logError("PGN %u length %u exceeds fast packet maximum %u\n", msg.pgn, msg.len, FASTPACKET_MAX_SIZE);
       }
       else
       {
-        sbAppendEncodeBase64(out, msg.data, msg.len, 0);
+        // Format msg as iKonvert message
+        sbAppendFormat(out, TX_PGN_MSG_PREFIX, msg.pgn, msg.dst);
+        if (hexMode)
+        {
+          sbAppendEncodeHex(out, msg.data, msg.len, 0);
+        }
+        else
+        {
+          sbAppendEncodeBase64(out, msg.data, msg.len, 0);
+        }
+        sbAppendFormat(out, "\r\n");
+        logDebug("SendBuffer [%s]\n", sbGet(out));
       }
-      sbAppendFormat(out, "\r\n");
-      logDebug("SendBuffer [%s]\n", sbGet(out));
     }
     else if (!readonly && msg.len > sizeof("$PDGY") && memcmp(msg.data, "$PDGY", sizeof("$PDGY")) == 0)
     {
