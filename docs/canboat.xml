@@ -4480,11 +4480,13 @@ limitations under the License.
       <EnumFieldType Value='59' Name='User 4' FieldType='NUMBER' Signed='true'
  Resolution='0.01' Bits='32'/>
       <EnumFieldType Value='60' Name='Roll Rate' FieldType='NUMBER' Signed='true'
- Resolution='0.0001' Unit='rad' Bits='16'/>
+ Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
       <EnumFieldType Value='64' Name='Forestay' FieldType='NUMBER' Signed='false'
  Resolution='0.001' Bits='32'/>
       <EnumFieldType Value='65' Name='Water Speed' FieldType='NUMBER' Signed='false'
  Resolution='0.01' Unit='m/s' Bits='16'/>
+      <EnumFieldType Value='68' Name='Yaw Rate' FieldType='NUMBER' Signed='true'
+ Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
       <EnumFieldType Value='73' Name='Current Set' FieldType='NUMBER' Signed='false'
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='77' Name='Wind Speed Apparent' FieldType='NUMBER' Signed='false'
@@ -4547,8 +4549,8 @@ limitations under the License.
  Resolution='0.0001' Unit='rad' Bits='16'/>
       <EnumFieldType Value='157' Name='Wind Angle to Mast' FieldType='NUMBER' Signed='true'
  Resolution='0.0001' Unit='rad' Bits='16'/>
-      <EnumFieldType Value='158' Name='Pitch Angle' FieldType='NUMBER' Signed='true'
- Resolution='0.0001' Unit='rad' Bits='16'/>
+      <EnumFieldType Value='158' Name='Pitch Rate' FieldType='NUMBER' Signed='true'
+ Resolution='3.125e-08' Unit='rad/s' Bits='32'/>
       <EnumFieldType Value='163' Name='Daggerboard Position' FieldType='NUMBER' Signed='false'
  Bits='16'/>
       <EnumFieldType Value='164' Name='Boom Position' FieldType='NUMBER' Signed='false'
