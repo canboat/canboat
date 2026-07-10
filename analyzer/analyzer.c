@@ -94,7 +94,6 @@ Packet reassemblyBuffer[REASSEMBLY_BUFFER_SIZE];
 #define ISO_TP_CM_RTS (16)
 #define ISO_TP_CM_ABORT (255)
 #define ISO_TP_SLOTS (16)
-#define ISO_TP_MAX_SIZE (255 * FASTPACKET_BUCKET_N_SIZE)
 
 typedef struct
 {
@@ -105,9 +104,9 @@ typedef struct
   uint32_t targetPgn;
   size_t   totalSize;
   uint8_t  packets;
-  uint32_t received[(255 + 31) / 32]; // Bit n is one when sequence n+1 has been received
+  uint32_t received[(ISOTP_MAX_PACKETS + 31) / 32]; // Bit n is one when sequence n+1 has been received
   char     timestamp[DATE_LENGTH];
-  uint8_t  data[ISO_TP_MAX_SIZE];
+  uint8_t  data[ISOTP_MAX_SIZE];
 } TpSlot;
 
 TpSlot tpSlotBuffer[ISO_TP_SLOTS];
@@ -203,7 +202,7 @@ static void usage(char **argv, char **av)
 int main(int argc, char **argv)
 {
   int    r;
-  char   msg[2000];
+  char   msg[MAX_MSG_LINE_LENGTH];
   FILE  *file = stdin;
   int    ac   = argc;
   char **av   = argv;
@@ -1016,7 +1015,7 @@ static void handleIsoTpCm(const RawMessage *msg)
   packets   = msg->data[3];
   targetPgn = (uint32_t) msg->data[5] + ((uint32_t) msg->data[6] << 8) + ((uint32_t) msg->data[7] << 16);
 
-  if (packets == 0 || totalSize == 0 || totalSize > ISO_TP_MAX_SIZE)
+  if (packets == 0 || totalSize == 0 || totalSize > ISOTP_MAX_SIZE)
   {
     logError("ISO TP CM frame from source %u declares implausible size=%u packets=%u; ignoring\n", msg->src, totalSize, packets);
     return;

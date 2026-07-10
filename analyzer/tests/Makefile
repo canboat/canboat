@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 tests
 
 all:	tests
 
@@ -237,4 +237,17 @@ test24:
 	diff $(TEMPDIR)/pgn-garmin-autopilot.out pgn-garmin-autopilot.out
 	diff $(TEMPDIR)/pgn-garmin-autopilot.err pgn-garmin-autopilot.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24
+# This tests that a message that arrives already reassembled - one FAST format
+# line holding the whole payload, as produced by anything that has done the ISO
+# Transport Protocol reassembly for us - is accepted when it is longer than a
+# fast packet's 223-byte ceiling. The input is the 1779-byte PGN 129540 payload
+# of test19 collapsed onto a single line, and the expected output is byte for
+# byte what reassembling that test's 255 TP.DT frames produces.
+#
+test25:
+	$(ANALYZER) -json -nv < iso-tp-preassembled-test.in > $(TEMPDIR)/iso-tp-preassembled-test.out -fixtime iso-tp-preassembled-test 2> $(TEMPDIR)/iso-tp-preassembled-test.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/iso-tp-preassembled-test.out
+	diff $(TEMPDIR)/iso-tp-preassembled-test.out iso-tp-preassembled-test.out
+	diff $(TEMPDIR)/iso-tp-preassembled-test.err iso-tp-preassembled-test.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25

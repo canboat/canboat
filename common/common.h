@@ -251,6 +251,30 @@ int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
 #define FASTPACKET_MAX_INDEX (0x1f)
 #define FASTPACKET_MAX_SIZE (FASTPACKET_BUCKET_0_SIZE + FASTPACKET_BUCKET_N_SIZE * FASTPACKET_MAX_INDEX)
 
+/*
+ * Messages too large even for a fast packet are sent using the ISO 11783-3
+ * Transport Protocol: PGN 60416 (TP.CM) announces the transfer and PGN 60160
+ * (TP.DT) carries the payload in 7 byte chunks with a 1-based sequence number.
+ * The sequence number is a single byte, so at most 255 * 7 = 1785 bytes.
+ */
+#define ISOTP_MAX_PACKETS (0xff)
+#define ISOTP_MAX_SIZE (FASTPACKET_BUCKET_N_SIZE * ISOTP_MAX_PACKETS)
+
+/*
+ * The largest payload that any reassembled NMEA 2000 message can have; this is
+ * what a RawMessage must be able to hold. Note that only the transports above
+ * reassemble; a message that is to be *transmitted* still has to fit in a fast
+ * packet, since none of the writers implement ISO TP.
+ */
+#define MAX_PGN_SIZE (ISOTP_MAX_SIZE)
+
+/*
+ * A single line of CANboat 'fast' format text: a timestamp, a short header and
+ * then ",xx" for every data byte. Any buffer that a full message is read into
+ * must be at least this large, or long messages are truncated as they are read.
+ */
+#define MAX_MSG_LINE_LENGTH (DATE_LENGTH + 32 + MAX_PGN_SIZE * 3)
+
 #define IS_PGN_PROPRIETARY(n)                                                   \
   (((n) >= 0xEF00 && (n) <= 0xEFFF)      /* PDU1 (addressed) single-frame */    \
    || ((n) >= 0xFF00 && (n) <= 0xFFFF)   /* PDU2 (nonaddressed) single-frame */ \
