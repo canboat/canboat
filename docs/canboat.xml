@@ -3609,7 +3609,15 @@ limitations under the License.
     <LookupEnumeration Name='GARMIN_AUTOPILOT_MODE_STATE' MaxValue='255'>
       <EnumPair Value='2' Name='Standby' />
       <EnumPair Value='3' Name='Shadow Drive' />
-      <EnumPair Value='5' Name='Engaged' />
+      <EnumPair Value='5' Name='Heading Hold' />
+      <EnumPair Value='8' Name='Circles' />
+      <EnumPair Value='9' Name='Zigzag' />
+      <EnumPair Value='10' Name='Williamson Turn' />
+      <EnumPair Value='11' Name='U-turn' />
+      <EnumPair Value='13' Name='Follow Route' />
+      <EnumPair Value='14' Name='Cloverleaf' />
+      <EnumPair Value='15' Name='Orbit' />
+      <EnumPair Value='16' Name='Search' />
     </LookupEnumeration>
     <LookupEnumeration Name='GARMIN_MESSAGE_ID' MaxValue='65535'>
       <EnumPair Value='1900' Name='AHRS ATT transport' />
