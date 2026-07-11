@@ -71,16 +71,19 @@ jobs:
   # Exercise the static-musl keel builds that release.yaml ships for linux, so a
   # musl-specific breakage (crt-static, the cformat snprintf extern, a std
   # feature unavailable on musl) surfaces on the PR instead of at tag time.
-  # aarch64 cross-links from the x86_64 runner via rust's self-contained musl
-  # (rust-lld), so no external toolchain is needed.
+  # Each target builds on its matching-arch runner (as release.yaml does), so
+  # linking is native-arch and needs no cross toolchain — the host's ld cannot
+  # link foreign-arch objects (e.g. aarch64 crt on an x86_64 runner).
   build-keel-musl:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.runner }}
     strategy:
       fail-fast: false
       matrix:
-        target:
-          - x86_64-unknown-linux-musl
-          - aarch64-unknown-linux-musl
+        include:
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+          - target: aarch64-unknown-linux-musl
+            runner: ubuntu-24.04-arm
     steps:
       - name: checkout repo
         uses: actions/checkout@v4
