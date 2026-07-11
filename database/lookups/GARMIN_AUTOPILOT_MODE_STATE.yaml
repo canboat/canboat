@@ -1,0 +1,7 @@
+name: GARMIN_AUTOPILOT_MODE_STATE
+kind: pair
+bits: 8
+values:
+  2: Standby
+  3: Shadow Drive
+  5: Engaged

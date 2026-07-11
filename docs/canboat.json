@@ -4454,6 +4454,51 @@
         ]
       },
       {
+        "Name":"GARMIN_AUTOPILOT_MODE_STATE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Standby", "Value":2},
+          {"Name":"Shadow Drive", "Value":3},
+          {"Name":"Engaged", "Value":5}
+        ]
+      },
+      {
+        "Name":"GARMIN_MESSAGE_ID",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"AHRS ATT transport", "Value":1900},
+          {"Name":"Autopilot transport", "Value":5904}
+        ]
+      },
+      {
+        "Name":"GARMIN_AUTOPILOT_FIELD",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Heartbeat", "Value":3},
+          {"Name":"Mode State", "Value":10},
+          {"Name":"Heading to Steer", "Value":11},
+          {"Name":"Response Setting", "Value":62},
+          {"Name":"Rate of Turn", "Value":114},
+          {"Name":"Rate of Turn Order", "Value":115},
+          {"Name":"Turn Angle Order", "Value":116},
+          {"Name":"System Voltage", "Value":158},
+          {"Name":"Turn Angle Measured", "Value":161},
+          {"Name":"Engine RPM B", "Value":239},
+          {"Name":"Engine RPM A", "Value":240},
+          {"Name":"Speed", "Value":246}
+        ]
+      },
+      {
+        "Name":"GARMIN_ATT_MESSAGE_ID",
+        "MaxValue":65535,
+        "EnumValues":[
+          {"Name":"Calibration Matrix Present", "Value":40},
+          {"Name":"Set North State", "Value":52},
+          {"Name":"Device Flags", "Value":65},
+          {"Name":"COG Source Valid Flag", "Value":67}
+        ]
+      },
+      {
         "Name":"GARMIN_BACKLIGHT_LEVEL",
         "MaxValue":255,
         "EnumValues":[
@@ -5413,9 +5458,10 @@
         {"name": "User 2", "value": 57, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.01, "Bits": "32"},
         {"name": "User 3", "value": 58, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.01, "Bits": "32"},
         {"name": "User 4", "value": 59, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.01, "Bits": "32"},
-        {"name": "Roll Rate", "value": 60, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
+        {"name": "Roll Rate", "value": 60, "FieldType": "NUMBER", "Signed": true, "Resolution": 3.125e-08, "Unit": "rad/s", "Bits": "32"},
         {"name": "Forestay", "value": 64, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.001, "Bits": "32"},
         {"name": "Water Speed", "value": 65, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
+        {"name": "Yaw Rate", "value": 68, "FieldType": "NUMBER", "Signed": true, "Resolution": 3.125e-08, "Unit": "rad/s", "Bits": "32"},
         {"name": "Current Set", "value": 73, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Wind Speed Apparent", "value": 77, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
         {"name": "Wind Speed True", "value": 79, "FieldType": "NUMBER", "Signed": false, "Resolution": 0.01, "Unit": "m/s", "Bits": "16"},
@@ -5447,7 +5493,7 @@
         {"name": "Attitude Roll", "value": 155, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Mast Angle", "value": 156, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
         {"name": "Wind Angle to Mast", "value": 157, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
-        {"name": "Pitch Angle", "value": 158, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
+        {"name": "Pitch Rate", "value": 158, "FieldType": "NUMBER", "Signed": true, "Resolution": 3.125e-08, "Unit": "rad/s", "Bits": "32"},
         {"name": "Daggerboard Position", "value": 163, "FieldType": "NUMBER", "Signed": false, "Bits": "16"},
         {"name": "Boom Position", "value": 164, "FieldType": "NUMBER", "Signed": false, "Bits": "16"},
         {"name": "MOB DR Bearing", "value": 185, "FieldType": "NUMBER", "Signed": true, "Resolution": 0.0001, "Unit": "rad", "Bits": "16"},
@@ -20500,7 +20546,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin ATT transport",
+            "Description":"AHRS ATT transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -20509,7 +20555,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20546,7 +20593,7 @@
             "Order":7,
             "Id":"attMessageId",
             "Name":"ATT Message ID",
-            "Description":"ID",
+            "Description":"COG Source Valid Flag",
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
@@ -20555,7 +20602,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_ATT_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20633,7 +20681,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin ATT transport",
+            "Description":"AHRS ATT transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -20642,7 +20690,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20679,7 +20728,7 @@
             "Order":7,
             "Id":"attMessageId",
             "Name":"ATT Message ID",
-            "Description":"ID",
+            "Description":"Device Flags",
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
@@ -20688,7 +20737,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_ATT_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20766,7 +20816,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin ATT transport",
+            "Description":"AHRS ATT transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -20775,7 +20825,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20812,7 +20863,7 @@
             "Order":7,
             "Id":"attMessageId",
             "Name":"ATT Message ID",
-            "Description":"ID",
+            "Description":"Calibration Matrix Present",
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
@@ -20821,7 +20872,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_ATT_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20899,7 +20951,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin ATT transport",
+            "Description":"AHRS ATT transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -20908,7 +20960,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -20945,7 +20998,7 @@
             "Order":7,
             "Id":"attMessageId",
             "Name":"ATT Message ID",
-            "Description":"ID",
+            "Description":"Set North State",
             "BitLength":16,
             "BitOffset":48,
             "BitStart":0,
@@ -20954,7 +21007,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_ATT_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21033,7 +21087,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21042,7 +21096,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21103,7 +21158,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21192,7 +21248,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21201,7 +21257,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21262,7 +21319,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21350,7 +21408,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21359,7 +21417,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21420,7 +21479,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21508,7 +21568,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21517,7 +21577,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21578,7 +21639,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21666,7 +21728,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21675,7 +21737,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21736,7 +21799,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21757,14 +21821,15 @@
             "BitOffset":72,
             "BitStart":0,
             "Unit":"V",
-            "Resolution":0.001,
+            "Resolution":0.01,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":65.532,
+            "RangeMax":655.32,
             "UnknownValue":65535,
             "OutOfRangeValue":65534,
             "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           }
         ]
       },
@@ -21826,7 +21891,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21835,7 +21900,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -21896,7 +21962,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -21983,7 +22050,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -21992,7 +22059,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22053,7 +22121,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22140,7 +22209,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22149,7 +22218,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22210,7 +22280,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22300,7 +22371,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22309,7 +22380,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22370,7 +22442,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22460,7 +22533,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22469,7 +22542,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22530,7 +22604,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22619,7 +22694,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22628,7 +22703,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22689,7 +22765,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22706,7 +22783,6 @@
             "Order":10,
             "Id":"modeState",
             "Name":"Mode State",
-            "Description":"Engage/standby state command (observed 2 = Standby, 5 = Engaged)",
             "BitLength":8,
             "BitOffset":72,
             "BitStart":0,
@@ -22717,7 +22793,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_MODE_STATE"
           }
         ]
       },
@@ -22779,7 +22856,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22788,7 +22865,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {
@@ -22849,7 +22927,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":252,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_FIELD",
             "PartOfPrimaryKey":true
           },
           {
@@ -22923,7 +23002,7 @@
             "Order":4,
             "Id":"subProtocolId",
             "Name":"Sub-protocol ID",
-            "Description":"Garmin autopilot transport",
+            "Description":"Autopilot transport",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,
@@ -22932,7 +23011,8 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":65532,
-            "FieldType":"NUMBER",
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_MESSAGE_ID",
             "PartOfPrimaryKey":true
           },
           {

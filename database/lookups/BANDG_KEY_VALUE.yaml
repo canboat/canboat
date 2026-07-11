@@ -79,13 +79,16 @@ values:
   type: FIX32_2
 - value: 60
   name: Roll Rate
-  type: ANGLE_FIX16
+  type: ROTATION_FIX32
 - value: 64
   name: Forestay
   type: UFIX32_2
 - value: 65
   name: Water Speed
   type: SPEED_UFIX16_CM
+- value: 68
+  name: Yaw Rate
+  type: ROTATION_FIX32
 - value: 73
   name: Current Set
   type: ANGLE_UFIX16
@@ -180,8 +183,8 @@ values:
   name: Wind Angle to Mast
   type: ANGLE_FIX16
 - value: 158
-  name: Pitch Angle
-  type: ANGLE_FIX16
+  name: Pitch Rate
+  type: ROTATION_FIX32
 - value: 163
   name: Daggerboard Position
   type: UINT16

@@ -28,9 +28,11 @@ fields:
   lookup: INDUSTRY_CODE
 - id: subProtocolId
   name: Sub-protocol ID
-  type: UINT16
-  description: Garmin ATT transport
+  type: LOOKUP
+  bits: 16
+  description: AHRS ATT transport
   match: 1900
+  lookup: GARMIN_MESSAGE_ID
   primaryKey: true
 - id: wrapperByte1
   name: Wrapper Byte 1
@@ -44,9 +46,11 @@ fields:
   match: 2
 - id: attMessageId
   name: ATT Message ID
-  type: UINT16
-  description: ID
+  type: LOOKUP
+  bits: 16
+  description: Calibration Matrix Present
   match: 40
+  lookup: GARMIN_ATT_MESSAGE_ID
   primaryKey: true
 - id: calibrationMatrixPresent
   name: Calibration Matrix Present
