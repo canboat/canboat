@@ -68,6 +68,38 @@ jobs:
           ls -l $CC
           make
 
+  # Exercise the static-musl keel builds that release.yaml ships for linux, so a
+  # musl-specific breakage (crt-static, the cformat snprintf extern, a std
+  # feature unavailable on musl) surfaces on the PR instead of at tag time.
+  # aarch64 cross-links from the x86_64 runner via rust's self-contained musl
+  # (rust-lld), so no external toolchain is needed.
+  build-keel-musl:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        target:
+          - x86_64-unknown-linux-musl
+          - aarch64-unknown-linux-musl
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build keel (static musl)
+        run: |
+          rustup target add "${{ matrix.target }}"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.target }}"
+
+      - name: Verify the binary is statically linked
+        run: |
+          bin="keel/target/${{ matrix.target }}/release/keel"
+          file "$bin"
+          # musl release binaries must not carry a dynamic-linker/interpreter.
+          if file "$bin" | grep -q "dynamically linked"; then
+            echo "::error::$bin is dynamically linked; expected a static musl build"
+            exit 1
+          fi
+
   build-windows:
     runs-on: windows-latest
     defaults:
