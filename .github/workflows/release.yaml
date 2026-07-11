@@ -54,6 +54,11 @@ jobs:
   # Native linux/macOS: the full C-tool archive plus the keel binary, one
   # runner per platform. Asset names match keel/keel's expected
   # keel-$(uname|lc)-$(uname -m) and the Makefile's rel/<platform>/ layout.
+  #
+  # keel on linux is built as a fully static musl binary (rust_target set), so
+  # the released binary has no glibc dependency and runs on any distro/glibc
+  # version rather than only the runner's glibc 2.39+. macOS keel stays native.
+  # The C-tool archive is still the runner-native (glibc) build.
   native:
     strategy:
       fail-fast: false
@@ -62,12 +67,15 @@ jobs:
           - runner: ubuntu-latest
             os: linux
             arch: x86_64
+            rust_target: x86_64-unknown-linux-musl
           - runner: ubuntu-24.04-arm
             os: linux
             arch: aarch64
+            rust_target: aarch64-unknown-linux-musl
           - runner: macos-latest
             os: darwin
             arch: arm64
+            rust_target: ""
     runs-on: ${{ matrix.runner }}
     permissions:
       contents: write
@@ -85,8 +93,17 @@ jobs:
 
       - name: Build keel
         run: |
-          cargo build --release --manifest-path keel/Cargo.toml
-          cp keel/target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
+          if [ -n "${{ matrix.rust_target }}" ]; then
+            # Static musl build: crt-static is on by default for *-musl and rust
+            # ships a self-contained musl libc, so the snprintf extern resolves
+            # and the binary links fully static with no external musl toolchain.
+            rustup target add "${{ matrix.rust_target }}"
+            cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.rust_target }}"
+            cp "keel/target/${{ matrix.rust_target }}/release/keel" "keel-${{ matrix.os }}-${{ matrix.arch }}"
+          else
+            cargo build --release --manifest-path keel/Cargo.toml
+            cp keel/target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
+          fi
 
       - name: Add release assets
         uses: softprops/action-gh-release@v2
