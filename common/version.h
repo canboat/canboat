@@ -19,6 +19,6 @@ limitations under the License.
 */
 
 // x-release-please-start-version
-#define VERSION "7.1.0"
+#define VERSION "7.2.0"
 // x-release-please-end-version
 #define SCHEMA_VERSION "2.5.0"

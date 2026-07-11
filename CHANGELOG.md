@@ -6,6 +6,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [7.2.0](https://github.com/canboat/canboat/compare/v7.1.0...v7.2.0) (2026-07-11)
+
+
+### Added
+
+* **126720:** restore shadowed variants and dedupe Maretron/BEP PGNs ([#744](https://github.com/canboat/canboat/issues/744)) ([7796fba](https://github.com/canboat/canboat/commit/7796fba0e861fc80f6cbe795c94d5b01326892ee))
+* **130824:** decode B&G key-value roll/pitch/yaw rates ([#757](https://github.com/canboat/canboat/issues/757)) ([8f737e9](https://github.com/canboat/canboat/commit/8f737e93ba2a1dd8684d4bc267126c55173c3ee5))
+* **130827:** decode Furuno NavPilot status ([#742](https://github.com/canboat/canboat/issues/742)) ([58a0f26](https://github.com/canboat/canboat/commit/58a0f26e4d53d5c58d0819ba0a030e035d042539))
+* **analyzer:** normalize emitted timestamps to canonical ISO-8601 UTC ([#750](https://github.com/canboat/canboat/issues/750)) ([8f33ead](https://github.com/canboat/canboat/commit/8f33eadc17835df070b67cb8951118973bc98e9b)), closes [#749](https://github.com/canboat/canboat/issues/749)
+* decode Garmin autopilot scalar transport over PGN 126720 ([#688](https://github.com/canboat/canboat/issues/688)) ([#692](https://github.com/canboat/canboat/issues/692)) ([3f6ce56](https://github.com/canboat/canboat/commit/3f6ce561f933c3e14769c4c6aa605c341d9f361b))
+* **furuno:** correct PGN 130845 satellite record layout and decode Baseline status ([#723](https://github.com/canboat/canboat/issues/723)) ([e72b6d5](https://github.com/canboat/canboat/commit/e72b6d5c4790ff1b77f67913d299d76547be1fb7))
+* **garmin:** Reactor autopilot mode state, voltage fix, and field lookups ([#753](https://github.com/canboat/canboat/issues/753)) ([a349344](https://github.com/canboat/canboat/commit/a349344fdb10402686bc43d01b99eecd396be96b))
+* **navico:** add 130824 B&G start-line & MOB position keys ([#708](https://github.com/canboat/canboat/issues/708)) ([2938fd8](https://github.com/canboat/canboat/commit/2938fd80be71d3c2117c35f823007ed069c67d08))
+* **navico:** add compass auto-calibration mode key; fix Local field units (130845) ([#720](https://github.com/canboat/canboat/issues/720)) ([e59571c](https://github.com/canboat/canboat/commit/e59571c5a47d3ce3eead7f2c7473913f9782a675)), closes [#718](https://github.com/canboat/canboat/issues/718)
+* **navico:** correct PGN 65350 layout to normalized magnetic field vector X/Y/Z ([#719](https://github.com/canboat/canboat/issues/719)) ([4426234](https://github.com/canboat/canboat/commit/44262343b2bec327b8ad26c3eacbdaa70e149486)), closes [#716](https://github.com/canboat/canboat/issues/716)
+* **navico:** decode five proprietary Navico/Simrad/Lowrance PGNs ([#743](https://github.com/canboat/canboat/issues/743)) ([6f47c34](https://github.com/canboat/canboat/commit/6f47c343b67db04c53b34b1126a3a1d04eca0768))
+* **navico:** decode PGN 130822 Command 3 "Bulk Report 3" Section 10 settings ([#733](https://github.com/canboat/canboat/issues/733)) ([ac21513](https://github.com/canboat/canboat/commit/ac21513352688a90d253a3f185347b2ca086ef24))
+* **navico:** decode PGN 130823 directory records, 130817 feature-unlock, and harden group-function/key-value handling ([#741](https://github.com/canboat/canboat/issues/741)) ([c41bdd5](https://github.com/canboat/canboat/commit/c41bdd5c90c454072b695014a5c9ace90ded226e))
+* **navico:** decode PGN 130845 display unit-preference keys ([#729](https://github.com/canboat/canboat/issues/729)) ([dab64cd](https://github.com/canboat/canboat/commit/dab64cd0b409aa3e4c2e11ce92a3e91b00e043f1))
+* **navico:** decode PGN 130845 instrument damping settings ([#730](https://github.com/canboat/canboat/issues/730)) ([#731](https://github.com/canboat/canboat/issues/731)) ([244abdf](https://github.com/canboat/canboat/commit/244abdfdcbe9aa7b8c432448f6dfd47742c4d552))
+* **navico:** decode proprietary PGNs 65303/65304, 130823, 130852 ([#728](https://github.com/canboat/canboat/issues/728)) ([5003dff](https://github.com/canboat/canboat/commit/5003dff6c0d2358c14d0ae8d7c9f24a6bbfe90df))
+* **navico:** decode SIMNET_ALARM_COMMAND 88 as Tack/Gybe Confirm ([#739](https://github.com/canboat/canboat/issues/739)) ([98b5240](https://github.com/canboat/canboat/commit/98b52409c879779c47c2826424dec13310591397))
+* **navico:** drop PGN 130861 "Simrad: Engine Data" — no producer exists ([#721](https://github.com/canboat/canboat/issues/721)) ([28d39e7](https://github.com/canboat/canboat/commit/28d39e740e46c7aab40738e1cff85664e7046c55)), closes [#712](https://github.com/canboat/canboat/issues/712)
+* **navico:** resolve PGN 65323 & 130840 Simnet Data Source Selection ([#725](https://github.com/canboat/canboat/issues/725)) ([20fee4f](https://github.com/canboat/canboat/commit/20fee4f49fc16305e1450a10808a865e11a062dc))
+* **navico:** unify SIMNET_DISPLAY_GROUP into SIMNET_NETWORK_GROUP ([#732](https://github.com/canboat/canboat/issues/732)) ([1e6a7e6](https://github.com/canboat/canboat/commit/1e6a7e679e12b29f04861ee609f2e319f91f0dcd))
+* **pk:** mark Function Code (126464) and Report (65305) as PartOfPrimaryKey ([#713](https://github.com/canboat/canboat/issues/713)) ([e0348ad](https://github.com/canboat/canboat/commit/e0348ade718c030c3312e6bd8542f221e76222a3))
+* reassemble ISO 11783-3 Transport Protocol (PGN 60416/60160) messages ([#736](https://github.com/canboat/canboat/issues/736)) ([339669b](https://github.com/canboat/canboat/commit/339669b8e6862a859a5747a947d067215cdc372c))
+* **seatalk:** add alarm IDs 112/113/122-125 and Bluetooth alarm group ([#709](https://github.com/canboat/canboat/issues/709)) ([893287b](https://github.com/canboat/canboat/commit/893287b2e93c14e6e318073a4878db5d436d9dc1)), closes [#552](https://github.com/canboat/canboat/issues/552)
+
+
+### Fixed
+
+* allow already reassembled messages to exceed the fast packet length ([#754](https://github.com/canboat/canboat/issues/754)) ([35910de](https://github.com/canboat/canboat/commit/35910de74eb12f4961579ff6f93f92b8630d38a6))
+* **analyzer:** key JSON/text output on -camel mode, not camelName presence ([#746](https://github.com/canboat/canboat/issues/746)) ([f890862](https://github.com/canboat/canboat/commit/f8908620578172d9afb73cfc3f2cab8875e05b8b)), closes [#745](https://github.com/canboat/canboat/issues/745)
+* decode STRING_LAU fields with 0xff encoding byte as empty ([#740](https://github.com/canboat/canboat/issues/740)) ([97881b5](https://github.com/canboat/canboat/commit/97881b53620d22913a66318aee854a1d4f41d892))
+* don't let fast-packet frame 0 complete against stale frames ([#738](https://github.com/canboat/canboat/issues/738)) ([65d5599](https://github.com/canboat/canboat/commit/65d55997e2b4eeb006ded2475456503afbf9baee))
+* **lookup:** reconcile lookup bit-lengths with field widths ([#751](https://github.com/canboat/canboat/issues/751)) ([1bbcb9f](https://github.com/canboat/canboat/commit/1bbcb9f9a8d44c73810d0861be91f6ee47aa6f14))
+* **navico:** correct 130822 Configuration Set naming and periodicity ([#734](https://github.com/canboat/canboat/issues/734)) ([5a328c4](https://github.com/canboat/canboat/commit/5a328c46a3f0146a3c75a75160791e5d73167cdd))
+
 ## [7.1.0](https://github.com/canboat/canboat/compare/v7.0.0...v7.1.0) (2026-06-30)
 
 
