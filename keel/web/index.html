@@ -172,7 +172,7 @@
     <div class="scroll">
     <table id="fields">
       <thead><tr><th>id</th><th>name</th><th>type</th><th>bits</th><th>lookup</th><th>match</th>
-        <th>unit</th><th>resolution</th><th>PK</th><th></th></tr></thead>
+        <th>PK</th><th></th></tr></thead>
       <tbody></tbody>
     </table>
     </div>
@@ -329,7 +329,14 @@ const FIELD_HELP = {
     help: "Added after scaling; shifts the zero point (e.g. a temperature stored in K " +
           "but reported around 0)." },
   description: { label: "description",
-    help: "Free-text note shown as the field's description. Purely informational." },
+    help: "END-USER-oriented text shown as the field's description in the decoded " +
+          "output, and carried downstream to the .h tables, the XML and the JSON. " +
+          "Say what the field means to someone reading the data." },
+  note: { label: "note",
+    help: "DEVELOPER-oriented annotation — implementation notes, observations from the " +
+          "bus, caveats, provenance. Internal to the database ONLY: unlike description " +
+          "it is not carried to any generated output (.h, XML or JSON). Use it for what " +
+          "a future maintainer needs to know, not what an end user sees." },
   primaryKey: { label: "primaryKey",
     help: "Marks this field as part of the PGN's primary key: the set of fields that " +
           "together identify which instance a message is about (an alarm id, an " +
@@ -847,20 +854,42 @@ function renderFields() {
       td.appendChild(inp);
       return td;
     };
-    tr.appendChild(cell("id", 16));
-    tr.appendChild(cell("name", 18));
+    // reserved/spare fields carry only id/name/bits — everything else is
+    // inapplicable, so lock and blank it (and the ✎ full editor below).
+    const isRS = f.type === "RESERVED" || f.type === "SPARE";
+    tr.appendChild(cell("id", 22));
+    tr.appendChild(cell("name", 24));
     {
       const td = document.createElement("td");
       const inp = document.createElement("input");
       inp.value = f.type ?? "";
-      inp.size = 24;
+      inp.size = 22;
       inp.oninput = () => { f.type = inp.value; typeCombo(inp, f, tr); regenerateYaml(); scheduleRefresh(); };
       inp.onfocus = () => typeCombo(inp, f, tr);
       inp.onblur = () => setTimeout(hideTypeCombo, 200);
       td.appendChild(inp);
       tr.appendChild(td);
     }
-    tr.appendChild(cell("bits", 4));
+    {
+      // bits: read-only and shows the width when the type fixes it (R14);
+      // editable only on a base/variable-width type.
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.size = 4;
+      const ft = ftByName(f.type);
+      if (ft && ft.bits) {
+        inp.value = ft.bits;
+        inp.readOnly = true;
+        inp.style.opacity = ".55";
+        inp.title = "width fixed by type " + f.type;
+      } else {
+        inp.value = f.bits ?? "";
+        inp.oninput = () => { f.bits = inp.value; regenerateYaml(); scheduleRefresh(); };
+        inp.onchange = () => renderGrid();
+      }
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
     {
       const td = document.createElement("td");
       td.style.whiteSpace = "nowrap";
@@ -868,11 +897,12 @@ function renderFields() {
       td.style.alignItems = "center";
       td.style.gap = "2px";
       const inp = document.createElement("input");
-      inp.value = f.lookup ?? "";
-      inp.size = 14;
+      inp.value = isRS ? "" : (f.lookup ?? "");
+      inp.size = 22;
       inp.style.flex = "1";
-      inp.style.minWidth = "40px";
+      inp.style.minWidth = "60px";
       inp.setAttribute("list", "dl_lookups");
+      inp.disabled = isRS;
       const view = document.createElement("button");
       view.className = "lkbtn";
       view.style.flex = "0 0 auto";
@@ -880,7 +910,7 @@ function renderFields() {
       const syncBtn = () => {
         view.textContent = knownLookup() ? "🔍" : "＋";
         view.title = knownLookup() ? "view / edit this enumeration" : "create this enumeration";
-        view.style.visibility = inp.value ? "visible" : "hidden";
+        view.style.visibility = (inp.value && !isRS) ? "visible" : "hidden";
       };
       inp.oninput = () => { f.lookup = inp.value; syncBtn(); regenerateYaml(); scheduleRefresh(); };
       view.onclick = () => { if (inp.value) openLookup(inp.value, f.bits); };
@@ -889,9 +919,17 @@ function renderFields() {
       td.appendChild(view);
       tr.appendChild(td);
     }
-    tr.appendChild(cell("match", 6));
-    tr.appendChild(cell("unit", 5));
-    tr.appendChild(cell("resolution", 8));
+    {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.value = isRS ? "" : (f.match ?? "");
+      inp.size = 7;
+      inp.disabled = isRS;
+      inp.oninput = () => { f.match = inp.value; regenerateYaml(); scheduleRefresh(); };
+      inp.onchange = () => renderGrid();
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
     const pk = document.createElement("td");
     const pkc = document.createElement("input");
     pkc.type = "checkbox"; pkc.checked = !!f.primaryKey; pkc.style.width = "auto";
@@ -901,8 +939,14 @@ function renderFields() {
     const act = document.createElement("td");
     act.style.whiteSpace = "nowrap";
     const edit = document.createElement("button");
-    edit.textContent = "✎"; edit.title = "edit every attribute of this field";
-    edit.onclick = () => openFieldEditor(i);
+    edit.textContent = "✎";
+    if (isRS) {
+      edit.disabled = true;
+      edit.title = "reserved/spare fields carry only id, name and bits";
+    } else {
+      edit.title = "edit every attribute of this field";
+      edit.onclick = () => openFieldEditor(i);
+    }
     const del = document.createElement("button");
     del.textContent = "✕"; del.title = "remove"; del.style.marginLeft = "3px";
     del.onclick = () => deleteField(i);
@@ -1278,18 +1322,28 @@ function openFieldEditor(i) {
 }
 
 // bits / resolution / signed are the fieldtype's job when the type fixes them
-// (R14). Show them read-only "from type" there; editable on a base type.
+// (R14): read-only "from type" there, editable on a base type. RESERVED/SPARE
+// carry only id/name/bits, so everything else is locked and blanked.
 function applyTypeConstraints() {
-  const ft = ftByName($("fe_type").value) || {};
-  const lock = (id, fixed, val) => {
+  const type = $("fe_type").value;
+  const ft = ftByName(type) || {};
+  const isRS = type === "RESERVED" || type === "SPARE";
+  const lock = (id, locked, ph) => {
     const el = $("fe_" + id);
-    el.readOnly = fixed;
-    el.placeholder = fixed ? `from type (${val})` : "";
-    if (fixed) el.value = "";
+    el.readOnly = locked;
+    el.placeholder = ph || "";
+    if (locked) el.value = "";
   };
-  lock("bits", !!ft.bits, ft.bits);
-  lock("resolution", ft.resolution != null, ft.resolution);
+  lock("bits", !!ft.bits, ft.bits ? `from type (${ft.bits})` : "");
+  lock("resolution", ft.resolution != null || isRS, ft.resolution != null ? `from type (${ft.resolution})` : "");
   $("fe_signed").value = ft.signed == null ? "(from type)" : (ft.signed ? "signed" : "unsigned");
+  ["description", "match", "lookup", "unit", "offset", "note", "specialValues", "rangeMin", "rangeMax"]
+    .forEach(k => lock(k, isRS));
+  ["primaryKey", "allowLookupWidthMismatch"].forEach(k => {
+    const el = $("fe_" + k);
+    el.disabled = isRS;
+    if (isRS) el.checked = false;
+  });
 }
 
 function applyFieldEditor() {
