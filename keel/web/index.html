@@ -257,7 +257,7 @@
       <div class="frow"><label>bits</label><input type="number" id="fe_bits" data-help="bits"></div>
       <div class="frow"><label>signed</label><input type="text" id="fe_signed" data-help="signed" readonly></div>
       <div class="frow"><label>description</label><textarea id="fe_description" rows="2" data-help="description"></textarea></div>
-      <div class="frow"><label>match</label><input type="text" id="fe_match" data-help="match"></div>
+      <div class="frow"><label>match</label><input type="text" id="fe_match" list="dl_matchvals" data-help="match"></div>
       <div class="frow"><label>lookup</label><input type="text" id="fe_lookup" list="dl_lookups" data-help="lookup"></div>
       <div class="frow"><label>unit</label><input type="text" id="fe_unit" data-help="unit"></div>
       <div class="frow"><label>resolution</label><input type="number" id="fe_resolution" step="any" data-help="resolution"></div>
@@ -272,6 +272,7 @@
         <div class="frow"><label>allowLookupWidthMismatch</label><input type="checkbox" id="fe_allowLookupWidthMismatch" data-help="allowLookupWidthMismatch" style="width:auto"></div>
       </details>
     </div>
+    <datalist id="dl_matchvals"></datalist>
     <div id="fldHelp">Focus an attribute to see what it does.</div>
     <footer>
       <button onclick="closeFieldEditor()">Cancel</button>
@@ -1234,11 +1235,19 @@ function fieldYaml(f, pad) {
   if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
   if (has(f.offset)) y += `${p}offset: ${Number(f.offset)}\n`;
   if (has(f.specialValues)) y += `${p}specialValues: ${Number(f.specialValues)}\n`;
-  if (has(f.rangeMin)) y += `${p}rangeMin: ${f.rangeMin}\n`;
-  if (has(f.rangeMax)) y += `${p}rangeMax: ${f.rangeMax}\n`;
+  // ranges are floats (converter emits 0.0 / 7.0); keep the .0 on whole numbers
+  if (has(f.rangeMin)) y += `${p}rangeMin: ${asFloat(f.rangeMin)}\n`;
+  if (has(f.rangeMax)) y += `${p}rangeMax: ${asFloat(f.rangeMax)}\n`;
   if (f.allowLookupWidthMismatch) y += `${p}allowLookupWidthMismatch: true\n`;
   if (f.primaryKey) y += `${p}primaryKey: true\n`;
   return y;
+}
+
+// Format a range bound as the converter does: a float, so a whole number
+// still carries a trailing .0 (rangeMin: 0.0, not 0).
+function asFloat(v) {
+  const n = Number(v);
+  return Number.isInteger(n) ? n + ".0" : String(n);
 }
 
 // A note: is a plain scalar, or a `|-` block scalar when it spans lines.
@@ -1260,6 +1269,7 @@ function openFieldEditor(i) {
   FE_TEXT.forEach(k => { $("fe_" + k).value = f[k] ?? ""; });
   FE_BOOL.forEach(k => { $("fe_" + k).checked = !!f[k]; });
   $("fldTitle").textContent = "Edit field: " + (f.id || "(new)");
+  loadMatchOptions(f);
   applyTypeConstraints();
   $("fldHelp").textContent = "Focus an attribute to see what it does.";
   $("fldHelp").classList.remove("warn");
@@ -1299,6 +1309,23 @@ function applyFieldEditor() {
 }
 
 function closeFieldEditor() { $("fldOverlay").style.display = "none"; fldEditIndex = -1; }
+
+// A match on a lookup field may be the enum value NAME (R13); offer those names
+// as datalist suggestions. Fetched per-open from the enum the field references.
+async function loadMatchOptions(f) {
+  const dl = $("dl_matchvals");
+  dl.innerHTML = "";
+  if (!f.lookup) return;
+  try {
+    const r = await api("/api/lookup?name=" + encodeURIComponent(f.lookup), null, "GET");
+    (r.values || []).forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.name;
+      o.label = String(v.value);
+      dl.appendChild(o);
+    });
+  } catch (e) { /* no suggestions is fine — match still accepts a raw number */ }
+}
 
 // A repeating set is a `- repeat:` item holding its own fields, so count and
 // start are the block's length and position; only countField is authored.
