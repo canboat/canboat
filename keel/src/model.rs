@@ -95,6 +95,10 @@ pub struct Field {
     pub unit: Option<String>,
     pub offset: Option<i32>,
     pub description: Option<String>,
+    /// Authored research note, YAML-only documentation (never emitted to an
+    /// artifact). Modeled so the editor can round-trip it through a fields:
+    /// block rewrite instead of silently dropping it.
+    pub note: Option<String>,
     pub match_: Option<String>, // printed verbatim; int-parsed for the lookup description
     pub lookup: Option<String>,
     pub lookup_indirect: Option<String>,

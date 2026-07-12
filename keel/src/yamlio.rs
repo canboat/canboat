@@ -193,6 +193,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         unit: opt_str(y, "unit"),
         offset: opt_i64(y, "offset").map(|o| o as i32),
         description: opt_str(y, "description"),
+        note: opt_str(y, "note"),
         match_,
         lookup: opt_str(y, "lookup"),
         lookup_indirect: li.and_then(|l| opt_str(l, "name")),

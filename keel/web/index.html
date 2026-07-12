@@ -84,6 +84,27 @@
   #lkModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
                     display: flex; gap: 10px; justify-content: flex-end; }
   .lkbtn { padding: 1px 7px; font-size: 12px; margin-left: 3px; }
+  #fldOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+               align-items: flex-start; justify-content: center; padding-top: 5vh; z-index: 15; }
+  #fldModal { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+              width: min(620px, 94vw); max-height: 90vh; display: flex; flex-direction: column; }
+  #fldModal header { padding: 10px 14px; border-bottom: 1px solid var(--line);
+                     display: flex; justify-content: space-between; align-items: center; }
+  #fldModal h3 { margin: 0; font-size: 15px; }
+  #fldBody { padding: 8px 14px; overflow-y: auto; }
+  #fldBody .frow { display: grid; grid-template-columns: 150px 1fr; gap: 10px;
+                   align-items: center; margin: 5px 0; }
+  #fldBody .frow > label { color: var(--muted); font-size: 12.5px; text-align: right; }
+  #fldBody input[type=text], #fldBody input[type=number], #fldBody textarea { width: 100%; }
+  #fldBody textarea { font: 12px/1.4 ui-monospace, monospace; resize: vertical; }
+  #fldBody input[readonly] { opacity: .55; cursor: not-allowed; }
+  #fldBody details { margin: 8px 0 2px; }
+  #fldBody details summary { cursor: pointer; color: var(--warn); font-size: 12.5px; }
+  #fldHelp { padding: 9px 14px; border-top: 1px solid var(--line); font-size: 12.5px;
+             line-height: 1.4; color: var(--muted); min-height: 3.4em; }
+  #fldHelp.warn { color: var(--warn); }
+  #fldModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
+                     display: flex; gap: 10px; justify-content: flex-end; }
   #dlgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
                 align-items: flex-start; justify-content: center; padding-top: 12vh; z-index: 30; }
   #dlg { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
@@ -224,8 +245,133 @@
   </div>
 </div>
 
+<!-- One-field editor: roomy editing of every attribute; the footer explains
+     whichever attribute has focus (copy lives in the FIELD_HELP block). -->
+<div id="fldOverlay" onclick="if(event.target===this) closeFieldEditor()">
+  <div id="fldModal">
+    <header><h3 id="fldTitle">Edit field</h3><button onclick="closeFieldEditor()">✕</button></header>
+    <div id="fldBody">
+      <div class="frow"><label>id</label><input type="text" id="fe_id" data-help="id"></div>
+      <div class="frow"><label>name</label><input type="text" id="fe_name" data-help="name"></div>
+      <div class="frow"><label>type</label><input type="text" id="fe_type" list="dl_ft" data-help="type"></div>
+      <div class="frow"><label>bits</label><input type="number" id="fe_bits" data-help="bits"></div>
+      <div class="frow"><label>signed</label><input type="text" id="fe_signed" data-help="signed" readonly></div>
+      <div class="frow"><label>description</label><textarea id="fe_description" rows="2" data-help="description"></textarea></div>
+      <div class="frow"><label>match</label><input type="text" id="fe_match" data-help="match"></div>
+      <div class="frow"><label>lookup</label><input type="text" id="fe_lookup" list="dl_lookups" data-help="lookup"></div>
+      <div class="frow"><label>unit</label><input type="text" id="fe_unit" data-help="unit"></div>
+      <div class="frow"><label>resolution</label><input type="number" id="fe_resolution" step="any" data-help="resolution"></div>
+      <div class="frow"><label>offset</label><input type="number" id="fe_offset" data-help="offset"></div>
+      <div class="frow"><label>note</label><textarea id="fe_note" rows="2" data-help="note"></textarea></div>
+      <div class="frow"><label>primaryKey</label><input type="checkbox" id="fe_primaryKey" data-help="primaryKey" style="width:auto"></div>
+      <details>
+        <summary>⚠ Advanced — overrides that change how the field decodes</summary>
+        <div class="frow"><label>specialValues</label><input type="number" id="fe_specialValues" data-help="specialValues"></div>
+        <div class="frow"><label>rangeMin</label><input type="number" id="fe_rangeMin" step="any" data-help="rangeMin"></div>
+        <div class="frow"><label>rangeMax</label><input type="number" id="fe_rangeMax" step="any" data-help="rangeMax"></div>
+        <div class="frow"><label>allowLookupWidthMismatch</label><input type="checkbox" id="fe_allowLookupWidthMismatch" data-help="allowLookupWidthMismatch" style="width:auto"></div>
+      </details>
+    </div>
+    <div id="fldHelp">Focus an attribute to see what it does.</div>
+    <footer>
+      <button onclick="closeFieldEditor()">Cancel</button>
+      <button class="primary" onclick="applyFieldEditor()">Apply</button>
+    </footer>
+  </div>
+</div>
+
 <script>
 "use strict";
+
+// ===========================================================================
+// FIELD_HELP — plain-language explanation of every editable field attribute.
+// This is the single place to find, edit and improve that copy; the one-field
+// editor renders `label`, and its footer shows `help` for whichever attribute
+// has focus. `warn: true` flags an attribute the footer marks with a ⚠ and
+// keeps in the collapsed "Advanced" section. Keep it accurate — this is the
+// authoritative in-app documentation for what each attribute does.
+// ===========================================================================
+const FIELD_HELP = {
+  id: { label: "id",
+    help: "Stable machine identifier (camelCase). Frozen once released — external " +
+          "consumers key on it, so renaming is a breaking change." },
+  name: { label: "name",
+    help: "Human-readable field name shown in decoded output." },
+  type: { label: "type",
+    help: "The fieldtype. A concrete type (UINT16, INT16, UFIX16, …) fixes the bit " +
+          "width, sign and resolution — those are taken as-is and are NOT overridable. " +
+          "For a custom field start from a base type that fixes none of them: NUMBER, " +
+          "INTEGER (signed) or UNSIGNED_INTEGER (unsigned), then set bits / resolution / " +
+          "unit yourself." },
+  bits: { label: "bits",
+    help: "Bit width. Set it only on a type that doesn't already fix one — NUMBER / " +
+          "INTEGER / UNSIGNED_INTEGER, LOOKUP, BINARY, RESERVED, etc. A concrete type " +
+          "like UINT16 already carries its width, so this is read-only there." },
+  signed: { label: "signed", readonly: true,
+    help: "Whether the value is signed. Determined by the type, not a per-field " +
+          "override: choose INT8/16/32 or INTEGER for signed, UINT8/16/32 or " +
+          "UNSIGNED_INTEGER for unsigned. Shown here for reference." },
+  lookup: { label: "lookup",
+    help: "The enumeration this field decodes against (value → name). The reference " +
+          "kind (pair/bit/triplet/fieldtype) is taken automatically from the enum." },
+  match: { label: "match",
+    help: "A fixed value that selects THIS PGN variant — the decoder picks the first " +
+          "variant whose every match field equals the wire. Enter the integer, or (on " +
+          "a lookup field) the enum value's name. Must fit the field's width." },
+  unit: { label: "unit",
+    help: "SI unit override (e.g. Pa, K, rad). Must map to a known physical quantity." },
+  resolution: { label: "resolution",
+    help: "Scale factor from the raw integer to engineering units " +
+          "(value = raw × resolution + offset). A FIX/UFIX type already fixes this, " +
+          "so set it only on a plain NUMBER/INTEGER/UNSIGNED_INTEGER field." },
+  offset: { label: "offset",
+    help: "Added after scaling; shifts the zero point (e.g. a temperature stored in K " +
+          "but reported around 0)." },
+  description: { label: "description",
+    help: "Free-text note shown as the field's description. Purely informational." },
+  primaryKey: { label: "primaryKey",
+    help: "Marks this field as part of the PGN's primary key: the set of fields that " +
+          "together identify which instance a message is about (an alarm id, an " +
+          "engine/battery instance…). Consumers use it to correlate repeated reports " +
+          "of the same object instead of treating each frame as new." },
+  specialValues: { label: "specialValues", warn: true,
+    help: "Advanced. Overrides the auto-derived count of reserved sentinel values at " +
+          "the top of the range (the ones decoding as Unavailable / Out-of-range / " +
+          "Reserved). Changes how those top values are read for EVERY frame. Emitted " +
+          "as reservedOverride in the C tables. Set only with a documented reason — " +
+          "the default is almost always right." },
+  rangeMin: { label: "rangeMin", warn: true,
+    help: "Advanced. Override the derived minimum of the valid range (normally computed " +
+          "from width, resolution and sign). Use only for a spec-mandated narrower range." },
+  rangeMax: { label: "rangeMax", warn: true,
+    help: "Advanced. Override the derived maximum of the valid range (normally computed " +
+          "from width, resolution and sign). Use only for a spec-mandated narrower range." },
+  allowLookupWidthMismatch: { label: "allowLookupWidthMismatch", warn: true,
+    help: "Explicit opt-in to let this field be a different width than its lookup " +
+          "declares (a shared enum used at 24 and 32 bits, or a YES/NO flag in 1 bit). " +
+          "Without it a mismatch is an error (R08). Don't set it just to silence an " +
+          "accidental mismatch." },
+};
+
+// Build a wizard field row from a server field def, carrying EVERY authored
+// attribute so a fields-block rewrite (regenerateYaml → fieldYaml) can never
+// drop one. Missing attributes normalise to "" (or null for the indirect blob).
+function defToState(f) {
+  return {
+    id: f.id, name: f.name, type: f.type,
+    bits: f.bits ?? "",
+    lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
+    lookupIndirect: f.lookupIndirect ?? "",            // triplet enum name
+    lookupIndirectOrder: f.lookupIndirectOrder ?? "",  // triplet order field
+    match: f.match ?? "",
+    unit: f.unit ?? "", resolution: f.resolution ?? "", offset: f.offset ?? "",
+    description: f.description ?? "", note: f.note ?? "",
+    specialValues: f.specialValues ?? "", rangeMin: f.rangeMin ?? "", rangeMax: f.rangeMax ?? "",
+    allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
+    primaryKey: !!f.primaryKey,
+  };
+}
+
 let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
 let samplesHex = [];         // assembled payloads (hex strings)
 let fieldsState = [];        // wizard field rows
@@ -277,6 +423,14 @@ async function init() {
   renderPgnList("");
   $("search").addEventListener("input", e => renderPgnList(e.target.value));
   initSidebarResize();
+  // Field-editor help footer: reflect whichever attribute has focus.
+  $("fldBody").addEventListener("focusin", e => {
+    const h = FIELD_HELP[e.target.getAttribute("data-help")];
+    const el = $("fldHelp");
+    el.textContent = h ? h.help : "Focus an attribute to see what it does.";
+    el.classList.toggle("warn", !!(h && h.warn));
+  });
+  $("fe_type").addEventListener("input", applyTypeConstraints);
 }
 
 // Draggable sidebar width, persisted across sessions. --sidebar-w drives both
@@ -385,12 +539,7 @@ async function openExisting(id) {
   $("m_desc").value = r.def.description;
   $("m_type").value = r.def.type;
   $("m_prio").value = r.def.priority || "";
-  fieldsState = r.def.fields.map(f => ({
-    id: f.id, name: f.name, type: f.type,
-    bits: f.bits ?? "", lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
-    match: f.match ?? "", unit: f.unit ?? "", resolution: f.resolution ?? "",
-    primaryKey: f.primaryKey,
-  }));
+  fieldsState = r.def.fields.map(defToState);
   // seed repeating sets from the stored definition (start is 1-based order)
   repAt = [-1, -1]; repCountField = ["", ""];
   [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
@@ -481,12 +630,7 @@ async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
   baseYaml = null;            // a brand-new file, not an edit of the source
   currentPgn = pgn;
   yamlDirty = false;
-  fieldsState = r.def.fields.map(f => ({
-    id: f.id, name: f.name, type: f.type,
-    bits: f.bits ?? "", lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
-    match: f.match ?? "", unit: f.unit ?? "", resolution: f.resolution ?? "",
-    primaryKey: f.primaryKey,
-  }));
+  fieldsState = r.def.fields.map(defToState);
   // set the one field that discriminates this variant to the observed value
   const df = fieldsState.find(f => f.id === diffFieldId);
   if (df) df.match = gotValue;
@@ -753,10 +897,16 @@ function renderFields() {
     pkc.onchange = () => { f.primaryKey = pkc.checked; regenerateYaml(); scheduleRefresh(); };
     pk.appendChild(pkc);
     tr.appendChild(pk);
-    const del = document.createElement("td");
-    del.innerHTML = "<button title='remove'>✕</button>";
-    del.firstChild.onclick = () => { deleteField(i); };
-    tr.appendChild(del);
+    const act = document.createElement("td");
+    act.style.whiteSpace = "nowrap";
+    const edit = document.createElement("button");
+    edit.textContent = "✎"; edit.title = "edit every attribute of this field";
+    edit.onclick = () => openFieldEditor(i);
+    const del = document.createElement("button");
+    del.textContent = "✕"; del.title = "remove"; del.style.marginLeft = "3px";
+    del.onclick = () => deleteField(i);
+    act.appendChild(edit); act.appendChild(del);
+    tr.appendChild(act);
     tb.appendChild(tr);
   });
   // trailing repeating-set dividers (a set declared but not yet populated)
@@ -1053,28 +1203,102 @@ async function saveLookup() {
 }
 
 function fieldYaml(f, pad) {
-  // attributes equal to the fieldtype's own are defaults - omit in YAML
+  // Attributes equal to the fieldtype's own are defaults - omit them. Emission
+  // order follows the converter so a fields-block rewrite stays a clean diff,
+  // and EVERY authored attribute is emitted so nothing is silently dropped.
   const ft = ftByName(f.type) || {};
-  let y = `${pad}- id: ${yq(f.id)}\n${pad}  name: ${yq(f.name)}\n${pad}  type: ${f.type}\n`;
-  if (f.bits && Number(f.bits) !== ft.bits) y += `${pad}  bits: ${Number(f.bits)}\n`;
-  if (f.lookup) {
+  const p = pad + "  ";
+  const has = v => v !== "" && v !== undefined && v !== null;
+  let y = `${pad}- id: ${yq(f.id)}\n${p}name: ${yq(f.name)}\n${p}type: ${f.type}\n`;
+  if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
+  if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;
+  if (has(f.match))
+    // integer verbatim; a lookup value NAME is written as-is (R13 resolves it)
+    y += `${p}match: ${/^\d+$/.test(String(f.match)) ? f.match : yq(f.match)}\n`;
+  if (has(f.lookupIndirect)) {
+    y += `${p}lookupIndirect:\n${p}  name: ${f.lookupIndirect}\n`;
+    if (has(f.lookupIndirectOrder)) y += `${p}  order: ${Number(f.lookupIndirectOrder)}\n`;
+  } else if (f.lookup) {
     // reference key must match the enumeration's kind (R08): a bit enum
-    // is lookupBits, a fieldtype enum lookupFieldtype, a triplet
-    // lookupIndirect, otherwise a plain pair lookup.
+    // is lookupBits, a fieldtype enum lookupFieldtype, otherwise a plain pair.
     const lk = MODEL.lookups.find(l => (l.name || l) === f.lookup);
     const key = !lk ? "lookup"
       : lk.kind === "bit" ? "lookupBits"
       : lk.kind === "fieldtype" ? "lookupFieldtype"
       : lk.kind === "triplet" ? "lookupIndirect"
       : "lookup";
-    y += `${pad}  ${key}: ${f.lookup}\n`;
+    y += `${p}${key}: ${f.lookup}\n`;
   }
-  if (f.match !== undefined && f.match !== "") y += `${pad}  match: ${Number(f.match)}\n`;
-  if (f.unit && f.unit !== ft.unit) y += `${pad}  unit: ${yq(f.unit)}\n`;
-  if (f.resolution && Number(f.resolution) !== ft.resolution) y += `${pad}  resolution: ${Number(f.resolution)}\n`;
-  if (f.primaryKey) y += `${pad}  primaryKey: true\n`;
+  if (has(f.note)) y += noteYaml(f.note, p);
+  if (has(f.unit) && f.unit !== ft.unit) y += `${p}unit: ${yq(f.unit)}\n`;
+  if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
+  if (has(f.offset)) y += `${p}offset: ${Number(f.offset)}\n`;
+  if (has(f.specialValues)) y += `${p}specialValues: ${Number(f.specialValues)}\n`;
+  if (has(f.rangeMin)) y += `${p}rangeMin: ${f.rangeMin}\n`;
+  if (has(f.rangeMax)) y += `${p}rangeMax: ${f.rangeMax}\n`;
+  if (f.allowLookupWidthMismatch) y += `${p}allowLookupWidthMismatch: true\n`;
+  if (f.primaryKey) y += `${p}primaryKey: true\n`;
   return y;
 }
+
+// A note: is a plain scalar, or a `|-` block scalar when it spans lines.
+function noteYaml(note, pad) {
+  if (!/\n/.test(note)) return `${pad}note: ${yq(note)}\n`;
+  const body = note.replace(/\n+$/, "").split("\n").map(l => `${pad}  ${l}`).join("\n");
+  return `${pad}note: |-\n${body}\n`;
+}
+
+// ---- One-field editor modal -------------------------------------------------
+let fldEditIndex = -1;
+const FE_TEXT = ["id", "name", "type", "bits", "description", "match", "lookup",
+                 "unit", "resolution", "offset", "note", "specialValues", "rangeMin", "rangeMax"];
+const FE_BOOL = ["primaryKey", "allowLookupWidthMismatch"];
+
+function openFieldEditor(i) {
+  fldEditIndex = i;
+  const f = fieldsState[i];
+  FE_TEXT.forEach(k => { $("fe_" + k).value = f[k] ?? ""; });
+  FE_BOOL.forEach(k => { $("fe_" + k).checked = !!f[k]; });
+  $("fldTitle").textContent = "Edit field: " + (f.id || "(new)");
+  applyTypeConstraints();
+  $("fldHelp").textContent = "Focus an attribute to see what it does.";
+  $("fldHelp").classList.remove("warn");
+  $("fldOverlay").style.display = "flex";
+  $("fe_name").focus();
+}
+
+// bits / resolution / signed are the fieldtype's job when the type fixes them
+// (R14). Show them read-only "from type" there; editable on a base type.
+function applyTypeConstraints() {
+  const ft = ftByName($("fe_type").value) || {};
+  const lock = (id, fixed, val) => {
+    const el = $("fe_" + id);
+    el.readOnly = fixed;
+    el.placeholder = fixed ? `from type (${val})` : "";
+    if (fixed) el.value = "";
+  };
+  lock("bits", !!ft.bits, ft.bits);
+  lock("resolution", ft.resolution != null, ft.resolution);
+  $("fe_signed").value = ft.signed == null ? "(from type)" : (ft.signed ? "signed" : "unsigned");
+}
+
+function applyFieldEditor() {
+  if (fldEditIndex < 0) return;
+  const f = fieldsState[fldEditIndex];
+  FE_TEXT.forEach(k => {
+    const el = $("fe_" + k);
+    // note keeps internal newlines; everything else is a single trimmed line
+    f[k] = el.readOnly ? "" : (k === "note" ? el.value.replace(/\s+$/, "") : el.value.trim());
+  });
+  FE_BOOL.forEach(k => { f[k] = $("fe_" + k).checked; });
+  closeFieldEditor();
+  regenerateYaml();
+  renderFields();
+  renderGrid();
+  scheduleRefresh();
+}
+
+function closeFieldEditor() { $("fldOverlay").style.display = "none"; fldEditIndex = -1; }
 
 // A repeating set is a `- repeat:` item holding its own fields, so count and
 // start are the block's length and position; only countField is authored.

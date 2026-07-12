@@ -269,12 +269,13 @@ fn api_model(server: &EditServer) -> Result<String, String> {
         .iter()
         .map(|ft| {
             format!(
-                "{{\"name\":{},\"root\":{},\"bits\":{},\"unit\":{},\"resolution\":{},\"description\":{}}}",
+                "{{\"name\":{},\"root\":{},\"bits\":{},\"unit\":{},\"resolution\":{},\"signed\":{},\"description\":{}}}",
                 js(&ft.name),
                 js(&ft.root_name),
                 ft.size,
                 ft.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
                 if ft.resolution != 0.0 { format!("{:?}", ft.resolution) } else { "null".into() },
+                ft.has_sign.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
                 ft.description.as_deref().map(js).unwrap_or_else(|| "null".into()),
             )
         })
@@ -301,7 +302,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .map(|f| {
             let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
             format!(
-                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"primaryKey\":{}}}",
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
                 js(&f.id),
                 js(&f.name),
                 js(&f.type_),
@@ -309,9 +310,18 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 opt_s(&f.lookup),
                 opt_s(&f.lookup_bits),
                 opt_s(&f.lookup_fieldtype),
+                opt_s(&f.lookup_indirect),
+                f.lookup_indirect_order.map(|o| o.to_string()).unwrap_or_else(|| "null".into()),
                 opt_s(&f.match_),
                 opt_s(&f.unit),
                 f.resolution.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.offset.map(|o| o.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.description),
+                opt_s(&f.note),
+                f.special_values.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
+                f.range_min.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.range_max.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.allow_lookup_width_mismatch,
                 f.primary_key,
             )
         })
