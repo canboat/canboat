@@ -57,6 +57,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_field_count(prefix, pgn, &mut v); // R11
             check_reserved_ids(prefix, pgn, &mut v); // R12
             check_match_values(prefix, db, pgn, &mut v); // R13
+            check_field_type_overrides(prefix, db, pgn, &mut v); // R14
         }
         check_variants(prefix, list, &mut v); // R20
         check_unique_ids(prefix, list, &mut v); // R21
@@ -571,6 +572,42 @@ fn check_match_values(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violatio
                 }
             }
             Some(_) => {}
+        }
+    }
+}
+
+// R14: a concrete fieldtype already fixes its width (and, for FIX/UFIX, its
+// resolution); a field of that type must not re-author them. After
+// fill_fieldtypes, db.fieldtypes[f.ft].size / .resolution are the effective
+// chain-resolved values, so a nonzero one means the type fixes that attribute.
+// A custom width/scale belongs on a base type (NUMBER/INTEGER/UNSIGNED_INTEGER)
+// that fixes neither. Sign is not field-authorable, so there is nothing to check.
+fn check_field_type_overrides(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+    for f in &p.fields {
+        let ft = &db.fieldtypes[f.ft];
+        if f.bits.is_some() && ft.size != 0 {
+            v.push(Violation {
+                rule: "R14",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "field '{}': type {} already fixes its width ({} bits) — drop bits, \
+                     or use a base type (NUMBER/INTEGER/UNSIGNED_INTEGER) for a custom width",
+                    f.id, f.type_, ft.size
+                ),
+            });
+        }
+        if f.resolution.is_some() && ft.resolution != 0.0 {
+            v.push(Violation {
+                rule: "R14",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "field '{}': type {} already fixes its resolution ({}) — drop resolution, \
+                     or use a plain NUMBER/INTEGER type for a custom scale",
+                    f.id, f.type_, ft.resolution
+                ),
+            });
         }
     }
 }

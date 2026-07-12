@@ -194,6 +194,22 @@ pub const RULES: &[Rule] = &[
                  stopping the variant from matching its frames.",
     },
     Rule {
+        id: "R14",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "derive (differing) + check::check_field_type_overrides (redundant)",
+        title: "A field does not re-specify an attribute its fieldtype already fixes.",
+        detail: "A concrete fieldtype (UINT16, INT16, UFIX16, …) carries an intrinsic \
+                 bit width and, for FIX/UFIX, a resolution; a field of that type may \
+                 not author bits or resolution (the whole database is audited clean of \
+                 this). A value that DIFFERS from the type's is a hard error in derive \
+                 (nothing can be sized), so it never loads; a value that merely REPEATS \
+                 the type's is caught here. Sign is likewise intrinsic and is not \
+                 field-authorable. A custom width or scale belongs on a base type that \
+                 fixes neither — NUMBER, INTEGER (signed) or UNSIGNED_INTEGER \
+                 (unsigned) — which then carries its own bits / resolution.",
+    },
+    Rule {
         id: "R20",
         scope: Scope::CrossFile,
         severity: "error",
