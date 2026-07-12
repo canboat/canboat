@@ -1,0 +1,59 @@
+name: SHIP_TYPE
+kind: pair
+bits: 8
+values:
+  0: Unavailable
+  20: Wing In Ground
+  21: Wing In Ground (hazard cat X)
+  22: Wing In Ground (hazard cat Y)
+  23: Wing In Ground (hazard cat Z)
+  24: Wing In Ground (hazard cat OS)
+  29: Wing In Ground (no additional information)
+  30: Fishing
+  31: Towing
+  32: Towing exceeds 200m or wider than 25m
+  33: Engaged in dredging or underwater operations
+  34: Engaged in diving operations
+  35: Engaged in military operations
+  36: Sailing
+  37: Pleasure
+  40: High speed craft
+  41: High speed craft (hazard cat X)
+  42: High speed craft (hazard cat Y)
+  43: High speed craft (hazard cat Z)
+  44: High speed craft (hazard cat OS)
+  49: High speed craft (no additional information)
+  50: Pilot vessel
+  51: SAR
+  52: Tug
+  53: Port tender
+  54: Anti-pollution
+  55: Law enforcement
+  56: Spare
+  57: 'Spare #2'
+  58: Medical
+  59: Ships and aircraft of States not parties to an armed conflict
+  60: Passenger ship
+  61: Passenger ship (hazard cat X)
+  62: Passenger ship (hazard cat Y)
+  63: Passenger ship (hazard cat Z)
+  64: Passenger ship (hazard cat OS)
+  69: Passenger ship (no additional information)
+  70: Cargo ship
+  71: Cargo ship (hazard cat X)
+  72: Cargo ship (hazard cat Y)
+  73: Cargo ship (hazard cat Z)
+  74: Cargo ship (hazard cat OS)
+  79: Cargo ship (no additional information)
+  80: Tanker
+  81: Tanker (hazard cat X)
+  82: Tanker (hazard cat Y)
+  83: Tanker (hazard cat Z)
+  84: Tanker (hazard cat OS)
+  89: Tanker (no additional information)
+  90: Other
+  91: Other (hazard cat X)
+  92: Other (hazard cat Y)
+  93: Other (hazard cat Z)
+  94: Other (hazard cat OS)
+  99: Other (no additional information)

@@ -1,0 +1,37 @@
+pgn: 127493
+id: transmissionParametersDynamic
+description: Transmission Parameters, Dynamic
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: transmissionGear
+  name: Transmission Gear
+  type: LOOKUP
+  bits: 2
+  lookup: GEAR_STATUS
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: oilPressure
+  name: Oil pressure
+  type: PRESSURE_UFIX16_HPA
+- id: oilTemperature
+  name: Oil temperature
+  type: TEMPERATURE_HIGH
+- id: discreteStatus1
+  name: Discrete Status 1
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: TRANSMISSION_STATUS_1
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8

@@ -1,0 +1,113 @@
+pgn: 130846
+id: simnetParameterSet
+description: 'Simnet: Key Value - Long'
+type: Fast
+variantOrder: 1
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Variable-length companion to PGN 130845 (Simnet: Key Value). The header is identical to 130845 (Address, Display
+  Group, the 24-bit composite Key and the Read/Set/Reply Operation byte), but the fixed 4-byte value is replaced by an explicit
+  Length byte followed by that many bytes of Value. Devices switch from 130845 to 130846 whenever a parameter''s value will
+  not fit in 4 bytes, so 130846 is also the echo/reply form (Operation = 2) for wide parameters. Observed in the nac3-operations
+  capture corpus.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: instance
+  name: Instance
+  type: UINT8
+  description: Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  description: This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set
+  lookup: SIMNET_NETWORK_GROUP
+- id: source
+  name: Source
+  type: UINT8
+  description: Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.
+- id: key
+  name: Key
+  type: DYNAMIC_FIELD_KEY
+  bits: 24
+  description: Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) << 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&G and Mercury key spaces.
+  lookupFieldtype: SIMNET_KEY_VALUE
+  primaryKey: true
+- id: operation
+  name: Operation
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_KEY_OPERATION
+- id: length
+  name: Length
+  type: DYNAMIC_FIELD_LENGTH
+  bits: 8
+  description: Number of bytes in the Value field that follows
+  dynamicFieldLength: true
+- id: value
+  name: Value
+  type: DYNAMIC_FIELD_VALUE
+  description: Variable-width value; width given by Length, datatype resolved per Key
+notes: 'Pin the historic <Id> (shipped in v7.0.0 as "Simnet: Parameter Set"); only the display Name changed.'
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130846,19,255,19,41,9f,ff,ff,64,ff,3b,fe,ff,01,08,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: ~
+    networkGroup: 100
+    source: ~
+    key: 16776763
+    operation: "Set"
+    length: 8
+    value: "0xffffffffffffffff"
+- raw: "2023-01-01-00:00:00.000,3,130846,4,255,21,41,9f,ff,00,ff,00,18,08,80,02,0a,45,4e,47,49,4e,45,00,00,00,00"  # from nac3-reset-dockside-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 0
+    key: 8390680
+    operation: "Reply"
+    length: 10
+    value: "0x454e47494e4500000000"
+- raw: "2023-01-01-00:00:00.000,3,130846,22,255,19,41,9f,ff,00,ff,78,14,0a,80,02,08,fb,9b,70,22,00,9b,50,c0"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 120
+    key: 8391188
+    operation: "Reply"
+    length: 8
+    value: "0xfb9b7022009b50c0"

@@ -1,0 +1,134 @@
+pgn: 129041
+id: aisAidsToNavigationAtonReport
+description: AIS Aids to Navigation (AtoN) Report
+type: Fast
+priority: 4
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  lookup: TIME_STAMP
+- id: lengthDiameter
+  name: Length/Diameter
+  type: LENGTH_UFIX16_DM
+- id: beamDiameter
+  name: Beam/Diameter
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromStarboardEdge
+  name: Position Reference from Starboard Edge
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromTrueNorthFacingEdge
+  name: Position Reference from True North Facing Edge
+  type: LENGTH_UFIX16_DM
+- id: atonType
+  name: AtoN Type
+  type: LOOKUP
+  bits: 5
+  lookup: ATON_TYPE
+- id: offPositionIndicator
+  name: Off Position Indicator
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: virtualAtonFlag
+  name: Virtual AtoN Flag
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: assignedModeFlag
+  name: Assigned Mode Flag
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_ASSIGNED_MODE
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 1
+- id: positionFixingDeviceType
+  name: Position Fixing Device Type
+  type: LOOKUP
+  bits: 4
+  lookup: POSITION_FIX_DEVICE
+- id: reserved19
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: atonStatus
+  name: AtoN Status
+  type: BINARY
+  bits: 8
+  description: 00000000 = default
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: reserved22
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: atonName
+  name: AtoN Name
+  type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129041,43,255,46,15,78,3c,3a,3b,28,83,62,d2,9b,e5,5f,17,f5,ff,ff,ff,ff,ff,ff,ff,ff,4d,0e,00,00,14,01,53,43,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20"  # from sbender1
+  expects:
+    messageId: "ATON report"
+    repeatIndicator: "Initial"
+    userId: 993672312
+    longitude: -76.5295832
+    latitude: 39.2160667
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: "Manual input mode"
+    lengthDiameter: ~
+    beamDiameter: ~
+    positionReferenceFromStarboardEdge: ~
+    positionReferenceFromTrueNorthFacingEdge: ~
+    atonType: "Fixed beacon: port hand"
+    offPositionIndicator: "No"
+    virtualAtonFlag: "Yes"
+    assignedModeFlag: "Autonomous and continuous"
+    positionFixingDeviceType: "Surveyed"
+    atonStatus: "0x00"
+    aisTransceiverInformation: "Channel A VDL reception"
+    atonName: "SC                "

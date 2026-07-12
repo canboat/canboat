@@ -1,0 +1,36 @@
+pgn: 130574
+id: supportedZoneData
+description: Supported Zone Data
+type: Fast
+priority: 6
+interval: 500
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
+fields:
+- id: firstZoneId
+  name: First zone ID
+  type: UINT8
+  description: First Zone in this PGN
+- id: zoneCount
+  name: Zone count
+  type: UINT8
+  description: Number of Zones in this PGN
+- id: totalZoneCount
+  name: Total zone count
+  type: UINT8
+  description: Total Zones supported by this device
+- repeat:
+    countField: zoneCount
+    fields:
+    - id: zoneId
+      name: Zone ID
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_ZONE
+    - id: name
+      name: Name
+      type: STRING_LAU

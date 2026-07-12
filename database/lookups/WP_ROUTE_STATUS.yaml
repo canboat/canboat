@@ -1,0 +1,7 @@
+name: WP_ROUTE_STATUS
+kind: pair
+bits: 4
+values:
+  0: Active
+  1: Inactive
+  2: Deleted

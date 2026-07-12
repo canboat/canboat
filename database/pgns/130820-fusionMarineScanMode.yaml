@@ -1,0 +1,43 @@
+pgn: 130820
+id: fusionMarineScanMode
+description: 'Fusion: Marine Scan Mode'
+type: Fast
+variantOrder: 25
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Marine Scan Mode
+  match: 32782
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: scan
+  name: Scan
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+  allowLookupWidthMismatch: true

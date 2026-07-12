@@ -1,0 +1,21 @@
+pgn: 126464
+id: pgnListTransmitAndReceive
+description: PGN List (Transmit and Receive)
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: functionCode
+  name: Function Code
+  type: LOOKUP
+  bits: 8
+  lookup: PGN_LIST_FUNCTION
+  primaryKey: true
+- repeat:
+    fields:
+    - id: pgn
+      name: PGN
+      type: PGN
+      bits: 24
+      rangeMin: 0.0
+      rangeMax: 262143.0

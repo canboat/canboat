@@ -1,0 +1,62 @@
+pgn: 130912
+id: xantrexChargerConfigurationStatus
+description: 'Xantrex: Charger Configuration Status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Xantrex Technology Inc.
+  match: 168
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: chargeInstance
+  name: Charge Instance
+  type: UINT8
+  primaryKey: true
+- id: batteryInstance
+  name: Battery Instance
+  type: UINT8
+- id: bulkVoltage
+  name: Bulk Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: bulkTime
+  name: Bulk Time
+  type: UINT16
+- id: absorptionVoltage
+  name: Absorption Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: absorptionTime
+  name: Absorption Time
+  type: UINT16
+- id: floatVoltage
+  name: Float Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: floatTime
+  name: Float Time
+  type: UINT16
+- id: equalizationVoltage
+  name: Equalization Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: genericChargeVoltage
+  name: Generic Charge Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: genericChargeCurrent
+  name: Generic Charge Current
+  type: UINT32

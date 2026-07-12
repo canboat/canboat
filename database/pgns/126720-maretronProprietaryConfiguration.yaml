@@ -1,0 +1,45 @@
+pgn: 126720
+id: maretronProprietaryConfiguration
+description: 'Maretron: Proprietary Configuration'
+type: Fast
+variantOrder: 48
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: productCode
+  name: Product code
+  type: LOOKUP
+  bits: 16
+  lookup: MARETRON_PRODUCT_CODE
+- id: softwareCode
+  name: Software code
+  type: UINT16
+- id: opcode
+  name: Opcode
+  type: LOOKUP
+  bits: 8
+  lookup: MARETRON_OPCODE
+- id: payload
+  name: Payload
+  type: BINARY
+  bits: 1784

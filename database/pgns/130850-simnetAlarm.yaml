@@ -1,0 +1,109 @@
+pgn: 130850
+id: simnetAlarm
+description: 'Simnet: Alarm'
+type: Fast
+variantOrder: 10
+priority: 2
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'An alarm lifecycle command (Activate when it triggers, Acknowledge/Silence on user action, Deactivate when it
+  clears) for the alarm named by ''Alarm ID''. Any device may issue these, which is why acknowledging an alarm on one display
+  clears it on the others. There may follow a PGN 130856 ''Simnet: Alarm Message'' with a textual explanation of the alarm.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: eventType
+  name: Event Type
+  type: LOOKUP
+  bits: 8
+  description: Alarm
+  match: 255
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: command
+  name: Command
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_ALARM_COMMAND
+- id: spare9
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: alarmId
+  name: Alarm ID
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_ALARM_ID
+- id: f
+  name: F
+  type: UINT8
+- id: g
+  name: G
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,15,255,12,41,9f,ff,ff,01,ff,39,00,44,00,03,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Alarm"
+    command: "Activate"
+    alarmId: "Engine water flow"
+    f: 3
+    g: 0
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,ff,ff,64,ff,61,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: 100
+    eventType: "Alarm"
+    command: 97
+    alarmId: ~
+    f: ~
+    g: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,50,255,12,41,9f,ff,ff,01,ff,38,00,16,00,01,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Alarm"
+    command: "Deactivate"
+    alarmId: "Heading missing"
+    f: 1
+    g: 0

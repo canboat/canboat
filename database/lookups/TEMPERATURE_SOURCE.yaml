@@ -1,0 +1,20 @@
+name: TEMPERATURE_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Sea Temperature
+  1: Outside Temperature
+  2: Inside Temperature
+  3: Engine Room Temperature
+  4: Main Cabin Temperature
+  5: Live Well Temperature
+  6: Bait Well Temperature
+  7: Refrigeration Temperature
+  8: Heating System Temperature
+  9: Dew Point Temperature
+  10: Apparent Wind Chill Temperature
+  11: Theoretical Wind Chill Temperature
+  12: Heat Index Temperature
+  13: Freezer Temperature
+  14: Exhaust Gas Temperature
+  15: Shaft Seal Temperature

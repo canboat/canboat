@@ -1,0 +1,101 @@
+pgn: 65283
+id: bepMarineCzoneChannelState
+description: 'BEP Marine: CZone Channel State'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode and a 4-bit Value; the reporting module emits this periodically or on state change so other devices on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context (likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been verified against captures with known channel states.
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: dipswitch
+  name: Dipswitch
+  type: UINT8
+- id: channel0Mode
+  name: Channel 0 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel1Mode
+  name: Channel 1 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel2Mode
+  name: Channel 2 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel3Mode
+  name: Channel 3 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel4Mode
+  name: Channel 4 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel5Mode
+  name: Channel 5 Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+  description: Likely circuit type / fault state; per-bit semantics unverified
+- id: channel0Value
+  name: Channel 0 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: channel1Value
+  name: Channel 1 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: channel2Value
+  name: Channel 2 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: channel3Value
+  name: Channel 3 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: channel4Value
+  name: Channel 4 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: channel5Value
+  name: Channel 5 Value
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 4-bit per-channel value; likely dim level (0..15) or state code
+- id: flag
+  name: Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: Single boolean flag; purpose unverified
+- id: reserved18
+  name: Reserved
+  type: RESERVED
+  bits: 3

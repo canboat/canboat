@@ -1,0 +1,146 @@
+pgn: 129808
+id: dscCallInformation
+description: DSC Call Information
+type: Fast
+variantOrder: 2
+priority: 4
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20160408121445/http://www.nmea.org/Assets/20150328%20dsc%20technical%20corrigendum%20v2.database%20version%202.100.pdf
+fields:
+- id: dscFormatSymbol
+  name: DSC Format Symbol
+  type: LOOKUP
+  bits: 8
+  lookup: DSC_FORMAT
+- id: dscCategorySymbol
+  name: DSC Category Symbol
+  type: LOOKUP
+  bits: 8
+  lookup: DSC_CATEGORY
+- id: dscMessageAddress
+  name: DSC Message Address
+  type: DECIMAL
+  bits: 40
+  description: MMSI, Geographic Area or blank
+  rangeMin: 0.0
+  rangeMax: 9999999999.0
+- id: 1stTelecommand
+  name: 1st Telecommand
+  type: LOOKUP
+  bits: 8
+  lookup: DSC_FIRST_TELECOMMAND
+- id: subsequentCommunicationModeOr2ndTelecommand
+  name: Subsequent Communication Mode or 2nd Telecommand
+  type: LOOKUP
+  bits: 8
+  lookup: DSC_SECOND_TELECOMMAND
+- id: proposedRxFrequencyChannel
+  name: Proposed Rx Frequency/Channel
+  type: STRING_FIX
+  bits: 48
+- id: proposedTxFrequencyChannel
+  name: Proposed Tx Frequency/Channel
+  type: STRING_FIX
+  bits: 48
+- id: telephoneNumber
+  name: Telephone Number
+  type: STRING_LAU
+- id: latitudeOfVesselReported
+  name: Latitude of Vessel Reported
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: longitudeOfVesselReported
+  name: Longitude of Vessel Reported
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: timeOfPosition
+  name: Time of Position
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: mmsiOfShipInDistress
+  name: MMSI of Ship In Distress
+  type: DECIMAL
+  bits: 40
+  rangeMin: 0.0
+  rangeMax: 9999999999.0
+- id: dscEosSymbol
+  name: DSC EOS Symbol
+  type: UINT8
+- id: expansionEnabled
+  name: Expansion Enabled
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: callingRxFrequencyChannel
+  name: Calling Rx Frequency/Channel
+  type: STRING_FIX
+  bits: 48
+- id: callingTxFrequencyChannel
+  name: Calling Tx Frequency/Channel
+  type: STRING_FIX
+  bits: 48
+- id: timeOfReceipt
+  name: Time of Receipt
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: dateOfReceipt
+  name: Date of Receipt
+  type: DATE
+- id: dscEquipmentAssignedMessageId
+  name: DSC Equipment Assigned Message ID
+  type: UINT16
+- repeat:
+    fields:
+    - id: dscExpansionFieldSymbol
+      name: DSC Expansion Field Symbol
+      type: LOOKUP
+      bits: 8
+      lookup: DSC_EXPANSION_DATA
+    - id: dscExpansionFieldData
+      name: DSC Expansion Field Data
+      type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129808,99,255,78,70,ff,17,32,4c,27,1e,6d,64,39,30,30,30,36,39,39,30,30,30,36,39,0b,01,31,38,30,30,20,48,65,6c,70,c0,66,4a,e9,80,2c,f3,55,10,fb,cf,24,17,32,4c,27,1e,7f,fd,39,30,30,30,37,30,39,30,30,30,37,30,10,fb,cf,24,eb,4e,ff,ff,68,06,01,49,6f,6e,61"  # from actisense-522.candump.log
+  expects:
+    dscFormatSymbol: "Distress"
+    dscCategorySymbol: ~
+    dscMessageAddress: "2350763930"
+    1stTelecommand: "J3E TP"
+    subsequentCommunicationModeOr2ndTelecommand: "No reason given"
+    proposedRxFrequencyChannel: "900069"
+    proposedTxFrequencyChannel: "900069"
+    telephoneNumber: "1800 Help"
+    latitudeOfVesselReported: -38.1000000
+    longitudeOfVesselReported: 144.2000000
+    timeOfPosition: 61761.0000
+    mmsiOfShipInDistress: "2350763930"
+    dscEosSymbol: 127
+    expansionEnabled: "Yes"
+    callingRxFrequencyChannel: "900070"
+    callingTxFrequencyChannel: "900070"
+    timeOfReceipt: 61761.0000
+    dateOfReceipt: 20203
+    dscEquipmentAssignedMessageId: ~
+    dscExpansionFieldSymbol: "Additional station identification"
+    dscExpansionFieldData: "Iona"

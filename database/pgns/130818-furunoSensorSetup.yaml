@@ -1,0 +1,125 @@
+pgn: 130818
+id: furunoSensorSetup
+description: 'Furuno: Sensor setup'
+type: Fast
+variantOrder: 2
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: rotationSmoothing
+  name: Rotation smoothing
+  type: DURATION_UFIX16_DS
+- id: headingOffset
+  name: Heading offset
+  type: ANGLE_FIX16_DDEG
+- id: pitchOffset
+  name: Pitch offset
+  type: ANGLE_FIX16_DDEG
+- id: rollOffset
+  name: Roll offset
+  type: ANGLE_FIX16_DDEG
+- id: f8
+  name: F8
+  type: UINT8
+- id: f9
+  name: F9
+  type: UINT8
+- id: sogAndCogSmoothing
+  name: SOG and COG smoothing
+  type: DURATION_FIX32_MS
+- id: 3AxisSpeedSmoothing
+  name: 3 Axis speed smoothing
+  type: DURATION_FIX32_MS
+- id: fc
+  name: FC
+  type: UINT16
+- id: 3AxisOffset
+  name: 3 axis offset
+  type: INT16
+  resolution: 0.00032
+  unit: '%'
+  rangeMin: -12.5
+  rangeMax: 12.5
+- id: airPressureOffset
+  name: Air pressure offset
+  type: INT16
+  resolution: 10.0
+  unit: Pa
+  rangeMin: -99.9
+  rangeMax: 99.9
+- id: airTemperatureOffset
+  name: Air temperature offset
+  type: FIX16_1
+  unit: K
+  rangeMin: -99.9
+  rangeMax: 99.9
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130818,52,255,30,3f,9f,64,10,0e,6e,b6,fb,ff,ff,ff,ff,00,00,00,00,00,00,00,00,ff,ff,ff,ff,00,00,00,00,00,00"  # from scx20-setting-tool-offset_smooth_rot_10s.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    rotationSmoothing: 419.6
+    headingOffset: 2817.4
+    pitchOffset: -109.8
+    rollOffset: -0.1
+    f8: ~
+    f9: ~
+    sogAndCogSmoothing: 0.000
+    3AxisSpeedSmoothing: 0.000
+    fc: ~
+    3AxisOffset: -0.0003
+    airPressureOffset: 0
+    airTemperatureOffset: 0.0
+- raw: "2023-01-01-00:00:00.000,7,130818,52,255,30,3f,9f,1e,12,ee,70,86,fb,ff,ff,ff,ff,e8,03,00,00,d0,07,00,00,ff,ff,ff,ff,64,00,05,00,06,00"  # from scx20-setting-tool-offsets.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    rotationSmoothing: 463.8
+    headingOffset: 2891.0
+    pitchOffset: -114.6
+    rollOffset: -0.1
+    f8: ~
+    f9: ~
+    sogAndCogSmoothing: 1.000
+    3AxisSpeedSmoothing: 2.000
+    fc: ~
+    3AxisOffset: -0.0003
+    airPressureOffset: 1000
+    airTemperatureOffset: 0.5
+- raw: "2023-01-01-00:00:00.000,7,130818,52,255,30,3f,9f,00,10,8e,70,84,fb,ff,ff,ff,ff,e8,03,00,00,00,00,00,00,ff,ff,ff,ff,00,00,00,00,00,00"  # from scx20-setting-tool-sensor-set.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    rotationSmoothing: 409.6
+    headingOffset: 2881.4
+    pitchOffset: -114.8
+    rollOffset: -0.1
+    f8: ~
+    f9: ~
+    sogAndCogSmoothing: 1.000
+    3AxisSpeedSmoothing: 0.000
+    fc: ~
+    3AxisOffset: -0.0003
+    airPressureOffset: 0
+    airTemperatureOffset: 0.0

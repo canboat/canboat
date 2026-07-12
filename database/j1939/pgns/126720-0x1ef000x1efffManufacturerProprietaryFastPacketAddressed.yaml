@@ -1,0 +1,29 @@
+pgn: 126720
+id: 0x1ef000x1efffManufacturerProprietaryFastPacketAddressed
+description: '0x1EF00-0x1EFFF: Manufacturer Proprietary fast-packet addressed'
+type: Fast
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1768

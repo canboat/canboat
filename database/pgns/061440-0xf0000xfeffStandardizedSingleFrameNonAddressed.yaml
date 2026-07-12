@@ -1,0 +1,29 @@
+pgn: 61440
+id: 0xf0000xfeffStandardizedSingleFrameNonAddressed
+description: '0xF000-0xFEFF: Standardized single-frame non-addressed'
+type: Single
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48

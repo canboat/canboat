@@ -1,0 +1,8 @@
+name: AIS_VERSION
+kind: pair
+bits: 2
+values:
+  0: ITU-R M.1371-1
+  1: ITU-R M.1371-3
+  2: ITU-R M.1371-5
+  3: ITU-R M.1371 future edition

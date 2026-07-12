@@ -1,0 +1,60 @@
+pgn: 127513
+id: batteryConfigurationStatus
+description: Battery Configuration Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: batteryType
+  name: Battery Type
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_TYPE
+- id: supportsEqualization
+  name: Supports Equalization
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: nominalVoltage
+  name: Nominal Voltage
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_VOLTAGE
+- id: chemistry
+  name: Chemistry
+  type: LOOKUP
+  bits: 4
+  lookup: BATTERY_CHEMISTRY
+- id: capacity
+  name: Capacity
+  type: ELECTRIC_CHARGE_UFIX16_AH
+- id: temperatureCoefficient
+  name: Temperature Coefficient
+  type: PERCENTAGE_INT8
+- id: peukertExponent
+  name: Peukert Exponent
+  type: PEUKERT_EXPONENT
+  rangeMin: 1.0
+  rangeMax: 1.5
+- id: chargeEfficiencyFactor
+  name: Charge Efficiency Factor
+  type: PERCENTAGE_INT8
+notes: |-
+  #143, @ksltd writes that it is definitely 10 bytes and that
+  nominal voltage is a lookup, Peukert Exponent and Charge Efficiency
+  are 8 bits. It follows that Temperature Coefficient must be 8 bits
+  as well to fit in 10 bytes.
+
+  I'm now actually following https://github.com/ttlappalainen/NMEA2000/
+  The Supports Equalization is 2 bits, Battery Type, Chemistry and
+  Nominal voltage are all 4 bits. Capacity and Peukert are both 2 bytes.
+  but this only adds up to 8 bytes... Maybe the 10 was as this is transmitted
+  as FAST pgn?

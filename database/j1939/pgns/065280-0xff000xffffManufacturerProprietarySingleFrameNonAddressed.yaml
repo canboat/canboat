@@ -1,0 +1,29 @@
+pgn: 65280
+id: 0xff000xffffManufacturerProprietarySingleFrameNonAddressed
+description: '0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed'
+type: Single
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48

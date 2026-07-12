@@ -1,0 +1,41 @@
+pgn: 130880
+id: airmarAdditionalWeatherData
+description: 'Airmar: Additional Weather Data'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20231224200258/airmartechnology.com/uploads/installguide/PB200UserManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: c
+  name: C
+  type: UINT8
+- id: apparentWindchillTemperature
+  name: Apparent Windchill Temperature
+  type: TEMPERATURE
+- id: trueWindchillTemperature
+  name: True Windchill Temperature
+  type: TEMPERATURE
+- id: dewpoint
+  name: Dewpoint
+  type: TEMPERATURE

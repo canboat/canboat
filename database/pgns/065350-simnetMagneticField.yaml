@@ -1,0 +1,51 @@
+pgn: 65350
+id: simnetMagneticField
+description: 'Simnet: Magnetic Field'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- MissingCompanyFields
+fields:
+- id: fieldX
+  name: Field X
+  type: INT16
+  resolution: 0.0001
+- id: fieldY
+  name: Field Y
+  type: INT16
+  resolution: 0.0001
+- id: fieldZ
+  name: Field Z
+  type: INT16
+  resolution: 0.0001
+- id: marker
+  name: Marker
+  type: UINT8
+  note: observed constant 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+  note: observed constant 0xff
+notes: Normalized magnetometer field unit-vector (|X,Y,Z| ~= 1.0); signed 1e-4/bit, dimensionless.
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65350,20,255,8,40,00,22,ff,4b,27,02,ff"  # from merrimac-2022.raw
+  expects:
+    fieldX: 0.0064
+    fieldY: -0.0222
+    fieldZ: 1.0059
+    marker: 2
+- raw: "2023-01-01-00:00:00.000,2,65350,20,255,8,44,00,25,ff,47,27,02,ff"  # from merrimac-2022.raw
+  expects:
+    fieldX: 0.0068
+    fieldY: -0.0219
+    fieldZ: 1.0055
+    marker: 2
+- raw: "2023-01-01-00:00:00.000,2,65350,20,255,8,39,00,1e,ff,52,27,02,ff"  # from merrimac-2022.raw
+  expects:
+    fieldX: 0.0057
+    fieldY: -0.0226
+    fieldZ: 1.0066
+    marker: 2

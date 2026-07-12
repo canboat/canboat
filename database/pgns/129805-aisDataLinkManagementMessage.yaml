@@ -1,0 +1,122 @@
+pgn: 129805
+id: aisDataLinkManagementMessage
+description: AIS Data Link Management Message
+type: Fast
+priority: 7
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- repeat:
+    fields:
+    - id: offset
+      name: Offset
+      type: UINT16
+      description: Reserved offset number
+    - id: numberOfSlots
+      name: Number of Slots
+      type: UINT8
+      description: Reserved consecutive slots
+    - id: timeout
+      name: Timeout
+      type: DURATION_UFIX8_MIN
+    - id: increment
+      name: Increment
+      type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,129805,8,255,31,14,28,43,25,00,01,1d,01,02,07,65,04,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Data link management message"
+    repeatIndicator: "Initial"
+    sourceId: 2442024
+    aisTransceiverInformation: "Channel A VDL reception"
+    offset: 285
+    numberOfSlots: 2
+    timeout: 420
+    increment: 1125
+    offset.2: 0
+    numberOfSlots.2: 0
+    timeout.2: 0
+    increment.2: 0
+    offset.3: 0
+    numberOfSlots.3: 0
+    timeout.3: 0
+    increment.3: 0
+    offset.4: 0
+    numberOfSlots.4: 0
+    timeout.4: 0
+    increment.4: 0
+- raw: "2023-01-01-00:00:00.000,7,129805,8,255,31,14,13,43,25,00,03,69,05,02,07,65,04,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Data link management message"
+    repeatIndicator: "Initial"
+    sourceId: 2442003
+    aisTransceiverInformation: "Channel B VDL reception"
+    offset: 1385
+    numberOfSlots: 2
+    timeout: 420
+    increment: 1125
+    offset.2: 0
+    numberOfSlots.2: 0
+    timeout.2: 0
+    increment.2: 0
+    offset.3: 0
+    numberOfSlots.3: 0
+    timeout.3: 0
+    increment.3: 0
+    offset.4: 0
+    numberOfSlots.4: 0
+    timeout.4: 0
+    increment.4: 0
+- raw: "2023-01-01-00:00:00.000,7,129805,8,255,31,14,13,43,25,00,01,13,01,02,07,65,04,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,c0"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Data link management message"
+    repeatIndicator: "Initial"
+    sourceId: 2442003
+    aisTransceiverInformation: "Channel A VDL reception"
+    offset: 275
+    numberOfSlots: 2
+    timeout: 420
+    increment: 1125
+    offset.2: 0
+    numberOfSlots.2: 0
+    timeout.2: 0
+    increment.2: 0
+    offset.3: 0
+    numberOfSlots.3: 0
+    timeout.3: 0
+    increment.3: 0
+    offset.4: 0
+    numberOfSlots.4: 0
+    timeout.4: 0
+    increment.4: 0

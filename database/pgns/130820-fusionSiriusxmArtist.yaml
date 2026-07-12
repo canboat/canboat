@@ -1,0 +1,68 @@
+pgn: 130820
+id: fusionSiriusxmArtist
+description: 'Fusion: SiriusXM Artist'
+type: Fast
+variantOrder: 44
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: SiriusXM Artist
+  match: 32806
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: channel
+  name: Channel
+  type: UINT16
+- id: artist
+  name: Artist
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,21,a3,99,26,80,04,64,00,0c,48,6f,77,61,72,64,20,53,74,65,72,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Artist"
+    sourceId: 4
+    channel: 100
+    artist: "Howard Stern"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,11,a3,99,26,80,04,7a,00,02,31,41,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Artist"
+    sourceId: 4
+    channel: 122
+    artist: "1A"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,19,a3,99,26,80,04,7b,00,0a,44,61,6e,20,41,72,69,65,6c,79,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Artist"
+    sourceId: 4
+    channel: 123
+    artist: "Dan Ariely"

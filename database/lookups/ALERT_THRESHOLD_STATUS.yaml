@@ -1,0 +1,10 @@
+name: ALERT_THRESHOLD_STATUS
+kind: pair
+bits: 4
+values:
+  0: Normal
+  1: Threshold Exceeded
+  2: Extreme Threshold Exceeded
+  3: Low Threshold Exceeded
+  4: Acknowledged
+  5: Awaiting Acknowledge

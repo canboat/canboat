@@ -1,0 +1,111 @@
+pgn: 129285
+id: navigationRouteWpInformation
+description: Navigation - Route/WP Information
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- id: navigationDirectionInRoute
+  name: Navigation direction in route
+  type: LOOKUP
+  bits: 3
+  lookup: DIRECTION
+- id: supplementaryRouteWpDataAvailable
+  name: Supplementary Route/WP data available
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: routeName
+  name: Route Name
+  type: STRING_LAU
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpId
+      name: WP ID
+      type: UINT16
+    - id: wpName
+      name: WP Name
+      type: STRING_LAU
+    - id: wpLatitude
+      name: WP Latitude
+      type: GEO_LAT_FIX32
+      rangeMin: -90.0
+      rangeMax: 90.0
+    - id: wpLongitude
+      name: WP Longitude
+      type: GEO_LON_FIX32
+      rangeMin: -180.0
+      rangeMax: 180.0
+samples:
+- raw: "2023-01-01-00:00:00.000,7,129285,25,255,39,ff,ff,02,00,ff,ff,ff,ff,e7,03,01,00,20,00,00,03,01,00,ff,ff,ff,7f,ff,ff,ff,7f,01,00,03,01,00,ff,ff,ff,7f,ff,ff,ff,7f"  # from merrimac-2022.raw
+  expects:
+    startRps: ~
+    nitems: 2
+    databaseId: ~
+    routeId: ~
+    navigationDirectionInRoute: ~
+    supplementaryRouteWpDataAvailable: "Off"
+    routeName: ""
+    wpId: 0
+    wpName: ""
+    wpLatitude: ~
+    wpLongitude: ~
+    wpId.2: 1
+    wpName.2: ""
+    wpLatitude.2: ~
+    wpLongitude.2: ~
+- raw: "2023-01-01-00:00:00.000,4,129285,99,255,64,ff,ff,02,00,01,00,02,00,e0,08,01,52,6f,75,74,65,31,ff,01,00,0d,01,57,61,79,70,6f,69,6e,74,4f,6e,65,00,60,e3,16,00,ca,91,fe,02,00,0d,01,57,61,79,70,6f,69,6e,74,54,77,6f,00,69,20,17,00,c1,54,fe"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 2
+    databaseId: 1
+    routeId: 2
+    navigationDirectionInRoute: "Forward"
+    supplementaryRouteWpDataAvailable: "Off"
+    routeName: "Route1"
+    wpId: 1
+    wpName: "WaypointOne"
+    wpLatitude: 38.4000000
+    wpLongitude: -2.4000000
+    wpId.2: 2
+    wpName.2: "WaypointTwo"
+    wpLatitude.2: 38.8000000
+    wpLongitude.2: -2.8000000
+- raw: "2023-01-01-00:00:00.000,7,129285,15,255,55,ff,ff,02,00,ff,ff,ff,ff,e0,0d,01,44,59,20,52,4f,55,54,45,20,31,00,7f,00,00,03,01,00,ff,ff,ff,7f,ff,ff,ff,7f,01,00,09,01,52,70,74,32,31,34,00,fe,7a,b9,1f,bd,20,21,03"  # from pgn129285.raw
+  expects:
+    startRps: ~
+    nitems: 2
+    databaseId: ~
+    routeId: ~
+    navigationDirectionInRoute: "Forward"
+    supplementaryRouteWpDataAvailable: "Off"
+    routeName: "DY ROUTE 1"
+    wpId: 0
+    wpName: ""
+    wpLatitude: ~
+    wpLongitude: ~
+    wpId.2: 1
+    wpName.2: "Rpt214"
+    wpLatitude.2: 53.2249342
+    wpLongitude.2: 5.2502717

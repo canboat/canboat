@@ -1,0 +1,99 @@
+pgn: 130845
+id: simnetKeyValue
+description: 'Simnet: Key Value'
+type: Fast
+variantOrder: 3
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter (and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed against NAC3 and AC42 autopilot and MFD capture corpus.
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: instance
+  name: Instance
+  type: UINT8
+  description: Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  description: This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set
+  lookup: SIMNET_NETWORK_GROUP
+- id: source
+  name: Source
+  type: UINT8
+  description: Source/owner that provided the value; set by the responder when Operation = Reply, 0xFF in read/set requests. This is NOT an NMEA 2000 bus address.
+- id: key
+  name: Key
+  type: DYNAMIC_FIELD_KEY
+  bits: 24
+  description: Composite 24-bit little-endian key = command group (low byte) | parameter key (upper 16 bits) << 8. The two parts are NOT split into separate fields because the parameter key is only unique within a command group (e.g. key 1 is "True wind high" in group 4 but "Deep water" in group 8), so the value's data type can only be resolved from the group and key together. This key space is distinct from the PGN 130822 tDataType ids and from the B&G and Mercury key spaces.
+  lookupFieldtype: SIMNET_KEY_VALUE
+  primaryKey: true
+- id: operation
+  name: Operation
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_KEY_OPERATION
+- id: value
+  name: Value
+  type: DYNAMIC_FIELD_VALUE
+  description: Always 4 bytes on the bus but actual width and datatype defined per key
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130845,26,255,14,41,9f,ff,ff,01,ff,04,05,00,01,00,00,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: ~
+    networkGroup: "Default"
+    source: ~
+    key: 1284
+    operation: "Set"
+    value: "0x0000ffff"
+- raw: "2023-01-01-00:00:00.000,3,130845,3,255,14,41,9f,ff,00,ff,98,18,78,00,02,a3,0d,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    instance: 0
+    networkGroup: ~
+    source: 152
+    key: 30744
+    operation: "Reply"
+    value: "0xa30d0000"
+- raw: "2023-01-01-00:00:00.000,3,130845,4,255,14,41,9f,03,00,ff,ff,18,79,00,00,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 3
+    instance: 0
+    networkGroup: ~
+    source: ~
+    key: 31000
+    operation: "Read"
+    value: "0xffffffff"

@@ -1,0 +1,53 @@
+pgn: 127258
+id: magneticVariation
+description: Magnetic Variation
+type: Single
+priority: 7
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 4
+  lookup: MAGNETIC_VARIATION
+  primaryKey: true
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: ageOfService
+  name: Age of service
+  type: DATE
+- id: variation
+  name: Variation
+  type: ANGLE_FIX16
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: |-
+  NMEA + Simrad AT10
+
+  https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127258,23,255,8,f8,f8,ff,ff,96,01,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 248
+    source: "WMM 2020"
+    ageOfService: ~
+    variation: 0.0406
+- raw: "2023-01-01-00:00:00.000,6,127258,14,255,8,ff,f7,55,47,76,01,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    source: "WMM 2015"
+    ageOfService: 18261
+    variation: 0.0374
+- raw: "2023-01-01-00:00:00.000,7,127258,12,255,8,37,ff,ff,ff,91,01,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 55
+    source: ~
+    ageOfService: ~
+    variation: 0.0401

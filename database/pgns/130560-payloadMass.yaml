@@ -1,0 +1,29 @@
+pgn: 130560
+id: payloadMass
+description: Payload Mass
+type: Single
+missing:
+- Resolution
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: measurementStatus
+  name: Measurement Status
+  type: UNSIGNED_INTEGER
+  bits: 3
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: measurementId
+  name: Measurement ID
+  type: UINT8
+- id: payloadMass
+  name: Payload Mass
+  type: UINT32
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 8

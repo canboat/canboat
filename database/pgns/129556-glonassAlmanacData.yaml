@@ -1,0 +1,69 @@
+pgn: 129556
+id: glonassAlmanacData
+description: GLONASS Almanac Data
+type: Fast
+priority: 6
+interval: irregular
+explanation: Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These parameters are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.
+url: https://www.unavco.org/help/glossary/docs/ICD_GLONASS_5.1_%282008%29_en.pdf
+fields:
+- id: prn
+  name: PRN
+  type: UINT8
+  description: Satellite ID number
+- id: na
+  name: NA
+  type: UINT16
+  description: Calendar day count within the four year period beginning with the previous leap year
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: cna
+  name: CnA
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: Generalized health of the satellite
+- id: hna
+  name: HnA
+  type: UNSIGNED_INTEGER
+  bits: 5
+  description: Carrier frequency number
+- id: EpsilonNa
+  name: (epsilon)nA
+  type: UINT16
+  description: Eccentricity
+- id: DeltatnaDot
+  name: (deltaTnA)DOT
+  type: UINT8
+  description: Rate of change of the draconitic circling time
+- id: OmegaNa
+  name: (omega)nA
+  type: UINT16
+  description: Rate of change of the draconitic circling time
+- id: DeltaTna
+  name: (delta)TnA
+  type: UINT24
+  description: Correction to the average value of the draconitic circling time
+- id: tna
+  name: tnA
+  type: UINT24
+  description: Time of the ascension node
+- id: LambdaNa
+  name: (lambda)nA
+  type: UINT24
+  description: Greenwich longitude of the ascension node
+- id: DeltaIna
+  name: (delta)inA
+  type: UINT24
+  description: Correction to the average value of the inclination angle
+- id: TauCa
+  name: (tau)cA
+  type: UNSIGNED_INTEGER
+  bits: 28
+  description: System time scale correction
+- id: TauNa
+  name: (tau)nA
+  type: UNSIGNED_INTEGER
+  bits: 12
+  description: Course value of the time scale shift

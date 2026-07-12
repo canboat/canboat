@@ -1,0 +1,64 @@
+pgn: 130834
+id: furunoSpeedCalculationPosition
+description: 'Furuno: Speed-calculation Position'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: pointIndex
+  name: Point index
+  type: UINT8
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: positionY
+  name: Position Y
+  type: LENGTH_UFIX16_DM
+- id: positionZ
+  name: Position Z
+  type: LENGTH_UFIX16_DM
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130834,52,255,9,3f,9f,01,00,00,79,00,12,00"  # from scx20-setting-tool-offset_calc_y2_plus5.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    pointIndex: 1
+    positionY: 12.1
+    positionZ: 1.8
+- raw: "2023-01-01-00:00:00.000,7,130834,52,255,9,3f,9f,00,00,00,47,00,0a,00"  # from scx20-setting-tool-offset_calc_z_plus1.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    pointIndex: 0
+    positionY: 7.1
+    positionZ: 1.0
+- raw: "2023-01-01-00:00:00.000,7,130834,52,255,9,3f,9f,00,00,00,aa,00,12,00"  # from scx20-setting-tool-offset_dim_antx_minus4point5.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    pointIndex: 0
+    positionY: 17.0
+    positionZ: 1.8

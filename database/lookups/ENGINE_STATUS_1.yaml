@@ -1,0 +1,20 @@
+name: ENGINE_STATUS_1
+kind: bit
+bits: 16
+values:
+  0: Check Engine
+  1: Over Temperature
+  2: Low Oil Pressure
+  3: Low Oil Level
+  4: Low Fuel Pressure
+  5: Low System Voltage
+  6: Low Coolant Level
+  7: Water Flow
+  8: Water In Fuel
+  9: Charge Indicator
+  10: Preheat Indicator
+  11: High Boost Pressure
+  12: Rev Limit Exceeded
+  13: EGR System
+  14: Throttle Position Sensor
+  15: Emergency Stop

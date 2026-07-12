@@ -1,0 +1,10 @@
+name: ISO_COMMAND
+kind: pair
+bits: 8
+values:
+  0: ACK
+  16: RTS
+  17: CTS
+  19: EOM
+  32: BAM
+  255: Abort

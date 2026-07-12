@@ -1,0 +1,110 @@
+pgn: 130850
+id: simnetEventCommandTimer
+description: 'Simnet: Event Command: Timer'
+type: Fast
+variantOrder: 9
+priority: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Race and trip timer commands sent by a Navico MFD, all observed live: race start/stop/sync/reset and trip enable/disable/reset,
+  with Parameter 1 selecting the trip (0 = Trip 1, 1 = Trip 2). Broadcast to a display group, so every device in the group
+  acts.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device, used for autopilot events
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: eventType
+  name: Event Type
+  type: LOOKUP
+  bits: 8
+  description: Timer
+  match: 23
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: event
+  name: Event
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_TIMER_EVENT
+- id: parameter1
+  name: Parameter 1
+  type: UINT8
+  description: Event dependent; for the trip timer 0 = Trip 1, 1 = Trip 2
+- id: parameter2
+  name: Parameter 2
+  type: UINT16
+  description: Event dependent
+- id: parameter3
+  name: Parameter 3
+  type: UINT8
+  description: Event dependent
+notes: |-
+  Navico MFD timer event. PGN 130850 has a single fixed byte layout, confirmed live:
+  byte 2 = Address, byte 3 = reserved, byte 4 = Network/Display Group, byte 5 = Event Type, byte
+  6 = command. The broadcast-event families (Timer = Event Type 23, Alarm = Event Type 255) are
+  distinguished by byte 5, so they are mutually exclusive and order-independent. See issue #409.
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,40,255,12,41,9f,ff,ff,00,17,4a,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "None"
+    eventType: "Timer"
+    event: 74
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,26,255,12,41,9f,ff,ff,01,17,49,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Timer"
+    event: 73
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,26,255,12,41,9f,ff,ff,01,17,4a,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: "Default"
+    eventType: "Timer"
+    event: 74
+    parameter1: ~
+    parameter2: ~
+    parameter3: ~

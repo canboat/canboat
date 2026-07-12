@@ -1,0 +1,23 @@
+name: AGS_OFF_REASON
+kind: pair
+bits: 8
+values:
+  0: Not off
+  1: DC voltage high
+  2: Battery state of charge high
+  3: AC current low
+  4: Contact opened
+  5: Reached absorption
+  6: Reached float
+  7: Manual off
+  8: Max run time
+  9: Max auto cycle
+  10: Exercise done
+  11: Quiet time
+  12: External off via AGS
+  13: Safe mode
+  14: External off via generator
+  15: External shutdown
+  16: Auto off
+  17: Fault
+  18: Unable to start

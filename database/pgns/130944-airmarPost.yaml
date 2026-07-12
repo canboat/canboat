@@ -1,0 +1,69 @@
+pgn: 130944
+id: airmarPost
+description: 'Airmar: POST'
+type: Fast
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 1
+  lookup: AIRMAR_POST_CONTROL
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 7
+- id: numberOfIdTestResultPairsToFollow
+  name: Number of ID/test result pairs to follow
+  type: UINT8
+- id: testId
+  name: Test ID
+  type: LOOKUP
+  bits: 8
+  description: See Airmar docs for table of IDs and failure codes; these lookup values are for DST200
+  lookup: AIRMAR_POST_ID
+- id: testResult
+  name: Test result
+  type: UINT8
+  description: Values other than 0 are failure codes
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130944,35,255,20,87,98,ff,08,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    control: "Generate new values"
+    numberOfIdTestResultPairsToFollow: 8
+    testId: "Format Code"
+    testResult: 0
+- raw: "2023-01-01-00:00:00.000,7,130944,35,255,24,87,98,ff,0a,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00,10,00,14,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    control: "Generate new values"
+    numberOfIdTestResultPairsToFollow: 10
+    testId: "Format Code"
+    testResult: 0

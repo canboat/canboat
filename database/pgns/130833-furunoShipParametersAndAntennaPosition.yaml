@@ -1,0 +1,94 @@
+pgn: 130833
+id: furunoShipParametersAndAntennaPosition
+description: 'Furuno: Ship Parameters and Antenna Position'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: equipmentIdentification
+  name: Equipment Identification
+  type: UINT8
+- id: antennaPositionX
+  name: Antenna position X
+  type: DISTANCE_FIX16_CM
+  description: Athwartship offset
+- id: antennaPositionY
+  name: Antenna position Y
+  type: LENGTH_UFIX16_DM
+- id: antennaPositionZ
+  name: Antenna position Z
+  type: LENGTH_UFIX16_DM
+- id: shipSWidth
+  name: Ship's width
+  type: LENGTH_UFIX16_DM
+- id: shipSLength
+  name: Ship's length
+  type: LENGTH_UFIX16_DM
+- id: shipSHeight
+  name: Ship's height
+  type: LENGTH_UFIX16_DM
+notes: |-
+  Furuno SCX-20 satellite-compass config group (130818/130819/130833/130834).
+  The SC_Setting_Tool reads these by broadcasting a PGN 126208 Request, and writes a
+  single setting with a PGN 126208 Command (Function Code 1) addressed to the device:
+    Command, target PGN, priority, #params, then for each param: <field number><value>.
+  The value width is taken from the target PGN's field at that field number, so these
+  field layouts must match for the command parameters to decode. E.g. to set Ship's Width
+  to 9.0 m: Command -> 130833, params {1=1855 (mfr), 3=4 (industry), 8=90 (0.1 m)}.
+  The device also broadcasts these PGNs as status with the same field order.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,3e,fe,a9,00,1b,00,5a,00,ab,00,40,01"  # from scx20-setting-tool-offset_dim_antx_minus4point5.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: -4.50
+    antennaPositionY: 16.9
+    antennaPositionZ: 2.7
+    shipSWidth: 9.0
+    shipSLength: 17.1
+    shipSHeight: 32.0
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,32,00,a8,00,1a,00,32,00,aa,00,28,00"  # from scx20-setting-tool-sensor-reset.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: 0.50
+    antennaPositionY: 16.8
+    antennaPositionZ: 2.6
+    shipSWidth: 5.0
+    shipSLength: 17.0
+    shipSHeight: 4.0
+- raw: "2023-01-01-00:00:00.000,7,130833,52,255,15,3f,9f,01,28,00,a9,00,1b,00,33,00,ab,00,40,01"  # from scx20-setting-tool-offsets.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    equipmentIdentification: 1
+    antennaPositionX: 0.40
+    antennaPositionY: 16.9
+    antennaPositionZ: 2.7
+    shipSWidth: 5.1
+    shipSLength: 17.1
+    shipSHeight: 32.0

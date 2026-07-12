@@ -1,0 +1,57 @@
+pgn: 130065
+id: routeAndWpServiceRouteList
+description: Route and WP Service - Route List
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRouteId
+  name: Start Route ID
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfRoutesInDatabase
+  name: Number of Routes in Database
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: routeId
+      name: Route ID
+      type: UINT16
+    - id: routeName
+      name: Route Name
+      type: STRING_LAU
+    - id: reserved
+      name: Reserved
+      type: RESERVED
+      bits: 2
+    - id: wpIdentificationMethod
+      name: WP Identification Method
+      type: LOOKUP
+      bits: 2
+      lookup: WP_IDENTIFICATION_METHOD
+    - id: routeStatus
+      name: Route Status
+      type: LOOKUP
+      bits: 4
+      lookup: WP_ROUTE_STATUS
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130065,99,255,43,ff,ff,02,00,16,00,ff,ff,01,00,0d,01,48,65,72,65,54,6f,54,68,65,72,65,27,02,00,10,01,41,6e,64,20,42,61,63,6b,20,41,67,61,69,6e,1b"  # from actisense-522.candump.log
+  expects:
+    startRouteId: ~
+    nitems: 2
+    numberOfRoutesInDatabase: 22
+    databaseId: ~
+    routeId: 1
+    routeName: "HereToThere"
+    wpIdentificationMethod: "Waypoints embedded in route"
+    routeStatus: "Deleted"
+    routeId.2: 2
+    routeName.2: "And Back Again"
+    wpIdentificationMethod.2: 2
+    routeStatus.2: "Inactive"

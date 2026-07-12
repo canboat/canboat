@@ -1,0 +1,29 @@
+pgn: 129291
+id: setDriftRapidUpdate
+description: Set & Drift, Rapid Update
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: setReference
+  name: Set Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: set
+  name: Set
+  type: ANGLE_UFIX16
+- id: drift
+  name: Drift
+  type: SPEED_UFIX16_CM
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

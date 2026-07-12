@@ -1,0 +1,80 @@
+pgn: 128520
+id: trackedTargetData
+description: Tracked Target Data
+type: Fast
+priority: 2
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: targetId
+  name: 'Target ID #'
+  type: UINT16
+  description: Number of route, waypoint, event, mark, etc.
+- id: trackStatus
+  name: Track Status
+  type: LOOKUP
+  bits: 2
+  lookup: TRACKING
+- id: reportedTarget
+  name: Reported Target
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: targetAcquisition
+  name: Target Acquisition
+  type: LOOKUP
+  bits: 1
+  lookup: TARGET_ACQUISITION
+- id: bearingReference
+  name: Bearing Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: bearing
+  name: Bearing
+  type: ANGLE_UFIX16
+- id: distance
+  name: Distance
+  type: DISTANCE_FIX32_CM
+- id: course
+  name: Course
+  type: ANGLE_UFIX16
+- id: speed
+  name: Speed
+  type: SPEED_UFIX16_CM
+- id: cpa
+  name: CPA
+  type: DISTANCE_FIX32_CM
+- id: tcpa
+  name: TCPA
+  type: DURATION_FIX32_MS
+  description: negative = time elapsed since event, positive = time to go
+- id: utcOfFix
+  name: UTC of Fix
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: name
+  name: Name
+  type: STRING_LAU
+- id: referenceTarget
+  name: Reference Target
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved17
+  name: Reserved
+  type: RESERVED
+  bits: 6

@@ -1,0 +1,9 @@
+name: ENTERTAINMENT_FILTER
+kind: pair
+bits: 8
+values:
+  0: Full range
+  1: High pass
+  2: Low pass
+  3: Band pass
+  4: Notch filter

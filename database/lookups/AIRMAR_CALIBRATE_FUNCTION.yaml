@@ -1,0 +1,10 @@
+name: AIRMAR_CALIBRATE_FUNCTION
+kind: pair
+bits: 8
+values:
+  0: Normal/cancel calibration
+  1: Enter calibration mode
+  2: Reset calibration to 0
+  3: Verify
+  4: Reset compass to defaults
+  5: Reset damping to defaults

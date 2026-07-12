@@ -1,0 +1,34 @@
+pgn: 130306
+id: windData
+description: Wind Data
+type: Single
+priority: 2
+interval: 100
+url: https://web.archive.org/web/20181024132013/www.maretron.com/support/manuals/WSO100UM_1.0.pdf#page=15
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: windSpeed
+  name: Wind Speed
+  type: SPEED_UFIX16_CM
+- id: windAngle
+  name: Wind Angle
+  type: ANGLE_UFIX16
+- id: reference
+  name: Reference
+  type: LOOKUP
+  bits: 3
+  lookup: WIND_REFERENCE
+  primaryKey: true
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 21
+samples:
+- raw: 2023-01-01-00:00:00.000,2,130306,42,255,8,00,b4,01,ac,58,03,fa,ff
+  expects:
+    sid: 0
+    windSpeed: 4.36
+    windAngle: 2.27
+    reference: True (boat referenced)

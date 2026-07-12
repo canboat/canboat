@@ -1,0 +1,95 @@
+pgn: 129551
+id: gnssDifferentialCorrectionReceiverSignal
+description: GNSS Differential Correction Receiver Signal
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: channel
+  name: Channel
+  type: UINT8
+- id: signalStrength
+  name: Signal Strength
+  type: SIGNALSTRENGTH_FIX32
+  description: Signal strength in dB relative to 1 uV/m
+- id: signalSnr
+  name: Signal SNR
+  type: SIGNALTONOISERATIO_FIX16
+- id: frequency
+  name: Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: stationType
+  name: Station Type
+  type: LOOKUP
+  bits: 4
+  lookup: GNS
+- id: referenceStationId
+  name: Reference Station ID
+  type: UNSIGNED_INTEGER
+  bits: 12
+- id: differentialSignalBitRate
+  name: Differential Signal Bit Rate
+  type: LOOKUP
+  bits: 5
+  lookup: SERIAL_BIT_RATE
+- id: differentialSignalDetectionMode
+  name: Differential Signal Detection Mode
+  type: LOOKUP
+  bits: 3
+  lookup: SERIAL_DETECTION_MODE
+- id: usedAsCorrectionSource
+  name: Used as Correction Source
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: differentialSource
+  name: Differential Source
+  type: LOOKUP
+  bits: 4
+  lookup: DIFFERENTIAL_SOURCE
+- id: timeSinceLastSatDifferentialSync
+  name: Time since Last Sat Differential Sync
+  type: DURATION_UFIX16_CS
+  description: Age of differential corrections
+- id: satelliteServiceIdNo
+  name: Satellite Service ID No.
+  type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129551,3,255,20,00,01,01,00,00,00,01,00,01,00,00,00,10,00,00,0c,01,00,64,00"  # from pgn129551.raw
+  expects:
+    sid: 0
+    channel: 1
+    signalStrength: 0.01
+    signalSnr: 0.01
+    frequency: 10
+    stationType: "GPS"
+    referenceStationId: 1
+    differentialSignalBitRate: "25"
+    differentialSignalDetectionMode: "Auto bit rate"
+    usedAsCorrectionSource: "No"
+    differentialSource: "Auto"
+    timeSinceLastSatDifferentialSync: 0.01
+    satelliteServiceIdNo: 100
+- raw: "2023-01-01-00:00:00.000,4,129551,3,255,20,00,01,ff,ff,ff,7f,01,00,01,00,00,00,10,00,00,0c,01,00,64,00"  # from pgn129551.raw
+  expects:
+    sid: 0
+    channel: 1
+    signalStrength: ~
+    signalSnr: 0.01
+    frequency: 10
+    stationType: "GPS"
+    referenceStationId: 1
+    differentialSignalBitRate: "25"
+    differentialSignalDetectionMode: "Auto bit rate"
+    usedAsCorrectionSource: "No"
+    differentialSource: "Auto"
+    timeSinceLastSatDifferentialSync: 0.01
+    satelliteServiceIdNo: 100

@@ -1,0 +1,156 @@
+pgn: 130820
+id: fusionSettings
+description: 'Fusion: Settings'
+type: Fast
+variantOrder: 30
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Settings
+  match: 32789
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: count
+  name: Count
+  type: UINT32
+- repeat:
+    countField: count
+    fields:
+    - id: id
+      name: ID
+      type: LOOKUP
+      bits: 32
+      lookup: FUSION_SETTING
+    - id: value
+      name: Value
+      type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,216,a3,99,15,80,1a,00,00,00,06,00,00,00,00,00,00,00,02,00,00,00,00,00,00,00,03,00,00,00,01,00,00,00,04,00,00,00,00,00,00,00,05,00,00,00,00,00,00,00,42,00,00,00,00,00,00,00,43,00,00,00,01,00,00,00,07,00,00,00,00,00,00,00,0e,00,00,00,00,00,00,00,0f,00,00,00,00,00,00,00,10,00,00,00,00,00,00,00,11,00,00,00,00,00,00,00,12,00,00,00,00,00,00,00,13,00,00,00,00,00,00,00,14,00,00,00,00,00,00,00,15,00,00,00,00,00,00,00,16,00,00,00,00,00,00,00,17,00,00,00,00,00,00,00,18,00,00,00,00,00,00,00,19,00,00,00,00,00,00,00,1a,00,00,00,00,00,00,00,1b,00,00,00,00,00,00,00,1c,00,00,00,00,00,00,00,1d,00,00,00,00,00,00,00,1e,00,00,00,00,00,00,00,1f,00,00,00,00,00,00,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Settings"
+    count: 26
+    id: "Telemute"
+    value: 0
+    id.2: "Zone 2 Linked"
+    value.2: 0
+    id.3: "Zone 2 Enabled"
+    value.3: 1
+    id.4: "Zone 3 Enabled"
+    value.4: 0
+    id.5: "Zone 4 Enabled"
+    value.5: 0
+    id.6: "Language"
+    value.6: 0
+    id.7: "Internal Amps On"
+    value.7: 1
+    id.8: "Tuner Region"
+    value.8: 0
+    id.9: "AM Preset 0"
+    value.9: 0
+    id.10: "AM Preset 1"
+    value.10: 0
+    id.11: "AM Preset 2"
+    value.11: 0
+    id.12: "AM Preset 3"
+    value.12: 0
+    id.13: "AM Preset 4"
+    value.13: 0
+    id.14: "AM Preset 5"
+    value.14: 0
+    id.15: "AM Preset 6"
+    value.15: 0
+    id.16: "AM Preset 7"
+    value.16: 0
+    id.17: "AM Preset 8"
+    value.17: 0
+    id.18: "AM Preset 9"
+    value.18: 0
+    id.19: "AM Preset 10"
+    value.19: 0
+    id.20: "AM Preset 11"
+    value.20: 0
+    id.21: "AM Preset 12"
+    value.21: 0
+    id.22: "AM Preset 13"
+    value.22: 0
+    id.23: "AM Preset 14"
+    value.23: 0
+    id.24: "FM Preset 0"
+    value.24: 0
+    id.25: "FM Preset 1"
+    value.25: 0
+    id.26: "FM Preset 2"
+    value.26: 0
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,184,a3,99,15,80,16,00,00,00,20,00,00,00,00,00,00,00,21,00,00,00,00,00,00,00,22,00,00,00,00,00,00,00,23,00,00,00,00,00,00,00,24,00,00,00,00,00,00,00,25,00,00,00,00,00,00,00,26,00,00,00,00,00,00,00,27,00,00,00,00,00,00,00,28,00,00,00,00,00,00,00,29,00,00,00,00,00,00,00,2a,00,00,00,00,00,00,00,2b,00,00,00,00,00,00,00,00,00,00,00,01,00,00,00,0c,00,00,00,02,00,00,00,0d,00,00,00,01,00,00,00,0b,00,00,00,01,00,00,00,09,00,00,00,01,00,00,00,0a,00,00,00,00,00,00,00,44,00,00,00,01,00,00,00,45,00,00,00,00,00,00,00,47,00,00,00,00,00,00,00,48,00,00,00,01,00,00,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Settings"
+    count: 22
+    id: "FM Preset 3"
+    value: 0
+    id.2: "FM Preset 4"
+    value.2: 0
+    id.3: "FM Preset 5"
+    value.3: 0
+    id.4: "FM Preset 6"
+    value.4: 0
+    id.5: "FM Preset 7"
+    value.5: 0
+    id.6: "FM Preset 8"
+    value.6: 0
+    id.7: "FM Preset 9"
+    value.7: 0
+    id.8: "FM Preset 10"
+    value.8: 0
+    id.9: "FM Preset 11"
+    value.9: 0
+    id.10: "FM Preset 12"
+    value.10: 0
+    id.11: "FM Preset 13"
+    value.11: 0
+    id.12: "FM Preset 14"
+    value.12: 0
+    id.13: "Alpha Search Threshold"
+    value.13: 1
+    id.14: "iPod repeat"
+    value.14: 2
+    id.15: "iPod shuffle"
+    value.15: 1
+    id.16: "iPod Album Artwork"
+    value.16: 1
+    id.17: "USB repeat"
+    value.17: 1
+    id.18: "USB shuffle"
+    value.18: 0
+    id.19: "MTP Repeat"
+    value.19: 1
+    id.20: "MTP Shuffle"
+    value.20: 0
+    id.21: "NMEA Power"
+    value.21: 0
+    id.22: "Low Power Mode"
+    value.22: 1

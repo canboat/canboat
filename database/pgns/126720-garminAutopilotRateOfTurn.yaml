@@ -1,0 +1,100 @@
+pgn: 126720
+id: garminAutopilotRateOfTurn
+description: 'Garmin Autopilot: Rate of Turn'
+type: Fast
+variantOrder: 7
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Autopilot transport
+  match: 5904
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '4'
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '4'
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  description: '0'
+  match: 0
+- id: field
+  name: Field
+  type: LOOKUP
+  bits: 8
+  description: Rate of Turn
+  match: 114
+  lookup: GARMIN_AUTOPILOT_FIELD
+  primaryKey: true
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: rateOfTurn
+  name: Rate of Turn
+  type: FLOAT_RAD_S
+  rangeMin: -3.40282346638529e+38
+  rangeMax: 3.40282346638529e+38
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,72,17,40,7c,37,3d"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 114
+    rateOfTurn: 0.0448
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,72,17,c5,68,5c,bd"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 114
+    rateOfTurn: -0.0538
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,13,e5,98,10,17,04,04,00,72,17,cf,36,d1,bc"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 0
+    field: 114
+    rateOfTurn: -0.0255

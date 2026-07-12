@@ -1,0 +1,56 @@
+pgn: 59392
+id: isoAcknowledgement
+description: ISO Acknowledgement
+type: Single
+variantOrder: 2
+priority: 6
+interval: irregular
+explanation: This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific command to indicate compliance or failure.
+fields:
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: ISO_CONTROL
+- id: groupFunction
+  name: Group Function
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Parameter Group Number of requested information
+  rangeMin: 0.0
+  rangeMax: 262143.0
+notes: |-
+  https://web.archive.org/web/20220515054117/www.nmea.org/Assets/july%202010%20nmea2000_v1-301_app_b_pgn_field_list.pdf
+
+  https://web.archive.org/web/20061221093749/www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf
+
+  https://web.archive.org/web/20150910070054/www.nmea.org/Assets/pgn059392.pdf
+
+  https://web.archive.org/web/20120916154734/www8.garmin.com/manuals/GPSMAP4008_NMEA2000NetworkFundamentals.pdf
+
+  https://web.archive.org/web/20240802130644/www.furunousa.com/-/media/sites/furuno/document_library/documents/manuals/public_manuals/gp330b_nmea_pgns.pdf
+
+  https://web.archive.org/web/20150910070107/www.nmea.org/Assets/20140710%20nmea-2000-060928%20iso%20address%20claim%20pgn%20corrigendum.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,59392,14,12,8,01,ff,ff,ff,ff,34,ff,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    control: "NAK"
+    groupFunction: ~
+    pgn: 65332
+- raw: "2023-01-01-00:00:00.000,6,59392,5,1,8,02,ff,ff,ff,ff,09,fd,01"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    control: "Access Denied"
+    groupFunction: ~
+    pgn: 130313
+- raw: "2023-01-01-00:00:00.000,6,59392,10,27,8,01,ff,ff,ff,ff,16,f0,01"  # from merrimac-ydwg-2020.raw
+  expects:
+    control: "NAK"
+    groupFunction: ~
+    pgn: 126998

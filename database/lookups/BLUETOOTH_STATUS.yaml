@@ -1,0 +1,7 @@
+name: BLUETOOTH_STATUS
+kind: pair
+bits: 8
+values:
+  0: Connected
+  1: Not connected
+  2: Not paired

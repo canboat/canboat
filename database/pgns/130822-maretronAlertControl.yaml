@@ -1,0 +1,68 @@
+pgn: 130822
+id: maretronAlertControl
+description: 'Maretron: Alert Control'
+type: Fast
+variantOrder: 9
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: alertType
+  name: Alert Type
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TYPE
+- id: alertCategory
+  name: Alert Category
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_CATEGORY
+- id: alertSystem
+  name: Alert System
+  type: UINT8
+- id: alertSubSystem
+  name: Alert Sub-System
+  type: UINT8
+- id: alertId
+  name: Alert ID
+  type: UINT16
+- id: dataSourceNetworkIdName
+  name: Data Source Network ID NAME
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: dataSourceInstance
+  name: Data Source Instance
+  type: UINT8
+  primaryKey: true
+- id: dataSourceIndexSource
+  name: Data Source Index-Source
+  type: UINT8
+- id: alertOccurrenceNumber
+  name: Alert Occurrence Number
+  type: UINT8
+- id: maretronExtension
+  name: Maretron Extension
+  type: BINARY
+  bits: 128
+  description: Maretron-specific payload following the standard Alert identity header.

@@ -1,0 +1,91 @@
+pgn: 130850
+id: simnetCommandApStandby
+description: 'Simnet: Command AP Standby'
+type: Fast
+variantOrder: 1
+priority: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: commandType
+  name: Command Type
+  type: LOOKUP
+  bits: 8
+  description: AP Command
+  match: 10
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: event
+  name: Event
+  type: LOOKUP
+  bits: 8
+  description: Standby
+  match: 6
+  lookup: SIMNET_AP_EVENTS
+- id: spare9
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,10,255,12,41,9f,02,ff,ff,0a,06,00,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 2
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Standby"
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,0d,ff,ff,0a,06,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Standby"
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,04,ff,ff,0a,06,00,ff,ff,ff,ff"  # from nac3-reset-dockside-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 4
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Standby"

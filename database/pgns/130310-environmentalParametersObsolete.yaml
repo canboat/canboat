@@ -1,0 +1,44 @@
+pgn: 130310
+id: environmentalParametersObsolete
+description: Environmental Parameters (obsolete)
+type: Single
+priority: 5
+interval: 500
+explanation: This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: waterTemperature
+  name: Water Temperature
+  type: TEMPERATURE
+- id: outsideAmbientAirTemperature
+  name: Outside Ambient Air Temperature
+  type: TEMPERATURE
+- id: atmosphericPressure
+  name: Atmospheric Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+notes: Water temperature, Transducer Measurement
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130310,17,255,8,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    waterTemperature: ~
+    outsideAmbientAirTemperature: ~
+    atmosphericPressure: ~
+- raw: "2023-01-01-00:00:00.000,5,130310,14,255,8,ff,ff,ff,c5,72,f6,03,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    waterTemperature: ~
+    outsideAmbientAirTemperature: 293.81
+    atmosphericPressure: 101400
+- raw: "2023-01-01-00:00:00.000,5,130310,4,255,8,04,88,71,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 4
+    waterTemperature: 290.64
+    outsideAmbientAirTemperature: ~
+    atmosphericPressure: ~

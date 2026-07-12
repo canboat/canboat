@@ -1,0 +1,42 @@
+pgn: 262161
+id: actisenseOperatingMode
+description: 'Actisense: Operating mode'
+type: Fast
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: modelId
+  name: Model ID
+  type: UINT16
+- id: serialId
+  name: Serial ID
+  type: UINT32
+- id: errorId
+  name: Error ID
+  type: UINT32
+- id: operatingMode
+  name: Operating Mode
+  type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,0,262161,0,0,13,01,0e,00,ab,b0,01,00,00,00,00,00,02,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 110763
+    errorId: 0
+    operatingMode: 2
+- raw: "2023-01-01-00:00:00.000,0,262161,0,0,13,01,0e,00,e7,b3,02,00,00,00,00,00,02,00"  # from susteranna-actisense-serial.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 177127
+    errorId: 0
+    operatingMode: 2
+- raw: "2023-01-01-00:00:00.000,0,262161,0,0,13,01,0e,00,ac,9f,01,00,00,00,00,00,02,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    sid: 1
+    modelId: 14
+    serialId: 106412
+    errorId: 0
+    operatingMode: 2

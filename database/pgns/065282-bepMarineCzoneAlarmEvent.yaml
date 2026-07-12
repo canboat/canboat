@@ -1,0 +1,41 @@
+pgn: 65282
+id: bepMarineCzoneAlarmEvent
+description: 'BEP Marine: CZone Alarm Event'
+type: Single
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / channel index, an alarm-state polarity flag, or a frame counter).
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: dipswitch
+  name: Dipswitch
+  type: UINT8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 32

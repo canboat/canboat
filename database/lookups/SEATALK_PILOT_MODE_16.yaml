@@ -1,0 +1,9 @@
+name: SEATALK_PILOT_MODE_16
+kind: pair
+bits: 16
+values:
+  0: Standby
+  64: Auto, compass commanded
+  256: Vane, Wind Mode
+  384: Track Mode
+  385: No Drift, COG referenced (In track, course changes)

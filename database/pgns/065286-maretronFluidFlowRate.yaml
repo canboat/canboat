@@ -1,0 +1,49 @@
+pgn: 65286
+id: maretronFluidFlowRate
+description: 'Maretron: Fluid Flow Rate'
+type: Single
+variantOrder: 3
+priority: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: flowRateInstance
+  name: Flow Rate Instance
+  type: UINT8
+  primaryKey: true
+- id: fluidType
+  name: Fluid Type
+  type: LOOKUP
+  bits: 4
+  lookup: TANK_TYPE
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: fluidFlowRate
+  name: Fluid Flow Rate
+  type: FIX24
+  resolution: 0.0001

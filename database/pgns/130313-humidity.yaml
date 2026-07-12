@@ -1,0 +1,52 @@
+pgn: 130313
+id: humidity
+description: Humidity
+type: Single
+priority: 5
+interval: 2000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: HUMIDITY_SOURCE
+  primaryKey: true
+- id: actualHumidity
+  name: Actual Humidity
+  type: PERCENTAGE_FIX16
+- id: setHumidity
+  name: Set Humidity
+  type: PERCENTAGE_FIX16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,17,00,01,b5,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 23
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.116
+    setHumidity: ~
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,0e,00,01,ca,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 14
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.200
+    setHumidity: ~
+- raw: "2023-01-01-00:00:00.000,5,130313,130,255,8,a6,00,01,df,3a,ff,7f,ff"  # from dirona-actisense-serial.raw
+  expects:
+    sid: 166
+    instance: 0
+    source: "Outside"
+    actualHumidity: 60.284
+    setHumidity: ~

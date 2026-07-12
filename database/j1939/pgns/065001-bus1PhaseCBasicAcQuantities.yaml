@@ -1,0 +1,23 @@
+pgn: 65001
+id: bus1PhaseCBasicAcQuantities
+description: 'Bus #1 Phase C Basic AC Quantities'
+type: Single
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: |-
+  Maretron ACM 100 manual documents PGN 65001-65030
+
+  https://web.archive.org/web/20230512042813/www.maretron.com/support/manuals/ACM100UM_1.3.pdf

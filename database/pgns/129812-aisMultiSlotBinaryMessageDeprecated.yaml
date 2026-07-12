@@ -1,0 +1,83 @@
+pgn: 129812
+id: aisMultiSlotBinaryMessageDeprecated
+description: AIS Multi Slot Binary Message (Deprecated)
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: 'Deprecated multi-slot addressed binary message (AIS message 26): a binary-data slot (number of bits + data)
+  repeats. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.'
+fields:
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: destinationIndicator
+  name: Destination Indicator
+  type: LOOKUP
+  bits: 1
+  lookup: BROADCAST_INDICATOR
+- id: binaryDataFlag
+  name: Binary data flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: destinationId
+  name: Destination ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: spare10
+  name: Spare
+  type: SPARE
+  bits: 3
+- id: communicationStateSelectorFlag
+  name: Communication state selector flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+- id: spare13
+  name: Spare
+  type: SPARE
+  bits: 3
+- id: reserved14
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- repeat:
+    fields:
+    - id: numberOfBitsInBinaryDataField
+      name: Number of Bits in Binary Data Field
+      type: UINT16
+    - id: binaryData
+      name: Binary Data
+      type: BINARY

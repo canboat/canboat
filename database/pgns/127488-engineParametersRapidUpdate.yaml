@@ -1,0 +1,53 @@
+pgn: 127488
+id: engineParametersRapidUpdate
+description: Engine Parameters, Rapid Update
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: speed
+  name: Speed
+  type: ROTATION_UFIX16_RPM
+- id: boostPressure
+  name: Boost Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: tiltTrim
+  name: Tilt/Trim
+  type: PERCENTAGE_INT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: |-
+  Engine group PGNs all derived PGN Numbers from
+
+  https://web.archive.org/web/20061221093749/www.maretron.com/products/pdf/J2K100-Data_Sheet.pdf
+
+  https://web.archive.org/web/20240122163152/www.floscan.com/html/blue/NMEA2000.php
+
+  https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127488,0,255,9,00,00,00,ff,ff,ff,ff,ff,f0"  # from sample-YDWG02-2.txt
+  expects:
+    instance: "Single Engine or Dual Engine Port"
+    speed: 0.0
+    boostPressure: ~
+    tiltTrim: -1
+- raw: "2023-01-01-00:00:00.000,2,127488,16,255,8,00,92,0c,ff,ff,7f,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    instance: "Single Engine or Dual Engine Port"
+    speed: 804.5
+    boostPressure: ~
+    tiltTrim: ~
+- raw: "2023-01-01-00:00:00.000,2,127488,16,255,8,00,47,0c,ff,ff,7f,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    instance: "Single Engine or Dual Engine Port"
+    speed: 785.8
+    boostPressure: ~
+    tiltTrim: ~

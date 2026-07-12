@@ -160,7 +160,7 @@ static unsigned int    getMessageByteCount(const char *const msg);
 static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
-  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel | -upper-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+  printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
          "-format <fmt> "
          "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -172,7 +172,6 @@ static void usage(char **argv, char **av)
   printf("     -empty            Modified json format where empty values are shown as NULL\n");
   printf("     -nv               Modified json format where lookup values are shown as name, value pair\n");
   printf("     -camel            Show fieldnames in normalCamelCase\n");
-  printf("     -upper-camel      Show fieldnames in UpperCamelCase\n");
   printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("     -q                Print logging from level ERROR\n");
   printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
@@ -223,12 +222,9 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-camel") == 0)
     {
+      // ids (camelName/camelDescription) are compiled into the generated
+      // tables; this only selects them for output
       showCamel = true;
-      camelCase(false);
-    }
-    else if (strcasecmp(av[1], "-upper-camel") == 0)
-    {
-      camelCase(true);
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
@@ -1302,6 +1298,8 @@ static bool printField(const Field   *field,
 
   if (fieldName == NULL)
   {
+    // Defensive only: both callers pass a name. Key on the mode, not on
+    // camelName presence - the generated tables set camelName everywhere.
     fieldName = (showCamel && field->camelName) ? field->camelName : (char *) field->name;
   }
 
@@ -1490,6 +1488,10 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   if (showJson)
   {
+    // The camel-id wrapper follows the -camel mode. This used to key on
+    // camelDescription presence as a proxy, which wrapped pinned-id PGNs
+    // even in plain JSON and broke down once the generated tables set
+    // camelDescription on every PGN.
     if (showCamel)
     {
       mprintf("{\"%s\":", pgn->camelDescription);
@@ -1670,6 +1672,10 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
 
     if (repetition >= 1 && !showJson)
     {
+      // The separator follows the naming style in use ("windSpeed_2" vs
+      // "Wind Speed 2"). This used to key on camelName presence as a cheap
+      // proxy for the -camel mode, which broke down once every field
+      // carries an explicit camelName (id) from the generated tables.
       strcat(fieldName, showCamel ? "_" : " ");
       sprintf(fieldName + strlen(fieldName), "%u", repetition);
     }

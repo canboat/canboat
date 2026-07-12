@@ -1,0 +1,60 @@
+pgn: 65379
+id: seatalkPilotMode
+description: 'Seatalk: Pilot Mode'
+type: Single
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: pilotMode
+  name: Pilot Mode
+  type: LOOKUP
+  bits: 16
+  lookup: SEATALK_PILOT_MODE_16
+- id: subMode
+  name: Sub Mode
+  type: BINARY
+  bits: 16
+- id: pilotModeData
+  name: Pilot Mode Data
+  type: BINARY
+  bits: 8
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65379,204,255,8,3b,9f,00,00,00,00,02,ff"  # from candumpSample3.txt
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    pilotMode: "Standby"
+    subMode: "0x0000"
+    pilotModeData: "0x02"
+- raw: "2023-01-01-00:00:00.000,7,65379,204,255,8,3b,9f,40,00,00,00,02,ff"  # from pgn65379.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    pilotMode: "Auto, compass commanded"
+    subMode: "0x0000"
+    pilotModeData: "0x02"

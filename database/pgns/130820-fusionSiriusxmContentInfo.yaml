@@ -1,0 +1,52 @@
+pgn: 130820
+id: fusionSiriusxmContentInfo
+description: 'Fusion: SiriusXM Content Info'
+type: Fast
+variantOrder: 45
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: SiriusXM Genre
+  match: 32807
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: channel
+  name: Channel
+  type: UINT16
+- id: genre
+  name: Genre
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,9,a3,99,27,80,04,64,00,00,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Genre"
+    sourceId: 4
+    channel: 100
+    genre: ""

@@ -1,0 +1,49 @@
+pgn: 130847
+id: navicoAsciiIdentifier
+description: 'Navico: ASCII Identifier'
+type: Fast
+variantOrder: 1
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text, e.g. a serial number). Observed in live captures.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: identifier
+  name: Identifier
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130847,11,255,13,13,99,0a,31,30,37,34,37,33,33,37,33,0a"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    identifier: "107473373\n"
+- raw: "2023-01-01-00:00:00.000,7,130847,15,255,19,13,99,10,30,66,31,33,32,30,30,65,38,32,38,64,63,61,35,66"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    identifier: "0f13200e828dca5f"
+- raw: "2023-01-01-00:00:00.000,7,130847,13,255,19,13,99,10,31,34,30,35,32,30,30,30,65,61,62,66,30,65,65,61"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    identifier: "14052000eabf0eea"

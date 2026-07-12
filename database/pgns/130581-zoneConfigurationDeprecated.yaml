@@ -1,0 +1,31 @@
+pgn: 130581
+id: zoneConfigurationDeprecated
+description: Zone Configuration (deprecated)
+type: Fast
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: firstZoneId
+  name: First zone ID
+  type: UINT8
+  description: First Zone in this PGN
+- id: zoneCount
+  name: Zone count
+  type: UINT8
+  description: Number of Zones in this PGN
+- id: totalZoneCount
+  name: Total zone count
+  type: UINT8
+  description: Total Zones supported by this device
+- repeat:
+    countField: zoneCount
+    fields:
+    - id: zoneId
+      name: Zone ID
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_ZONE
+    - id: zoneName
+      name: Zone name
+      type: STRING_LAU

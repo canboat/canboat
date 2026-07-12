@@ -1,0 +1,10 @@
+name: FUSION_PLAY_STATUS
+kind: pair
+bits: 16
+values:
+  0: Invalid
+  1: Playing
+  2: Paused
+  3: Stopped
+  4: Skip Forward
+  5: Skip Rewind

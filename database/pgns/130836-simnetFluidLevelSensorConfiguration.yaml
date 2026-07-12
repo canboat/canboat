@@ -1,0 +1,61 @@
+pgn: 130836
+id: simnetFluidLevelSensorConfiguration
+description: 'Simnet: Fluid Level Sensor Configuration'
+type: Fast
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: c
+  name: C
+  type: UINT8
+- id: device
+  name: Device
+  type: UINT8
+  primaryKey: true
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: f
+  name: F
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: tankType
+  name: Tank type
+  type: LOOKUP
+  bits: 4
+  lookup: TANK_TYPE
+- id: capacity
+  name: Capacity
+  type: VOLUME_UFIX32_DL
+- id: g
+  name: G
+  type: UINT8
+- id: h
+  name: H
+  type: INT16
+- id: i
+  name: I
+  type: INT8
+notes: Seen when HDS8 configures EP65R

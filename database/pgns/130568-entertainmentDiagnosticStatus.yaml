@@ -1,0 +1,31 @@
+pgn: 130568
+id: entertainmentDiagnosticStatus
+description: Entertainment - Diagnostic Status
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: Audio/video source diagnostic status. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
+fields:
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: diagnosticMode
+  name: Diagnostic Mode
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: diagnosticData
+  name: Diagnostic Data
+  type: STRING_LAU
+notes: From the NMEA 3.002 field-name list; lengths/datatypes a best guess, flagged PACKET_PDF_ONLY.

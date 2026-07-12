@@ -1,0 +1,46 @@
+pgn: 130816
+id: sonichubInit1
+description: 'SonicHub: Init #1'
+type: Fast
+variantOrder: 17
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: 'Init #1'
+  match: 25
+  lookup: SONICHUB_COMMAND
+  primaryKey: true
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_CONTROL

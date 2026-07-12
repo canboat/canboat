@@ -1,0 +1,17 @@
+[package]
+name = "keel"
+version = "0.1.0"
+edition = "2024"
+description = "CANboat PGN database tool: validate, generate, edit"
+license = "Apache-2.0"
+authors = ["Kees Verruijt <canboat@verruijt.net>"]
+
+[dependencies]
+# Deliberately minimal (DESIGN.md): YAML parsing only. The canonical YAML
+# *writer* is our own (the style is keel's spec), floats print via libc
+# snprintf (declared extern, no crate), and the editor server will use a
+# minimal HTTP dependency when it lands.
+yaml-rust2 = "0.10"
+
+[profile.release]
+lto = true

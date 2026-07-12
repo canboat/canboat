@@ -1,0 +1,7 @@
+name: SIMNET_DEPTH_UNIT
+kind: pair
+bits: 8
+values:
+  0: Meters
+  1: Feet
+  2: Fathoms

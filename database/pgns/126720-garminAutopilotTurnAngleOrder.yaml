@@ -1,0 +1,104 @@
+pgn: 126720
+id: garminAutopilotTurnAngleOrder
+description: 'Garmin Autopilot: Turn Angle Order'
+type: Fast
+variantOrder: 11
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: Autopilot transport
+  match: 5904
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '4'
+  match: 4
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '4'
+  match: 4
+- id: fieldGroup
+  name: Field Group
+  type: UINT8
+  description: '2'
+  match: 2
+- id: field
+  name: Field
+  type: LOOKUP
+  bits: 8
+  description: Turn Angle Order
+  match: 116
+  lookup: GARMIN_AUTOPILOT_FIELD
+  primaryKey: true
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: turnAngleOrder
+  name: Turn Angle Order
+  type: UINT16
+  resolution: 9.58738e-05
+  unit: rad
+  description: Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)
+notes: |-
+  Turn Angle Order/Measured are a full-circle u16 angle pair (raw * 2*pi/65536 rad, wrapping 0..2*pi),
+  the same order/measured relationship as the Rate of Turn pair above.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,01,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 0.00010
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,ee,ff"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 6.28146
+- raw: "2023-01-01-00:00:00.000,7,126720,0,255,11,e5,98,10,17,04,04,02,74,17,08,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 2
+    field: 116
+    turnAngleOrder: 0.00077

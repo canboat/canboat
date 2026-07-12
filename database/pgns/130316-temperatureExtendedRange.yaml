@@ -1,0 +1,49 @@
+pgn: 130316
+id: temperatureExtendedRange
+description: Temperature Extended Range
+type: Single
+priority: 5
+interval: 2000
+url: https://web.archive.org/web/20220516160001/https://www.nmea.org/Assets/nmea%202000%20pgn%20130316%20corrigenda%20nmd%20version%202.100%20feb%202015.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: TEMPERATURE_SOURCE
+  primaryKey: true
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE_UFIX24
+- id: setTemperature
+  name: Set Temperature
+  type: TEMPERATURE_HIGH
+samples:
+- raw: "2023-01-01-00:00:00.000,5,130316,14,255,8,ff,00,01,b2,7b,04,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    instance: 0
+    source: "Outside Temperature"
+    temperature: 293.810
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130316,35,255,8,ff,00,00,00,00,00,ff,ff"  # from nac3-operations.raw
+  expects:
+    sid: ~
+    instance: 0
+    source: "Sea Temperature"
+    temperature: 0.000
+    setTemperature: ~
+- raw: "2023-01-01-00:00:00.000,5,130316,35,255,8,ff,00,00,62,89,04,ff,ff"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    sid: ~
+    instance: 0
+    source: "Sea Temperature"
+    temperature: 297.314
+    setTemperature: ~

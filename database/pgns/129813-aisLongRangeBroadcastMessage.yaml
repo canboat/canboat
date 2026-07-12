@@ -1,0 +1,78 @@
+pgn: 129813
+id: aisLongRangeBroadcastMessage
+description: AIS Long-Range Broadcast Message
+type: Fast
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: Long-range broadcast (AIS message 27). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
+fields:
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: navStatus
+  name: Nav Status
+  type: LOOKUP
+  bits: 4
+  lookup: NAV_STATUS
+- id: positionLatency
+  name: Position Latency
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 1
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: reserved15
+  name: Reserved
+  type: RESERVED
+  bits: 3

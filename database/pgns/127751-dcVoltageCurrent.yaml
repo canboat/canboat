@@ -1,0 +1,27 @@
+pgn: 127751
+id: dcVoltageCurrent
+description: DC Voltage/Current
+type: Fast
+missing:
+- SampleData
+explanation: 'This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a
+  single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter
+  in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission
+  interval is likewise unknown. See github issue #655.'
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: connectionNumber
+  name: Connection Number
+  type: UINT8
+- id: dcVoltage
+  name: DC Voltage
+  type: VOLTAGE_UFIX16_100MV
+- id: dcCurrent
+  name: DC Current
+  type: CURRENT_FIX24_CA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

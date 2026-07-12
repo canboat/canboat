@@ -1,0 +1,5 @@
+name: MARETRON_SOFTWARE_CODE
+kind: pair
+bits: 16
+values:
+  1: Version 1

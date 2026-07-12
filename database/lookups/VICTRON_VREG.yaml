@@ -1,0 +1,508 @@
+name: VICTRON_VREG
+kind: fieldtype
+bits: 16
+values:
+- value: 260
+  name: Group ID
+  type: UINT8
+- value: 261
+  name: Hardware Revision
+  type: UINT8
+- value: 270
+  name: Identify
+  type: UINT8
+- value: 288
+  name: Uptime
+  type: DURATION_UFIX32_S
+- value: 304
+  name: CAN Hardware RX Overflows
+  type: UINT32
+- value: 305
+  name: CAN Software RX Overflows
+  type: UINT32
+- value: 306
+  name: CAN Error Passive Counter
+  type: UINT32
+- value: 307
+  name: CAN Bus Off Counter
+  type: UINT32
+- value: 512
+  name: Device Mode
+  type: UINT8
+- value: 513
+  name: Device State
+  type: UINT8
+- value: 514
+  name: Remote Control Used
+  type: UINT32
+- value: 515
+  name: AC Input Current Limit
+  type: CURRENT_UFIX16_DA
+- value: 516
+  name: AC Active Input
+  type: UINT8
+- value: 528
+  name: AC Input 1 Current Limit
+  type: CURRENT_UFIX16_DA
+- value: 529
+  name: AC Input 1 Current Limit Min
+  type: CURRENT_UFIX16_DA
+- value: 530
+  name: AC Input 1 Current Limit Max
+  type: CURRENT_UFIX16_DA
+- value: 531
+  name: AC Input 1 Current Limit Internal
+  type: CURRENT_UFIX16_DA
+- value: 532
+  name: AC Input 1 Current Limit Remote
+  type: CURRENT_UFIX16_DA
+- value: 544
+  name: AC Input 2 Current Limit
+  type: CURRENT_UFIX16_DA
+- value: 545
+  name: AC Input 2 Current Limit Min
+  type: CURRENT_UFIX16_DA
+- value: 546
+  name: AC Input 2 Current Limit Max
+  type: CURRENT_UFIX16_DA
+- value: 547
+  name: AC Input 2 Current Limit Internal
+  type: CURRENT_UFIX16_DA
+- value: 548
+  name: AC Input 2 Current Limit Remote
+  type: CURRENT_UFIX16_DA
+- value: 768
+  name: Deepest Discharge
+  type: ELECTRIC_CHARGE_FIX32_DAH
+- value: 769
+  name: Last Discharge
+  type: ELECTRIC_CHARGE_FIX32_DAH
+- value: 770
+  name: Average Discharge
+  type: ELECTRIC_CHARGE_FIX32_DAH
+- value: 771
+  name: Charge Cycles
+  type: INT32
+- value: 772
+  name: Full Discharges
+  type: INT32
+- value: 773
+  name: Cumulative Ah Drawn
+  type: ELECTRIC_CHARGE_FIX32_DAH
+- value: 774
+  name: Minimum Voltage
+  type: VOLTAGE_FIX32_10MV
+- value: 775
+  name: Maximum Voltage
+  type: VOLTAGE_FIX32_10MV
+- value: 776
+  name: Seconds Since Last Full Charge
+  type: INT32
+- value: 777
+  name: Automatic Synchronizations
+  type: INT32
+- value: 778
+  name: Low Voltage Alarms
+  type: INT32
+- value: 779
+  name: High Voltage Alarms
+  type: INT32
+- value: 780
+  name: Low Auxiliary Voltage Alarms
+  type: INT32
+- value: 781
+  name: High Auxiliary Voltage Alarms
+  type: INT32
+- value: 782
+  name: Minimum Auxiliary Voltage
+  type: VOLTAGE_FIX32_10MV
+- value: 783
+  name: Maximum Auxiliary Voltage
+  type: VOLTAGE_FIX32_10MV
+- value: 784
+  name: Discharged Energy
+  type: ENERGY_UFIX32_CKWH
+- value: 785
+  name: Charged Energy
+  type: ENERGY_UFIX32_CKWH
+- value: 800
+  name: Low Voltage Alarm Set
+  type: VOLTAGE_FIX16_10MV
+- value: 801
+  name: Low Voltage Alarm Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 802
+  name: High Voltage Alarm Set
+  type: VOLTAGE_FIX16_10MV
+- value: 803
+  name: High Voltage Alarm Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 804
+  name: Low Auxiliary Voltage Alarm Set
+  type: VOLTAGE_FIX16_10MV
+- value: 805
+  name: Low Auxiliary Voltage Alarm Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 806
+  name: High Auxiliary Voltage Alarm Set
+  type: VOLTAGE_FIX16_10MV
+- value: 807
+  name: High Auxiliary Voltage Alarm Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 808
+  name: Low State of Charge Alarm Set
+  type: PERCENTAGE_UFIX16_D
+- value: 809
+  name: Low State of Charge Alarm Clear
+  type: PERCENTAGE_UFIX16_D
+- value: 810
+  name: Low Battery Temperature Alarm Set
+  type: TEMPERATURE
+- value: 811
+  name: Low Battery Temperature Alarm Clear
+  type: TEMPERATURE
+- value: 812
+  name: High Battery Temperature Alarm Set
+  type: TEMPERATURE
+- value: 813
+  name: High Battery Temperature Alarm Clear
+  type: TEMPERATURE
+- value: 814
+  name: High Internal Temperature Alarm Set
+  type: TEMPERATURE
+- value: 815
+  name: High Internal Temperature Alarm Clear
+  type: TEMPERATURE
+- value: 816
+  name: Fuse Blown Alarm
+  type: UINT8
+- value: 817
+  name: Mid-point Voltage Alarm Set
+  type: PERCENTAGE_UFIX16_D
+- value: 818
+  name: Mid-point Voltage Alarm Clear
+  type: PERCENTAGE_UFIX16_D
+- value: 845
+  name: Relay Invert
+  type: UINT8
+- value: 846
+  name: Relay Control
+  type: UINT8
+- value: 847
+  name: Relay Mode
+  type: UINT8
+- value: 848
+  name: Low Voltage Relay Set
+  type: VOLTAGE_FIX16_10MV
+- value: 849
+  name: Low Voltage Relay Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 850
+  name: High Voltage Relay Set
+  type: VOLTAGE_FIX16_10MV
+- value: 851
+  name: High Voltage Relay Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 852
+  name: Low Auxiliary Voltage Relay Set
+  type: VOLTAGE_FIX16_10MV
+- value: 853
+  name: Low Auxiliary Voltage Relay Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 854
+  name: High Auxiliary Voltage Relay Set
+  type: VOLTAGE_FIX16_10MV
+- value: 855
+  name: High Auxiliary Voltage Relay Clear
+  type: VOLTAGE_FIX16_10MV
+- value: 856
+  name: Low State of Charge Relay Set
+  type: PERCENTAGE_UFIX16_D
+- value: 857
+  name: Low State of Charge Relay Clear
+  type: PERCENTAGE_UFIX16_D
+- value: 858
+  name: Low Battery Temperature Relay Set
+  type: TEMPERATURE
+- value: 859
+  name: Low Battery Temperature Relay Clear
+  type: TEMPERATURE
+- value: 860
+  name: High Battery Temperature Relay Set
+  type: TEMPERATURE
+- value: 861
+  name: High Battery Temperature Relay Clear
+  type: TEMPERATURE
+- value: 862
+  name: High Internal Temperature Relay Set
+  type: TEMPERATURE
+- value: 863
+  name: High Internal Temperature Relay Clear
+  type: TEMPERATURE
+- value: 864
+  name: Fuse Blown Relay
+  type: UINT8
+- value: 865
+  name: Mid-point Voltage Relay Set
+  type: PERCENTAGE_UFIX16_D
+- value: 866
+  name: Mid-point Voltage Relay Clear
+  type: PERCENTAGE_UFIX16_D
+- value: 880
+  name: BMS Flags
+  type: UINT32
+- value: 881
+  name: BMS State
+  type: UINT8
+- value: 882
+  name: BMS Error Flags
+  type: UINT32
+- value: 898
+  name: Mid-point Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 899
+  name: Mid-point Voltage Deviation
+  type: PERCENTAGE_FIX16_D
+- value: 4094
+  name: Time To Go
+  type: DURATION_UFIX16_MIN
+- value: 4095
+  name: State of Charge
+  type: PERCENTAGE_UFIX16_C
+- value: 4096
+  name: Battery Capacity
+  type: ELECTRIC_CHARGE_UFIX16_AH
+- value: 4097
+  name: Charged Voltage
+  type: VOLTAGE_UFIX16_100MV
+- value: 4098
+  name: Charged Current
+  type: PERCENTAGE_UFIX16_D
+- value: 4099
+  name: Charged Detection Time
+  type: DURATION_UFIX16_MIN
+- value: 4100
+  name: Charge Efficiency
+  type: UINT16
+- value: 4101
+  name: Peukert Coefficient
+  type: UINT16
+- value: 4102
+  name: Current Threshold
+  type: CURRENT_UFIX16_CA
+- value: 4103
+  name: Average Time To Go
+  type: DURATION_UFIX16_MIN
+- value: 4104
+  name: Low State of Charge Set
+  type: PERCENTAGE_UFIX16_D
+- value: 4105
+  name: Low State of Charge Clear
+  type: PERCENTAGE_UFIX16_D
+- value: 4106
+  name: Relay Minimum Enabled Time
+  type: DURATION_UFIX16_MIN
+- value: 4107
+  name: Relay Disable Delay
+  type: DURATION_UFIX16_MIN
+- value: 4148
+  name: Current Offset
+  type: UINT16
+- value: 8194
+  name: DC Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 8220
+  name: DC Current
+  type: CURRENT_FIX32_MA
+- value: 60781
+  name: Channel 3 Voltage
+  type: VOLTAGE_FIX16_10MV
+- value: 60782
+  name: Channel 3 Power
+  type: POWER_FIX16
+- value: 60783
+  name: Channel 3 Current
+  type: CURRENT_FIX16_DA
+- value: 60797
+  name: Channel 2 Voltage
+  type: VOLTAGE_FIX16_10MV
+- value: 60798
+  name: Channel 2 Power
+  type: POWER_FIX16
+- value: 60799
+  name: Channel 2 Current
+  type: CURRENT_FIX16_DA
+- value: 60813
+  name: Channel 1 Voltage
+  type: VOLTAGE_FIX16_10MV
+- value: 60814
+  name: Channel 1 Power
+  type: POWER_FIX16
+- value: 60815
+  name: Channel 1 Current
+  type: CURRENT_FIX16_DA
+- value: 60831
+  name: CAN Select
+  type: UINT8
+- value: 60840
+  name: Load Output Status
+  type: UINT8
+- value: 60841
+  name: Load Output Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 60842
+  name: Load Output Power
+  type: POWER_UFIX16_CW
+- value: 60843
+  name: Load Output Control Mode
+  type: UINT8
+- value: 60844
+  name: Load Output Offset Voltage
+  type: UINT8
+- value: 60845
+  name: Load Output Actual Current
+  type: CURRENT_UFIX16_DA
+- value: 60846
+  name: Load Output Current Limit
+  type: CURRENT_UFIX16_DA
+- value: 60847
+  name: Load Output Maximum Current
+  type: CURRENT_UFIX16_DA
+- value: 60857
+  name: Input Voltage Maximum Clear
+  type: VOLTAGE_UFIX16_10MV
+- value: 60858
+  name: Input Voltage Maximum Set
+  type: VOLTAGE_UFIX16_10MV
+- value: 60859
+  name: Input Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 60860
+  name: Input Power
+  type: POWER_UFIX32_CW
+- value: 60861
+  name: Input Current
+  type: CURRENT_UFIX16_DA
+- value: 60863
+  name: Input Maximum Current
+  type: CURRENT_UFIX16_DA
+- value: 60880
+  name: Charger Maximum Power Yesterday
+  type: POWER_UINT32
+- value: 60881
+  name: Charger Yield Yesterday
+  type: ENERGY_UFIX32_CKWH
+- value: 60882
+  name: Charger Maximum Power Today
+  type: POWER_UINT32
+- value: 60883
+  name: Charger Yield Today
+  type: ENERGY_UFIX32_CKWH
+- value: 60884
+  name: Charger Additional State Information
+  type: UINT8
+- value: 60885
+  name: Charger Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 60886
+  name: Charger Power
+  type: POWER_UFIX16_CW
+- value: 60887
+  name: Charger Current
+  type: CURRENT_UFIX16_DA
+- value: 60888
+  name: Charger Relay State
+  type: UINT8
+- value: 60889
+  name: Charger Relay Mode
+  type: UINT8
+- value: 60890
+  name: Charger Error Code
+  type: UINT8
+- value: 60891
+  name: Charger Internal Temperature
+  type: INT16
+- value: 60892
+  name: Charger User Yield
+  type: ENERGY_UFIX32_CKWH
+- value: 60893
+  name: Charger System Yield
+  type: ENERGY_UFIX32_CKWH
+- value: 60894
+  name: Charger Number of Physical Outputs
+  type: UINT8
+- value: 60895
+  name: Charger Maximum Current
+  type: CURRENT_UFIX16_DA
+- value: 60904
+  name: Battery BMS Present
+  type: UINT8
+- value: 60905
+  name: Battery Power Supply Voltage
+  type: VOLTAGE_UFIX16_10MV
+- value: 60906
+  name: Battery Voltage Setting
+  type: UINT8
+- value: 60907
+  name: Battery Overcharge Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60908
+  name: Battery Temperature
+  type: TEMPERATURE
+- value: 60909
+  name: Battery Intelligent Mode
+  type: UINT8
+- value: 60910
+  name: Battery Storage Mode
+  type: UINT8
+- value: 60911
+  name: Battery Voltage Selection
+  type: UINT8
+- value: 60912
+  name: Battery Maximum Current
+  type: CURRENT_UFIX16_DA
+- value: 60913
+  name: Battery Type
+  type: UINT8
+- value: 60914
+  name: Battery Temperature Compensation
+  type: INT16
+- value: 60915
+  name: Battery Discharge Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60916
+  name: Battery Equalisation Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60917
+  name: Battery Storage Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60918
+  name: Battery Float Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60919
+  name: Battery Absorption Voltage Level
+  type: VOLTAGE_UFIX16_10MV
+- value: 60920
+  name: Battery Repeated Absorption Time Interval
+  type: DURATION_UFIX16_CDAY
+- value: 60921
+  name: Battery Repeated Absorption Time Duration
+  type: DURATION_UFIX16_CHOUR
+- value: 60922
+  name: Battery Float Time Limit
+  type: DURATION_UFIX16_CHOUR
+- value: 60923
+  name: Battery Absorption Time Limit
+  type: DURATION_UFIX16_CHOUR
+- value: 60924
+  name: Battery Bulk Time Limit
+  type: DURATION_UFIX16_CHOUR
+- value: 60925
+  name: Battery Automatic Equalisation Mode
+  type: UINT8
+- value: 60926
+  name: Battery Adaptive Mode
+  type: UINT8
+- value: 60927
+  name: Battery Safe Mode
+  type: UINT8

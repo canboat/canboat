@@ -1,0 +1,65 @@
+pgn: 126986
+id: alertConfiguration
+description: Alert Configuration
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: alertType
+  name: Alert Type
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TYPE
+- id: alertCategory
+  name: Alert Category
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_CATEGORY
+- id: alertSystem
+  name: Alert System
+  type: UINT8
+- id: alertSubSystem
+  name: Alert Sub-System
+  type: UINT8
+- id: alertId
+  name: Alert ID
+  type: UINT16
+- id: dataSourceNetworkIdName
+  name: Data Source Network ID NAME
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: dataSourceInstance
+  name: Data Source Instance
+  type: UINT8
+  primaryKey: true
+- id: dataSourceIndexSource
+  name: Data Source Index-Source
+  type: UINT8
+- id: alertOccurrenceNumber
+  name: Alert Occurrence Number
+  type: UINT8
+- id: alertControl
+  name: Alert Control
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: userDefinedAlertAssignment
+  name: User Defined Alert Assignment
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: reactivationPeriod
+  name: Reactivation Period
+  type: UINT8
+- id: temporarySilencePeriod
+  name: Temporary Silence Period
+  type: UINT8
+- id: escalationPeriod
+  name: Escalation Period
+  type: UINT8
+notes: Unknown field lengths past this point, except Alert Control is likely 2 bits

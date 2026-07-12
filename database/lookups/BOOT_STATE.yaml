@@ -1,0 +1,7 @@
+name: BOOT_STATE
+kind: pair
+bits: 3
+values:
+  0: in Startup Monitor
+  1: running Bootloader
+  2: running Application

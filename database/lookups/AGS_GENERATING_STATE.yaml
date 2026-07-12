@@ -1,0 +1,16 @@
+name: AGS_GENERATING_STATE
+kind: pair
+bits: 4
+values:
+  0: Preheating
+  1: Start delay
+  2: Cranking
+  3: Starter cooling
+  4: Warming up
+  5: Cooling down
+  6: Spinning up
+  7: Shutdown bypass
+  8: Stopping
+  9: Running
+  10: Stopped
+  11: Crank delaty

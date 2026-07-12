@@ -1,0 +1,63 @@
+pgn: 65341
+id: simnetAutopilotAngle
+description: 'Simnet: Autopilot Angle'
+type: Single
+priority: 6
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_AP_MODE
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: angle
+  name: Angle
+  type: ANGLE_UFIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65341,3,255,8,41,9f,ff,ff,02,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "Heading"
+    angle: ~
+- raw: "2023-01-01-00:00:00.000,6,65341,2,255,8,41,9f,ff,ff,0b,ff,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "No Drift"
+    angle: 0.0000
+- raw: "2023-01-01-00:00:00.000,6,65341,17,255,8,41,9f,ff,ff,03,ff,0a,5c"  # from simrad_event_timer2.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    mode: "Wind"
+    angle: 2.3562

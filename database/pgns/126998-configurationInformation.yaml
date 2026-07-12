@@ -1,0 +1,33 @@
+pgn: 126998
+id: configurationInformation
+description: Configuration Information
+type: Fast
+priority: 6
+interval: irregular
+explanation: Free-form alphanumeric fields describing the installation (e.g., starboard engine room location) of the device and installation notes (e.g., calibration data).
+fields:
+- id: installationDescription1
+  name: 'Installation Description #1'
+  type: STRING_LAU
+- id: installationDescription2
+  name: 'Installation Description #2'
+  type: STRING_LAU
+- id: manufacturerInformation
+  name: Manufacturer Information
+  type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,6,126998,35,255,42,02,01,02,01,26,01,41,69,72,6d,61,72,20,31,2d,36,30,33,2d,36,37,33,2d,39,35,37,30,20,77,77,77,2e,61,69,72,6d,61,72,2e,63,6f,6d"  # from merrimac-2022.raw
+  expects:
+    installationDescription1: ""
+    installationDescription2: ""
+    manufacturerInformation: "Airmar 1-603-673-9570 www.airmar.com"
+- raw: "2023-01-01-00:00:00.000,6,126998,3,255,102,22,01,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,22,01,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,22,01,41,75,74,6f,6e,6e,69,63,20,52,65,73,65,61,72,63,68,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20"  # from strings.raw
+  expects:
+    installationDescription1: "                                "
+    installationDescription2: "                                "
+    manufacturerInformation: "Autonnic Research               "
+- raw: "2023-01-01-00:00:00.000,6,126998,13,255,82,28,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,28,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,02,01"  # from h5000_pilot_126998.raw
+  expects:
+    installationDescription1: "��������������������������������������"
+    installationDescription2: "��������������������������������������"
+    manufacturerInformation: ""

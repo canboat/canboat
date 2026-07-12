@@ -1,0 +1,48 @@
+pgn: 127505
+id: fluidLevel
+description: Fluid Level
+type: Single
+priority: 6
+interval: 2500
+url: https://web.archive.org/web/20060511065306/http://www.maretron.com/support/manuals/TLA100UM_1.2.pdf
+fields:
+- id: instance
+  name: Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+  primaryKey: true
+- id: type
+  name: Type
+  type: LOOKUP
+  bits: 4
+  lookup: TANK_TYPE
+- id: level
+  name: Level
+  type: PERCENTAGE_FIX16
+- id: capacity
+  name: Capacity
+  type: VOLUME_UFIX32_DL
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+notes: Observed from EP65R
+samples:
+- raw: "2023-01-01-00:00:00.000,6,127505,114,255,8,50,ff,7f,be,11,00,00,ff"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 0
+    type: "Black water"
+    level: ~
+    capacity: 454.2
+- raw: "2023-01-01-00:00:00.000,6,127505,16,255,8,00,40,5f,ff,ff,ff,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    instance: 0
+    type: "Fuel"
+    level: 97.536
+    capacity: ~
+- raw: "2023-01-01-00:00:00.000,6,127505,5,255,8,0c,00,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    instance: 12
+    type: "Fuel"
+    level: 0.000
+    capacity: 0.0

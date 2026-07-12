@@ -1,0 +1,16 @@
+pgn: 65262
+id: engineTemp1
+description: 'Engine Temp #1'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: engineCoolantTemp
+  name: Engine Coolant Temp
+  type: TEMPERATURE_UINT8_OFFSET
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 56

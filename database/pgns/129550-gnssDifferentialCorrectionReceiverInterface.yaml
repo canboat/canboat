@@ -1,0 +1,38 @@
+pgn: 129550
+id: gnssDifferentialCorrectionReceiverInterface
+description: GNSS Differential Correction Receiver Interface
+type: Single
+priority: 6
+interval: irregular
+fields:
+- id: channel
+  name: Channel
+  type: UINT8
+- id: frequency
+  name: Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: serialInterfaceBitRate
+  name: Serial Interface Bit Rate
+  type: LOOKUP
+  bits: 5
+  lookup: SERIAL_BIT_RATE
+- id: serialInterfaceDetectionMode
+  name: Serial Interface Detection Mode
+  type: LOOKUP
+  bits: 3
+  lookup: SERIAL_DETECTION_MODE
+- id: differentialSource
+  name: Differential Source
+  type: LOOKUP
+  bits: 4
+  lookup: DIFFERENTIAL_SOURCE
+- id: differentialOperationMode
+  name: Differential Operation Mode
+  type: LOOKUP
+  bits: 4
+  lookup: DIFFERENTIAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

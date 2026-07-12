@@ -1,0 +1,6 @@
+name: SIMNET_TEMPERATURE_UNIT
+kind: pair
+bits: 8
+values:
+  0: Celsius
+  1: Fahrenheit

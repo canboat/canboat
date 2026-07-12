@@ -1,0 +1,67 @@
+pgn: 126720
+id: seatalk1DisplayColor
+description: 'Seatalk1: Display Color'
+type: Fast
+variantOrder: 24
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Display
+  match: 140
+  lookup: SEATALK_MESSAGE_ID
+  primaryKey: true
+- id: command1
+  name: command1
+  type: LOOKUP
+  bits: 8
+  description: Settings
+  match: 12
+  lookup: SEATALK_COMMAND
+  primaryKey: true
+- id: group
+  name: Group
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_NETWORK_GROUP
+- id: unknown1
+  name: Unknown 1
+  type: BINARY
+  bits: 8
+- id: command
+  name: Command
+  type: UINT8
+  description: Color
+  match: 1
+- id: color
+  name: Color
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_DISPLAY_COLOR
+- id: unknown2
+  name: Unknown 2
+  type: BINARY
+  bits: 8

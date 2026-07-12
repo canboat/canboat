@@ -1,0 +1,1682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>keel — CANboat PGN editor</title>
+<style>
+  :root {
+    --bg: #ffffff; --fg: #1a1a1a; --muted: #667; --line: #d8dce2;
+    --panel: #f5f7fa; --accent: #0a6cbd; --ok: #1a7f37; --err: #c62828;
+    --warn: #9a6700; --const: #dbe9f6; --unset: #eceff1; --vary: #e6f4e6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #16181d; --fg: #e6e8eb; --muted: #99a; --line: #33383f;
+      --panel: #1e2127; --accent: #58a6ff; --ok: #4caf50; --err: #ef5350;
+      --warn: #e3b341; --const: #1d3a5f; --unset: #2a2e35; --vary: #1e3d1e;
+    }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--fg);
+         display: grid; grid-template-columns: var(--sidebar-w, 280px) 1fr; height: 100vh; }
+  #sidebar { border-right: 1px solid var(--line); background: var(--panel); display: flex;
+             flex-direction: column; overflow: hidden; }
+  #sidebar header { padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  #sidebar h1 { font-size: 15px; margin: 0 0 8px; }
+  #search { width: 100%; padding: 5px 8px; border: 1px solid var(--line); border-radius: 5px;
+            background: var(--bg); color: var(--fg); }
+  #pgnlist { overflow-y: auto; flex: 1; }
+  #pgnlist div { padding: 4px 12px; cursor: pointer; white-space: nowrap; overflow: hidden;
+                 text-overflow: ellipsis; }
+  #pgnlist div:hover { background: var(--const); }
+  #pgnlist b { font-variant-numeric: tabular-nums; margin-right: 6px; }
+  #main { overflow-y: auto; padding: 16px 20px 60px; }
+  /* Drag handle sitting on the sidebar/main boundary; left tracks --sidebar-w
+     so it stays glued to the grid column without any overflow entanglement. */
+  #resizer { position: fixed; top: 0; left: var(--sidebar-w, 280px); width: 7px; height: 100%;
+             margin-left: -3px; cursor: col-resize; z-index: 50; }
+  #resizer::before { content: ""; position: absolute; left: 3px; top: 0; width: 1px; height: 100%; }
+  #resizer:hover::before, #resizer.dragging::before { width: 3px; left: 2px; background: var(--accent); }
+  h2 { font-size: 16px; margin: 18px 0 8px; }
+  .step { color: var(--accent); font-weight: 600; margin-right: 6px; }
+  textarea { width: 100%; font: 12px/1.4 ui-monospace, monospace; background: var(--bg);
+             color: var(--fg); border: 1px solid var(--line); border-radius: 6px; padding: 8px; }
+  button { padding: 6px 14px; border: 1px solid var(--line); border-radius: 6px; cursor: pointer;
+           background: var(--panel); color: var(--fg); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; }
+  input, select { padding: 4px 6px; border: 1px solid var(--line); border-radius: 5px;
+                  background: var(--bg); color: var(--fg); }
+  table { border-collapse: collapse; margin: 8px 0; }
+  th, td { border: 1px solid var(--line); padding: 3px 7px; font-size: 13px; }
+  th { background: var(--panel); font-weight: 600; text-align: left; }
+  #grid td { font: 12px ui-monospace, monospace; text-align: center; padding: 2px 5px; }
+  #grid td.const { background: var(--const); }
+  #grid td.unset { background: var(--unset); color: var(--muted); }
+  #grid td.vary { background: var(--vary); }
+  #grid tr.fieldrow td { font-size: 10px; color: var(--muted); border-top: 2px solid var(--accent); }
+  #fields input, #fields select { width: 100%; min-width: 60px; }
+  #fields td { padding: 2px 4px; }
+  .violations div { padding: 2px 0; font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .violations .err { color: var(--err); }
+  .violations .warn { color: var(--warn); }
+  .flash { padding: 8px 12px; border-radius: 6px; margin: 10px 0; display: none; }
+  .flash.ok { background: var(--vary); color: var(--ok); display: block; }
+  .flash.bad { background: var(--unset); color: var(--err); display: block; white-space: pre-wrap;
+               font-family: ui-monospace, monospace; font-size: 12.5px; }
+  .hint { color: var(--muted); font-size: 12.5px; }
+  .row { display: flex; gap: 10px; flex-wrap: wrap; align-items: end; margin: 6px 0; }
+  .row label { display: flex; flex-direction: column; font-size: 12px; color: var(--muted); gap: 2px; }
+  #decodeTable td.unavail { color: var(--muted); font-style: italic; }
+  #decodeTable td.unnamed { background: rgba(230,160,30,.18); }
+  #decodeTable th .addname { margin-left: 6px; font-size: 11px; padding: 0 5px;
+                             border: 1px solid rgba(230,160,30,.7); border-radius: 4px;
+                             color: var(--accent); cursor: pointer; white-space: nowrap; }
+  .scroll { overflow-x: auto; }
+  #lkOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+               align-items: flex-start; justify-content: center; padding-top: 6vh; z-index: 10; }
+  #lkModal { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+             width: min(560px, 92vw); max-height: 82vh; display: flex; flex-direction: column; }
+  #lkModal header { padding: 10px 14px; border-bottom: 1px solid var(--line);
+                    display: flex; justify-content: space-between; align-items: center; }
+  #lkModal h3 { margin: 0; font-size: 15px; }
+  #lkBody { padding: 10px 14px; overflow-y: auto; }
+  #lkBody input { width: 100%; }
+  #lkModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
+                    display: flex; gap: 10px; justify-content: flex-end; }
+  .lkbtn { padding: 1px 7px; font-size: 12px; margin-left: 3px; }
+  #fldOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+               align-items: flex-start; justify-content: center; padding-top: 5vh; z-index: 15; }
+  #fldModal { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+              width: min(620px, 94vw); max-height: 90vh; display: flex; flex-direction: column; }
+  #fldModal header { padding: 10px 14px; border-bottom: 1px solid var(--line);
+                     display: flex; justify-content: space-between; align-items: center; }
+  #fldModal h3 { margin: 0; font-size: 15px; }
+  #fldBody { padding: 8px 14px; overflow-y: auto; }
+  #fldBody .frow { display: grid; grid-template-columns: 150px 1fr; gap: 10px;
+                   align-items: center; margin: 5px 0; }
+  #fldBody .frow > label { color: var(--muted); font-size: 12.5px; text-align: right; }
+  #fldBody input[type=text], #fldBody input[type=number], #fldBody textarea { width: 100%; }
+  #fldBody textarea { font: 12px/1.4 ui-monospace, monospace; resize: vertical; }
+  #fldBody input[readonly] { opacity: .55; cursor: not-allowed; }
+  #fldBody details { margin: 8px 0 2px; }
+  #fldBody details summary { cursor: pointer; color: var(--warn); font-size: 12.5px; }
+  #fldHelp { padding: 9px 14px; border-top: 1px solid var(--line); font-size: 12.5px;
+             line-height: 1.4; color: var(--muted); min-height: 3.4em; }
+  #fldHelp.warn { color: var(--warn); }
+  #fldModal footer { padding: 10px 14px; border-top: 1px solid var(--line);
+                     display: flex; gap: 10px; justify-content: flex-end; }
+  #dlgOverlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none;
+                align-items: flex-start; justify-content: center; padding-top: 12vh; z-index: 30; }
+  #dlg { background: var(--bg); border: 1px solid var(--line); border-radius: 10px;
+         width: min(520px, 92vw); padding: 16px 18px; }
+  #dlg h3 { margin: 0 0 8px; font-size: 15px; }
+  #dlgMsg { white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: 12.5px;
+            max-height: 40vh; overflow-y: auto; margin-bottom: 12px; }
+  #dlgBtns { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+  #typeCombo { position: fixed; z-index: 20; background: var(--bg); border: 1px solid var(--line);
+               border-radius: 8px; box-shadow: 0 6px 24px rgba(0,0,0,.25); max-height: 340px;
+               overflow-y: auto; width: min(520px, 90vw); display: none; }
+  #typeCombo div { padding: 5px 10px; cursor: pointer; border-bottom: 1px solid var(--line); }
+  #typeCombo div:hover, #typeCombo div.sel { background: var(--const); }
+  #typeCombo b { font-family: ui-monospace, monospace; font-size: 12.5px; }
+  #typeCombo .meta { color: var(--accent); font-size: 11.5px; margin-left: 8px; }
+  #typeCombo small { color: var(--muted); display: block; }
+</style>
+</head>
+<body>
+<div id="sidebar">
+  <header>
+    <h1>keel — CANboat PGN database</h1>
+    <input id="search" placeholder="filter PGNs &amp; enumerations…">
+    <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
+      <button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button>
+      <button onclick="openNewLookup()">＋ New Lookup</button>
+    </div>
+  </header>
+  <div id="pgnlist"></div>
+</div>
+<div id="resizer" title="Drag to resize the sidebar"></div>
+<div id="main">
+  <div id="flash" class="flash"></div>
+
+  <section id="stepSamples">
+    <h2><span class="step">1</span>Evidence — paste sample records</h2>
+    <p class="hint">canboat PLAIN (<code>ts,prio,pgn,src,dst,len,hh,…</code>) or candump
+      (<code>can0 18EAFF00#…</code>). One or more, ideally several of the same PGN.
+      Skip only for documentation-derived definitions.</p>
+    <textarea id="sampleInput" rows="6" spellcheck="false"></textarea>
+    <div class="row">
+      <button class="primary" onclick="analyze()">Analyze</button>
+      <span id="analyzeStatus" class="hint"></span>
+    </div>
+    <div id="messages"></div>
+  </section>
+
+  <section id="stepDefine" style="display:none">
+    <h2><span class="step">2</span>Definition</h2>
+    <div class="row">
+      <label>PGN <input id="m_pgn" size="8" oninput="onMetaEdit()"></label>
+      <label>Id <input id="m_id" size="26" oninput="onMetaEdit()"></label>
+      <label>Description <input id="m_desc" size="34" oninput="onMetaEdit()"></label>
+      <label>Type <select id="m_type" onchange="onMetaEdit()"><option>Single</option><option>Fast</option><option>ISO</option></select></label>
+      <label>Priority <input id="m_prio" size="3" oninput="onMetaEdit()"></label>
+    </div>
+
+    <h2>Evidence grid</h2>
+    <p class="hint">Samples stacked byte by byte — <span style="background:var(--const)">constant</span>
+      bytes suggest match/reserved fields, <span style="background:var(--unset)">0xFF</span> is unclaimed,
+      <span style="background:var(--vary)">varying</span> is data. Field spans are marked under the grid.</p>
+    <div class="scroll"><table id="grid"></table></div>
+
+    <h2>Fields</h2>
+    <div class="scroll">
+    <table id="fields">
+      <thead><tr><th>id</th><th>name</th><th>type</th><th>bits</th><th>lookup</th><th>match</th>
+        <th>PK</th><th></th></tr></thead>
+      <tbody></tbody>
+    </table>
+    </div>
+    <div class="row">
+      <button onclick="addField()">＋ field</button>
+      <button onclick="addField('reserved')">＋ reserved</button>
+      <button id="addRepBtn" onclick="addRepeatingSet()">＋ repeating field set</button>
+      <span class="hint" id="bitBudget"></span>
+    </div>
+
+    <h2>Live decode</h2>
+    <div class="scroll"><table id="decodeTable"></table></div>
+    <div class="violations" id="violations"></div>
+  </section>
+
+  <section id="stepSave" style="display:none">
+    <h2><span class="step">3</span>YAML &amp; save</h2>
+    <div class="row">
+      <button onclick="adoptExpectations()">Adopt current decodes as expectations</button>
+      <label><input type="checkbox" id="citeSamples" checked style="width:auto"> cite samples in notes</label>
+    </div>
+    <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; syncSavePath(); scheduleRefresh()"></textarea>
+    <div class="row">
+      <span class="hint" id="savePath"></span>
+      <button onclick="save(true)" title="Run keel check but write nothing — try things out safely">Validate</button>
+      <button class="primary" onclick="save(false)" title="Run keel check, then write the file only if it passes">Validate and Save</button>
+    </div>
+  </section>
+</div>
+
+<div id="dlgOverlay">
+  <div id="dlg">
+    <h3 id="dlgTitle"></h3>
+    <div id="dlgMsg"></div>
+    <div id="dlgBtns"></div>
+  </div>
+</div>
+<div id="typeCombo"></div>
+<div id="lkOverlay" onclick="if(event.target===this) closeLookup()">
+  <div id="lkModal">
+    <header>
+      <h3 id="lkTitle">lookup</h3>
+      <button onclick="closeLookup()">✕</button>
+    </header>
+    <div id="lkBody">
+      <div class="row" id="lkNameRow" style="display:none">
+        <label>name <input id="lk_name" size="28" placeholder="UPPER_SNAKE_CASE"
+               oninput="this.value=this.value.toUpperCase()"></label>
+      </div>
+      <div class="row">
+        <label>kind <select id="lk_kind" onchange="lkKindChanged()">
+          <option value="pair">pair (value → name)</option>
+          <option value="bit">bit (bit → name)</option>
+          <option value="triplet">triplet (v1, v2 → name)</option>
+          <option value="fieldtype">fieldtype (value → name + datatype)</option>
+        </select></label>
+        <label>bits <input id="lk_bits" size="4"></label>
+        <span class="hint" id="lkHint"></span>
+      </div>
+      <p class="hint" style="margin:2px 0">Values are the decimal number on the wire
+        (a <code>0x…</code> prefix is also accepted). For a <b>bit</b> enumeration the
+        value is the bit position (0, 1, 2, …), not a mask.</p>
+      <table id="lkValues"><thead id="lkHead"></thead><tbody></tbody></table>
+      <button id="lkAddBtn" onclick="lkAddRow({})">＋ value</button>
+    </div>
+    <footer>
+      <span class="hint" id="lkFile"></span>
+      <button class="primary" id="lkSave" onclick="saveLookup()">Save lookup</button>
+    </footer>
+  </div>
+</div>
+
+<!-- One-field editor: roomy editing of every attribute; the footer explains
+     whichever attribute has focus (copy lives in the FIELD_HELP block). -->
+<div id="fldOverlay" onclick="if(event.target===this) closeFieldEditor()">
+  <div id="fldModal">
+    <header><h3 id="fldTitle">Edit field</h3><button onclick="closeFieldEditor()">✕</button></header>
+    <div id="fldBody">
+      <div class="frow"><label>id</label><input type="text" id="fe_id" data-help="id"></div>
+      <div class="frow"><label>name</label><input type="text" id="fe_name" data-help="name"></div>
+      <div class="frow"><label>type</label><input type="text" id="fe_type" list="dl_ft" data-help="type"></div>
+      <div class="frow"><label>bits</label><input type="number" id="fe_bits" data-help="bits"></div>
+      <div class="frow"><label>signed</label><input type="text" id="fe_signed" data-help="signed" readonly></div>
+      <div class="frow"><label>description</label><textarea id="fe_description" rows="2" data-help="description"></textarea></div>
+      <div class="frow"><label>match</label><input type="text" id="fe_match" list="dl_matchvals" data-help="match"></div>
+      <div class="frow"><label>lookup</label><input type="text" id="fe_lookup" list="dl_lookups" data-help="lookup"></div>
+      <div class="frow"><label>unit</label><input type="text" id="fe_unit" data-help="unit"></div>
+      <div class="frow"><label>resolution</label><input type="number" id="fe_resolution" step="any" data-help="resolution"></div>
+      <div class="frow"><label>offset</label><input type="number" id="fe_offset" data-help="offset"></div>
+      <div class="frow"><label>note</label><textarea id="fe_note" rows="2" data-help="note"></textarea></div>
+      <div class="frow"><label>primaryKey</label><input type="checkbox" id="fe_primaryKey" data-help="primaryKey" style="width:auto"></div>
+      <details>
+        <summary>⚠ Advanced — overrides that change how the field decodes</summary>
+        <div class="frow"><label>specialValues</label><input type="number" id="fe_specialValues" data-help="specialValues"></div>
+        <div class="frow"><label>rangeMin</label><input type="number" id="fe_rangeMin" step="any" data-help="rangeMin"></div>
+        <div class="frow"><label>rangeMax</label><input type="number" id="fe_rangeMax" step="any" data-help="rangeMax"></div>
+        <div class="frow"><label>allowLookupWidthMismatch</label><input type="checkbox" id="fe_allowLookupWidthMismatch" data-help="allowLookupWidthMismatch" style="width:auto"></div>
+      </details>
+    </div>
+    <datalist id="dl_matchvals"></datalist>
+    <div id="fldHelp">Focus an attribute to see what it does.</div>
+    <footer>
+      <button onclick="closeFieldEditor()">Cancel</button>
+      <button class="primary" onclick="applyFieldEditor()">Apply</button>
+    </footer>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+// ===========================================================================
+// FIELD_HELP — plain-language explanation of every editable field attribute.
+// This is the single place to find, edit and improve that copy; the one-field
+// editor renders `label`, and its footer shows `help` for whichever attribute
+// has focus. `warn: true` flags an attribute the footer marks with a ⚠ and
+// keeps in the collapsed "Advanced" section. Keep it accurate — this is the
+// authoritative in-app documentation for what each attribute does.
+// ===========================================================================
+const FIELD_HELP = {
+  id: { label: "id",
+    help: "Stable machine identifier (camelCase). Frozen once released — external " +
+          "consumers key on it, so renaming is a breaking change." },
+  name: { label: "name",
+    help: "Human-readable field name shown in decoded output." },
+  type: { label: "type",
+    help: "The fieldtype. A concrete type (UINT16, INT16, UFIX16, …) fixes the bit " +
+          "width, sign and resolution — those are taken as-is and are NOT overridable. " +
+          "For a custom field start from a base type that fixes none of them: NUMBER, " +
+          "INTEGER (signed) or UNSIGNED_INTEGER (unsigned), then set bits / resolution / " +
+          "unit yourself." },
+  bits: { label: "bits",
+    help: "Bit width. Set it only on a type that doesn't already fix one — NUMBER / " +
+          "INTEGER / UNSIGNED_INTEGER, LOOKUP, BINARY, RESERVED, etc. A concrete type " +
+          "like UINT16 already carries its width, so this is read-only there." },
+  signed: { label: "signed", readonly: true,
+    help: "Whether the value is signed. Determined by the type, not a per-field " +
+          "override: choose INT8/16/32 or INTEGER for signed, UINT8/16/32 or " +
+          "UNSIGNED_INTEGER for unsigned. Shown here for reference." },
+  lookup: { label: "lookup",
+    help: "The enumeration this field decodes against (value → name). The reference " +
+          "kind (pair/bit/triplet/fieldtype) is taken automatically from the enum." },
+  match: { label: "match",
+    help: "A fixed value that selects THIS PGN variant — the decoder picks the first " +
+          "variant whose every match field equals the wire. Enter the integer, or (on " +
+          "a lookup field) the enum value's name. Must fit the field's width." },
+  unit: { label: "unit",
+    help: "SI unit override (e.g. Pa, K, rad). Must map to a known physical quantity." },
+  resolution: { label: "resolution",
+    help: "Scale factor from the raw integer to engineering units " +
+          "(value = raw × resolution + offset). A FIX/UFIX type already fixes this, " +
+          "so set it only on a plain NUMBER/INTEGER/UNSIGNED_INTEGER field." },
+  offset: { label: "offset",
+    help: "Added after scaling; shifts the zero point (e.g. a temperature stored in K " +
+          "but reported around 0)." },
+  description: { label: "description",
+    help: "END-USER-oriented text shown as the field's description in the decoded " +
+          "output, and carried downstream to the .h tables, the XML and the JSON. " +
+          "Say what the field means to someone reading the data." },
+  note: { label: "note",
+    help: "DEVELOPER-oriented annotation — implementation notes, observations from the " +
+          "bus, caveats, provenance. Internal to the database ONLY: unlike description " +
+          "it is not carried to any generated output (.h, XML or JSON). Use it for what " +
+          "a future maintainer needs to know, not what an end user sees." },
+  primaryKey: { label: "primaryKey",
+    help: "Marks this field as part of the PGN's primary key: the set of fields that " +
+          "together identify which instance a message is about (an alarm id, an " +
+          "engine/battery instance…). Consumers use it to correlate repeated reports " +
+          "of the same object instead of treating each frame as new." },
+  specialValues: { label: "specialValues", warn: true,
+    help: "Advanced. Overrides the auto-derived count of reserved sentinel values at " +
+          "the top of the range (the ones decoding as Unavailable / Out-of-range / " +
+          "Reserved). Changes how those top values are read for EVERY frame. Emitted " +
+          "as reservedOverride in the C tables. Set only with a documented reason — " +
+          "the default is almost always right." },
+  rangeMin: { label: "rangeMin", warn: true,
+    help: "Advanced. Override the derived minimum of the valid range (normally computed " +
+          "from width, resolution and sign). Use only for a spec-mandated narrower range." },
+  rangeMax: { label: "rangeMax", warn: true,
+    help: "Advanced. Override the derived maximum of the valid range (normally computed " +
+          "from width, resolution and sign). Use only for a spec-mandated narrower range." },
+  allowLookupWidthMismatch: { label: "allowLookupWidthMismatch", warn: true,
+    help: "Explicit opt-in to let this field be a different width than its lookup " +
+          "declares (a shared enum used at 24 and 32 bits, or a YES/NO flag in 1 bit). " +
+          "Without it a mismatch is an error (R08). Don't set it just to silence an " +
+          "accidental mismatch." },
+};
+
+// Build a wizard field row from a server field def, carrying EVERY authored
+// attribute so a fields-block rewrite (regenerateYaml → fieldYaml) can never
+// drop one. Missing attributes normalise to "" (or null for the indirect blob).
+function defToState(f) {
+  return {
+    id: f.id, name: f.name, type: f.type,
+    bits: f.bits ?? "",
+    lookup: f.lookup || f.lookupBits || f.lookupFieldtype || "",
+    lookupIndirect: f.lookupIndirect ?? "",            // triplet enum name
+    lookupIndirectOrder: f.lookupIndirectOrder ?? "",  // triplet order field
+    match: f.match ?? "",
+    unit: f.unit ?? "", resolution: f.resolution ?? "", offset: f.offset ?? "",
+    description: f.description ?? "", note: f.note ?? "",
+    specialValues: f.specialValues ?? "", rangeMin: f.rangeMin ?? "", rangeMax: f.rangeMax ?? "",
+    allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
+    primaryKey: !!f.primaryKey,
+  };
+}
+
+let MODEL = { pgns: [], lookups: [], fieldtypes: [] };
+let samplesHex = [];         // assembled payloads (hex strings)
+let fieldsState = [];        // wizard field rows
+// Repeating field sets: fieldsState indices >= repAt[k] belong to set k+1.
+// A set is always a contiguous block of trailing fields; at most two, the
+// second following the first. -1 = that set is not defined.
+let repAt = [-1, -1];
+let repCountField = ["", ""]; // per set: id of the field holding the repeat count
+let lastDecode = null;       // last /api/decode response
+let yamlDirty = false;       // textarea hand-edited: it wins over the form
+let baseYaml = null;         // existing PGN: full original YAML (fields: block
+                             // gets surgically replaced, everything else kept)
+let currentPgn = null;       // pgn number being edited (existing mode)
+let refreshTimer = null;
+let lkBaseYaml = null;       // original lookup YAML (values: block surgically replaced)
+let lkName = null;
+let lkReadOnly = false;
+
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+
+async function api(path, body, method="POST") {
+  const r = await fetch(path, { method, body });
+  return r.json();
+}
+
+// Rebuild the autocomplete datalists from the current MODEL. Re-callable:
+// updates the existing <datalist> in place so a lookup/fieldtype created
+// this session is immediately offered in field pickers.
+function rebuildDatalists() {
+  const set = (id, items) => {
+    let d = $(id);
+    if (!d) { d = document.createElement("datalist"); d.id = id; document.body.appendChild(d); }
+    d.innerHTML = "";
+    items.forEach(v => { const o = document.createElement("option"); o.value = v; d.appendChild(o); });
+  };
+  set("dl_lookups", MODEL.lookups.map(l => l.name));   // any kind referencable by a field
+  set("dl_ft", MODEL.fieldtypes.map(f => f.name));
+}
+
+// Refresh MODEL and everything derived from it.
+async function refreshModel() {
+  MODEL = await api("/api/model", null, "GET");
+  rebuildDatalists();
+}
+
+async function init() {
+  await refreshModel();
+  renderPgnList("");
+  $("search").addEventListener("input", e => renderPgnList(e.target.value));
+  initSidebarResize();
+  // Field-editor help footer: reflect whichever attribute has focus.
+  $("fldBody").addEventListener("focusin", e => {
+    const h = FIELD_HELP[e.target.getAttribute("data-help")];
+    const el = $("fldHelp");
+    el.textContent = h ? h.help : "Focus an attribute to see what it does.";
+    el.classList.toggle("warn", !!(h && h.warn));
+  });
+  $("fe_type").addEventListener("input", applyTypeConstraints);
+}
+
+// Draggable sidebar width, persisted across sessions. --sidebar-w drives both
+// the body grid column and the fixed resizer handle, so they move together.
+function initSidebarResize() {
+  const KEY = "keelSidebarW";
+  const setW = w => document.body.style.setProperty("--sidebar-w", w + "px");
+  const saved = parseInt(localStorage.getItem(KEY), 10);
+  if (saved) setW(saved);
+  const rz = $("resizer");
+  let dragging = false;
+  const clamp = x => Math.max(180, Math.min(x, window.innerWidth - 320));
+  rz.addEventListener("mousedown", e => {
+    dragging = true;
+    rz.classList.add("dragging");
+    document.body.style.userSelect = "none";
+    e.preventDefault();
+  });
+  window.addEventListener("mousemove", e => { if (dragging) setW(clamp(e.clientX)); });
+  window.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false;
+    rz.classList.remove("dragging");
+    document.body.style.userSelect = "";
+    const w = parseInt(getComputedStyle(document.body).getPropertyValue("--sidebar-w"), 10);
+    if (w) localStorage.setItem(KEY, w);
+  });
+}
+
+function renderPgnList(filter) {
+  const f = filter.toLowerCase();
+  const el = $("pgnlist");
+  el.innerHTML = "";
+  MODEL.pgns
+    .filter(p => !f || String(p.pgn).includes(f) || p.id.toLowerCase().includes(f)
+              || p.description.toLowerCase().includes(f))
+    .slice(0, 400)
+    .forEach(p => {
+      const d = document.createElement("div");
+      d.innerHTML = `<b>${p.pgn}</b>${esc(p.description)}`;
+      d.title = `${p.pgn} · ${p.description}\n${p.id}`;
+      d.onclick = () => openExisting(p.id);
+      el.appendChild(d);
+    });
+  // enumerations: shown when filtering (so the default view stays PGN-focused)
+  const lks = f
+    ? MODEL.lookups.filter(l => (l.name || l).toLowerCase().includes(f))
+    : [];
+  if (lks.length) {
+    const h = document.createElement("div");
+    h.className = "hint";
+    h.style.cssText = "padding:4px 12px;border-top:1px solid var(--line);position:sticky;top:0";
+    h.textContent = "enumerations";
+    el.appendChild(h);
+    lks.slice(0, 200).forEach(l => {
+      const name = l.name || l;
+      const d = document.createElement("div");
+      d.innerHTML = `<b style="color:var(--accent)">⚙</b>${esc(name)} <span class="hint">${esc(l.kind || "")}</span>`;
+      d.title = `edit enumeration ${name}`;
+      d.onclick = () => openLookup(name);
+      el.appendChild(d);
+    });
+  }
+}
+
+function flash(msg, ok) {
+  const f = $("flash");
+  f.textContent = msg;
+  f.className = "flash " + (ok ? "ok" : "bad");
+  if (ok) setTimeout(() => f.className = "flash", 4000);
+}
+
+function newWizard() {
+  samplesHex = []; fieldsState = []; yamlDirty = false;
+  repAt = [-1, -1]; repCountField = ["", ""];
+  baseYaml = null; currentPgn = null;
+  $("sampleInput").placeholder = "";
+  $("sampleInput").value = ""; $("messages").innerHTML = "";
+  $("stepDefine").style.display = "none";
+  $("stepSave").style.display = "none";
+  $("stepSamples").style.display = "";
+  ["m_pgn","m_id","m_desc","m_prio"].forEach(id => $(id).value = "");
+  window.scrollTo(0, 0);
+}
+
+function loadEvidence(msgs) {
+  samplesHex = msgs.map(m => m.hex);
+  renderGrid();
+  scheduleRefresh();
+  flash(`${msgs.length} sample(s) loaded as evidence — see the grid and live decode`, true);
+}
+
+async function openExisting(id) {
+  const r = await api(`/api/pgn?id=${encodeURIComponent(id)}`, null, "GET");
+  if (r.error) return flash(r.error, false);
+  newWizard();
+  baseYaml = r.yaml;
+  currentPgn = r.def.pgn;
+  $("stepSamples").style.display = "";
+  $("stepDefine").style.display = "";
+  $("stepSave").style.display = "";
+  $("sampleInput").placeholder =
+    `paste ${r.def.pgn} captures here to check them against this definition …`;
+  $("m_pgn").value = r.def.pgn;
+  $("m_id").value = r.def.id;
+  $("m_desc").value = r.def.description;
+  $("m_type").value = r.def.type;
+  $("m_prio").value = r.def.priority || "";
+  fieldsState = r.def.fields.map(defToState);
+  // seed repeating sets from the stored definition (start is 1-based order)
+  repAt = [-1, -1]; repCountField = ["", ""];
+  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
+    if (!rp) return;
+    repAt[k] = rp.start - 1;
+    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
+  });
+  $("yamlText").value = r.yaml;
+  yamlDirty = false;                      // form edits patch the fields: block
+  $("savePath").textContent = r.path.replace(/^.*database\//, "database/");
+  renderFields();
+  renderGrid();
+  scheduleRefresh();
+}
+
+async function analyze() {
+  const r = await api("/api/analyze", $("sampleInput").value);
+  if (r.error) return flash(r.error, false);
+  // group by matched variant (falls back to the PGN number for unknowns),
+  // so a mixed capture yields one evidence button per definition
+  const byPgn = {};
+  r.messages.forEach(m => {
+    const key = m.variant ? `${m.pgn}\u0000${m.variant}` : String(m.pgn);
+    (byPgn[key] = byPgn[key] || []).push(m);
+  });
+  const el = $("messages");
+  el.innerHTML = "";
+  (r.warnings || []).forEach(w => {
+    const d = document.createElement("div");
+    d.className = "hint"; d.textContent = "⚠ " + w;
+    el.appendChild(d);
+  });
+  Object.entries(byPgn).forEach(([key, msgs]) => {
+    const pgn = msgs[0].pgn;
+    const variant = msgs[0].variant;
+    const fallback = msgs[0].fallback;
+    const btn = document.createElement("button");
+    if (currentPgn && pgn === currentPgn) {
+      // this definition is already open: adopt directly
+      btn.textContent = `Use ${msgs.length} sample(s) of PGN ${pgn} as evidence for this definition`;
+      btn.className = "primary";
+      btn.onclick = () => loadEvidence(msgs);
+    } else if (variant && !fallback) {
+      // exact match: open its stored definition WITH these pastes as evidence
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — check against existing '${variant}'`;
+      btn.className = "primary";
+      btn.onclick = async () => {
+        const keep = $("sampleInput").value;
+        await openExisting(variant);
+        $("sampleInput").value = keep;      // openExisting resets the paste box
+        loadEvidence(msgs);
+      };
+    } else {
+      btn.textContent = `PGN ${pgn}: ${msgs.length} sample(s) — no exact match, start a new definition`;
+      btn.onclick = () => startDefinition(pgn, msgs);
+    }
+    btn.style.margin = "6px 6px 0 0";
+    el.appendChild(btn);
+
+    // near-miss suggestions: same shape, one differing match field
+    if (!(currentPgn && pgn === currentPgn) && fallback) {
+      const seen = {};
+      msgs.forEach(m => (m.nearMisses || []).forEach(n => { seen[n.id] = n; }));
+      Object.values(seen).forEach(n => {
+        const s = document.createElement("div");
+        s.className = "hint";
+        s.style.margin = "4px 0 0 8px";
+        s.textContent = `↳ looks like '${n.id}' but ${n.fieldName} = ${n.got} (it matches ${n.expected}). `;
+        const c = document.createElement("button");
+        c.textContent = `Clone '${n.id}', set ${n.fieldName}=${n.got}`;
+        c.style.marginLeft = "4px";
+        c.onclick = () => cloneFrom(n.id, pgn, msgs, n.field, n.got);
+        s.appendChild(c);
+        el.appendChild(s);
+      });
+    }
+  });
+  $("analyzeStatus").textContent = `${r.messages.length} message(s)`;
+}
+
+// Start a NEW definition from an existing variant's field layout (same
+// vendor/shape), pre-setting the one differing match field to the value
+// these samples carry. The user renames id/description and saves a new file.
+async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
+  const r = await api(`/api/pgn?id=${encodeURIComponent(variantId)}`, null, "GET");
+  if (r.error) return flash(r.error, false);
+  samplesHex = msgs.map(m => m.hex);
+  baseYaml = null;            // a brand-new file, not an edit of the source
+  currentPgn = pgn;
+  yamlDirty = false;
+  fieldsState = r.def.fields.map(defToState);
+  // set the one field that discriminates this variant to the observed value
+  const df = fieldsState.find(f => f.id === diffFieldId);
+  if (df) df.match = gotValue;
+  // clone repeating sets too
+  repAt = [-1, -1]; repCountField = ["", ""];
+  [r.def.repeating1, r.def.repeating2].forEach((rp, k) => {
+    if (!rp) return;
+    repAt[k] = rp.start - 1;
+    if (rp.countField) repCountField[k] = (fieldsState[rp.countField - 1] || {}).id || "";
+  });
+  $("m_pgn").value = pgn;
+  $("m_type").value = r.def.type;
+  $("m_prio").value = r.def.priority || "";
+  $("m_id").value = "";            // must be a new, unique id
+  $("m_desc").value = "";
+  $("stepDefine").style.display = "";
+  $("stepSave").style.display = "";
+  $("savePath").textContent = "";
+  renderAll();
+  flash(`cloned '${variantId}' — give it a new Id and Description, then save`, true);
+}
+
+function startDefinition(pgn, msgs) {
+  samplesHex = msgs.map(m => m.hex);
+  fieldsState = [];
+  repAt = [-1, -1]; repCountField = ["", ""];
+  yamlDirty = false;
+  $("m_pgn").value = pgn;
+  $("m_prio").value = msgs[0].prio;
+  $("m_type").value = samplesHex.some(h => h.length > 16) ? "Fast" : "Single";
+  $("stepDefine").style.display = "";
+  $("stepSave").style.display = "";
+  $("savePath").textContent = "";
+  if ((pgn >= 0xff00 && pgn <= 0xffff) || pgn === 0x1ef00 || (pgn >= 0x1ff00 && pgn <= 0x1ffff)) {
+    addProprietaryPreamble();
+  }
+  renderAll();
+}
+
+function addField(kind) {
+  const n = fieldsState.length + 1;
+  if (kind === "reserved") {
+    fieldsState.push({ id: "reserved", name: "Reserved", type: "RESERVED", bits: 8 });
+  } else {
+    fieldsState.push({ id: `field${n}`, name: `Field ${n}`, type: "UINT8", bits: "" });
+  }
+  renderAll();
+}
+
+// Highest defined repeating set (0, 1 or 2).
+function repDepth() { return repAt[1] >= 0 ? 2 : repAt[0] >= 0 ? 1 : 0; }
+
+// Begin the next repeating set at the current end of the field list; the
+// fields added after it belong to the set. At most two, and only trailing.
+function addRepeatingSet() {
+  const d = repDepth();
+  if (d >= 2) return flash("a PGN has at most two repeating field sets", false);
+  if (!fieldsState.length) return flash("add the fields first, then mark where the set starts", false);
+  if (d === 1 && fieldsState.length <= repAt[0])
+    return flash("add at least one field to set 1 before starting set 2", false);
+  repAt[d] = fieldsState.length; // set begins after the current last field
+  renderAll();
+}
+
+function removeRepeatingSet(k) {
+  repAt[k] = -1;
+  repCountField[k] = "";
+  renderAll();
+}
+
+function deleteField(i) {
+  fieldsState.splice(i, 1);
+  // keep set boundaries anchored to the same fields
+  for (let k = 0; k < 2; k++) {
+    if (repAt[k] > i) repAt[k]--;
+    if (repAt[k] > fieldsState.length) repAt[k] = fieldsState.length;
+  }
+  renderAll();
+}
+
+// A full-width divider marking the start of repeating set k (0-based),
+// carrying the optional "count from" field and a remove control.
+function repDividerRow(k) {
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+  td.colSpan = 10;
+  td.style.background = "var(--panel)";
+  td.style.borderTop = "2px solid var(--accent)";
+  const label = document.createElement("b");
+  label.textContent = `↻ repeating field set ${k + 1} — count from `;
+  td.appendChild(label);
+  const sel = document.createElement("select");
+  sel.style.width = "auto";
+  const none = document.createElement("option");
+  none.value = ""; none.textContent = "(fills remaining bytes)";
+  sel.appendChild(none);
+  fieldsState.forEach((f, i) => {
+    if (i < repAt[k]) {
+      const o = document.createElement("option");
+      o.value = f.id; o.textContent = f.id;
+      sel.appendChild(o);
+    }
+  });
+  sel.value = repCountField[k];
+  sel.onchange = () => { repCountField[k] = sel.value; regenerateYaml(); scheduleRefresh(); };
+  td.appendChild(sel);
+  if (repDepth() === k + 1) {   // only the deepest set is removable (sets stay trailing)
+    const rm = document.createElement("button");
+    rm.className = "lkbtn"; rm.textContent = "✕ remove set"; rm.style.marginLeft = "8px";
+    rm.onclick = () => removeRepeatingSet(k);
+    td.appendChild(rm);
+  }
+  tr.appendChild(td);
+  return tr;
+}
+
+function addProprietaryPreamble() {
+  fieldsState.unshift(
+    { id: "manufacturerCode", name: "Manufacturer Code", type: "LOOKUP", bits: 11,
+      lookup: "MANUFACTURER_CODE", match: detectPreamble(0, 11), primaryKey: true },
+    { id: "reserved", name: "Reserved", type: "RESERVED", bits: 2 },
+    { id: "industryCode", name: "Industry Code", type: "LOOKUP", bits: 3,
+      lookup: "INDUSTRY_CODE", match: detectPreamble(13, 3), primaryKey: true },
+  );
+  renderAll();
+}
+
+function detectPreamble(bitOff, bits) {
+  // constant across all samples? then it is the match value
+  const vals = samplesHex.map(h => extractBits(h, bitOff, bits));
+  return vals.length && vals.every(v => v === vals[0]) ? vals[0] : "";
+}
+
+function extractBits(hex, bitOff, bits) {
+  let v = 0n;
+  for (let i = 0; i < bits; i++) {
+    const bit = bitOff + i;
+    const byte = parseInt(hex.substr((bit >> 3) * 2, 2) || "ff", 16);
+    if (byte & (1 << (bit & 7))) v |= 1n << BigInt(i);
+  }
+  return Number(v);
+}
+
+function ftByName(name) { return MODEL.fieldtypes.find(t => t.name === name); }
+
+function typeCombo(inp, f, tr) {
+  const box = $("typeCombo");
+  const q = inp.value.toLowerCase();
+  const hits = MODEL.fieldtypes.filter(t =>
+    !q || t.name.toLowerCase().includes(q) || (t.description || "").toLowerCase().includes(q)
+  ).slice(0, 40);
+  if (!hits.length) return hideTypeCombo();
+  box.innerHTML = "";
+  hits.forEach(t => {
+    const meta = [t.bits ? t.bits + " bits" : null, t.unit, t.resolution]
+      .filter(Boolean).join(" · ");
+    const d = document.createElement("div");
+    d.innerHTML = `<b>${esc(t.name)}</b><span class="meta">${esc(meta)}</span>` +
+      (t.description ? `<small>${esc(t.description)}</small>` : "");
+    d.onmousedown = (ev) => {           // mousedown beats the input's blur
+      ev.preventDefault();
+      inp.value = t.name;
+      f.type = t.name;
+      // a fieldtype mandates its bits/unit/resolution: show them in the row
+      // (fieldsYaml omits them again when they match the type's defaults)
+      if (t.bits) f.bits = t.bits;
+      if (t.unit) f.unit = t.unit;
+      if (t.resolution) f.resolution = t.resolution;
+      hideTypeCombo();
+      renderFields();
+      renderGrid();
+      regenerateYaml();
+      scheduleRefresh();
+    };
+    box.appendChild(d);
+  });
+  const rc = inp.getBoundingClientRect();
+  box.style.left = Math.min(rc.left, window.innerWidth - 540) + "px";
+  box.style.top = (rc.bottom + 2) + "px";
+  box.style.display = "block";
+}
+
+function hideTypeCombo() { $("typeCombo").style.display = "none"; }
+
+function fieldBits(f) {
+  if (f.bits) return Number(f.bits);
+  const ft = MODEL.fieldtypes.find(t => t.name === f.type);
+  return ft && ft.bits ? ft.bits : 0;
+}
+
+function renderAll() {
+  renderFields();
+  renderGrid();
+  regenerateYaml();
+  scheduleRefresh();
+}
+
+function renderFields() {
+  const tb = $("fields").querySelector("tbody");
+  tb.innerHTML = "";
+  fieldsState.forEach((f, i) => {
+    if (repAt[0] === i) tb.appendChild(repDividerRow(0));
+    if (repAt[1] === i) tb.appendChild(repDividerRow(1));
+    const tr = document.createElement("tr");
+    const cell = (key, size, listId) => {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.value = f[key] ?? "";
+      inp.size = size;
+      if (listId) inp.setAttribute("list", listId);
+      inp.oninput = () => { f[key] = inp.value; regenerateYaml(); scheduleRefresh(); };
+      inp.onchange = () => renderGrid();
+      td.appendChild(inp);
+      return td;
+    };
+    // reserved/spare fields carry only id/name/bits — everything else is
+    // inapplicable, so lock and blank it (and the ✎ full editor below).
+    const isRS = f.type === "RESERVED" || f.type === "SPARE";
+    tr.appendChild(cell("id", 22));
+    tr.appendChild(cell("name", 24));
+    {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.value = f.type ?? "";
+      inp.size = 22;
+      inp.oninput = () => { f.type = inp.value; typeCombo(inp, f, tr); regenerateYaml(); scheduleRefresh(); };
+      inp.onfocus = () => typeCombo(inp, f, tr);
+      inp.onblur = () => setTimeout(hideTypeCombo, 200);
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
+    {
+      // bits: read-only and shows the width when the type fixes it (R14);
+      // editable only on a base/variable-width type.
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.size = 4;
+      const ft = ftByName(f.type);
+      if (ft && ft.bits) {
+        inp.value = ft.bits;
+        inp.readOnly = true;
+        inp.style.opacity = ".55";
+        inp.title = "width fixed by type " + f.type;
+      } else {
+        inp.value = f.bits ?? "";
+        inp.oninput = () => { f.bits = inp.value; regenerateYaml(); scheduleRefresh(); };
+        inp.onchange = () => renderGrid();
+      }
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
+    {
+      const td = document.createElement("td");
+      td.style.whiteSpace = "nowrap";
+      td.style.display = "flex";
+      td.style.alignItems = "center";
+      td.style.gap = "2px";
+      const inp = document.createElement("input");
+      inp.value = isRS ? "" : (f.lookup ?? "");
+      inp.size = 22;
+      inp.style.flex = "1";
+      inp.style.minWidth = "60px";
+      inp.setAttribute("list", "dl_lookups");
+      inp.disabled = isRS;
+      const view = document.createElement("button");
+      view.className = "lkbtn";
+      view.style.flex = "0 0 auto";
+      const knownLookup = () => inp.value && MODEL.lookups.some(l => (l.name || l) === inp.value);
+      const syncBtn = () => {
+        view.textContent = knownLookup() ? "🔍" : "＋";
+        view.title = knownLookup() ? "view / edit this enumeration" : "create this enumeration";
+        view.style.visibility = (inp.value && !isRS) ? "visible" : "hidden";
+      };
+      inp.oninput = () => { f.lookup = inp.value; syncBtn(); regenerateYaml(); scheduleRefresh(); };
+      view.onclick = () => { if (inp.value) openLookup(inp.value, f.bits); };
+      syncBtn();
+      td.appendChild(inp);
+      td.appendChild(view);
+      tr.appendChild(td);
+    }
+    {
+      const td = document.createElement("td");
+      const inp = document.createElement("input");
+      inp.value = isRS ? "" : (f.match ?? "");
+      inp.size = 7;
+      inp.disabled = isRS;
+      inp.oninput = () => { f.match = inp.value; regenerateYaml(); scheduleRefresh(); };
+      inp.onchange = () => renderGrid();
+      td.appendChild(inp);
+      tr.appendChild(td);
+    }
+    const pk = document.createElement("td");
+    const pkc = document.createElement("input");
+    pkc.type = "checkbox"; pkc.checked = !!f.primaryKey; pkc.style.width = "auto";
+    pkc.onchange = () => { f.primaryKey = pkc.checked; regenerateYaml(); scheduleRefresh(); };
+    pk.appendChild(pkc);
+    tr.appendChild(pk);
+    const act = document.createElement("td");
+    act.style.whiteSpace = "nowrap";
+    const edit = document.createElement("button");
+    edit.textContent = "✎";
+    if (isRS) {
+      edit.disabled = true;
+      edit.title = "reserved/spare fields carry only id, name and bits";
+    } else {
+      edit.title = "edit every attribute of this field";
+      edit.onclick = () => openFieldEditor(i);
+    }
+    const del = document.createElement("button");
+    del.textContent = "✕"; del.title = "remove"; del.style.marginLeft = "3px";
+    del.onclick = () => deleteField(i);
+    act.appendChild(edit); act.appendChild(del);
+    tr.appendChild(act);
+    tb.appendChild(tr);
+  });
+  // trailing repeating-set dividers (a set declared but not yet populated)
+  if (repAt[0] === fieldsState.length) tb.appendChild(repDividerRow(0));
+  if (repAt[1] === fieldsState.length) tb.appendChild(repDividerRow(1));
+  const addRep = $("addRepBtn");
+  if (addRep) addRep.disabled = repDepth() >= 2;
+  const total = fieldsState.reduce((a, f) => a + fieldBits(f), 0);
+  const frame = $("m_type").value === "Single" ? 64 : null;
+  $("bitBudget").textContent =
+    `${total} bits (${(total / 8).toFixed(1)} bytes)` +
+    (frame ? ` of ${frame} — ${frame - total >= 0 ? (frame - total) + " left" : "OVER by " + (total - frame)}` : "") +
+    (total % 8 ? " — not byte-aligned (R03)" : "");
+}
+
+function fieldSpans() {
+  // Prefer exact spans from the last decode (handles variable-length
+  // fields and repeating instances); fall back to declared-width math.
+  const decoded = lastDecode && lastDecode.samples && lastDecode.samples[0]
+    && lastDecode.samples[0].fields;
+  if (decoded && decoded.length && decoded[0].bits !== undefined) {
+    return decoded.map(f => ({
+      id: f.id + (f.instance > 1 ? "." + f.instance : ""),
+      from: f.bitOffset, to: f.bitOffset + f.bits,
+    }));
+  }
+  const spans = [];
+  let bit = 0;
+  fieldsState.forEach(f => {
+    const bits = fieldBits(f);
+    spans.push({ id: f.id, from: bit, to: bit + bits });
+    bit += bits;
+  });
+  return spans;
+}
+
+function renderGrid() {
+  const g = $("grid");
+  g.innerHTML = "";
+  if (!samplesHex.length) return;
+  const maxBytes = Math.max(...samplesHex.map(h => h.length / 2));
+  const spans = fieldSpans();
+
+  // which bytes are covered by a defined field?
+  const covered = Array.from({length: maxBytes}, (_, b) =>
+    spans.some(s => s.from < (b + 1) * 8 && s.to > b * 8));
+
+  // classification per byte: a byte inside a field is never "unclaimed",
+  // even when it is 0xFF in every sample
+  const cls = [];
+  for (let b = 0; b < maxBytes; b++) {
+    const vals = samplesHex.map(h => h.substr(b * 2, 2) || "");
+    const allSame = vals.every(v => v === vals[0] && v !== "");
+    cls.push(!covered[b] && vals.every(v => v === "ff") ? "unset"
+             : allSame ? "const" : "vary");
+  }
+
+  const head = document.createElement("tr");
+  head.innerHTML = "<th></th>" + Array.from({length: maxBytes}, (_, b) => `<th>${b}</th>`).join("");
+  g.appendChild(head);
+
+  samplesHex.forEach((h, si) => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<th>#${si + 1}</th>` + Array.from({length: maxBytes}, (_, b) => {
+      const v = h.substr(b * 2, 2);
+      return `<td class="${cls[b]}">${v || "·"}</td>`;
+    }).join("");
+    g.appendChild(tr);
+  });
+
+  // field row: coalesce consecutive bytes covered by the same field(s)
+  // into one colspan cell, so the name appears exactly once per span
+  const keyAt = (b) =>
+    spans.filter(s => s.from < (b + 1) * 8 && s.to > b * 8).map(s => s.id).join(" ");
+  const tr = document.createElement("tr");
+  tr.className = "fieldrow";
+  const th = document.createElement("th");
+  th.textContent = "fields";
+  tr.appendChild(th);
+  let b = 0;
+  while (b < maxBytes) {
+    let e = b + 1;
+    while (e < maxBytes && keyAt(e) === keyAt(b)) e++;
+    const td = document.createElement("td");
+    td.colSpan = e - b;
+    td.textContent = keyAt(b);
+    td.title = keyAt(b);
+    tr.appendChild(td);
+    b = e;
+  }
+  g.appendChild(tr);
+}
+
+// ---- YAML generation (wizard mode) -----------------------------------------
+
+function yq(s) {
+  s = String(s);
+  // conservative plain-scalar test: no #, no colon-space, no edge spaces
+  return /^[A-Za-z0-9][A-Za-z0-9 _.()\/+-]*[A-Za-z0-9).]$/.test(s) && !/^\d+$/.test(s)
+      && !s.includes(": ") ? s : JSON.stringify(s);
+}
+
+// ---- lookup viewer / editor -------------------------------------------------
+
+// Brand-new enumeration from scratch: name is entered in the modal.
+function openNewLookup() {
+  $("lkValues").querySelector("tbody").innerHTML = "";
+  lkBaseYaml = null;
+  lkReadOnly = false;
+  lkName = "";
+  $("lkNameRow").style.display = "";
+  $("lk_name").value = "";
+  $("lkTitle").textContent = "New lookup";
+  $("lkFile").textContent = "database/lookups/…yaml";
+  $("lk_kind").value = "pair";
+  $("lk_kind").disabled = false;
+  $("lk_bits").value = "";
+  $("lkHint").textContent = "new enumeration — pick a kind, width, and values";
+  $("lkSave").style.display = "";
+  $("lk_name").oninput = () => {
+    const n = ($("lk_name").value = $("lk_name").value.toUpperCase());
+    $("lkTitle").textContent = n || "New lookup";
+    $("lkFile").textContent = `database/lookups/${n || "…"}.yaml`;
+  };
+  lkRenderHead();
+  lkAddRow({ value: 0 });
+  $("lkOverlay").style.display = "flex";
+  $("lk_name").focus();
+}
+
+// seed: values (pair) or bit positions (bit) to pre-add for naming,
+// e.g. unnamed values a pasted sample just revealed.
+async function openLookup(name, suggestedBits, seed) {
+  $("lkNameRow").style.display = "none";   // name is fixed for existing/targeted
+  const r = await api(`/api/lookup?name=${encodeURIComponent(name)}`, null, "GET");
+  const tb = $("lkValues").querySelector("tbody");
+  tb.innerHTML = "";
+  lkName = name;
+  $("lkTitle").textContent = name;
+  $("lkFile").textContent = `database/lookups/${name}.yaml`;
+  if (r.error) {
+    // create mode
+    lkBaseYaml = null;
+    lkReadOnly = false;
+    $("lk_kind").value = "pair";
+    $("lk_kind").disabled = false;
+    $("lk_bits").value = suggestedBits || "";
+    $("lkHint").textContent = "new enumeration — will be created on save";
+    lkRenderHead();
+    (seed && seed.length ? seed : [0]).forEach(v => lkAddRow({ value: v }));
+  } else {
+    lkBaseYaml = r.yaml;
+    lkReadOnly = false;
+    $("lk_kind").value = r.kind;
+    $("lk_kind").disabled = true;   // kind is fixed for an existing enumeration
+    $("lk_bits").value = r.bits;
+    $("lkHint").textContent = r.kind;
+    lkRenderHead();
+    (r.values || []).forEach(v => lkAddRow(v));
+    // append rows for any evidence values not already present, ready to name
+    if (seed) {
+      const have = new Set((r.values || []).map(v => Number(v.value)));
+      const fresh = [...new Set(seed.map(Number))].filter(v => !have.has(v)).sort((a, b) => a - b);
+      if (fresh.length) {
+        fresh.forEach(v => lkAddRow({ value: v }));
+        $("lkHint").textContent = `${r.kind} — ${fresh.length} value(s) from your samples added below, name them`;
+      }
+    }
+  }
+  $("lkSave").style.display = "";
+  $("lkOverlay").style.display = "flex";
+}
+
+// Columns per lookup kind. `k` is both the input's data-key and the
+// entry field name coming back from /api/lookup.
+function lkCols(kind) {
+  switch (kind) {
+    case "bit": return [{ k: "value", label: "bit", size: 6 }, { k: "name" }];
+    case "triplet": return [{ k: "v1", size: 6 }, { k: "v2", size: 6 }, { k: "name" }];
+    case "fieldtype": return [
+      { k: "value", size: 6 }, { k: "name" },
+      { k: "type", label: "datatype", size: 16, list: "dl_ft" },
+      { k: "bits", label: "length", size: 6 },
+      { k: "lookup", size: 14, list: "dl_lookups" }];
+    default: return [{ k: "value", size: 6 }, { k: "name" }]; // pair
+  }
+}
+
+function lkRenderHead() {
+  const cols = lkCols(lkKind());
+  $("lkHead").innerHTML = "<tr>" +
+    cols.map(c => `<th>${esc(c.label || c.k)}</th>`).join("") + "<th></th></tr>";
+}
+
+function lkKind() { return $("lk_kind").value; }
+
+// Called when the kind selector changes (only possible for new lookups).
+function lkKindChanged() {
+  $("lkValues").querySelector("tbody").innerHTML = "";
+  lkRenderHead();
+  lkAddRow({});
+}
+
+function lkAddRow(entry) {
+  const tb = $("lkValues").querySelector("tbody");
+  const tr = document.createElement("tr");
+  lkCols(lkKind()).forEach(c => {
+    const td = document.createElement("td");
+    const inp = document.createElement("input");
+    inp.dataset.k = c.k;
+    inp.value = entry[c.k] != null ? entry[c.k] : "";
+    if (c.size) inp.size = c.size;
+    if (c.list) inp.setAttribute("list", c.list);
+    if (c.label && c.k === "bits") inp.placeholder = "default";
+    inp.readOnly = lkReadOnly;
+    td.appendChild(inp);
+    tr.appendChild(td);
+  });
+  const del = document.createElement("td");
+  if (!lkReadOnly) {
+    del.innerHTML = "<button class='lkbtn'>✕</button>";
+    del.firstChild.onclick = () => tr.remove();
+  }
+  tr.appendChild(del);
+  tb.appendChild(tr);
+}
+
+function closeLookup() { $("lkOverlay").style.display = "none"; }
+
+async function saveLookup() {
+  // brand-new enumeration: take the name from the modal and validate
+  if ($("lkNameRow").style.display !== "none") {
+    const n = $("lk_name").value.trim();
+    if (!/^[A-Z][A-Z0-9_]*$/.test(n)) return flash("name must be UPPER_SNAKE_CASE", false);
+    if (MODEL.lookups.some(l => (l.name || l) === n)) return flash(`lookup ${n} already exists`, false);
+    if (!Number($("lk_bits").value)) return flash("set the bit width", false);
+    lkName = n;
+  }
+  const kind = $("lk_kind").value;
+  // read each row into an object keyed by column (value, name, v1, v2, type, bits, lookup)
+  const rows = [...$("lkValues").querySelectorAll("tbody tr")].map(tr => {
+    const e = {};
+    tr.querySelectorAll("input").forEach(i => { e[i.dataset.k] = i.value.trim(); });
+    return e;
+  });
+  let block, err;
+  if (kind === "triplet") {
+    const rs = rows.filter(e => e.v1 !== "" && e.v2 !== "" && e.name !== "");
+    if (!rs.length) err = "add at least one v1, v2, name row";
+    block = "values:\n" + rs.map(e =>
+      `- - ${Number(e.v1)}\n  - ${Number(e.v2)}\n  - ${yq(e.name)}`).join("\n") + "\n";
+  } else if (kind === "fieldtype") {
+    const rs = rows.filter(e => e.value !== "" && e.name !== "" && e.type !== "");
+    if (!rs.length) err = "each row needs value, name and datatype";
+    rs.sort((a, b) => Number(a.value) - Number(b.value));
+    block = "values:\n" + rs.map(e => {
+      let s = `- value: ${Number(e.value)}\n  name: ${yq(e.name)}\n  type: ${e.type}`;
+      if (e.bits) s += `\n  bits: ${Number(e.bits)}`;
+      if (e.lookup) {
+        s += `\n  lookup: ${e.lookup}`;
+        // carry the nested lookup's kind when it isn't the default 'pair'
+        const nl = MODEL.lookups.find(l => (l.name || l) === e.lookup);
+        if (nl && nl.kind && nl.kind !== "pair") s += `\n  lookupKind: ${nl.kind}`;
+      }
+      return s;
+    }).join("\n") + "\n";
+  } else { // pair | bit
+    const rs = rows.filter(e => e.value !== "" && e.name !== "");
+    if (!rs.length) err = "add at least one value";
+    rs.sort((a, b) => Number(a.value) - Number(b.value));
+    block = "values:\n" + rs.map(e => `  ${Number(e.value)}: ${yq(e.name)}`).join("\n") + "\n";
+  }
+  if (err) return flash(err, false);
+  let yaml;
+  if (lkBaseYaml) {
+    const m = lkBaseYaml.match(/\nvalues:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
+    yaml = m
+      ? lkBaseYaml.slice(0, m.index) + "\n" + block.trimEnd() + lkBaseYaml.slice(m.index + m[0].length)
+      : lkBaseYaml.trimEnd() + "\n" + block;
+    // bits may have been edited
+    yaml = yaml.replace(/^bits: \d+$/m, `bits: ${Number($("lk_bits").value)}`);
+  } else {
+    yaml = `name: ${lkName}\nkind: ${$("lk_kind").value}\nbits: ${Number($("lk_bits").value)}\n${block}`;
+  }
+  const r = await api(`/api/save?file=${encodeURIComponent(`database/lookups/${lkName}.yaml`)}`, yaml);
+  if (r.error) return flash(r.error, false);
+  flash(`saved database/lookups/${lkName}.yaml`, true);
+  closeLookup();
+  await refreshModel();
+  // fields now know this enumeration: refresh their button state and
+  // re-emit references with the correct kind (lookup/lookupBits/…)
+  if (fieldsState.length) { renderFields(); regenerateYaml(); }
+  scheduleRefresh();   // live decode picks up renamed values immediately
+}
+
+function fieldYaml(f, pad) {
+  // Attributes equal to the fieldtype's own are defaults - omit them. Emission
+  // order follows the converter so a fields-block rewrite stays a clean diff,
+  // and EVERY authored attribute is emitted so nothing is silently dropped.
+  const ft = ftByName(f.type) || {};
+  const p = pad + "  ";
+  const has = v => v !== "" && v !== undefined && v !== null;
+  let y = `${pad}- id: ${yq(f.id)}\n${p}name: ${yq(f.name)}\n${p}type: ${f.type}\n`;
+  if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
+  if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;
+  if (has(f.match))
+    // integer verbatim; a lookup value NAME is written as-is (R13 resolves it)
+    y += `${p}match: ${/^\d+$/.test(String(f.match)) ? f.match : yq(f.match)}\n`;
+  if (has(f.lookupIndirect)) {
+    y += `${p}lookupIndirect:\n${p}  name: ${f.lookupIndirect}\n`;
+    if (has(f.lookupIndirectOrder)) y += `${p}  order: ${Number(f.lookupIndirectOrder)}\n`;
+  } else if (f.lookup) {
+    // reference key must match the enumeration's kind (R08): a bit enum
+    // is lookupBits, a fieldtype enum lookupFieldtype, otherwise a plain pair.
+    const lk = MODEL.lookups.find(l => (l.name || l) === f.lookup);
+    const key = !lk ? "lookup"
+      : lk.kind === "bit" ? "lookupBits"
+      : lk.kind === "fieldtype" ? "lookupFieldtype"
+      : lk.kind === "triplet" ? "lookupIndirect"
+      : "lookup";
+    y += `${p}${key}: ${f.lookup}\n`;
+  }
+  if (has(f.note)) y += noteYaml(f.note, p);
+  if (has(f.unit) && f.unit !== ft.unit) y += `${p}unit: ${yq(f.unit)}\n`;
+  if (has(f.resolution) && Number(f.resolution) !== ft.resolution) y += `${p}resolution: ${Number(f.resolution)}\n`;
+  if (has(f.offset)) y += `${p}offset: ${Number(f.offset)}\n`;
+  if (has(f.specialValues)) y += `${p}specialValues: ${Number(f.specialValues)}\n`;
+  // ranges are floats (converter emits 0.0 / 7.0); keep the .0 on whole numbers
+  if (has(f.rangeMin)) y += `${p}rangeMin: ${asFloat(f.rangeMin)}\n`;
+  if (has(f.rangeMax)) y += `${p}rangeMax: ${asFloat(f.rangeMax)}\n`;
+  if (f.allowLookupWidthMismatch) y += `${p}allowLookupWidthMismatch: true\n`;
+  if (f.primaryKey) y += `${p}primaryKey: true\n`;
+  return y;
+}
+
+// Format a range bound as the converter does: a float, so a whole number
+// still carries a trailing .0 (rangeMin: 0.0, not 0).
+function asFloat(v) {
+  const n = Number(v);
+  return Number.isInteger(n) ? n + ".0" : String(n);
+}
+
+// A note: is a plain scalar, or a `|-` block scalar when it spans lines.
+function noteYaml(note, pad) {
+  if (!/\n/.test(note)) return `${pad}note: ${yq(note)}\n`;
+  const body = note.replace(/\n+$/, "").split("\n").map(l => `${pad}  ${l}`).join("\n");
+  return `${pad}note: |-\n${body}\n`;
+}
+
+// ---- One-field editor modal -------------------------------------------------
+let fldEditIndex = -1;
+const FE_TEXT = ["id", "name", "type", "bits", "description", "match", "lookup",
+                 "unit", "resolution", "offset", "note", "specialValues", "rangeMin", "rangeMax"];
+const FE_BOOL = ["primaryKey", "allowLookupWidthMismatch"];
+
+function openFieldEditor(i) {
+  fldEditIndex = i;
+  const f = fieldsState[i];
+  FE_TEXT.forEach(k => { $("fe_" + k).value = f[k] ?? ""; });
+  FE_BOOL.forEach(k => { $("fe_" + k).checked = !!f[k]; });
+  $("fldTitle").textContent = "Edit field: " + (f.id || "(new)");
+  loadMatchOptions(f);
+  applyTypeConstraints();
+  $("fldHelp").textContent = "Focus an attribute to see what it does.";
+  $("fldHelp").classList.remove("warn");
+  $("fldOverlay").style.display = "flex";
+  $("fe_name").focus();
+}
+
+// bits / resolution / signed are the fieldtype's job when the type fixes them
+// (R14): read-only "from type" there, editable on a base type. RESERVED/SPARE
+// carry only id/name/bits, so everything else is locked and blanked.
+function applyTypeConstraints() {
+  const type = $("fe_type").value;
+  const ft = ftByName(type) || {};
+  const isRS = type === "RESERVED" || type === "SPARE";
+  const lock = (id, locked, ph) => {
+    const el = $("fe_" + id);
+    el.readOnly = locked;
+    el.placeholder = ph || "";
+    if (locked) el.value = "";
+  };
+  lock("bits", !!ft.bits, ft.bits ? `from type (${ft.bits})` : "");
+  lock("resolution", ft.resolution != null || isRS, ft.resolution != null ? `from type (${ft.resolution})` : "");
+  $("fe_signed").value = ft.signed == null ? "(from type)" : (ft.signed ? "signed" : "unsigned");
+  ["description", "match", "lookup", "unit", "offset", "note", "specialValues", "rangeMin", "rangeMax"]
+    .forEach(k => lock(k, isRS));
+  ["primaryKey", "allowLookupWidthMismatch"].forEach(k => {
+    const el = $("fe_" + k);
+    el.disabled = isRS;
+    if (isRS) el.checked = false;
+  });
+}
+
+function applyFieldEditor() {
+  if (fldEditIndex < 0) return;
+  const f = fieldsState[fldEditIndex];
+  FE_TEXT.forEach(k => {
+    const el = $("fe_" + k);
+    // note keeps internal newlines; everything else is a single trimmed line
+    f[k] = el.readOnly ? "" : (k === "note" ? el.value.replace(/\s+$/, "") : el.value.trim());
+  });
+  FE_BOOL.forEach(k => { f[k] = $("fe_" + k).checked; });
+  closeFieldEditor();
+  regenerateYaml();
+  renderFields();
+  renderGrid();
+  scheduleRefresh();
+}
+
+function closeFieldEditor() { $("fldOverlay").style.display = "none"; fldEditIndex = -1; }
+
+// A match on a lookup field may be the enum value NAME (R13); offer those names
+// as datalist suggestions. Fetched per-open from the enum the field references.
+async function loadMatchOptions(f) {
+  const dl = $("dl_matchvals");
+  dl.innerHTML = "";
+  if (!f.lookup) return;
+  try {
+    const r = await api("/api/lookup?name=" + encodeURIComponent(f.lookup), null, "GET");
+    (r.values || []).forEach(v => {
+      const o = document.createElement("option");
+      o.value = v.name;
+      o.label = String(v.value);
+      dl.appendChild(o);
+    });
+  } catch (e) { /* no suggestions is fine — match still accepts a raw number */ }
+}
+
+// A repeating set is a `- repeat:` item holding its own fields, so count and
+// start are the block's length and position; only countField is authored.
+function fieldsYaml() {
+  const ends = [repAt[1] >= 0 ? repAt[1] : fieldsState.length, fieldsState.length];
+  const opens = new Map();                    // field index -> set number
+  for (let k = 0; k < 2; k++) {
+    if (repAt[k] < 0 || ends[k] - repAt[k] <= 0) continue;   // declared but empty: skip
+    opens.set(repAt[k], k);
+  }
+  const firstRep = opens.size ? Math.min(...opens.keys()) : -1;
+
+  let y = "fields:\n";
+  fieldsState.forEach((f, i) => {
+    if (opens.has(i)) {
+      const k = opens.get(i);
+      y += `- repeat:\n`;
+      if (repCountField[k] && fieldsState.some(g => g.id === repCountField[k]))
+        y += `    countField: ${repCountField[k]}\n`;
+      y += `    fields:\n`;
+    }
+    y += fieldYaml(f, firstRep >= 0 && i >= firstRep ? "    " : "");
+  });
+  return y;
+}
+
+function stripBlock(yaml, key) {
+  return yaml.replace(new RegExp(`\\n${key}:\\n[\\s\\S]*?(?=\\n[A-Za-z][A-Za-z0-9]*:|$)`), "");
+}
+
+// Metadata field edited: in wizard mode the form drives the YAML (and the
+// save path); for an existing PGN the id/pgn are fixed to its file.
+function onMetaEdit() {
+  if (baseYaml !== null) return;
+  regenerateYaml();
+  scheduleRefresh();
+}
+
+// Keep the save target in step with the document's pgn+id, even when the
+// YAML was hand-edited (so renaming the id renames the file).
+function syncSavePath() {
+  if (baseYaml !== null) return;   // existing PGN keeps its own file
+  const y = $("yamlText").value;
+  const pgn = (y.match(/^pgn:\s*(\d+)/m) || [])[1];
+  const id = (y.match(/^id:\s*(\S+)/m) || [])[1];
+  if (pgn && id) $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+}
+
+function regenerateYaml() {
+  if (yamlDirty) { syncSavePath(); return; }
+  if (baseYaml !== null) {
+    // Existing PGN: replace the fields: block, repeating sets and all; notes,
+    // samples and every other authored key survive. The repeating1/repeating2
+    // strip only matters for a file predating the nested `repeat:` form.
+    let base = stripBlock(stripBlock(baseYaml, "repeating2"), "repeating1");
+    const m = base.match(/\nfields:\n[\s\S]*?(?=\n[A-Za-z][A-Za-z0-9]*:|$)/);
+    if (m) {
+      $("yamlText").value =
+        base.slice(0, m.index) + "\n" + fieldsYaml().trimEnd() + base.slice(m.index + m[0].length);
+    }
+    return;
+  }
+  const pgn = Number($("m_pgn").value || 0);
+  let y = `pgn: ${pgn}\n`;
+  y += `id: ${yq($("m_id").value || "newPgn")}\n`;
+  y += `description: ${yq($("m_desc").value || "New PGN")}\n`;
+  y += `type: ${$("m_type").value}\n`;
+  y += `missing: [Fields, FieldLengths, Resolution, SampleData]\n`;
+  if ($("m_prio").value) y += `priority: ${Number($("m_prio").value)}\n`;
+  y += fieldsYaml();
+  $("yamlText").value = y;
+  const id = $("m_id").value || "newPgn";
+  $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+}
+
+// ---- live decode ------------------------------------------------------------
+
+function scheduleRefresh() {
+  clearTimeout(refreshTimer);
+  refreshTimer = setTimeout(refresh, 350);
+}
+
+async function refresh() {
+  const yaml = $("yamlText").value;
+  if (!yaml.trim()) return;
+  const qs = samplesHex.map(h => "data=" + h).join("&");
+  const r = await api("/api/decode" + (qs ? "?" + qs : ""), yaml);
+  lastDecode = r;
+  const vio = $("violations");
+  if (r.error) {
+    vio.innerHTML = `<div class="err">parse: ${esc(r.error)}</div>`;
+    $("decodeTable").innerHTML = "";
+    return;
+  }
+  renderGrid();
+  vio.innerHTML = (r.violations || [])
+    .map(v => `<div class="${v.error ? "err" : "warn"}">${v.rule} ${esc(v.message)}</div>`)
+    .join("") || `<div style="color:var(--ok)">✓ rules pass</div>`;
+
+  const t = $("decodeTable");
+  t.innerHTML = "";
+  const sampleResults = r.samples || [];
+  if (!sampleResults.length) return;
+  const rows = {};
+  sampleResults.forEach((s, si) => {
+    (s.fields || []).forEach(f => {
+      const key = f.id + (f.instance > 1 ? "." + f.instance : "");
+      rows[key] = rows[key] ||
+        { name: f.name, unit: f.unit, kind: f.kind, lookup: null, lookupKind: null, unnamed: new Set(), values: [] };
+      rows[key].values[si] = f.value;
+      if (f.lookup) { rows[key].lookup = f.lookup; rows[key].lookupKind = f.lookupKind; }
+      (f.unnamed || []).forEach(u => rows[key].unnamed.add(u));
+    });
+  });
+  const head = document.createElement("tr");
+  head.innerHTML = "<th>field</th>" + sampleResults.map((_, i) => `<th>#${i + 1}</th>`).join("");
+  t.appendChild(head);
+  Object.entries(rows).forEach(([key, row]) => {
+    const tr = document.createElement("tr");
+    const th = document.createElement("th");
+    th.title = row.name;
+    th.textContent = key;
+    if (row.unnamed.size && row.lookup) {
+      const n = row.unnamed.size;
+      const badge = document.createElement("span");
+      badge.className = "addname";
+      badge.textContent = row.lookupKind === "bit"
+        ? `⚠ name ${n} bit${n > 1 ? "s" : ""}` : `⚠ name ${n} value${n > 1 ? "s" : ""}`;
+      badge.title = `${row.lookup}: ${[...row.unnamed].join(", ")} not in the enumeration`;
+      badge.onclick = () => openLookup(row.lookup, null, [...row.unnamed]);
+      th.appendChild(badge);
+    }
+    tr.appendChild(th);
+    row.values.forEach(v => {
+      const td = document.createElement("td");
+      const cls = [];
+      if (v === "Unavailable") cls.push("unavail");
+      if (cellHasUnnamed(v, row)) cls.push("unnamed");
+      td.className = cls.join(" ");
+      td.textContent = fmtDecoded(v, row.unit, row.kind);
+      tr.appendChild(td);
+    });
+    t.appendChild(tr);
+  });
+}
+
+// Does this decoded cell carry a value not named in its enumeration?
+function cellHasUnnamed(v, row) {
+  if (!row.unnamed.size || v == null) return false;
+  if (row.lookupKind === "pair") return row.unnamed.has(Number(v));
+  if (row.lookupKind === "bit") return /\bbit \d+\b/.test(v);   // "[..., bit 5]"
+  return false;
+}
+
+function hms(sec) {
+  const sign = sec < 0 ? "-" : "";
+  sec = Math.abs(sec);
+  const whole = Math.floor(sec);
+  const p = n => String(n).padStart(2, "0");
+  let out = `${sign}${p(Math.floor(whole / 3600))}:${p(Math.floor((whole % 3600) / 60))}:${p(whole % 60)}`;
+  const frac = sec - whole;
+  if (frac > 1e-9) out += "." + frac.toFixed(4).slice(2).replace(/0+$/, "");
+  return out;
+}
+
+function ymd(days) {
+  const d = new Date(Math.round(days) * 86400000);
+  const p = n => String(n).padStart(2, "0");
+  return `${d.getUTCFullYear()}.${p(d.getUTCMonth() + 1)}.${p(d.getUTCDate())}`;
+}
+
+// Live-decode display: keep the raw number and append a human reading -
+// degrees for radians, Celsius for Kelvin, calendar date / clock time
+// for DATE/TIME/DURATION fields.
+function fmtDecoded(value, unit, kind) {
+  if (value == null || value === "" || value === "Unavailable") return value ?? "";
+  const num = Number(value);
+  if (Number.isNaN(num)) return value;
+  if (kind === "DATE") return `${value} (${ymd(num)})`;
+  if (kind === "TIME" || kind === "DURATION") return `${value} s (${hms(num)})`;
+  if (!unit) return value;
+  if (unit === "rad") return `${value} rad (${(num * 180 / Math.PI).toFixed(1)}°)`;
+  if (unit === "K") return `${value} K (${(num - 273.15).toFixed(2)}°C)`;
+  return `${value} ${unit}`;
+}
+
+// ---- expectations + save ------------------------------------------------------
+
+function adoptExpectations() {
+  if (!lastDecode || !lastDecode.samples || !samplesHex.length)
+    return flash("analyze + decode some samples first", false);
+  const lines = $("sampleInput").value.split("\n").map(s => s.trim())
+    .filter(s => s && !s.startsWith("#"));
+  let y = "samples:\n";
+  lastDecode.samples.forEach((s, si) => {
+    // crude but honest: cite the pasted lines verbatim; multi-frame pastes
+    // become a raw list
+    const mine = lines.length === lastDecode.samples.length ? [lines[si]] : lines;
+    if (mine.length === 1) {
+      y += `- raw: ${JSON.stringify(mine[0])}\n`;
+    } else {
+      y += `- raw:\n` + mine.map(l => `  - ${JSON.stringify(l)}`).join("\n") + "\n";
+    }
+    y += "  expects:\n";
+    (s.fields || []).forEach(f => {
+      if (f.id.startsWith("reserved") || f.id.startsWith("spare")) return;
+      const key = f.id + (f.instance > 1 ? "." + f.instance : "");
+      let v = f.value;
+      if (v === "Unavailable") v = "~";
+      else if (/^\[.*\]$/.test(v)) v = "[" + v.slice(1, -1).split(", ").filter(Boolean).map(x => yq(x)).join(", ") + "]";
+      else if (/ \(\d+\)$/.test(v)) v = yq(v.replace(/ \(\d+\)$/, ""));   // lookup name
+      else if (/^".*"$/.test(v)) v = v;                                   // string
+      else if (!isNaN(Number(v))) v = v;                                  // number
+      else v = yq(v);
+      y += `    ${key}: ${v}\n`;
+    });
+  });
+  yamlDirty = true;
+  $("yamlText").value = $("yamlText").value.trimEnd() + "\n" + y;
+  scheduleRefresh();
+}
+
+function dialog(title, message, buttons) {
+  $("dlgTitle").textContent = title;
+  $("dlgMsg").textContent = message;
+  const btns = $("dlgBtns");
+  btns.innerHTML = "";
+  buttons.forEach(([label, primary, fn]) => {
+    const b = document.createElement("button");
+    b.textContent = label;
+    if (primary) b.className = "primary";
+    b.onclick = () => fn();
+    btns.appendChild(b);
+  });
+  $("dlgOverlay").style.display = "flex";
+}
+function closeDialog() { $("dlgOverlay").style.display = "none"; }
+
+async function undoSave() {
+  const r = await api("/api/undo", "");
+  if (r.error) return flash(r.error, false);
+  await refreshModel();
+  renderPgnList($("search").value);
+  dialog("Reverted", `${r.undone}\n\n` + (r.deleted
+    ? "The file this edit created was removed."
+    : "The file was restored to its previous content.") +
+    "\n\nRegenerate artifacts to bring canboat.xml and the\nanalyzer tables back in sync.", [
+    ["Regenerate artifacts", true, () => regenFromDialog()],
+    ["Close", false, closeDialog],
+  ]);
+}
+
+async function regenFromDialog() {
+  $("dlgMsg").textContent = "regenerating…";
+  const g = await api("/api/generate", "");
+  if (g.error) {
+    $("dlgMsg").textContent = g.error;
+  } else {
+    $("dlgMsg").textContent = "Regenerated:\n" + g.written.join("\n") +
+      "\n\nReview with git diff, then commit the database and\nartifacts together.";
+    $("dlgTitle").textContent += " + regenerated";
+  }
+}
+
+// scratch=true → "Validate" (keel check only, writes nothing);
+// scratch=false → "Validate and Save" (checks first, writes only if it passes).
+async function save(scratch) {
+  const file = $("savePath").textContent.trim();
+  if (!file) return flash("no target file (set PGN + id first)", false);
+  const r = await api("/api/save?file=" + encodeURIComponent(file) + (scratch ? "&scratch=1" : ""),
+    $("yamlText").value);
+  if (r.error) {
+    dialog(scratch ? "Validation failed" : "Not saved (validation failed)", r.error, [
+      ["Back to editing", true, closeDialog],
+    ]);
+    return;
+  }
+  if (r.scratch) {
+    dialog("Validated — not written",
+      `${r.saved}\n\nkeel check passed. Nothing was written to disk.\n` +
+      `Use "Validate and Save" to write it.`, [
+      ["Back to editing", true, closeDialog],
+    ]);
+    return;
+  }
+  await refreshModel();
+  renderPgnList($("search").value);
+  dialog("Saved", `${r.saved}\n\nkeel check passed. The generated artifacts\n` +
+    `(canboat.xml, analyzer tables) are now out of date until regenerated.`, [
+    ["Regenerate artifacts", true, () => regenFromDialog()],
+    ["Undo the changes made by this edit", false, undoSave],
+    ["Keep editing this PGN", false, closeDialog],
+    ["Start a new PGN", false, () => { closeDialog(); newWizard(); }],
+  ]);
+}
+
+init();
+</script>
+</body>
+</html>

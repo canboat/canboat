@@ -1,0 +1,41 @@
+pgn: 65287
+id: airmarAccessLevel
+description: 'Airmar: Access Level'
+type: Single
+variantOrder: 1
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: formatCode
+  name: Format Code
+  type: UINT8
+- id: accessLevel
+  name: Access Level
+  type: LOOKUP
+  bits: 3
+  lookup: ACCESS_LEVEL
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: accessSeedKey
+  name: Access Seed/Key
+  type: UINT32
+  description: When transmitted, it provides a seed for an unlock operation. It is used to provide the key during PGN 126208.

@@ -1,0 +1,48 @@
+pgn: 126720
+id: airmarCalibrateSpeed
+description: 'Airmar: Calibrate Speed'
+type: Fast
+variantOrder: 39
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Calibrate Speed
+  match: 41
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: numberOfPairsOfDataPoints
+  name: Number of pairs of data points
+  type: UINT8
+  description: actual range is 0 to 25. 254=restore default speed curve
+- repeat:
+    countField: numberOfPairsOfDataPoints
+    fields:
+    - id: inputFrequency
+      name: Input frequency
+      type: FREQUENCY_UFIX16
+      resolution: 0.1
+    - id: outputSpeed
+      name: Output speed
+      type: SPEED_UFIX16_CM

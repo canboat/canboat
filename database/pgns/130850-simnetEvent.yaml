@@ -1,0 +1,92 @@
+pgn: 130850
+id: simnetEvent
+description: 'Simnet: Event'
+type: Fast
+variantOrder: 12
+priority: 2
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Other Simnet Event
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: reserved13
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,2,130850,10,255,12,41,9f,02,ff,ff,02,0d,00,04,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 2
+    networkGroup: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,32,255,12,41,9f,ff,ff,ff,1f,83,00,ff,ff,00,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: ~
+    networkGroup: ~
+- raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,0d,ff,ff,1a,03,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~

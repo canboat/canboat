@@ -1,0 +1,48 @@
+pgn: 126720
+id: 0x1ef00ManufacturerProprietaryFastPacketAddressed
+description: '0x1EF00: Manufacturer Proprietary fast-packet addressed'
+type: Fast
+fallback: true
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1768
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,126720,204,255,8,00,08,3b,9f,f0,81,9c,51"  # from candumpSample3.txt
+  - "2023-01-01-00:00:00.000,7,126720,204,255,3,01,15,fb"
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    data: "0xf0819c5115fb"
+- raw: "2023-01-01-00:00:00.000,7,126720,1,255,62,e5,98,17,00,04,04,00,00,c0,40,00,00,c0,40,b6,c3,07,41,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,6c,e5,35,3f,dd,a9,98,3f,80,b3,b1,3f,76,a0,31,3f,00,00,00,00"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    data: "0x170004040000c0400000c040b6c307410000000000000000000000000000000000000000000000006ce5353fdda9983f80b3b13f76a0313f00000000"
+- raw: "2023-01-01-00:00:00.000,7,126720,1,255,42,e5,98,61,06,02,02,ff,ff,ff,ff,03,03,00,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,00,ff,ff,ff,7f,ff,ff,ff,7f,ff,ff,ff,7f,00,00,ff,7f"  # from garmin-ap-reactor-126720.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    data: "0x61060202ffffffff03030000ffffffffffffffffffff0000ffffff7fffffff7fffffff7f0000ff7f"

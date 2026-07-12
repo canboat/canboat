@@ -1,0 +1,84 @@
+pgn: 130833
+id: bGUserAndRemoteRename
+description: 'B&G: User and Remote rename'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: B & G
+  match: 381
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: dataType
+  name: Data Type
+  type: DYNAMIC_FIELD_KEY
+  bits: 12
+  lookupFieldtype: BANDG_KEY_VALUE
+  primaryKey: true
+- id: length
+  name: Length
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Length of field 8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: decimals
+  name: Decimals
+  type: LOOKUP
+  bits: 8
+  lookup: BANDG_DECIMALS
+- id: shortName
+  name: Short name
+  type: STRING_FIX
+  bits: 64
+- id: longName
+  name: Long name
+  type: STRING_FIX
+  bits: 128
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,3a,00,ff,fe,55,53,45,52,20,33,00,00,55,73,65,72,20,33,00,00,00,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "User 3"
+    length: 0
+    decimals: "Auto"
+    shortName: "USER 3"
+    longName: "User 3"
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,f6,00,ff,fe,52,45,4d,4f,54,45,20,37,52,65,6d,6f,74,65,20,37,00,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "Remote 7"
+    length: 0
+    decimals: "Auto"
+    shortName: "REMOTE 7"
+    longName: "Remote 7"
+- raw: "2023-01-01-00:00:00.000,7,130833,38,255,30,7d,99,c7,00,ff,fe,4d,49,44,20,44,50,54,00,4d,69,64,20,44,65,70,74,68,00,00,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    dataType: "Aft Depth"
+    length: 0
+    decimals: "Auto"
+    shortName: "MID DPT"
+    longName: "Mid Depth"

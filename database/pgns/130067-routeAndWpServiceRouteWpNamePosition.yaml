@@ -1,0 +1,57 @@
+pgn: 130067
+id: routeAndWpServiceRouteWpNamePosition
+description: Route and WP Service - Route - WP Name & Position
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfWpsInTheRouteWpList
+  name: Number of WPs in the Route/WP-List
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpId
+      name: WP ID
+      type: UINT16
+    - id: wpName
+      name: WP Name
+      type: STRING_LAU
+    - id: wpLatitude
+      name: WP Latitude
+      type: GEO_LAT_FIX32
+      rangeMin: -90.0
+      rangeMax: 90.0
+    - id: wpLongitude
+      name: WP Longitude
+      type: GEO_LON_FIX32
+      rangeMin: -180.0
+      rangeMax: 180.0
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130067,99,255,57,ff,ff,02,00,64,00,ff,ff,02,00,01,00,0b,01,42,65,6e,74,6c,65,69,67,68,00,a0,1c,e9,40,f3,20,56,21,00,10,01,45,61,73,74,20,42,65,6e,74,6c,65,69,67,68,00,f1,41,eb,80,47,aa,56"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 2
+    numberOfWpsInTheRouteWpList: 100
+    databaseId: ~
+    routeId: 2
+    wpId: 1
+    wpName: "Bentleigh"
+    wpLatitude: -38.4000000
+    wpLongitude: 144.5000000
+    wpId.2: 33
+    wpName.2: "East Bentleigh"
+    wpLatitude.2: -34.8000000
+    wpLongitude.2: 145.4000000

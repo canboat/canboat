@@ -1,0 +1,117 @@
+pgn: 130323
+id: meteorologicalStationData
+description: Meteorological Station Data
+type: Fast
+priority: 6
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: measurementDate
+  name: Measurement Date
+  type: DATE
+- id: measurementTime
+  name: Measurement Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: stationLatitude
+  name: Station Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: stationLongitude
+  name: Station Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: windSpeed
+  name: Wind Speed
+  type: SPEED_UFIX16_CM
+- id: windDirection
+  name: Wind Direction
+  type: ANGLE_UFIX16
+- id: windReference
+  name: Wind Reference
+  type: LOOKUP
+  bits: 3
+  lookup: WIND_REFERENCE
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: windGusts
+  name: Wind Gusts
+  type: SPEED_UFIX16_CM
+- id: atmosphericPressure
+  name: Atmospheric Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: ambientTemperature
+  name: Ambient Temperature
+  type: TEMPERATURE
+- id: stationId
+  name: Station ID
+  type: STRING_LAU
+  primaryKey: true
+- id: stationName
+  name: Station Name
+  type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,30,d9,c5,0d,d5,6b,70,1f,c0,a4,16,03,85,00,22,18,fa,ff,ff,fe,03,43,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23107.0000
+    stationLatitude: 52.7461333
+    stationLongitude: 5.1815616
+    windSpeed: 1.33
+    windDirection: 0.6178
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 289.95
+    stationId: ""
+    stationName: ""
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,b0,4f,10,0e,12,6d,70,1f,7e,a4,16,03,06,01,8a,21,fa,ff,ff,fe,03,4d,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23595.0000
+    stationLatitude: 52.7461650
+    stationLongitude: 5.1815550
+    windSpeed: 2.62
+    windDirection: 0.8586
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 290.05
+    stationId: ""
+    stationName: ""
+- raw: "2023-01-01-00:00:00.000,6,130323,36,255,30,f0,f1,3a,f0,71,d1,0d,28,6c,70,1f,4c,a4,16,03,2f,01,3f,23,fa,ff,ff,fe,03,39,71,02,01,02,01"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    mode: "Autonomous"
+    measurementDate: 15089
+    measurementTime: 23183.0000
+    stationLatitude: 52.7461416
+    stationLongitude: 5.1815500
+    windSpeed: 3.03
+    windDirection: 0.9023
+    windReference: "Apparent"
+    windGusts: ~
+    atmosphericPressure: 102200
+    ambientTemperature: 289.85
+    stationId: ""
+    stationName: ""

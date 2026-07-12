@@ -1,0 +1,138 @@
+pgn: 130824
+id: mercuryEngineKeyValueData
+description: 'Mercury: Engine Key-Value Data'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Lookups
+explanation: Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are only partially identified.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- repeat:
+    fields:
+    - id: key
+      name: Key
+      type: DYNAMIC_FIELD_KEY
+      bits: 12
+      lookupFieldtype: MERCURY_KEY_VALUE
+      primaryKey: true
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 4
+      description: Length of field 6
+      dynamicFieldLength: true
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: Data value
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130824,1,255,134,90,98,b1,41,4e,d6,64,00,b0,41,88,10,3b,00,c1,41,4e,d6,64,00,c0,41,88,10,3b,00,11,10,00,05,10,01,0a,40,00,00,00,00,51,11,00,0b,20,d0,02,50,11,00,d1,41,4e,d6,64,00,08,40,9b,97,0a,00,d0,41,88,10,3b,00,91,41,02,00,00,00,90,41,02,00,00,00,0e,20,67,16,01,12,00,a1,21,26,02,a0,21,26,02,11,11,64,11,22,00,00,10,11,64,71,11,00,0c,20,92,05,70,11,00,81,41,aa,0a,00,00,80,41,aa,0a,00,00,0d,40,85,94,0a,00,f1,11,00"  # from mercury-proprietary.raw
+  expects:
+    manufacturerCode: "Mercury Marine"
+    industryCode: "Marine Industry"
+    key: "Engine 1 Fuel Used"
+    length: 4
+    value: 660.8462
+    key.2: "Engine 0 Fuel Used"
+    length.2: 4
+    value.2: 387.0856
+    key.3: "Engine 1 Fuel Used Trip"
+    length.3: 4
+    value.3: 660.8462
+    key.4: "Engine 0 Fuel Used Trip"
+    length.4: 4
+    value.4: 387.0856
+    key.5: "Troll and ActiveTrim Active Helm"
+    length.5: 1
+    value.5: 0
+    key.6: "Smart-Contextual state"
+    length.6: 1
+    value.6: 1
+    key.7: "Water Distance"
+    length.7: 4
+    value.7: 0
+    key.8: "Engine 1 Trim Status"
+    length.8: 1
+    value.8: 0
+    key.9: "Trip Speed Avg"
+    length.9: 2
+    value.9: 0.000720
+    key.10: "Engine 0 Trim Status"
+    length.10: 1
+    value.10: 0
+    key.11: "Engine 1 Fuel Used Season"
+    length.11: 4
+    value.11: 660.8462
+    key.12: "Engine 0 Distance"
+    length.12: 4
+    value.12: 694171
+    key.13: "Engine 0 Fuel Used Season"
+    length.13: 4
+    value.13: 387.0856
+    key.14: "Engine 1 Engine Control Flags"
+    length.14: 4
+    value.14: 2
+    key.15: "Engine 0 Engine Control Flags"
+    length.15: 4
+    value.15: 2
+    key.16: "Trip Max Speed RPM"
+    length.16: 2
+    value.16: 5735
+    key.17: "Engine 1 Exhaust Valve"
+    length.17: 1
+    value.17: 0.00
+    key.18: "Engine 1 Idle RPM Setpoint"
+    length.18: 2
+    value.18: 550
+    key.19: "Engine 0 Idle RPM Setpoint"
+    length.19: 2
+    value.19: 550
+    key.20: "Engine 1 Predictive General Maintenance"
+    length.20: 1
+    value.20: 1.00
+    key.21: "Engine 1 Exhaust Status"
+    length.21: 2
+    value.21: 0
+    key.22: "Engine 0 Predictive General Maintenance"
+    length.22: 1
+    value.22: 1.00
+    key.23: "Engine 1 Malfunction Indicator Light"
+    length.23: 1
+    value.23: 0
+    key.24: "Trip Speed Max"
+    length.24: 2
+    value.24: 0.001426
+    key.25: "Engine 0 Malfunction Indicator Light"
+    length.25: 1
+    value.25: 0
+    key.26: "Engine 1 Engine Warning Flags"
+    length.26: 4
+    value.26: 2730
+    key.27: "Engine 0 Engine Warning Flags"
+    length.27: 4
+    value.27: 2730
+    key.28: "Engine 1 Distance"
+    length.28: 4
+    value.28: 693381
+    key.29: "Engine 1 Four Stroke Engine Oil"
+    length.29: 1
+    value.29: 0

@@ -1,0 +1,68 @@
+pgn: 130820
+id: fusionSiriusxmChannel
+description: 'Fusion: SiriusXM Channel'
+type: Fast
+variantOrder: 42
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: SiriusXM Channel
+  match: 32804
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: channelNumber
+  name: Channel Number
+  type: UINT16
+- id: channel
+  name: Channel
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,22,a3,99,24,80,04,64,00,0d,78,4c,20,48,6f,77,61,72,64,20,31,30,30,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Channel"
+    sourceId: 4
+    channelNumber: 100
+    channel: "xL Howard 100"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,25,a3,99,24,80,04,7b,00,10,50,52,58,20,50,75,62,6c,69,63,20,52,61,64,69,6f,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Channel"
+    sourceId: 4
+    channelNumber: 123
+    channel: "PRX Public Radio"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,16,a3,99,24,80,04,7a,00,07,4e,50,52,20,4e,6f,77,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Channel"
+    sourceId: 4
+    channelNumber: 122
+    channel: "NPR Now"

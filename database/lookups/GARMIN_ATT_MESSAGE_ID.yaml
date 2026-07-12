@@ -1,0 +1,8 @@
+name: GARMIN_ATT_MESSAGE_ID
+kind: pair
+bits: 16
+values:
+  40: Calibration Matrix Present
+  52: Set North State
+  65: Device Flags
+  67: COG Source Valid Flag

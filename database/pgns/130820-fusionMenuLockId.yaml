@@ -1,0 +1,47 @@
+pgn: 130820
+id: fusionMenuLockId
+description: 'Fusion: Menu Lock Id'
+type: Fast
+variantOrder: 15
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Menu Lock ID
+  match: 32786
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: lockId
+  name: Lock Id
+  type: UINT32
+- id: flags
+  name: Flags
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,13,255,9,a3,99,12,80,f8,15,00,00,3c"  # from fusion-130820-status.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Menu Lock ID"
+    lockId: 5624
+    flags: 60

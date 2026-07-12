@@ -1,0 +1,10 @@
+name: SIMNET_AUTOPILOT_MODE
+kind: pair
+bits: 8
+values:
+  0: Standby
+  1: Heading
+  3: Mode 4
+  4: Wind
+  5: Non-Follow-Up
+  6: Navigation

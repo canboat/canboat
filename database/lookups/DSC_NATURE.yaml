@@ -1,0 +1,16 @@
+name: DSC_NATURE
+kind: pair
+bits: 8
+values:
+  100: Fire
+  101: Flooding
+  102: Collision
+  103: Grounding
+  104: Listing
+  105: Sinking
+  106: Disabled and adrift
+  107: Undesignated
+  108: Abandoning ship
+  109: Piracy
+  110: Man overboard
+  112: EPIRB emission

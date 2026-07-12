@@ -1,0 +1,6 @@
+name: FUSION_SIRIUS_COMMAND
+kind: pair
+bits: 8
+values:
+  1: Next
+  2: Prev

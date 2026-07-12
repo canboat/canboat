@@ -1,0 +1,63 @@
+pgn: 130571
+id: libraryDataGroup
+description: Library Data Group
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
+fields:
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: type
+  name: Type
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_TYPE
+- id: zone
+  name: Zone
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_ZONE
+- id: groupId
+  name: Group ID
+  type: UINT32
+  description: Unique group ID
+- id: idOffset
+  name: ID offset
+  type: UINT16
+  description: First ID in this PGN
+- id: idCount
+  name: ID count
+  type: UINT16
+  description: Number of IDs in this PGN
+- id: totalIdCount
+  name: Total ID count
+  type: UINT16
+  description: Total IDs in group
+- repeat:
+    countField: idCount
+    fields:
+    - id: idType
+      name: ID type
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_ID_TYPE
+    - id: id
+      name: ID
+      type: UINT32
+    - id: name
+      name: Name
+      type: STRING_LAU
+- id: artist
+  name: Artist
+  type: STRING_LAU

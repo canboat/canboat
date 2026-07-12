@@ -1,0 +1,8 @@
+name: CHARGING_ALGORITHM
+kind: pair
+bits: 4
+values:
+  0: Trickle
+  1: Constant voltage / Constant current
+  2: 2 stage (no float)
+  3: 3 stage

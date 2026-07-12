@@ -1,0 +1,18 @@
+pgn: 65014
+id: utilityPhaseABasicAcQuantities
+description: Utility Phase A Basic AC Quantities
+type: Single
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: acRmsCurrent
+  name: AC RMS Current
+  type: CURRENT_UFIX16_A

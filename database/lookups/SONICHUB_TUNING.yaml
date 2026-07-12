@@ -1,0 +1,7 @@
+name: SONICHUB_TUNING
+kind: pair
+bits: 8
+values:
+  1: Seeking up
+  2: Tuned
+  3: Seeking down

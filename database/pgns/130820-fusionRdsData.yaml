@@ -1,0 +1,57 @@
+pgn: 130820
+id: fusionRdsData
+description: 'Fusion: RDS Data'
+type: Fast
+variantOrder: 16
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: RDS Data
+  match: 32850
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: rdsType
+  name: RDS Type
+  type: UINT8
+- id: programmeType
+  name: Programme Type
+  type: UINT8
+- id: rds
+  name: RDS
+  type: STRING_LZ
+  bits: 256
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,13,255,17,a3,99,52,80,01,01,05,08,20,39,32,2e,39,46,4d,20,00"  # from fusion-130820-status.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "RDS Data"
+    sourceId: 1
+    rdsType: 1
+    programmeType: 5
+    rds: " 92.9FM "

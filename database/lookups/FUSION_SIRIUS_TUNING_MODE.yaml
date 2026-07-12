@@ -1,0 +1,7 @@
+name: FUSION_SIRIUS_TUNING_MODE
+kind: pair
+bits: 8
+values:
+  1: Normal
+  2: Category
+  3: Preset

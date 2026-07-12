@@ -1,0 +1,59 @@
+pgn: 65360
+id: seatalkPilotLockedHeading
+description: 'Seatalk: Pilot Locked Heading'
+type: Single
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: targetHeadingTrue
+  name: Target Heading True
+  type: ANGLE_UFIX16
+- id: targetHeadingMagnetic
+  name: Target Heading Magnetic
+  type: ANGLE_UFIX16
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65360,204,255,8,3b,9f,ff,ff,ff,0e,49,ff"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    sid: ~
+    targetHeadingTrue: ~
+    targetHeadingMagnetic: 1.8702
+- raw: "2023-01-01-00:00:00.000,7,65360,204,255,8,3b,9f,ff,ff,ff,3c,72,ff"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    sid: ~
+    targetHeadingTrue: ~
+    targetHeadingMagnetic: 2.9244
+- raw: "2023-01-01-00:00:00.000,7,65360,204,255,8,3b,9f,ff,ff,ff,30,ee,ff"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    sid: ~
+    targetHeadingTrue: ~
+    targetHeadingMagnetic: 6.0976

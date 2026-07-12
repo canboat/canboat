@@ -1,0 +1,59 @@
+pgn: 130820
+id: fusionCapabilities
+description: 'Fusion: Capabilities'
+type: Fast
+variantOrder: 38
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Capabilities
+  match: 32798
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone1
+  name: Zone 1
+  type: UINT16
+- id: zone2
+  name: Zone 2
+  type: UINT16
+- id: zone3
+  name: Zone 3
+  type: UINT16
+- id: zone4
+  name: Zone 4
+  type: UINT16
+- id: global
+  name: Global
+  type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Capabilities"
+    zone1: 15
+    zone2: 15
+    zone3: 527
+    zone4: 0
+    global: 464

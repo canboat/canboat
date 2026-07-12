@@ -1,0 +1,168 @@
+- name: ELECTRICAL_CURRENT
+  description: Electrical current
+  url: https://en.wikipedia.org/wiki/Electric_current
+  unitDescription: Ampere
+  unit: A
+- name: ELECTRICAL_CHARGE
+  description: Electrical charge
+  url: https://en.wikipedia.org/wiki/Electric_charge
+  unitDescription: Coulomb
+  unit: C
+- name: ELECTRICAL_ENERGY
+  description: Electrical energy
+  comment: The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is equivalent to 3.6e6 J (Joules).
+  url: https://en.wikipedia.org/wiki/Electrical_energy
+  unitDescription: Kilo Watt Hour
+  unit: kWh
+- name: ELECTRICAL_POWER
+  description: Electrical power
+  comment: The amount of energy transferred or converted per unit time.
+  url: https://en.wikipedia.org/wiki/Electrical_power
+  unitDescription: Watt
+  unit: W
+- name: ELECTRICAL_APPARENT_POWER
+  description: AC apparent power
+  comment: The amount of power transferred where the current and voltage are in phase.
+  url: https://en.wikipedia.org/wiki/Volt-ampere
+  unitDescription: Volt Ampere
+  unit: VA
+- name: ELECTRICAL_REACTIVE_POWER
+  description: AC reactive power
+  comment: The amount of power transferred where the current and voltage are not in phase.
+  url: https://en.wikipedia.org/wiki/Volt-ampere#Reactive
+  unitDescription: Volt Ampere Reactive
+  unit: VAR
+- name: POTENTIAL_DIFFERENCE
+  description: Potential difference
+  url: https://en.wikipedia.org/wiki/Voltage
+  unitDescription: Volt
+  unit: V
+- name: POWER_FACTOR
+  description: Power Factor
+  comment: Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the circuit. If less than one, the voltage and current are not in phase.
+  url: https://en.wikipedia.org/wiki/Power_factor
+  unitDescription: Cos(Phi)
+  unit: Cos Phi
+- name: LENGTH
+  description: Length
+  comment: The physical size in one dimension of an object.
+  url: https://en.wikipedia.org/wiki/Length
+  unitDescription: Meter
+  unit: m
+- name: DISTANCE
+  description: Distance
+  comment: The amount of separation between two objects.
+  url: https://en.wikipedia.org/wiki/Distance
+  unitDescription: meter
+  unit: m
+- name: SPEED
+  description: Speed
+  comment: The velocity, or length per unit of time.
+  url: https://en.wikipedia.org/wiki/Speed
+  unitDescription: meter per second
+  unit: m/s
+- name: ANGLE
+  description: Angle
+  comment: All standardized PGNs seen so far all use radians, but some manufacturer specific PGNs use degrees (deg).
+  url: https://en.wikipedia.org/wiki/Angle
+  unitDescription: radian
+  unit: rad
+- name: ANGULAR_VELOCITY
+  description: Angular velocity
+  comment: The speed at which a measured angle changes
+  url: https://en.wikipedia.org/wiki/Angular_velocity
+  unitDescription: radians per second
+  unit: rad/s
+- name: VOLUME
+  description: Volume
+  comment: A measure of occupied three-dimensional space.
+  url: https://en.wikipedia.org/wiki/Volume
+  unitDescription: liter
+  unit: L
+- name: VOLUMETRIC_FLOW
+  description: Volumetric flow
+  comment: The volume of fluid which passes per unit time.
+  url: https://en.wikipedia.org/wiki/Volumetric_flow_rate
+  unitDescription: liter per hour
+  unit: L/h
+- name: MAGNETIC_FIELD
+  description: Magnetic field
+  url: https://en.wikipedia.org/wiki/Magnetic_field
+  unitDescription: Tesla
+  unit: T
+- name: FREQUENCY
+  description: Frequency
+  url: https://en.wikipedia.org/wiki/Radio_frequency
+  unitDescription: Hertz
+  unit: Hz
+- name: DATE
+  description: Date
+  comment: A calendar date is a reference to a particular day in time, in NMEA 2000 expressed as the number of days since 1970-01-01 (UNIX epoch).
+  url: https://en.wikipedia.org/wiki/Calendar_date
+  unitDescription: days
+  unit: d
+- name: TIME
+  description: Time
+  comment: Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)
+  url: https://en.wikipedia.org/wiki/Time
+  unitDescription: Second
+  unit: s
+- name: DURATION
+  description: Duration of an event or interval between two points in time
+  unitDescription: Second
+  unit: s
+- name: GEOGRAPHICAL_LATITUDE
+  description: Geographical latitude
+  comment: Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.
+  url: https://en.wikipedia.org/wiki/Geographic_coordinate_system
+  unitDescription: degree
+  unit: deg
+- name: GEOGRAPHICAL_LONGITUDE
+  description: Geographical longitude
+  comment: Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.
+  url: https://en.wikipedia.org/wiki/Geographic_coordinate_system
+  unitDescription: degree
+  unit: deg
+- name: TEMPERATURE
+  description: Temperature
+  url: https://en.wikipedia.org/wiki/Temperature
+  unitDescription: Kelvin
+  unit: K
+- name: PRESSURE
+  description: Pressure
+  url: https://en.wikipedia.org/wiki/Pressure
+  unitDescription: Pascal
+  unit: Pa
+- name: PRESSURE_RATE
+  description: Pressure rate
+  comment: How the pressure changes over time.
+  url: https://en.wikipedia.org/wiki/Pressure
+  unitDescription: Pascal per hour
+  unit: Pa/hr
+- name: CONCENTRATION
+  description: Concentration of one substance in another, in this marine context usually the amount of salts in water
+  url: https://www.engineeringtoolbox.com/water-salinity-d_1251.html
+  unitDescription: parts per million
+  unit: ppm
+- name: DIMENSIONLESS_RATIO
+  description: Dimensionless ratio
+  comment: A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity (m/m), clock drift (s/s), and similar.
+  url: https://en.wikipedia.org/wiki/Dimensionless_quantity
+  unitDescription: ratio
+  unit: ratio
+- name: SQUARE_ROOT_LENGTH
+  description: Square root of length
+  comment: Used in GPS/GNSS almanac data for the square root of the semi-major axis of satellite orbits.
+  url: https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes
+  unitDescription: sqrt(m)
+  unit: sqrt(m)
+- name: SIGNAL_STRENGTH
+  description: Signal strength expressed in dB with respect to 1 uV/m
+  url: https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications
+  unitDescription: decibel
+  unit: dB
+- name: SIGNAL_TO_NOISE_RATIO
+  description: Signal-to-noise ratio
+  url: https://en.wikipedia.org/wiki/Signal-to-noise_ratio
+  unitDescription: decibel
+  unit: dB

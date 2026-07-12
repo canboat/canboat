@@ -1,0 +1,79 @@
+pgn: 65420
+id: simnetApUnknown3
+description: 'Simnet: AP Unknown 3'
+type: Single
+priority: 6
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Broadcast by the AC (AutoPilot Computer): the low nibble of byte 6 is a sub-index selecting which internal variable
+  is reported (sub-index 0 and 1 observed); the high nibble is always 0xF. Observed emitted by the AC-42; the newer NAC-3
+  does not emit it.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: value
+  name: Value
+  type: UINT16
+- id: c
+  name: C
+  type: UINT8
+- id: d
+  name: D
+  type: UINT8
+- id: subIndex
+  name: Sub Index
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Selects the reported variable (0 and 1 seen)
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65420,40,255,8,41,9f,ff,ff,ff,ff,f0,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    value: ~
+    c: ~
+    d: ~
+    subIndex: 0
+- raw: "2023-01-01-00:00:00.000,6,65420,2,255,8,41,9f,4b,a0,b2,07,f1,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    value: 41035
+    c: 178
+    d: 7
+    subIndex: 1
+- raw: "2023-01-01-00:00:00.000,6,65420,2,255,8,41,9f,18,00,b3,07,f1,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    value: 24
+    c: 179
+    d: 7
+    subIndex: 1

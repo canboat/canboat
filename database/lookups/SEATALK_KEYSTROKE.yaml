@@ -1,0 +1,14 @@
+name: SEATALK_KEYSTROKE
+kind: pair
+bits: 8
+values:
+  1: Auto
+  2: Standby
+  3: Wind
+  5: '-1'
+  6: '-10'
+  7: '+1'
+  8: '+10'
+  33: -1 and -10
+  34: +1 and +10
+  35: Track

@@ -1,0 +1,7 @@
+name: SIMNET_DEVICE_MODEL
+kind: pair
+bits: 8
+values:
+  0: AC
+  1: Other device
+  100: NAC

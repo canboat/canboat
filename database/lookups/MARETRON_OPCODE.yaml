@@ -1,0 +1,26 @@
+name: MARETRON_OPCODE
+kind: pair
+bits: 8
+values:
+  0: Read All
+  1: Write Register
+  2: Read Config
+  3: Write Config
+  4: Calibrate
+  5: Clear Calibration
+  6: Status
+  7: Clear Status
+  8: Reset Factory Default
+  9: Debug
+  16: Write Instance
+  17: Read Instance
+  32: Write Label
+  33: Read Label
+  48: Write Switch Config
+  49: Read Switch Config
+  64: Write Alert Config
+  65: Read Alert Config
+  80: Write Channel Config
+  81: Read Channel Config
+  86: Read Channel Config Extended
+  87: Write Channel Config Extended

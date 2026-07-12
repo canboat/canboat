@@ -1,0 +1,21 @@
+pgn: 61444
+id: ecu1
+description: 'ECU #1'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: engineRpm
+  name: Engine RPM
+  type: ROTATION_UFIX16_RPM_HIGHRES
+- id: reserved3
+  name: Reserved
+  type: RESERVED
+  bits: 24
+notes: 'J1939 ECU #1 PGN 61444'

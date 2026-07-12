@@ -1,0 +1,62 @@
+pgn: 130820
+id: fusionMultiroom
+description: 'Fusion: Multiroom'
+type: Fast
+variantOrder: 17
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Multiroom
+  match: 32824
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+  allowLookupWidthMismatch: true
+- id: ipAddress1
+  name: IP Address 1
+  type: UINT8
+- id: ipAddress2
+  name: IP Address 2
+  type: UINT8
+- id: ipAddress3
+  name: IP Address 3
+  type: UINT8
+- id: ipAddress4
+  name: IP Address 4
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,13,255,9,a3,99,38,80,00,00,00,00,00"  # from fusion-130820-status.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Multiroom"
+    enabled: "No"
+    ipAddress1: 0
+    ipAddress2: 0
+    ipAddress3: 0
+    ipAddress4: 0

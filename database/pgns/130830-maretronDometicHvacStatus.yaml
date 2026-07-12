@@ -1,0 +1,50 @@
+pgn: 130830
+id: maretronDometicHvacStatus
+description: 'Maretron: Dometic HVAC Status'
+type: Fast
+variantOrder: 1
+priority: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: additionalSensorTemperature
+  name: Additional Sensor Temperature
+  type: UINT8
+- id: canId
+  name: CAN ID
+  type: UINT32
+- id: state
+  name: State
+  type: UINT8
+- id: hardwareStatus
+  name: Hardware Status
+  type: UINT8
+- id: faults
+  name: Faults
+  type: UINT8
+- id: lineVoltage
+  name: Line Voltage
+  type: UINT8
+- id: compressorCurrent
+  name: Compressor Current
+  type: UINT8

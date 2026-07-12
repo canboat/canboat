@@ -1,0 +1,46 @@
+pgn: 126720
+id: airmarAttitudeOffset
+description: 'Airmar: Attitude Offset'
+type: Fast
+variantOrder: 34
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Attitude Offsets
+  match: 32
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: azimuthOffset
+  name: Azimuth offset
+  type: ANGLE_FIX16
+  description: 'Positive: sensor rotated to port, negative: sensor rotated to starboard'
+- id: pitchOffset
+  name: Pitch offset
+  type: ANGLE_FIX16
+  description: 'Positive: sensor tilted to bow, negative: sensor tilted to stern'
+- id: rollOffset
+  name: Roll offset
+  type: ANGLE_FIX16
+  description: 'Positive: sensor tilted to port, negative: sensor tilted to starboard'

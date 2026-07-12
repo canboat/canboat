@@ -1,0 +1,16 @@
+name: REPORTING_INTERVAL
+kind: pair
+bits: 4
+values:
+  0: As given by the autonomous mode
+  1: 10 min
+  2: 6 min
+  3: 3 min
+  4: 1 min
+  5: 30 sec
+  6: 15 sec
+  7: 10 sec
+  8: 5 sec
+  9: 2 sec (not applicable to Class B CS)
+  10: Next shorter reporting interval
+  11: Next longer reporting interval

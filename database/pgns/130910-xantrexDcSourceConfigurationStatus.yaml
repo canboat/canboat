@@ -1,0 +1,56 @@
+pgn: 130910
+id: xantrexDcSourceConfigurationStatus
+description: 'Xantrex: DC Source Configuration Status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Xantrex Technology Inc.
+  match: 168
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: dcSourceInstance
+  name: DC Source Instance
+  type: UINT8
+  primaryKey: true
+- id: dcUvShutdownLevel
+  name: DC UV Shutdown Level
+  type: VOLTAGE_UFIX16_10MV
+- id: dcUvWarningLevel
+  name: DC UV Warning Level
+  type: VOLTAGE_UFIX16_10MV
+- id: dcUvShutdownDelay
+  name: DC UV Shutdown Delay
+  type: VOLTAGE_UFIX16_10MV
+- id: dcUvRecoverLevel
+  name: DC UV Recover Level
+  type: VOLTAGE_UFIX16_10MV
+- id: dcOvShutdownLevel
+  name: DC OV Shutdown Level
+  type: VOLTAGE_UFIX16_10MV
+- id: dcOvWarningLevel
+  name: DC OV Warning Level
+  type: VOLTAGE_UFIX16_10MV
+- id: dcOvShutdownDelay
+  name: DC OV Shutdown Delay
+  type: VOLTAGE_UFIX16_10MV
+- id: dcOvRecoverLevel
+  name: DC OV Recover Level
+  type: VOLTAGE_UFIX16_10MV

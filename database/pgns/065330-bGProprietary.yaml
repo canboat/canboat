@@ -1,0 +1,38 @@
+pgn: 65330
+id: bGProprietary
+description: 'B&G: Proprietary'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: B & G
+  match: 381
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65330,5,255,8,7d,99,00,00,ff,ff,ff,ff"  # from susteranna-actisense-serial.raw
+  expects:
+    manufacturerCode: "B & G"
+    industryCode: "Marine Industry"
+    data: "0x0000ffffffff"

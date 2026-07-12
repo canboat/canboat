@@ -1,0 +1,60 @@
+pgn: 130820
+id: fusionSiriusxmCategory
+description: 'Fusion: SiriusXM Category'
+type: Fast
+variantOrder: 46
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: SiriusXM Category
+  match: 32808
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: channel
+  name: Channel
+  type: UINT16
+- id: name
+  name: Name
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,21,a3,99,28,80,04,64,00,0c,48,6f,77,61,72,64,20,53,74,65,72,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Category"
+    sourceId: 4
+    channel: 100
+    name: "Howard Stern"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,22,a3,99,28,80,04,7a,00,0d,4e,65,77,73,2f,50,6f,6c,69,74,69,63,73,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Category"
+    sourceId: 4
+    channel: 122
+    name: "News/Politics"

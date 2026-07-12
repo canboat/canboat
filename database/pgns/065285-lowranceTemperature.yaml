@@ -1,0 +1,56 @@
+pgn: 65285
+id: lowranceTemperature
+description: 'Lowrance: Temperature'
+type: Single
+variantOrder: 2
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: temperatureSource
+  name: Temperature Source
+  type: LOOKUP
+  bits: 8
+  lookup: TEMPERATURE_SOURCE
+  primaryKey: true
+- id: actualTemperature
+  name: Actual Temperature
+  type: TEMPERATURE
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,0,65285,0,0,9,8c,80,00,a1,72,ff,ff,ff,9e"  # from lowrance-65285.raw
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    temperatureSource: "Sea Temperature"
+    actualTemperature: 293.45
+- raw: "2023-01-01-00:00:00.000,0,65285,0,0,9,8c,80,03,69,73,ff,ff,ff,00"  # from lowrance-65285.raw
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    temperatureSource: "Engine Room Temperature"
+    actualTemperature: 295.45
+- raw: "2023-01-01-00:00:00.000,0,65285,0,0,9,8c,80,07,ab,72,ff,ff,ff,ff"  # from lowrance-65285.raw
+  expects:
+    manufacturerCode: "Lowrance"
+    industryCode: "Marine Industry"
+    temperatureSource: "Refrigeration Temperature"
+    actualTemperature: 293.55

@@ -1,0 +1,57 @@
+pgn: 126720
+id: garminAhrsAttDeviceFlags
+description: 'Garmin AHRS ATT: Device Flags'
+type: Fast
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: subProtocolId
+  name: Sub-protocol ID
+  type: LOOKUP
+  bits: 16
+  description: AHRS ATT transport
+  match: 1900
+  lookup: GARMIN_MESSAGE_ID
+  primaryKey: true
+- id: wrapperByte1
+  name: Wrapper Byte 1
+  type: UINT8
+  description: '1'
+  match: 2
+- id: wrapperByte2
+  name: Wrapper Byte 2
+  type: UINT8
+  description: '2'
+  match: 2
+- id: attMessageId
+  name: ATT Message ID
+  type: LOOKUP
+  bits: 16
+  description: Device Flags
+  match: 65
+  lookup: GARMIN_ATT_MESSAGE_ID
+  primaryKey: true
+- id: deviceFlags
+  name: Device Flags
+  type: UINT32

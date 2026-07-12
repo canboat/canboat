@@ -1,0 +1,50 @@
+pgn: 127245
+id: rudder
+description: Rudder
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: directionOrder
+  name: Direction Order
+  type: LOOKUP
+  bits: 3
+  lookup: DIRECTION_RUDDER
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: angleOrder
+  name: Angle Order
+  type: ANGLE_FIX16
+- id: position
+  name: Position
+  type: ANGLE_FIX16
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: https://web.archive.org/web/20150702022039/www.maretron.com/support/manuals/RAA100UM_1.0.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,2,127245,5,255,8,ff,07,ff,7f,4b,18,ff,ff"  # from merrimac-2022.raw
+  expects:
+    instance: ~
+    directionOrder: ~
+    angleOrder: ~
+    position: 0.6219
+- raw: "2023-01-01-00:00:00.000,2,127245,3,255,8,ff,00,00,00,ff,7f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    instance: ~
+    directionOrder: "No Order"
+    angleOrder: 0.0000
+    position: ~
+- raw: "2023-01-01-00:00:00.000,2,127245,2,255,8,ff,ff,15,02,28,02,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    instance: ~
+    directionOrder: ~
+    angleOrder: 0.0533
+    position: 0.0552

@@ -1,0 +1,70 @@
+pgn: 130918
+id: seatalkRouteInformation
+description: 'SeaTalk: Route Information'
+type: Fast
+priority: 7
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: currentWaypointSequence
+  name: Current Waypoint Sequence
+  type: UINT16
+- id: currentWaypointName
+  name: Current Waypoint Name
+  type: STRING_FIX
+  bits: 128
+- id: nextWaypointSequence
+  name: Next Waypoint Sequence
+  type: UINT16
+- id: nextWaypointName
+  name: Next Waypoint Name
+  type: STRING_FIX
+  bits: 128
+- id: unknown
+  name: Unknown
+  type: UINT8
+  note: Maybe DIRECTION_REFERENCE? I've never seen Raymarine originate a magnetic yet
+- id: distancePositionToNextWaypoint
+  name: Distance, Position to Next Waypoint
+  type: LENGTH_UFIX32_M
+- id: bearingPositionToNextWaypointTrue
+  name: Bearing, Position to Next Waypoint, True
+  type: ANGLE_UFIX16
+- id: bearingCurrentWaypointToNextWaypointTrue
+  name: Bearing, Current Waypoint to Next Waypoint, True
+  type: ANGLE_UFIX16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130918,6,255,47,3b,9f,01,00,57,61,79,70,6f,69,6e,74,20,31,33,34,51,77,65,72,02,00,57,61,79,70,6f,69,6e,74,20,37,34,36,00,3b,a7,02,00,bf,47,1d,00,3a,07,36,d3"  # from raymarine-string.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    currentWaypointSequence: 1
+    currentWaypointName: "Waypoint 134Qwer"
+    nextWaypointSequence: 2
+    nextWaypointName: "Waypoint 746"
+    unknown: 0
+    distancePositionToNextWaypoint: 1918911
+    bearingPositionToNextWaypointTrue: 0.1850
+    bearingCurrentWaypointToNextWaypointTrue: 5.4070

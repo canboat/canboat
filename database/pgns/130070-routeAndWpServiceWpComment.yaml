@@ -1,0 +1,43 @@
+pgn: 130070
+id: routeAndWpServiceWpComment
+description: Route and WP Service - WP Comment
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startId
+  name: Start ID
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfWpsWithComments
+  name: Number of WPs with Comments
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpIdRps
+      name: WP ID / RPS#
+      type: UINT16
+    - id: comment
+      name: Comment
+      type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130070,99,255,53,ff,ff,02,00,64,00,ff,ff,02,00,01,00,13,01,42,65,6e,74,6c,65,69,67,68,2d,43,6f,6d,6d,65,6e,74,02,00,14,01,47,6c,65,6e,68,75,6e,74,6c,79,2d,43,6f,6d,6d,65,6e,74"  # from actisense-522.candump.log
+  expects:
+    startId: ~
+    nitems: 2
+    numberOfWpsWithComments: 100
+    databaseId: ~
+    routeId: 2
+    wpIdRps: 1
+    comment: "Bentleigh-Comment"
+    wpIdRps.2: 2
+    comment.2: "Glenhuntly-Comment"

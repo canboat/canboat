@@ -1,0 +1,38 @@
+pgn: 129033
+id: timeDate
+description: Time & Date
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: date
+  name: Date
+  type: DATE
+- id: time
+  name: Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: localOffset
+  name: Local Offset
+  type: DURATION_FIX16_MIN
+samples:
+- raw: "2023-01-01-00:00:00.000,3,129033,36,255,8,f1,3a,30,d9,c5,0d,ff,7f"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    date: 15089
+    time: 23107.0000
+    localOffset: ~
+- raw: "2023-01-01-00:00:00.000,3,129033,36,255,8,f1,3a,10,23,00,0e,ff,7f"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    date: 15089
+    time: 23489.0000
+    localOffset: ~
+- raw: "2023-01-01-00:00:00.000,3,129033,36,255,8,f1,3a,40,00,c6,0d,ff,7f"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    date: 15089
+    time: 23108.0000
+    localOffset: ~

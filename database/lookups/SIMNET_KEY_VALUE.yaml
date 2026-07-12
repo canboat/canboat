@@ -1,0 +1,198 @@
+name: SIMNET_KEY_VALUE
+kind: fieldtype
+bits: 24
+values:
+- value: 0
+  name: Heading Offset
+  type: ANGLE_FIX16
+- value: 41
+  name: Timezone offset
+  type: DURATION_FIX16_MIN
+- value: 260
+  name: True wind high
+  type: SPEED_UFIX16_CM
+- value: 264
+  name: Deep water
+  type: LENGTH_UFIX16_CM
+- value: 516
+  name: True wind low
+  type: SPEED_UFIX16_CM
+- value: 517
+  name: Low boat speed
+  type: SPEED_UFIX16_CM
+- value: 520
+  name: Shallow water
+  type: LENGTH_UFIX16_CM
+- value: 768
+  name: Local field
+  type: PERCENTAGE_FIX16
+- value: 1024
+  name: Field angle
+  type: ANGLE_FIX16
+- value: 1280
+  name: Heading damping
+  type: DURATION_UFIX16_1_11S
+- value: 1283
+  name: Apparent wind damping
+  type: DURATION_UFIX16_1_11S
+- value: 1285
+  name: Boat speed damping
+  type: DURATION_UFIX16_1_11S
+- value: 1329
+  name: Trim angle damping
+  type: DURATION_UFIX16_1_11S
+- value: 1335
+  name: SOG damping
+  type: DURATION_UFIX16_1_11S
+- value: 1336
+  name: COG damping
+  type: DURATION_UFIX16_1_11S
+- value: 1337
+  name: Heel angle damping
+  type: DURATION_UFIX16_1_11S
+- value: 1345
+  name: Tide damping
+  type: DURATION_UFIX16_1_11S
+- value: 1349
+  name: True wind speed damping
+  type: DURATION_UFIX16_1_111S
+- value: 1800
+  name: Anchor depth
+  type: LENGTH_UFIX16_CM
+- value: 4863
+  name: Backlight level
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_BACKLIGHT_LEVEL
+- value: 5120
+  name: Heading unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_HEADING_UNIT
+- value: 5123
+  name: Wind speed unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_WIND_SPEED_UNIT
+- value: 5125
+  name: Speed unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_SPEED_UNIT
+- value: 5126
+  name: Temperature unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_TEMPERATURE_UNIT
+- value: 5127
+  name: Distance unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DISTANCE_UNIT
+- value: 5128
+  name: Depth unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEPTH_UNIT
+- value: 5134
+  name: Volume unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_VOLUME_UNIT
+- value: 5160
+  name: Time format
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_TIME_FORMAT
+- value: 5161
+  name: Time hour display
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_HOUR_DISPLAY
+- value: 5163
+  name: Pressure unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_PRESSURE_UNIT
+- value: 5164
+  name: Barometric pressure unit
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_BARO_PRESSURE_UNIT
+- value: 5174
+  name: Distance unit (companion)
+  type: UINT8
+- value: 9983
+  name: Night mode
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NIGHT_MODE
+- value: 11524
+  name: True wind shift
+  type: ANGLE_FIX16
+- value: 16903
+  name: Race timer duration
+  type: DURATION_UFIX32_MIN
+- value: 22296
+  name: AP low boat speed
+  type: SPEED_UFIX16_CM
+- value: 32789
+  name: Alert bits
+  type: BITLOOKUP
+  bits: 64
+  lookup: SIMNET_ALERT_BITFIELD
+  lookupKind: bit
+- value: 36871
+  name: Distance unit (small)
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DISTANCE_SMALL_UNIT
+- value: 40711
+  name: Race timer auto start
+  type: LOOKUP
+  bits: 8
+  lookup: OFF_ON
+- value: 44079
+  name: Night mode color
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NIGHT_MODE_COLOR
+- value: 49159
+  name: Race timer rolling start
+  type: LOOKUP
+  bits: 8
+  lookup: OFF_ON
+- value: 53760
+  name: Auto calibration mode
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_COMPASS_AUTOCAL_MODE
+- value: 55087
+  name: Day mode invert
+  type: UINT8
+valueNotes:
+  768: 'compass local magnetic field %, see #718'
+  1280: 'see #730'
+  1283: 'see #730'
+  1285: 'see #730'
+  1329: 'see #730'
+  1335: 'see #730'
+  1336: 'see #730'
+  1337: 'see #730'
+  1345: 'see #730'
+  1349: 'see #730'
+  5120: 'see #729'
+  5123: 'see #729'
+  5125: 'see #729'
+  5126: 'see #729'
+  5127: 'see #729'
+  5128: 'see #729'
+  5134: 'see #729'
+  5163: 'see #729'
+  5164: 'see #729'
+  5174: 'always fires alongside key 5127 Distance unit; only value 0 observed, meaning unconfirmed, see #729'
+  16903: 'u32 minutes, see #409'
+  36871: 'see #729'
+  40711: 'see #409'
+  49159: 'see #409'
+  53760: 'see #718'

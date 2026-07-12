@@ -1,0 +1,19 @@
+name: DSC_SECOND_TELECOMMAND
+kind: pair
+bits: 8
+values:
+  100: No reason given
+  101: Congestion at MSC
+  102: Busy
+  103: Queue indication
+  104: Station barred
+  105: No operator available
+  106: Operator temporarily unavailable
+  107: Equipment disabled
+  108: Unable to use proposed channel
+  109: Unable to use proposed mode
+  110: Ships and aircraft of States not parties to an armed conflict
+  111: Medical transports
+  112: Pay phone/public call office
+  113: Fax/data
+  126: No information

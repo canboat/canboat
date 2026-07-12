@@ -1,0 +1,53 @@
+pgn: 130822
+id: mercuryEngineTelemetryLowSpeed
+description: 'Mercury: Engine Telemetry, Low Speed'
+type: Fast
+variantOrder: 11
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+explanation: Low-speed engine telemetry broadcast by Mercury engine gateways. Carries the malfunction-indicator (check-engine) state, intake-air and exhaust-gas temperatures (raw, Mercury-specific scaling), a 'GPL' fraction (raw / 128) and an engine run-state code. This is a flat fixed record, unrelated to the Navico and BEP variants of this PGN number; the manufacturer code in the first two bytes is the only disambiguator. Observed on live engine networks.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: engineInstance
+  name: Engine Instance
+  type: UINT8
+- id: malfunctionIndicator
+  name: Malfunction Indicator
+  type: UINT8
+  description: Check-engine indicator lamp (0 = off, 1 = on)
+- id: intakeAirTemperature
+  name: Intake Air Temperature
+  type: UINT8
+  description: Raw value, Mercury-specific scaling
+- id: exhaustGasTemperature
+  name: Exhaust Gas Temperature
+  type: UINT16
+  description: Raw value, Mercury-specific scaling
+- id: gpl
+  name: GPL
+  type: UINT8
+  description: Raw value; fraction = value / 128
+- id: engineState
+  name: Engine State
+  type: UINT8
+  description: Raw engine run-state code

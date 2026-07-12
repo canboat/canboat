@@ -1,0 +1,31 @@
+pgn: 60416
+id: isoTransportProtocolConnectionManagementAbort
+description: ISO Transport Protocol, Connection Management - Abort
+type: Single
+variantOrder: 5
+priority: 6
+interval: irregular
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to announce an abort of a long message spanning multiple frames.
+url: https://embeddedflakes.com/j1939-transport-protocol/
+fields:
+- id: groupFunctionCode
+  name: Group Function Code
+  type: LOOKUP
+  bits: 8
+  description: Abort
+  match: 255
+  lookup: ISO_COMMAND
+- id: reason
+  name: Reason
+  type: BINARY
+  bits: 8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0

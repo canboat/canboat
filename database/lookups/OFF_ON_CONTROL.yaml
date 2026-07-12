@@ -1,0 +1,8 @@
+name: OFF_ON_CONTROL
+kind: pair
+bits: 2
+values:
+  0: 'Off'
+  1: 'On'
+  2: Reserved
+  3: Take no action (no change)

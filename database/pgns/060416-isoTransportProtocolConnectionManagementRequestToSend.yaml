@@ -1,0 +1,40 @@
+pgn: 60416
+id: isoTransportProtocolConnectionManagementRequestToSend
+description: ISO Transport Protocol, Connection Management - Request To Send
+type: Single
+variantOrder: 1
+priority: 6
+interval: irregular
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to prepare the receiver for the fact that this sender wants to transmit a long message. The receiver will respond with CTS.
+url: https://embeddedflakes.com/j1939-transport-protocol/
+fields:
+- id: groupFunctionCode
+  name: Group Function Code
+  type: LOOKUP
+  bits: 8
+  description: RTS
+  match: 16
+  lookup: ISO_COMMAND
+- id: messageSize
+  name: Message size
+  type: UINT16
+  description: bytes
+- id: packets
+  name: Packets
+  type: UINT8
+  description: packets
+- id: packetsReply
+  name: Packets reply
+  type: UINT8
+  description: packets sent in response to CTS
+  note: This one is still mysterious to me...
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0
+notes: |-
+  ''ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have
+  9 or more data bytes. This PGN's role in the transport process is determined by the group function value found in the first
+  data byte of the PGN.''

@@ -1,0 +1,25 @@
+pgn: 130054
+id: loranCSignalData
+description: Loran-C Signal Data
+type: Fast
+priority: 3
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: groupRepetitionIntervalGri
+  name: Group Repetition Interval (GRI)
+  type: DURATION_FIX32_NANO_S
+- id: stationIdentifier
+  name: Station identifier
+  type: STRING_FIX
+  bits: 8
+- id: stationSnr
+  name: Station SNR
+  type: SIGNALTONOISERATIO_FIX16
+- id: stationEcd
+  name: Station ECD
+  type: DURATION_FIX32_NANO_S
+- id: stationAsf
+  name: Station ASF
+  type: DURATION_FIX32_NANO_S

@@ -1,0 +1,66 @@
+pgn: 130850
+id: simnetCommandApNav
+description: 'Simnet: Command AP Nav'
+type: Fast
+variantOrder: 4
+priority: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of commanded device
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: commandType
+  name: Command Type
+  type: LOOKUP
+  bits: 8
+  description: AP Command
+  match: 10
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: event
+  name: Event
+  type: LOOKUP
+  bits: 8
+  description: Nav mode
+  match: 10
+  lookup: SIMNET_AP_EVENTS
+- id: spare9
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: reserved10
+  name: Reserved
+  type: RESERVED
+  bits: 24

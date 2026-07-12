@@ -1,0 +1,61 @@
+pgn: 65284
+id: maretronProprietaryDcBreakerCurrent
+description: 'Maretron: Proprietary DC Breaker Current'
+type: Single
+variantOrder: 1
+priority: 6
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: bankInstance
+  name: Bank Instance
+  type: UINT8
+  primaryKey: true
+- id: indicatorNumber
+  name: Indicator Number
+  type: UINT8
+- id: breakerCurrent
+  name: Breaker Current
+  type: CURRENT_FIX16_DA
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65284,72,255,8,89,98,02,01,00,00,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    bankInstance: 2
+    indicatorNumber: 1
+    breakerCurrent: 0.0
+- raw: "2023-01-01-00:00:00.000,6,65284,72,255,8,89,98,02,02,04,00,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    bankInstance: 2
+    indicatorNumber: 2
+    breakerCurrent: 0.4
+- raw: "2023-01-01-00:00:00.000,6,65284,72,255,8,89,98,02,03,01,00,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    bankInstance: 2
+    indicatorNumber: 3
+    breakerCurrent: 0.1

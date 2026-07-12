@@ -1,0 +1,8 @@
+name: SIMNET_AP_MODE
+kind: pair
+bits: 8
+values:
+  2: Heading
+  3: Wind
+  10: Nav
+  11: No Drift

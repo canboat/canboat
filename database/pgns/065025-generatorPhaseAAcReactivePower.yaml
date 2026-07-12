@@ -1,0 +1,41 @@
+pgn: 65025
+id: generatorPhaseAAcReactivePower
+description: Generator Phase A AC Reactive Power
+type: Single
+priority: 3
+fields:
+- id: reactivePower
+  name: Reactive Power
+  type: POWER_FIX32_VAR_OFFSET
+- id: powerFactor
+  name: Power factor
+  type: UINT16
+  resolution: 6.10352e-05
+  unit: Cos Phi
+  rangeMin: 0.0
+  rangeMax: 3.999755859375
+- id: powerFactorLagging
+  name: Power Factor Lagging
+  type: LOOKUP
+  bits: 2
+  lookup: POWER_FACTOR
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 14
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65025,196,255,8,1a,95,35,77,80,79,fd,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: 282
+    powerFactor: 1.89844
+    powerFactorLagging: "Lagging"
+- raw: "2023-01-01-00:00:00.000,3,65025,194,255,8,00,94,35,77,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: 0
+    powerFactor: ~
+    powerFactorLagging: ~
+- raw: "2023-01-01-00:00:00.000,3,65025,195,255,8,1f,98,35,77,c0,7d,fd,ff"  # from dirona-actisense-serial.raw
+  expects:
+    reactivePower: 1055
+    powerFactor: 1.96485
+    powerFactorLagging: "Lagging"

@@ -1,0 +1,44 @@
+pgn: 65290
+id: maretronRotationalRate
+description: 'Maretron: Rotational Rate'
+type: Single
+variantOrder: 2
+priority: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: dataInstance
+  name: Data Instance
+  type: UINT8
+  primaryKey: true
+- id: rotationalRate
+  name: Rotational Rate
+  type: INT16
+  resolution: 0.25
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16

@@ -1,0 +1,7 @@
+name: ACCESS_LEVEL
+kind: pair
+bits: 3
+values:
+  0: Locked
+  1: unlocked level 1
+  2: unlocked level 2

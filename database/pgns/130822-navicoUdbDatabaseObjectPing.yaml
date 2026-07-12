@@ -1,0 +1,56 @@
+pgn: 130822
+id: navicoUdbDatabaseObjectPing
+description: 'Navico: UDB Database, Object Ping'
+type: Fast
+variantOrder: 1
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Header-only form of the Navico/SimNet UDB database broadcast (Command 0; Commands 8 and 9 are equivalent reserved pings). The object is addressed by (Address, Section, Item).
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Object Ping
+  match: 0
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8

@@ -1,0 +1,68 @@
+pgn: 130820
+id: fusionSiriusxmTitle
+description: 'Fusion: SiriusXM Title'
+type: Fast
+variantOrder: 43
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: SiriusXM Title
+  match: 32805
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: channel
+  name: Channel
+  type: UINT16
+- id: title
+  name: Title
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,25,80,04,64,00,0e,52,6f,62,69,6e,20,6f,6e,20,53,79,72,69,61,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Title"
+    sourceId: 4
+    channel: 100
+    title: "Robin on Syria"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,24,a3,99,25,80,04,7b,00,0f,49,72,72,61,74,69,6f,6e,61,6c,20,45,63,6f,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Title"
+    sourceId: 4
+    channel: 123
+    title: "Irrational Econ"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,25,80,04,7a,00,0e,4a,6f,73,68,75,61,20,4a,6f,68,6e,73,6f,6e,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "SiriusXM Title"
+    sourceId: 4
+    channel: 122
+    title: "Joshua Johnson"

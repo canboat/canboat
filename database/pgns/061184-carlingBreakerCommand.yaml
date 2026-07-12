@@ -1,0 +1,52 @@
+pgn: 61184
+id: carlingBreakerCommand
+description: 'Carling: Breaker Command'
+type: Single
+variantOrder: 5
+priority: 2
+explanation: Addresses up to 19 breakers on a Carling digital switching panel via three bitmap fields. Breakers 1 to 8 are in Breaker Mapping 1, 9 to 16 in Breaker Mapping 2, and 17 to 19 in Breaker Mapping 3.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Carling Technologies Inc. (Moritz Aerospace)
+  match: 176
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+  description: Breaker Command
+  match: 2
+  primaryKey: true
+- id: breakerMapping1
+  name: Breaker Mapping 1
+  type: UINT8
+- id: breakerMapping2
+  name: Breaker Mapping 2
+  type: UINT8
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: breakerMapping3
+  name: Breaker Mapping 3
+  type: UNSIGNED_INTEGER
+  bits: 3
+- id: breakerCommand
+  name: Breaker Command
+  type: UINT8
+- id: dimValue
+  name: Dim Value
+  type: UINT8

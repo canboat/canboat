@@ -1,0 +1,56 @@
+pgn: 127250
+id: vesselHeading
+description: Vessel Heading
+type: Single
+priority: 2
+interval: 100
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: heading
+  name: Heading
+  type: ANGLE_UFIX16
+- id: deviation
+  name: Deviation
+  type: ANGLE_FIX16
+- id: variation
+  name: Variation
+  type: ANGLE_FIX16
+- id: reference
+  name: Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+notes: |-
+  NMEA + Simrad AT10
+
+  https://web.archive.org/web/20250326093059/www.maretron.com/support/manuals/SSC200UM_1.7.pdf
+
+  molly_rose_E80start.kees
+samples:
+- raw: "2023-01-01-00:00:00.000,2,127250,20,255,8,00,b2,7a,ff,7f,ff,7f,fd"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    heading: 3.1410
+    deviation: ~
+    variation: ~
+    reference: "Magnetic"
+- raw: "2023-01-01-00:00:00.000,2,127250,14,255,8,ff,fe,79,ff,7f,76,01,fc"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    heading: 3.1230
+    deviation: ~
+    variation: 0.0374
+    reference: "True"
+- raw: "2023-01-01-00:00:00.000,2,127250,14,255,8,ff,59,7a,ff,7f,76,01,fc"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    heading: 3.1321
+    deviation: ~
+    variation: 0.0374
+    reference: "True"

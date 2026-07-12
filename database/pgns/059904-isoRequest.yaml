@@ -1,0 +1,24 @@
+pgn: 59904
+id: isoRequest
+description: ISO Request
+type: Single
+priority: 6
+interval: irregular
+explanation: As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.
+fields:
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0
+samples:
+- raw: "2023-01-01-00:00:00.000,6,59904,0,14,3,14,f0,01"  # from merrimac-2022.raw
+  expects:
+    pgn: 126996
+- raw: "2023-01-01-00:00:00.000,6,59904,60,255,8,00,ee,00,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    pgn: 60928
+- raw: "2023-01-01-00:00:00.000,6,59904,20,0,3,00,ee,00"  # from merrimac-2022.raw
+  expects:
+    pgn: 60928

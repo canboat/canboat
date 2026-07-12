@@ -1,0 +1,72 @@
+pgn: 65301
+id: bepMarineCzone65301
+description: 'BEP Marine: CZone 65301'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65301.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: field1
+  name: Field 1
+  type: UINT8
+  description: Pass-through byte; purpose unverified
+- id: field2
+  name: Field 2
+  type: UNSIGNED_INTEGER
+  bits: 5
+  description: 5-bit field; purpose unverified
+- id: field3
+  name: Field 3
+  type: UNSIGNED_INTEGER
+  bits: 3
+  description: 3-bit field; purpose unverified
+- id: statusBitmap
+  name: Status Bitmap
+  type: BINARY
+  bits: 32
+  description: 32-bit bitmap, LSB-first; bit n set => item n active. Per-bit meaning unverified.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,68,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 3
+    statusBitmap: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,48,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 2
+    statusBitmap: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65301,1,255,8,27,99,ff,28,00,00,00,00"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "BEP Marine 2"
+    industryCode: "Marine Industry"
+    field1: ~
+    field2: 8
+    field3: 1
+    statusBitmap: "0x00000000"

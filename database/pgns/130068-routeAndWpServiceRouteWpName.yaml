@@ -1,0 +1,45 @@
+pgn: 130068
+id: routeAndWpServiceRouteWpName
+description: Route and WP Service - Route - WP Name
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfWpsInTheRouteWpList
+  name: Number of WPs in the Route/WP-List
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: wpId
+      name: WP ID
+      type: UINT16
+    - id: wpName
+      name: WP Name
+      type: STRING_LAU
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130068,99,255,59,ff,ff,03,00,64,00,ff,ff,02,00,01,00,0b,01,42,65,6e,74,6c,65,69,67,68,21,00,10,01,45,61,73,74,20,42,65,6e,74,6c,65,69,67,68,63,00,10,01,46,61,77,6b,6e,65,72,20,42,65,61,63,6f,6e"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 3
+    numberOfWpsInTheRouteWpList: 100
+    databaseId: ~
+    routeId: 2
+    wpId: 1
+    wpName: "Bentleigh"
+    wpId.2: 33
+    wpName.2: "East Bentleigh"
+    wpId.3: 99
+    wpName.3: "Fawkner Beacon"

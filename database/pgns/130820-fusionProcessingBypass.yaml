@@ -1,0 +1,39 @@
+pgn: 130820
+id: fusionProcessingBypass
+description: 'Fusion: Processing Bypass'
+type: Fast
+variantOrder: 19
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Processing Bypass
+  match: 32832
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: bypass
+  name: Bypass
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+  allowLookupWidthMismatch: true

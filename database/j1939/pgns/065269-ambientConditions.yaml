@@ -1,0 +1,16 @@
+pgn: 65269
+id: ambientConditions
+description: Ambient Conditions
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: barometricPressure
+  name: Barometric Pressure
+  type: PRESSURE_UINT8_KPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 56

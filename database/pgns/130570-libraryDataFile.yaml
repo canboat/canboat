@@ -1,0 +1,76 @@
+pgn: 130570
+id: libraryDataFile
+description: Library Data File
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20170609110901/https://www.nmea.org/Assets/20160715%20corrigenda%20entertainment%20pgns%20.pdf
+fields:
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: id
+  name: ID
+  type: UINT32
+  description: Unique file ID
+- id: type
+  name: Type
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_TYPE
+- id: name
+  name: Name
+  type: STRING_LAU
+- id: track
+  name: Track
+  type: UINT16
+- id: station
+  name: Station
+  type: UINT16
+- id: favorite
+  name: Favorite
+  type: UINT8
+- id: radioFrequency
+  name: Radio Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: hdFrequency
+  name: HD Frequency
+  type: UINT8
+- id: zone
+  name: Zone
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_ZONE
+- id: inPlayQueue
+  name: In play queue
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: locked
+  name: Locked
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: artistName
+  name: Artist Name
+  type: STRING_LAU
+- id: albumName
+  name: Album Name
+  type: STRING_LAU
+- id: stationName
+  name: Station Name
+  type: STRING_LAU

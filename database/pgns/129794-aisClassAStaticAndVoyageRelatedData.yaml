@@ -1,0 +1,164 @@
+pgn: 129794
+id: aisClassAStaticAndVoyageRelatedData
+description: AIS Class A Static and Voyage Related Data
+type: Fast
+priority: 6
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: imoNumber
+  name: IMO number
+  type: UINT32
+- id: callsign
+  name: Callsign
+  type: STRING_FIX
+  bits: 56
+- id: name
+  name: Name
+  type: STRING_FIX
+  bits: 160
+- id: typeOfShip
+  name: Type of ship
+  type: LOOKUP
+  bits: 8
+  lookup: SHIP_TYPE
+- id: length
+  name: Length
+  type: LENGTH_UFIX16_DM
+- id: beam
+  name: Beam
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromStarboard
+  name: Position reference from Starboard
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromBow
+  name: Position reference from Bow
+  type: LENGTH_UFIX16_DM
+- id: etaDate
+  name: ETA Date
+  type: DATE
+- id: etaTime
+  name: ETA Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: draft
+  name: Draft
+  type: LENGTH_UFIX16_CM
+- id: destination
+  name: Destination
+  type: STRING_FIX
+  bits: 160
+- id: aisVersionIndicator
+  name: AIS version indicator
+  type: LOOKUP
+  bits: 2
+  lookup: AIS_VERSION
+- id: gnssType
+  name: GNSS type
+  type: LOOKUP
+  bits: 4
+  lookup: POSITION_FIX_DEVICE
+- id: dte
+  name: DTE
+  type: LOOKUP
+  bits: 1
+  lookup: AVAILABLE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: reserved21
+  name: Reserved
+  type: RESERVED
+  bits: 3
+notes: https://web.archive.org/web/20100527193521/www.navcen.uscg.gov/enav/ais/AIS_messages.htm
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129794,23,255,76,05,80,26,aa,0e,f8,8e,8c,00,50,43,48,51,20,00,ff,55,4b,31,34,37,20,4d,4f,52,47,45,4e,53,54,45,52,00,ff,ff,ff,1e,a4,01,50,00,28,00,40,01,31,4a,00,00,00,00,e0,01,46,49,53,48,49,4e,47,20,47,52,4f,55,4e,44,53,20,20,20,00,ff,3d,e1,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Static and voyage related data"
+    repeatIndicator: "Initial"
+    userId: 246032000
+    imoNumber: 9211640
+    callsign: "PCHQ"
+    name: "UK147 MORGENSTER"
+    typeOfShip: "Fishing"
+    length: 42.0
+    beam: 8.0
+    positionReferenceFromStarboard: 4.0
+    positionReferenceFromBow: 32.0
+    etaDate: 18993
+    etaTime: 0.0000
+    draft: 4.80
+    destination: "FISHING GROUNDS"
+    aisVersionIndicator: "ITU-R M.1371-3"
+    gnssType: ~
+    dte: "Available"
+    aisTransceiverInformation: "Channel B VDL reception"
+- raw: "2023-01-01-00:00:00.000,6,129794,0,255,75,05,3a,73,96,0e,ff,ff,ff,ff,50,47,39,31,38,32,40,47,41,41,53,54,45,52,4c,41,4e,44,40,40,40,40,40,40,40,40,40,21,5c,03,6e,00,32,00,f8,02,37,43,40,20,49,1a,ff,ff,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,40,3d,e0"  # from susteranna-actisense-serial.raw
+  expects:
+    messageId: "Static and voyage related data"
+    repeatIndicator: "Initial"
+    userId: 244740922
+    imoNumber: ~
+    callsign: "PG9182"
+    name: "GAASTERLAND"
+    typeOfShip: "Engaged in dredging or underwater operations"
+    length: 86.0
+    beam: 11.0
+    positionReferenceFromStarboard: 5.0
+    positionReferenceFromBow: 76.0
+    etaDate: 17207
+    etaTime: 44100.0000
+    draft: ~
+    destination: ""
+    aisVersionIndicator: "ITU-R M.1371-3"
+    gnssType: ~
+    dte: "Available"
+    aisTransceiverInformation: "Channel A VDL reception"
+- raw: "2023-01-01-00:00:00.000,7,129794,8,255,75,05,a0,ee,42,15,d0,0a,8b,00,33,46,4c,47,36,20,20,4d,53,43,20,46,4f,52,54,55,4e,41,54,45,20,20,20,20,20,20,20,47,be,0a,90,01,e6,00,12,07,f1,3a,00,61,7a,24,9c,04,42,52,45,4d,45,52,48,41,56,45,4e,20,20,20,20,20,20,20,20,20,04,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    messageId: "Static and voyage related data"
+    repeatIndicator: "Initial"
+    userId: 356708000
+    imoNumber: 9112272
+    callsign: "3FLG6"
+    name: "MSC FORTUNATE"
+    typeOfShip: "Cargo ship (hazard cat X)"
+    length: 275.0
+    beam: 40.0
+    positionReferenceFromStarboard: 23.0
+    positionReferenceFromBow: 181.0
+    etaDate: 15089
+    etaTime: 61200.0000
+    draft: 11.80
+    destination: "BREMERHAVEN"
+    aisVersionIndicator: "ITU-R M.1371-1"
+    gnssType: "GPS"
+    dte: "Available"
+    aisTransceiverInformation: "Channel A VDL reception"
