@@ -56,6 +56,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_special_values(prefix, pgn, &mut v); // R09
             check_field_count(prefix, pgn, &mut v); // R11
             check_reserved_ids(prefix, pgn, &mut v); // R12
+            check_match_values(prefix, db, pgn, &mut v); // R13
         }
         check_variants(prefix, list, &mut v); // R20
         check_unique_ids(prefix, list, &mut v); // R21
@@ -526,6 +527,50 @@ fn check_special_values(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
                     ),
                 });
             }
+        }
+    }
+}
+
+// R13: a `match` discriminator is compared numerically against the field's
+// unsigned extracted bits (decode::select_variant) and emitted as "=<number>"
+// to the C tables and <Match> XML. It must resolve to a non-negative integer
+// that fits the field's width; on a lookup field an enum NAME is allowed and
+// resolved via model::resolve_match. An unresolvable value (non-numeric with no
+// matching lookup name) or an oversized value would be emitted verbatim but
+// read as 0 by the decoder, silently stopping the variant from matching its
+// real frames.
+fn check_match_values(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+    for f in &p.fields {
+        let Some(m) = &f.match_ else { continue };
+        match db.resolve_match(f) {
+            None => {
+                let hint = if f.lookup_ref().is_some() {
+                    "not an integer, and not a value name in its lookup"
+                } else {
+                    "not a non-negative integer"
+                };
+                v.push(Violation {
+                    rule: "R13",
+                    error: true,
+                    location: pgn_loc(prefix, p),
+                    message: format!("field '{}': match value {m:?} does not resolve ({hint})", f.id),
+                });
+            }
+            Some(val) if f.res_bits < 64 => {
+                let max = (1u64 << f.res_bits) - 1;
+                if val > max {
+                    v.push(Violation {
+                        rule: "R13",
+                        error: true,
+                        location: pgn_loc(prefix, p),
+                        message: format!(
+                            "field '{}': match value {val} exceeds the field's {}-bit range (max {max})",
+                            f.id, f.res_bits
+                        ),
+                    });
+                }
+            }
+            Some(_) => {}
         }
     }
 }

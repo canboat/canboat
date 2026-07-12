@@ -262,6 +262,27 @@ impl Database {
             .ok_or_else(|| format!("fieldType '{name}' not found"))
     }
 
+    /// Resolve a field's `match:` to the numeric discriminator that every
+    /// consumer needs: the value `select_variant` compares against the wire,
+    /// the C `.unit = "=N"` tables, and the XML `<Match>`. A plain
+    /// non-negative integer parses directly; on a lookup field a non-numeric
+    /// value is taken as an enum NAME and resolved to its value (pair or
+    /// fieldtype). `None` means unresolvable — R13 rejects those before any
+    /// consumer relies on this, so the fallbacks elsewhere are only defensive.
+    pub fn resolve_match(&self, f: &Field) -> Option<u64> {
+        let m = f.match_.as_ref()?;
+        if let Ok(n) = m.parse::<u64>() {
+            return Some(n);
+        }
+        // Non-numeric: only meaningful as an enum name on a lookup field.
+        let (kind, name) = f.lookup_ref()?;
+        let lk = self.lookups.get(name)?;
+        match kind {
+            "fieldtype" => lk.fieldtypes.iter().find(|e| e.name == *m).map(|e| e.value),
+            _ => lk.pairs.iter().find(|(_, n)| n == m).map(|(v, _)| *v),
+        }
+    }
+
     pub fn ordered_lookups(&self, kind: &str) -> Vec<&Lookup> {
         let mut out: Vec<&Lookup> = Vec::new();
         let mut seen = std::collections::HashSet::new();

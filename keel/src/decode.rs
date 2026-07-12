@@ -75,9 +75,9 @@ pub fn select_variant<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) 
         let mut ok = true;
         let mut has_match = false;
         for f in &p.fields {
-            if let Some(m) = &f.match_ {
+            if f.match_.is_some() {
                 has_match = true;
-                let want: i64 = m.parse().unwrap_or(0);
+                let want: i64 = db.resolve_match(f).unwrap_or(0) as i64;
                 match extract_bits(data, bit, f.res_bits as usize, false, 0) {
                     Some(e) if e.value == want => {}
                     _ => {
@@ -112,8 +112,8 @@ pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8]) -> Vec<NearMiss<
         let mut bit = 0usize;
         let mut diffs: Vec<(String, String, i64, i64, bool)> = Vec::new();
         for f in &p.fields {
-            if let Some(m) = &f.match_ {
-                let want: i64 = m.parse().unwrap_or(0);
+            if f.match_.is_some() {
+                let want: i64 = db.resolve_match(f).unwrap_or(0) as i64;
                 let got = extract_bits(data, bit, f.res_bits as usize, false, 0).map(|e| e.value);
                 if got != Some(want) {
                     // Is this the proprietary preamble (vendor identity)? A

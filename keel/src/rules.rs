@@ -178,6 +178,22 @@ pub const RULES: &[Rule] = &[
                  them structurally.",
     },
     Rule {
+        id: "R13",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_match_values",
+        title: "A match value resolves to an integer within the field's width.",
+        detail: "A match discriminator is compared numerically against the \
+                 field's unsigned extracted bits and emitted as \"=<number>\" to \
+                 the C tables and <Match> XML, so it must be a non-negative \
+                 integer that fits the field's width. On a lookup field a value \
+                 NAME from the enumeration is also accepted and resolved to its \
+                 number. A non-numeric value with no matching lookup name, or a \
+                 value too large for the field, is rejected — otherwise it would \
+                 be emitted verbatim but read as 0 by the decoder, silently \
+                 stopping the variant from matching its frames.",
+    },
+    Rule {
         id: "R20",
         scope: Scope::CrossFile,
         severity: "error",

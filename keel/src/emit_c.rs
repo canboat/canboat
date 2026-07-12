@@ -349,8 +349,11 @@ fn emit_field(db: &Database, f: &Field) -> String {
     if ft.has_sign == Some(true) {
         parts.push(".hasSign = true".into());
     }
-    if let Some(m) = &f.match_ {
-        parts.push(format!(".unit = {}", c_str(&format!("={m}"))));
+    if f.match_.is_some() {
+        // A match is compared numerically against the wire, so it is emitted
+        // as "=<number>" even when authored as a lookup name (model::resolve_match).
+        let n = db.resolve_match(f).expect("match resolves (guaranteed by check R13)");
+        parts.push(format!(".unit = {}", c_str(&format!("={n}"))));
     } else if let Some(u) = &f.unit {
         parts.push(format!(".unit = {}", c_str(u)));
     }

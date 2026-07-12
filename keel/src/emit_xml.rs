@@ -463,8 +463,14 @@ impl<'a> Emitter<'a> {
         if f.proprietary {
             self.xml(10, "Condition", Some("PGNIsProprietary"));
         }
-        if let Some(m) = &f.match_ {
-            self.xml(10, "Match", Some(m));
+        if f.match_.is_some() {
+            // Emitted numerically even when authored as a lookup name
+            // (model::resolve_match); the C analyzer matches on the number.
+            let n = self
+                .db
+                .resolve_match(f)
+                .expect("match resolves (guaranteed by check R13)");
+            self.xml(10, "Match", Some(&n.to_string()));
         } else {
             self.xml(10, "Unit", f.res_unit.as_deref());
         }
@@ -573,7 +579,7 @@ impl<'a> Emitter<'a> {
         let Some(lk) = self.db.lookups.get(name) else {
             return String::new();
         };
-        let Ok(want) = f.match_.as_ref().unwrap().parse::<u64>() else {
+        let Some(want) = self.db.resolve_match(f) else {
             return String::new();
         };
         if kind == "fieldtype" {
