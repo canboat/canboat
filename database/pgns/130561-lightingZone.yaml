@@ -7,8 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled
-  by a Scene. This PGN is only sent upon request.
+explanation: This PGN is used to report or configure a name for a given zone. A zone is a grouping of devices that are controlled by a Scene. This PGN is only sent upon request.
 fields:
 - id: zoneIndex
   name: Zone Index

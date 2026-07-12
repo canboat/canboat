@@ -8,9 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder
-  writes a length byte followed by that many ASCII characters (per-device identifier text, e.g. a serial number). Observed
-  in live captures.
+explanation: A length-prefixed ASCII string broadcast by Navico instruments/heads (Triton2, AP48, WS320). The frame builder writes a length byte followed by that many ASCII characters (per-device identifier text, e.g. a serial number). Observed in live captures.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

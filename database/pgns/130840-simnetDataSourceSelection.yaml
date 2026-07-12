@@ -9,12 +9,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Change-driven broadcast announcing which source is selected for each Data Type across the instrument network;
-  it is the fast-packet answer to the single-frame PGN 65323 poll and shares its Data Type/Source Class namespace. Data Type
-  identifies the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct
-  sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. Source Address is the current
-  NMEA 2000 address of the selected device and Source is that same device's 64-bit NAME (address and NAME both identify the
-  one selected source); Change Counter increments on each selection change. See also the periodic UDB table dump in PGN 130822.
+explanation: Change-driven broadcast announcing which source is selected for each Data Type across the instrument network; it is the fast-packet answer to the single-frame PGN 65323 poll and shares its Data Type/Source Class namespace. Data Type identifies the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type. Source Address is the current NMEA 2000 address of the selected device and Source is that same device's 64-bit NAME (address and NAME both identify the one selected source); Change Counter increments on each selection change. See also the periodic UDB table dump in PGN 130822.
 researchDoc: navico_udb
 fields:
 - id: manufacturerCode

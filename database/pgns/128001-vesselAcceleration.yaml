@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: The Vessel Acceleration PGN transmits the acceleration of the vessel in all three axes, ahead/astern, port/starboard,
-  and up/down.
+explanation: The Vessel Acceleration PGN transmits the acceleration of the vessel in all three axes, ahead/astern, port/starboard, and up/down.
 fields:
 - id: sid
   name: SID

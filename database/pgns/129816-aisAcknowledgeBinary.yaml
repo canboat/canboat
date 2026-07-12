@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: Acknowledgment of received addressed binary messages; the destination/sequence triple repeats per acknowledgment.
-  Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
+explanation: Acknowledgment of received addressed binary messages; the destination/sequence triple repeats per acknowledgment. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
 fields:
 - id: sequenceId
   name: Sequence ID

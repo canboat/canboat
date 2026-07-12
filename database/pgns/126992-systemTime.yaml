@@ -10,8 +10,7 @@ fields:
 - id: sid
   name: SID
   type: UINT8
-  description: An upward counting number used to tie releated information together between different PGNs. For example the
-    SID would be used to tie together the COG, SOG and RAIM values to a given position.
+  description: An upward counting number used to tie releated information together between different PGNs. For example the SID would be used to tie together the COG, SOG and RAIM values to a given position.
 - id: source
   name: Source
   type: LOOKUP

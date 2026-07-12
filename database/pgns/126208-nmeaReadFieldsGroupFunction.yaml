@@ -9,10 +9,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read Reply
-  variation of this PGN, containing the desired values. This PGN is special as it contains two sets of repeating fields, and
-  the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields
-  3 to 5 are only present if field 2 is for a proprietary PGN
+explanation: This is the Read Fields variation of this group function PGN. The receiver shall respond by sending a Read Reply variation of this PGN, containing the desired values. This PGN is special as it contains two sets of repeating fields, and the fields that contain the information how many repetitions there are do not have a fixed offset in the PGN as the fields 3 to 5 are only present if field 2 is for a proprietary PGN
 url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
 fields:
 - id: functionCode

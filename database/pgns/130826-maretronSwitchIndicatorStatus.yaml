@@ -4,8 +4,7 @@ description: 'Maretron: Switch Indicator Status'
 type: Fast
 variantOrder: 1
 priority: 2
-explanation: Broadcast by Maretron switching devices alongside PGN 127501. Each indicator status byte carries the state of
-  one switch channel, encoded as 0 = Off, 1 = On, 2 = Tripped, 3 = Unknown.
+explanation: Broadcast by Maretron switching devices alongside PGN 127501. Each indicator status byte carries the state of one switch channel, encoded as 0 = Off, 1 = On, 2 = Tripped, 3 = Unknown.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

@@ -4,8 +4,7 @@ description: Environmental Parameters (obsolete)
 type: Single
 priority: 5
 interval: 500
-explanation: This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315
-  should be used
+explanation: This PGN was succeeded by PGN 130310, but it should no longer be generated and separate PGNs in range 130312..130315 should be used
 fields:
 - id: sid
   name: SID

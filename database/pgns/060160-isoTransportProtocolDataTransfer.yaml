@@ -4,8 +4,7 @@ description: ISO Transport Protocol, Data Transfer
 type: Single
 priority: 6
 interval: irregular
-explanation: ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have
-  9 or more data bytes. This PGN represents a single packet of a multipacket message.
+explanation: ISO 11783 defines this PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN represents a single packet of a multipacket message.
 fields:
 - id: sid
   name: SID
@@ -15,8 +14,7 @@ fields:
   name: Data
   type: BINARY
   bits: 56
-  description: Multi-packet packetized data - 56 bits organized as seven 8-bit bytes, each of the bytes is transmitted in
-    the same order as it would in a standard (i.e., single frame) message. Unused bytes shall be filled with 0xFF.
+  description: Multi-packet packetized data - 56 bits organized as seven 8-bit bytes, each of the bytes is transmitted in the same order as it would in a standard (i.e., single frame) message. Unused bytes shall be filled with 0xFF.
 notes: |-
   For a good explanation of ISO 11783 Transport Protocol (as used in J1939) see
   https://web.archive.org/web/20220207184927/www.simmasoftware.com/j1939-presentation.pdf

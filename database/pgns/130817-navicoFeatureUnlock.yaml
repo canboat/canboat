@@ -8,10 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the
-  bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero
-  count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded
-  here) and two trailing bytes.
+explanation: Feature-unlock / capability report emitted by Navico devices, and the target of the 126208 Request seen on the bus (the requester filters on Feature Id as field 4). The payload is a 2-byte Feature Id and a record count; a non-zero count is believed to be followed by that many 3-byte records (never observed on the wire, so their layout is left undecoded here) and two trailing bytes.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -34,8 +31,7 @@ fields:
 - id: featureId
   name: Feature Id
   type: UINT16
-  description: Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester
-    asks the target to report a specific feature).
+  description: Feature/object identifier. A 126208 Request for this PGN filters on this value as its field 4 (the requester asks the target to report a specific feature).
 - id: recordCount
   name: Record Count
   type: UINT8

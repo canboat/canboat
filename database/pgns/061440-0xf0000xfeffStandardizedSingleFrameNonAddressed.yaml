@@ -7,8 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279). When this is shown during
-  analysis it means the PGN is not reverse engineered yet.
+explanation: PGNs in PDU2 (non-addressed) single-frame PGN range 0xF000 to 0xFEFF (61440 - 65279). When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

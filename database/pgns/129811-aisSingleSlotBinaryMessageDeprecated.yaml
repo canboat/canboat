@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: Deprecated single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from the
-  NMEA 3.002 field-name list and are unconfirmed.
+explanation: Deprecated single-slot addressed binary message (AIS message 25). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
 fields:
 - id: sequenceId
   name: Sequence ID

@@ -8,8 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown
-  during analysis it means the PGN is not reverse engineered yet.
+explanation: Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: data
   name: Data

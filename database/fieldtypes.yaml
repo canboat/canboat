@@ -1,11 +1,6 @@
 - name: NUMBER
   description: Number
-  encodingDescription: Binary numbers are little endian. Number fields that are at least two bits in length use the highest
-    positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the
-    highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but
-    there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For
-    signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which
-    is the maximum negative value.
+  encodingDescription: Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.
   url: https://en.wikipedia.org/wiki/Binary_number
   sentinels: TopOfRange
   print: fieldPrintNumber
@@ -67,17 +62,13 @@
 - name: UNSIGNED_FIXED_POINT_NUMBER
   base: NUMBER
   description: An unsigned numeric value where the Least Significant Bit does not encode the integer value 1
-  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength`
-    attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular
-    range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
+  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
   url: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
   signed: false
 - name: SIGNED_FIXED_POINT_NUMBER
   base: NUMBER
   description: A signed numeric value where the Least Significant Bit does not encode the integer value 1
-  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength`
-    attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular
-    range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
+  encodingDescription: The `Resolution` attribute indicates what the raw value 1 should represent. The `Signed` and `BitLength` attributes are always present. Together, this gives sufficient information to represent a fixed point number in a particular range where non-integral values can be encoded without requiring four or eight bytes for a floating point number.
   url: https://en.wikipedia.org/wiki/Fixed-point_arithmetic
   signed: true
 - name: FIX8
@@ -154,9 +145,7 @@
   physical: SPEED
 - name: DECIMAL
   description: An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)
-  encodingDescription: Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing
-    0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g.
-    the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).
+  encodingDescription: Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).
   print: fieldPrintDecimal
   signed: false
 - name: LOOKUP
@@ -171,28 +160,21 @@
   print: fieldPrintLookup
   signed: false
 - name: INDIRECT_LOOKUP
-  description: Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another
-    field
+  description: Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field
   encodingDescription: Each lookup has a LookupIndirectEnumeration defining what the possible values mean
-  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs
-    that has no corresponding textual explanation.
+  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.
   sentinels: TopOfRange
   print: fieldPrintLookup
   signed: false
 - name: BITLOOKUP
   description: Number value where each bit value encodes for a distinct meaning
-  encodingDescription: Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have
-    any combination of bits set.
-  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs
-    that has no corresponding textual explanation.
+  encodingDescription: Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.
+  comment: For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.
   print: fieldPrintBitLookup
 - name: DYNAMIC_FIELD_KEY
-  description: Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field;
-    generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH
-    field the length is contained in the lookup table
+  description: Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table
   encodingDescription: Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean
-  comment: These values have been determined by reverse engineering, given the known values it is anticipated that there are
-    unkown enumeration values and some known values have incorrect datatypes
+  comment: These values have been determined by reverse engineering, given the known values it is anticipated that there are unkown enumeration values and some known values have incorrect datatypes
   sentinels: TopOfRange
   print: fieldPrintLookup
   signed: false
@@ -203,8 +185,7 @@
   signed: false
 - name: DYNAMIC_FIELD_VALUE
   description: Variable field whose type and length is dynamic
-  encodingDescription: The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length
-    is defined by the preceding length field or the length determined by the lookup value.
+  encodingDescription: The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.
   sentinels: Variable
   print: fieldPrintKeyValue
 - name: MANUFACTURER
@@ -292,39 +273,34 @@
 - name: GEO_DELTA_FIX24
   base: FIX24
   description: Geographical latitude or longitude delta
-  encodingDescription: The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or
-    about 1 mm when we refer to an Earth position
+  encodingDescription: The `Resolution` for this field is 1.0e-5 sec, so the resolution is ~ 27 billionth of a degree, or about 1 mm when we refer to an Earth position
   resolution: 2.777777777777778e-09
   print: fieldPrintNumber
 - name: GEO_LAT_FIX32
   base: FIX32
   description: Geographical latitude
-  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about
-    1 cm when we refer to an Earth position
+  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position
   resolution: 1.0e-07
   physical: GEOGRAPHICAL_LATITUDE
   print: fieldPrintLatLon
 - name: GEO_LON_FIX32
   base: FIX32
   description: Geographical longitude
-  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about
-    1 cm when we refer to an Earth position
+  encodingDescription: The `Resolution` for this field is 1.0e-7, so the resolution is 1/10 millionth of a degree, or about 1 cm when we refer to an Earth position
   resolution: 1.0e-07
   physical: GEOGRAPHICAL_LONGITUDE
   print: fieldPrintLatLon
 - name: GEO_LON_FIX64
   base: FIX64
   description: Geographical latitude or longitude, high resolution
-  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we
-    refer to an Earth position
+  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position
   resolution: 1.0e-16
   physical: GEOGRAPHICAL_LONGITUDE
   print: fieldPrintLatLon
 - name: GEO_LAT_FIX64
   base: FIX64
   description: Geographical latitude or longitude, high resolution
-  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we
-    refer to an Earth position
+  encodingDescription: The `Resolution` for this field is 1.0e-16, so the resolution is about 0.01 nm (nanometer) when we refer to an Earth position
   resolution: 1.0e-16
   physical: GEOGRAPHICAL_LATITUDE
   print: fieldPrintLatLon
@@ -752,16 +728,14 @@
 - name: POWER_FIX32_VA_OFFSET
   base: FIX32
   description: Electrical power, AC apparent power
-  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
-    Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
   offset: -2000000000
   resolution: 1.0
   physical: ELECTRICAL_APPARENT_POWER
 - name: POWER_FIX32_VAR_OFFSET
   base: FIX32
   description: Electrical power, AC reactive power
-  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000.
-    Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
+  encodingDescription: This uses an offset, so 0 encodes the maximum negative value -2000000000, and 0 is represented by 2000000000. Depending on the field it represents either real power in W, active power in VA or reactive power in VAR.
   offset: -2000000000
   resolution: 1.0
   physical: ELECTRICAL_REACTIVE_POWER
@@ -998,8 +972,7 @@
   print: fieldPrintPGN
 - name: ISO_NAME
   description: ISO NAME field
-  encodingDescription: A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of
-    PGN 60928 to explain the subfields.
+  encodingDescription: A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.
   bits: 64
   resolution: 1.0
   print: fieldPrintName
@@ -1016,16 +989,12 @@
 - name: SIGNED_ALMANAC_PARAMETER
   base: SIGNED_FIXED_POINT_NUMBER
   description: Almanac parameter, signed
-  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using
-    an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected
-    by resolution field containing some factor of 2^n or 2^-n.
+  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.
   url: https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf
 - name: UNSIGNED_ALMANAC_PARAMETER
   base: UNSIGNED_FIXED_POINT_NUMBER
   description: Almanac parameter, unsigned
-  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using
-    an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected
-    by resolution field containing some factor of 2^n or 2^-n.
+  encodingDescription: These encode various almanac parameters consisting of differing sizes and sign. They are all using an interesting resolution/scale, which is always a number of bits that the value is shifted left or right. This is reflected by resolution field containing some factor of 2^n or 2^-n.
   url: https://web.archive.org/web/20250915232426/www.gps.gov/technical/icwg/IS-GPS-200N.pdf
 - name: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
   base: SIGNED_ALMANAC_PARAMETER
@@ -1068,24 +1037,19 @@
     are seen: 0xff (255), the standard NMEA 2000 "Unknown" value. ''@'', the standard AIS "Unknown" value for strings. 0x00,
     the standard C end-of-string marker. It is encouraged to stop the string at the first such character (and not make it
     part of the string). An empty string can be considered to make the entire field "Unknown".'
-  comment: It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values
-    are supported.
+  comment: It is unclear what character sets are allowed/supported. Possibly UTF-8 but it could also be that only ASCII values are supported.
   sentinels: EmptyString
   print: fieldPrintStringFix
 - name: STRING_LZ
   description: A varying length string containing single byte codepoints encoded with a length byte and terminating zero.
-  encodingDescription: The length of the string is determined by a starting length byte. It also contains a terminating zero
-    byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.
-  comment: This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The
-    use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.
+  encodingDescription: The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself. The character encoding is UTF-8.
+  comment: This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices.
   variableSize: true
   sentinels: EmptyString
   print: fieldPrintStringLZ
 - name: STRING_LAU
-  description: A varying length string containing double or single byte codepoints encoded with a length byte and terminating
-    zero.
-  encodingDescription: The length of the string is determined by a starting length byte. This count includes the length and
-    type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.
+  description: A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.
+  encodingDescription: The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.
   variableSize: true
   sentinels: EmptyString
   print: fieldPrintStringLAU
@@ -1101,13 +1065,11 @@
 - name: SPARE
   description: Spare field
   encodingDescription: All spare bits shall be 0
-  comment: This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371
-    standard.
+  comment: This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard.
   print: fieldPrintSpare
 - name: MMSI
   description: MMSI
-  encodingDescription: The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered
-    as a string. The first three or four digits are special, see the USCG link for a detailed explanation.
+  encodingDescription: The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.
   url: https://navcen.uscg.gov/maritime-mobile-service-identity
   bits: 32
   resolution: 1.0

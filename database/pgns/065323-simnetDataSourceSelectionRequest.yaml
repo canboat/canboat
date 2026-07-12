@@ -8,12 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet half is PGN 130840,
-  which shares the same Data Type namespace. Data Type selects the quantity (heading, depth, wind, ...); Source Class tags
-  the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is
-  constant per Data Type - it does not identify the selected device. A node answers with a 130840 record naming the source
-  (Source Address plus NAME) it has selected for that (Data Type, Source Class) channel. Emitted by autopilot heads and instruments
-  (AP48, Triton2, ZEUS); the autopilot and MFDs receive it.
+explanation: Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet half is PGN 130840, which shares the same Data Type namespace. Data Type selects the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type - it does not identify the selected device. A node answers with a 130840 record naming the source (Source Address plus NAME) it has selected for that (Data Type, Source Class) channel. Emitted by autopilot heads and instruments (AP48, Triton2, ZEUS); the autopilot and MFDs receive it.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

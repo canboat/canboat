@@ -9,9 +9,7 @@ missing:
 - FieldLengths
 - Resolution
 - SampleData
-explanation: Diagnostic telemetry emitted by the AutoPilot Computer, one analog channel per frame in round-robin. The Channel
-  field selects the quantity (drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle, ...)
-  and Value carries its raw reading. Used by commissioning and diagnostic tools; observed in live captures.
+explanation: Diagnostic telemetry emitted by the AutoPilot Computer, one analog channel per frame in round-robin. The Channel field selects the quantity (drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle, ...) and Value carries its raw reading. Used by commissioning and diagnostic tools; observed in live captures.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -38,8 +36,7 @@ fields:
 - id: channel
   name: Channel
   type: UINT8
-  description: Selects which analog quantity is reported (e.g. drive/heatsink temperature, drive supply voltage, drive current,
-    rudder-feedback angle)
+  description: Selects which analog quantity is reported (e.g. drive/heatsink temperature, drive supply voltage, drive current, rudder-feedback angle)
 - id: value
   name: Value
   type: UINT32

@@ -4,14 +4,12 @@ description: Product Information
 type: Fast
 priority: 6
 interval: irregular
-explanation: Provides product information onto the network that could be important for determining quality of data coming
-  from this product.
+explanation: Provides product information onto the network that could be important for determining quality of data coming from this product.
 fields:
 - id: nmea2000Version
   name: NMEA 2000 Version
   type: VERSION
-  description: Binary number containing a decimal number of format AABBB, where AA is the major and BBB is the minor release.
-    The decimal point position is assumed.
+  description: Binary number containing a decimal number of format AABBB, where AA is the major and BBB is the minor release. The decimal point position is assumed.
 - id: productCode
   name: Product Code
   type: UINT16

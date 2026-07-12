@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: J1939 ETC1 - Electronic Transmission Controller 1. Reports transmission status including driveline engagement,
-  torque converter lockup, output/input shaft speeds, and clutch slip.
+explanation: J1939 ETC1 - Electronic Transmission Controller 1. Reports transmission status including driveline engagement, torque converter lockup, output/input shaft speeds, and clutch slip.
 fields:
 - id: transmissionDrivelineEngaged
   name: Transmission Driveline Engaged

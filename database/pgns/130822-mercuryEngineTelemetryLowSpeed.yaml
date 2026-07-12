@@ -8,10 +8,7 @@ missing:
 - FieldLengths
 - Resolution
 - SampleData
-explanation: Low-speed engine telemetry broadcast by Mercury engine gateways. Carries the malfunction-indicator (check-engine)
-  state, intake-air and exhaust-gas temperatures (raw, Mercury-specific scaling), a 'GPL' fraction (raw / 128) and an engine
-  run-state code. This is a flat fixed record, unrelated to the Navico and BEP variants of this PGN number; the manufacturer
-  code in the first two bytes is the only disambiguator. Observed on live engine networks.
+explanation: Low-speed engine telemetry broadcast by Mercury engine gateways. Carries the malfunction-indicator (check-engine) state, intake-air and exhaust-gas temperatures (raw, Mercury-specific scaling), a 'GPL' fraction (raw / 128) and an engine run-state code. This is a flat fixed record, unrelated to the Navico and BEP variants of this PGN number; the manufacturer code in the first two bytes is the only disambiguator. Observed on live engine networks.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

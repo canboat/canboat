@@ -3,9 +3,7 @@ id: isoRequest
 description: ISO Request
 type: Single
 interval: irregular
-explanation: As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame.
-  The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested
-  PGN.
+explanation: As defined by ISO, this message has a data length of 3 bytes with no padding added to complete the single frame. The appropriate response to this message is based on the PGN being requested, and whether the receiver supports the requested PGN.
 fields:
 - id: pgn
   name: PGN

@@ -10,8 +10,7 @@
   unit: C
 - name: ELECTRICAL_ENERGY
   description: Electrical energy
-  comment: The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is
-    equivalent to 3.6e6 J (Joules).
+  comment: The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is equivalent to 3.6e6 J (Joules).
   url: https://en.wikipedia.org/wiki/Electrical_energy
   unitDescription: Kilo Watt Hour
   unit: kWh
@@ -40,8 +39,7 @@
   unit: V
 - name: POWER_FACTOR
   description: Power Factor
-  comment: Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the
-    circuit. If less than one, the voltage and current are not in phase.
+  comment: Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the circuit. If less than one, the voltage and current are not in phase.
   url: https://en.wikipedia.org/wiki/Power_factor
   unitDescription: Cos(Phi)
   unit: Cos Phi
@@ -99,15 +97,13 @@
   unit: Hz
 - name: DATE
   description: Date
-  comment: A calendar date is a reference to a particular day in time, in NMEA 2000 expressed as the number of days since
-    1970-01-01 (UNIX epoch).
+  comment: A calendar date is a reference to a particular day in time, in NMEA 2000 expressed as the number of days since 1970-01-01 (UNIX epoch).
   url: https://en.wikipedia.org/wiki/Calendar_date
   unitDescription: days
   unit: d
 - name: TIME
   description: Time
-  comment: Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare
-    how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)
+  comment: Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)
   url: https://en.wikipedia.org/wiki/Time
   unitDescription: Second
   unit: s
@@ -150,8 +146,7 @@
   unit: ppm
 - name: DIMENSIONLESS_RATIO
   description: Dimensionless ratio
-  comment: A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity
-    (m/m), clock drift (s/s), and similar.
+  comment: A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity (m/m), clock drift (s/s), and similar.
   url: https://en.wikipedia.org/wiki/Dimensionless_quantity
   unitDescription: ratio
   unit: ratio

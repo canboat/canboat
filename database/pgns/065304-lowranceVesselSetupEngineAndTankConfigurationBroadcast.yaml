@@ -3,9 +3,7 @@ id: lowranceVesselSetupEngineAndTankConfigurationBroadcast
 description: 'Lowrance: Vessel Setup - Engine and Tank Configuration Broadcast'
 type: Single
 variantOrder: 3
-explanation: Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total
-  fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200
-  L) by autopilot-computer and display devices.
+explanation: Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200 L) by autopilot-computer and display devices.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

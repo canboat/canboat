@@ -7,9 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer counterpart
-  of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual settings are not yet identified.
-  The first byte matches the sender's source address in the observed traffic.
+explanation: GPS antenna configuration broadcast by Navico GPS/navigation sources - the Lowrance-manufacturer counterpart of the Simnet LGC-2000 Configuration. The field boundaries are known but the individual settings are not yet identified. The first byte matches the sender's source address in the observed traffic.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

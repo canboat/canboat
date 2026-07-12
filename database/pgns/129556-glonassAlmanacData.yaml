@@ -4,8 +4,7 @@ description: GLONASS Almanac Data
 type: Fast
 priority: 6
 interval: irregular
-explanation: Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These parameters
-  are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.
+explanation: Almanac data for GLONASS products. The alamant contains satellite vehicle course orbital parameters. These parameters are described in the GLONASS ICS Section 4.5 Table 4.3. See URL.
 url: https://www.unavco.org/help/glossary/docs/ICD_GLONASS_5.1_%282008%29_en.pdf
 fields:
 - id: prn

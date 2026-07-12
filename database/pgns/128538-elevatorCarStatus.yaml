@@ -7,10 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: This PGN provides the status information of an elevator car. This includes the elevator car id and type, sensors
-  for load and weight limits, smoke detection, door status, motor status, and brake status. Also provided are weight and speed
-  measurements, current and destination deck location, proximity switch status, inertial measurement unit status and Emergency
-  button and buzzer status.
+explanation: This PGN provides the status information of an elevator car. This includes the elevator car id and type, sensors for load and weight limits, smoke detection, door status, motor status, and brake status. Also provided are weight and speed measurements, current and destination deck location, proximity switch status, inertial measurement unit status and Emergency button and buzzer status.
 fields:
 - id: sid
   name: SID

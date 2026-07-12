@@ -7,11 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm condition on the
-  bus; the plotter's alarm engine routes it through a 3-sample debounce before raising or clearing the alarm in the UI. Modules
-  originate this PGN themselves (the host CZone library is unpack-only). The byte at offset 2 is read by the unpacker but
-  ignored by the alarm classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / channel
-  index, an alarm-state polarity flag, or a frame counter).
+explanation: CZone alarm-event PGN. A CZone module emits this single-frame PGN to assert or clear an alarm condition on the bus; the plotter's alarm engine routes it through a 3-sample debounce before raising or clearing the alarm in the UI. Modules originate this PGN themselves (the host CZone library is unpack-only). The byte at offset 2 is read by the unpacker but ignored by the alarm classifier; its per-source semantics are not yet observed in real captures (likely a sub-type / channel index, an alarm-state polarity flag, or a frame counter).
 url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65282.md
 fields:
 - id: manufacturerCode

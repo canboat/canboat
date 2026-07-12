@@ -7,8 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course
-  to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood.
+explanation: Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

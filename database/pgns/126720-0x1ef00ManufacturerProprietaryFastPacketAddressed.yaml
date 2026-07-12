@@ -8,8 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during
-  analysis it means the PGN is not reverse engineered yet.
+explanation: Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN 0x1EF00 (126720).When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

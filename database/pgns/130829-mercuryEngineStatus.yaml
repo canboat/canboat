@@ -7,10 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per
-  engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); when bit1 is set
-  the device also emits the Cruise Control PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for Mercury
-  multi-helm installations.
+explanation: Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for Mercury multi-helm installations.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

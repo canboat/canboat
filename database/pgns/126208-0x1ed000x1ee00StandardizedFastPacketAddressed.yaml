@@ -10,8 +10,7 @@ missing:
 - FieldLengths
 - Resolution
 - Lookups
-explanation: Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464). When this is
-  shown during analysis it means the PGN is not reverse engineered yet.
+explanation: Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (126208 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: data
   name: Data

@@ -8,9 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing data block is
-  opcode/instance-specific, may be empty, and its block semantics are defined by an external BAM specification rather than
-  being locally decodable.
+explanation: Variable-length Mercury Bridge Alert Management (BAM) digital-data proxy channel; the trailing data block is opcode/instance-specific, may be empty, and its block semantics are defined by an external BAM specification rather than being locally decodable.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

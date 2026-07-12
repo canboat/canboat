@@ -67,9 +67,7 @@ fields:
   name: Source Setting Id
   type: DYNAMIC_FIELD_KEY
   bits: 8
-  description: Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that
-    follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids,
-    and PGN 130840.
+  description: Compacted id selecting which setting this object reports; also resolves the wire type of the Value field that follows. Different id space from the Command 1 'Source Setting Id', the Command 6 dump / PGN 130845 NAVICO_DATA_TYPE ids, and PGN 130840.
   lookupFieldtype: NAVICO_SOURCE_SETTING_ID
   primaryKey: true
 - id: spare12

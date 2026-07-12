@@ -6,9 +6,7 @@ variantOrder: 3
 priority: 7
 missing:
 - Lookups
-explanation: Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent
-  by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are only partially
-  identified.
+explanation: Engine diagnostic key/value pairs (distance, runtime, fuel and other cumulative counters, configuration) sent by the Mercury VesselView-Link gateway. Uses the same key/length/value scheme as the B&G PGN 130824. Keys are only partially identified.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

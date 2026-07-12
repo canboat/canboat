@@ -4,8 +4,7 @@ description: ISO Transport Protocol, Connection Management - End Of Message
 type: Single
 variantOrder: 3
 interval: irregular
-explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages
-  that have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message.
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to mark the end of the message.
 url: https://embeddedflakes.com/j1939-transport-protocol/
 fields:
 - id: groupFunctionCode

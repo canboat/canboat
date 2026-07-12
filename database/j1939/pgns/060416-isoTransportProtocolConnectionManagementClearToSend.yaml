@@ -4,9 +4,7 @@ description: ISO Transport Protocol, Connection Management - Clear To Send
 type: Single
 variantOrder: 2
 interval: irregular
-explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages
-  that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender that the receive is
-  ready to receive a number of frames.
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.
 url: https://embeddedflakes.com/j1939-transport-protocol/
 fields:
 - id: groupFunctionCode

@@ -8,13 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Per-object value report (Command 1), the form that accounts for essentially all observed 130822 traffic. Each
-  frame reports one object's current 'Object Value' (0xFC00 = no value), addressed by (Address, Source Setting Id, Item).
-  The trailing 'Sub' and 'Token' are the object's identity metadata, byte-identical to the same object's Command 6 dump and
-  constant per object; 'Token' is a stable per-object-definition handle (only a couple dozen distinct values on a typical
-  bus) that tracks the object independently of its local Section/Item address. The selected source DEVICE for each data type
-  is not carried here - it appears only in the Command 6 dump (as a NAME) and in PGN 130840. 'Source Setting Id' uses a different
-  id space from the data-type ids carried by the Command 6 dump and PGN 130845.
+explanation: Per-object value report (Command 1), the form that accounts for essentially all observed 130822 traffic. Each frame reports one object's current 'Object Value' (0xFC00 = no value), addressed by (Address, Source Setting Id, Item). The trailing 'Sub' and 'Token' are the object's identity metadata, byte-identical to the same object's Command 6 dump and constant per object; 'Token' is a stable per-object-definition handle (only a couple dozen distinct values on a typical bus) that tracks the object independently of its local Section/Item address. The selected source DEVICE for each data type is not carried here - it appears only in the Command 6 dump (as a NAME) and in PGN 130840. 'Source Setting Id' uses a different id space from the data-type ids carried by the Command 6 dump and PGN 130845.
 researchDoc: navico_udb
 fields:
 - id: manufacturerCode
@@ -57,9 +51,7 @@ fields:
 - id: sourceSettingId
   name: Source Setting Id
   type: UINT8
-  description: Compacted id selecting which data type this object is for. This is a different id space from the Command 6
-    dump / PGN 130845 data-type ids (NAVICO_DATA_TYPE) - the two use different numbers for the same quantity. Only 0x0F =
-    Heading is mapped so far; see PGN 130840.
+  description: Compacted id selecting which data type this object is for. This is a different id space from the Command 6 dump / PGN 130845 data-type ids (NAVICO_DATA_TYPE) - the two use different numbers for the same quantity. Only 0x0F = Heading is mapped so far; see PGN 130840.
 - id: item
   name: Item
   type: UINT8

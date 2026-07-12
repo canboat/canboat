@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: Audio/video source diagnostic status. Field lengths and types are inferred from the NMEA 3.002 field-name list
-  and are unconfirmed.
+explanation: Audio/video source diagnostic status. Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
 fields:
 - id: source
   name: Source

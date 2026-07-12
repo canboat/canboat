@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual
-  device connected to a lighting controller or physical device on the network.
+explanation: This PGN is used to provide status and capabilities of a lighting device. A lighting device may be a virtual device connected to a lighting controller or physical device on the network.
 fields:
 - id: deviceId
   name: Device ID

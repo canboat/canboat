@@ -8,8 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during
-  analysis it means the PGN is not reverse engineered yet.
+explanation: Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

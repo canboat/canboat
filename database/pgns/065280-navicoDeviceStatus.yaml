@@ -8,9 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The first payload
-  byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices
-  far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known.
+explanation: Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

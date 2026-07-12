@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: CZone alarm/status/acknowledgement message. Payload byte 2 is the device/source module id, byte 3 is the channel/alarm
-  id, bytes 4-5 are the little-endian alarm type, and byte 6 contains packed severity/state flags. Payload byte 7 is reserved.
+explanation: CZone alarm/status/acknowledgement message. Payload byte 2 is the device/source module id, byte 3 is the channel/alarm id, bytes 4-5 are the little-endian alarm type, and byte 6 contains packed severity/state flags. Payload byte 7 is reserved.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

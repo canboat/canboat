@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: This PGN provides the status of an elevator motor controller. Settings of the elevator motor controller may be
-  changed using the NMEA Command Group Function.
+explanation: This PGN provides the status of an elevator motor controller. Settings of the elevator motor controller may be changed using the NMEA Command Group Function.
 fields:
 - id: sid
   name: SID

@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and
-  has not been observed yet; field lengths and precisions are guesses.
+explanation: This PGN is used to provide the status on power storage sources such as batteries.This PGN is new in v3.0 and has not been observed yet; field lengths and precisions are guesses.
 fields:
 - id: energyStorageIdentifier
   name: Energy Storage Identifier

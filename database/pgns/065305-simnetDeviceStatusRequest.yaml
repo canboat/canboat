@@ -4,8 +4,7 @@ description: 'Simnet: Device Status Request'
 type: Single
 variantOrder: 2
 interval: 1000
-explanation: This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller)
-  to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.
+explanation: This PGN is sent by an active AutoPilot head controller (AP, MFD, Triton2). It is used by the AC (AutoPilot Controller) to verify that there is an active controller. If this PGN is not sent regularly the AC may report an error and go to standby.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

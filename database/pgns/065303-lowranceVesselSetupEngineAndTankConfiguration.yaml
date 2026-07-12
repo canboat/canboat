@@ -3,9 +3,7 @@ id: lowranceVesselSetupEngineAndTankConfiguration
 description: 'Lowrance: Vessel Setup - Engine and Tank Configuration'
 type: Single
 variantOrder: 2
-explanation: Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of engines,
-  number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a capture where the values were
-  changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L).
+explanation: Vessel-setup configuration sent by a Lowrance/Navico display when the operator changes the number of engines, number of fuel tanks, or total fuel capacity on the Vessel Setup page. Confirmed against a capture where the values were changed from (1 engine, 1 tank, 1200 L) to (2 engines, 3 tanks, 200 L).
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

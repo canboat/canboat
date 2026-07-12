@@ -71,9 +71,7 @@ fields:
     - id: value
       name: Value
       type: DYNAMIC_FIELD_VALUE
-      description: Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed
-        by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry
-        small typed values.
+      description: Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.
 samples:
 - raw: "2023-01-01-00:00:00.000,3,130823,19,255,218,13,99,ff,00,06,01,00,0b,09,4d,01,00,00,00,00,00,00,00,00,06,04,76,00,00,00,00,15,09,32,00,0a,00,2f,1e,80,11,00,82,b4,c0,00,00,00,00,00,00,00,00,0b,09,33,00,00,00,00,00,00,00,00,00,0b,09,35,00,00,00,00,00,00,00,00,00,0b,09,36,00,00,00,00,00,00,00,00,00,0b,09,37,00,00,00,00,00,00,00,00,00,0b,09,3c,00,00,00,00,00,00,00,00,00,04,02,31,00,00,04,02,25,00,00,04,02,47,00,00,04,02,48,00,00,04,02,49,00,00,04,02,8e,00,00,04,02,8f,00,00,04,02,90,00,00,04,02,39,01,00,04,02,3a,01,00,04,02,3c,01,00,04,02,4e,01,00,04,02,4f,01,00,04,02,50,01,00,0b,09,9d,01,00,00,00,00,00,00,00,00,0b,09,83,02,00,00,00,00,00,00,00,00,03,01,a0,02,03,01,be,01,03,01,bf,01,03,01,c0,01"  # from navico-130823.raw
   expects:

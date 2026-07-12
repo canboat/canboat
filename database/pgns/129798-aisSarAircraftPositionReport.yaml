@@ -55,8 +55,7 @@ fields:
 - id: sog
   name: SOG
   type: SPEED_UFIX16_DM
-  description: Originally this used the same resolution as SOG for boats (0.01 m/s), but this did not allow for speeds over
-    180 km/h so in some addendum this has been amended to have a resolution of 0.1 m/s
+  description: Originally this used the same resolution as SOG for boats (0.01 m/s), but this did not allow for speeds over 180 km/h so in some addendum this has been amended to have a resolution of 0.1 m/s
 - id: communicationState
   name: Communication State
   type: BINARY

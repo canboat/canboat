@@ -7,13 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Boat-speed (target performance) polar table, produced only by the B&G Hercules performance processor. It is emitted
-  as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that must be concatenated by Part
-  number beyond normal fast-packet reassembly. The reassembled stream is a 3-float preamble followed by repeating {uint16
-  count}{count x (0x04, float32)} rows; a typical table is 8 rows x 22 columns, the rows stepping the true wind speed 7.5,
-  10, 12.5 ... 25 kn and each row ending at true wind angle 180 deg. Because the payload is a stateful multi-part numeric
-  table rather than per-frame fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This
-  report is Hercules-only; NEON displays emit the Report Type 5 data-type directory instead.
+explanation: Boat-speed (target performance) polar table, produced only by the B&G Hercules performance processor. It is emitted as a one-shot burst of several parts (Report Type 15, Part numbers 1..N, ~20 ms apart) that must be concatenated by Part number beyond normal fast-packet reassembly. The reassembled stream is a 3-float preamble followed by repeating {uint16 count}{count x (0x04, float32)} rows; a typical table is 8 rows x 22 columns, the rows stepping the true wind speed 7.5, 10, 12.5 ... 25 kn and each row ending at true wind angle 180 deg. Because the payload is a stateful multi-part numeric table rather than per-frame fields, each part is shown here as raw bytes; reassemble the parts to recover the polar. This report is Hercules-only; NEON displays emit the Report Type 5 data-type directory instead.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

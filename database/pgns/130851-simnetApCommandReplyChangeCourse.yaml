@@ -8,8 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to
-  it.
+explanation: Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to it.
 researchDoc: navico_alarms_and_commands
 fields:
 - id: manufacturerCode

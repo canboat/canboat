@@ -7,9 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B static-data Part
-  A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the AIS transceiver's silent-mode state; the
-  two trailing bytes carry the state and are constant in the observed traffic.
+explanation: Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the observed traffic.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

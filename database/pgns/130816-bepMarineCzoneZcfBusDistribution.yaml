@@ -3,11 +3,7 @@ id: bepMarineCzoneZcfBusDistribution
 description: 'BEP Marine: CZone .zcf Bus Distribution'
 type: Fast
 variantOrder: 22
-explanation: Channel the plotter uses to push a .zcf configuration file over the bus. Each fast-packet sequence carries one
-  chunk; a complete .zcf reassembles by concatenating the Data portion of all chunks in Chunk Index order. Each non-terminal
-  chunk carries exactly 200 bytes of .zcf data; the terminal chunk is the first one with Data length < 200, followed by a
-  final chunk with Data length == 0 marking transfer end. Receivers should key state by source address; back-to-back transfers
-  from the same source are observed.
+explanation: Channel the plotter uses to push a .zcf configuration file over the bus. Each fast-packet sequence carries one chunk; a complete .zcf reassembles by concatenating the Data portion of all chunks in Chunk Index order. Each non-terminal chunk carries exactly 200 bytes of .zcf data; the terminal chunk is the first one with Data length < 200, followed by a final chunk with Data length == 0 marking transfer end. Receivers should key state by source address; back-to-back transfers from the same source are observed.
 url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130816.md
 fields:
 - id: manufacturerCode

@@ -8,9 +8,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from
-  entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually
-  only the request form is seen (empty Session/Status); the reply carries a status.
+explanation: Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

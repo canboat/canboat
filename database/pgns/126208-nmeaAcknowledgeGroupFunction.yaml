@@ -5,8 +5,7 @@ type: Fast
 variantOrder: 4
 priority: 3
 interval: irregular
-explanation: This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt
-  to perform the command (change its parameters) and reply positively or negatively.
+explanation: This is the Acknowledge variation of this group function PGN. When a device receives a Command, it will attempt to perform the command (change its parameters) and reply positively or negatively.
 url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
 fields:
 - id: functionCode

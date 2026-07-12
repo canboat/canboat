@@ -7,8 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815).
-  When this is shown during analysis it means the PGN is not reverse engineered yet.
+explanation: Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.
 fields:
 - id: data
   name: Data

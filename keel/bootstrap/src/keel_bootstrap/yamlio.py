@@ -40,7 +40,7 @@ _Dumper.add_representer(str, _str_presenter)
 def _dump(data, path: str) -> None:
     os.makedirs(os.path.dirname(path), exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
-        yaml.dump(data, f, Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=120)
+        yaml.dump(data, f, Dumper=_Dumper, sort_keys=False, allow_unicode=True, width=100000)
 
 
 def _load(path: str):

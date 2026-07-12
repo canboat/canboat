@@ -5,8 +5,7 @@ type: Fast
 variantOrder: 2
 priority: 3
 interval: irregular
-explanation: This is the Request variation of this group function PGN. The receiver shall respond by sending the requested
-  PGN, at the desired transmission interval.
+explanation: This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.
 url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
 fields:
 - id: functionCode

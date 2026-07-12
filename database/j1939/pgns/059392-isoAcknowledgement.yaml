@@ -4,9 +4,7 @@ description: ISO Acknowledgement
 type: Single
 variantOrder: 2
 interval: irregular
-explanation: This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This
-  message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific
-  command to indicate compliance or failure.
+explanation: This message is provided by ISO 11783 for a handshake mechanism between transmitting and receiving devices. This message is the possible response to acknowledge the reception of a 'normal broadcast' message or the response to a specific command to indicate compliance or failure.
 fields:
 - id: control
   name: Control

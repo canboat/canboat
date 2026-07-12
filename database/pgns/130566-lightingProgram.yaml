@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor
-  program.
+explanation: This PGN describes an available program on the controller. Can be a built in required NMEA one or a custom vendor program.
 fields:
 - id: programId
   name: Program ID

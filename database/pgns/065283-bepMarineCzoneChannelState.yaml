@@ -6,10 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode and a 4-bit
-  Value; the reporting module emits this periodically or on state change so other devices on the bus can mirror its outputs.
-  The Mode and Value field semantics are inferred from context (likely circuit-type/fault state for Mode and dim-level/state-code
-  for Value) but have not yet been verified against captures with known channel states.
+explanation: Per-channel state report for one CZone module's six output channels. Each channel has a 2-bit Mode and a 4-bit Value; the reporting module emits this periodically or on state change so other devices on the bus can mirror its outputs. The Mode and Value field semantics are inferred from context (likely circuit-type/fault state for Mode and dim-level/state-code for Value) but have not yet been verified against captures with known channel states.
 url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65283.md
 fields:
 - id: manufacturerCode

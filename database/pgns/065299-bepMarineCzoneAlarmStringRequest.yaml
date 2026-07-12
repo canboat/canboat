@@ -7,8 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: CZone request for remote alarm string text. The request identifies the device and channel/alarm id; the remote
-  device is expected to respond with the matching alarm string.
+explanation: CZone request for remote alarm string text. The request identifies the device and channel/alarm id; the remote device is expected to respond with the matching alarm string.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code

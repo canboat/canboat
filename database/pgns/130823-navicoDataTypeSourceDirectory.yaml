@@ -7,14 +7,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast
-  by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report
-  Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the
-  fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type
-  indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a
-  NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or
-  none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches
-  the layout observed across all captured traffic.
+explanation: Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -76,9 +69,7 @@ fields:
     - id: value
       name: Value
       type: DYNAMIC_FIELD_VALUE
-      description: Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed
-        by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry
-        small typed values.
+      description: Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.
 samples:
 - raw: "2023-01-01-00:00:00.000,3,130823,32,255,65,13,99,ff,00,05,01,00,3a,00,00,04,02,3b,00,00,04,02,91,00,00,04,02,95,00,00,0e,02,96,00,0a,00,fb,1b,7d,22,00,96,50,c0,ff,04,02,26,00,00,04,02,27,00,00,04,02,7d,00,00,04,02,a5,00,00,04,02,99,01,00"  # from nac3-operations.raw
   expects:

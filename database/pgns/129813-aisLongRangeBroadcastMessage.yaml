@@ -7,8 +7,7 @@ missing:
 - Resolution
 - Lookups
 - SampleData
-explanation: Long-range broadcast (AIS message 27). Field lengths and types are inferred from the NMEA 3.002 field-name list
-  and are unconfirmed.
+explanation: Long-range broadcast (AIS message 27). Field lengths and types are inferred from the NMEA 3.002 field-name list and are unconfirmed.
 fields:
 - id: sequenceId
   name: Sequence ID

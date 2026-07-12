@@ -6,8 +6,7 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
-explanation: Electric Energy Storage Status message provides important energy storage information global at a rapid update
-  rate.
+explanation: Electric Energy Storage Status message provides important energy storage information global at a rapid update rate.
 fields:
 - id: energyStorageIdentifier
   name: Energy Storage Identifier
