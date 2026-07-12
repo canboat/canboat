@@ -18,7 +18,7 @@
   }
   * { box-sizing: border-box; }
   body { margin: 0; font: 14px/1.45 system-ui, sans-serif; background: var(--bg); color: var(--fg);
-         display: grid; grid-template-columns: 280px 1fr; height: 100vh; }
+         display: grid; grid-template-columns: var(--sidebar-w, 280px) 1fr; height: 100vh; }
   #sidebar { border-right: 1px solid var(--line); background: var(--panel); display: flex;
              flex-direction: column; overflow: hidden; }
   #sidebar header { padding: 10px 12px; border-bottom: 1px solid var(--line); }
@@ -31,6 +31,12 @@
   #pgnlist div:hover { background: var(--const); }
   #pgnlist b { font-variant-numeric: tabular-nums; margin-right: 6px; }
   #main { overflow-y: auto; padding: 16px 20px 60px; }
+  /* Drag handle sitting on the sidebar/main boundary; left tracks --sidebar-w
+     so it stays glued to the grid column without any overflow entanglement. */
+  #resizer { position: fixed; top: 0; left: var(--sidebar-w, 280px); width: 7px; height: 100%;
+             margin-left: -3px; cursor: col-resize; z-index: 50; }
+  #resizer::before { content: ""; position: absolute; left: 3px; top: 0; width: 1px; height: 100%; }
+  #resizer:hover::before, #resizer.dragging::before { width: 3px; left: 2px; background: var(--accent); }
   h2 { font-size: 16px; margin: 18px 0 8px; }
   .step { color: var(--accent); font-weight: 600; margin-right: 6px; }
   textarea { width: 100%; font: 12px/1.4 ui-monospace, monospace; background: var(--bg);
@@ -108,6 +114,7 @@
   </header>
   <div id="pgnlist"></div>
 </div>
+<div id="resizer" title="Drag to resize the sidebar"></div>
 <div id="main">
   <div id="flash" class="flash"></div>
 
@@ -169,9 +176,8 @@
     <textarea id="yamlText" rows="22" spellcheck="false" oninput="yamlDirty=true; syncSavePath(); scheduleRefresh()"></textarea>
     <div class="row">
       <span class="hint" id="savePath"></span>
-      <label class="hint" title="Validate through keel check but do not write any file — for trying things out">
-        <input type="checkbox" id="scratchMode"> scratch (don't write)</label>
-      <button class="primary" onclick="save()">Save (checked first)</button>
+      <button onclick="save(true)" title="Run keel check but write nothing — try things out safely">Validate</button>
+      <button class="primary" onclick="save(false)" title="Run keel check, then write the file only if it passes">Validate and Save</button>
     </div>
   </section>
 </div>
@@ -270,6 +276,34 @@ async function init() {
   await refreshModel();
   renderPgnList("");
   $("search").addEventListener("input", e => renderPgnList(e.target.value));
+  initSidebarResize();
+}
+
+// Draggable sidebar width, persisted across sessions. --sidebar-w drives both
+// the body grid column and the fixed resizer handle, so they move together.
+function initSidebarResize() {
+  const KEY = "keelSidebarW";
+  const setW = w => document.body.style.setProperty("--sidebar-w", w + "px");
+  const saved = parseInt(localStorage.getItem(KEY), 10);
+  if (saved) setW(saved);
+  const rz = $("resizer");
+  let dragging = false;
+  const clamp = x => Math.max(180, Math.min(x, window.innerWidth - 320));
+  rz.addEventListener("mousedown", e => {
+    dragging = true;
+    rz.classList.add("dragging");
+    document.body.style.userSelect = "none";
+    e.preventDefault();
+  });
+  window.addEventListener("mousemove", e => { if (dragging) setW(clamp(e.clientX)); });
+  window.addEventListener("mouseup", () => {
+    if (!dragging) return;
+    dragging = false;
+    rz.classList.remove("dragging");
+    document.body.style.userSelect = "";
+    const w = parseInt(getComputedStyle(document.body).getPropertyValue("--sidebar-w"), 10);
+    if (w) localStorage.setItem(KEY, w);
+  });
 }
 
 function renderPgnList(filter) {
@@ -283,7 +317,7 @@ function renderPgnList(filter) {
     .forEach(p => {
       const d = document.createElement("div");
       d.innerHTML = `<b>${p.pgn}</b>${esc(p.description)}`;
-      d.title = p.id;
+      d.title = `${p.pgn} · ${p.description}\n${p.id}`;
       d.onclick = () => openExisting(p.id);
       el.appendChild(d);
     });
@@ -1305,22 +1339,23 @@ async function regenFromDialog() {
   }
 }
 
-async function save() {
+// scratch=true → "Validate" (keel check only, writes nothing);
+// scratch=false → "Validate and Save" (checks first, writes only if it passes).
+async function save(scratch) {
   const file = $("savePath").textContent.trim();
   if (!file) return flash("no target file (set PGN + id first)", false);
-  const scratch = $("scratchMode").checked;
   const r = await api("/api/save?file=" + encodeURIComponent(file) + (scratch ? "&scratch=1" : ""),
     $("yamlText").value);
   if (r.error) {
-    dialog(scratch ? "Would not save" : "Not saved", r.error, [
+    dialog(scratch ? "Validation failed" : "Not saved (validation failed)", r.error, [
       ["Back to editing", true, closeDialog],
     ]);
     return;
   }
   if (r.scratch) {
-    dialog("Scratch — validated, not written",
-      `${r.saved}\n\nkeel check passed. Nothing was written to disk\n` +
-      `(scratch mode). Uncheck "scratch" to save for real.`, [
+    dialog("Validated — not written",
+      `${r.saved}\n\nkeel check passed. Nothing was written to disk.\n` +
+      `Use "Validate and Save" to write it.`, [
       ["Back to editing", true, closeDialog],
     ]);
     return;
