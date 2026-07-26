@@ -43,6 +43,21 @@ tests:  compile
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 
+# The Rust runtime (rust/) is deliberately OPT-IN and is NOT a dependency of
+# all/compile/tests: a plain `make` of the C tools must never invoke cargo, so
+# C-only contributors and packagers need no Rust toolchain. keel is the one
+# exception and is shimmed separately from analyzer/Makefile; it is a different
+# workspace with a deliberately tiny dependency closure. See
+# MERGE-CANBOAT-RS.md goals #1 and #4.
+rust:
+	$(MAKE) -C rust
+
+rust-tests:
+	$(MAKE) -C rust test
+
+rust-clean:
+	$(MAKE) -C rust clean
+
 # Regenerate FIRST, then test against the fresh output. keel (run inside
 # `analyzer generated`) rewrites the C data tables and canboat.xml from the
 # database; only afterwards do we rebuild the analyzer from those fresh
@@ -131,7 +146,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-tests rust-clean
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

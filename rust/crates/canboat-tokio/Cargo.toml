@@ -1,0 +1,22 @@
+[package]
+name        = "canboat-tokio"
+version     = { workspace = true }
+edition     = { workspace = true }
+license     = { workspace = true }
+authors     = { workspace = true }
+repository  = { workspace = true }
+rust-version = { workspace = true }
+description = "Async tokio adapters for canboat-core (NGT-1, iKonvert)."
+
+[dependencies]
+canboat-core = { workspace = true }
+log          = { workspace = true }
+tokio        = { workspace = true }
+tokio-serial = { workspace = true }
+futures      = { workspace = true }
+
+[dev-dependencies]
+anyhow     = { workspace = true }
+clap       = { workspace = true }
+env_logger = { workspace = true }
+tokio      = { workspace = true, features = ["macros", "rt"] }

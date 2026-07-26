@@ -1,0 +1,26 @@
+[package]
+name        = "canboat-io"
+version     = { workspace = true }
+edition     = { workspace = true }
+license     = { workspace = true }
+authors     = { workspace = true }
+repository  = { workspace = true }
+rust-version = { workspace = true }
+description = "Sync std::io adapters for canboat-core (stdin, serial, TCP)."
+
+[dependencies]
+canboat-core = { workspace = true }
+log          = { workspace = true }
+serialport   = { workspace = true }
+# Container captures: `.nif` is gzip(tar); `.pcap.gz` / inner captures
+# are gzip(pcap). flate2's default miniz_oxide backend stays pure-Rust
+# for the static musl release builds.
+flate2       = { workspace = true }
+tar          = { workspace = true }
+
+[build-dependencies]
+serde_json = { workspace = true }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+socketcan = "3"
+libc      = "0.2"
