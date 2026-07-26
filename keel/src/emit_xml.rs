@@ -449,8 +449,11 @@ impl<'a> Emitter<'a> {
 
         if f.res_bits == 0 {
             self.p("          <BitLengthVariable>true</BitLengthVariable>\n");
-            if f.type_ == "BINARY" {
-                self.xml_u(10, "BitLengthField", (f.order - 1) as u64);
+            // The C hardcoded `order - 1` and keyed it on the type name alone;
+            // the referenced field is now authored as bitLengthField and R15
+            // resolves it to an order (QUIRKS Q14).
+            if let Some(order) = f.bit_length_field_order {
+                self.xml_u(10, "BitLengthField", order as u64);
             }
         } else {
             self.xml_u(10, "BitLength", f.res_bits as u64);

@@ -342,6 +342,9 @@ const FIELD_HELP = {
           "together identify which instance a message is about (an alarm id, an " +
           "engine/battery instance…). Consumers use it to correlate repeated reports " +
           "of the same object instead of treating each frame as new." },
+  bitLengthField: { label: "bitLengthField",
+    help: "Id of the earlier field holding this field's length in bits. Required on a variable-length BINARY field and allowed nowhere else; the referenced field must be a plain integer count (no lookup, no scaling). Emitted as <BitLengthField>.",
+  },
   specialValues: { label: "specialValues", warn: true,
     help: "Advanced. Overrides the auto-derived count of reserved sentinel values at " +
           "the top of the range (the ones decoding as Unavailable / Out-of-range / " +
@@ -375,6 +378,7 @@ function defToState(f) {
     unit: f.unit ?? "", resolution: f.resolution ?? "", offset: f.offset ?? "",
     description: f.description ?? "", note: f.note ?? "",
     specialValues: f.specialValues ?? "", rangeMin: f.rangeMin ?? "", rangeMax: f.rangeMax ?? "",
+    bitLengthField: f.bitLengthField ?? "",
     allowLookupWidthMismatch: !!f.allowLookupWidthMismatch,
     primaryKey: !!f.primaryKey,
   };
@@ -1256,6 +1260,7 @@ function fieldYaml(f, pad) {
   const has = v => v !== "" && v !== undefined && v !== null;
   let y = `${pad}- id: ${yq(f.id)}\n${p}name: ${yq(f.name)}\n${p}type: ${f.type}\n`;
   if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
+  if (has(f.bitLengthField)) y += `${p}bitLengthField: ${f.bitLengthField}\n`;
   if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;
   if (has(f.match))
     // integer verbatim; a lookup value NAME is written as-is (R13 resolves it)

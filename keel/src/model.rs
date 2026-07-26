@@ -112,6 +112,9 @@ pub struct Field {
     /// 32/24-bit constellations) and flag idioms (YES_NO in 1 bit).
     pub allow_lookup_width_mismatch: bool,
     pub special_values: Option<u32>,
+    /// Id of the field holding this field's length in bits. Authored only on
+    /// variable-length BINARY fields; emitted as <BitLengthField> (QUIRKS Q14).
+    pub bit_length_field: Option<String>,
     pub dynamic_field_length: bool,
     pub dynamic_field_length_overhead: u32,
     pub range_min: Option<f64>,
@@ -127,6 +130,8 @@ pub struct Field {
     pub res_range_max: f64,
     pub reserved_count: u32,
     pub order: u32,
+    /// 1-based order of the field named by `bit_length_field`.
+    pub bit_length_field_order: Option<u32>,
 }
 
 impl Field {

@@ -613,38 +613,62 @@ fn check_field_type_overrides(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<
     }
 }
 
-// R15: a variable-length BINARY field emits <BitLengthField>order - 1</...>,
-// i.e. "my length lives in the field right before me" (QUIRKS Q14). That
-// relationship is implicit - nothing declares it - so assert it holds rather
-// than let a mis-authored field emit a BitLengthField pointing at whatever
-// happens to precede it.
+// R15: a variable-length BINARY field takes its length from another field.
+// The C hardcoded "the field before me" and keyed it on the type name alone
+// (QUIRKS Q14); the reference is now authored as bitLengthField, and this rule
+// makes sure it is present, resolvable, positioned before the field, and an
+// unscaled integer bit count.
 fn check_bit_length_field(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     for (i, f) in p.fields.iter().enumerate() {
-        if f.res_bits != 0 || f.type_ != "BINARY" {
+        let variable_binary = f.res_bits == 0 && f.type_ == "BINARY";
+        let mut bad = |msg: String| {
+            v.push(Violation {
+                rule: "R15",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: msg,
+            })
+        };
+        let Some(target) = f.bit_length_field.as_deref() else {
+            if variable_binary {
+                bad(format!(
+                    "field '{}': a variable-length BINARY field must name the field \
+                     holding its length, e.g. bitLengthField: <id>",
+                    f.id
+                ));
+            }
+            continue;
+        };
+        if !variable_binary {
+            bad(format!(
+                "field '{}': bitLengthField only applies to a variable-length BINARY field",
+                f.id
+            ));
             continue;
         }
-        let bad = |why: String| Violation {
-            rule: "R15",
-            error: true,
-            location: pgn_loc(prefix, p),
-            message: format!(
-                "field '{}': a variable-length BINARY field takes its length from the \
-                 field immediately before it, {why}",
+        let Some(j) = p.fields.iter().position(|o| o.id == target) else {
+            bad(format!(
+                "field '{}': bitLengthField '{target}' is not a field of this PGN",
                 f.id
-            ),
-        };
-        let Some(prev) = i.checked_sub(1).map(|j| &p.fields[j]) else {
-            v.push(bad("but it is the first field".into()));
+            ));
             continue;
         };
+        if j >= i {
+            bad(format!(
+                "field '{}': bitLengthField '{target}' must come before it",
+                f.id
+            ));
+            continue;
+        }
         // The length field holds a bit count: a fixed-width integer, no lookup
-        // and no resolution scaling. Compare the *derived* resolution — a plain
+        // and no resolution scaling. Compare the *derived* resolution - a plain
         // UINT8/UINT16 authors none, which reads as 0.0 (unset) on the type.
-        if prev.lookup_ref().is_some() || prev.res_resolution != 1.0 || prev.res_bits == 0 {
-            v.push(bad(format!(
-                "but '{}' ({}) is not an integer bit-count field",
-                prev.id, prev.type_
-            )));
+        let t = &p.fields[j];
+        if t.lookup_ref().is_some() || t.res_resolution != 1.0 || t.res_bits == 0 {
+            bad(format!(
+                "field '{}': bitLengthField '{target}' ({}) is not an integer bit-count field",
+                f.id, t.type_
+            ));
         }
     }
 }

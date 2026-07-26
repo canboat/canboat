@@ -214,15 +214,15 @@ pub const RULES: &[Rule] = &[
         scope: Scope::IntraPgn,
         severity: "error",
         enforced_in: "check::check_bit_length_field",
-        title: "A variable-length BINARY field is preceded by its bit-count field.",
-        detail: "A BINARY field with no fixed width emits \
-                 <BitLengthField>order - 1</BitLengthField>: its length lives in the \
-                 field immediately before it. Nothing declares that relationship — the \
-                 emitter hardcodes the offset and keys it on the type name alone \
-                 (QUIRKS Q14) — so this rule asserts the field really is there and \
-                 really is an unscaled integer bit count (no lookup, resolution 1, \
-                 non-zero width). Without it a mis-authored BINARY field would silently \
-                 emit a BitLengthField pointing at whatever happened to precede it.",
+        title: "A variable-length BINARY field names the field holding its length.",
+        detail: "A BINARY field with no fixed width takes its length in bits from \
+                 another field, named by `bitLengthField: <id>` and emitted as \
+                 <BitLengthField>. The C hardcoded `order - 1` and keyed it on the type \
+                 name alone (QUIRKS Q14), so a mis-authored field silently pointed at \
+                 whatever happened to precede it. The reference is now explicit and this \
+                 rule checks it: present on every variable-length BINARY field and only \
+                 on those, resolvable within the PGN, positioned before the field, and \
+                 an unscaled integer bit count (no lookup, resolution 1, non-zero width).",
     },
     Rule {
         id: "R20",
