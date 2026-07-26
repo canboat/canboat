@@ -58,7 +58,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .unit = "=16", .description = "RTS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
+      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 16, .description = "RTS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
       {.name = "Message size", .camelName = "messageSize", .fieldType = "UINT16", .resolution = 1.0, .description = "bytes"},
       {.name = "Packets", .camelName = "packets", .fieldType = "UINT8", .resolution = 1.0, .description = "packets"},
       {.name = "Packets reply", .camelName = "packetsReply", .fieldType = "UINT8", .resolution = 1.0, .description = "packets sent in response to CTS"},
@@ -74,7 +74,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .unit = "=17", .description = "CTS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
+      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 17, .description = "CTS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
       {.name = "Max packets", .camelName = "maxPackets", .fieldType = "UINT8", .resolution = 1.0, .description = "Number of frames that can be sent before another CTS is required"},
       {.name = "Next SID", .camelName = "nextSid", .fieldType = "UINT8", .resolution = 1.0, .description = "Number of next frame to be transmitted"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 16, .resolution = 1.0},
@@ -90,7 +90,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .unit = "=19", .description = "EOM", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
+      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 19, .description = "EOM", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
       {.name = "Total message size", .camelName = "totalMessageSize", .fieldType = "UINT16", .resolution = 1.0, .description = "bytes"},
       {.name = "Total number of frames received", .camelName = "totalNumberOfFramesReceived", .fieldType = "UINT8", .resolution = 1.0, .description = "Total number of of frames received"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
@@ -106,7 +106,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .unit = "=32", .description = "BAM", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
+      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32, .description = "BAM", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
       {.name = "Message size", .camelName = "messageSize", .fieldType = "UINT16", .resolution = 1.0, .description = "bytes"},
       {.name = "Packets", .camelName = "packets", .fieldType = "UINT8", .resolution = 1.0, .description = "frames"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
@@ -122,7 +122,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .unit = "=255", .description = "Abort", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
+      {.name = "Group Function Code", .camelName = "groupFunctionCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 255, .description = "Abort", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupISO_COMMAND, .lookup.name = "ISO_COMMAND"},
       {.name = "Reason", .camelName = "reason", .fieldType = "BINARY", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 24, .resolution = 1.0},
       {.name = "PGN", .camelName = "pgn", .fieldType = "PGN", .size = 24}

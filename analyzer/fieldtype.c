@@ -391,7 +391,7 @@ extern void fillFieldType(bool doUnitFixup)
       {
         fixupUnit(f);
       }
-      if (f->unit != NULL && f->unit[0] == '=') // Is a match field
+      if (f->hasMatchValue)
       {
         pgnList[i].hasMatchFields = true;
       }
