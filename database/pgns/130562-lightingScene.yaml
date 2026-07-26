@@ -1,0 +1,49 @@
+pgn: 130562
+id: lightingScene
+description: Lighting Scene
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: A Lighting Scene is a sequence of zone program configurations.
+fields:
+- id: sceneIndex
+  name: Scene Index
+  type: UINT8
+- id: zoneName
+  name: Zone Name
+  type: STRING_LAU
+- id: control
+  name: Control
+  type: UINT8
+- id: configurationCount
+  name: Configuration Count
+  type: UINT8
+- repeat:
+    countField: configurationCount
+    fields:
+    - id: configurationIndex
+      name: Configuration Index
+      type: UINT8
+    - id: zoneIndex
+      name: Zone Index
+      type: UINT8
+    - id: devicesId
+      name: Devices ID
+      type: UINT32
+    - id: programIndex
+      name: Program Index
+      type: UINT8
+    - id: programColorSequenceIndex
+      name: Program Color Sequence Index
+      type: UINT8
+    - id: programIntensity
+      name: Program Intensity
+      type: UINT8
+    - id: programRate
+      name: Program Rate
+      type: UINT8
+    - id: programColorSequenceRate
+      name: Program Color Sequence Rate
+      type: UINT8

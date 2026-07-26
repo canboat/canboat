@@ -1,0 +1,8 @@
+name: FUSION_SIRIUS_COM_STATE
+kind: pair
+bits: 8
+values:
+  255: Unknown
+  1: 'Off'
+  2: Initialising
+  3: 'On'

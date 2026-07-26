@@ -1,0 +1,31 @@
+name: AIS_MESSAGE_ID
+kind: pair
+bits: 6
+values:
+  1: Scheduled Class A position report
+  2: Assigned scheduled Class A position report
+  3: Interrogated Class A position report
+  4: Base station report
+  5: Static and voyage related data
+  6: Binary addressed message
+  7: Binary acknowledgement
+  8: Binary broadcast message
+  9: Standard SAR aircraft position report
+  10: UTC/date inquiry
+  11: UTC/date response
+  12: Safety related addressed message
+  13: Safety related acknowledgement
+  14: Satety related broadcast message
+  15: Interrogation
+  16: Assignment mode command
+  17: DGNSS broadcast binary message
+  18: Standard Class B position report
+  19: Extended Class B position report
+  20: Data link management message
+  21: ATON report
+  22: Channel management
+  23: Group assignment command
+  24: Static data report
+  25: Single slot binary message
+  26: Multiple slot binary message
+  27: Position report for long range applications

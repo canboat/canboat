@@ -1,0 +1,80 @@
+pgn: 130816
+id: seaRecoveryWatermakerStatus
+description: 'Sea Recovery: Watermaker Status'
+type: Fast
+variantOrder: 24
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Sea Recovery
+  match: 285
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: UINT8
+- id: watermakerInstance
+  name: Watermaker Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: operationState
+  name: Operation State
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: prefilterPressure
+  name: Prefilter Pressure
+  type: UINT16
+- id: postfilterPressure
+  name: Postfilter Pressure
+  type: UINT16
+- id: operationPressure
+  name: Operation Pressure
+  type: UINT16
+- id: productFlow
+  name: Product Flow
+  type: INT16
+- id: prefilterPressureStatus
+  name: Prefilter Pressure Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: postfilterPressureStatus
+  name: Postfilter Pressure Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: operationPressureStatus
+  name: Operation Pressure Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: productSalinityStatus
+  name: Product Salinity Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: filterStatus
+  name: Filter Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: systemStatus
+  name: System Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved17
+  name: Reserved
+  type: RESERVED
+  bits: 4

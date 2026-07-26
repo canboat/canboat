@@ -1,0 +1,23 @@
+pgn: 129546
+id: gnssRaimSettings
+description: GNSS RAIM Settings
+type: Single
+priority: 6
+interval: irregular
+fields:
+- id: radialPositionErrorMaximumThreshold
+  name: Radial Position Error Maximum Threshold
+  type: LENGTH_UFIX16_CM
+- id: probabilityOfFalseAlarm
+  name: Probability of False Alarm
+  type: PERCENTAGE_INT8
+- id: probabilityOfMissedDetection
+  name: Probability of Missed Detection
+  type: PERCENTAGE_INT8
+- id: pseudorangeResidualFilteringTimeConstant
+  name: Pseudorange Residual Filtering Time Constant
+  type: DURATION_UFIX16_S
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

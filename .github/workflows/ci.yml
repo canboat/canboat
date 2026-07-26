@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
 
@@ -68,6 +68,41 @@ jobs:
           ls -l $CC
           make
 
+  # Exercise the static-musl keel builds that release.yaml ships for linux, so a
+  # musl-specific breakage (crt-static, the cformat snprintf extern, a std
+  # feature unavailable on musl) surfaces on the PR instead of at tag time.
+  # Each target builds on its matching-arch runner (as release.yaml does), so
+  # linking is native-arch and needs no cross toolchain — the host's ld cannot
+  # link foreign-arch objects (e.g. aarch64 crt on an x86_64 runner).
+  build-keel-musl:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+          - target: aarch64-unknown-linux-musl
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      - name: Build keel (static musl)
+        run: |
+          rustup target add "${{ matrix.target }}"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.target }}"
+
+      - name: Verify the binary is statically linked
+        run: |
+          bin="keel/target/${{ matrix.target }}/release/keel"
+          file "$bin"
+          # musl release binaries must not carry a dynamic-linker/interpreter.
+          if file "$bin" | grep -q "dynamically linked"; then
+            echo "::error::$bin is dynamically linked; expected a static musl build"
+            exit 1
+          fi
+
   build-windows:
     runs-on: windows-latest
     defaults:
@@ -76,7 +111,7 @@ jobs:
 
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4

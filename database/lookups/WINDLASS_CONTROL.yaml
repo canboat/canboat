@@ -1,0 +1,5 @@
+name: WINDLASS_CONTROL
+kind: bit
+bits: 4
+values:
+  0: Another device controlling windlass

@@ -1,0 +1,41 @@
+pgn: 61184
+id: 0xef00ManufacturerProprietarySingleFrameAddressed
+description: '0xEF00: Manufacturer Proprietary single-frame addressed'
+type: Single
+fallback: true
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer proprietary PGNs in PDU1 (addressed) single-frame PGN 0xEF00 (61184). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,0,52,8,3f,9f,00,00,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    data: "0x0000ffffffff"
+- raw: "2023-01-01-00:00:00.000,7,61184,52,0,8,3f,9f,00,03,ff,ff,ff,ff"  # from scx20-setting-tool-get-information.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    data: "0x0003ffffffff"

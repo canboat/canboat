@@ -1,0 +1,6 @@
+name: CERTIFICATION_LEVEL
+kind: pair
+bits: 8
+values:
+  0: Level A
+  1: Level B

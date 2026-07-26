@@ -1,0 +1,61 @@
+pgn: 130819
+id: bepMarineCzone130819
+description: 'BEP Marine: CZone 130819'
+type: Fast
+variantOrder: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130819.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: fieldA
+  name: Field A
+  type: UINT16
+  description: uint16 LE; purpose unverified
+- id: fieldB
+  name: Field B
+  type: UINT8
+  description: Pass-through byte; purpose unverified
+- id: fieldC
+  name: Field C
+  type: UINT8
+  description: Pass-through byte; purpose unverified
+- id: fieldD
+  name: Field D
+  type: UINT8
+  description: Pass-through byte; purpose unverified
+- id: fieldE
+  name: Field E
+  type: UINT16
+  description: uint16 LE; purpose unverified
+- id: fieldF
+  name: Field F
+  type: UINT32
+  description: uint32 LE; top byte always 0 (effectively 24-bit). Purpose unverified.
+- id: fieldG
+  name: Field G
+  type: UINT8
+  description: Pass-through byte; purpose unverified
+- id: flag
+  name: Flag
+  type: UINT8
+  description: Boolean encoded as 0xFE = false, 0xFF = true; purpose unverified

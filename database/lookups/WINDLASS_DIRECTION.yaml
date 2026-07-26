@@ -1,0 +1,7 @@
+name: WINDLASS_DIRECTION
+kind: pair
+bits: 2
+values:
+  0: 'Off'
+  1: Down
+  2: Up

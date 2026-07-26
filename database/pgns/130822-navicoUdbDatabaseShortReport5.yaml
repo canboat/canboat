@@ -1,0 +1,60 @@
+pgn: 130822
+id: navicoUdbDatabaseShortReport5
+description: 'Navico: UDB Database, Short Report 5'
+type: Fast
+variantOrder: 6
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Short Report 5
+  match: 5
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8
+- id: data
+  name: Data
+  type: BINARY
+  bits: 32

@@ -1,0 +1,52 @@
+pgn: 126720
+id: airmarTemperatureFilterIir
+description: 'Airmar: Temperature Filter IIR'
+type: Fast
+variantOrder: 44
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Temperature Filter
+  match: 44
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: filterType
+  name: Filter type
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: IIR filter
+  match: 1
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: sampleInterval
+  name: Sample interval
+  type: DURATION_UFIX16_CS
+  description: Interval of time between successive samples of the water temperature thermistor
+- id: filterDuration
+  name: Filter duration
+  type: DURATION_UFIX16_CS
+  description: Duration of filter, must be bigger than the sample interval

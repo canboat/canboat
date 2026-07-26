@@ -1,0 +1,17 @@
+pgn: 127744
+id: acPowerCurrentPhaseA
+description: AC Power / Current - Phase A
+type: Single
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: connectionNumber
+  name: Connection Number
+  type: UINT8
+- id: acRmsCurrent
+  name: AC RMS Current
+  type: CURRENT_UFIX16_DA
+- id: power
+  name: Power
+  type: POWER_INT32

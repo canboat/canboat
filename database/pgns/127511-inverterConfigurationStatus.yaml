@@ -1,0 +1,40 @@
+pgn: 127511
+id: inverterConfigurationStatus
+description: Inverter Configuration Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: acInstance
+  name: AC Instance
+  type: UINT8
+  primaryKey: true
+- id: dcInstance
+  name: DC Instance
+  type: UINT8
+  primaryKey: true
+- id: inverterEnableDisable
+  name: Inverter Enable/Disable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: inverterMode
+  name: Inverter Mode
+  type: LOOKUP
+  bits: 4
+  lookup: INVERTER_MODE
+- id: loadSenseEnableDisable
+  name: Load Sense Enable/Disable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: loadSensePowerThreshold
+  name: Load Sense Power Threshold
+  type: POWER_UINT16
+- id: loadSenseInterval
+  name: Load Sense Interval
+  type: DURATION_UFIX16_CS

@@ -1,0 +1,13 @@
+pgn: 65005
+id: utilityTotalAcEnergy
+description: Utility Total AC Energy
+type: Single
+missing:
+- Resolution
+fields:
+- id: totalEnergyExport
+  name: Total Energy Export
+  type: ENERGY_UINT32
+- id: totalEnergyImport
+  name: Total Energy Import
+  type: ENERGY_UINT32

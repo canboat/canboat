@@ -1,0 +1,10 @@
+name: SEATALK_ALARM_GROUP
+kind: pair
+bits: 8
+values:
+  0: Instrument
+  1: Autopilot
+  2: Radar
+  3: Chart Plotter
+  4: AIS
+  5: Bluetooth Accessory

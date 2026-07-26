@@ -1,0 +1,45 @@
+pgn: 130825
+id: maretronDataInstanceChannelCorrelation
+description: 'Maretron: Data Instance Channel Correlation'
+type: Fast
+variantOrder: 1
+priority: 6
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: PGN for which the correlation is reported
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: hardwareChannel
+  name: Hardware Channel
+  type: UINT8
+  primaryKey: true
+- id: instance
+  name: Instance
+  type: UINT8
+- id: dataSource
+  name: Data Source
+  type: UINT8
+- id: dataIndicator
+  name: Data Indicator
+  type: UINT8

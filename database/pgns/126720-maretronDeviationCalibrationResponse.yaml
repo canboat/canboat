@@ -1,0 +1,49 @@
+pgn: 126720
+id: maretronDeviationCalibrationResponse
+description: 'Maretron: Deviation Calibration Response'
+type: Fast
+variantOrder: 47
+url: https://web.archive.org/web/20220809223313/https://www.maretron.com/support/manuals/SSC200UM_1.8.html
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: productCode
+  name: Product code
+  type: LOOKUP
+  bits: 16
+  lookup: MARETRON_PRODUCT_CODE
+- id: softwareCode
+  name: Software code
+  type: LOOKUP
+  bits: 16
+  description: Version 1
+  match: 1
+  lookup: MARETRON_SOFTWARE_CODE
+- id: command
+  name: Command
+  type: LOOKUP
+  bits: 8
+  description: Deviation calibration
+  match: 80
+  lookup: MARETRON_COMMAND
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 8
+  lookup: MARETRON_STATUS_DEVIATION

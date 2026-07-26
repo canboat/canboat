@@ -1,0 +1,6 @@
+name: RODE_TYPE
+kind: pair
+bits: 2
+values:
+  0: Chain presently detected
+  1: Rope presently detected

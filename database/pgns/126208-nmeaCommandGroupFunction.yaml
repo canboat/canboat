@@ -1,0 +1,73 @@
+pgn: 126208
+id: nmeaCommandGroupFunction
+description: NMEA - Command group function
+type: Fast
+variantOrder: 3
+priority: 3
+interval: irregular
+explanation: This is the Command variation of this group function PGN. This instructs the receiver to modify its internal state for the passed parameters. The receiver shall reply with an Acknowledge reply.
+url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
+fields:
+- id: functionCode
+  name: Function Code
+  type: LOOKUP
+  bits: 8
+  description: Command
+  match: 1
+  lookup: GROUP_FUNCTION
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Commanded PGN
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: priority
+  name: Priority
+  type: LOOKUP
+  bits: 4
+  lookup: PRIORITY
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: numberOfParameters
+  name: Number of Parameters
+  type: UINT8
+  description: How many parameter pairs will follow
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: value
+      name: Value
+      type: VARIABLE
+      description: Parameter value
+samples:
+- raw: "2023-01-01-00:00:00.000,2,126208,0,67,21,01,16,f0,01,ff,01,02,0e,01,59,44,3a,56,4f,4c,55,4d,45,20,36,30"  # from 126208.raw
+  expects:
+    functionCode: "Command"
+    pgn: 126998
+    priority: ~
+    numberOfParameters: 1
+    parameter: 2
+    value: "0x0e0159443a564f4c554d45203630"
+- raw: "2023-01-01-00:00:00.000,3,126208,0,52,42,01,02,ff,01,f8,0b,01,3f,07,03,04,04,1e,00,05,09,07,06,87,03,07,86,03,0a,e8,03,00,00,0b,d0,07,00,00,0d,64,00,0e,05,00,0f,06,00"  # from scx20-setting-tool-offsets.raw
+  expects:
+    functionCode: "Command"
+    pgn: 130818
+    priority: "Leave unchanged"
+    numberOfParameters: 11
+    parameter: 1
+    value: "0x3f070304041e000509070687030786030ae80300000bd00700000d64000e05000f0600"
+- raw: "2023-01-01-00:00:00.000,3,126208,1,28,31,01,01,ff,01,f8,06,01,3f,07,03,04,09,07,00,00,00,0a,00,0e,00,00,0b,00,00,38,00,00,0c,07,00,00"  # from scx20-disable-sv.raw
+  expects:
+    functionCode: "Command"
+    pgn: 130817
+    priority: "Leave unchanged"
+    numberOfParameters: 6
+    parameter: 1
+    value: "0x3f07030409070000000a000e00000b00003800000c070000"

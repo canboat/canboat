@@ -1,0 +1,82 @@
+pgn: 126720
+id: airmarCalibrateCompass
+description: 'Airmar: Calibrate Compass'
+type: Fast
+variantOrder: 35
+interval: irregular
+missing:
+- Fields
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Calibrate Compass
+  match: 33
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: calibrateFunction
+  name: Calibrate Function
+  type: LOOKUP
+  bits: 8
+  lookup: AIRMAR_CALIBRATE_FUNCTION
+- id: calibrationStatus
+  name: Calibration Status
+  type: LOOKUP
+  bits: 8
+  lookup: AIRMAR_CALIBRATE_STATUS
+- id: verifyScore
+  name: Verify Score
+  type: UINT8
+  description: TBD
+- id: xAxisGainValue
+  name: X-axis gain value
+  type: DILUTION_OF_PRECISION_FIX16
+  description: default 100, range 50 to 500
+- id: yAxisGainValue
+  name: Y-axis gain value
+  type: DILUTION_OF_PRECISION_FIX16
+  description: default 100, range 50 to 500
+- id: zAxisGainValue
+  name: Z-axis gain value
+  type: DILUTION_OF_PRECISION_FIX16
+  description: default 100, range 50 to 500
+- id: xAxisLinearOffset
+  name: X-axis linear offset
+  type: MAGNETIC_FIELD_FIX16
+- id: yAxisLinearOffset
+  name: Y-axis linear offset
+  type: MAGNETIC_FIELD_FIX16
+- id: zAxisLinearOffset
+  name: Z-axis linear offset
+  type: MAGNETIC_FIELD_FIX16
+- id: xAxisAngularOffset
+  name: X-axis angular offset
+  type: ANGLE_FIX16_DDEG
+- id: pitchAndRollDamping
+  name: Pitch and Roll damping
+  type: DURATION_FIX16_5CS
+  description: default 30, range 0 to 200
+- id: compassRateGyroDamping
+  name: Compass/Rate gyro damping
+  type: DURATION_FIX16_5CS
+  description: default -30, range -2400 to 2400, negative indicates rate gyro is to be used in compass calculations

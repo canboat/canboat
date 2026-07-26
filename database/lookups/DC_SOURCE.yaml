@@ -1,0 +1,9 @@
+name: DC_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Battery
+  1: Alternator
+  2: Convertor
+  3: Solar cell
+  4: Wind generator

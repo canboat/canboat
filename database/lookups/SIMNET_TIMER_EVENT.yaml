@@ -1,0 +1,11 @@
+name: SIMNET_TIMER_EVENT
+kind: pair
+bits: 16
+values:
+  61: Race Timer Start
+  62: Race Timer Stop
+  63: Race Timer Sync
+  64: Race Timer Reset
+  65: Trip Timer Reset All
+  100: Trip Timer Enable
+  101: Trip Timer Disable

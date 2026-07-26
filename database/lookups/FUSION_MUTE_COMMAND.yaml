@@ -1,0 +1,6 @@
+name: FUSION_MUTE_COMMAND
+kind: pair
+bits: 8
+values:
+  1: Mute On
+  2: Mute Off

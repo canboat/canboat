@@ -53,55 +53,11 @@ limitations under the License.
  very typical pattern of code used by code generators (like this one :-) )
 */
 
-#ifdef EXPLAIN
-#define LOOKUP_PAIR_FUNCTION function.pairEnumerator
-#define LOOKUP_BIT_FUNCTION function.bitEnumerator
-#define LOOKUP_TRIPLET_FUNCTION function.tripletEnumerator
-#define LOOKUP_FIELDTYPE_FUNCTION function.fieldtypeEnumerator
-#else
 #define LOOKUP_PAIR_FUNCTION function.pair
 #define LOOKUP_BIT_FUNCTION function.pair
 #define LOOKUP_TRIPLET_FUNCTION function.triplet
 #define LOOKUP_FIELDTYPE_FUNCTION function.pair
-#endif
 
-#ifdef EXPLAIN
-
-// Generate functions that are usable as callbacks that will loop over all
-// possible values.
-
-#define LOOKUP_TYPE(type, length)        \
-  void lookup##type(EnumPairCallback cb) \
-  {
-#define LOOKUP(type, n, str) (cb)(n, str);
-
-#define LOOKUP_TYPE_BITFIELD(type, length) \
-  void lookup##type(BitPairCallback cb)    \
-  {
-#define LOOKUP_BITFIELD(type, n, str) (cb)(n, str);
-
-#define LOOKUP_TYPE_TRIPLET(type, length)   \
-  void lookup##type(EnumTripletCallback cb) \
-  {
-#define LOOKUP_TRIPLET(type, n1, n2, str) (cb)(n1, n2, str);
-
-#define LOOKUP_TYPE_FIELDTYPE(type, length)   \
-  void lookup##type(EnumFieldtypeCallback cb) \
-  {
-#define LOOKUP_FIELDTYPE(ftype, n, str, ft) (cb)(n, str, ft, NULL);
-#define LOOKUP_FIELDTYPE_LOOKUP(ftype, n, str, ft, bits, lt, ln) \
-  {                                                              \
-    static LookupInfo l;                                         \
-    l.name                   = xstr(ln);                         \
-    l.size                   = bits;                             \
-    l.type                   = LOOKUP_TYPE_##lt;                 \
-    l.LOOKUP_##lt##_FUNCTION = lookup##ln;                       \
-    (cb)(n, str, ft, &l);                                        \
-  }
-
-#define LOOKUP_END }
-
-#else
 
 // Generate functions that lookup the value using switch statements. Compilers
 // are really good at optimizing long switch statements, as lex/yacc style generated
@@ -179,24 +135,11 @@ limitations under the License.
   return NULL;     \
   }
 
-#endif
 
 #include "lookup.h"
 
 // Fill the lookup arrays
 
-#ifdef EXPLAIN
-static size_t l_id;
-static Field *l_field;
-
-static void fillFieldDescription(size_t n, const char *s)
-{
-  if (n == l_id)
-  {
-    l_field->description = s;
-  }
-}
-#endif
 
 void fillLookups(void)
 {
@@ -213,15 +156,7 @@ void fillLookups(void)
 
       if (sscanf(f->unit, "=%d", &id) > 0)
       {
-#ifdef EXPLAIN
-        // The callback will enumerate all fields, set globals to indicate which
-        // id to filter and where to fill the description.
-        l_id    = id;
-        l_field = f;
-        (lookupMANUFACTURER_CODE)(fillFieldDescription);
-#else
         f->description = (lookupMANUFACTURER_CODE) (id);
-#endif
       }
     }
   }

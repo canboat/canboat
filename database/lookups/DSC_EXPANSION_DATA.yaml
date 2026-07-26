@@ -1,0 +1,11 @@
+name: DSC_EXPANSION_DATA
+kind: pair
+bits: 8
+values:
+  100: Enhanced position
+  101: Source and datum of position
+  102: SOG
+  103: COG
+  104: Additional station identification
+  105: Enhanced geographic area
+  106: Number of persons on board

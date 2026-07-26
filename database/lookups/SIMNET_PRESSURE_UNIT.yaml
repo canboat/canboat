@@ -1,0 +1,8 @@
+name: SIMNET_PRESSURE_UNIT
+kind: pair
+bits: 8
+values:
+  1: PSI
+  3: Kilopascal
+  5: Inches of mercury
+  6: Bar

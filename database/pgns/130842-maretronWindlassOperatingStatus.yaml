@@ -1,0 +1,88 @@
+pgn: 130842
+id: maretronWindlassOperatingStatus
+description: 'Maretron: Windlass Operating Status'
+type: Fast
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: windlassOperatingEvents
+  name: Windlass Operating Events
+  type: UNSIGNED_INTEGER
+  bits: 6
+- id: windlassInstance
+  name: Windlass Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: windlassDirectionControl
+  name: Windlass Direction Control
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: speedControl
+  name: Speed Control
+  type: UINT8
+- id: powerEnable
+  name: Power Enable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: mechanicalEnable
+  name: Mechanical Enable
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: anchorDockingControl
+  name: Anchor Docking Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: deckAndAnchorWash
+  name: Deck and Anchor Wash
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: anchorLight
+  name: Anchor Light
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: auxiliaryAControl
+  name: Auxiliary A Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: auxiliaryBControl
+  name: Auxiliary B Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: auxiliaryCControl
+  name: Auxiliary C Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: auxiliaryDControl
+  name: Auxiliary D Control
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON

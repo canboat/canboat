@@ -1,0 +1,6 @@
+name: OK_WARNING
+kind: pair
+bits: 2
+values:
+  0: OK
+  1: Warning

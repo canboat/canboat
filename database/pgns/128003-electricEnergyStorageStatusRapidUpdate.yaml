@@ -1,0 +1,35 @@
+pgn: 128003
+id: electricEnergyStorageStatusRapidUpdate
+description: Electric Energy Storage Status, Rapid Update
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Electric Energy Storage Status message provides important energy storage information global at a rapid update rate.
+fields:
+- id: energyStorageIdentifier
+  name: Energy Storage Identifier
+  type: UINT8
+- id: batteryStatus
+  name: Battery Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: isolationStatus
+  name: Isolation Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: batteryError
+  name: Battery Error
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: batteryVoltage
+  name: Battery Voltage
+  type: VOLTAGE_UFIX16_100MV
+- id: batteryCurrent
+  name: Battery Current
+  type: CURRENT_FIX16_DA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

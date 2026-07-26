@@ -1,0 +1,8 @@
+name: STATION_STATUS
+kind: bit
+bits: 4
+values:
+  0: Station in use
+  1: Low SNR
+  2: Cycle Error
+  3: Blink

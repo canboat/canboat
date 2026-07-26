@@ -1,0 +1,10 @@
+name: TANK_TYPE
+kind: pair
+bits: 4
+values:
+  0: Fuel
+  1: Water
+  2: Gray water
+  3: Live well
+  4: Oil
+  5: Black water

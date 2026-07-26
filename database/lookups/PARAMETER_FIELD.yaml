@@ -1,0 +1,11 @@
+name: PARAMETER_FIELD
+kind: pair
+bits: 4
+values:
+  0: Acknowledge
+  1: Invalid parameter field
+  2: Temporary error
+  3: Parameter out of range
+  4: Access denied
+  5: Not supported
+  6: Read or Write not supported

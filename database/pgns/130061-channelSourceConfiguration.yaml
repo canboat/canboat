@@ -1,0 +1,49 @@
+pgn: 130061
+id: channelSourceConfiguration
+description: Channel Source Configuration
+type: Fast
+missing:
+- Resolution
+- SampleData
+fields:
+- id: dataSourceChannelId
+  name: Data Source Channel ID
+  type: UINT8
+- id: sourceSelectionStatus
+  name: Source Selection Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: nameSelectionCriteriaMask
+  name: NAME Selection Criteria Mask
+  type: BINARY
+  bits: 12
+- id: sourceName
+  name: Source NAME
+  type: ISO_NAME
+  rangeMin: 0.0
+  rangeMax: 1.84467440737096e+19
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: dataSourceInstanceFieldNumber
+  name: Data Source Instance Field Number
+  type: UINT8
+- id: dataSourceInstanceValue
+  name: Data Source Instance Value
+  type: UINT8
+- id: secondaryEnumerationFieldNumber
+  name: Secondary Enumeration Field Number
+  type: UINT8
+- id: secondaryEnumerationFieldValue
+  name: Secondary Enumeration Field Value
+  type: UINT8
+- id: parameterFieldNumber
+  name: Parameter Field Number
+  type: UINT8

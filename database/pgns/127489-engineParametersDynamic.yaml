@@ -1,0 +1,75 @@
+pgn: 127489
+id: engineParametersDynamic
+description: Engine Parameters, Dynamic
+type: Fast
+priority: 2
+interval: 500
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: oilPressure
+  name: Oil pressure
+  type: PRESSURE_UFIX16_HPA
+- id: oilTemperature
+  name: Oil temperature
+  type: TEMPERATURE_HIGH
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE
+- id: alternatorPotential
+  name: Alternator Potential
+  type: VOLTAGE_FIX16_10MV
+- id: fuelRate
+  name: Fuel Rate
+  type: VOLUMETRIC_FLOW
+- id: totalEngineHours
+  name: Total Engine hours
+  type: DURATION_UFIX32_S
+- id: coolantPressure
+  name: Coolant Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: fuelPressure
+  name: Fuel Pressure
+  type: PRESSURE_UFIX16_KPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: discreteStatus1
+  name: Discrete Status 1
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: ENGINE_STATUS_1
+- id: discreteStatus2
+  name: Discrete Status 2
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: ENGINE_STATUS_2
+- id: engineLoad
+  name: Engine Load
+  type: PERCENTAGE_INT8
+- id: engineTorque
+  name: Engine Torque
+  type: PERCENTAGE_INT8
+notes: |-
+  https://osukl.com/wp-content/uploads/2020/02/3155_User-Manual_-Rev_1.21_.pdf
+  samples/susteranna-actisense-serial.raw:
+  2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f
+samples:
+- raw: 2016-04-09T16:41:39.628Z,2,127489,16,255,26,00,2f,06,ff,ff,e3,73,65,05,ff,7f,72,10,00,00,ff,ff,ff,ff,ff,06,00,00,00,7f,7f
+  expects:
+    instance: Single Engine or Dual Engine Port
+    oilPressure: 158300
+    oilTemperature: null
+    temperature: 296.67
+    alternatorPotential: 13.81
+    totalEngineHours: 4210
+    discreteStatus1:
+    - Over Temperature
+    - Low Oil Pressure
+    discreteStatus2: []
+    engineLoad: null

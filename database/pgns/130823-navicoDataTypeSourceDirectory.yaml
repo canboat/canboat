@@ -1,0 +1,135 @@
+pgn: 130823
+id: navicoDataTypeSourceDirectory
+description: 'Navico: Data Type Source Directory'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Directory mapping the Navico data types a device tracks to their currently-selected source device, broadcast by NEON-generation displays (e.g. Nemesis, ZEUS SR-16 MFD) roughly every 5 seconds. After the fixed FF/00 marker, Report Type 5 and a part number, the frame carries a list of {Length, Type, Data Type, Value} records that run to the end of the fast-packet. Length counts the three header bytes (Type plus the 16-bit Data Type) as well as the trailing Value. Data Type indexes the NAVICO_DATA_TYPE table (the NEON DataType enumeration). When a source is bound to a data type the Value is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); most entries carry a short typed value or none. This is the same record format as the Report Type 6 full report and the PGN 130822 Command 6 Object Dump, and matches the layout observed across all captured traffic.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: spare5
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: reportType
+  name: Report Type
+  type: UINT8
+  description: Data-type source directory
+  match: 5
+- id: part
+  name: Part
+  type: UINT8
+  description: Sequence/part number of the directory report
+- id: spare8
+  name: Spare
+  type: SPARE
+  bits: 8
+- repeat:
+    fields:
+    - id: length
+      name: Length
+      type: DYNAMIC_FIELD_LENGTH
+      bits: 8
+      description: 'Bytes following in this record: a type byte, a 16-bit data-type id and the value'
+      dynamicFieldLength: true
+      dynamicFieldLengthOverhead: 3
+    - id: type
+      name: Type
+      type: UINT8
+      description: Value encoding/class for this entry (e.g. 2 = single-byte value, 9 = bound-source NAME wrapper)
+    - id: dataType
+      name: Data Type
+      type: LOOKUP
+      bits: 16
+      lookup: NAVICO_DATA_TYPE
+    - id: value
+      name: Value
+      type: DYNAMIC_FIELD_VALUE
+      description: Tagged value for this data type. When a source is bound to the data type it is a NAME wrapper (0x0A 0x00 followed by the source device's 8-byte NMEA 2000 NAME); a zero-length or single 0x00 value means none/auto; other data types carry small typed values.
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130823,32,255,65,13,99,ff,00,05,01,00,3a,00,00,04,02,3b,00,00,04,02,91,00,00,04,02,95,00,00,0e,02,96,00,0a,00,fb,1b,7d,22,00,96,50,c0,ff,04,02,26,00,00,04,02,27,00,00,04,02,7d,00,00,04,02,a5,00,00,04,02,99,01,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 5
+    part: 1
+    length: 58
+    type: 0
+    dataType: 1024
+    value: "0x023b0000040291000004029500000e0296000a00fb1b7d22009650c0ff0402260000040227000004027d00000402a500000402990100"
+- raw: "2023-01-01-00:00:00.000,3,130823,19,255,48,13,99,ff,00,05,01,00,0a,00,55,02,bc,2f,00,96,50,c0,ff,04,02,26,00,00,04,02,27,00,00,04,02,7d,00,00,04,02,a5,00,00,04,02,99,01,00,04,02,f9,01,00"  # from navico-130823.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 5
+    part: 1
+    length: 10
+    type: 0
+    dataType: "Yanmar Fuel Level Tank1 Stbd"
+    value: "0xbc2f009650c0ff"
+    length.2: 4
+    type.2: 2
+    dataType.2: "Current Set"
+    value.2: "0x00"
+    length.3: 4
+    type.3: 2
+    dataType.3: "Current Drift"
+    value.3: "0x00"
+    length.4: 4
+    type.4: 2
+    dataType.4: "Deviation"
+    value.4: "0x00"
+    length.5: 4
+    type.5: 2
+    dataType.5: "Structure Depth"
+    value.5: "0x00"
+    length.6: 4
+    type.6: 2
+    dataType.6: "Forward Depth"
+    value.6: "0x00"
+    length.7: 4
+    type.7: 2
+    dataType.7: "Speed Boat"
+    value.7: "0x00"
+- raw: "2023-01-01-00:00:00.000,3,130823,28,255,57,13,99,ff,00,05,01,00,00,04,02,95,00,00,0e,02,96,00,0a,00,fb,1b,7d,22,00,96,50,c0,ff,04,02,26,00,00,04,02,27,00,00,04,02,7d,00,00,04,02,a5,00,00,04,02,99,01,00,03,01,f9,01"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 5
+    part: 1
+    length: 0
+    type: 4
+    dataType: 38146
+    value: "0x"
+    length.2: 0
+    type.2: 0
+    dataType.2: "Idle Control"
+    value.2: "0x"
+    length.3: 150
+    type.3: 0
+    dataType.3: "Position Integrity"
+    value.3: "0xfb1b7d22009650c0ff0402260000040227000004027d00000402a5000004029901000301f901"

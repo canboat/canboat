@@ -1,0 +1,53 @@
+pgn: 65280
+id: navicoDeviceStatus
+description: 'Navico: Device Status'
+type: Single
+variantOrder: 7
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Low-rate proprietary status broadcast seen from Navico/B&G/Simrad devices (MFDs, autopilots). The first payload byte distinguishes the sender's software platform - NOS-generation devices emit it at about 4 Hz, NEON-generation devices far less often. The remaining bytes are constant in all observed traffic, so their meaning is not yet known.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reportType
+  name: Report Type
+  type: UINT8
+  description: 'Tracks the emitting device''s software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four
+    times a second, NEON devices at a much lower rate.'
+- id: data
+  name: Data
+  type: BINARY
+  bits: 40
+  description: Payload; constant in all observed traffic
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65280,30,255,8,13,99,04,05,00,00,02,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 4
+    data: "0x0500000200"
+- raw: "2023-01-01-00:00:00.000,2,65280,32,255,8,13,99,05,00,00,00,00,00"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    reportType: 5
+    data: "0x0000000000"

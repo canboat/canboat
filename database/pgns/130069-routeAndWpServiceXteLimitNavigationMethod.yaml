@@ -1,0 +1,56 @@
+pgn: 130069
+id: routeAndWpServiceXteLimitNavigationMethod
+description: Route and WP Service - XTE Limit & Navigation Method
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfWpsWithASpecificXteLimitOrNavMethod
+  name: Number of WPs with a specific XTE Limit or Nav. Method
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: databaseId
+      name: Database ID
+      type: UINT16
+    - id: routeId
+      name: Route ID
+      type: UINT16
+    - id: rps
+      name: RPS#
+      type: UINT16
+    - id: xteLimitInTheLegAfterWp
+      name: XTE Limit in the leg after WP
+      type: DISTANCE_FIX16_M
+    - id: navMethodInTheLegAfterWp
+      name: Nav. Method in the leg after WP
+      type: LOOKUP
+      bits: 2
+      lookup: WP_NAVIGATION_METHOD
+    - id: reserved
+      name: Reserved
+      type: RESERVED
+      bits: 6
+samples:
+- raw: "2023-01-01-00:00:00.000,4,130069,99,255,20,ff,ff,02,00,64,00,ff,ff,02,00,01,00,1e,00,fc,02,00,14,00,fd"  # from actisense-522.candump.log
+  expects:
+    startRps: ~
+    nitems: 2
+    numberOfWpsWithASpecificXteLimitOrNavMethod: 100
+    databaseId: ~
+    routeId: 2
+    rps: 1
+    xteLimitInTheLegAfterWp: 30
+    navMethodInTheLegAfterWp: "Great Circle"
+    databaseId.2: 2
+    routeId.2: 20
+    rps.2: 253
+    xteLimitInTheLegAfterWp.2: ~
+    navMethodInTheLegAfterWp.2: ~

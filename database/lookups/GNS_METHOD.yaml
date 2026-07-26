@@ -1,0 +1,13 @@
+name: GNS_METHOD
+kind: pair
+bits: 4
+values:
+  0: no GNSS
+  1: GNSS fix
+  2: DGNSS fix
+  3: Precise GNSS
+  4: RTK Fixed Integer
+  5: RTK float
+  6: Estimated (DR) mode
+  7: Manual Input
+  8: Simulate mode

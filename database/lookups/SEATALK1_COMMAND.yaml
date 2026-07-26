@@ -1,0 +1,63 @@
+name: SEATALK1_COMMAND
+kind: pair
+bits: 8
+values:
+  0: Depth Below Transducer
+  1: Equipment ID
+  5: Engine RPM and PITCH
+  16: Apparent Wind Angle
+  17: Apparent Wind Speed
+  32: Speed through water
+  33: Trip Mileage
+  34: Total Mileage
+  35: Water temperature (ST50)
+  36: Display units for Mileage & Speed
+  37: Total & Trip Log
+  38: Speed through water (with average)
+  39: Water temperature
+  48: Set lamp Intensity
+  54: Cancel MOB (Man Over Board) condition
+  56: Codelock data
+  80: LAT position
+  81: LON position
+  82: Speed over Ground
+  83: Course over Ground (COG)
+  84: GMT-time
+  85: TRACK keystroke on GPS unit
+  86: Date
+  87: Sat Info
+  88: LAT/LON (raw unfiltered)
+  89: Set Count Down Timer
+  97: Issued by E-80 multifunction display at initialization
+  101: Select Fathom display units for depth display
+  102: Wind alarm
+  104: Alarm acknowledgment keystroke
+  108: Second equipment-ID datagram
+  110: MOB (Man Over Board)
+  112: Keystroke on Raymarine A25006 ST60 Maxiview Remote Control
+  128: Set Lamp Intensity
+  129: Sent by course computer during setup
+  130: Target waypoint name
+  131: Sent by course computer
+  132: Compass heading Autopilot course and Rudder position
+  133: Navigation to waypoint information
+  134: Keystroke
+  135: Set Response level
+  136: Autopilot Parameter
+  137: Compass heading sent by ST40 compass instrument
+  144: Device Indentification
+  145: Set Rudder gain
+  146: Set Autopilot Parameter
+  147: Enter AP-Setup
+  149: Replaces command 84 while autopilot is in value setting mode
+  153: Compass variation
+  154: Version String
+  156: Compass heading and Rudder position
+  158: Waypoint definition
+  161: Destination Waypoint Info
+  162: Arrival Info
+  164: Broadcast query/response to identify devices
+  165: GPS and DGPS Info
+  167: Unknown meaning
+  168: Alarm ON/OFF for Guard
+  171: Alarm ON/OFF for Guard

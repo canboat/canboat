@@ -1,0 +1,39 @@
+pgn: 130820
+id: simnetReprogramStatus
+description: 'Simnet: Reprogram Status'
+type: Fast
+variantOrder: 2
+priority: 7
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: status
+  name: Status
+  type: UINT8
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 24

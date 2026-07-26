@@ -1,0 +1,7 @@
+name: TURN_MODE
+kind: pair
+bits: 3
+values:
+  0: Rudder limit controlled
+  1: Turn rate controlled
+  2: Radius controlled

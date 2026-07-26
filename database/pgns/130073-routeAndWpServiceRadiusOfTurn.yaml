@@ -1,0 +1,31 @@
+pgn: 130073
+id: routeAndWpServiceRadiusOfTurn
+description: Route and WP Service - Radius of Turn
+type: Fast
+priority: 7
+interval: irregular
+fields:
+- id: startRps
+  name: Start RPS#
+  type: UINT16
+- id: nitems
+  name: nItems
+  type: UINT16
+- id: numberOfWpsWithASpecificRadiusOfTurn
+  name: Number of WPs with a specific Radius of Turn
+  type: UINT16
+- id: databaseId
+  name: Database ID
+  type: UINT16
+- id: routeId
+  name: Route ID
+  type: UINT16
+- repeat:
+    countField: nitems
+    fields:
+    - id: rps
+      name: RPS#
+      type: UINT16
+    - id: radiusOfTurn
+      name: Radius of Turn
+      type: DISTANCE_FIX16_M

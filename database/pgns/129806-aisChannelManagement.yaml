@@ -1,0 +1,115 @@
+pgn: 129806
+id: aisChannelManagement
+description: AIS Channel Management
+type: Fast
+priority: 7
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: channelA
+  name: Channel A
+  type: UINT16
+- id: channelB
+  name: Channel B
+  type: UINT16
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: power
+  name: Power
+  type: LOOKUP
+  bits: 1
+  lookup: POWER_MODE
+- id: txRxMode
+  name: Tx/Rx Mode
+  type: LOOKUP
+  bits: 4
+  lookup: TX_RX_MODE
+- id: northEastLongitudeCorner1
+  name: North East Longitude Corner 1
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: northEastLatitudeCorner1
+  name: North East Latitude Corner 1
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: southWestLongitudeCorner2
+  name: South West Longitude Corner 2
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: southWestLatitudeCorner2
+  name: South West Latitude Corner 2
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: reserved16
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: addressedOrBroadcastMessageIndicator
+  name: Addressed or Broadcast Message Indicator
+  type: LOOKUP
+  bits: 1
+  lookup: BROADCAST_INDICATOR
+- id: channelABandwidth
+  name: Channel A Bandwidth
+  type: LOOKUP
+  bits: 1
+  lookup: BANDWIDTH
+- id: channelBBandwidth
+  name: Channel B Bandwidth
+  type: LOOKUP
+  bits: 1
+  lookup: BANDWIDTH
+- id: reserved20
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: transitionalZoneSize
+  name: Transitional Zone Size
+  type: LOOKUP
+  bits: 3
+  lookup: ZONE_SIZE
+- id: spare22
+  name: Spare
+  type: SPARE
+  bits: 23
+- id: reserved23
+  name: Reserved
+  type: RESERVED
+  bits: 1

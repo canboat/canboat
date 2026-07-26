@@ -1,0 +1,46 @@
+pgn: 65289
+id: maretron010V
+description: 'Maretron: 0-10 V'
+type: Single
+variantOrder: 2
+priority: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: dataInstance
+  name: Data Instance
+  type: UINT8
+  primaryKey: true
+- id: 010VData
+  name: 0-10 V Data
+  type: UINT16
+  resolution: 0.000244141
+  rangeMin: 0.0
+  rangeMax: 15.9990234375
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 16

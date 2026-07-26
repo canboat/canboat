@@ -1,0 +1,683 @@
+//! `keel edit` - the local web editor (DESIGN.md §7).
+//!
+//! Deliberately dependency-free: a minimal hand-rolled HTTP/1.1 server on
+//! localhost (GET + POST with Content-Length, thread per connection) and
+//! hand-emitted JSON responses. Candidate PGN definitions travel as YAML -
+//! the same text that gets saved - so the existing loader is the parser and
+//! no JSON parser is needed.
+
+use std::io::{Read, Write};
+use std::net::{TcpListener, TcpStream};
+use std::path::PathBuf;
+use std::sync::Arc;
+
+use crate::model::Database;
+use crate::{check, decode, derive, emit_xml, generate, samples, yamlio};
+
+pub struct EditServer {
+    pub root: PathBuf,
+    pub version: String,
+    pub schema_version: String,
+    /// Snapshot of the last real (non-scratch) save, so the editor can
+    /// offer "undo this edit". Restores the file (or removes it if the
+    /// edit created it) and the lookup-order manifest.
+    pub last_save: std::sync::Mutex<Option<UndoEntry>>,
+}
+
+pub struct UndoEntry {
+    pub file: String,
+    /// Previous file content; None if the save created the file.
+    pub prev: Option<String>,
+    /// Previous lookups.order.yaml, captured only when a lookup save
+    /// rewrote it.
+    pub prev_order: Option<String>,
+}
+
+const INDEX_HTML: &str = include_str!("../web/index.html");
+
+pub fn serve(server: EditServer, port: u16) -> Result<(), String> {
+    let listener =
+        TcpListener::bind(("127.0.0.1", port)).map_err(|e| format!("bind 127.0.0.1:{port}: {e}"))?;
+    let addr = listener.local_addr().map_err(|e| e.to_string())?;
+    println!("keel edit: http://{addr}/  (Ctrl-C to stop)");
+    let _ = open_browser(&format!("http://{addr}/"));
+
+    let server = Arc::new(server);
+    for stream in listener.incoming() {
+        let Ok(stream) = stream else { continue };
+        let server = Arc::clone(&server);
+        std::thread::spawn(move || {
+            let _ = handle(&server, stream);
+        });
+    }
+    Ok(())
+}
+
+fn open_browser(url: &str) -> std::io::Result<()> {
+    #[cfg(target_os = "macos")]
+    let cmd = "open";
+    #[cfg(not(target_os = "macos"))]
+    let cmd = "xdg-open";
+    std::process::Command::new(cmd).arg(url).spawn().map(|_| ())
+}
+
+fn handle(server: &EditServer, mut stream: TcpStream) -> std::io::Result<()> {
+    let mut buf = Vec::new();
+    let mut tmp = [0u8; 4096];
+    // read until end of headers
+    let header_end = loop {
+        let n = stream.read(&mut tmp)?;
+        if n == 0 {
+            return Ok(());
+        }
+        buf.extend_from_slice(&tmp[..n]);
+        if let Some(pos) = find_subslice(&buf, b"\r\n\r\n") {
+            break pos + 4;
+        }
+        if buf.len() > 1 << 20 {
+            return Ok(());
+        }
+    };
+    let head = String::from_utf8_lossy(&buf[..header_end]).into_owned();
+    let mut lines = head.lines();
+    let request = lines.next().unwrap_or_default().to_string();
+    let mut content_length = 0usize;
+    for l in lines {
+        if let Some(v) = l.to_ascii_lowercase().strip_prefix("content-length:").map(str::trim) {
+            content_length = v.parse().unwrap_or(0);
+        }
+    }
+    let mut body = buf[header_end..].to_vec();
+    while body.len() < content_length {
+        let n = stream.read(&mut tmp)?;
+        if n == 0 {
+            break;
+        }
+        body.extend_from_slice(&tmp[..n]);
+    }
+    let body = String::from_utf8_lossy(&body).into_owned();
+
+    let mut parts = request.split_whitespace();
+    let method = parts.next().unwrap_or_default();
+    let target = parts.next().unwrap_or_default();
+    let (path, query) = match target.split_once('?') {
+        Some((p, q)) => (p, q),
+        None => (target, ""),
+    };
+
+    let (status, ctype, payload) = route(server, method, path, query, &body);
+    let response = format!(
+        "HTTP/1.1 {status}\r\nContent-Type: {ctype}\r\nContent-Length: {}\r\nCache-Control: no-store\r\nConnection: close\r\n\r\n",
+        payload.len()
+    );
+    stream.write_all(response.as_bytes())?;
+    stream.write_all(payload.as_bytes())?;
+    Ok(())
+}
+
+fn find_subslice(haystack: &[u8], needle: &[u8]) -> Option<usize> {
+    haystack.windows(needle.len()).position(|w| w == needle)
+}
+
+fn route(
+    server: &EditServer,
+    method: &str,
+    path: &str,
+    query: &str,
+    body: &str,
+) -> (&'static str, &'static str, String) {
+    let json = "application/json; charset=utf-8";
+    match (method, path) {
+        ("GET", "/") => {
+            // Prefer the on-disk file during development, fall back to the
+            // compiled-in copy.
+            let disk = server.root.join("keel/web/index.html");
+            let html = std::fs::read_to_string(disk).unwrap_or_else(|_| INDEX_HTML.to_string());
+            ("200 OK", "text/html; charset=utf-8", html)
+        }
+        ("GET", "/api/model") => match api_model(server) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("500 Internal Server Error", json, err_json(&e)),
+        },
+        ("POST", "/api/analyze") => match api_analyze(server, body) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("POST", "/api/decode") => match api_decode(server, query, body) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("POST", "/api/generate") => match api_generate(server) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("POST", "/api/undo") => match api_undo(server) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("POST", "/api/save") => match api_save(server, query, body) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("GET", "/api/pgn") => match api_pgn(server, query) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        ("GET", "/api/lookup") => match api_lookup(server, query) {
+            Ok(j) => ("200 OK", json, j),
+            Err(e) => ("200 OK", json, err_json(&e)),
+        },
+        _ => ("404 Not Found", "text/plain", "not found".into()),
+    }
+}
+
+/// Regenerate every artifact from the current database tree (the editor's
+/// post-save action). Same output as `keel generate`.
+fn api_generate(server: &EditServer) -> Result<String, String> {
+    let mut db = yamlio::load_database(
+        &server.root.join("database"),
+        &server.version,
+        &server.schema_version,
+    )?;
+    let authored = db.fieldtypes.clone();
+    derive::fill(&mut db)?;
+    let violations = check::check(&db);
+    if let Some(v) = violations.iter().find(|v| v.error) {
+        return Err(format!("not generated - {} {}: {}", v.rule, v.location, v.message));
+    }
+    let mut written = Vec::new();
+    for (path, content) in generate::emit_artifacts(&server.root, &db, &authored, emit_xml::FloatStyle::C) {
+        std::fs::write(&path, content).map_err(|e| format!("{}: {e}", path.display()))?;
+        written.push(js(
+            &path
+                .strip_prefix(&server.root)
+                .unwrap_or(&path)
+                .display()
+                .to_string(),
+        ));
+    }
+    Ok(format!("{{\"written\":[{}]}}", written.join(",")))
+}
+
+fn load_db(server: &EditServer) -> Result<Database, String> {
+    let mut db = yamlio::load_database(
+        &server.root.join("database"),
+        &server.version,
+        &server.schema_version,
+    )?;
+    derive::fill(&mut db)?;
+    Ok(db)
+}
+
+// ---- JSON emission helpers (no serde) -------------------------------------
+
+fn js(s: &str) -> String {
+    let mut out = String::with_capacity(s.len() + 2);
+    out.push('"');
+    for c in s.chars() {
+        match c {
+            '"' => out.push_str("\\\""),
+            '\\' => out.push_str("\\\\"),
+            '\n' => out.push_str("\\n"),
+            '\r' => out.push_str("\\r"),
+            '\t' => out.push_str("\\t"),
+            c if (c as u32) < 0x20 => out.push_str(&format!("\\u{:04x}", c as u32)),
+            c => out.push(c),
+        }
+    }
+    out.push('"');
+    out
+}
+
+fn err_json(e: &str) -> String {
+    format!("{{\"error\":{}}}", js(e))
+}
+
+// ---- endpoints -------------------------------------------------------------
+
+fn api_model(server: &EditServer) -> Result<String, String> {
+    let db = load_db(server)?;
+    let mut pgns: Vec<String> = db
+        .pgns
+        .iter()
+        .map(|p| {
+            format!(
+                "{{\"pgn\":{},\"id\":{},\"description\":{},\"fallback\":{}}}",
+                p.pgn,
+                js(&p.id),
+                js(&p.description),
+                p.fallback
+            )
+        })
+        .collect();
+    pgns.sort();
+    let mut lookups: Vec<String> = db
+        .lookups
+        .values()
+        .map(|l| {
+            format!(
+                "{{\"name\":{},\"kind\":{},\"bits\":{}}}",
+                js(&l.name),
+                js(&l.kind),
+                l.bits
+            )
+        })
+        .collect();
+    lookups.sort();
+    let fieldtypes: Vec<String> = db
+        .fieldtypes
+        .iter()
+        .map(|ft| {
+            format!(
+                "{{\"name\":{},\"root\":{},\"bits\":{},\"unit\":{},\"resolution\":{},\"signed\":{},\"description\":{}}}",
+                js(&ft.name),
+                js(&ft.root_name),
+                ft.size,
+                ft.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                if ft.resolution != 0.0 { format!("{:?}", ft.resolution) } else { "null".into() },
+                ft.has_sign.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
+                ft.description.as_deref().map(js).unwrap_or_else(|| "null".into()),
+            )
+        })
+        .collect();
+    Ok(format!(
+        "{{\"pgns\":[{}],\"lookups\":[{}],\"fieldtypes\":[{}]}}",
+        pgns.join(","),
+        lookups.join(","),
+        fieldtypes.join(",")
+    ))
+}
+
+fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
+    let id = query
+        .split('&')
+        .find_map(|kv| kv.strip_prefix("id="))
+        .ok_or("missing id=")?;
+    let path = find_pgn_file(server, id)?;
+    let yaml = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
+    let def = yamlio::parse_pgn_str(&yaml, id)?;
+    let fields: Vec<String> = def
+        .fields
+        .iter()
+        .map(|f| {
+            let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
+            format!(
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
+                js(&f.id),
+                js(&f.name),
+                js(&f.type_),
+                f.bits.map(|b| b.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.lookup),
+                opt_s(&f.lookup_bits),
+                opt_s(&f.lookup_fieldtype),
+                opt_s(&f.lookup_indirect),
+                f.lookup_indirect_order.map(|o| o.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.match_),
+                opt_s(&f.unit),
+                f.resolution.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.offset.map(|o| o.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.description),
+                opt_s(&f.note),
+                f.special_values.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
+                f.range_min.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.range_max.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                f.allow_lookup_width_mismatch,
+                f.primary_key,
+            )
+        })
+        .collect();
+    let rep = |r: &Option<crate::model::Repeating>| match r {
+        Some(r) => format!(
+            "{{\"count\":{},\"start\":{},\"countField\":{}}}",
+            r.count,
+            r.start,
+            r.count_field.map(|c| c.to_string()).unwrap_or_else(|| "null".into())
+        ),
+        None => "null".into(),
+    };
+    Ok(format!(
+        "{{\"path\":{},\"yaml\":{},\"def\":{{\"pgn\":{},\"id\":{},\"description\":{},\"type\":{},\"priority\":{},\"repeating1\":{},\"repeating2\":{},\"fields\":[{}]}}}}",
+        js(&path.display().to_string()),
+        js(&yaml),
+        def.pgn,
+        js(&def.id),
+        js(&def.description),
+        js(&def.type_),
+        def.priority,
+        rep(&def.repeating1),
+        rep(&def.repeating2),
+        fields.join(",")
+    ))
+}
+
+/// GET /api/lookup?name=NAME -> the lookup file (yaml + structured values).
+fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
+    let name = query
+        .split('&')
+        .find_map(|kv| kv.strip_prefix("name="))
+        .ok_or("missing name=")?;
+    if !name.chars().all(|c| c.is_ascii_alphanumeric() || c == '_') {
+        return Err("bad lookup name".into());
+    }
+    let path = server.root.join(format!("database/lookups/{name}.yaml"));
+    let yaml = std::fs::read_to_string(&path).map_err(|e| format!("{name}: {e}"))?;
+    let lk = yamlio::parse_lookup_str(&yaml, name)?;
+    let values: Vec<String> = match lk.kind.as_str() {
+        "pair" | "bit" => lk
+            .pairs
+            .iter()
+            .map(|(v, n)| format!("{{\"value\":{v},\"name\":{}}}", js(n)))
+            .collect(),
+        "triplet" => lk
+            .triplets
+            .iter()
+            .map(|(a, b, n)| format!("{{\"v1\":{a},\"v2\":{b},\"name\":{}}}", js(n)))
+            .collect(),
+        _ => lk
+            .fieldtypes
+            .iter()
+            .map(|e| {
+                format!(
+                    "{{\"value\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupKind\":{}}}",
+                    e.value,
+                    js(&e.name),
+                    js(&e.fieldtype),
+                    e.bits.map(|b| b.to_string()).unwrap_or_else(|| "null".into()),
+                    e.lookup.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    e.lookup_kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                )
+            })
+            .collect(),
+    };
+    Ok(format!(
+        "{{\"name\":{},\"kind\":{},\"bits\":{},\"yaml\":{},\"values\":[{}]}}",
+        js(&lk.name),
+        js(&lk.kind),
+        lk.bits,
+        js(&yaml),
+        values.join(",")
+    ))
+}
+
+/// Keep database/lookups.order.yaml in step when the editor adds a lookup.
+fn sync_lookup_order(server: &EditServer, db: &Database) -> Result<(), String> {
+    let mut out = String::new();
+    for kind in ["pair", "triplet", "bit", "fieldtype"] {
+        out.push_str(kind);
+        out.push_str(":\n");
+        for name in db.lookup_order.get(kind).into_iter().flatten() {
+            out.push_str("- ");
+            out.push_str(name);
+            out.push('\n');
+        }
+    }
+    std::fs::write(server.root.join("database/lookups.order.yaml"), out).map_err(|e| e.to_string())
+}
+
+fn find_pgn_file(server: &EditServer, id: &str) -> Result<PathBuf, String> {
+    let dir = server.root.join("database/pgns");
+    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+        let name = entry.file_name().to_string_lossy().into_owned();
+        if name.ends_with(&format!("-{id}.yaml")) {
+            return Ok(entry.path());
+        }
+    }
+    Err(format!("no file for pgn id '{id}'"))
+}
+
+/// POST body: raw sample lines. Response: assembled messages + warnings.
+fn api_analyze(server: &EditServer, body: &str) -> Result<String, String> {
+    let db = load_db(server)?;
+    let mut frames = Vec::new();
+    for (n, line) in body.lines().enumerate() {
+        if line.trim().is_empty() || line.trim_start().starts_with('#') {
+            continue;
+        }
+        frames.push(samples::parse_line(line).map_err(|e| format!("line {}: {e}", n + 1))?);
+    }
+    let (assembled, warnings) = samples::reassemble_lenient(&frames, |pgn| {
+        db.pgns.iter().any(|q| q.pgn == pgn && q.type_ == "Fast")
+    })?;
+    let msgs: Vec<String> = assembled
+        .iter()
+        .map(|a| {
+            // A fallback catch-all is never a real match for entered data:
+            // treat it as unmatched so the editor guides toward a new
+            // definition (or a near-miss clone) instead.
+            let variant = decode::select_variant(&db, a.pgn, &a.data, false)
+                .filter(|p| !p.fallback);
+            let is_exact = variant.is_some();
+            // only suggest near misses when nothing matched exactly
+            let near: Vec<String> = if is_exact {
+                Vec::new()
+            } else {
+                decode::near_misses(&db, a.pgn, &a.data)
+                    .iter()
+                    .map(|n| {
+                        format!(
+                            "{{\"id\":{},\"field\":{},\"fieldName\":{},\"expected\":{},\"got\":{}}}",
+                            js(&n.pgn.id),
+                            js(&n.field_id),
+                            js(&n.field_name),
+                            n.expected,
+                            n.got
+                        )
+                    })
+                    .collect()
+            };
+            format!(
+                "{{\"pgn\":{},\"prio\":{},\"src\":{},\"dst\":{},\"hex\":{},\"variant\":{},\"fallback\":{},\"nearMisses\":[{}]}}",
+                a.pgn,
+                a.prio,
+                a.src,
+                a.dst,
+                js(&a.data.iter().map(|b| format!("{b:02x}")).collect::<String>()),
+                variant.map(|p| js(&p.id)).unwrap_or_else(|| "null".into()),
+                !is_exact,   // "fallback": no exact variant (unknown or catch-all only)
+                near.join(",")
+            )
+        })
+        .collect();
+    let warns: Vec<String> = warnings.iter().map(|w| js(w)).collect();
+    Ok(format!(
+        "{{\"messages\":[{}],\"warnings\":[{}]}}",
+        msgs.join(","),
+        warns.join(",")
+    ))
+}
+
+/// POST /api/decode?data=<hex>[&data=<hex>...] - body: candidate PGN YAML.
+/// Decodes every payload against the candidate; also runs the rule engine
+/// with the candidate swapped in and returns its violations.
+fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, String> {
+    let payloads: Vec<Vec<u8>> = query
+        .split('&')
+        .filter_map(|kv| kv.strip_prefix("data="))
+        .map(samples::parse_hex)
+        .collect::<Result<_, _>>()?;
+
+    let mut db = load_db(server)?;
+    let candidate = yamlio::parse_pgn_str(body, "candidate")?;
+    let cand_id = candidate.id.clone();
+    db.pgns.retain(|p| p.id != cand_id);
+    db.pgns.push(candidate);
+    db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
+    derive::fill(&mut db)?;
+
+    let violations: Vec<String> = check::check(&db)
+        .iter()
+        .filter(|v| v.location.contains(&format!("-{cand_id}.yaml")) || v.location.contains("candidate"))
+        .map(|v| {
+            format!(
+                "{{\"rule\":{},\"error\":{},\"message\":{}}}",
+                js(v.rule),
+                v.error,
+                js(&v.message)
+            )
+        })
+        .collect();
+
+    let pgn = db.pgns.iter().find(|p| p.id == cand_id).unwrap();
+    let mut sample_results = Vec::new();
+    for data in &payloads {
+        let fields = match decode::decode(&db, pgn, data) {
+            Ok(d) => d,
+            Err(e) => {
+                sample_results.push(err_json(&e));
+                continue;
+            }
+        };
+        let items: Vec<String> = fields
+            .iter()
+            .map(|d| {
+                let unnamed = d
+                    .unnamed
+                    .iter()
+                    .map(|v| v.to_string())
+                    .collect::<Vec<_>>()
+                    .join(",");
+                format!(
+                    "{{\"id\":{},\"name\":{},\"instance\":{},\"value\":{},\"unit\":{},\"kind\":{},\"lookup\":{},\"lookupKind\":{},\"unnamed\":[{}],\"bitOffset\":{},\"bits\":{}}}",
+                    js(&d.id),
+                    js(&d.name),
+                    d.instance,
+                    js(&d.value.to_string()),
+                    d.unit.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    d.kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    d.lookup.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    d.lookup_kind.as_deref().map(js).unwrap_or_else(|| "null".into()),
+                    unnamed,
+                    d.bit_offset,
+                    d.bits
+                )
+            })
+            .collect();
+        sample_results.push(format!("{{\"fields\":[{}]}}", items.join(",")));
+    }
+    Ok(format!(
+        "{{\"violations\":[{}],\"samples\":[{}]}}",
+        violations.join(","),
+        sample_results.join(",")
+    ))
+}
+
+/// POST /api/save?file=<name> - body: full YAML document. Validates with the
+/// candidate in place; refuses to write when any error-level violation
+/// remains anywhere (the edit may affect other files' rules).
+fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, String> {
+    let file = query
+        .split('&')
+        .find_map(|kv| kv.strip_prefix("file="))
+        .ok_or("missing file=")?;
+    let file = file.replace("%2F", "/");
+    if !file.ends_with(".yaml") || file.contains("..") || !file.starts_with("database/") {
+        return Err("file must be database/**.yaml".into());
+    }
+    // scratch mode: run the full gate but touch nothing on disk
+    let scratch = query.split('&').any(|kv| kv == "scratch=1");
+    let mut db = yamlio::load_database(
+        &server.root.join("database"),
+        &server.version,
+        &server.schema_version,
+    )?;
+    if file.starts_with("database/lookups/") {
+        let candidate = yamlio::parse_lookup_str(body, &file)?;
+        let expect = format!("database/lookups/{}.yaml", candidate.name);
+        if file != expect {
+            return Err(format!("lookup '{}' must be saved as {expect}", candidate.name));
+        }
+        if !db.lookups.contains_key(&candidate.name) {
+            // new lookup: emission order manifest must list it
+            db.lookup_order
+                .entry(candidate.kind.clone())
+                .or_default()
+                .push(candidate.name.clone());
+        }
+        db.lookups.insert(candidate.name.clone(), candidate);
+    } else {
+        let candidate = yamlio::parse_pgn_str(body, &file)?;
+        // the filename must match the document's pgn + id, so editing the id
+        // renames the file instead of silently overwriting another variant
+        let expect = format!("database/pgns/{:06}-{}.yaml", candidate.pgn, candidate.id);
+        if file != expect {
+            return Err(format!(
+                "id '{}' (PGN {}) must be saved as {expect}, not {file} — set the Id to match, or this would overwrite another variant",
+                candidate.id, candidate.pgn
+            ));
+        }
+        let cand_id = candidate.id.clone();
+        db.pgns.retain(|p| p.id != cand_id);
+        db.pgns.push(candidate);
+        db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
+    }
+    derive::fill(&mut db)?;
+    let violations = check::check(&db);
+    let errors: Vec<&check::Violation> = violations.iter().filter(|v| v.error).collect();
+    if !errors.is_empty() {
+        let list: Vec<String> = errors
+            .iter()
+            .map(|v| format!("{} {}: {}", v.rule, v.location, v.message))
+            .collect();
+        return Err(format!("not saved - {} error(s):\n{}", errors.len(), list.join("\n")));
+    }
+
+    if scratch {
+        // validated, wrote nothing
+        return Ok(format!("{{\"scratch\":true,\"saved\":{}}}", js(&file)));
+    }
+
+    let path = server.root.join(&file);
+    let prev = std::fs::read_to_string(&path).ok();
+    let order_path = server.root.join("database/lookups.order.yaml");
+    let is_lookup = file.starts_with("database/lookups/");
+    let prev_order = if is_lookup { std::fs::read_to_string(&order_path).ok() } else { None };
+
+    if let Some(parent) = path.parent() {
+        std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
+    }
+    std::fs::write(&path, body).map_err(|e| e.to_string())?;
+    if is_lookup {
+        sync_lookup_order(server, &db)?;
+    }
+    *server.last_save.lock().unwrap() = Some(UndoEntry { file: file.clone(), prev, prev_order });
+    Ok(format!(
+        "{{\"saved\":{},\"canUndo\":true,\"created\":{}}}",
+        js(&file),
+        server
+            .last_save
+            .lock()
+            .unwrap()
+            .as_ref()
+            .map(|u| u.prev.is_none())
+            .unwrap_or(false)
+    ))
+}
+
+/// Revert the most recent real save: restore the file's prior content (or
+/// delete it if the save created it) plus the lookup-order manifest.
+fn api_undo(server: &EditServer) -> Result<String, String> {
+    let entry = server
+        .last_save
+        .lock()
+        .unwrap()
+        .take()
+        .ok_or("nothing to undo")?;
+    let path = server.root.join(&entry.file);
+    match &entry.prev {
+        Some(content) => std::fs::write(&path, content).map_err(|e| e.to_string())?,
+        None => {
+            if path.exists() {
+                std::fs::remove_file(&path).map_err(|e| e.to_string())?;
+            }
+        }
+    }
+    if let Some(order) = &entry.prev_order {
+        std::fs::write(server.root.join("database/lookups.order.yaml"), order)
+            .map_err(|e| e.to_string())?;
+    }
+    Ok(format!(
+        "{{\"undone\":{},\"deleted\":{}}}",
+        js(&entry.file),
+        entry.prev.is_none()
+    ))
+}

@@ -1,0 +1,6 @@
+name: ENGINE_INSTANCE
+kind: pair
+bits: 8
+values:
+  0: Single Engine or Dual Engine Port
+  1: Dual Engine Starboard

@@ -1,0 +1,8 @@
+name: TIME_STAMP
+kind: pair
+bits: 6
+values:
+  60: Not available
+  61: Manual input mode
+  62: Dead reckoning mode
+  63: Positioning system is inoperative

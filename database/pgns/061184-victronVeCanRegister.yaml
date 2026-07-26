@@ -1,0 +1,56 @@
+pgn: 61184
+id: victronVeCanRegister
+description: 'Victron: VE.Can Register'
+type: Single
+variantOrder: 4
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Victron VE.Can register (VREG) read/broadcast: the frame carries a 16-bit register id and the register''s value,
+  whose type is selected by the register id (see the VE.Can registers document at .url). Register ids that are not listed,
+  or that carry a multi-field or string value, decode as raw bytes.'
+url: https://www.victronenergy.com/upload/documents/VE.Can-registers-public.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Victron Energy
+  match: 358
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: registerId
+  name: Register Id
+  type: DYNAMIC_FIELD_KEY
+  bits: 16
+  lookupFieldtype: VICTRON_VREG
+  primaryKey: true
+- id: value
+  name: Value
+  type: DYNAMIC_FIELD_VALUE
+  description: Register value; its type is selected by Register Id
+samples:
+- raw: "2023-01-01-00:00:00.000,7,61184,227,255,8,66,99,02,20,f8,04,00,00"  # from victron-61184-vreg.raw
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "DC Voltage"
+    value: 12.72
+- raw: "2023-01-01-00:00:00.000,7,61184,227,255,8,66,99,1c,20,10,f5,ff,ff"  # from victron-61184-vreg.raw
+  expects:
+    manufacturerCode: "Victron Energy"
+    industryCode: "Marine Industry"
+    registerId: "DC Current"
+    value: -2.800

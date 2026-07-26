@@ -1,0 +1,57 @@
+pgn: 130816
+id: sonichubZoneInfo
+description: 'SonicHub: Zone info'
+type: Fast
+variantOrder: 4
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Zone Info
+  match: 5
+  lookup: SONICHUB_COMMAND
+  primaryKey: true
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_CONTROL
+- id: zone
+  name: Zone
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130816,10,255,8,00,06,13,99,ff,05,80,01"  # from merrimac-ydwg-2020.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    proprietaryId: "Zone Info"
+    control: "Ack"
+    zone: 1

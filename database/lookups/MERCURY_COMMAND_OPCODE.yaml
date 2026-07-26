@@ -1,0 +1,15 @@
+name: MERCURY_COMMAND_OPCODE
+kind: pair
+bits: 8
+values:
+  0: Horn Control
+  1: Maintenance Reset Command
+  2: Maintenance Reset Response
+  4: Cruise Control
+  5: Global Brightness
+  6: Active Trim Command
+  7: Active Trim Status
+  8: Autopilot Command
+  9: Active Exhaust
+  12: Oil Level Check Command
+  13: Oil Level Reset Response

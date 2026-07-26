@@ -1,0 +1,47 @@
+pgn: 129302
+id: bearingAndDistanceBetweenTwoMarks
+description: Bearing and Distance between two Marks
+type: Fast
+priority: 6
+missing:
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: bearingReference
+  name: Bearing Reference
+  type: LOOKUP
+  bits: 2
+  lookup: DIRECTION_REFERENCE
+- id: calculationType
+  name: Calculation Type
+  type: LOOKUP
+  bits: 2
+  lookup: BEARING_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: bearingOriginToDestination
+  name: Bearing, Origin to Destination
+  type: ANGLE_UFIX16
+- id: distance
+  name: Distance
+  type: LENGTH_UFIX32_CM
+- id: originMarkType
+  name: Origin Mark Type
+  type: LOOKUP
+  bits: 4
+  lookup: MARK_TYPE
+- id: destinationMarkType
+  name: Destination Mark Type
+  type: LOOKUP
+  bits: 4
+  lookup: MARK_TYPE
+- id: originMarkId
+  name: Origin Mark ID
+  type: UINT32
+- id: destinationMarkId
+  name: Destination Mark ID
+  type: UINT32

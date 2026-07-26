@@ -1,0 +1,9 @@
+name: WATER_REFERENCE
+kind: pair
+bits: 8
+values:
+  0: Paddle wheel
+  1: Pitot tube
+  2: Doppler
+  3: Correlation (ultra sound)
+  4: Electro Magnetic

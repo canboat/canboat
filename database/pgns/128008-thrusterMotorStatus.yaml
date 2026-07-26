@@ -1,0 +1,25 @@
+pgn: 128008
+id: thrusterMotorStatus
+description: Thruster Motor Status
+type: Single
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: identifier
+  name: Identifier
+  type: UINT8
+- id: motorEvents
+  name: Motor Events
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: THRUSTER_MOTOR_EVENTS
+- id: current
+  name: Current
+  type: CURRENT_UFIX8_A
+- id: temperature
+  name: Temperature
+  type: TEMPERATURE
+- id: operatingTime
+  name: Operating Time
+  type: DURATION_UFIX16_MIN

@@ -1,0 +1,10 @@
+name: AIS_TRANSCEIVER
+kind: pair
+bits: 5
+values:
+  0: Channel A VDL reception
+  1: Channel B VDL reception
+  2: Channel A VDL transmission
+  3: Channel B VDL transmission
+  4: Own information not broadcast
+  5: Reserved

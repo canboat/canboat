@@ -1,0 +1,67 @@
+pgn: 65323
+id: simnetDataSourceSelectionRequest
+description: 'Simnet: Data Source Selection Request'
+type: Single
+priority: 3
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Single-frame poll/announce half of the Simnet source-selection subsystem; the fast-packet half is PGN 130840, which shares the same Data Type namespace. Data Type selects the quantity (heading, depth, wind, ...); Source Class tags the class of source for that quantity (1 = a direct sensor/navigation source, 100 = an autopilot-provided source) and is constant per Data Type - it does not identify the selected device. A node answers with a 130840 record naming the source (Source Address plus NAME) it has selected for that (Data Type, Source Class) channel. Emitted by autopilot heads and instruments (AP48, Triton2, ZEUS); the autopilot and MFDs receive it.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: dataType
+  name: Data Type
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DATA_SOURCE
+- id: sourceClass
+  name: Source Class
+  type: UINT8
+  description: 'Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources
+    and 100 for autopilot-provided sources'
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65323,19,255,8,41,9f,ff,36,64,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot"
+    sourceClass: 100
+- raw: "2023-01-01-00:00:00.000,3,65323,14,255,8,41,9f,ff,00,01,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Heading"
+    sourceClass: 1
+- raw: "2023-01-01-00:00:00.000,3,65323,19,255,8,41,9f,ff,68,64,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    dataType: "Autopilot Control"
+    sourceClass: 100

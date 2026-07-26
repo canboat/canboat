@@ -70,14 +70,6 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
   return r;
 }
 
-#ifdef EXPLAIN
-uint64_t g_max;
-
-static void fillMaxRangeLookup(size_t n, const char *s)
-{
-  g_max = CB_MAX(g_max, n);
-}
-#endif
 
 // Number of top-of-range values reserved as non-data sentinels, by bit width
 // (NMEA 2000: Unknown / OutOfRange / Reserved). Authoritative source: Cassidy,
@@ -126,21 +118,6 @@ static double getMaxRange(const char *name,
     maxValue += offset;
   }
 
-#ifdef EXPLAIN
-  if (lookup != NULL && lookup->type == LOOKUP_TYPE_PAIR)
-  {
-    // maybe the specialValues are actually lookups, correct these.
-    // Remember, when EXPLAIN is set the lookup function is like:
-    // void lookupYES_NO(EnumPairCallback cb)
-    // {
-    //   (cb)(0, "No");
-    //   (cb)(1, "Yes");
-    // }
-    g_max = maxValue;
-    (*lookup->function.pairEnumerator)(fillMaxRangeLookup);
-    maxValue = g_max;
-  }
-#endif
 
   r = maxValue * resolution;
   logDebug(
@@ -215,12 +192,10 @@ void fixupUnit(Field *f)
   }
 }
 
-#ifndef EXPLAIN
 static LookupInfo fieldtypeEnums[] = {
 #define LOOKUP_TYPE_FIELDTYPE(type, length) {.name = xstr(type), .size = length, .function.pair = lookup##type},
 #include "lookup.h"
 };
-#endif
 
 extern void fillFieldType(bool doUnitFixup)
 {
@@ -495,7 +470,6 @@ extern void fillFieldType(bool doUnitFixup)
     logDebug("PGN %u '%s' has %u fields\n", pgnList[i].pgn, pname, j);
   }
 
-#ifndef EXPLAIN
   for (size_t i = 0; i < ARRAY_SIZE(fieldtypeEnums); i++)
   {
     uint32_t maxValue = (1 << fieldtypeEnums[i].size) - 1;
@@ -505,7 +479,6 @@ extern void fillFieldType(bool doUnitFixup)
       /* DISCARD */ (fieldtypeEnums[i].function.pair)(j); // Initialize all internal fields on init
     }
   }
-#endif
 
   logDebug("Filled all fieldtypes\n");
 }

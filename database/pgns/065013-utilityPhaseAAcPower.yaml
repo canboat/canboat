@@ -1,0 +1,25 @@
+pgn: 65013
+id: utilityPhaseAAcPower
+description: Utility Phase A AC Power
+type: Single
+priority: 3
+fields:
+- id: realPower
+  name: Real Power
+  type: POWER_FIX32_OFFSET
+- id: apparentPower
+  name: Apparent Power
+  type: POWER_FIX32_VA_OFFSET
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65013,193,255,8,56,a5,35,77,56,a5,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 4438
+    apparentPower: 4438
+- raw: "2023-01-01-00:00:00.000,3,65013,193,255,8,fc,a4,35,77,54,a5,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 4348
+    apparentPower: 4436
+- raw: "2023-01-01-00:00:00.000,3,65013,193,255,8,51,a5,35,77,51,a5,35,77"  # from dirona-actisense-serial.raw
+  expects:
+    realPower: 4433
+    apparentPower: 4433

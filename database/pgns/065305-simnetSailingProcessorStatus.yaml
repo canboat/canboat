@@ -1,0 +1,69 @@
+pgn: 65305
+id: simnetSailingProcessorStatus
+description: 'Simnet: Sailing Processor Status'
+type: Single
+variantOrder: 5
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN has been seen to be reported by a Sailing Processor.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Sailing Processor Status
+  match: 23
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: data
+  name: Data
+  type: BINARY
+  bits: 32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65305,26,255,8,41,9f,01,17,0c,08,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "Other device"
+    report: "Sailing Processor Status"
+    data: "0x0c080000"
+- raw: "2023-01-01-00:00:00.000,7,65305,40,255,8,41,9f,03,17,00,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: 3
+    report: "Sailing Processor Status"
+    data: "0x00000000"
+- raw: "2023-01-01-00:00:00.000,7,65305,38,255,8,41,9f,01,17,10,09,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "Other device"
+    report: "Sailing Processor Status"
+    data: "0x10090000"

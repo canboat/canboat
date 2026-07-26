@@ -1,0 +1,69 @@
+pgn: 130052
+id: loranCTdData
+description: Loran-C TD Data
+type: Fast
+priority: 3
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: groupRepetitionIntervalGri
+  name: Group Repetition Interval (GRI)
+  type: DURATION_FIX32_NANO_S
+- id: masterRange
+  name: Master Range
+  type: DURATION_FIX32_NANO_S
+- id: vSecondaryTd
+  name: V Secondary TD
+  type: DURATION_FIX32_NANO_S
+- id: wSecondaryTd
+  name: W Secondary TD
+  type: DURATION_FIX32_NANO_S
+- id: xSecondaryTd
+  name: X Secondary TD
+  type: DURATION_FIX32_NANO_S
+- id: ySecondaryTd
+  name: Y Secondary TD
+  type: DURATION_FIX32_NANO_S
+- id: zSecondaryTd
+  name: Z Secondary TD
+  type: DURATION_FIX32_NANO_S
+- id: stationStatusMaster
+  name: 'Station status: Master'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: stationStatusV
+  name: 'Station status: V'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: stationStatusW
+  name: 'Station status: W'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: stationStatusX
+  name: 'Station status: X'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: stationStatusY
+  name: 'Station status: Y'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: stationStatusZ
+  name: 'Station status: Z'
+  type: BITLOOKUP
+  bits: 4
+  lookupBits: STATION_STATUS
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 4
+  lookup: RESIDUAL_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4

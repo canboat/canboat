@@ -1,0 +1,6 @@
+name: THRUSTER_CONTROL_EVENTS
+kind: bit
+bits: 8
+values:
+  0: Another device controlling thruster
+  1: Boat speed too fast to safely use thruster

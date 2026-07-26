@@ -1,0 +1,100 @@
+pgn: 130837
+id: maretronSwitchStatusTimer
+description: 'Maretron: Switch Status Timer'
+type: Fast
+variantOrder: 3
+priority: 6
+interval: 15000
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: indicatorNumber
+  name: Indicator Number
+  type: UINT8
+- id: startDate
+  name: Start Date
+  type: DATE
+- id: startTime
+  name: Start Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: accumulatedOffPeriod
+  name: Accumulated OFF Period
+  type: DURATION_UFIX32_S
+- id: accumulatedOnPeriod
+  name: Accumulated ON Period
+  type: DURATION_UFIX32_S
+- id: accumulatedErrorPeriod
+  name: Accumulated ERROR Period
+  type: DURATION_UFIX32_S
+- id: switchStatus
+  name: Switch Status
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 6
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130837,72,255,23,89,98,02,01,ff,ff,ff,ff,ff,ff,a5,1c,e5,02,37,49,23,00,0b,00,00,00,fc"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 2
+    indicatorNumber: 1
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 48569509
+    accumulatedOnPeriod: 2312503
+    accumulatedErrorPeriod: 11
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130837,209,255,23,89,98,00,02,ff,ff,ff,ff,ff,ff,ed,8c,87,03,ff,ff,ff,ff,ff,ff,ff,ff,fc"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 0
+    indicatorNumber: 2
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 59215085
+    accumulatedOnPeriod: ~
+    accumulatedErrorPeriod: ~
+    switchStatus: "Off"
+- raw: "2023-01-01-00:00:00.000,6,130837,72,255,23,89,98,02,02,ff,ff,ff,ff,ff,ff,03,f5,ec,00,3c,cc,52,01,a7,a4,c8,00,fd"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    instance: 2
+    indicatorNumber: 2
+    startDate: ~
+    startTime: ~
+    accumulatedOffPeriod: 15529219
+    accumulatedOnPeriod: 22203452
+    accumulatedErrorPeriod: 13149351
+    switchStatus: "On"

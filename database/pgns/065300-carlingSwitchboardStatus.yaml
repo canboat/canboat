@@ -1,0 +1,39 @@
+pgn: 65300
+id: carlingSwitchboardStatus
+description: 'Carling: Switchboard Status'
+type: Single
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Multi-purpose Carling digital switching PGN with 16+ message types: box status, breaker status, configuration,
+  power information, AC GenII status, uptime reports, and solenoid profiles. The Message Type field selects the variant.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Carling Technologies Inc. (Moritz Aerospace)
+  match: 176
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+  primaryKey: true
+- id: data
+  name: Data
+  type: BINARY
+  bits: 40
+  description: Payload varies by Message Type.

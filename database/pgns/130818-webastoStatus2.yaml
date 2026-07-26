@@ -1,0 +1,47 @@
+pgn: 130818
+id: webastoStatus2
+description: 'Webasto: Status 2'
+type: Fast
+variantOrder: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Webasto
+  match: 540
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: canAddress
+  name: CAN Address
+  type: UINT8
+- id: deviceId
+  name: Device ID
+  type: UINT8
+- id: systemError
+  name: System Error
+  type: UINT32
+- id: systemStatus
+  name: System Status
+  type: UINT32
+- id: freshAirBlowerSpeed
+  name: Fresh Air Blower Speed
+  type: UINT8
+- id: vSeriesOutput
+  name: V-Series Output
+  type: UINT8

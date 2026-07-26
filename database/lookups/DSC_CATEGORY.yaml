@@ -1,0 +1,8 @@
+name: DSC_CATEGORY
+kind: pair
+bits: 8
+values:
+  100: Routine
+  108: Safety
+  110: Urgency
+  112: Distress

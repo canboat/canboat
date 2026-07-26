@@ -1,0 +1,109 @@
+pgn: 130567
+id: watermakerInputSettingAndStatus
+description: Watermaker Input Setting and Status
+type: Fast
+url: https://web.archive.org/web/20170609065450/https://www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+fields:
+- id: watermakerOperatingState
+  name: Watermaker Operating State
+  type: LOOKUP
+  bits: 6
+  lookup: WATERMAKER_STATE
+- id: productionStartStop
+  name: Production Start/Stop
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: rinseStartStop
+  name: Rinse Start/Stop
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: lowPressurePumpStatus
+  name: Low Pressure Pump Status
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: highPressurePumpStatus
+  name: High Pressure Pump Status
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: emergencyStop
+  name: Emergency Stop
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: productSolenoidValveStatus
+  name: Product Solenoid Valve Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: flushModeStatus
+  name: Flush Mode Status
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: salinityStatus
+  name: Salinity Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: sensorStatus
+  name: Sensor Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: oilChangeIndicatorStatus
+  name: Oil Change Indicator Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: filterStatus
+  name: Filter Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: systemStatus
+  name: System Status
+  type: LOOKUP
+  bits: 2
+  lookup: OK_WARNING
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: salinity
+  name: Salinity
+  type: CONCENTRATION_UINT16_PPM
+- id: productWaterTemperature
+  name: Product Water Temperature
+  type: TEMPERATURE
+- id: preFilterPressure
+  name: Pre-filter Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: postFilterPressure
+  name: Post-filter Pressure
+  type: PRESSURE_UFIX16_HPA
+- id: feedPressure
+  name: Feed Pressure
+  type: PRESSURE_FIX16_KPA
+- id: systemHighPressure
+  name: System High Pressure
+  type: PRESSURE_UFIX16_KPA
+- id: productWaterFlow
+  name: Product Water Flow
+  type: VOLUMETRIC_FLOW
+- id: brineWaterFlow
+  name: Brine Water Flow
+  type: VOLUMETRIC_FLOW
+- id: runTime
+  name: Run Time
+  type: DURATION_UFIX32_S
+notes: |-
+  https://web.archive.org/web/20200918142919/www.nmea.org/Assets/20130905%20amendment%20at%202000%20201309051%20watermaker%20input%20setting%20and%20status%20pgn%20130567.pdf
+
+  This PGN may be requested or used to command and configure a number of Watermaker controls. The Command Group Function PGN
+  126208 is used perform the following: start/stop a production, start/stop rinse or flush operation, start/stop low and high
+  pressure pump and perform an emergency stop. The Request Group Function PGN 126208 or ISO Request PGN 059904 may be used to
+  request this PGN. This PGN also provides Watermaker status and measurement information. The PGN is broadcast periodically.

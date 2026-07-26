@@ -1,0 +1,104 @@
+pgn: 130817
+id: furunoSvControl
+description: 'Furuno: SV control'
+type: Fast
+variantOrder: 3
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: f4
+  name: F4
+  type: BINARY
+  bits: 8
+  description: Unknown
+- id: f5
+  name: F5
+  type: BINARY
+  bits: 8
+  description: Unknown
+- id: sbasMode
+  name: SBAS mode
+  type: LOOKUP
+  bits: 8
+  lookup: AUTOMATIC_MANUAL
+- id: sbasSatellite
+  name: SBAS satellite
+  type: LOOKUP
+  bits: 8
+  lookup: SBAS_SV
+- id: f8
+  name: F8
+  type: BINARY
+  bits: 16
+  description: Unknown
+- id: gpsDisable
+  name: GPS disable
+  type: BITLOOKUP
+  bits: 32
+  lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
+- id: glonassDisable
+  name: GLONASS disable
+  type: BITLOOKUP
+  bits: 32
+  lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
+- id: galileoDisable
+  name: Galileo disable
+  type: BITLOOKUP
+  bits: 40
+  lookupBits: DISABLED_SATELLITES
+- id: qzssDisable
+  name: QZSS disable
+  type: BITLOOKUP
+  bits: 24
+  lookupBits: DISABLED_SATELLITES
+  allowLookupWidthMismatch: true
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130817,28,255,24,3f,9f,f8,00,00,00,00,00,07,00,00,00,00,0e,00,00,00,00,38,00,00,07,00,00"  # from scx20-disable-sv.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    f4: "0xf8"
+    f5: "0x00"
+    sbasMode: "Automatic"
+    sbasSatellite: "120"
+    f8: "0x0000"
+    gpsDisable: ["Disable SV #1", "Disable SV #2", "Disable SV #3"]
+    glonassDisable: ["Disable SV #10", "Disable SV #11", "Disable SV #12"]
+    galileoDisable: ["Disable SV #20", "Disable SV #21", "Disable SV #22"]
+    qzssDisable: ["Disable SV #1", "Disable SV #2", "Disable SV #3"]
+- raw: "2023-01-01-00:00:00.000,7,130817,52,255,24,3f,9f,f8,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00"  # from scx20-setting-tool-sensor-reset.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    f4: "0xf8"
+    f5: "0x00"
+    sbasMode: "Automatic"
+    sbasSatellite: "120"
+    f8: "0x0000"
+    gpsDisable: []
+    glonassDisable: []
+    galileoDisable: []
+    qzssDisable: []

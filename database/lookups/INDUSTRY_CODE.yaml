@@ -1,0 +1,10 @@
+name: INDUSTRY_CODE
+kind: pair
+bits: 3
+values:
+  0: Global
+  1: Highway
+  2: Agriculture
+  3: Construction
+  4: Marine Industry
+  5: Industrial

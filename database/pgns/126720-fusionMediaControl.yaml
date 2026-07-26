@@ -1,0 +1,40 @@
+pgn: 126720
+id: fusionMediaControl
+description: 'Fusion: Media Control'
+type: Fast
+variantOrder: 26
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Media Command
+  match: 3
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+- id: command
+  name: Command
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_COMMAND

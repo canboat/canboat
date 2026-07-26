@@ -1,0 +1,88 @@
+pgn: 129798
+id: aisSarAircraftPositionReport
+description: AIS SAR Aircraft Position Report
+type: Fast
+priority: 4
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  lookup: TIME_STAMP
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_DM
+  description: Originally this used the same resolution as SOG for boats (0.01 m/s), but this did not allow for speeds over 180 km/h so in some addendum this has been amended to have a resolution of 0.1 m/s
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+  description: Information used by the TDMA slot allocation algorithm and synchronization information
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: altitude
+  name: Altitude
+  type: DISTANCE_FIX32_CM
+- id: reservedForRegionalApplications
+  name: Reserved for Regional Applications
+  type: BINARY
+  bits: 8
+- id: dte
+  name: DTE
+  type: LOOKUP
+  bits: 1
+  lookup: AVAILABLE
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 5
+- id: reserved17
+  name: Reserved
+  type: RESERVED
+  bits: 2

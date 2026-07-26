@@ -1,0 +1,66 @@
+pgn: 130819
+id: webastoHvacCommand
+description: 'Webasto: HVAC Command'
+type: Fast
+variantOrder: 3
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Webasto
+  match: 540
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: canAddress
+  name: CAN Address
+  type: UINT8
+- id: blowerSpeed
+  name: Blower Speed
+  type: UINT8
+- id: unitOnOff
+  name: Unit On/Off
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: setTemperature
+  name: Set Temperature
+  type: TEMPERATURE
+- id: ecoMode
+  name: ECO Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: functionalMode
+  name: Functional Mode
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: compressor
+  name: Compressor
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: mask
+  name: Mask
+  type: UINT8

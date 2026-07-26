@@ -1,0 +1,21 @@
+pgn: 65266
+id: fuelEconomy
+description: Fuel Economy
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 48
+- id: throttlePosition
+  name: Throttle Position
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: reserved3
+  name: Reserved
+  type: RESERVED
+  bits: 8

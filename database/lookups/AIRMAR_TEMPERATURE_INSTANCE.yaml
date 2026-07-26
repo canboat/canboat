@@ -1,0 +1,7 @@
+name: AIRMAR_TEMPERATURE_INSTANCE
+kind: pair
+bits: 2
+values:
+  0: Device Sensor
+  1: Onboard Water Sensor
+  2: Optional Water Sensor

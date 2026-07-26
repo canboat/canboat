@@ -1,0 +1,9 @@
+name: MARK_TYPE
+kind: pair
+bits: 4
+values:
+  0: Collision
+  1: Turning point
+  2: Reference
+  3: Wheelover
+  4: Waypoint

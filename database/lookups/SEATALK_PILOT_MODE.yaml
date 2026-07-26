@@ -1,0 +1,8 @@
+name: SEATALK_PILOT_MODE
+kind: pair
+bits: 8
+values:
+  64: Standby
+  66: Auto
+  70: Wind
+  74: Track

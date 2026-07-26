@@ -1,0 +1,11 @@
+name: PGN_ERROR_CODE
+kind: pair
+bits: 4
+values:
+  0: Acknowledge
+  1: PGN not supported
+  2: PGN not available
+  3: Access denied
+  4: Not supported
+  5: Tag not supported
+  6: Read or Write not supported

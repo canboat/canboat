@@ -1,0 +1,35 @@
+pgn: 130579
+id: systemConfiguration
+description: System Configuration
+type: Single
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: power
+  name: Power
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: defaultSettings
+  name: Default Settings
+  type: LOOKUP
+  bits: 2
+  lookup: ENTERTAINMENT_DEFAULT_SETTINGS
+- id: tunerRegions
+  name: Tuner regions
+  type: LOOKUP
+  bits: 4
+  lookup: ENTERTAINMENT_REGIONS
+- id: maxFavorites
+  name: Max favorites
+  type: UINT8
+- id: videoProtocols
+  name: Video protocols
+  type: LOOKUP
+  bits: 4
+  lookup: VIDEO_PROTOCOLS
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 44

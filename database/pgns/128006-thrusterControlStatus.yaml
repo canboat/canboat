@@ -1,0 +1,40 @@
+pgn: 128006
+id: thrusterControlStatus
+description: Thruster Control Status
+type: Single
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: identifier
+  name: Identifier
+  type: UINT8
+- id: directionControl
+  name: Direction Control
+  type: LOOKUP
+  bits: 4
+  lookup: THRUSTER_DIRECTION_CONTROL
+- id: powerEnabled
+  name: Power Enabled
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: retractControl
+  name: Retract Control
+  type: LOOKUP
+  bits: 2
+  lookup: THRUSTER_RETRACT_CONTROL
+- id: speedControl
+  name: Speed Control
+  type: PERCENTAGE_UINT8
+- id: controlEvents
+  name: Control Events
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: THRUSTER_CONTROL_EVENTS
+- id: commandTimeout
+  name: Command Timeout
+  type: DURATION_UFIX8_5MS
+- id: azimuthControl
+  name: Azimuth Control
+  type: ANGLE_UFIX16

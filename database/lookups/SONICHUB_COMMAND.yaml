@@ -1,0 +1,22 @@
+name: SONICHUB_COMMAND
+kind: pair
+bits: 8
+values:
+  1: 'Init #2'
+  4: AM Radio
+  5: Zone Info
+  6: Source
+  8: Source List
+  9: Control
+  12: FM Radio
+  13: Playlist
+  14: Track
+  15: Artist
+  16: Album
+  19: Menu Item
+  20: Zones
+  23: Max Volume
+  24: Volume
+  25: 'Init #1'
+  48: Position
+  50: 'Init #3'

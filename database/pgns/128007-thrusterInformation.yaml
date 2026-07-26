@@ -1,0 +1,26 @@
+pgn: 128007
+id: thrusterInformation
+description: Thruster Information
+type: Single
+fields:
+- id: identifier
+  name: Identifier
+  type: UINT8
+- id: motorType
+  name: Motor Type
+  type: LOOKUP
+  bits: 4
+  lookup: THRUSTER_MOTOR_TYPE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: powerRating
+  name: Power Rating
+  type: POWER_UINT16
+- id: maximumTemperatureRating
+  name: Maximum Temperature Rating
+  type: TEMPERATURE
+- id: maximumRotationalSpeed
+  name: Maximum Rotational Speed
+  type: ROTATION_UFIX16_RPM

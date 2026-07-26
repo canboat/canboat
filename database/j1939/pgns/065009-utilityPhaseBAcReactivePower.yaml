@@ -1,0 +1,24 @@
+pgn: 65009
+id: utilityPhaseBAcReactivePower
+description: Utility Phase B AC Reactive Power
+type: Single
+fields:
+- id: reactivePower
+  name: Reactive Power
+  type: POWER_UINT16_VAR
+- id: powerFactor
+  name: Power factor
+  type: UINT16
+  resolution: 6.10352e-05
+  unit: Cos Phi
+  rangeMin: 0.0
+  rangeMax: 3.999755859375
+- id: powerFactorLagging
+  name: Power Factor Lagging
+  type: LOOKUP
+  bits: 2
+  lookup: POWER_FACTOR
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 30

@@ -1,0 +1,57 @@
+pgn: 126720
+id: seatalk1PilotHullType
+description: 'Seatalk1: Pilot Hull Type'
+type: Fast
+variantOrder: 20
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Pilot Configuration
+  match: 108
+  lookup: SEATALK_MESSAGE_ID
+  primaryKey: true
+- id: command
+  name: command
+  type: LOOKUP
+  bits: 8
+  description: Hull Type
+  match: 22
+  lookup: SEATALK_COMMAND
+  primaryKey: true
+- id: unknown
+  name: Unknown
+  type: BINARY
+  bits: 8
+- id: hullType
+  name: Hull Type
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_PILOT_HULL_TYPE
+- id: unknown2
+  name: Unknown 2
+  type: BINARY
+  bits: 64

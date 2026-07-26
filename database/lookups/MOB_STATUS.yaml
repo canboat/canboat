@@ -1,0 +1,10 @@
+name: MOB_STATUS
+kind: pair
+bits: 3
+values:
+  0: MOB Emitter Activated
+  1: Manual on-board MOB Button Activation
+  2: Test mode
+  3: MOB Not Active
+valueNotes:
+  3: deactivated/cleared; seen in samples/simrad_mob_quick.raw

@@ -1,0 +1,32 @@
+pgn: 60416
+id: isoTransportProtocolConnectionManagementBroadcastAnnounce
+description: ISO Transport Protocol, Connection Management - Broadcast Announce
+type: Single
+variantOrder: 4
+interval: irregular
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to announce a broadcast of a long message spanning multiple frames.
+url: https://embeddedflakes.com/j1939-transport-protocol/
+fields:
+- id: groupFunctionCode
+  name: Group Function Code
+  type: LOOKUP
+  bits: 8
+  description: BAM
+  match: 32
+  lookup: ISO_COMMAND
+- id: messageSize
+  name: Message size
+  type: UINT16
+  description: bytes
+- id: packets
+  name: Packets
+  type: UINT8
+  description: frames
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24

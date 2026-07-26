@@ -1,0 +1,30 @@
+pgn: 128769
+id: elevatorDeckPushButton
+description: Elevator Deck Push Button
+type: Single
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: Transmit data of Deck controller to Elevator Main controller.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: elevatorCallButtonId
+  name: Elevator Call Button ID
+  type: UINT8
+- id: deckButtonId
+  name: Deck Button ID
+  type: UINT8
+- id: elevatorCarUsage
+  name: Elevator Car Usage
+  type: UINT8
+- id: elevatorCarButtonSelection
+  name: Elevator Car Button Selection
+  type: UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24

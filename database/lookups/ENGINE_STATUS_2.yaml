@@ -1,0 +1,12 @@
+name: ENGINE_STATUS_2
+kind: bit
+bits: 16
+values:
+  0: Warning Level 1
+  1: Warning Level 2
+  2: Power Reduction
+  3: Maintenance Needed
+  4: Engine Comm Error
+  5: Sub or Secondary Throttle
+  6: Neutral Start Protect
+  7: Engine Shutting Down

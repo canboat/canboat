@@ -1,0 +1,23 @@
+pgn: 129027
+id: positionDeltaRapidUpdate
+description: Position Delta, Rapid Update
+type: Single
+priority: 2
+interval: 100
+missing:
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: timeDelta
+  name: Time Delta
+  type: DURATION_UFIX8_5MS
+- id: latitudeDelta
+  name: Latitude Delta
+  type: GEO_DELTA_FIX24
+  unit: deg
+- id: longitudeDelta
+  name: Longitude Delta
+  type: GEO_DELTA_FIX24
+  unit: deg

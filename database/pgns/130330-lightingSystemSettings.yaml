@@ -1,0 +1,65 @@
+pgn: 130330
+id: lightingSystemSettings
+description: Lighting System Settings
+type: Fast
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN provides a lighting controller settings and number of supported capabilities.
+fields:
+- id: globalEnable
+  name: Global Enable
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: defaultSettingsCommand
+  name: Default Settings/Command
+  type: LOOKUP
+  bits: 3
+  lookup: LIGHTING_COMMAND
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: nameOfTheLightingController
+  name: Name of the lighting controller
+  type: STRING_LAU
+- id: maxScenes
+  name: Max Scenes
+  type: UINT8
+- id: maxSceneConfigurationCount
+  name: Max Scene Configuration Count
+  type: UINT8
+- id: maxZones
+  name: Max Zones
+  type: UINT8
+- id: maxColorSequences
+  name: Max Color Sequences
+  type: UINT8
+- id: maxColorSequenceColorCount
+  name: Max Color Sequence Color Count
+  type: UINT8
+- id: numberOfPrograms
+  name: Number of Programs
+  type: UINT8
+- id: controllerCapabilities
+  name: Controller Capabilities
+  type: UINT8
+- id: identifyDevice
+  name: Identify Device
+  type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130330,92,255,36,21,18,01,53,43,2d,4c,69,67,68,74,69,6e,67,20,43,6f,6e,74,72,6f,6c,6c,65,72,28,06,06,28,14,07,01,ff,ff,ff,ff"  # from pgn130330.raw
+  expects:
+    globalEnable: 1
+    defaultSettingsCommand: "Idle"
+    nameOfTheLightingController: "SC-Lighting Controller"
+    maxScenes: 40
+    maxSceneConfigurationCount: 6
+    maxZones: 6
+    maxColorSequences: 40
+    maxColorSequenceColorCount: 20
+    numberOfPrograms: 7
+    controllerCapabilities: 1
+    identifyDevice: ~

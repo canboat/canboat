@@ -1,0 +1,20 @@
+pgn: 65271
+id: vehicleElectricalPower
+description: Vehicle Electrical Power
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 32
+- id: batteryVoltage
+  name: Battery Voltage
+  type: VOLTAGE_UFIX16_50MV
+- id: reserved3
+  name: Reserved
+  type: RESERVED
+  bits: 16

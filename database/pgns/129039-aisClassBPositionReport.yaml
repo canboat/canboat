@@ -1,0 +1,190 @@
+pgn: 129039
+id: aisClassBPositionReport
+description: AIS Class B Position Report
+type: Fast
+priority: 4
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  lookup: TIME_STAMP
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+  description: Information used by the TDMA slot allocation algorithm and synchronization information
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: heading
+  name: Heading
+  type: ANGLE_UFIX16
+  description: True heading
+- id: regionalApplication
+  name: Regional Application
+  type: SPARE
+  bits: 8
+- id: regionalApplicationB
+  name: Regional Application B
+  type: SPARE
+  bits: 2
+- id: unitType
+  name: Unit type
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_TYPE
+- id: integratedDisplay
+  name: Integrated Display
+  type: LOOKUP
+  bits: 1
+  description: Whether the unit can show messages 12 and 14
+  lookup: YES_NO_1BIT
+- id: dsc
+  name: DSC
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: band
+  name: Band
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_BAND
+- id: canHandleMsg22
+  name: Can handle Msg 22
+  type: LOOKUP
+  bits: 1
+  lookup: YES_NO_1BIT
+- id: aisMode
+  name: AIS mode
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_MODE
+- id: aisCommunicationState
+  name: AIS communication state
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_COMMUNICATION_STATE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 15
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129039,23,255,27,12,68,94,9c,0c,5a,ac,37,03,6f,df,9e,1f,e4,04,6b,05,00,06,00,0e,ff,ff,00,74,ff,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Standard Class B position report"
+    repeatIndicator: "Initial"
+    userId: 211588200
+    longitude: 5.3980250
+    latitude: 53.0505583
+    positionAccuracy: "Low"
+    raim: "not in use"
+    timeStamp: 57
+    cog: 2.7396
+    sog: 0.05
+    communicationState: "0x060006"
+    aisTransceiverInformation: "Channel B VDL reception"
+    heading: ~
+    regionalApplication: "0x00"
+    regionalApplicationB: "0x00"
+    unitType: "CS"
+    integratedDisplay: "No"
+    dsc: "Yes"
+    band: "Entire marine band"
+    canHandleMsg22: "Yes"
+    aisMode: "Autonomous"
+    aisCommunicationState: "ITDMA"
+- raw: "2023-01-01-00:00:00.000,4,129039,23,255,27,12,08,4a,8d,0e,90,62,2d,03,a8,98,9f,1f,2e,83,20,25,01,ff,c2,08,66,21,00,f0,fe,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Standard Class B position report"
+    repeatIndicator: "Initial"
+    userId: 244140552
+    longitude: 5.3306000
+    latitude: 53.0553000
+    positionAccuracy: "Low"
+    raim: "in use"
+    timeStamp: 11
+    cog: 0.8323
+    sog: 2.93
+    communicationState: "0xffc200"
+    aisTransceiverInformation: "Channel B VDL reception"
+    heading: 0.8550
+    regionalApplication: "0x00"
+    regionalApplicationB: "0x00"
+    unitType: "SOTDMA"
+    integratedDisplay: "No"
+    dsc: "Yes"
+    band: "Entire marine band"
+    canHandleMsg22: "Yes"
+    aisMode: "Assigned"
+    aisCommunicationState: "SOTDMA"
+- raw: "2023-01-01-00:00:00.000,4,129039,23,255,27,12,18,7c,96,0c,ec,75,31,03,1c,eb,89,1f,e8,54,24,ec,00,e2,08,08,f2,1b,00,70,fe,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Standard Class B position report"
+    repeatIndicator: "Initial"
+    userId: 211188760
+    longitude: 5.3573100
+    latitude: 52.9132316
+    positionAccuracy: "Low"
+    raim: "not in use"
+    timeStamp: 58
+    cog: 0.9300
+    sog: 2.36
+    communicationState: "0xe20800"
+    aisTransceiverInformation: "Channel B VDL reception"
+    heading: 0.7154
+    regionalApplication: "0x00"
+    regionalApplicationB: "0x00"
+    unitType: "SOTDMA"
+    integratedDisplay: "No"
+    dsc: "Yes"
+    band: "Entire marine band"
+    canHandleMsg22: "Yes"
+    aisMode: "Autonomous"
+    aisCommunicationState: "SOTDMA"

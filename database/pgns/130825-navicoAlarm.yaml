@@ -1,0 +1,77 @@
+pgn: 130825
+id: navicoAlarm
+description: 'Navico: Alarm'
+type: Fast
+variantOrder: 2
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Navico alarm status record (mfg 275): Alarm Type + Alarm ID identify the fault, Alarm State tracks its lifecycle
+  (Normal -> Active -> Silenced -> Acknowledged), and Alarm Severity classifies it.'
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+- id: recordId
+  name: Record ID
+  type: UINT8
+- id: alarmType
+  name: Alarm Type
+  type: UINT16
+- id: alarmId
+  name: Alarm ID
+  type: LOOKUP
+  bits: 16
+  lookup: SIMNET_ALARM_ID
+- id: alarmState
+  name: Alarm State
+  type: LOOKUP
+  bits: 3
+  lookup: ALERT_STATE
+  allowLookupWidthMismatch: true
+- id: actionFlag
+  name: Action Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: alarmSeverity
+  name: Alarm Severity
+  type: LOOKUP
+  bits: 4
+  lookup: ALERT_TYPE
+- id: value
+  name: Value
+  type: UINT16
+samples:
+- raw: "2023-01-01-00:00:00.000,1,130825,2,255,11,13,99,ff,00,00,10,6d,0c,23,00,00"  # from navico-proprietary.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    instance: ~
+    recordId: 0
+    alarmType: 4096
+    alarmId: 3181
+    alarmState: "Silenced"
+    actionFlag: 0
+    alarmSeverity: "Alarm"
+    value: 0

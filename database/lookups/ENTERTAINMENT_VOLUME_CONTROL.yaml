@@ -1,0 +1,6 @@
+name: ENTERTAINMENT_VOLUME_CONTROL
+kind: pair
+bits: 2
+values:
+  0: Up
+  1: Down

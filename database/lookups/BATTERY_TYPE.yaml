@@ -1,0 +1,7 @@
+name: BATTERY_TYPE
+kind: pair
+bits: 4
+values:
+  0: Flooded
+  1: Gel
+  2: AGM

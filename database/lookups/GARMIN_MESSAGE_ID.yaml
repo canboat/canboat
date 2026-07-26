@@ -1,0 +1,6 @@
+name: GARMIN_MESSAGE_ID
+kind: pair
+bits: 16
+values:
+  1900: AHRS ATT transport
+  5904: Autopilot transport

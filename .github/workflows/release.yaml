@@ -1,19 +1,21 @@
 name: Upload release assets
 
-# this flow will be run only when new tags are pushed that match our pattern
+# Runs on release tags (vX.Y.Z) and pre-release tags (vX.Y.Z-alpha.1, -beta, -rc).
 on:
   push:
     tags:
       - "v[0-9]+.[0-9]+.[0-9]+"
+      - "v[0-9]+.[0-9]+.[0-9]+-*"
 
 jobs:
-  build:
+  # Version gate + the generated database docs (needs xsltproc/libxml2).
+  docs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
@@ -23,7 +25,7 @@ jobs:
 
       - name: Version in common/version.h must match release tag
         run: |
-          export CANBOAT_VERSION=$(sed -En 's/.*\ VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+          export CANBOAT_VERSION=$(sed -En 's/#define VERSION "([^"]+)"/\1/p' common/version.h)
           echo "Checking if docs/canboat.json contains \"CANboat version v${CANBOAT_VERSION}\""
           grep -q "CANboat version v${CANBOAT_VERSION}" docs/canboat.json
           echo "Checking if docs/canboat.json contains version \"Version\":\"${CANBOAT_VERSION}\""
@@ -32,7 +34,7 @@ jobs:
           grep -q "CANboat version v${CANBOAT_VERSION}" docs/canboat.xml
           echo "Checking if docs/canboat.xml contains \"<Version>${CANBOAT_VERSION}</Version>\""
           grep -q "<Version>${CANBOAT_VERSION}</Version>" docs/canboat.xml
-          export SCHEMA_VERSION=$(sed -En 's/.*\ SCHEMA_VERSION\ \"([0-9]+\.)([0-9]+\.)?([0-9]+)\"/\1\2\3/p' common/version.h)
+          export SCHEMA_VERSION=$(sed -En 's/#define SCHEMA_VERSION "([^"]+)"/\1/p' common/version.h)
           echo "Checking if docs/canboat.xsd contains \"xs:version=\"${SCHEMA_VERSION}\""
           grep -q "xs:schema version=\"${SCHEMA_VERSION}\"" docs/canboat.xsd
           echo "Checking if docs/canboat.json contains version \"SchemaVersion\":\"${SCHEMA_VERSION}\""
@@ -41,22 +43,166 @@ jobs:
           test "${GITHUB_REF##*/}" == "v${CANBOAT_VERSION}"
 
       - name: Add release assets
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             docs/canboat.json
             docs/canboat.xml
             docs/canboat.xsd
 
-  build-windows:
+  # Native linux/macOS: the full C-tool archive plus the keel binary, one
+  # runner per platform. Asset names match keel/keel's expected
+  # keel-$(uname|lc)-$(uname -m) and the Makefile's rel/<platform>/ layout.
+  #
+  # keel on linux is built as a fully static musl binary (rust_target set), so
+  # the released binary has no glibc dependency and runs on any distro/glibc
+  # version rather than only the runner's glibc 2.39+. macOS keel stays native.
+  # The C-tool archive is still the runner-native (glibc) build.
+  native:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: ubuntu-latest
+            os: linux
+            arch: x86_64
+            rust_target: x86_64-unknown-linux-musl
+          - runner: ubuntu-24.04-arm
+            os: linux
+            arch: aarch64
+            rust_target: aarch64-unknown-linux-musl
+          - runner: macos-latest
+            os: darwin
+            arch: arm64
+            rust_target: ""
+    runs-on: ${{ matrix.runner }}
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build C tools
+        run: make
+
+      - name: Package canboat archive
+        run: |
+          plat="${{ matrix.os }}-${{ matrix.arch }}"
+          tar czf "canboat-${plat}-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C "rel/${plat}" .
+
+      - name: Build keel
+        run: |
+          if [ -n "${{ matrix.rust_target }}" ]; then
+            # Static musl build: crt-static is on by default for *-musl and rust
+            # ships a self-contained musl libc, so the snprintf extern resolves
+            # and the binary links fully static with no external musl toolchain.
+            rustup target add "${{ matrix.rust_target }}"
+            cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.rust_target }}"
+            cp "keel/target/${{ matrix.rust_target }}/release/keel" "keel-${{ matrix.os }}-${{ matrix.arch }}"
+          else
+            cargo build --release --manifest-path keel/Cargo.toml
+            cp keel/target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
+          fi
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
+            keel-${{ matrix.os }}-${{ matrix.arch }}
+
+  # Intel macOS: cross-built on the Apple-Silicon runner (-arch x86_64), so we
+  # do not depend on the deprecated/slow macos-13 Intel runner pool.
+  macos-x86_64:
+    runs-on: macos-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build C tools (x86_64)
+        run: make PLATFORM=darwin-x86_64 CFLAGS="-Wall -O2 -arch x86_64" LDFLAGS="-arch x86_64"
+
+      - name: Package canboat archive
+        run: tar czf "canboat-darwin-x86_64-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C rel/darwin-x86_64 .
+
+      - name: Build keel (x86_64)
+        run: |
+          rustup target add x86_64-apple-darwin
+          cargo build --release --manifest-path keel/Cargo.toml --target x86_64-apple-darwin
+          cp keel/target/x86_64-apple-darwin/release/keel keel-darwin-x86_64
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-darwin-x86_64-${{ github.ref_name }}.tar.gz
+            keel-darwin-x86_64
+
+  # 32-bit ARM (e.g. Raspberry Pi): static musl cross-build of both the C tools
+  # and keel, mirroring the ci.yml build-armv7-musl setup.
+  armv7:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      TARGET: armv7l-linux-musleabihf
+      RUST_TARGET: armv7-unknown-linux-musleabihf
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build tools
+        run: sudo apt-get update && sudo apt-get install -y make autoconf
+
+      - name: Setup musl cross compiler
+        run: |
+          mkdir "$HOME/musl" && cd "$HOME/musl"
+          wget "https://keversoft.com/downloads/${TARGET}-cross.tgz"
+          tar xf "${TARGET}-cross.tgz"
+
+      - name: Build C tools (musl)
+        run: |
+          export PATH="$PATH:$HOME/musl/${TARGET}-cross/bin"
+          export CC="$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc"
+          export BUILDDIR="rel/${TARGET}"
+          make
+
+      - name: Package canboat archive
+        run: |
+          tar czf "canboat-linux-armv7l-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C "rel/${TARGET}" .
+
+      - name: Build keel (static musl)
+        run: |
+          rustup target add "${RUST_TARGET}"
+          cc="$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc"
+          export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER="$cc"
+          export CC_armv7_unknown_linux_musleabihf="$cc"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${RUST_TARGET}"
+          cp "keel/target/${RUST_TARGET}/release/keel" keel-linux-armv7l
+
+      - name: Add release assets
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: |
+            canboat-linux-armv7l-${{ github.ref_name }}.tar.gz
+            keel-linux-armv7l
+
+  windows:
     runs-on: windows-latest
+    permissions:
+      contents: write
     defaults:
         run:
           shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
-
     steps:
       - name: checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4
@@ -70,11 +216,24 @@ jobs:
       - name: zip
         run: |
           cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
-          zip 
           zip "../canboat-windows-x86_64-${GITHUB_REF##*/}.zip" *.exe *.dll
 
-      - name: Add release assets
-        uses: softprops/action-gh-release@v1
+      # Upload the C-tool archive before building keel, so a keel build issue
+      # can never block the archive.
+      - name: Add canboat archive
+        uses: softprops/action-gh-release@v2
         with:
-          files: |
-            rel/*.zip
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: rel/*.zip
+
+      - name: Build keel (MSVC)
+        shell: pwsh
+        run: |
+          cargo build --release --manifest-path keel/Cargo.toml
+          Copy-Item keel/target/release/keel.exe keel-windows-x86_64.exe
+
+      - name: Add keel asset
+        uses: softprops/action-gh-release@v2
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: keel-windows-x86_64.exe

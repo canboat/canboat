@@ -1,0 +1,9 @@
+name: INVERTER_STATE
+kind: pair
+bits: 4
+values:
+  0: Invert
+  1: AC passthru
+  2: Load sense
+  3: Fault
+  4: Disabled

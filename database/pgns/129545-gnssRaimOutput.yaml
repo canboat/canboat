@@ -1,0 +1,42 @@
+pgn: 129545
+id: gnssRaimOutput
+description: GNSS RAIM Output
+type: Fast
+priority: 6
+interval: irregular
+missing:
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: integrityFlag
+  name: Integrity flag
+  type: LOOKUP
+  bits: 2
+  lookup: GNS_INTEGRITY
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: latitudeExpectedError
+  name: Latitude expected error
+  type: DISTANCE_FIX16_CM
+- id: longitudeExpectedError
+  name: Longitude expected error
+  type: DISTANCE_FIX16_CM
+- id: altitudeExpectedError
+  name: Altitude expected error
+  type: DISTANCE_FIX16_CM
+- id: svIdOfMostLikelyFailedSat
+  name: SV ID of most likely failed sat
+  type: UINT8
+- id: probabilityOfMissedDetection
+  name: Probability of missed detection
+  type: DISTANCE_FIX16_CM
+- id: estimateOfPseudorangeBias
+  name: Estimate of pseudorange bias
+  type: DISTANCE_FIX16_CM
+- id: stdDeviationOfBias
+  name: Std Deviation of bias
+  type: DISTANCE_FIX16_CM

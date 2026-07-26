@@ -1,0 +1,9 @@
+name: WP_CHANGE
+kind: bit
+bits: 8
+values:
+  0: Change in main data (Position, Name)
+  1: Change in supplementary parameters (or new added)
+  2: Changed number of WPs in Route/WP-List, and/or name changed/added
+  3: 'Route: Change supplementary parameters (or new added)'
+  6: Other not specified changed

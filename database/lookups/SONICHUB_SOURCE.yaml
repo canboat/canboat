@@ -1,0 +1,11 @@
+name: SONICHUB_SOURCE
+kind: pair
+bits: 8
+values:
+  0: AM
+  1: FM
+  2: iPod
+  3: USB
+  4: AUX
+  5: AUX 2
+  6: Mic

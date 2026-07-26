@@ -1,0 +1,6 @@
+name: DIRECTION
+kind: pair
+bits: 3
+values:
+  0: Forward
+  1: Reverse

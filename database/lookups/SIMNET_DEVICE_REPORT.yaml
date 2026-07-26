@@ -1,0 +1,9 @@
+name: SIMNET_DEVICE_REPORT
+kind: pair
+bits: 8
+values:
+  2: Status
+  3: Send Status
+  10: Mode
+  11: Send Mode
+  23: Sailing Processor Status

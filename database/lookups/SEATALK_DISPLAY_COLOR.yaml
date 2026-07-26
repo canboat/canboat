@@ -1,0 +1,8 @@
+name: SEATALK_DISPLAY_COLOR
+kind: pair
+bits: 8
+values:
+  0: Day 1
+  2: Day 2
+  3: Red/Black
+  4: Inverse

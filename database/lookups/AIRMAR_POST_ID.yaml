@@ -1,0 +1,12 @@
+name: AIRMAR_POST_ID
+kind: pair
+bits: 8
+values:
+  1: Format Code
+  2: Factory EEPROM
+  3: User EEPROM
+  4: Water Temperature Sensor
+  5: Sonar Transceiver
+  6: Speed sensor
+  7: Internal temperature sensor
+  8: Battery voltage sensor

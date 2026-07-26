@@ -1,0 +1,40 @@
+pgn: 130582
+id: zoneVolume
+description: Zone Volume
+type: Single
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: zoneId
+  name: Zone ID
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_ZONE
+- id: volume
+  name: Volume
+  type: PERCENTAGE_UINT8
+- id: volumeChange
+  name: Volume change
+  type: LOOKUP
+  bits: 2
+  description: Write only
+  lookup: ENTERTAINMENT_VOLUME_CONTROL
+- id: mute
+  name: Mute
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: channel
+  name: Channel
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_CHANNEL
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 32

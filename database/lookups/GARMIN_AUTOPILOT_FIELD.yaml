@@ -1,0 +1,16 @@
+name: GARMIN_AUTOPILOT_FIELD
+kind: pair
+bits: 8
+values:
+  3: Heartbeat
+  10: Mode State
+  11: Heading to Steer
+  62: Response Setting
+  114: Rate of Turn
+  115: Rate of Turn Order
+  116: Turn Angle Order
+  158: System Voltage
+  161: Turn Angle Measured
+  239: Engine RPM B
+  240: Engine RPM A
+  246: Speed

@@ -1,0 +1,38 @@
+pgn: 130833
+id: maretronVesselDataRecorderStatus
+description: 'Maretron: Vessel Data Recorder Status'
+type: Fast
+variantOrder: 1
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: vdrRecordingStatus
+  name: VDR Recording Status
+  type: UINT8
+- id: memoryCapacity
+  name: Memory Capacity
+  type: UINT64
+- id: memoryUsed
+  name: Memory Used
+  type: UINT64

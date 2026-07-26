@@ -1,0 +1,7 @@
+name: ENTERTAINMENT_LIKE_STATUS
+kind: pair
+bits: 8
+values:
+  0: None
+  1: Thumbs up
+  2: Thumbs down

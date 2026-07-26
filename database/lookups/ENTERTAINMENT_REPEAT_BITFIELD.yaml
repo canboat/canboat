@@ -1,0 +1,6 @@
+name: ENTERTAINMENT_REPEAT_BITFIELD
+kind: bit
+bits: 2
+values:
+  0: Song
+  1: Play queue

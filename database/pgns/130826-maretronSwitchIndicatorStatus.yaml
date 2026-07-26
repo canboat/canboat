@@ -1,0 +1,39 @@
+pgn: 130826
+id: maretronSwitchIndicatorStatus
+description: 'Maretron: Switch Indicator Status'
+type: Fast
+variantOrder: 1
+priority: 2
+explanation: Broadcast by Maretron switching devices alongside PGN 127501. Each indicator status byte carries the state of one switch channel, encoded as 0 = Off, 1 = On, 2 = Tripped, 3 = Unknown.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: indicatorBankInstance
+  name: Indicator Bank Instance
+  type: UINT8
+  primaryKey: true
+- id: numberOfStatusFields
+  name: Number of Status Fields
+  type: UINT8
+- repeat:
+    countField: numberOfStatusFields
+    fields:
+    - id: indicatorStatus
+      name: Indicator Status
+      type: UINT8

@@ -1,0 +1,47 @@
+pgn: 130834
+id: maretronSmsStatus
+description: 'Maretron: SMS Status'
+type: Fast
+variantOrder: 1
+priority: 6
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: simCardStatus
+  name: SIM Card Status
+  type: UINT8
+- id: gsmBand
+  name: GSM Band
+  type: UINT8
+- id: signalStrength
+  name: Signal Strength
+  type: UINT8
+- id: bitErrorRate
+  name: Bit Error Rate
+  type: UINT8
+- id: simCardPhoneNumber
+  name: SIM Card Phone Number
+  type: STRING_LAU
+- id: networkOperatorName
+  name: Network Operator Name
+  type: STRING_LAU

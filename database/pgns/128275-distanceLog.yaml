@@ -1,0 +1,47 @@
+pgn: 128275
+id: distanceLog
+description: Distance Log
+type: Fast
+priority: 6
+interval: 1000
+fields:
+- id: date
+  name: Date
+  type: DATE
+- id: time
+  name: Time
+  type: TIME
+  bits: 32
+  resolution: 0.0001
+  description: Seconds since midnight
+  specialValues: 3
+  rangeMin: 0.0
+  rangeMax: 86401.0
+- id: log
+  name: Log
+  type: LENGTH_UFIX32_M
+  description: Total cumulative distance
+- id: tripLog
+  name: Trip Log
+  type: LENGTH_UFIX32_M
+  description: Distance since last reset
+notes: https://web.archive.org/web/20220705131506/www.nmea.org/Assets/nmea-2000-digital-interface-white-paper.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,128275,26,255,14,ff,ff,ff,ff,ff,ff,4a,28,27,00,7f,8c,10,00"  # from merrimac-2022.raw
+  expects:
+    date: ~
+    time: ~
+    log: 2566218
+    tripLog: 1084543
+- raw: "2023-01-01-00:00:00.000,6,128275,2,255,14,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    date: ~
+    time: ~
+    log: ~
+    tripLog: ~
+- raw: "2023-01-01-00:00:00.000,6,128275,35,255,14,ff,ff,ff,ff,ff,ff,7b,ce,2d,00,7b,ce,2d,00"  # from merrimac-2022.raw
+  expects:
+    date: ~
+    time: ~
+    log: 3001979
+    tripLog: 3001979

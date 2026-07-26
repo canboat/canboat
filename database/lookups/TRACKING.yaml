@@ -1,0 +1,8 @@
+name: TRACKING
+kind: pair
+bits: 2
+values:
+  0: Cancelled
+  1: Acquiring
+  2: Tracking
+  3: Lost

@@ -1,0 +1,81 @@
+pgn: 130569
+id: currentStatusAndFile
+description: Current Status and File
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+url: https://web.archive.org/web/20170609024809/https://www.nmea.org/Assets/20160725%20corrigenda%20pgn%20130569%20published.pdf
+fields:
+- id: zone
+  name: Zone
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_ZONE
+- id: source
+  name: Source
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_SOURCE
+- id: number
+  name: Number
+  type: UINT8
+  description: Source number per type
+- id: id
+  name: ID
+  type: UINT32
+  description: Unique file ID
+- id: playStatus
+  name: Play status
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_PLAY_STATUS
+- id: elapsedTrackTime
+  name: Elapsed Track Time
+  type: DURATION_UFIX16_S
+- id: trackTime
+  name: Track Time
+  type: DURATION_UFIX16_S
+- id: repeatStatus
+  name: Repeat Status
+  type: LOOKUP
+  bits: 4
+  lookup: ENTERTAINMENT_REPEAT_STATUS
+- id: shuffleStatus
+  name: Shuffle Status
+  type: LOOKUP
+  bits: 4
+  lookup: ENTERTAINMENT_SHUFFLE_STATUS
+- id: saveFavoriteNumber
+  name: Save Favorite Number
+  type: UINT8
+  description: Used to command AV to save current station as favorite
+- id: playFavoriteNumber
+  name: Play Favorite Number
+  type: UINT16
+  description: Used to command AV to play indicated favorite station
+- id: thumbsUpDown
+  name: Thumbs Up/Down
+  type: LOOKUP
+  bits: 8
+  lookup: ENTERTAINMENT_LIKE_STATUS
+- id: signalStrength
+  name: Signal Strength
+  type: PERCENTAGE_UINT8
+- id: radioFrequency
+  name: Radio Frequency
+  type: RADIO_FREQUENCY_UFIX32
+  resolution: 10.0
+- id: hdFrequencyMulticast
+  name: HD Frequency Multicast
+  type: UINT8
+  description: Digital sub channel
+- id: deleteFavoriteNumber
+  name: Delete Favorite Number
+  type: UINT8
+  description: Used to command AV to delete current station as favorite
+- id: totalNumberOfTracks
+  name: Total Number of Tracks
+  type: UINT16

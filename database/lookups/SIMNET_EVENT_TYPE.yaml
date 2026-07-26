@@ -1,0 +1,10 @@
+name: SIMNET_EVENT_TYPE
+kind: pair
+bits: 8
+values:
+  2: Follow Up
+  10: AP Command
+  23: Timer
+  31: Siren
+  36: AIS vessel selected
+  255: Alarm

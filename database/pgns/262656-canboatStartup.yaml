@@ -1,0 +1,16 @@
+pgn: 262656
+id: canboatStartup
+description: 'CANboat: Startup'
+type: Fast
+fields:
+- id: version
+  name: Version
+  type: VERSION
+- id: source
+  name: Source
+  type: STRING_FIX
+  bits: 256
+- id: device
+  name: Device
+  type: STRING_FIX
+  bits: 256

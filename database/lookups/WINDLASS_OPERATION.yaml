@@ -1,0 +1,9 @@
+name: WINDLASS_OPERATION
+kind: bit
+bits: 6
+values:
+  0: System error
+  1: Sensor error
+  2: No windlass motion detected
+  3: Retrieval docking distance reached
+  4: End of rode reached

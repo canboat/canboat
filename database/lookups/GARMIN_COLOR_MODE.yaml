@@ -1,0 +1,7 @@
+name: GARMIN_COLOR_MODE
+kind: pair
+bits: 8
+values:
+  0: Day
+  1: Night
+  13: Color

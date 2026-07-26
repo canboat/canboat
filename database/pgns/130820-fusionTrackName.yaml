@@ -1,0 +1,68 @@
+pgn: 130820
+id: fusionTrackName
+description: 'Fusion: Track Name'
+type: Fast
+variantOrder: 8
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Track Title
+  match: 32773
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: index
+  name: Index
+  type: UINT32
+- id: track
+  name: Track
+  type: STRING_LZ
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,21,a3,99,05,80,0b,06,00,00,00,0a,43,68,61,70,74,65,72,20,56,49,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Title"
+    sourceId: 11
+    index: 6
+    track: "Chapter VI"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,111,a3,99,05,80,0b,00,00,00,00,64,54,65,65,6e,73,20,46,72,6f,6d,20,54,77,6f,20,44,2e,43,2e,20,53,63,68,6f,6f,6c,73,20,e2,80,94,20,4f,6e,65,20,50,75,62,6c,69,63,20,43,68,61,72,74,65,72,2c,20,4f,6e,65,20,50,72,69,76,61,74,65,20,e2,80,94,20,48,6f,6c,64,20,54,6f,75,67,68,20,43,6f,6e,76,65,72,73,61,74,69,6f,6e,73,20,6f,6e,20,52,61,63,65,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Title"
+    sourceId: 11
+    index: 0
+    track: "Teens From Two D.C. Schools — One Public Charter, One Private — Hold Tough Conversations on Race"
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,87,a3,99,05,80,0b,00,00,00,00,4c,41,20,50,75,6c,69,74,7a,65,72,2d,57,69,6e,6e,69,6e,67,20,4a,6f,75,72,6e,61,6c,69,73,74,27,73,20,41,64,76,69,63,65,20,41,6e,64,20,57,68,79,20,48,65,20,44,6f,65,73,20,41,20,4d,6f,6e,74,68,6c,79,20,4e,69,67,68,74,20,53,68,69,66,74,00"  # from fusion-130820.log
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Title"
+    sourceId: 11
+    index: 0
+    track: "A Pulitzer-Winning Journalist's Advice And Why He Does A Monthly Night Shift"

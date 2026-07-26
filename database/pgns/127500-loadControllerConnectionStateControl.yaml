@@ -1,0 +1,30 @@
+pgn: 127500
+id: loadControllerConnectionStateControl
+description: Load Controller Connection State/Control
+type: Single
+url: https://github.com/canboat/canboat/issues/366
+fields:
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+- id: connectionId
+  name: Connection ID
+  type: UINT8
+- id: state
+  name: State
+  type: UINT8
+- id: status
+  name: Status
+  type: UINT8
+- id: operationalStatusControl
+  name: Operational Status & Control
+  type: UINT8
+- id: pwmDutyCycle
+  name: PWM Duty Cycle
+  type: UINT8
+- id: timeon
+  name: TimeON
+  type: UINT8
+- id: timeoff
+  name: TimeOFF
+  type: UINT8

@@ -1,0 +1,46 @@
+pgn: 129549
+id: dgnssCorrections
+description: DGNSS Corrections
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: referenceStationId
+  name: Reference Station ID
+  type: UNSIGNED_INTEGER
+  bits: 12
+- id: referenceStationType
+  name: Reference Station Type
+  type: LOOKUP
+  bits: 4
+  lookup: GNS
+- id: timeOfCorrections
+  name: Time of corrections
+  type: DURATION_UFIX16_DS
+- id: stationHealth
+  name: Station Health
+  type: LOOKUP
+  bits: 4
+  lookup: STATION_HEALTH
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: satelliteId
+  name: Satellite ID
+  type: UINT8
+- id: prc
+  name: PRC
+  type: DISTANCE_FIX32_DMM
+- id: rrc
+  name: RRC
+  type: SPEED_FIX16_DMM
+- id: udre
+  name: UDRE
+  type: LENGTH_UFIX16_CM
+- id: iod
+  name: IOD
+  type: UINT8

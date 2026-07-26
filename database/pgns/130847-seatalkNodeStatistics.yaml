@@ -1,0 +1,44 @@
+pgn: 130847
+id: seatalkNodeStatistics
+description: 'SeaTalk: Node Statistics'
+type: Fast
+variantOrder: 2
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: productCode
+  name: Product Code
+  type: UINT16
+- id: year
+  name: Year
+  type: UINT8
+- id: month
+  name: Month
+  type: UINT8
+- id: deviceNumber
+  name: Device Number
+  type: UINT16
+- id: nodeVoltage
+  name: Node Voltage
+  type: VOLTAGE_UFIX16_10MV

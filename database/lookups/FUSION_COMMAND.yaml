@@ -1,0 +1,8 @@
+name: FUSION_COMMAND
+kind: pair
+bits: 8
+values:
+  1: Play
+  2: Pause
+  4: Next
+  6: Prev

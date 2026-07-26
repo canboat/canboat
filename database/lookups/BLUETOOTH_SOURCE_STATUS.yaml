@@ -1,0 +1,8 @@
+name: BLUETOOTH_SOURCE_STATUS
+kind: pair
+bits: 4
+values:
+  0: Reserved
+  1: Connected
+  2: Connecting
+  3: Not connected

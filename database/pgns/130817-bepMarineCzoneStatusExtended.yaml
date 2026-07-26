@@ -1,0 +1,46 @@
+pgn: 130817
+id: bepMarineCzoneStatusExtended
+description: 'BEP Marine: CZone Status Extended'
+type: Fast
+variantOrder: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Periodic extended-status frame from a CZone module. Real CZone modules use it to report per-circuit measurements
+  (e.g. breaker current); the YDAB-01 sends a stub form for module-presence purposes only. Each per-circuit record is 3 bytes:
+  byte 0 = circuit_id (8-bit), byte 1 = value low, byte 2 = bits 0..1 are value high (10-bit magnitude total) + bit 2 = sign
+  (set => positive) + bit 3 = per-frame flag (only meaningful with N>=6 records) + bits 4..7 = unknown. Value is most plausibly
+  current in 0.1 A units, but unverified. Periodic at ~2 s intervals.'
+url: https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: BEP Marine 2
+  match: 295
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: page
+  name: Page
+  type: UINT8
+  description: Observed = 0x01; possibly a status-page selector
+- id: dipswitch
+  name: Dipswitch
+  type: UINT8
+- id: records
+  name: Records
+  type: BINARY
+  bits: 192
+  description: N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8

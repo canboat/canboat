@@ -1,0 +1,8 @@
+name: WINDLASS_MONITORING
+kind: bit
+bits: 8
+values:
+  0: Controller under voltage cut-out
+  1: Controller over current cut-out
+  2: Controller over temperature cut-out
+  3: Manufacturer defined

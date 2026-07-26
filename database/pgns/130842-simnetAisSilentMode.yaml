@@ -1,0 +1,48 @@
+pgn: 130842
+id: simnetAisSilentMode
+description: 'Simnet: AIS Silent Mode'
+type: Fast
+variantOrder: 5
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Simnet AIS silent-mode read/reply (Message ID 4 of the 130842 family, alongside the Class B static-data Part A/B forms). A source reads (Operation = Read) or reports (Operation = Reply) the AIS transceiver's silent-mode state; the two trailing bytes carry the state and are constant in the observed traffic.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: AIS Silent Mode
+  match: 4
+  primaryKey: true
+- id: operation
+  name: Operation
+  type: LOOKUP
+  bits: 2
+  lookup: SIMNET_KEY_OPERATION
+  allowLookupWidthMismatch: true
+- id: d
+  name: D
+  type: UINT8
+- id: e
+  name: E
+  type: UINT8

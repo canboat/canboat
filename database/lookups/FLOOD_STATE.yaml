@@ -1,0 +1,7 @@
+name: FLOOD_STATE
+kind: pair
+bits: 3
+values:
+  0: Flood
+  1: Slack
+  2: Ebb

@@ -1,0 +1,11 @@
+name: BATTERY_VOLTAGE
+kind: pair
+bits: 4
+values:
+  0: 6V
+  1: 12V
+  2: 24V
+  3: 32V
+  4: 36V
+  5: 42V
+  6: 48V

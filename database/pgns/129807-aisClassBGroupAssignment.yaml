@@ -1,0 +1,98 @@
+pgn: 129807
+id: aisClassBGroupAssignment
+description: AIS Class B Group Assignment
+type: Fast
+priority: 7
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: sourceId
+  name: Source ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: txRxMode
+  name: Tx/Rx Mode
+  type: LOOKUP
+  bits: 4
+  lookup: TX_RX_MODE
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: northEastLongitudeCorner1
+  name: North East Longitude Corner 1
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: northEastLatitudeCorner1
+  name: North East Latitude Corner 1
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: southWestLongitudeCorner2
+  name: South West Longitude Corner 2
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: southWestLatitudeCorner2
+  name: South West Latitude Corner 2
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: stationType
+  name: Station Type
+  type: LOOKUP
+  bits: 4
+  lookup: STATION_TYPE
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: shipAndCargoFilter
+  name: Ship and Cargo Filter
+  type: LOOKUP
+  bits: 8
+  lookup: SHIP_TYPE
+- id: spare14
+  name: Spare
+  type: SPARE
+  bits: 22
+- id: reserved15
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: reportingInterval
+  name: Reporting Interval
+  type: LOOKUP
+  bits: 4
+  lookup: REPORTING_INTERVAL
+- id: quietTime
+  name: Quiet Time
+  type: DURATION_UFIX4_MIN
+  description: Commanded quiet time
+- id: spare18
+  name: Spare
+  type: SPARE
+  bits: 6
+- id: reserved19
+  name: Reserved
+  type: RESERVED
+  bits: 2

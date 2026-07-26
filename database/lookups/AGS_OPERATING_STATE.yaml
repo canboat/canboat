@@ -1,0 +1,14 @@
+name: AGS_OPERATING_STATE
+kind: pair
+bits: 4
+values:
+  0: Quiet time
+  1: Auto on
+  2: Auto off
+  3: Manual On
+  4: Manual Off
+  5: Generator shutdown
+  6: External shutdown
+  7: Fault
+  8: Suspend
+  9: Not operating

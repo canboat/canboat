@@ -1,0 +1,7 @@
+name: SIMNET_KEY_OPERATION
+kind: pair
+bits: 8
+values:
+  0: Read
+  1: Set
+  2: Reply

@@ -6,11 +6,14 @@ merged. For build instructions and the architecture of the PGN database, see
 
 ## The cardinal rule: source and generated move together
 
-The NMEA 2000 PGN database is **hand-edited C** in `analyzer/pgn.h`,
-`analyzer/lookup.h` and `analyzer/fieldtype.h`. The files under `docs/`
-(`canboat.xml`, `canboat.html`, `canboat.json`) and `docs/canboat.dbc` are
-**generated** from those headers and committed to git. If your change touches
-the database, regenerate the artifacts in the **same** commit:
+The NMEA 2000 PGN database is **YAML** under `database/` (one file per PGN
+variant in `pgns/`, one per enumeration in `lookups/`, plus
+`fieldtypes.yaml`; `database/j1939/` for the J1939 build). Validate your edit
+with `keel/keel check`. The files under `docs/` (`canboat.xml`,
+`canboat.html`, `canboat.json`), `docs/canboat.dbc`, AND the analyzer's C
+data tables (`analyzer/lookup.h`, `analyzer/*-data.h`) are **generated**
+from the database and committed to git. If your change touches the
+database, regenerate the artifacts in the **same** commit:
 
 ```sh
 make generated
@@ -85,10 +88,31 @@ chore: add real-world Fusion and Victron sample captures
 - **Marking database work as `chore`** — new PGN/field support is `feat`; a
   wrong decode is `fix`.
 
+## Adding or fixing a PGN
+
+The recommended path is the evidence-first editor:
+
+```sh
+keel/keel edit          # local web editor, no network, no npm
+```
+
+Paste real captures (canboat PLAIN, candump, or raw hex) and the editor
+reassembles them, stacks the bytes so structure stands out, and decodes them
+live as you build the field list. If your frame nearly matches an existing
+definition it offers to **clone** that variant so you don't redefine shared
+fields. Enumerations (pair/bit/triplet/fieldtype) are editable in place, and
+unnamed values a sample reveals are flagged. Saving is refused while any rule
+fails, and you can adopt the decodes as regression expectations that
+`keel check` re-verifies forever.
+
+You can also edit the YAML under `database/` by hand and run `keel/keel check`.
+Either way, author only the observed data — order, bit offsets, lengths, ranges
+and sentinels are derived. AGENTS.md §9 has the full workflow.
+
 ## Database changes should be backed by evidence
 
 New or corrected decodes should be justified by a real capture (add it under
-`samples/` and cite it in a `pgn.h` comment) or by public documentation. The
+`samples/` and cite it in the PGN's `notes:` key) or by public documentation. The
 goal is a database that is reverse-engineered from observation, not guesswork.
 
 ## Need help?

@@ -1,0 +1,11 @@
+pgn: 65007
+id: utilityPhaseCAcPower
+description: Utility Phase C AC Power
+type: Single
+fields:
+- id: realPower
+  name: Real Power
+  type: POWER_FIX32_OFFSET
+- id: apparentPower
+  name: Apparent Power
+  type: POWER_FIX32_VA_OFFSET
