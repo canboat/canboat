@@ -187,12 +187,15 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
 
 /// Port of fieldtype.c fixupUnit(), SI branch only (showSI = true in explain).
 fn fixup_unit(unit: &str, has_sign: bool, range_min: &mut f64, range_max: &mut f64) {
+    // The C carried the truncated literal 3.1415926; keel uses π to double
+    // precision (QUIRKS Q17). Moves 101 emitted range bounds in the 8th
+    // significant digit — ~2e-8 rad, far below any sensor's resolution.
     if unit == "rad" {
         if has_sign {
-            *range_min = c_max(*range_min, -3.1415926);
-            *range_max = c_min(*range_max, 3.1415926);
+            *range_min = c_max(*range_min, -std::f64::consts::PI);
+            *range_max = c_min(*range_max, std::f64::consts::PI);
         } else {
-            *range_max = c_min(*range_max, 2.0 * 3.1415926);
+            *range_max = c_min(*range_max, 2.0 * std::f64::consts::PI);
         }
     }
 }
