@@ -655,19 +655,19 @@ extern bool fieldPrintLookup(const Field   *field,
     return true;
   }
 
-  if (field->unit && field->unit[0] == '=' && isdigit((unsigned char) field->unit[1]))
+  if (field->hasMatchValue)
   {
-    sprintf(lookfor, "=%" PRId64, value);
-    if (strcmp(lookfor, field->unit) != 0)
+    if (value != field->matchValue)
     {
-      logDebug("Field %s value %" PRId64 " does not match %s\n", fieldName, value, field->unit + 1);
+      logDebug("Field %s value %" PRId64 " does not match %" PRId64 "\n", fieldName, value, field->matchValue);
       g_skip = true;
       return false;
     }
     s = field->description;
     if (s == NULL && field->lookup.type == LOOKUP_TYPE_NONE)
     {
-      s = lookfor + 1;
+      sprintf(lookfor, "%" PRId64, value);
+      s = lookfor;
     }
   }
 

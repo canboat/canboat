@@ -138,13 +138,13 @@ const Pgn *getMatchingPgn(int pgnId, const uint8_t *data, int length)
       const Field *field = &pgn->fieldList[i];
       int          bits  = field->size;
 
-      if (field->unit != NULL && field->unit[0] == '=')
+      if (field->hasMatchValue)
       {
         int64_t value, desiredValue;
         int64_t maxValue;
 
         hasFixedField = true;
-        desiredValue  = strtol(field->unit + 1, 0, 10);
+        desiredValue  = field->matchValue;
         if (!extractNumber(field, data, length, startBit, field->size, &value, &maxValue) || value != desiredValue)
         {
           logDebug("getMatchingPgn: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",
@@ -256,12 +256,12 @@ const Pgn *getMatchingPgnByParameters(int pgnId, const uint8_t *data, int length
       int          bytes = (bits + 7) >> 3;
 
       logDebug("getMatchingPgnByParameters: parameter #%d = '%s' length %d\n", index, field->description, bytes);
-      if (field->unit != NULL && field->unit[0] == '=')
+      if (field->hasMatchValue)
       {
         int64_t value, desiredValue;
         int64_t maxValue;
 
-        desiredValue = strtol(field->unit + 1, 0, 10);
+        desiredValue = field->matchValue;
         if (!extractNumber(field, data, length, d << 3, field->size, &value, &maxValue) || value != desiredValue)
         {
           logDebug("getMatchingPgnByParameters: PGN %u field '%s' value %" PRId64 " does not match %" PRId64 "\n",

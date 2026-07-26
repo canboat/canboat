@@ -86,6 +86,11 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
+  bool    hasMatchValue; /* This field discriminates between variants of the PGN: the definition only applies when the
+                          *    wire value equals matchValue. Used to be encoded by writing the value into 'unit' as the
+                          *    string "=<number>" (see keel/QUIRKS.md Q19). */
+  int64_t matchValue;
+
   int32_t offset;          /* Mostly used for SAE J1939 values with sign; these are in Offset/Excess-K notation instead
                             *    of two's complement as used by NMEA 2000.
                             *    See http://en.wikipedia.org/wiki/Offset_binary
