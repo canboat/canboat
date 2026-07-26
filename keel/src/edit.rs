@@ -12,7 +12,7 @@ use std::path::PathBuf;
 use std::sync::Arc;
 
 use crate::model::Database;
-use crate::{check, decode, derive, emit_xml, generate, samples, yamlio};
+use crate::{check, decode, derive, generate, samples, yamlio};
 
 pub struct EditServer {
     pub root: PathBuf,
@@ -183,7 +183,7 @@ fn api_generate(server: &EditServer) -> Result<String, String> {
         return Err(format!("not generated - {} {}: {}", v.rule, v.location, v.message));
     }
     let mut written = Vec::new();
-    for (path, content) in generate::emit_artifacts(&server.root, &db, &authored, emit_xml::FloatStyle::C) {
+    for (path, content) in generate::emit_artifacts(&server.root, &db, &authored) {
         std::fs::write(&path, content).map_err(|e| format!("{}: {e}", path.display()))?;
         written.push(js(
             &path
