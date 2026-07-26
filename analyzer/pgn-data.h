@@ -148,8 +148,8 @@ Pgn pgnList[] = {
      {
       {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "UNSIGNED_INTEGER", .size = 21, .resolution = 1.0, .description = "ISO Identity Number"},
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
-      {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance", .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 7.0},
-      {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance", .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 31.0},
+      {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance", .reservedOverride = 1},
+      {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance", .reservedOverride = 1},
       {.name = "Device Function", .camelName = "deviceFunction", .fieldType = "INDIRECT_LOOKUP", .size = 8, .resolution = 1.0, .description = "ISO Function", .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupDEVICE_FUNCTION, .lookup.name = "DEVICE_FUNCTION", .lookup.val1Order = 7},
       {.name = "Spare", .camelName = "spare", .fieldType = "SPARE", .size = 1, .resolution = 1.0},
       {.name = "Device Class", .camelName = "deviceClass", .fieldType = "LOOKUP", .size = 7, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDEVICE_CLASS, .lookup.name = "DEVICE_CLASS"},
@@ -344,7 +344,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_UINT16_VAR"},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 30, .resolution = 1.0}
      },
@@ -381,7 +381,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_UINT16_VAR"},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 30, .resolution = 1.0}
      },
@@ -418,7 +418,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -455,7 +455,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -503,7 +503,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -540,7 +540,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -577,7 +577,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -614,7 +614,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Reactive Power", .camelName = "reactivePower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true},
-      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.10352e-5, .unit = "Cos Phi", .rangeMin = 0.0, .rangeMax = 3.999755859375},
+      {.name = "Power factor", .camelName = "powerFactor", .fieldType = "UINT16", .resolution = 6.103515625e-5, .unit = "Cos Phi"},
       {.name = "Power Factor Lagging", .camelName = "powerFactorLagging", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOWER_FACTOR, .lookup.name = "POWER_FACTOR"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 14, .resolution = 1.0}
      },
@@ -652,8 +652,8 @@ Pgn pgnList[] = {
      {
       {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "BINARY", .size = 21, .resolution = 1.0, .description = "ISO Identity Number"},
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
-      {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance", .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 7.0},
-      {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance", .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 31.0},
+      {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance", .reservedOverride = 1},
+      {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance", .reservedOverride = 1},
       {.name = "Device Function", .camelName = "deviceFunction", .fieldType = "INDIRECT_LOOKUP", .size = 8, .resolution = 1.0, .description = "ISO Function", .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupDEVICE_FUNCTION, .lookup.name = "DEVICE_FUNCTION", .lookup.val1Order = 7},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
       {.name = "Device Class", .camelName = "deviceClass", .fieldType = "LOOKUP", .size = 7, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupDEVICE_CLASS, .lookup.name = "DEVICE_CLASS"},
@@ -1097,7 +1097,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Data Instance", .camelName = "dataInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "0-10 V Data", .camelName = "010VData", .fieldType = "UINT16", .resolution = 0.000244141, .rangeMin = 0.0, .rangeMax = 15.9990234375},
+      {.name = "0-10 V Data", .camelName = "010VData", .fieldType = "UINT16", .resolution = 0.000244140625},
       {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "maretron010V",
@@ -2550,7 +2550,7 @@ Pgn pgnList[] = {
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "2"},
       {.name = "Field", .camelName = "field", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 116, .description = "Turn Angle Order", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_FIELD, .lookup.name = "GARMIN_AUTOPILOT_FIELD", .partOfPrimaryKey = true},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Turn Angle Order", .camelName = "turnAngleOrder", .fieldType = "UINT16", .resolution = 9.58738e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
+      {.name = "Turn Angle Order", .camelName = "turnAngleOrder", .fieldType = "UINT16", .resolution = 9.58737992553711e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
      },
      .camelDescription = "garminAutopilotTurnAngleOrder",
      .priority = 7},
@@ -2569,7 +2569,7 @@ Pgn pgnList[] = {
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "2"},
       {.name = "Field", .camelName = "field", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 161, .description = "Turn Angle Measured", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_FIELD, .lookup.name = "GARMIN_AUTOPILOT_FIELD", .partOfPrimaryKey = true},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Turn Angle Measured", .camelName = "turnAngleMeasured", .fieldType = "UINT16", .resolution = 9.58738e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
+      {.name = "Turn Angle Measured", .camelName = "turnAngleMeasured", .fieldType = "UINT16", .resolution = 9.58737992553711e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
      },
      .camelDescription = "garminAutopilotTurnAngleMeasured",
      .priority = 7},
@@ -3292,7 +3292,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -3303,7 +3303,7 @@ Pgn pgnList[] = {
       {.name = "Acknowledge Support", .camelName = "acknowledgeSupport", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
       {.name = "Escalation Support", .camelName = "escalationSupport", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Trigger Condition", .camelName = "triggerCondition", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupALERT_TRIGGER_CONDITION, .lookup.name = "ALERT_TRIGGER_CONDITION"},
       {.name = "Threshold Status", .camelName = "thresholdStatus", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupALERT_THRESHOLD_STATUS, .lookup.name = "ALERT_THRESHOLD_STATUS"},
       {.name = "Alert Priority", .camelName = "alertPriority", .fieldType = "UINT8", .resolution = 1.0},
@@ -3321,11 +3321,11 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Response Command", .camelName = "responseCommand", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupALERT_RESPONSE_COMMAND, .lookup.name = "ALERT_RESPONSE_COMMAND"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 6, .resolution = 1.0}
      },
@@ -3341,7 +3341,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -3361,7 +3361,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -3384,7 +3384,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -3392,7 +3392,7 @@ Pgn pgnList[] = {
       {.name = "Parameter Number", .camelName = "parameterNumber", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Trigger Method", .camelName = "triggerMethod", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Threshold Data Format", .camelName = "thresholdDataFormat", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Threshold Level", .camelName = "thresholdLevel", .fieldType = "UINT64", .resolution = 1.0, .rangeMin = 0.0, .rangeMax = 1.8446744073709552e19}
+      {.name = "Threshold Level", .camelName = "thresholdLevel", .fieldType = "UINT64", .resolution = 1.0}
      },
      .camelDescription = "alertThreshold",
      .repeatingCount1 = 4,
@@ -3409,14 +3409,14 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Number of Parameters", .camelName = "numberOfParameters", .fieldType = "UINT8", .resolution = 1.0, .description = "Total Number of Value Parameters"},
       {.name = "Value Parameter Number", .camelName = "valueParameterNumber", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Value Data Format", .camelName = "valueDataFormat", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Value Data", .camelName = "valueData", .fieldType = "UINT64", .resolution = 1.0, .rangeMin = 0.0, .rangeMax = 1.8446744073709552e19}
+      {.name = "Value Data", .camelName = "valueData", .fieldType = "UINT64", .resolution = 1.0}
      },
      .camelDescription = "alertValue",
      .repeatingCount1 = 3,
@@ -5021,16 +5021,16 @@ Pgn pgnList[] = {
       {.name = "PRN", .camelName = "prn", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "GPS Week number", .camelName = "gpsWeekNumber", .fieldType = "UINT16", .resolution = 1.0},
       {.name = "SV Health Bits", .camelName = "svHealthBits", .fieldType = "BINARY", .size = 8, .resolution = 1.0},
-      {.name = "Eccentricity", .camelName = "eccentricity", .fieldType = "UNSIGNED_ALMANAC_PARAMETER_RATIO", .size = 16, .resolution = 4.76837e-7, .description = "'e' in table 20-VI in ICD-GPS-200", .rangeMin = 0.0, .rangeMax = 0.0312480926513672},
+      {.name = "Eccentricity", .camelName = "eccentricity", .fieldType = "UNSIGNED_ALMANAC_PARAMETER_RATIO", .size = 16, .resolution = 4.76837158203125e-7, .description = "'e' in table 20-VI in ICD-GPS-200"},
       {.name = "Almanac Reference Time", .camelName = "almanacReferenceTime", .fieldType = "UNSIGNED_ALMANAC_PARAMETER_DURATION", .size = 8, .resolution = 4096.0, .description = "'t oa' in table 20-VI in ICD-GPS-200"},
-      {.name = "Inclination Angle", .camelName = "inclinationAngle", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 16, .resolution = 1.90735e-6, .hasSign = true, .description = "'delta i' in table 20-VI in ICD-GPS-200", .rangeMin = -0.0624980926513672, .rangeMax = 0.0624923706054688},
-      {.name = "Rate of Right Ascension", .camelName = "rateOfRightAscension", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S", .size = 16, .resolution = 3.63798e-12, .hasSign = true, .description = "'OMEGADOT' in table 20-VI in ICD-GPS-200", .rangeMin = -1.19205651571974e-7, .rangeMax = 1.19194737635553e-7},
-      {.name = "Root of Semi-major Axis", .camelName = "rootOfSemiMajorAxis", .fieldType = "UNSIGNED_ALMANAC_PARAMETER_SQRT_M", .size = 24, .resolution = 0.000488281, .description = "'(A)^0.5' in table 20-VI in ICD-GPS-200", .reservedOverride = 4, .rangeMin = 0.0, .rangeMax = 8191.998046875},
-      {.name = "Argument of Perigee", .camelName = "argumentOfPerigee", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.19209e-7, .hasSign = true, .description = "'(OMEGA)0' in table 20-VI in ICD-GPS-200", .rangeMin = -0.99999988079071, .rangeMax = 0.999999523162842},
-      {.name = "Longitude of Ascension Node", .camelName = "longitudeOfAscensionNode", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.19209e-7, .hasSign = true, .description = "'small-omega' in table 20-VI in ICD-GPS-200", .rangeMin = -0.99999988079071, .rangeMax = 0.999999523162842},
-      {.name = "Mean Anomaly", .camelName = "meanAnomaly", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.19209e-7, .hasSign = true, .description = "'M 0' in table 20-VI in ICD-GPS-200", .rangeMin = -0.99999988079071, .rangeMax = 0.999999523162842},
-      {.name = "Clock Parameter 1", .camelName = "clockParameter1", .fieldType = "SIGNED_ALMANAC_PARAMETER_DURATION", .size = 11, .resolution = 9.53674e-7, .hasSign = true, .description = "'a f0' in table 20-VI in ICD-GPS-200", .rangeMin = -0.000975608825683594, .rangeMax = 0.000972747802734375},
-      {.name = "Clock Parameter 2", .camelName = "clockParameter2", .fieldType = "SIGNED_ALMANAC_PARAMETER_RATIO", .size = 11, .resolution = 3.63798e-12, .hasSign = true, .description = "'a f1' in table 20-VI in ICD-GPS-200", .rangeMin = -3.72165231965482e-9, .rangeMax = 3.71073838323355e-9},
+      {.name = "Inclination Angle", .camelName = "inclinationAngle", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 16, .resolution = 1.9073486328125e-6, .hasSign = true, .description = "'delta i' in table 20-VI in ICD-GPS-200"},
+      {.name = "Rate of Right Ascension", .camelName = "rateOfRightAscension", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE_PER_S", .size = 16, .resolution = 3.637978807091713e-12, .hasSign = true, .description = "'OMEGADOT' in table 20-VI in ICD-GPS-200"},
+      {.name = "Root of Semi-major Axis", .camelName = "rootOfSemiMajorAxis", .fieldType = "UNSIGNED_ALMANAC_PARAMETER_SQRT_M", .size = 24, .resolution = 0.00048828125, .description = "'(A)^0.5' in table 20-VI in ICD-GPS-200", .reservedOverride = 4},
+      {.name = "Argument of Perigee", .camelName = "argumentOfPerigee", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.1920928955078125e-7, .hasSign = true, .description = "'(OMEGA)0' in table 20-VI in ICD-GPS-200"},
+      {.name = "Longitude of Ascension Node", .camelName = "longitudeOfAscensionNode", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.1920928955078125e-7, .hasSign = true, .description = "'small-omega' in table 20-VI in ICD-GPS-200"},
+      {.name = "Mean Anomaly", .camelName = "meanAnomaly", .fieldType = "SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE", .size = 24, .resolution = 1.1920928955078125e-7, .hasSign = true, .description = "'M 0' in table 20-VI in ICD-GPS-200"},
+      {.name = "Clock Parameter 1", .camelName = "clockParameter1", .fieldType = "SIGNED_ALMANAC_PARAMETER_DURATION", .size = 11, .resolution = 9.5367431640625e-7, .hasSign = true, .description = "'a f0' in table 20-VI in ICD-GPS-200"},
+      {.name = "Clock Parameter 2", .camelName = "clockParameter2", .fieldType = "SIGNED_ALMANAC_PARAMETER_RATIO", .size = 11, .resolution = 3.637978807091713e-12, .hasSign = true, .description = "'a f1' in table 20-VI in ICD-GPS-200"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0}
      },
      .camelDescription = "gpsAlmanacData",
@@ -5287,7 +5287,7 @@ Pgn pgnList[] = {
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
-      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 3.0},
+      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1},
       {.name = "Destination ID", .camelName = "destinationId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
       {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 6, .resolution = 1.0},
       {.name = "Retransmit flag", .camelName = "retransmitFlag", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
@@ -5312,7 +5312,7 @@ Pgn pgnList[] = {
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
       {.name = "Spare", .camelName = "spare6", .fieldType = "SPARE", .size = 2, .resolution = 1.0},
       {.name = "Destination ID", .camelName = "destinationId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
-      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 3.0},
+      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 6, .resolution = 1.0}
      },
      .camelDescription = "aisAcknowledge",
@@ -5415,7 +5415,7 @@ Pgn pgnList[] = {
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
-      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 3.0},
+      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1},
       {.name = "Destination ID", .camelName = "destinationId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
       {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 6, .resolution = 1.0},
       {.name = "Retransmit flag", .camelName = "retransmitFlag", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
@@ -5841,7 +5841,7 @@ Pgn pgnList[] = {
       {.name = "Spare", .camelName = "spare7", .fieldType = "SPARE", .size = 1, .resolution = 1.0},
       {.name = "Number of Acknowledgments", .camelName = "numberOfAcknowledgments", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Destination ID", .camelName = "destinationId", .fieldType = "MMSI", .partOfPrimaryKey = true, .rangeMin = 2000000.0, .rangeMax = 999999999.0},
-      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1, .rangeMin = 0.0, .rangeMax = 3.0},
+      {.name = "Sequence Number", .camelName = "sequenceNumber", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0, .reservedOverride = 1},
       {.name = "Reserved", .camelName = "reserved11", .fieldType = "RESERVED", .size = 6, .resolution = 1.0}
      },
      .camelDescription = "aisAcknowledgeBinary",
@@ -5940,7 +5940,7 @@ Pgn pgnList[] = {
       {.name = "Source Selection Status", .camelName = "sourceSelectionStatus", .fieldType = "UNSIGNED_INTEGER", .size = 2, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "NAME Selection Criteria Mask", .camelName = "nameSelectionCriteriaMask", .fieldType = "BINARY", .size = 12, .resolution = 1.0},
-      {.name = "Source NAME", .camelName = "sourceName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Source NAME", .camelName = "sourceName", .fieldType = "ISO_NAME"},
       {.name = "PGN", .camelName = "pgn", .fieldType = "PGN", .size = 24, .rangeMin = 0.0, .rangeMax = 262143.0},
       {.name = "Data Source Instance Field Number", .camelName = "dataSourceInstanceFieldNumber", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Data Source Instance Value", .camelName = "dataSourceInstanceValue", .fieldType = "UINT8", .resolution = 1.0},
@@ -7618,7 +7618,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -8469,11 +8469,11 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Acknowledge Source Network ID NAME", .camelName = "acknowledgeSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Response Command", .camelName = "responseCommand", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupALERT_RESPONSE_COMMAND, .lookup.name = "ALERT_RESPONSE_COMMAND"},
       {.name = "Reserved", .camelName = "reserved15", .fieldType = "RESERVED", .size = 6, .resolution = 1.0}
      },
@@ -8529,7 +8529,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -8747,7 +8747,7 @@ Pgn pgnList[] = {
       {.name = "Alert System", .camelName = "alertSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Sub-System", .camelName = "alertSubSystem", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Data Source Network ID NAME", .camelName = "dataSourceNetworkIdName", .fieldType = "ISO_NAME"},
       {.name = "Data Source Instance", .camelName = "dataSourceInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Data Source Index-Source", .camelName = "dataSourceIndexSource", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Alert Occurrence Number", .camelName = "alertOccurrenceNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -9513,7 +9513,7 @@ Pgn pgnList[] = {
       {.name = "Source Address", .camelName = "sourceAddress", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Change Counter", .camelName = "changeCounter", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Source", .camelName = "source", .fieldType = "ISO_NAME", .rangeMin = 0.0, .rangeMax = 1.84467440737096e19},
+      {.name = "Source", .camelName = "source", .fieldType = "ISO_NAME"},
       {.name = "Reserved", .camelName = "reserved11", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "simnetDataSourceSelection",

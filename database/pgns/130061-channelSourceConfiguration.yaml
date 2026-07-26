@@ -24,8 +24,6 @@ fields:
 - id: sourceName
   name: Source NAME
   type: ISO_NAME
-  rangeMin: 0.0
-  rangeMax: 1.84467440737096e+19
 - id: pgn
   name: PGN
   type: PGN

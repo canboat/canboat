@@ -40,6 +40,30 @@ pub fn c_15g(value: f64) -> String {
     cfmt(b"%.15g\0", value)
 }
 
+/// `%g` style, but with the fewest significant digits that still round-trip
+/// to the same f64 (QUIRKS.md Q6).
+///
+/// Used only for `Resolution`. Plain `%g` gives 6 significant digits, which is
+/// lossy for the binary fractions resolutions actually are: `1/16384` printed
+/// as `6.10352e-05`, `2^-38` as `3.63798e-12`. That mattered historically —
+/// the bootstrap converter read these back out of the XML, so the truncated
+/// value became the stored one, and an explicit `rangeMax` had to be authored
+/// alongside to preserve a bound the truncated resolution no longer produced.
+///
+/// Deliberately keeps `%g`'s formatting (including its switch to exponent
+/// notation) rather than Rust's `{}`, so the document's number style stays
+/// uniform; only the digit count changes, and only where 6 digits would lose
+/// information. A value that already round-trips at 6 digits is untouched.
+pub fn c_g_roundtrip(value: f64) -> String {
+    for p in 1..=17 {
+        let s = cfmt(format!("%.{p}g\0").as_bytes(), value);
+        if s.parse::<f64>() == Ok(value) {
+            return s;
+        }
+    }
+    cfmt(b"%.17g\0", value)
+}
+
 /// Candidate replacement for %g: Rust's shortest round-trip formatting.
 /// Not used for the golden gate; `keel generate --float-style rust` emits
 /// with these so the delta against C %g can be audited (QUIRKS.md Q6).
