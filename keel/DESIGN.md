@@ -1,10 +1,12 @@
 # keel — design for the PGN database refactor
 
-Status: **implemented through migration step 5** (switchover done on the
-`refactor_pgn_database` branch): the YAML database is the source of truth,
-keel generates canboat.xml and the analyzer's C tables, analyzer-explain and
-the `-DEXPLAIN`/v1/macro-DSL machinery are deleted. Remaining: step 6 (the
-editor), the pre-merge cleanups in FINDINGS.md, and the QUIRKS.md review.
+Status: **all six migration steps implemented.** The YAML database is the
+source of truth, keel generates canboat.xml and the analyzer's C tables, the
+editor is live (`keel edit`), and analyzer-explain plus the
+`-DEXPLAIN`/v1/macro-DSL machinery are deleted. The one-shot bootstrap
+converter has served its purpose and is gone. Still open: the QUIRKS.md
+review (its "cleanup" entries are meant to land together in one deliberate
+post-switchover release, reviewed through `tools/contract.py`).
 
 `keel` is the tool that will own the CANboat PGN database: a set of YAML
 source files that replace `analyzer/pgn.h`, `analyzer/lookup.h` and
@@ -262,13 +264,13 @@ the YAML database feeds a Rust decoder without the canboat.json detour.
 Range arithmetic uses i128 before the final f64 conversion, which is what
 makes the derived ranges bit-exact against the C.
 
-One deliberate exception: the **bootstrap converter**
-(`canboat.xml` + `fieldtype.h` → `database/`) stays a small Python package
-in `keel/bootstrap/` (PyYAML, own venv, `keel-bootstrap` entry point). It
-is a one-shot migration tool that dies at switchover; until then it also
-re-syncs `database/` when master's `pgn.h` changes, and the Rust emitter
-agreeing byte-for-byte with the Python-written tree is itself a strong
-cross-language check.
+During the migration one deliberate exception existed: the **bootstrap
+converter** (`canboat.xml` + `fieldtype.h` → `database/`), a small Python
+package under `keel/bootstrap/`. It seeded the YAML tree and re-synced it
+while master still authored `pgn.h`, and the Rust emitter agreeing
+byte-for-byte with the Python-written tree was a strong cross-language
+check. With the switchover complete there is nothing left to convert *from*,
+so it has been deleted — keel is the only tool.
 
 ```
 keel check       load + validate everything, print rule violations, exit≠0 on any

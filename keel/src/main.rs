@@ -1,8 +1,8 @@
 //! keel - the CANboat PGN database tool. See DESIGN.md.
 //!
-//! Durable commands live here (Rust); the one-shot bootstrap converter
-//! (canboat.xml -> database/) lives in keel/bootstrap/ (Python) and dies at
-//! migration switchover.
+//! The database under database/ is the source of truth; keel validates it,
+//! generates the analyzer's C tables and canboat.xml, decodes sample frames
+//! and serves the editor.
 
 mod bits;
 mod cformat;
@@ -160,7 +160,7 @@ fn run() -> Result<i32, String> {
     let db_dir = root.join("database");
     if !db_dir.is_dir() {
         return Err(format!(
-            "no database/ tree at {} (run the bootstrap converter first)",
+            "no database/ tree at {} (wrong --root?)",
             db_dir.display()
         ));
     }

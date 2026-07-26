@@ -1,8 +1,9 @@
 //! database/ tree loader.
 //!
-//! The YAML writer lives in the Python bootstrap until `keel fmt` lands; this
-//! side only needs to *read* the canonical machine-written files (strict
-//! subset of YAML, PyYAML-safe styles).
+//! This side only *reads* the canonical files (a strict subset of YAML: block
+//! style, no folded plain scalars). Whole-file canonical writing is not
+//! implemented yet (`keel fmt`); the editor writes targeted block surgery
+//! instead, matching this style byte-for-byte.
 
 use std::fs;
 use std::path::Path;

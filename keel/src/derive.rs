@@ -6,8 +6,8 @@
 //!  - min()/max() macros are `x <= y ? x : y`; NaN comparisons are false, so
 //!    clamping a NaN yields the clamp value. Rust f64 comparisons behave
 //!    identically, so the direct translation matches.
-//!  - Range arithmetic runs in i128 before the final f64 conversion, exactly
-//!    like the (arbitrary-precision) Python bootstrap the golden test proved.
+//!  - Range arithmetic runs in i128 before the final f64 conversion, so the
+//!    derived ranges come out bit-exact against the C.
 //!
 //! The migration golden test (emitted XML == analyzer-explain output) is what
 //! proves this port correct across the whole database.

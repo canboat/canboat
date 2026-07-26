@@ -69,7 +69,7 @@ to the YAML under `database/`, checked by `keel check`, followed by
 | `database/fieldtypes.yaml` | **source** | The FieldType hierarchy (base types, resolutions, print-function names). |
 | `database/physicalquantities.yaml` | **source** | Physical quantities (units, URLs). |
 | `database/j1939/pgns/*.yaml` | **source** | Parallel PGN set for the J1939 build (`-DJ1939`); shares lookups + fieldtypes. |
-| `keel/` | **source** | The Rust tool that validates and generates; `keel/bootstrap/` (Python) is the migration-era converter, dies at final merge. |
+| `keel/` | **source** | The Rust tool that validates, generates, decodes and serves the editor. |
 | `analyzer/pgn.h` | **source** | Hand-written halves only: `struct Pgn`/`struct Field`, packet enums, ranges; `#include "pgn-data.h"`. |
 | `analyzer/lookup.h` | **generated** | X-macro enumeration stream, from `database/lookups/`. |
 | `analyzer/pgn-data.h`, `pgn-j1939-data.h`, `fieldtype-data.h`, `physicalquantity-data.h` | **generated** | The analyzer's data tables, from `database/`. |
