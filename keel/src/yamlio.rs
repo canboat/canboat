@@ -205,6 +205,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         proprietary: opt_bool(y, "proprietary").unwrap_or(false),
         allow_lookup_width_mismatch: opt_bool(y, "allowLookupWidthMismatch").unwrap_or(false),
         special_values: opt_i64(y, "specialValues").map(|s| s as u32),
+        bit_length_field: opt_str(y, "bitLengthField"),
         dynamic_field_length: opt_bool(y, "dynamicFieldLength").unwrap_or(false) || overhead != 0,
         dynamic_field_length_overhead: overhead,
         range_min: opt_f64(y, "rangeMin"),

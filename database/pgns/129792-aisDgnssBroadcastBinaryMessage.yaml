@@ -60,3 +60,4 @@ fields:
 - id: binaryData
   name: Binary Data
   type: BINARY
+  bitLengthField: numberOfBitsInBinaryDataField

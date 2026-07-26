@@ -58,6 +58,7 @@ fields:
 - id: binaryData
   name: Binary Data
   type: BINARY
+  bitLengthField: numberOfBitsInBinaryDataField
 notes: |-
   The following PGNs are taken from the field-name list in the NMEA Network Message Database
   Version 3.002, Appendix A/B. That document lists only field names, so the field lengths,

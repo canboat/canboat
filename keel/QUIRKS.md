@@ -67,9 +67,9 @@ constant, not a computed product: there is a single exact intended value, and
 |---|---|---|---|---|
 | Q10 | The tri-state `Bool` enum is `{Null=0, False=1, True=2}`, so C lowercase `false` aliased to **Null** and `true` to **False**. ISO_NAME's `.hasSign = false` was a live instance: almost certainly meant `False` (unsigned), but produced *no* `Signed` attribute at all | `fieldtype.h` enum + ISO_NAME initializer | `database/fieldtypes.yaml` | **done** — ISO_NAME now carries `signed: false` and emits `<Signed>false</Signed>` (and `.hasSign = False` in `fieldtype-data.h`). Contract-neutral: `Signed` is not part of the FieldType contract signature. Beware the second-order effect this surfaced — see Q11 |
 | Q11 | Fieldtype-level explicit `.rangeMin`/`.rangeMax` initializers (MMSI, FIELD_INDEX) never reach the XML: `fillFieldType`'s `rangeMax == 0.0` guard routes any explicit value to the NaN branch | `fieldtype.c:315` | `database/fieldtypes.yaml` + `emit_xml::Emitter::fieldtypes()` | **done** — initializers deleted. See the correction below: they were *suppressors*, not dead config |
-| Q12 | `min()`/`max()` macros are `x <= y ? x : y`: comparing NaN yields the *other* operand, so `fixupUnit()`'s rad clamp turns a NaN range into a concrete ±π bound. Whether any field currently exercises this is unverified — the port is faithful either way | `analyzer.h` macros + `fixupUnit()` | `derive.c_min()` / `c_max()` | keep (semantics), audit later |
-| Q13 | A match field's `<Description>` is derived by scanning the lookup for the match value; when the lookup names no such value the element would be emitted *empty*. Also relies on calling a fieldtype-lookup enumerator through the pair-enumerator union member (works by ABI accident in C) | `explainPGNXML` + `filterPair()` | `emit_xml.match_description()` (implemented safely) | keep behavior; the C union pun dies with analyzer-explain.c at switchover |
-| Q14 | `BitLengthField` (pointing at the length field of a variable BINARY field) is hardcoded to `order - 1` and only for fields whose *specific* type name is `BINARY` — not driven by any declared relationship | `explainPGNXML` | `emit_xml::Emitter::field()` | **guarded** — rule **R15** now asserts the preceding field really is an unscaled integer bit count (all 8 instances pass; verified it trips when broken). It cannot catch a pointer at the *wrong* integer — an explicit authored reference, like `dynamicFieldLength`, is still the real fix |
+| Q12 | `min()`/`max()` macros are `x <= y ? x : y`: comparing NaN yields the *other* operand, so `fixupUnit()`'s rad clamp would turn a NaN range into a concrete ±π bound | `analyzer.h` macros + `fixupUnit()` | `derive::c_min()` / `c_max()` | **keep — audited 2026-07-26, the NaN branch is unexercised.** Reaching it needs a rad field whose fieldtype has `hasSign == Null`; all **76** rad fields carry an explicit `Signed` (4 FLOAT signed, 51 NUMBER unsigned, 21 NUMBER signed), so every emitted ±π/2π bound is a genuine clamp of a wider computed range — the FLOAT ones clamp down from FLT_MAX. The port stays faithful either way; re-check if a rad field is ever added on a sign-less type |
+| Q13 | A match field's `<Description>` is derived by scanning the lookup for the match value; when the lookup names no such value the element would be emitted *empty*. The C also called a fieldtype-lookup enumerator through the pair-enumerator union member, which worked by ABI accident | `explainPGNXML` + `filterPair()` | `emit_xml::Emitter::match_description()` | **keep** (the empty-description behaviour) — **the union pun is gone**: verified 2026-07-26 that `analyzer/analyzer-explain.c` no longer exists and no `filterPair` remains anywhere in the C. keel's port never punned; it resolves the enumerator by kind |
+| Q14 | `BitLengthField` (pointing at the length field of a variable BINARY field) was hardcoded to `order - 1` and only for fields whose *specific* type name is `BINARY` — not driven by any declared relationship | `explainPGNXML` | `bitLengthField:` in the YAML + `derive` + `emit_xml::Emitter::field()` | **done** — the reference is authored: `bitLengthField: <id>` on the 8 variable-length BINARY fields, resolved to an order by derive. Rule **R15** now validates the reference itself (present on exactly the variable-length BINARY fields, resolvable, positioned earlier, an unscaled integer bit count) — all four failure modes verified to trip. This closes the gap the earlier heuristic could not: a reference to the *wrong* integer is now impossible to express silently. Artifacts byte-identical |
 | Q15 | An unknown transmission interval (C `interval == 0`) *silently adds* `Interval` to `<Missing>`; the authored YAML therefore never stores that entry (`model.missing_effective()`) | `fieldtype.c:486` | derived, by design | keep — this is derivation, not a defect |
 | Q16 | Lookup fields whose type has `hasSign == Null` (e.g. BITLOOKUP) get NaN ranges, then a *fallback* emission branch prints `RangeMin 0` / `RangeMax 2^bits-1` anyway | `explainPGNXML` range else-branches | `emit_xml.Emitter.field()` | keep |
 | Q17 | `fixupUnit()` SI branch clamped `rad` field ranges to ±π (signed) / 2π (unsigned) with the magic literal `3.1415926` (not M_PI) | `fieldtype.c fixupUnit()` | `derive::fixup_unit()` + `common.h`'s `Pi` | **done** — keel uses `std::f64::consts::PI` (moved 101 emitted bounds in the 8th significant digit; contract-neutral). The project had **three** different πs: this `3.1415926`, `common.h`'s `Pi (3.141592654)` driving `RadianToDegree`, and `2 * Pi / 65536` baked into two 126720 resolutions. All now resolve to the one full-precision value — `common.h` defines `Pi (3.141592653589793)` (spelled out, since `M_PI` is not standard C and needs `_USE_MATH_DEFINES` on MSVC) and `fieldtype.c`'s clamp uses it, so the C runtime and keel finally agree. Don't reintroduce a local approximation |
@@ -134,21 +134,24 @@ authored data or a C-side inconsistency:
   resolution fix) the true number is **18**. The great majority of the ranges
   that merely *differ* from the derived value are genuine bounds, not precision
   artifacts.
-- **32 fields carry `specialValues`** (the `SPECIAL_VALUES()` overrides) —
-  audited 2026-07-26. All 32 emit `.reservedOverride` into `pgn-data.h`, but
-  only 9 do anything observable:
-  - **8 encode a count that differs from `reservedCountForSize()`**, all saying
-    "no special values, every raw value is valid": `Device Instance Lower`
-    (3 bits, auto 1 → 0), `Device Instance Upper` (5 bits, auto 2 → 0),
-    `Sequence Number` (2 bits, auto 1 → 0). Removing these would change how
-    many top-of-range values the runtime treats as special.
-  - **1 more, `129541 rootOfSemiMajorAxis`**, restates the auto count (3) yet
-    is still load-bearing: dropping it loses the field's whole sentinel triple
-    from the XML. Worth understanding before touching — the sentinel gate in
-    `emit_xml` gets there through `reserved_count` *and* a non-NaN range, so
-    presence appears to matter independently of value.
-  - The remaining 23 restate the auto count and change neither the XML nor the
-    C behaviour. Cosmetically removable; no reason to hurry.
+- **`specialValues` — audited and pruned 2026-07-26.** Was 32 fields; now **8**.
+  All 32 emitted `.reservedOverride` into `pgn-data.h`, but only the 8 whose
+  count differs from `reservedCountForSize()` do anything: `Device Instance
+  Lower` (3 bits, auto 1 -> 0), `Device Instance Upper` (5 bits, auto 2 -> 0)
+  and `Sequence Number` (2 bits, auto 1 -> 0), each appearing in several PGNs —
+  all saying "no special values, every raw value is valid". The other 24 merely
+  restated the auto count and have been deleted; `canboat.xml` and
+  `canboat.json` are byte-identical across the removal, and the only change to
+  `pgn-data.h` is the 24 dropped clauses.
+
+  Worth noting how this moved: an earlier pass found `129541
+  rootOfSemiMajorAxis` load-bearing *despite* matching the auto count — dropping
+  it lost the field's whole sentinel triple. The Q6 resolution fix (exact
+  `POW2NEG(11)`, and the redundant authored range deleted with it) changed that
+  derivation path, so it now derives its sentinels without help and could be
+  pruned with the rest. Sentinels verified still present: 16777215 / 16777214 /
+  16777213.
+
 - ~~`database/lookups.order.yaml` preserves lookup.h definition order purely
   for the golden byte-diff; **dies at switchover** in favor of sorted order~~
   **done (2026-07-26)** — retired. `Database::ordered_lookups()` now sorts by

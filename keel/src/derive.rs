@@ -328,6 +328,19 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             f.order = order;
         }
 
+        // Resolve bitLengthField to the referenced field's order. R15 has the
+        // diagnostics; an unresolvable id simply emits nothing here.
+        let by_id: std::collections::HashMap<&str, u32> =
+            pgn.fields.iter().map(|f| (f.id.as_str(), f.order)).collect();
+        let resolved: Vec<Option<u32>> = pgn
+            .fields
+            .iter()
+            .map(|f| f.bit_length_field.as_deref().and_then(|id| by_id.get(id).copied()))
+            .collect();
+        for (f, order) in pgn.fields.iter_mut().zip(resolved) {
+            f.bit_length_field_order = order;
+        }
+
         fill_pgn_length(pgn)?;
     }
     if marine {

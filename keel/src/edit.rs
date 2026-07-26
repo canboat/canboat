@@ -299,7 +299,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .map(|f| {
             let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
             format!(
-                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
                 js(&f.id),
                 js(&f.name),
                 js(&f.type_),
@@ -318,6 +318,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 f.special_values.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
                 f.range_min.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
                 f.range_max.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
+                opt_s(&f.bit_length_field),
                 f.allow_lookup_width_mismatch,
                 f.primary_key,
             )

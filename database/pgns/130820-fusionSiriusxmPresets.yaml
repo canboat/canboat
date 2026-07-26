@@ -41,6 +41,7 @@ fields:
 - id: values
   name: Values
   type: BINARY
+  bitLengthField: count
   description: Preset Values. There will be Count / 4 presets stored
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,10,255,10,a3,99,2c,80,04,04,64,00,00,00"  # from fusion-130820.log
