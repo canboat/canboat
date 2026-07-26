@@ -133,12 +133,12 @@ void fixupUnit(Field *f)
     {
       if (f->hasSign)
       {
-        f->rangeMin = max(f->rangeMin, -3.1415926);
-        f->rangeMax = min(f->rangeMax, 3.1415926);
+        f->rangeMin = max(f->rangeMin, -Pi);
+        f->rangeMax = min(f->rangeMax, Pi);
       }
       else
       {
-        f->rangeMax = min(f->rangeMax, 2 * 3.1415926);
+        f->rangeMax = min(f->rangeMax, 2 * Pi);
       }
     }
 

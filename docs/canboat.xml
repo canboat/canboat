@@ -21420,7 +21420,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
-          <Resolution>9.58737992553711e-05</Resolution>
+          <Resolution>9.587379924285257e-05</Resolution>
           <Signed>false</Signed>
           <RangeMax>6.28318530717959</RangeMax>
           <FieldType>NUMBER</FieldType>
@@ -21583,7 +21583,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
-          <Resolution>9.58737992553711e-05</Resolution>
+          <Resolution>9.587379924285257e-05</Resolution>
           <Signed>false</Signed>
           <RangeMax>6.28318530717959</RangeMax>
           <FieldType>NUMBER</FieldType>

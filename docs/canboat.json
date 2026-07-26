@@ -21986,7 +21986,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Unit":"rad",
-            "Resolution":9.58737992553711e-05,
+            "Resolution":9.587379924285257e-05,
             "Signed":false,
             "RangeMax":6.28318530717959,
             "FieldType":"NUMBER"
@@ -22145,7 +22145,7 @@
             "BitOffset":72,
             "BitStart":0,
             "Unit":"rad",
-            "Resolution":9.58737992553711e-05,
+            "Resolution":9.587379924285257e-05,
             "Signed":false,
             "RangeMax":6.28318530717959,
             "FieldType":"NUMBER"
