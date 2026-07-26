@@ -976,6 +976,7 @@
   bits: 64
   resolution: 1.0
   print: fieldPrintName
+  signed: false
 - name: POWER_FACTOR_UFIX16
   base: UFIX16
   description: Power Factor
@@ -1074,8 +1075,6 @@
   bits: 32
   resolution: 1.0
   print: fieldPrintMMSI
-  rangeMin: 2000000.0
-  rangeMax: 999999999.0
   signed: false
 - name: VARIABLE
   description: Variable
@@ -1089,6 +1088,4 @@
   resolution: 1.0
   sentinels: TopOfRange
   print: fieldPrintNumber
-  rangeMin: 0.0
-  rangeMax: 252.0
   signed: false

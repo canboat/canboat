@@ -1160,6 +1160,7 @@ FieldType fieldTypeList[] = {
      .encodingDescription = "A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.",
      .size = 64,
      .resolution = 1.0,
+     .hasSign = False,
      .pf = fieldPrintName},
 
     {.name = "POWER_FACTOR_UFIX16",
@@ -1274,9 +1275,7 @@ FieldType fieldTypeList[] = {
      .size = 32,
      .resolution = 1.0,
      .hasSign = False,
-     .pf = fieldPrintMMSI,
-     .rangeMin = 2000000.0,
-     .rangeMax = 999999999.0},
+     .pf = fieldPrintMMSI},
 
     {.name = "VARIABLE",
      .description = "Variable",
@@ -1291,8 +1290,6 @@ FieldType fieldTypeList[] = {
      .resolution = 1.0,
      .hasSign = False,
      .sentinels = SENTINEL_TOP_OF_RANGE,
-     .pf = fieldPrintNumber,
-     .rangeMin = 0.0,
-     .rangeMax = 252.0},
+     .pf = fieldPrintNumber},
 
 };

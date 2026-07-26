@@ -431,21 +431,6 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
         db.lookups.insert(lk.name.clone(), lk);
     }
 
-    let order_doc = load_file(&db_dir.join("lookups.order.yaml"))?;
-    if let Yaml::Hash(h) = &order_doc {
-        for (k, v) in h {
-            let kind = k.as_str().unwrap_or_default().to_string();
-            let names = match v {
-                Yaml::Array(a) => a
-                    .iter()
-                    .filter_map(|n| n.as_str().map(String::from))
-                    .collect(),
-                _ => Vec::new(),
-            };
-            db.lookup_order.insert(kind, names);
-        }
-    }
-
     for path in sorted_yaml_files(&db_dir.join("pgns"))? {
         let doc = load_file(&path)?;
         db.pgns.push(pgn(&doc, &path.display().to_string())?);

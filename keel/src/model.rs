@@ -241,7 +241,6 @@ pub struct Database {
     pub fieldtypes: Vec<FieldType>,
     pub ft_index: HashMap<String, usize>,
     pub lookups: HashMap<String, Lookup>,
-    pub lookup_order: HashMap<String, Vec<String>>, // kind -> names, emission order
     pub pgns: Vec<Pgn>,
     /// The parallel J1939 list (pgn-j1939.h); shares every other section.
     pub pgns_j1939: Vec<Pgn>,
@@ -287,29 +286,20 @@ impl Database {
         }
     }
 
+    /// Enumerations of `kind`, sorted by name.
+    ///
+    /// Emission order used to be pinned by `database/lookups.order.yaml`, a
+    /// manifest that existed only to reproduce lookup.h's hand-authored
+    /// definition order for the migration's byte-diff gate. That gate is
+    /// retired, so order is now simply alphabetical: derivable, stable, and
+    /// one less file to keep in step when an enumeration is added.
     pub fn ordered_lookups(&self, kind: &str) -> Vec<&Lookup> {
-        let mut out: Vec<&Lookup> = Vec::new();
-        let mut seen = std::collections::HashSet::new();
-        if let Some(names) = self.lookup_order.get(kind) {
-            for n in names {
-                if let Some(lk) = self.lookups.get(n) {
-                    out.push(lk);
-                    seen.insert(n.as_str());
-                }
-            }
-        }
-        // Append any enumeration of this kind that the order file does not
-        // pin, sorted by name for determinism. Membership follows the actual
-        // lookup set, so a newly-added enum is never silently dropped from
-        // lookup.h while pgn-data.h still references it (which fails the C
-        // build); the order file only *reorders* what already exists.
-        let mut extra: Vec<&Lookup> = self
+        let mut out: Vec<&Lookup> = self
             .lookups
             .values()
-            .filter(|lk| lk.kind == kind && !seen.contains(lk.name.as_str()))
+            .filter(|lk| lk.kind == kind)
             .collect();
-        extra.sort_by(|a, b| a.name.cmp(&b.name));
-        out.extend(extra);
+        out.sort_by(|a, b| a.name.cmp(&b.name));
         out
     }
 }
