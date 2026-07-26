@@ -20,11 +20,6 @@ pub use canboat::Reassembler
 pub use canboat::ReassemblyError
 pub use canboat::SCHEMA_HASH
 pub use canboat::Units
-pub mod canboat::bridge
-pub use canboat::bridge::Bridge
-pub use canboat::bridge::BridgeConfig
-pub use canboat::bridge::Quirk
-pub use canboat::bridge::Transmitter
 pub mod canboat::bus
 pub use canboat::bus::DeviceHandle
 pub use canboat::bus::DeviceWriterGone
@@ -32,14 +27,6 @@ pub use canboat::bus::FrameSender
 pub fn canboat::bus::open_ikonvert(&str, u32) -> core::io::error::Result<canboat_io::device::DeviceHandle>
 pub fn canboat::bus::open_ngt1(&str, u32) -> core::io::error::Result<canboat_io::device::DeviceHandle>
 pub fn canboat::bus::open_socketcan(&str, u8) -> core::io::error::Result<canboat_io::device::DeviceHandle>
-pub mod canboat::device
-pub use canboat::device::ClaimState
-pub use canboat::device::Claimer
-pub use canboat::device::Name
-pub use canboat::device::ProductInfo
-pub use canboat::device::heartbeat_frame
-pub use canboat::device::iso_ack_frame
-pub use canboat::device::pgn_list_frames
 pub mod canboat::ids
 pub use canboat::ids::field
 pub use canboat::ids::pgn
@@ -74,14 +61,3 @@ pub use canboat::schema::LookupTable
 pub use canboat::schema::LookupValue
 pub use canboat::schema::PacketType
 pub use canboat::schema::PgnInfo
-pub mod canboat::wire
-pub use canboat::wire::FrameError
-pub use canboat::wire::Hello
-pub use canboat::wire::HelloError
-pub use canboat::wire::MAX_FRAME_LEN
-pub use canboat::wire::PgnIndex
-pub use canboat::wire::WirePgn
-pub use canboat::wire::append_frame
-pub use canboat::wire::decode_frame
-pub use canboat::wire::pgn_id_hash
-pub use canboat::wire::try_read_frame

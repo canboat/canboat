@@ -39,7 +39,6 @@
 //! | 2601 | `--ais-port`            | out | AIS snapshot, then close |
 //! | 2602 | *(reserved)*            | —   | future status stream (n2kd `port+5`) |
 //! | 2603 | `--raw-port`            | out | raw frame output stream |
-//! | 2604 | `--analyzer-binary-port`| out | binary `WirePgn` stream |
 //! | 2605 | `--nmea0183-filter-port`| **i/o** | PGN 262657 filter control (with `--nmea0183-filter`) |
 //!
 //! The lone exception to "every output is read-only" is 2605: the
@@ -232,8 +231,7 @@ pub struct Args {
     /// canboat PLAIN/FAST lines that are injected onto the bus
     /// (device mode only); nothing is streamed back, so it never
     /// forces JSON/CSV serialization. This is the cheap write path for
-    /// a consumer that reads its data on another port (e.g. the
-    /// analyzer-binary stream). `0` disables.
+    /// a consumer that reads its data on another port. `0` disables.
     #[arg(long, default_value_t = 2600)]
     input_port: u16,
 
@@ -254,18 +252,6 @@ pub struct Args {
     /// `n2kd`'s `port+4` AIS port. `0` disables.
     #[arg(long, default_value_t = 2601)]
     ais_port: u16,
-
-    /// Port for the read-only binary analyzer stream: each decoded PGN
-    /// as a length-prefixed postcard `WirePgn` (see the canboat-wire
-    /// crate), preceded by a one-shot `Hello` handshake carrying the
-    /// schema hash. Far cheaper for a Rust consumer than parsing the
-    /// analyzer JSON — no field re-serialization here, no JSON parse
-    /// there — but the client MUST link an identical schema. Lazy:
-    /// nothing is encoded when no client is subscribed, so it's cheap
-    /// to leave on. Canonical slot 2604 (after the reserved status
-    /// slot at 2602 and the raw output stream at 2603). `0` disables.
-    #[arg(long, default_value_t = 2604)]
-    analyzer_binary_port: u16,
 
     /// Also write NMEA 0183 sentences (including AIVDM) to stdout —
     /// mirrors canboat C `n2kd`'s `--nmea0183` flag. Off by default,
@@ -310,7 +296,7 @@ pub struct Args {
     /// socket. Kept off the read-only analyzer stream so no other
     /// consumer ever sees the control PGN. Only opened when
     /// `--nmea0183-filter` is set (there's nothing to control otherwise);
-    /// `0` disables. Slot 2605, after the binary analyzer stream.
+    /// `0` disables. Slot 2605.
     #[arg(long, default_value_t = 2605)]
     nmea0183_filter_port: u16,
 
@@ -378,7 +364,6 @@ pub struct BridgeConfig {
     pub input_port: u16,
     pub raw_port: u16,
     pub ais_port: u16,
-    pub analyzer_binary_port: u16,
     pub nmea0183_stdout: bool,
     pub no_nmea0183_rate_limit: bool,
     pub nmea0183_filter: Option<PathBuf>,
@@ -422,7 +407,6 @@ impl Default for BridgeConfig {
             input_port: 2600,
             raw_port: 2603,
             ais_port: 2601,
-            analyzer_binary_port: 2604,
             nmea0183_stdout: false,
             no_nmea0183_rate_limit: false,
             nmea0183_filter: None,
@@ -463,7 +447,6 @@ impl From<Args> for BridgeConfig {
             input_port: a.input_port,
             raw_port: a.raw_port,
             ais_port: a.ais_port,
-            analyzer_binary_port: a.analyzer_binary_port,
             nmea0183_stdout: a.nmea0183_stdout,
             no_nmea0183_rate_limit: a.no_nmea0183_rate_limit,
             nmea0183_filter: a.nmea0183_filter,

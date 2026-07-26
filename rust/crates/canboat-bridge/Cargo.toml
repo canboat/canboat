@@ -20,7 +20,6 @@ cli = ["dep:clap", "dep:canboat-cli", "dep:env_logger"]
 [dependencies]
 canboat-core = { workspace = true }
 canboat-io   = { workspace = true }
-canboat-wire = { workspace = true }
 anyhow       = { workspace = true }
 serde        = { workspace = true }
 serde_json   = { workspace = true, features = ["preserve_order"] }

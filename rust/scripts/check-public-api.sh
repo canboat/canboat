@@ -25,8 +25,8 @@ mkdir -p "$OUT_DIR"
 # the binary is not part of the public library contract.
 FEATURESETS=(
     "decode"
-    "decode,io,wire,nmea0183,ais"
-    "decode,io,wire,node,bridge,nmea0183,ais"
+    "decode,io,nmea0183,ais"
+    "decode,io,node,bridge,nmea0183,ais"
 )
 
 if ! cargo public-api --version >/dev/null 2>&1; then

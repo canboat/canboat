@@ -7,7 +7,6 @@ members = [
     "crates/canboat-tokio",
     "crates/canboat-cli",
     "crates/canboat",
-    "crates/canboat-wire",
     "crates/canboat-bridge",
 ]
 
@@ -24,7 +23,6 @@ canboat-schema = { path = "crates/canboat-schema", version = "7.1.0" } # x-relea
 canboat-core   = { path = "crates/canboat-core",   version = "7.1.0" } # x-release-please-version
 canboat-io     = { path = "crates/canboat-io",     version = "7.1.0" } # x-release-please-version
 canboat-cli    = { path = "crates/canboat-cli",    version = "7.1.0" } # x-release-please-version
-canboat-wire   = { path = "crates/canboat-wire",   version = "7.1.0" } # x-release-please-version
 canboat-bridge = { path = "crates/canboat-bridge", version = "7.1.0" } # x-release-please-version
 
 serde      = { version = "1", features = ["derive"] }
