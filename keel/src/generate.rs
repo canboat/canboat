@@ -13,12 +13,11 @@ pub fn emit_artifacts(
     root: &Path,
     db: &Database,
     authored_fieldtypes: &[FieldType],
-    style: emit_xml::FloatStyle,
 ) -> Vec<(PathBuf, String)> {
     vec![
         (
             root.join("docs/canboat.xml"),
-            emit_xml::emit_xml(db, "normal", style),
+            emit_xml::emit_xml(db, "normal"),
         ),
         (root.join("analyzer/lookup.h"), emit_c::emit_lookup_h(db)),
         (

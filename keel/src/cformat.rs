@@ -54,8 +54,15 @@ pub fn c_15g(value: f64) -> String {
 /// notation) rather than Rust's `{}`, so the document's number style stays
 /// uniform; only the digit count changes, and only where 6 digits would lose
 /// information. A value that already round-trips at 6 digits is untouched.
+///
+/// The search starts at 6 — `%g`'s own precision — and only ever *adds*
+/// digits. Searching from 1 would "shorten" values that `%g` already prints
+/// exactly: `10` round-trips as `1e+01`, `60` as `6e+01`, so a
+/// fewest-digits-wins rule silently rewrites clean integers into exponent
+/// notation. Never printing less than `%g` keeps this strictly a
+/// precision-recovery function.
 pub fn c_g_roundtrip(value: f64) -> String {
-    for p in 1..=17 {
+    for p in 6..=17 {
         let s = cfmt(format!("%.{p}g\0").as_bytes(), value);
         if s.parse::<f64>() == Ok(value) {
             return s;
@@ -64,22 +71,31 @@ pub fn c_g_roundtrip(value: f64) -> String {
     cfmt(b"%.17g\0", value)
 }
 
-/// Candidate replacement for %g: Rust's shortest round-trip formatting.
-/// Not used for the golden gate; `keel generate --float-style rust` emits
-/// with these so the delta against C %g can be audited (QUIRKS.md Q6).
-/// Differences: full precision instead of 6/15 significant digits, and no
-/// automatic switch to exponent notation.
-pub fn rust_g(value: f64) -> String {
-    format!("{}", value)
+#[cfg(test)]
+mod roundtrip_tests {
+    use super::*;
+
+    #[test]
+    fn never_shortens_what_g_prints_exactly() {
+        // %g already round-trips these; the output must be byte-identical.
+        for v in [10.0, 60.0, 100.0, 500.0, 1000.0, 2000.0, 4096.0, 36.0, 864.0, 0.01, 0.1, 1.0] {
+            assert_eq!(c_g_roundtrip(v), c_g(v), "{v} must match plain %g");
+        }
+    }
+
+    #[test]
+    fn lengthens_only_where_g_loses_information() {
+        // Binary fractions %g truncates: recovered in full, exponent style kept.
+        assert_eq!(c_g_roundtrip(1.0 / 16384.0), "6.103515625e-05");
+        assert_eq!(c_g_roundtrip(2f64.powi(-38)), "3.637978807091713e-12");
+        assert_eq!(c_g_roundtrip(2f64.powi(-11)), "0.00048828125");
+        // and every result must parse back to the exact input
+        for v in [1.0 / 16384.0, 1.0 / 11.0, 2f64.powi(-23), 2.0 * 3.141592654 / 65536.0] {
+            assert_eq!(c_g_roundtrip(v).parse::<f64>().unwrap(), v);
+        }
+    }
 }
 
-pub fn rust_15g(value: f64) -> String {
-    format!("{}", value)
-}
-
-/// Port of printXML(): escapes & < > " -- and deliberately NOT the
-/// apostrophe, even though lookup attribute values are single-quoted
-/// (QUIRKS.md Q3). The & replacement must run first.
 /// Escape text for XML element content or a double-quoted attribute value.
 ///
 /// Every attribute keel emits is double-quoted, so `"` is the only quote that

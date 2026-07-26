@@ -4,7 +4,7 @@
 //! Every deliberate oddity reproduced here is cataloged in QUIRKS.md (Q1-Q19);
 //! the golden byte-diff against analyzer-explain output guards them all.
 
-use crate::cformat::{c_15g, c_g, c_g_roundtrip, rust_15g, rust_g, xml_escape};
+use crate::cformat::{c_15g, c_g_roundtrip, xml_escape};
 use crate::model::{ACTISENSE_BEM, Database, Field, IKONVERT_BEM, Interval, Pgn};
 
 // NB: no `\`-line-continuations here - they strip the next line's leading
@@ -31,49 +31,29 @@ fn copyright(version: &str) -> String {
     )
 }
 
-/// Which float formatter to use: C (%g via snprintf, golden-compatible) or
-/// Rust's shortest round-trip formatting (candidate replacement, QUIRKS Q6).
-#[derive(Clone, Copy, PartialEq)]
-pub enum FloatStyle {
-    C,
-    Rust,
-}
-
 pub struct Emitter<'a> {
     db: &'a Database,
     out: String,
-    style: FloatStyle,
 }
 
 impl<'a> Emitter<'a> {
-    pub fn new(db: &'a Database, style: FloatStyle) -> Self {
+    pub fn new(db: &'a Database) -> Self {
         Emitter {
             db,
             out: String::with_capacity(4 << 20),
-            style,
         }
     }
 
-    fn g(&self, v: f64) -> String {
-        match self.style {
-            FloatStyle::C => c_g(v),
-            FloatStyle::Rust => rust_g(v),
-        }
-    }
-
+    /// Ranges and the like: C `%.15g`. Lossy in the last bits, deliberately so
+    /// - these are computed products and 15 digits absorbs the multiply's
+    /// noise (QUIRKS Q6, "the other half").
     fn g15(&self, v: f64) -> String {
-        match self.style {
-            FloatStyle::C => c_15g(v),
-            FloatStyle::Rust => rust_15g(v),
-        }
+        c_15g(v)
     }
 
-    /// Resolution only: %g style at whatever digit count round-trips (Q6).
+    /// Resolution only: `%g` style at whatever digit count round-trips (Q6).
     fn gres(&self, v: f64) -> String {
-        match self.style {
-            FloatStyle::C => c_g_roundtrip(v),
-            FloatStyle::Rust => rust_g(v),
-        }
+        c_g_roundtrip(v)
     }
 
     fn p(&mut self, text: &str) {
@@ -653,6 +633,6 @@ impl<'a> Emitter<'a> {
     }
 }
 
-pub fn emit_xml(db: &Database, which: &str, style: FloatStyle) -> String {
-    Emitter::new(db, style).emit(which)
+pub fn emit_xml(db: &Database, which: &str) -> String {
+    Emitter::new(db).emit(which)
 }

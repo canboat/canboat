@@ -32,7 +32,31 @@ output. Those entries became ordinary database edits reviewed through
 | Q3 | `printXML()` escaped `& < > "` but **not** the apostrophe — yet the lookup sections put names in single-quoted attributes (`Name='...'`), so a lookup name containing `'` would have produced malformed XML | `printXML()` | `cformat::xml_escape()` | **done** via Q5 — with every attribute double-quoted, `"` (already escaped) is the only quote that can break one. The interim "validator rule forbidding `'` in names" this entry proposed was never written and is no longer needed |
 | Q4 | The `FieldTypes` and `PhysicalQuantities` sections were emitted with raw `printf` — no XML escaping at all. Safe only because no current text contains `& < >` | `explainFieldTypesXML`, `explainPhysicalQuantityXML` | `emit_xml::Emitter::fieldtypes()` / `physical_quantities()` | **done** — both sections now route every name, element text and unit through `xml_escape()`. Byte-identical today (0 instances); the hazard is retired rather than deferred |
 | Q5 | Attribute quoting was inconsistent: lookup sections used single quotes, `FieldType`/`PhysicalQuantity`/`MissingAttribute` double quotes | different printf authors | `emit_xml` lookup sections + `enum_fieldtype()` | **done** — every attribute keel emits is double-quoted. This also retires Q3: `"` was already escaped, and `'` needs no escaping inside a double-quoted attribute |
-| Q6 | Floats print as C `%g` (6 significant digits) / `%.15g`. Notably lossy for resolutions: `1/16384` printed as `6.10352e-05`, `2^-38` as `3.63798e-12` | all float printfs | `cformat::c_g()` / `c_15g()`; **`c_g_roundtrip()` for Resolution** | **Resolution done** (2026-07-26); rest **keep**. `<Resolution>` and the `EnumFieldType Resolution=` attribute now print at the fewest significant digits that round-trip, keeping `%g`'s exponent style. This was a real defect, not cosmetics: the old XML printed Resolution with `%g` but `RangeMax` with `%.15g`, so the bootstrap converter stored a **truncated resolution** (28 of them, rel. err up to 2.4e-6) plus a compensating explicit `rangeMax`. The exact values were recovered from the pre-switchover `pgn.h` (`1 / 16384.`, `POW2NEG(n)`, `2 * Pi / 65536`). Contract: minor (22 fields' decode moves in the 7th significant digit). A wholesale switch to Rust float formatting remains a net loss — audited 2026-07: 266 lines of float noise like `6553.200000000001` |
+| Q6 | Floats print as C `%g` (6 significant digits) / `%.15g`. Notably lossy for resolutions: `1/16384` printed as `6.10352e-05`, `2^-38` as `3.63798e-12` | all float printfs | `cformat::c_g_roundtrip()` for Resolution, `c_15g()` for ranges | **Resolution done** (2026-07-26); rest **keep**. `<Resolution>` and the `EnumFieldType Resolution=` attribute now print at the fewest significant digits that round-trip, keeping `%g`'s exponent style. This was a real defect, not cosmetics: the old XML printed Resolution with `%g` but `RangeMax` with `%.15g`, so the bootstrap converter stored a **truncated resolution** (28 of them, rel. err up to 2.4e-6) plus a compensating explicit `rangeMax`. The exact values were recovered from the pre-switchover `pgn.h` (`1 / 16384.`, `POW2NEG(n)`, `2 * Pi / 65536`). Contract: minor (22 fields' decode moves in the 7th significant digit). The `--float-style c|rust` audit flag that existed to measure a wholesale switch has been **removed** now that Q6 is settled — it only ever emitted deliberately-worse artifacts (see "the other half" below) |
+### Q6, the other half: RangeMin/RangeMax stay on `%.15g`
+
+Measured 2026-07-26 by pointing `c_g_roundtrip` at the four range sites too.
+882 lines move, 50 distinct transitions, and **both** halves are a regression:
+
+- **21 transitions are cosmetic damage.** Round-trip picks the shortest
+  representation, so clean integers become exponent notation: `RangeMin -90` →
+  `-9e+01`, `RangeMax 180` → `1.8e+02`, `16380` → `1.638e+04`. (This same trap
+  bit the Resolution change first — `10` came out as `1e+01` — which is why
+  `c_g_roundtrip` now starts its search at `%g`'s own 6 digits and only ever
+  *adds* digits. Two tests in `cformat` pin that.)
+- **29 transitions expose float dirt that `%.15g` was usefully hiding.**
+  `RangeMax 6553.2` → `6553.200000000001`, `RangeMin -3276.7` →
+  `-3276.7000000000003`, `-838.8607` → `-838.8607000000001`. These bounds are
+  computed as `raw * resolution`; the product is not the clean decimal a reader
+  expects, and 15 digits rounds it back to the intended value.
+
+So the 2026-07 verdict stands, now with a specific reason rather than a general
+one: `%.15g` is the right formatter for ranges. It is lossy only in the last
+couple of bits, and that lossiness is *load-bearing* — it absorbs the noise of
+a floating-point multiply. Resolution was different because it is an authored
+constant, not a computed product: there is a single exact intended value, and
+6 digits could not express it.
+
 | Q7 | `RangeMax` of an unsigned 64-bit resolution-1 field prints as the integer `18446744073709551615` instead of `%.15g` (which would print `1.84467440737096e+19`) | `explainPGNXML` special case | `emit_xml.Emitter.field()` | keep (it is the *more* correct output) |
 | Q8 | The `<Copyright>` element and the leading XML comment embed the license with a trailing blank line before the closing tag | `printf("  <Copyright>" COPYRIGHT "\n</Copyright>\n")` | `emit_xml.header()` | keep |
 | Q9 | The Actisense/iKonvert BEM documents carried the `canboat.xsl` stylesheet PI although no stylesheet ships for them and the sections it styles are absent | `explainXML()` shares one header path | `emit_xml::Emitter::header(styled)` | **done** — the PI is emitted for the main and J1939 documents only. The rest of the header (SchemaVersion/Version/Copyright) is kept: it identifies the document |

@@ -24,7 +24,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-use emit_xml::FloatStyle;
 
 // Die silently on SIGPIPE (keel explain | head) instead of a Rust panic.
 // Unix only: Windows has no SIGPIPE and no libc `signal` to link against.
@@ -67,7 +66,6 @@ struct Args {
     check: bool,
     port: Option<u16>,
     diff: Option<String>,
-    float_style: FloatStyle,
     which: String,
     root: PathBuf,
     per_pgn: usize,
@@ -80,7 +78,6 @@ fn parse_args() -> Result<Args, String> {
         check: false,
         port: None,
         diff: None,
-        float_style: FloatStyle::C,
         which: "normal".into(),
         root: PathBuf::from("."),
         per_pgn: 3,
@@ -108,20 +105,13 @@ fn parse_args() -> Result<Args, String> {
             }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
             "--which" => args.which = it.next().ok_or("--which needs normal|actisense|ikonvert")?,
-            "--float-style" => {
-                args.float_style = match it.next().as_deref() {
-                    Some("c") => FloatStyle::C,
-                    Some("rust") => FloatStyle::Rust,
-                    _ => return Err("--float-style needs c|rust".into()),
-                }
-            }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
             pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--float-style c|rust] [--per-pgn N] [--root DIR] [files...]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--per-pgn N] [--root DIR] [files...]".into());
     }
     Ok(args)
 }
@@ -196,7 +186,7 @@ fn run() -> Result<i32, String> {
             let artifacts: Vec<(PathBuf, String)> = vec![
                 (
                     root.join("docs/canboat.xml"),
-                    emit_xml::emit_xml(&db, "normal", args.float_style),
+                    emit_xml::emit_xml(&db, "normal"),
                 ),
                 (root.join("analyzer/lookup.h"), emit_c::emit_lookup_h(&db)),
                 (
@@ -322,7 +312,7 @@ fn run() -> Result<i32, String> {
         }
         "emit" => {
             // Emit any document to stdout (dev tool; also the BEM documents)
-            print!("{}", emit_xml::emit_xml(&db, &args.which, args.float_style));
+            print!("{}", emit_xml::emit_xml(&db, &args.which));
             Ok(0)
         }
         other => Err(format!("unknown command '{other}'")),
