@@ -28,7 +28,6 @@ fields:
   bits: 32
   resolution: 0.0001
   description: Seconds since midnight
-  specialValues: 3
   rangeMin: 0.0
   rangeMax: 86401.0
 - id: stationLatitude

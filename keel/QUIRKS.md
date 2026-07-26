@@ -134,21 +134,24 @@ authored data or a C-side inconsistency:
   resolution fix) the true number is **18**. The great majority of the ranges
   that merely *differ* from the derived value are genuine bounds, not precision
   artifacts.
-- **32 fields carry `specialValues`** (the `SPECIAL_VALUES()` overrides) —
-  audited 2026-07-26. All 32 emit `.reservedOverride` into `pgn-data.h`, but
-  only 9 do anything observable:
-  - **8 encode a count that differs from `reservedCountForSize()`**, all saying
-    "no special values, every raw value is valid": `Device Instance Lower`
-    (3 bits, auto 1 → 0), `Device Instance Upper` (5 bits, auto 2 → 0),
-    `Sequence Number` (2 bits, auto 1 → 0). Removing these would change how
-    many top-of-range values the runtime treats as special.
-  - **1 more, `129541 rootOfSemiMajorAxis`**, restates the auto count (3) yet
-    is still load-bearing: dropping it loses the field's whole sentinel triple
-    from the XML. Worth understanding before touching — the sentinel gate in
-    `emit_xml` gets there through `reserved_count` *and* a non-NaN range, so
-    presence appears to matter independently of value.
-  - The remaining 23 restate the auto count and change neither the XML nor the
-    C behaviour. Cosmetically removable; no reason to hurry.
+- **`specialValues` — audited and pruned 2026-07-26.** Was 32 fields; now **8**.
+  All 32 emitted `.reservedOverride` into `pgn-data.h`, but only the 8 whose
+  count differs from `reservedCountForSize()` do anything: `Device Instance
+  Lower` (3 bits, auto 1 -> 0), `Device Instance Upper` (5 bits, auto 2 -> 0)
+  and `Sequence Number` (2 bits, auto 1 -> 0), each appearing in several PGNs —
+  all saying "no special values, every raw value is valid". The other 24 merely
+  restated the auto count and have been deleted; `canboat.xml` and
+  `canboat.json` are byte-identical across the removal, and the only change to
+  `pgn-data.h` is the 24 dropped clauses.
+
+  Worth noting how this moved: an earlier pass found `129541
+  rootOfSemiMajorAxis` load-bearing *despite* matching the auto count — dropping
+  it lost the field's whole sentinel triple. The Q6 resolution fix (exact
+  `POW2NEG(11)`, and the redundant authored range deleted with it) changed that
+  derivation path, so it now derives its sentinels without help and could be
+  pruned with the rest. Sentinels verified still present: 16777215 / 16777214 /
+  16777213.
+
 - ~~`database/lookups.order.yaml` preserves lookup.h definition order purely
   for the golden byte-diff; **dies at switchover** in favor of sorted order~~
   **done (2026-07-26)** — retired. `Database::ordered_lookups()` now sorts by

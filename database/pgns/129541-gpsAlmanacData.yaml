@@ -48,7 +48,6 @@ fields:
   bits: 24
   resolution: 0.00048828125
   description: '''(A)^0.5'' in table 20-VI in ICD-GPS-200'
-  specialValues: 3
 - id: argumentOfPerigee
   name: Argument of Perigee
   type: SIGNED_ALMANAC_PARAMETER_SEMI_CIRCLE
