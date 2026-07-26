@@ -2550,7 +2550,7 @@ Pgn pgnList[] = {
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "2"},
       {.name = "Field", .camelName = "field", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 116, .description = "Turn Angle Order", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_FIELD, .lookup.name = "GARMIN_AUTOPILOT_FIELD", .partOfPrimaryKey = true},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Turn Angle Order", .camelName = "turnAngleOrder", .fieldType = "UINT16", .resolution = 9.58737992553711e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
+      {.name = "Turn Angle Order", .camelName = "turnAngleOrder", .fieldType = "UINT16", .resolution = 9.587379924285257e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
      },
      .camelDescription = "garminAutopilotTurnAngleOrder",
      .priority = 7},
@@ -2569,7 +2569,7 @@ Pgn pgnList[] = {
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 2, .description = "2"},
       {.name = "Field", .camelName = "field", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 161, .description = "Turn Angle Measured", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_FIELD, .lookup.name = "GARMIN_AUTOPILOT_FIELD", .partOfPrimaryKey = true},
       {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Turn Angle Measured", .camelName = "turnAngleMeasured", .fieldType = "UINT16", .resolution = 9.58737992553711e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
+      {.name = "Turn Angle Measured", .camelName = "turnAngleMeasured", .fieldType = "UINT16", .resolution = 9.587379924285257e-5, .unit = "rad", .description = "Full-circle angle, wraps 0..2*pi (2*pi/65536 rad per bit)"}
      },
      .camelDescription = "garminAutopilotTurnAngleMeasured",
      .priority = 7},

@@ -90,7 +90,7 @@ mod roundtrip_tests {
         assert_eq!(c_g_roundtrip(2f64.powi(-38)), "3.637978807091713e-12");
         assert_eq!(c_g_roundtrip(2f64.powi(-11)), "0.00048828125");
         // and every result must parse back to the exact input
-        for v in [1.0 / 16384.0, 1.0 / 11.0, 2f64.powi(-23), 2.0 * 3.141592654 / 65536.0] {
+        for v in [1.0 / 16384.0, 1.0 / 11.0, 2f64.powi(-23), 2.0 * std::f64::consts::PI / 65536.0] {
             assert_eq!(c_g_roundtrip(v).parse::<f64>().unwrap(), v);
         }
     }

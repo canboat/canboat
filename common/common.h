@@ -288,7 +288,11 @@ int writeSerial(SOCKET handle, const uint8_t *data, size_t len);
 #define MAP_PGN_TO_CONTINUOUS_RANGE(n) ((n) - (0xE800))
 #define PGN_MAX_CONTINUOUS_RANGE (MAP_PGN_TO_CONTINUOUS_RANGE(0x20000))
 
-#define Pi (3.141592654)
+/* The shortest decimal that round-trips to the IEEE-754 double nearest pi,
+ * i.e. the same value as M_PI -- spelled out rather than included, because
+ * M_PI is not standard C and needs _USE_MATH_DEFINES on MSVC. This is the
+ * project's single pi: do not reintroduce a local approximation. */
+#define Pi (3.141592653589793)
 #define RadianToDegree (360.0 / 2 / Pi)
 #define BITS(x) (x)
 #define BYTES(x) ((x) * (8))
