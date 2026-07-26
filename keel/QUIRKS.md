@@ -45,12 +45,12 @@ output. Those entries became ordinary database edits reviewed through
 | Q11 | Fieldtype-level explicit `.rangeMin`/`.rangeMax` initializers (MMSI, FIELD_INDEX) never reach the XML: `fillFieldType`'s `rangeMax == 0.0` guard routes any explicit value to the NaN branch | `fieldtype.c:315` | `database/fieldtypes.yaml` + `emit_xml::Emitter::fieldtypes()` | **done** — initializers deleted. See the correction below: they were *suppressors*, not dead config |
 | Q12 | `min()`/`max()` macros are `x <= y ? x : y`: comparing NaN yields the *other* operand, so `fixupUnit()`'s rad clamp turns a NaN range into a concrete ±π bound. Whether any field currently exercises this is unverified — the port is faithful either way | `analyzer.h` macros + `fixupUnit()` | `derive.c_min()` / `c_max()` | keep (semantics), audit later |
 | Q13 | A match field's `<Description>` is derived by scanning the lookup for the match value; when the lookup names no such value the element would be emitted *empty*. Also relies on calling a fieldtype-lookup enumerator through the pair-enumerator union member (works by ABI accident in C) | `explainPGNXML` + `filterPair()` | `emit_xml.match_description()` (implemented safely) | keep behavior; the C union pun dies with analyzer-explain.c at switchover |
-| Q14 | `BitLengthField` (pointing at the length field of a variable BINARY field) is hardcoded to `order - 1` and only for fields whose *specific* type name is `BINARY` — not driven by any declared relationship | `explainPGNXML` | `emit_xml.Emitter.field()` | cleanup — should become an explicit authored reference (like `dynamicFieldLength`) |
+| Q14 | `BitLengthField` (pointing at the length field of a variable BINARY field) is hardcoded to `order - 1` and only for fields whose *specific* type name is `BINARY` — not driven by any declared relationship | `explainPGNXML` | `emit_xml::Emitter::field()` | **guarded** — rule **R15** now asserts the preceding field really is an unscaled integer bit count (all 8 instances pass; verified it trips when broken). It cannot catch a pointer at the *wrong* integer — an explicit authored reference, like `dynamicFieldLength`, is still the real fix |
 | Q15 | An unknown transmission interval (C `interval == 0`) *silently adds* `Interval` to `<Missing>`; the authored YAML therefore never stores that entry (`model.missing_effective()`) | `fieldtype.c:486` | derived, by design | keep — this is derivation, not a defect |
 | Q16 | Lookup fields whose type has `hasSign == Null` (e.g. BITLOOKUP) get NaN ranges, then a *fallback* emission branch prints `RangeMin 0` / `RangeMax 2^bits-1` anyway | `explainPGNXML` range else-branches | `emit_xml.Emitter.field()` | keep |
-| Q17 | `fixupUnit()` SI branch clamps `rad` field ranges to ±π (signed) / 2π (unsigned) with the magic literal `3.1415926` (not M_PI) | `fieldtype.c fixupUnit()` | `derive.fixup_unit()` | keep the clamp; consider M_PI at cleanup (changes `%.15g` output!) |
+| Q17 | `fixupUnit()` SI branch clamped `rad` field ranges to ±π (signed) / 2π (unsigned) with the magic literal `3.1415926` (not M_PI) | `fieldtype.c fixupUnit()` | `derive::fixup_unit()` | **done** — now `std::f64::consts::PI`. Moved 101 emitted bounds in the 8th significant digit (±3.14159265358979, 6.28318530717959); contract-neutral |
 | Q18 | Sentinel (`UnknownValue`/...) emission is suppressed for 64-bit fields, match fields, and non-TopOfRange roots; `reservedCount` is a gap computation between raw bit-max and rangeMax, capped by width — subtle but semantically intended | `fieldtype.c:448` + `explainPGNXML` | `derive.fill_field()` + emitter | keep — this is the sentinel model, documented in fieldtype.h |
-| Q19 | The `unit` string doubles as the match encoding in C (`unit = "=275"`). No XML impact (`<Match>` element), but the pun shapes the C tables | pgn.h macros | dead in YAML (`match:` is first-class); generated pgn.h may keep it internally until the runtime is cleaned | cleanup (in generated-C form) |
+| Q19 | The `unit` string doubled as the match encoding in C (`unit = "=275"`), 982 instances. No XML impact (`<Match>` is its own element), but the pun shaped the C tables | pgn.h macros | `struct Field` + `emit_c` | **done** — `struct Field` carries `hasMatchValue` / `matchValue`; the four sniff sites (fieldtype.c, pgn.c ×2, print.c) read the member. Fixed a latent display bug: print.c appends `unit` in plain text, so match fields printed `Report Type = 15 =15`. JSON was never affected. NB `struct Field` is duplicated in `pgn-j1939.h` — both copies need any new member |
 | Q20 | `camelName`/`camelDescription` **presence** was used as a proxy for the `-camel` mode in three runtime output decisions (plain-text repeating suffix `_N` vs ` N`, JSON `{"camelId": ...}` wrapper, a dead fieldName fallback). Broke down for pinned ids: PGN 130846 emitted *wrapped* JSON even in plain mode, baked into four test fixtures | analyzer.c:1304/1494/1657 | **FIXED in C** (2026-07): all three now key on `showCamel`; the generated tables set camelName/camelDescription on every entry; the 130846 fixtures were corrected. Behavior change surface: only pinned ids in plain modes (1 field, 1 PGN — scanned) | done (fix-in-C) |
 
 ### Correction to Q11: those initializers were suppressors, not dead config
@@ -87,11 +87,37 @@ Not quirks of the emitter but places where the YAML carries explicit values
 because derivation cannot know them; worth reviewing whether each is *truly*
 authored data or a C-side inconsistency:
 
-- ~103 `pgns/*.yaml` files carry authored `rangeMin`/`rangeMax` — explicit
-  initializers in pgn.h macros (e.g. `PGN_FIELD` 0..262143, the
-  "all values valid" idiom) plus fields whose macro resolution is itself
-  `%g`-lossy in the XML.
-- 32 fields carry `specialValues` (the `SPECIAL_VALUES()` overrides).
+- **Authored `rangeMin`/`rangeMax` — audited 2026-07-26, all load-bearing.**
+  418 values across 111 files. Stripping them all and regenerating removes 588
+  range elements and 23 sentinel triples from `canboat.xml`, so none of them is
+  dead. 176 fields change; they split cleanly in two:
+  - **134 = fallout from Q6.** e.g. `powerFactor` (16-bit, resolution 1/16384):
+    authored `RangeMax 3.999755859375`, derived `3.9997587264`. The authored
+    value is the range the C computed from the *exact* resolution, while keel
+    stores the resolution as its `%g` text (`6.10352e-05`) and would recompute
+    a slightly wrong bound from it. These overrides exist only to paper over
+    the lossy Resolution — **fixing Q6 for Resolution would make all 134
+    derivable** and let them be deleted. The two entries are coupled; do them
+    together or not at all.
+  - **42 = genuine authored semantics.** e.g. the `pgn` field of 59392/59904/
+    60416: a 24-bit field carrying an 18-bit PGN number, authored `0..262143`.
+    Derivation has no way to know the valid range is narrower than the width,
+    so these must stay authored.
+- **32 fields carry `specialValues`** (the `SPECIAL_VALUES()` overrides) —
+  audited 2026-07-26. All 32 emit `.reservedOverride` into `pgn-data.h`, but
+  only 9 do anything observable:
+  - **8 encode a count that differs from `reservedCountForSize()`**, all saying
+    "no special values, every raw value is valid": `Device Instance Lower`
+    (3 bits, auto 1 → 0), `Device Instance Upper` (5 bits, auto 2 → 0),
+    `Sequence Number` (2 bits, auto 1 → 0). Removing these would change how
+    many top-of-range values the runtime treats as special.
+  - **1 more, `129541 rootOfSemiMajorAxis`**, restates the auto count (3) yet
+    is still load-bearing: dropping it loses the field's whole sentinel triple
+    from the XML. Worth understanding before touching — the sentinel gate in
+    `emit_xml` gets there through `reserved_count` *and* a non-NaN range, so
+    presence appears to matter independently of value.
+  - The remaining 23 restate the auto count and change neither the XML nor the
+    C behaviour. Cosmetically removable; no reason to hurry.
 - ~~`database/lookups.order.yaml` preserves lookup.h definition order purely
   for the golden byte-diff; **dies at switchover** in favor of sorted order~~
   **done (2026-07-26)** — retired. `Database::ordered_lookups()` now sorts by
@@ -100,7 +126,10 @@ authored data or a C-side inconsistency:
   Emission order is derivable again, so adding an enumeration no longer means
   keeping a second file in step. One reordering diff in `lookup.h` and
   `canboat.xml`; contract-neutral (order is not part of the signature).
-- `variantOrder` on multi-entry PGNs is genuinely semantic (runtime match
-  precedence) *including* fallback placement: the 0xE800 fallback sits first
-  within 59392, but the 0x1EF00 fallback sits last within 126720. Review
-  whether that asymmetry is intended.
+- ~~`variantOrder` fallback placement is asymmetric: the 0xE800 fallback sits
+  first within 59392, but the 0x1EF00 fallback sits last within 126720~~
+  **stale — no asymmetry left (checked 2026-07-26).** `variantOrder` is still
+  genuinely semantic (runtime match precedence), but every one of the eight
+  fallback-bearing groups now emits its fallback **first**: 59392, 61184,
+  61440, 65280, 126208, 126720, 126976, 130816. PR #744 ("restore shadowed
+  variants and dedupe Maretron/BEP PGNs") fixed 126720. Nothing to review.
