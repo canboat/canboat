@@ -103,6 +103,20 @@ jobs:
             exit 1
           fi
 
+  keel-deps:
+    name: keel dependency closure
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v4
+
+      # keel is on the path of anyone regenerating the database (it is
+      # cargo-shimmed from analyzer/Makefile), so its dependency closure must
+      # stay tiny — the Rust runtime in rust/ must never leak into it.
+      # MERGE-CANBOAT-RS.md §9.
+      - name: keel must not pull in the runtime dependency tree
+        run: tools/check-keel-deps.sh
+
   build-windows:
     runs-on: windows-latest
     defaults:

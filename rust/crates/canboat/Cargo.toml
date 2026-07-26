@@ -1,0 +1,76 @@
+# (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+
+[package]
+name        = "canboat"
+version     = { workspace = true }
+edition     = { workspace = true }
+license     = { workspace = true }
+authors     = { workspace = true }
+repository  = { workspace = true }
+rust-version = { workspace = true }
+description = "The canboat NMEA 2000 toolkit: a decode/encode library and a CLI (convert / interface / server / tui)."
+
+# The facade library — the ONLY crate external consumers depend on. Its
+# public surface is curated (see docs/library-api-plan.md) and gated behind
+# the `decode` / `io` / `wire` / `node` / `bridge` features.
+[lib]
+name = "canboat"
+path = "src/lib.rs"
+
+# The CLI. Requires the `cli` feature so a library consumer building with
+# `--no-default-features --features decode` never pulls clap/tokio/ratatui
+# or compiles the subcommand tree.
+[[bin]]
+name = "canboat"
+path = "src/main.rs"
+required-features = ["cli"]
+
+[features]
+# The repo and the release build the binary, so `cli` is the package default.
+# Library consumers select `default-features = false, features = ["decode", …]`.
+default = ["cli"]
+
+# ── library features (what external consumers pick) ──
+decode   = ["dep:canboat-core"]            # sans-I/O core: schema, decode, encode, formatters
+io       = ["decode", "dep:canboat-io"]    # byte-source readers (read::*Reader)
+wire     = ["decode", "dep:canboat-wire"]  # cross-process WirePgn / Hello handshake
+node     = ["decode", "dep:canboat-io"]    # device::{Name, Claimer, Responder}
+bridge   = ["io", "wire", "node", "dep:canboat-bridge"]  # live-bus: Bridge + BridgeConfig + serving
+nmea0183 = ["decode"]                      # output::write_nmea0183
+ais      = ["decode"]                      # output::write_ais
+
+# ── the CLI (not part of the public library surface) ──
+# `canboat-bridge` hosts the server/n2kd subcommand implementations (lifted out
+# of this crate); the CLI dispatches into it.
+cli = [
+    "decode", "io", "wire", "bridge", "nmea0183", "ais",
+    "canboat-bridge/cli",
+    "dep:canboat-cli", "dep:clap", "dep:env_logger", "dep:anyhow",
+    "dep:serde", "dep:serde_json", "dep:tokio", "dep:crossterm",
+    "dep:ratatui", "dep:futures", "dep:chrono", "dep:indexmap",
+]
+
+[dependencies]
+# Library layer — optional, pulled in by the features above.
+canboat-core = { workspace = true, optional = true }
+canboat-io   = { workspace = true, optional = true }
+canboat-wire = { workspace = true, optional = true }
+# `log` is a zero-cost facade; kept non-optional so any layer can log.
+log          = { workspace = true }
+
+# CLI layer — optional, enabled only by the `cli` feature.
+canboat-bridge = { workspace = true, optional = true }
+canboat-cli  = { workspace = true, optional = true }
+anyhow       = { workspace = true, optional = true }
+clap         = { workspace = true, optional = true }
+serde        = { workspace = true, optional = true }
+serde_json   = { workspace = true, optional = true, features = ["preserve_order"] }
+env_logger   = { workspace = true, optional = true }
+# Async runtime + terminal UI, used only by the `tui` subcommand.
+tokio        = { workspace = true, optional = true, features = ["net", "time", "fs"] }
+crossterm    = { version = "0.28", optional = true, features = ["event-stream"] }
+ratatui      = { version = "0.29", optional = true }
+indexmap     = { workspace = true, optional = true }
+futures      = { workspace = true, optional = true }
+# Local-time formatting for the tui file browser (cross-platform).
+chrono       = { version = "0.4", optional = true, default-features = false, features = ["clock"] }

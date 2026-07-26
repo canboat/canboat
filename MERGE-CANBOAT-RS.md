@@ -1,9 +1,35 @@
 # Merging canboat-rs into canboat (the keel line)
 
-Status: **proposal / not started.** Companion to `DESIGN.md`. This describes how the
-Rust runtime that currently lives in the separate [`canboat-rs`] repository folds into
-this repository (the `refactor_pgn_database` / v8 line), now that `keel` has made the
-PGN database Rust-authored and the C build already ships without a Rust toolchain.
+Status: **step 1 done, and it took step 2's main prize with it.** Companion to
+`DESIGN.md`. This describes how the Rust runtime that used to live in the separate
+[`canboat-rs`] repository folds into this repository, now that `keel` has made the PGN
+database Rust-authored and the C build already ships without a Rust toolchain.
+
+What landed (2026-07-27):
+
+- The crates live in **`rust/`** as their own workspace; `keel/` stays where it was, so
+  the analyzer Makefile shim, the release matrix and `build-keel-musl` are untouched.
+- **The vendored schema is gone.** Rather than waiting for §5, `canboat-core/build.rs`
+  and `canboat-io/build.rs` now read the repository's own `docs/canboat.json`. That
+  deletes `data/canboat.json`, `CANBOAT_REF`, `scripts/sync-canboat.sh`, the weekly
+  `canboat-sync.yml` cron and the schema-pin CI gate — **goal #2 (single source, zero
+  drift) is met now**, several steps earlier than planned.
+- `make rust` / `rust-tests` / `rust-clean` are opt-in; a plain `make` still invokes
+  cargo zero times.
+- The keel dependency-closure guard of §9 is real: `tools/check-keel-deps.sh`, run by
+  the `keel-deps` CI job.
+
+Two corrections to what this document assumed:
+
+1. **Committing generated tables is *heavier* than vendoring the JSON.** §5's premise
+   was that emitting `schema_data.rs` removes the vendored copy's weight. Measured: the
+   JSON is 2.42 MB raw / ~0.15 MB git-compressed; `build.rs`'s output is 5.47 MB raw /
+   ~0.27 MB compressed. So §5 would *add* ~0.12 MB. Its real justification is a crate
+   that builds with no build script (publishability), not repo size — and nothing is
+   published on crates.io today.
+2. The runtime has grown past this document's description: **8 crates, ~42k LoC** (not 7
+   / ~29k), at 0.6.0. There is no `n2kd` crate — it is a module inside the new
+   `canboat-bridge`, and the parity harness is `crates/canboat/parity/run-parity.sh`.
 
 Audience: maintainers deciding whether and how to co-locate the two codebases. No build
 wiring is changed by this document.

@@ -1,0 +1,175 @@
+# CI for the Cargo workspace in rust/ (the canboat-rs runtime).
+#
+# Ported from canboat-rs's own ci.yml when the crates moved in
+# (MERGE-CANBOAT-RS.md step 1). Two deliberate differences from that
+# original:
+#
+#   - Every job runs with working-directory rust/, since the workspace is a
+#     subtree rather than the repo root.
+#   - The jobs are path-filtered. A C-only or database-only PR should not pay
+#     for a three-OS Rust build, so these run only when rust/** or this
+#     workflow changes. That means they are NOT suitable as *required* status
+#     checks: on a PR that touches no Rust they will not run at all.
+#
+# canboat-rs's schema-pin job is gone: there is no vendored schema any more.
+# The build scripts read docs/canboat.json directly, so the runtime and the
+# analyzer are generated from one database and cannot drift. The golden
+# fixtures come from this checkout for the same reason.
+#
+# Jobs:
+#   - test:       build + full test suite on Linux / macOS / Windows.
+#   - msrv:       cargo check at the workspace's declared rust-version.
+#   - clippy:     -D warnings, all targets.
+#   - fmt:        rustfmt check.
+#   - docs:       facade rustdoc per library feature set with -D warnings.
+name: Rust CI
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - "rust/**"
+      - ".github/workflows/rust-ci.yml"
+  pull_request:
+    paths:
+      - "rust/**"
+      - ".github/workflows/rust-ci.yml"
+
+# Cancel superseded runs when a newer commit arrives on the same PR / branch;
+# master is excluded so its runs always complete.
+concurrency:
+  group: rust-ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref_name != 'master' }}
+
+defaults:
+  run:
+    working-directory: rust
+
+jobs:
+  test:
+    name: Rust Build & Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      # Golden fixtures come from this very checkout: the schema the crates
+      # build against IS docs/canboat.json, so schema and fixtures cannot
+      # drift. Windows skips them — the runner checks files out with CRLF,
+      # which breaks the byte-exact diffs.
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: Build
+        run: cargo build --workspace --locked
+
+      - name: Test (golden fixtures required)
+        if: runner.os != 'Windows'
+        run: cargo test --workspace --locked
+        env:
+          CANBOAT_DIR: ${{ github.workspace }}
+          CANBOAT_GOLDEN: required
+
+      - name: Test
+        if: runner.os == 'Windows'
+        run: cargo test --workspace --locked
+
+  msrv:
+    name: Rust MSRV
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Read MSRV from the workspace
+        id: msrv
+        run: echo "version=$(sed -n 's/^rust-version *= *"\(.*\)"/\1/p' Cargo.toml)" >> "$GITHUB_OUTPUT"
+
+      - name: Install Rust ${{ steps.msrv.outputs.version }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ steps.msrv.outputs.version }}
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: Check
+        run: cargo check --workspace --locked
+
+  clippy:
+    name: Rust Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+  fmt:
+    name: Rust Rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Rust stable with rustfmt
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt
+
+      - name: Check formatting
+        run: cargo fmt --all --check
+
+  docs:
+    name: Rust Docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: rust
+
+      # A broken intra-doc link or a missing doc (the crate denies
+      # missing_docs under `decode`) fails the build. The feature sets match
+      # scripts/check-public-api.sh so the documented surface tracks the
+      # locked public surface.
+      - name: Generate library rustdoc (-D warnings)
+        env:
+          RUSTDOCFLAGS: "-D warnings"
+        run: |
+          for set in \
+            "decode" \
+            "decode,io,wire,nmea0183,ais" \
+            "decode,io,wire,node,bridge,nmea0183,ais"; do
+            echo "::group::cargo doc --features $set"
+            cargo doc --no-deps -p canboat --no-default-features --features "$set" --locked
+            echo "::endgroup::"
+          done
