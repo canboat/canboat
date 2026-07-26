@@ -210,6 +210,21 @@ pub const RULES: &[Rule] = &[
                  (unsigned) — which then carries its own bits / resolution.",
     },
     Rule {
+        id: "R15",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_bit_length_field",
+        title: "A variable-length BINARY field is preceded by its bit-count field.",
+        detail: "A BINARY field with no fixed width emits \
+                 <BitLengthField>order - 1</BitLengthField>: its length lives in the \
+                 field immediately before it. Nothing declares that relationship — the \
+                 emitter hardcodes the offset and keys it on the type name alone \
+                 (QUIRKS Q14) — so this rule asserts the field really is there and \
+                 really is an unscaled integer bit count (no lookup, resolution 1, \
+                 non-zero width). Without it a mis-authored BINARY field would silently \
+                 emit a BitLengthField pointing at whatever happened to precede it.",
+    },
+    Rule {
         id: "R20",
         scope: Scope::CrossFile,
         severity: "error",
