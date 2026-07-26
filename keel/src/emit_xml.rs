@@ -89,11 +89,16 @@ impl<'a> Emitter<'a> {
 
     // ----- sections ------------------------------------------------------
 
-    fn header(&mut self) {
+    /// `styled` drives the stylesheet PI: canboat.xsl only ships for the main
+    /// document, and the sections it styles are absent from the Actisense /
+    /// iKonvert BEM documents anyway.
+    fn header(&mut self, styled: bool) {
         let cp = copyright(&self.db.version);
         self.p("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         self.p(&format!("<!--\n{cp}\n-->\n"));
-        self.p("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
+        if styled {
+            self.p("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
+        }
         self.p(&format!(
             "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \
              xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <SchemaVersion>{}</SchemaVersion>\n",
@@ -109,10 +114,12 @@ impl<'a> Emitter<'a> {
     }
 
     fn physical_quantities(&mut self) {
-        // explainPhysicalQuantityXML: raw printf, no escaping (QUIRKS Q4)
         self.p("  <PhysicalQuantities>\n");
         for pq in &self.db.physical_quantities {
-            self.p(&format!("    <PhysicalQuantity Name=\"{}\">\n", pq.name));
+            self.p(&format!(
+                "    <PhysicalQuantity Name=\"{}\">\n",
+                xml_escape(&pq.name)
+            ));
             for (tag, val) in [
                 ("Description", &pq.description),
                 ("Comment", &pq.comment),
@@ -121,7 +128,7 @@ impl<'a> Emitter<'a> {
                 ("Unit", &pq.unit),
             ] {
                 if let Some(v) = val {
-                    self.p(&format!("      <{tag}>{v}</{tag}>\n"));
+                    self.p(&format!("      <{tag}>{}</{tag}>\n", xml_escape(v)));
                 }
             }
             self.p("    </PhysicalQuantity>\n");
@@ -130,13 +137,16 @@ impl<'a> Emitter<'a> {
     }
 
     fn fieldtypes(&mut self) {
-        // explainFieldTypesXML: raw printf, roots only (QUIRKS Q4)
+        // explainFieldTypesXML: roots only
         self.p("  <FieldTypes>\n");
         for ft in &self.db.fieldtypes {
             if ft.base.is_some() {
                 continue;
             }
-            self.p(&format!("    <FieldType Name=\"{}\">\n", ft.name));
+            self.p(&format!(
+                "    <FieldType Name=\"{}\">\n",
+                xml_escape(&ft.name)
+            ));
             for (tag, val) in [
                 ("Description", &ft.description),
                 ("EncodingDescription", &ft.encoding_description),
@@ -144,7 +154,7 @@ impl<'a> Emitter<'a> {
                 ("URL", &ft.url),
             ] {
                 if let Some(v) = val {
-                    self.p(&format!("      <{tag}>{v}</{tag}>\n"));
+                    self.p(&format!("      <{tag}>{}</{tag}>\n", xml_escape(v)));
                 }
             }
             if ft.size != 0 {
@@ -164,7 +174,7 @@ impl<'a> Emitter<'a> {
                 self.p("      <VariableSize>true</VariableSize>\n");
             }
             if let Some(u) = &ft.unit {
-                self.p(&format!("      <Unit>{u}</Unit>\n"));
+                self.p(&format!("      <Unit>{}</Unit>\n", xml_escape(u)));
             }
             if let Some(s) = ft.has_sign {
                 self.p(&format!(
@@ -176,14 +186,12 @@ impl<'a> Emitter<'a> {
                 let r = self.g15(ft.resolution);
                 self.p(&format!("      <Resolution>{r}</Resolution>\n"));
             }
-            if !ft.range_min.is_nan() {
-                let r = self.g15(ft.range_min);
-                self.p(&format!("      <RangeMin>{r}</RangeMin>\n"));
-            }
-            if !ft.range_max.is_nan() {
-                let r = self.g15(ft.range_max);
-                self.p(&format!("      <RangeMax>{r}</RangeMax>\n"));
-            }
+            // No RangeMin/RangeMax here: canboat.xsd's FieldType has no such
+            // elements. A range only means something once bits, resolution and
+            // sign are concrete, i.e. per *field*. The C emitter had the same
+            // dead branch; it stayed invisible because the only two fieldtypes
+            // that could reach it (MMSI, FIELD_INDEX) carried explicit range
+            // initializers that fillFieldType routed to NaN (QUIRKS Q11).
             self.p(&format!("      <Sentinels>{}</Sentinels>\n", ft.sentinels));
             self.p("    </FieldType>\n");
         }
@@ -231,12 +239,12 @@ impl<'a> Emitter<'a> {
         for lk in self.db.ordered_lookups("pair") {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
-                "    <LookupEnumeration Name='{}' MaxValue='{max_value}'>\n",
-                lk.name
+                "    <LookupEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
+                xml_escape(&lk.name)
             ));
             for (value, name) in &lk.pairs {
                 self.p(&format!(
-                    "      <EnumPair Value='{value}' Name='{}' />\n",
+                    "      <EnumPair Value=\"{value}\" Name=\"{}\" />\n",
                     xml_escape(name)
                 ));
             }
@@ -248,12 +256,12 @@ impl<'a> Emitter<'a> {
         for lk in self.db.ordered_lookups("triplet") {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
-                "    <LookupIndirectEnumeration Name='{}' MaxValue='{max_value}'>\n",
-                lk.name
+                "    <LookupIndirectEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
+                xml_escape(&lk.name)
             ));
             for (v1, v2, name) in &lk.triplets {
                 self.p(&format!(
-                    "      <EnumTriplet Value1='{v1}' Value2='{v2}' Name='{}' />\n",
+                    "      <EnumTriplet Value1=\"{v1}\" Value2=\"{v2}\" Name=\"{}\" />\n",
                     xml_escape(name)
                 ));
             }
@@ -265,12 +273,12 @@ impl<'a> Emitter<'a> {
         for lk in self.db.ordered_lookups("bit") {
             let max_value = lk.bits - 1;
             self.p(&format!(
-                "    <LookupBitEnumeration Name='{}' MaxValue='{max_value}'>\n",
-                lk.name
+                "    <LookupBitEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
+                xml_escape(&lk.name)
             ));
             for (bit, name) in &lk.pairs {
                 self.p(&format!(
-                    "      <BitPair Bit='{bit}' Name='{}' />\n",
+                    "      <BitPair Bit=\"{bit}\" Name=\"{}\" />\n",
                     xml_escape(name)
                 ));
             }
@@ -282,8 +290,8 @@ impl<'a> Emitter<'a> {
         for lk in self.db.ordered_lookups("fieldtype") {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
-                "    <LookupFieldTypeEnumeration Name='{}' MaxValue='{max_value}'>\n",
-                lk.name
+                "    <LookupFieldTypeEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
+                xml_escape(&lk.name)
             ));
             let entries = lk.fieldtypes.clone();
             for entry in &entries {
@@ -294,7 +302,7 @@ impl<'a> Emitter<'a> {
         self.p("  </LookupFieldTypeEnumerations>\n");
     }
 
-    /// explainFieldtypeXMLv2, including the Signed newline quirk (QUIRKS Q2).
+    /// explainFieldtypeXMLv2.
     fn enum_fieldtype(&mut self, entry: &crate::model::FieldTypeLookupEntry) {
         let fti = self
             .db
@@ -302,23 +310,29 @@ impl<'a> Emitter<'a> {
             .expect("lookup fieldtype");
         let ft = &self.db.fieldtypes[fti];
         self.p(&format!(
-            "      <EnumFieldType Value='{}' Name='{}'",
+            "      <EnumFieldType Value=\"{}\" Name=\"{}\"",
             entry.value,
             xml_escape(&entry.name)
         ));
-        self.p(&format!(" FieldType='{}'", ft.root_name));
+        self.p(&format!(
+            " FieldType=\"{}\"",
+            xml_escape(&ft.root_name)
+        ));
         if let Some(s) = ft.has_sign {
-            self.p(&format!(" Signed='{}'\n", if s { "true" } else { "false" }));
+            self.p(&format!(
+                " Signed=\"{}\"",
+                if s { "true" } else { "false" }
+            ));
         }
         if ft.resolution != 0.0 {
-            self.p(&format!(" Resolution='{}'", self.g(ft.resolution)));
+            self.p(&format!(" Resolution=\"{}\"", self.g(ft.resolution)));
         }
         if let Some(u) = &ft.unit {
-            self.p(&format!(" Unit='{u}'"));
+            self.p(&format!(" Unit=\"{}\"", xml_escape(u)));
         }
         let bits = entry.bits.unwrap_or(ft.size);
         if bits != 0 {
-            self.p(&format!(" Bits='{bits}'"));
+            self.p(&format!(" Bits=\"{bits}\""));
         }
         if let Some(nested) = entry.lookup.clone() {
             self.p(">\n");
@@ -356,8 +370,7 @@ impl<'a> Emitter<'a> {
         self.xml(6, "Id", Some(&pgn.id));
         self.xml(6, "Description", Some(&pgn.description));
         if pgn.priority != 0 {
-            // 4-space indent quirk (QUIRKS Q1)
-            self.p(&format!("    <Priority>{}</Priority>\n", pgn.priority));
+            self.xml_u(6, "Priority", pgn.priority as u64);
         }
         self.xml(6, "Explanation", pgn.explanation.as_deref());
         self.xml(6, "URL", pgn.url.as_deref());
@@ -600,8 +613,9 @@ impl<'a> Emitter<'a> {
     // ----- top level ------------------------------------------------------
 
     pub fn emit(mut self, which: &str) -> String {
-        self.header();
-        if which == "normal" || which == "j1939" {
+        let full = which == "normal" || which == "j1939";
+        self.header(full);
+        if full {
             // The J1939 document is the "normal" layout of the J1939 build
             // (analyzer-explain-j1939): full sections, its own pgnList.
             self.physical_quantities();

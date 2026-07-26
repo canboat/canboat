@@ -28,9 +28,6 @@ pub struct UndoEntry {
     pub file: String,
     /// Previous file content; None if the save created the file.
     pub prev: Option<String>,
-    /// Previous lookups.order.yaml, captured only when a lookup save
-    /// rewrote it.
-    pub prev_order: Option<String>,
 }
 
 const INDEX_HTML: &str = include_str!("../web/index.html");
@@ -399,21 +396,6 @@ fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
     ))
 }
 
-/// Keep database/lookups.order.yaml in step when the editor adds a lookup.
-fn sync_lookup_order(server: &EditServer, db: &Database) -> Result<(), String> {
-    let mut out = String::new();
-    for kind in ["pair", "triplet", "bit", "fieldtype"] {
-        out.push_str(kind);
-        out.push_str(":\n");
-        for name in db.lookup_order.get(kind).into_iter().flatten() {
-            out.push_str("- ");
-            out.push_str(name);
-            out.push('\n');
-        }
-    }
-    std::fs::write(server.root.join("database/lookups.order.yaml"), out).map_err(|e| e.to_string())
-}
-
 fn find_pgn_file(server: &EditServer, id: &str) -> Result<PathBuf, String> {
     let dir = server.root.join("database/pgns");
     for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
@@ -586,13 +568,6 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         if file != expect {
             return Err(format!("lookup '{}' must be saved as {expect}", candidate.name));
         }
-        if !db.lookups.contains_key(&candidate.name) {
-            // new lookup: emission order manifest must list it
-            db.lookup_order
-                .entry(candidate.kind.clone())
-                .or_default()
-                .push(candidate.name.clone());
-        }
         db.lookups.insert(candidate.name.clone(), candidate);
     } else {
         let candidate = yamlio::parse_pgn_str(body, &file)?;
@@ -628,18 +603,12 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
 
     let path = server.root.join(&file);
     let prev = std::fs::read_to_string(&path).ok();
-    let order_path = server.root.join("database/lookups.order.yaml");
-    let is_lookup = file.starts_with("database/lookups/");
-    let prev_order = if is_lookup { std::fs::read_to_string(&order_path).ok() } else { None };
 
     if let Some(parent) = path.parent() {
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
     std::fs::write(&path, body).map_err(|e| e.to_string())?;
-    if is_lookup {
-        sync_lookup_order(server, &db)?;
-    }
-    *server.last_save.lock().unwrap() = Some(UndoEntry { file: file.clone(), prev, prev_order });
+    *server.last_save.lock().unwrap() = Some(UndoEntry { file: file.clone(), prev });
     Ok(format!(
         "{{\"saved\":{},\"canUndo\":true,\"created\":{}}}",
         js(&file),
@@ -653,8 +622,8 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
     ))
 }
 
-/// Revert the most recent real save: restore the file's prior content (or
-/// delete it if the save created it) plus the lookup-order manifest.
+/// Revert the most recent real save: restore the file's prior content, or
+/// delete it if the save created it.
 fn api_undo(server: &EditServer) -> Result<String, String> {
     let entry = server
         .last_save
@@ -670,10 +639,6 @@ fn api_undo(server: &EditServer) -> Result<String, String> {
                 std::fs::remove_file(&path).map_err(|e| e.to_string())?;
             }
         }
-    }
-    if let Some(order) = &entry.prev_order {
-        std::fs::write(server.root.join("database/lookups.order.yaml"), order)
-            .map_err(|e| e.to_string())?;
     }
     Ok(format!(
         "{{\"undone\":{},\"deleted\":{}}}",

@@ -56,6 +56,12 @@ pub fn rust_15g(value: f64) -> String {
 /// Port of printXML(): escapes & < > " -- and deliberately NOT the
 /// apostrophe, even though lookup attribute values are single-quoted
 /// (QUIRKS.md Q3). The & replacement must run first.
+/// Escape text for XML element content or a double-quoted attribute value.
+///
+/// Every attribute keel emits is double-quoted, so `"` is the only quote that
+/// needs escaping; `'` is legal as-is in both positions. (The C emitter mixed
+/// single- and double-quoted attributes and escaped neither `'` nor, in the
+/// FieldTypes/PhysicalQuantities sections, anything at all — QUIRKS Q3/Q4/Q5.)
 pub fn xml_escape(text: &str) -> String {
     text.replace('&', "&amp;")
         .replace('<', "&lt;")
