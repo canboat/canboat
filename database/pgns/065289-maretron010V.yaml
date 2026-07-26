@@ -37,9 +37,7 @@ fields:
 - id: 010VData
   name: 0-10 V Data
   type: UINT16
-  resolution: 0.000244141
-  rangeMin: 0.0
-  rangeMax: 15.9990234375
+  resolution: 0.000244140625
 - id: reserved7
   name: Reserved
   type: RESERVED

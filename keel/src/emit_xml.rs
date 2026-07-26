@@ -4,7 +4,7 @@
 //! Every deliberate oddity reproduced here is cataloged in QUIRKS.md (Q1-Q19);
 //! the golden byte-diff against analyzer-explain output guards them all.
 
-use crate::cformat::{c_15g, c_g, rust_15g, rust_g, xml_escape};
+use crate::cformat::{c_15g, c_g, c_g_roundtrip, rust_15g, rust_g, xml_escape};
 use crate::model::{ACTISENSE_BEM, Database, Field, IKONVERT_BEM, Interval, Pgn};
 
 // NB: no `\`-line-continuations here - they strip the next line's leading
@@ -65,6 +65,14 @@ impl<'a> Emitter<'a> {
         match self.style {
             FloatStyle::C => c_15g(v),
             FloatStyle::Rust => rust_15g(v),
+        }
+    }
+
+    /// Resolution only: %g style at whatever digit count round-trips (Q6).
+    fn gres(&self, v: f64) -> String {
+        match self.style {
+            FloatStyle::C => c_g_roundtrip(v),
+            FloatStyle::Rust => rust_g(v),
         }
     }
 
@@ -183,7 +191,7 @@ impl<'a> Emitter<'a> {
                 ));
             }
             if ft.resolution != 1.0 && ft.resolution != 0.0 {
-                let r = self.g15(ft.resolution);
+                let r = self.gres(ft.resolution);
                 self.p(&format!("      <Resolution>{r}</Resolution>\n"));
             }
             // No RangeMin/RangeMax here: canboat.xsd's FieldType has no such
@@ -325,7 +333,7 @@ impl<'a> Emitter<'a> {
             ));
         }
         if ft.resolution != 0.0 {
-            self.p(&format!(" Resolution=\"{}\"", self.g(ft.resolution)));
+            self.p(&format!(" Resolution=\"{}\"", self.gres(ft.resolution)));
         }
         if let Some(u) = &ft.unit {
             self.p(&format!(" Unit=\"{}\"", xml_escape(u)));
@@ -489,7 +497,7 @@ impl<'a> Emitter<'a> {
         }
 
         if f.res_resolution != 0.0 {
-            let r = self.g(f.res_resolution);
+            let r = self.gres(f.res_resolution);
             self.p(&format!("          <Resolution>{r}</Resolution>\n"));
         }
         if let Some(s) = ft.has_sign {

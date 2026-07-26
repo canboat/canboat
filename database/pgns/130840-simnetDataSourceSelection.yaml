@@ -57,8 +57,6 @@ fields:
 - id: source
   name: Source
   type: ISO_NAME
-  rangeMin: 0.0
-  rangeMax: 1.84467440737096e+19
 - id: reserved11
   name: Reserved
   type: RESERVED

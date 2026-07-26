@@ -58,8 +58,6 @@ fields:
       type: UNSIGNED_INTEGER
       bits: 2
       specialValues: 0
-      rangeMin: 0.0
-      rangeMax: 3.0
     - id: reserved11
       name: Reserved
       type: RESERVED

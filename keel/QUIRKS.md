@@ -32,7 +32,7 @@ output. Those entries became ordinary database edits reviewed through
 | Q3 | `printXML()` escaped `& < > "` but **not** the apostrophe — yet the lookup sections put names in single-quoted attributes (`Name='...'`), so a lookup name containing `'` would have produced malformed XML | `printXML()` | `cformat::xml_escape()` | **done** via Q5 — with every attribute double-quoted, `"` (already escaped) is the only quote that can break one. The interim "validator rule forbidding `'` in names" this entry proposed was never written and is no longer needed |
 | Q4 | The `FieldTypes` and `PhysicalQuantities` sections were emitted with raw `printf` — no XML escaping at all. Safe only because no current text contains `& < >` | `explainFieldTypesXML`, `explainPhysicalQuantityXML` | `emit_xml::Emitter::fieldtypes()` / `physical_quantities()` | **done** — both sections now route every name, element text and unit through `xml_escape()`. Byte-identical today (0 instances); the hazard is retired rather than deferred |
 | Q5 | Attribute quoting was inconsistent: lookup sections used single quotes, `FieldType`/`PhysicalQuantity`/`MissingAttribute` double quotes | different printf authors | `emit_xml` lookup sections + `enum_fieldtype()` | **done** — every attribute keel emits is double-quoted. This also retires Q3: `"` was already escaped, and `'` needs no escaping inside a double-quoted attribute |
-| Q6 | Floats print as C `%g` (6 significant digits) / `%.15g`. Notably lossy for resolutions: 1/11 prints as `0.0909091`, so the XML/JSON never contains the exact wire resolution | all float printfs | `cformat::c_g()` / `c_15g()` via libc snprintf; `--float-style rust` emits Rust shortest-round-trip for comparison | **keep** — audited 2026-07: a wholesale switch to Rust formatting changes 266 lines and is a net *loss* (float noise like `6553.200000000001`, misleading full-decimal expansions like `18446744073709600000`). The one real improvement it exposes: resolutions could carry full precision (`0.09090909090909091` = exact 1/11) — worth doing *selectively for Resolution only* at a schema bump, not as a formatting switch |
+| Q6 | Floats print as C `%g` (6 significant digits) / `%.15g`. Notably lossy for resolutions: `1/16384` printed as `6.10352e-05`, `2^-38` as `3.63798e-12` | all float printfs | `cformat::c_g()` / `c_15g()`; **`c_g_roundtrip()` for Resolution** | **Resolution done** (2026-07-26); rest **keep**. `<Resolution>` and the `EnumFieldType Resolution=` attribute now print at the fewest significant digits that round-trip, keeping `%g`'s exponent style. This was a real defect, not cosmetics: the old XML printed Resolution with `%g` but `RangeMax` with `%.15g`, so the bootstrap converter stored a **truncated resolution** (28 of them, rel. err up to 2.4e-6) plus a compensating explicit `rangeMax`. The exact values were recovered from the pre-switchover `pgn.h` (`1 / 16384.`, `POW2NEG(n)`, `2 * Pi / 65536`). Contract: minor (22 fields' decode moves in the 7th significant digit). A wholesale switch to Rust float formatting remains a net loss — audited 2026-07: 266 lines of float noise like `6553.200000000001` |
 | Q7 | `RangeMax` of an unsigned 64-bit resolution-1 field prints as the integer `18446744073709551615` instead of `%.15g` (which would print `1.84467440737096e+19`) | `explainPGNXML` special case | `emit_xml.Emitter.field()` | keep (it is the *more* correct output) |
 | Q8 | The `<Copyright>` element and the leading XML comment embed the license with a trailing blank line before the closing tag | `printf("  <Copyright>" COPYRIGHT "\n</Copyright>\n")` | `emit_xml.header()` | keep |
 | Q9 | The Actisense/iKonvert BEM documents carried the `canboat.xsl` stylesheet PI although no stylesheet ships for them and the sections it styles are absent | `explainXML()` shares one header path | `emit_xml::Emitter::header(styled)` | **done** — the PI is emitted for the main and J1939 documents only. The rest of the header (SchemaVersion/Version/Copyright) is kept: it identifies the document |
@@ -87,22 +87,29 @@ Not quirks of the emitter but places where the YAML carries explicit values
 because derivation cannot know them; worth reviewing whether each is *truly*
 authored data or a C-side inconsistency:
 
-- **Authored `rangeMin`/`rangeMax` — audited 2026-07-26, all load-bearing.**
-  418 values across 111 files. Stripping them all and regenerating removes 588
-  range elements and 23 sentinel triples from `canboat.xml`, so none of them is
-  dead. 176 fields change; they split cleanly in two:
-  - **134 = fallout from Q6.** e.g. `powerFactor` (16-bit, resolution 1/16384):
-    authored `RangeMax 3.999755859375`, derived `3.9997587264`. The authored
-    value is the range the C computed from the *exact* resolution, while keel
-    stores the resolution as its `%g` text (`6.10352e-05`) and would recompute
-    a slightly wrong bound from it. These overrides exist only to paper over
-    the lossy Resolution — **fixing Q6 for Resolution would make all 134
-    derivable** and let them be deleted. The two entries are coupled; do them
-    together or not at all.
-  - **42 = genuine authored semantics.** e.g. the `pgn` field of 59392/59904/
-    60416: a 24-bit field carrying an 18-bit PGN number, authored `0..262143`.
-    Derivation has no way to know the valid range is narrower than the width,
-    so these must stay authored.
+- **Authored `rangeMin`/`rangeMax` — audited 2026-07-26, re-measured after the
+  Q6 fix.** 184 fields carry one.
+  - **43 are redundant** — derivation reproduces them exactly. 25 already were;
+    the Q6 resolution fix added **18** more (the nine `129541 gpsAlmanacData`
+    almanac parameters, the eight `powerFactor` fields, and `65289 maretron010V`).
+    All 43 have been deleted: 102 lines from 36 files, with `canboat.xml`
+    byte-identical afterwards.
+  - **141 are load-bearing genuine semantics** — a real-world valid range that
+    is narrower than the raw width, which derivation cannot know: the `pgn`
+    field of 59392/59904/60416 (24 bits carrying an 18-bit PGN number,
+    `0..262143`), `TIME` fields (`0..86401`), `latitude`/`longitude`
+    (`±90`/`±180` vs a derived `±214.7483647`), `temperatureOffset`
+    (`±9.999` vs a derived `±32.767`), and the `FLOAT` fields of 126720, whose
+    authored `±3.40282346638529e+38` is FLT_MAX where derivation produces an
+    int32 span.
+
+  **Correction:** an earlier pass through this section claimed 134 of these were
+  "fallout from Q6" and would become derivable once Resolution carried full
+  precision. That was wrong — it generalised from the one `powerFactor` example.
+  Measured properly (strip all ranges, regenerate, diff, before and after the
+  resolution fix) the true number is **18**. The great majority of the ranges
+  that merely *differ* from the derived value are genuine bounds, not precision
+  artifacts.
 - **32 fields carry `specialValues`** (the `SPECIAL_VALUES()` overrides) —
   audited 2026-07-26. All 32 emit `.reservedOverride` into `pgn-data.h`, but
   only 9 do anything observable:

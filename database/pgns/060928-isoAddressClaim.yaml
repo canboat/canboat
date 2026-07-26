@@ -23,16 +23,12 @@ fields:
   bits: 3
   description: ISO ECU Instance
   specialValues: 0
-  rangeMin: 0.0
-  rangeMax: 7.0
 - id: deviceInstanceUpper
   name: Device Instance Upper
   type: UNSIGNED_INTEGER
   bits: 5
   description: ISO Function Instance
   specialValues: 0
-  rangeMin: 0.0
-  rangeMax: 31.0
 - id: deviceFunction
   name: Device Function
   type: INDIRECT_LOOKUP

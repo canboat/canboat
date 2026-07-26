@@ -4339,7 +4339,7 @@ limitations under the License.
       <EnumFieldType Value="130" Name="Leeway Angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="131" Name="Current Drift" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="132" Name="Current Set" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="135" Name="Barometric Pressure" FieldType="NUMBER" Signed="false" Resolution="100" Unit="Pa" Bits="16"/>
+      <EnumFieldType Value="135" Name="Barometric Pressure" FieldType="NUMBER" Signed="false" Resolution="1e+02" Unit="Pa" Bits="16"/>
       <EnumFieldType Value="152" Name="Distance to Start Line" FieldType="NUMBER" Signed="true" Resolution="0.01" Unit="m" Bits="32"/>
       <EnumFieldType Value="154" Name="Heading on Opposite Tack" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
       <EnumFieldType Value="155" Name="Attitude Roll" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
@@ -4518,7 +4518,7 @@ limitations under the License.
     </LookupFieldTypeEnumeration>
     <LookupFieldTypeEnumeration Name="SIMNET_KEY_VALUE" MaxValue="16777215">
       <EnumFieldType Value="0" Name="Heading Offset" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="41" Name="Timezone offset" FieldType="DURATION" Signed="true" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="41" Name="Timezone offset" FieldType="DURATION" Signed="true" Resolution="6e+01" Unit="s" Bits="16"/>
       <EnumFieldType Value="260" Name="True wind high" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="264" Name="Deep water" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="16"/>
       <EnumFieldType Value="516" Name="True wind low" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
@@ -4526,15 +4526,15 @@ limitations under the License.
       <EnumFieldType Value="520" Name="Shallow water" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="16"/>
       <EnumFieldType Value="768" Name="Local field" FieldType="NUMBER" Signed="true" Resolution="0.004" Unit="%" Bits="16"/>
       <EnumFieldType Value="1024" Name="Field angle" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="1280" Name="Heading damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1283" Name="Apparent wind damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1285" Name="Boat speed damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1329" Name="Trim angle damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1335" Name="SOG damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1336" Name="COG damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1337" Name="Heel angle damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1345" Name="Tide damping" FieldType="DURATION" Signed="false" Resolution="0.0909091" Unit="s" Bits="16"/>
-      <EnumFieldType Value="1349" Name="True wind speed damping" FieldType="DURATION" Signed="false" Resolution="0.00900901" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1280" Name="Heading damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1283" Name="Apparent wind damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1285" Name="Boat speed damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1329" Name="Trim angle damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1335" Name="SOG damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1336" Name="COG damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1337" Name="Heel angle damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1345" Name="Tide damping" FieldType="DURATION" Signed="false" Resolution="0.09090909090909091" Unit="s" Bits="16"/>
+      <EnumFieldType Value="1349" Name="True wind speed damping" FieldType="DURATION" Signed="false" Resolution="0.009009009009009009" Unit="s" Bits="16"/>
       <EnumFieldType Value="1800" Name="Anchor depth" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m" Bits="16"/>
       <EnumFieldType Value="4863" Name="Backlight level" FieldType="LOOKUP" Signed="false" Bits="8">
           <LookupEnumeration>SIMNET_BACKLIGHT_LEVEL</LookupEnumeration>
@@ -4577,7 +4577,7 @@ limitations under the License.
           <LookupEnumeration>SIMNET_NIGHT_MODE</LookupEnumeration>
       </EnumFieldType>
       <EnumFieldType Value="11524" Name="True wind shift" FieldType="NUMBER" Signed="true" Resolution="0.0001" Unit="rad" Bits="16"/>
-      <EnumFieldType Value="16903" Name="Race timer duration" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="32"/>
+      <EnumFieldType Value="16903" Name="Race timer duration" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="32"/>
       <EnumFieldType Value="22296" Name="AP low boat speed" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="m/s" Bits="16"/>
       <EnumFieldType Value="32789" Name="Alert bits" FieldType="BITLOOKUP" Bits="64">
           <LookupBitEnumeration>SIMNET_ALERT_BITFIELD</LookupBitEnumeration>
@@ -4687,20 +4687,20 @@ limitations under the License.
       <EnumFieldType Value="882" Name="BMS Error Flags" FieldType="NUMBER" Signed="false" Bits="32"/>
       <EnumFieldType Value="898" Name="Mid-point Voltage" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="V" Bits="16"/>
       <EnumFieldType Value="899" Name="Mid-point Voltage Deviation" FieldType="NUMBER" Signed="true" Resolution="0.1" Unit="%" Bits="16"/>
-      <EnumFieldType Value="4094" Name="Time To Go" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="4094" Name="Time To Go" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="16"/>
       <EnumFieldType Value="4095" Name="State of Charge" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="%" Bits="16"/>
       <EnumFieldType Value="4096" Name="Battery Capacity" FieldType="NUMBER" Signed="false" Resolution="1" Unit="Ah" Bits="16"/>
       <EnumFieldType Value="4097" Name="Charged Voltage" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="V" Bits="16"/>
       <EnumFieldType Value="4098" Name="Charged Current" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="%" Bits="16"/>
-      <EnumFieldType Value="4099" Name="Charged Detection Time" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="4099" Name="Charged Detection Time" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="16"/>
       <EnumFieldType Value="4100" Name="Charge Efficiency" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="4101" Name="Peukert Coefficient" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="4102" Name="Current Threshold" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="A" Bits="16"/>
-      <EnumFieldType Value="4103" Name="Average Time To Go" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="4103" Name="Average Time To Go" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="16"/>
       <EnumFieldType Value="4104" Name="Low State of Charge Set" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="%" Bits="16"/>
       <EnumFieldType Value="4105" Name="Low State of Charge Clear" FieldType="NUMBER" Signed="false" Resolution="0.1" Unit="%" Bits="16"/>
-      <EnumFieldType Value="4106" Name="Relay Minimum Enabled Time" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="16"/>
-      <EnumFieldType Value="4107" Name="Relay Disable Delay" FieldType="DURATION" Signed="false" Resolution="60" Unit="s" Bits="16"/>
+      <EnumFieldType Value="4106" Name="Relay Minimum Enabled Time" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="16"/>
+      <EnumFieldType Value="4107" Name="Relay Disable Delay" FieldType="DURATION" Signed="false" Resolution="6e+01" Unit="s" Bits="16"/>
       <EnumFieldType Value="4148" Name="Current Offset" FieldType="NUMBER" Signed="false" Bits="16"/>
       <EnumFieldType Value="8194" Name="DC Voltage" FieldType="NUMBER" Signed="false" Resolution="0.01" Unit="V" Bits="16"/>
       <EnumFieldType Value="8220" Name="DC Current" FieldType="NUMBER" Signed="true" Resolution="0.001" Unit="A" Bits="32"/>
@@ -6695,7 +6695,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -6910,7 +6910,7 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -7126,7 +7126,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -7342,7 +7342,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -7612,7 +7612,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -7828,7 +7828,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -8044,7 +8044,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -8260,7 +8260,7 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Cos Phi</Unit>
-          <Resolution>6.10352e-05</Resolution>
+          <Resolution>6.103515625e-05</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3.999755859375</RangeMax>
@@ -11620,7 +11620,7 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>0.000244141</Resolution>
+          <Resolution>0.000244140625</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>15.9990234375</RangeMax>
@@ -21420,7 +21420,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
-          <Resolution>9.58738e-05</Resolution>
+          <Resolution>9.58737992553711e-05</Resolution>
           <Signed>false</Signed>
           <RangeMax>6.28318530717959</RangeMax>
           <FieldType>NUMBER</FieldType>
@@ -21583,7 +21583,7 @@ limitations under the License.
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>rad</Unit>
-          <Resolution>9.58738e-05</Resolution>
+          <Resolution>9.58737992553711e-05</Resolution>
           <Signed>false</Signed>
           <RangeMax>6.28318530717959</RangeMax>
           <FieldType>NUMBER</FieldType>
@@ -30200,7 +30200,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -30277,7 +30277,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -30385,7 +30385,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -30403,7 +30403,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>1000</Resolution>
+          <Resolution>1e+03</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532000</RangeMax>
@@ -30695,7 +30695,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -30889,7 +30889,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -33348,7 +33348,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -33521,7 +33521,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -33915,7 +33915,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -35981,7 +35981,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -36174,7 +36174,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Unit>m</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>2520</RangeMax>
@@ -37723,7 +37723,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>3931920</RangeMax>
@@ -38059,7 +38059,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Unit>deg</Unit>
-          <Resolution>2.77778e-09</Resolution>
+          <Resolution>2.777777777777778e-09</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.0233016861111111</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
@@ -38076,7 +38076,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>deg</Unit>
-          <Resolution>2.77778e-09</Resolution>
+          <Resolution>2.777777777777778e-09</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.0233016861111111</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
@@ -38576,7 +38576,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-1966020</RangeMin>
           <RangeMax>1965840</RangeMax>
@@ -41746,7 +41746,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>m/m</Unit>
-          <Resolution>4.76837e-07</Resolution>
+          <Resolution>4.76837158203125e-07</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>0.0312480926513672</RangeMax>
@@ -41784,7 +41784,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Unit>semi-circle</Unit>
-          <Resolution>1.90735e-06</Resolution>
+          <Resolution>1.9073486328125e-06</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.0624980926513672</RangeMin>
           <RangeMax>0.0624923706054688</RangeMax>
@@ -41803,7 +41803,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>semi-circle/s</Unit>
-          <Resolution>3.63798e-12</Resolution>
+          <Resolution>3.637978807091713e-12</Resolution>
           <Signed>true</Signed>
           <RangeMin>-1.19205651571974e-07</RangeMin>
           <RangeMax>1.19194737635553e-07</RangeMax>
@@ -41822,7 +41822,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>88</BitOffset>
           <BitStart>0</BitStart>
           <Unit>sqrt(m)</Unit>
-          <Resolution>0.000488281</Resolution>
+          <Resolution>0.00048828125</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>8191.998046875</RangeMax>
@@ -41841,7 +41841,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Unit>semi-circle</Unit>
-          <Resolution>1.19209e-07</Resolution>
+          <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
@@ -41860,7 +41860,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>136</BitOffset>
           <BitStart>0</BitStart>
           <Unit>semi-circle</Unit>
-          <Resolution>1.19209e-07</Resolution>
+          <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
@@ -41879,7 +41879,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Unit>semi-circle</Unit>
-          <Resolution>1.19209e-07</Resolution>
+          <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.99999988079071</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
@@ -41898,7 +41898,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>9.53674e-07</Resolution>
+          <Resolution>9.5367431640625e-07</Resolution>
           <Signed>true</Signed>
           <RangeMin>-0.000975608825683594</RangeMin>
           <RangeMax>0.000972747802734375</RangeMax>
@@ -41917,7 +41917,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>195</BitOffset>
           <BitStart>3</BitStart>
           <Unit>s/s</Unit>
-          <Resolution>3.63798e-12</Resolution>
+          <Resolution>3.637978807091713e-12</Resolution>
           <Signed>true</Signed>
           <RangeMin>-3.72165231965482e-09</RangeMin>
           <RangeMax>3.71073838323355e-09</RangeMax>
@@ -42753,7 +42753,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -42926,7 +42926,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -44755,7 +44755,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -44773,7 +44773,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -45884,7 +45884,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>15120</RangeMax>
@@ -46505,7 +46505,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>220</BitOffset>
           <BitStart>4</BitStart>
           <Unit>s</Unit>
-          <Resolution>60</Resolution>
+          <Resolution>6e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>780</RangeMax>
@@ -51321,7 +51321,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -51447,7 +51447,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -52725,7 +52725,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>176</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -53007,7 +53007,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>208</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -53025,7 +53025,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa/hr</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-327670</RangeMin>
           <RangeMax>327640</RangeMax>
@@ -55035,7 +55035,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -55053,7 +55053,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>100</Resolution>
+          <Resolution>1e+02</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>6553200</RangeMax>
@@ -55071,7 +55071,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>1000</Resolution>
+          <Resolution>1e+03</Resolution>
           <Signed>true</Signed>
           <RangeMin>-32767000</RangeMin>
           <RangeMax>32764000</RangeMax>
@@ -55089,7 +55089,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>112</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>1000</Resolution>
+          <Resolution>1e+03</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>65532000</RangeMax>
@@ -55490,7 +55490,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>144</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -55694,7 +55694,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>Radio Frequency</Name>
           <BitLength>32</BitLength>
           <Unit>Hz</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>42949672920</RangeMax>
@@ -62201,7 +62201,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitOffset>192</BitOffset>
           <BitStart>0</BitStart>
           <Unit>Pa</Unit>
-          <Resolution>10</Resolution>
+          <Resolution>1e+01</Resolution>
           <Signed>true</Signed>
           <RangeMin>-99.9</RangeMin>
           <RangeMax>99.9</RangeMax>
