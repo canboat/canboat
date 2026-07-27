@@ -348,6 +348,10 @@ pub struct BridgeConfig {
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
     pub socketcan_address: u8,
+    /// When `true`, the SocketCAN driver brings the interface up itself (at
+    /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
+    /// external `ip link set … up` unit being ordered first.
+    pub socketcan_configure_link: bool,
     pub canboat_csv: Option<String>,
     pub canboat_csv_write: Option<String>,
     pub baud: Option<u32>,
@@ -391,6 +395,7 @@ impl Default for BridgeConfig {
             maretron: None,
             socketcan: None,
             socketcan_address: 0,
+            socketcan_configure_link: false,
             canboat_csv: None,
             canboat_csv_write: None,
             baud: None,
@@ -431,6 +436,9 @@ impl From<Args> for BridgeConfig {
             maretron: a.maretron,
             socketcan: a.socketcan,
             socketcan_address: a.socketcan_address,
+            // The standalone `canboat` CLI keeps assuming an externally
+            // configured interface; only library embedders (merrimac) opt in.
+            socketcan_configure_link: false,
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
             baud: a.baud,
@@ -600,6 +608,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let config = device::socketcan::Config {
             address: config.socketcan_address,
             model_version: Some("canboat-pipeline-rs"),
+            configure_link: config.socketcan_configure_link,
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address

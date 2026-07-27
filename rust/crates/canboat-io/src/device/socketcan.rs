@@ -63,6 +63,14 @@ mod config {
         /// `"canboat-pipeline-rs"` so a downstream display can tell which
         /// canboat-rs binary is driving the bus.
         pub model_version: Option<&'static str>,
+        /// When `true`, the driver owns the interface's link lifecycle: before
+        /// opening the socket it brings the link down, sets the NMEA 2000
+        /// bitrate (always 250 kbit/s) with bus-off auto-recovery, and brings
+        /// it up — retrying to ride out controllers that intermittently fail
+        /// to configure at boot (notably the MCP2515's "didn't enter config
+        /// mode"). `false` leaves the interface untouched, assuming it was
+        /// configured externally (e.g. a systemd `ip link set … up` unit).
+        pub configure_link: bool,
     }
 
     impl Default for Config {
@@ -76,6 +84,7 @@ mod config {
                 no_claim: false,
                 timeout_secs: 0,
                 model_version: None,
+                configure_link: false,
             }
         }
     }
@@ -106,7 +115,7 @@ mod imp {
     use canboat_core::format::{days_to_ymd, iso11783_compose, iso11783_decompose};
     use canboat_core::frame::RawFrame;
     use canboat_core::{ADDR_GLOBAL, ADDR_NULL, FramePacketType, Reassembled, Reassembler};
-    use socketcan::{CanSocket, EmbeddedFrame, ExtendedId, Socket};
+    use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket};
 
     use super::config::Config;
     use crate::address_claim::{AddressClaim, ClaimState};
@@ -1071,11 +1080,73 @@ mod imp {
     /// injector, so the in-process loopback shows the same `src` the
     /// rewritten frame will reach the bus with) read it from this
     /// atom. The supervisor reuses the same atom across reconnects.
+    /// NMEA 2000 runs at a fixed 250 kbit/s — the standard never varies, so
+    /// the managed bring-up hard-codes it rather than exposing a knob.
+    const NMEA2000_BITRATE: u32 = 250_000;
+    /// Bus-off auto-recovery delay for the managed bring-up (matches the
+    /// historical `ip link … restart-ms 100`).
+    const NMEA2000_RESTART_MS: u32 = 100;
+
+    /// Configure and bring up a SocketCAN link via netlink (RTM_NEWLINK),
+    /// replacing an external `ip link set … up type can bitrate 250000 …`
+    /// unit. A CAN controller must be *down* to set its bit timing, so we
+    /// always cycle down → set bitrate + restart-ms → up. Retried a few times
+    /// because some controllers (notably the MCP2515) intermittently fail to
+    /// enter config mode on the first bring-up after boot, and a fresh down→up
+    /// often clears it. Best-effort: on give-up it logs and returns rather
+    /// than aborting the device session, so a later supervisor reconnect can
+    /// try again. PRIVILEGED — requires the process to run as root.
+    fn configure_can_link(iface: &str) {
+        let ci = match CanInterface::open(iface) {
+            Ok(ci) => ci,
+            Err(e) => {
+                log::error!("CAN {iface}: cannot open netlink handle to configure link: {e}");
+                return;
+            }
+        };
+        const ATTEMPTS: u32 = 5;
+        for attempt in 1..=ATTEMPTS {
+            // Down first: bit timing can only be set while down, and it also
+            // resets a controller left half-configured by a prior failed
+            // bring-up. An already-down interface makes this a no-op.
+            let _ = ci.bring_down();
+            let result = ci
+                .set_bitrate(NMEA2000_BITRATE, None::<u32>)
+                .and_then(|()| ci.set_restart_ms(NMEA2000_RESTART_MS))
+                .and_then(|()| ci.bring_up());
+            match result {
+                Ok(()) => {
+                    log::info!(
+                        "CAN {iface}: configured {NMEA2000_BITRATE} bit/s, \
+                         restart-ms {NMEA2000_RESTART_MS}, link up (attempt {attempt})"
+                    );
+                    return;
+                }
+                Err(e) => {
+                    log::warn!("CAN {iface}: bring-up attempt {attempt}/{ATTEMPTS} failed: {e}");
+                    thread::sleep(std::time::Duration::from_millis(500));
+                }
+            }
+        }
+        log::error!(
+            "CAN {iface}: could not bring link up after {ATTEMPTS} attempts; opening socket \
+             anyway (TX will fail with ENETDOWN until the controller recovers)"
+        );
+    }
+
     pub fn run(
         iface: &str,
         config: Config,
         claim_addr: Arc<AtomicU8>,
     ) -> std::io::Result<DeviceHandle> {
+        // Own the link's lifecycle here instead of relying on an external
+        // bring-up (systemd/ip) that may not be ordered before us — the
+        // historical failure mode where the N2K interface was left DOWN
+        // because its bring-up unit no longer ran first. Best-effort: `run()`
+        // proceeds even if it can't come up, so the supervisor keeps retrying.
+        if config.configure_link {
+            configure_can_link(iface);
+        }
         let sock = CanSocket::open(iface).map_err(std::io::Error::other)?;
         sock.set_nonblocking(true)?;
         let fd = sock.as_raw_fd();

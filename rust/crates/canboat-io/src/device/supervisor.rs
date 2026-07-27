@@ -396,8 +396,17 @@ mod tests {
 
         // Collect frames until we've seen all the expected payloads
         // or we time out.
+        //
+        // The happy path spends ~2s in real sleeps — 500ms after each of
+        // the two mid-stream EOFs plus one INITIAL_BACKOFF for the
+        // simulated open failure — and the loop breaks the moment all 7
+        // frames land, so a generous ceiling costs nothing when the test
+        // passes. It only bounds a genuine hang. Keep it far above the
+        // expected time: a loaded CI runner that stretches those sleeps
+        // must not be mistaken for a dropped frame (a 5s deadline flaked
+        // on macOS, timing out one frame short of the last session).
         let mut got: Vec<u32> = Vec::new();
-        let deadline = std::time::Instant::now() + Duration::from_secs(5);
+        let deadline = std::time::Instant::now() + Duration::from_secs(60);
         while got.len() < 7 && std::time::Instant::now() < deadline {
             match sup.frames_rx.recv_timeout(Duration::from_millis(500)) {
                 Ok(f) => got.push(f.pgn),
