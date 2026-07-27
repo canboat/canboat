@@ -651,10 +651,7 @@ fn write_field_value<W: fmt::Write>(
                 write!(w, "{}", v)
             }
         }
-        FieldValue::Float(v) => {
-            // canboat uses %g — Rust's `{}` is acceptably close.
-            write!(w, "{}", v)
-        }
+        FieldValue::Float(v) => super::write_c_g(w, *v),
         FieldValue::Binary(bytes) => {
             // canboat emits binary as uppercase hex with space-separated
             // bytes (matches fieldPrintBinary's `%s%2.02X` w/ " " sep).

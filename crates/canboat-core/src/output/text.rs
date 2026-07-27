@@ -296,9 +296,7 @@ fn write_field_value<W: fmt::Write>(
             Ok(())
         }
         FieldValue::Float(v) => {
-            // canboat uses %g for floats — Rust's `{}` for f64 is close
-            // enough for v0.
-            write!(w, "{}", v)?;
+            super::write_c_g(w, *v)?;
             if let Some(unit) = &f.unit() {
                 write!(w, " {}", unit)?;
             }

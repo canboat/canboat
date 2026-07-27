@@ -141,6 +141,60 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     w.write_str(frac_str)
 }
 
+/// C `printf("%g")` — how canboat prints FLOAT fields
+/// (`fieldPrintFloat`, print.c).
+///
+/// Six significant digits: `%e` when the decimal exponent is below -4
+/// or at least 6, `%f` otherwise, then trailing fractional zeros and a
+/// bare `.` are stripped. C's exponent always carries a sign and at
+/// least two digits, which Rust's `{:e}` does not.
+///
+/// This is not the same function as Rust's `{}`, which prints the
+/// shortest string that round-trips. The two diverge exactly where a
+/// FLOAT field is a widened `f32`: Garmin's `Heading to Steer` is
+/// `2.7274` under `%g` and `2.7273988723754883` under `{}`.
+///
+/// Allocates, unlike the rest of this module — but only on the FLOAT
+/// path, which a handful of PGNs use.
+pub(crate) fn write_c_g<W: std::fmt::Write>(w: &mut W, v: f64) -> std::fmt::Result {
+    const PRECISION: i32 = 6;
+
+    if v.is_nan() {
+        return w.write_str("nan");
+    }
+    if v.is_infinite() {
+        return w.write_str(if v > 0.0 { "inf" } else { "-inf" });
+    }
+
+    // Take the exponent from the rounded `%e` form rather than from
+    // `log10`, so a value that rounds up into the next decade (9.9999995
+    // → 1e+01) picks the exponent it will actually be printed with.
+    let sci = format!("{:.*e}", (PRECISION - 1) as usize, v);
+    let (mantissa, exp_str) = sci.split_once('e').expect("{:e} always emits an 'e'");
+    let exp: i32 = exp_str
+        .parse()
+        .expect("{:e} always emits an integer exponent");
+
+    fn trim(s: &str) -> &str {
+        match s.split_once('.') {
+            Some(_) => s.trim_end_matches('0').trim_end_matches('.'),
+            None => s,
+        }
+    }
+
+    // Spelled as C's own condition rather than a range test, so it
+    // reads against the standard's wording for %g.
+    #[allow(clippy::manual_range_contains)]
+    let scientific = exp < -4 || exp >= PRECISION;
+    if scientific {
+        w.write_str(trim(mantissa))?;
+        write!(w, "e{}{:02}", if exp < 0 { '-' } else { '+' }, exp.abs())
+    } else {
+        let decimals = (PRECISION - 1 - exp).max(0) as usize;
+        w.write_str(trim(&format!("{v:.decimals$}")))
+    }
+}
+
 /// Format days-since-1970-01-01 as `YYYY.MM.DD` (canboat text style).
 pub fn format_date(days: u16, w: &mut dyn std::fmt::Write) -> std::fmt::Result {
     let (y, m, d) = days_to_ymd(days as i64);
@@ -227,5 +281,61 @@ mod tests {
         let mut out = String::new();
         format_time(3661.5, 3, false, &mut out).unwrap();
         assert_eq!(out, "01:01:01.500");
+    }
+}
+
+#[cfg(test)]
+mod c_g_tests {
+    use super::write_c_g;
+
+    fn g(v: f32) -> String {
+        let mut s = String::new();
+        write_c_g(&mut s, v as f64).unwrap();
+        s
+    }
+
+    #[test]
+    fn matches_c_printf_g() {
+        // Expected strings produced by a C program printing `%g` of the
+        // same `(double)` promotions, compiled and run on this platform.
+        let cases: &[(f32, &str)] = &[
+            (2.727_398_9, "2.7274"), // Garmin Heading to Steer
+            (0.0, "0"),
+            (-0.0, "-0"),
+            (1.0, "1"),
+            (10.0, "10"),
+            (100_000.0, "100000"),  // last %f exponent
+            (1_000_000.0, "1e+06"), // first %e exponent
+            (1_234_567.0, "1.23457e+06"),
+            (0.0001, "0.0001"), // last %f exponent going down
+            (0.00001, "1e-05"), // first %e exponent going down
+            (9.999_999, "10"),  // rounds up into the next decade
+            (-core::f32::consts::PI, "-3.14159"),
+            (123_456.0, "123456"),
+            (0.5, "0.5"),
+            (1e-10, "1e-10"),
+            (1e20, "1e+20"),
+            (65535.0, "65535"),
+            (2.5e-5, "2.5e-05"),
+            (999_999.5, "1e+06"),
+            (1e6, "1e+06"),
+            (0.000_123_456, "0.000123456"),
+        ];
+        for (v, want) in cases {
+            assert_eq!(&g(*v), want, "%g of {v}");
+        }
+    }
+
+    #[test]
+    fn handles_non_finite() {
+        let mut s = String::new();
+        write_c_g(&mut s, f64::NAN).unwrap();
+        assert_eq!(s, "nan");
+        s.clear();
+        write_c_g(&mut s, f64::INFINITY).unwrap();
+        assert_eq!(s, "inf");
+        s.clear();
+        write_c_g(&mut s, f64::NEG_INFINITY).unwrap();
+        assert_eq!(s, "-inf");
     }
 }
