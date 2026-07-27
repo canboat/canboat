@@ -45,8 +45,8 @@ impl<'a> Emitter<'a> {
     }
 
     /// Ranges and the like: C `%.15g`. Lossy in the last bits, deliberately so
-    /// - these are computed products and 15 digits absorbs the multiply's
-    /// noise (QUIRKS Q6, "the other half").
+    ///   - these are computed products and 15 digits absorbs the multiply's
+    ///     noise (QUIRKS Q6, "the other half").
     fn g15(&self, v: f64) -> String {
         c_15g(v)
     }
@@ -302,15 +302,9 @@ impl<'a> Emitter<'a> {
             entry.value,
             xml_escape(&entry.name)
         ));
-        self.p(&format!(
-            " FieldType=\"{}\"",
-            xml_escape(&ft.root_name)
-        ));
+        self.p(&format!(" FieldType=\"{}\"", xml_escape(&ft.root_name)));
         if let Some(s) = ft.has_sign {
-            self.p(&format!(
-                " Signed=\"{}\"",
-                if s { "true" } else { "false" }
-            ));
+            self.p(&format!(" Signed=\"{}\"", if s { "true" } else { "false" }));
         }
         if ft.resolution != 0.0 {
             self.p(&format!(" Resolution=\"{}\"", self.gres(ft.resolution)));
@@ -390,17 +384,17 @@ impl<'a> Emitter<'a> {
         }
 
         for (n, rep) in [(1, &pgn.repeating1), (2, &pgn.repeating2)] {
-            if let Some(rep) = rep {
-                if rep.count > 0 {
-                    self.xml_u(6, &format!("RepeatingFieldSet{n}Size"), rep.count as u64);
-                    self.xml_u(
-                        6,
-                        &format!("RepeatingFieldSet{n}StartField"),
-                        rep.start as u64,
-                    );
-                    if let Some(cf) = rep.count_field {
-                        self.xml_u(6, &format!("RepeatingFieldSet{n}CountField"), cf as u64);
-                    }
+            if let Some(rep) = rep
+                && rep.count > 0
+            {
+                self.xml_u(6, &format!("RepeatingFieldSet{n}Size"), rep.count as u64);
+                self.xml_u(
+                    6,
+                    &format!("RepeatingFieldSet{n}StartField"),
+                    rep.start as u64,
+                );
+                if let Some(cf) = rep.count_field {
+                    self.xml_u(6, &format!("RepeatingFieldSet{n}CountField"), cf as u64);
                 }
             }
         }
@@ -438,9 +432,10 @@ impl<'a> Emitter<'a> {
                 self.xml(10, "Description", Some(d));
             }
             _ => {
-                if f.match_.is_some() && lookup_ref.is_some() {
+                if let Some((kind, name)) = lookup_ref.as_ref()
+                    && f.match_.is_some()
+                {
                     // filterPair: a match field's description is the lookup name
-                    let (kind, name) = lookup_ref.as_ref().unwrap();
                     let desc = self.match_description(f, kind, name);
                     self.p(&format!("          <Description>{desc}</Description>\n"));
                 }

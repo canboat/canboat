@@ -13,8 +13,14 @@ pub enum Value {
     /// value with display precision derived from the field resolution
     /// (mirrors the C: resolution 0.0001 prints 4 decimals - the raw f64
     /// would show binary noise like 0.19190000000000002)
-    Number { value: f64, decimals: u8 },
-    Lookup { value: u64, name: Option<String> },
+    Number {
+        value: f64,
+        decimals: u8,
+    },
+    Lookup {
+        value: u64,
+        name: Option<String>,
+    },
     Bits(Vec<String>),
     Str(String),
     Binary(String), // hex bytes
@@ -27,7 +33,10 @@ impl std::fmt::Display for Value {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
             Value::Number { value, decimals } => write!(f, "{:.*}", *decimals as usize, value),
-            Value::Lookup { value, name: Some(n) } => write!(f, "{n} ({value})"),
+            Value::Lookup {
+                value,
+                name: Some(n),
+            } => write!(f, "{n} ({value})"),
             Value::Lookup { value, name: None } => write!(f, "{value}"),
             Value::Bits(names) => write!(f, "[{}]", names.join(", ")),
             Value::Str(s) => write!(f, "\"{s}\""),
@@ -123,7 +132,13 @@ pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8]) -> Vec<NearMiss<
                         f.lookup.as_deref(),
                         Some("MANUFACTURER_CODE") | Some("INDUSTRY_CODE")
                     );
-                    diffs.push((f.id.clone(), f.name.clone(), want, got.unwrap_or(-1), preamble));
+                    diffs.push((
+                        f.id.clone(),
+                        f.name.clone(),
+                        want,
+                        got.unwrap_or(-1),
+                        preamble,
+                    ));
                 }
             }
             bit += f.res_bits as usize;
@@ -131,7 +146,13 @@ pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8]) -> Vec<NearMiss<
         // exactly one differing match field, and it isn't the vendor preamble
         if diffs.len() == 1 && !diffs[0].4 {
             let (field_id, field_name, expected, got, _) = diffs.into_iter().next().unwrap();
-            out.push(NearMiss { pgn: p, field_id, field_name, expected, got });
+            out.push(NearMiss {
+                pgn: p,
+                field_id,
+                field_name,
+                expected,
+                got,
+            });
         }
     }
     out
@@ -165,7 +186,11 @@ pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>
         .as_ref()
         .map(|r| (r.start as usize, r.count as usize))
         .unwrap_or((usize::MAX, 0));
-    let fixed_end = if rep_count > 0 { rep_start - 1 } else { pgn.fields.len() };
+    let fixed_end = if rep_count > 0 {
+        rep_start - 1
+    } else {
+        pgn.fields.len()
+    };
 
     for f in &pgn.fields[..fixed_end.min(pgn.fields.len())] {
         decode_one(db, f, data, &mut ctx, 1, &mut out)?;
@@ -255,9 +280,15 @@ fn decode_one(
                         match extract_bits(data, ctx.bit, vbits, false, 0) {
                             Some(e) => {
                                 let nm = db.lookups.get(nl).and_then(|lk| {
-                                    lk.pairs.iter().find(|(v, _)| *v == e.raw).map(|(_, n)| n.clone())
+                                    lk.pairs
+                                        .iter()
+                                        .find(|(v, _)| *v == e.raw)
+                                        .map(|(_, n)| n.clone())
                                 });
-                                Value::Lookup { value: e.raw, name: nm }
+                                Value::Lookup {
+                                    value: e.raw,
+                                    name: nm,
+                                }
                             }
                             None => Value::Unavailable,
                         }
@@ -268,7 +299,10 @@ fn decode_one(
                                 if fv.is_nan() {
                                     Value::Unavailable
                                 } else {
-                                    Value::Number { value: fv as f64, decimals: 4 }
+                                    Value::Number {
+                                        value: fv as f64,
+                                        decimals: 4,
+                                    }
                                 }
                             }
                             None => Value::Unavailable,
@@ -282,7 +316,10 @@ fn decode_one(
                                 value: e.value as f64 * res,
                                 decimals: decimals_for(res),
                             },
-                            Some(e) => Value::Number { value: e.value as f64, decimals: 0 },
+                            Some(e) => Value::Number {
+                                value: e.value as f64,
+                                decimals: 0,
+                            },
                             None => Value::Unavailable,
                         }
                     } else {
@@ -315,7 +352,11 @@ fn decode_one(
             let n = total.saturating_sub(2); // count includes length + encoding bytes
             let v = slice_bytes(data, ctx.bit + 16, n);
             ctx.bit += total.max(2) * 8;
-            Value::Str(String::from_utf8_lossy(&v).trim_end_matches('\0').to_string())
+            Value::Str(
+                String::from_utf8_lossy(&v)
+                    .trim_end_matches('\0')
+                    .to_string(),
+            )
         }
         "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
             let v = slice_bits(data, ctx.bit, bits);
@@ -348,7 +389,9 @@ fn decode_one(
                                     .lookup_fieldtype
                                     .as_ref()
                                     .and_then(|n| db.lookups.get(n))
-                                    .and_then(|lk| lk.fieldtypes.iter().find(|en| en.value == e.raw))
+                                    .and_then(|lk| {
+                                        lk.fieldtypes.iter().find(|en| en.value == e.raw)
+                                    })
                                     .map(|en| (en.fieldtype.clone(), en.bits, en.lookup.clone()));
                                 if let Some(("fieldtype", n)) = f.lookup_ref() {
                                     lookup_ref = Some((n.to_string(), "fieldtype".into()));
@@ -420,7 +463,10 @@ fn decode_one(
                     if v.is_nan() {
                         Value::Unavailable
                     } else {
-                        Value::Number { value: v as f64, decimals: 4 }
+                        Value::Number {
+                            value: v as f64,
+                            decimals: 4,
+                        }
                     }
                 }
                 None => Value::Unavailable,
@@ -445,7 +491,10 @@ fn decode_one(
                             value: e.value as f64 * f.res_resolution,
                             decimals: decimals_for(f.res_resolution),
                         },
-                        None => Value::Number { value: e.value as f64, decimals: 0 },
+                        None => Value::Number {
+                            value: e.value as f64,
+                            decimals: 0,
+                        },
                     }
                 }
             }
@@ -497,7 +546,11 @@ fn sentinel(f: &Field, has_sign: Option<bool>, raw: u64, bits: usize) -> Option<
     if f.reserved_count == 0 || bits == 0 || bits >= 64 || f.match_.is_some() {
         return None;
     }
-    let highbit = if has_sign == Some(true) && f.res_offset == 0 { bits - 1 } else { bits };
+    let highbit = if has_sign == Some(true) && f.res_offset == 0 {
+        bits - 1
+    } else {
+        bits
+    };
     let top = (1u64 << highbit) - 1;
     if raw == top {
         Some(Value::Unavailable)
@@ -519,7 +572,11 @@ fn lookup_name(
     let (kind, name) = f.lookup_ref()?;
     let lk = db.lookups.get(name)?;
     match kind {
-        "pair" => lk.pairs.iter().find(|(v, _)| *v == raw).map(|(_, n)| n.clone()),
+        "pair" => lk
+            .pairs
+            .iter()
+            .find(|(v, _)| *v == raw)
+            .map(|(_, n)| n.clone()),
         "fieldtype" => lk
             .fieldtypes
             .iter()
@@ -541,7 +598,11 @@ fn lookup_name(
 }
 
 fn byte_at(data: &[u8], bit: usize) -> Option<u8> {
-    if bit % 8 == 0 { data.get(bit / 8).copied() } else { None }
+    if bit.is_multiple_of(8) {
+        data.get(bit / 8).copied()
+    } else {
+        None
+    }
 }
 
 /// Bit-exact binary slice: extracts `bits` bits from `bit` (LSB-first per

@@ -24,7 +24,6 @@ use std::fs;
 use std::path::{Path, PathBuf};
 use std::process::ExitCode;
 
-
 // Die silently on SIGPIPE (keel explain | head) instead of a Rust panic.
 // Unix only: Windows has no SIGPIPE and no libc `signal` to link against.
 #[cfg(unix)]
@@ -142,7 +141,14 @@ fn run() -> Result<i32, String> {
     // so it works anywhere (e.g. regenerating docs).
     if args.command == "rules" {
         let md = args.rest.iter().any(|a| a == "md" || a == "markdown");
-        print!("{}", if md { rules::render_md() } else { rules::render_text() });
+        print!(
+            "{}",
+            if md {
+                rules::render_md()
+            } else {
+                rules::render_text()
+            }
+        );
         return Ok(0);
     }
     let root = find_repo_root(&args.root)?;
@@ -257,9 +263,7 @@ fn run() -> Result<i32, String> {
                 if line.trim().is_empty() || line.trim_start().starts_with('#') {
                     continue;
                 }
-                frames.push(
-                    samples::parse_line(line).map_err(|e| format!("line {}: {e}", n + 1))?,
-                );
+                frames.push(samples::parse_line(line).map_err(|e| format!("line {}: {e}", n + 1))?);
             }
             let (assembled, warnings) =
                 samples::reassemble_lenient(&frames, |pgn| fast.contains(&pgn))?;
@@ -277,7 +281,11 @@ fn run() -> Result<i32, String> {
                             } else {
                                 String::new()
                             };
-                            let unit = d.unit.as_deref().map(|u| format!(" {u}")).unwrap_or_default();
+                            let unit = d
+                                .unit
+                                .as_deref()
+                                .map(|u| format!(" {u}"))
+                                .unwrap_or_default();
                             println!("  {}{} = {}{}", d.id, inst, d.value, unit);
                         }
                     }

@@ -19,11 +19,17 @@ pub fn emit_text(db: &Database, j1939: bool) -> String {
     ));
     let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
     out.push_str("_______ Complete PGNs _________\n\n");
-    for p in list.iter().filter(|p| p.is_complete() && p.pgn < ACTISENSE_BEM) {
+    for p in list
+        .iter()
+        .filter(|p| p.is_complete() && p.pgn < ACTISENSE_BEM)
+    {
         explain_pgn(db, p, &mut out);
     }
     out.push_str("_______ Incomplete PGNs _________\n\n");
-    for p in list.iter().filter(|p| !p.is_complete() && p.pgn < ACTISENSE_BEM) {
+    for p in list
+        .iter()
+        .filter(|p| !p.is_complete() && p.pgn < ACTISENSE_BEM)
+    {
         explain_pgn(db, p, &mut out);
     }
     out
@@ -41,15 +47,19 @@ fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
         out.push_str(&format!("     URL: {u}\n"));
     }
     if p.is_variable {
-        out.push_str(&format!("     The length is variable but at least {} bytes\n", p.length));
+        out.push_str(&format!(
+            "     The length is variable but at least {} bytes\n",
+            p.length
+        ));
     } else {
         out.push_str(&format!("     The length is {} bytes\n", p.length));
     }
 
     for (rep, _n) in [(&p.repeating1, 1), (&p.repeating2, 2)] {
-        if let Some(rep) = rep {
-            if rep.count > 0 {
-                match rep.count_field {
+        if let Some(rep) = rep
+            && rep.count > 0
+        {
+            match rep.count_field {
                     Some(cf) => out.push_str(&format!(
                         "     Fields {} thru {} repeat n times, where n is the value contained in field {}.\n\n",
                         rep.start,
@@ -62,14 +72,13 @@ fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
                         rep.start + rep.count
                     )),
                 }
-            }
         }
     }
 
     match p.interval {
-        Interval::Ms(ms) if ms != 0 => {
-            out.push_str(&format!("     The PGN is normally transmitted every {ms} ms\n"))
-        }
+        Interval::Ms(ms) if ms != 0 => out.push_str(&format!(
+            "     The PGN is normally transmitted every {ms} ms\n"
+        )),
         Interval::Irregular => {
             out.push_str("     The PGN is transmitted on-demand or when data is available\n")
         }
@@ -86,7 +95,10 @@ fn explain_pgn(db: &Database, p: &Pgn, out: &mut String) {
 }
 
 fn explain_field(db: &Database, f: &Field, out: &mut String) {
-    let desc = f.description.as_deref().filter(|d| !d.is_empty() && !d.starts_with(','));
+    let desc = f
+        .description
+        .as_deref()
+        .filter(|d| !d.is_empty() && !d.starts_with(','));
     out.push_str(&format!(
         "  Field #{}: {}{}{}\n",
         f.order,
@@ -106,12 +118,19 @@ fn explain_field(db: &Database, f: &Field, out: &mut String) {
         out.push_str(&format!("                  Unit: {u}\n"));
     }
     if f.res_resolution != 0.0 {
-        out.push_str(&format!("                  Resolution: {}\n", c_g(f.res_resolution)));
+        out.push_str(&format!(
+            "                  Resolution: {}\n",
+            c_g(f.res_resolution)
+        ));
     }
     let ft = &db.fieldtypes[f.ft];
     out.push_str(&format!(
         "                  Signed: {}\n",
-        if ft.has_sign == Some(true) { "true" } else { "false" }
+        if ft.has_sign == Some(true) {
+            "true"
+        } else {
+            "false"
+        }
     ));
     if f.res_offset != 0 {
         if f.res_resolution == 1.0 || f.res_resolution == 0.0 {

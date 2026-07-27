@@ -71,31 +71,6 @@ pub fn c_g_roundtrip(value: f64) -> String {
     cfmt(b"%.17g\0", value)
 }
 
-#[cfg(test)]
-mod roundtrip_tests {
-    use super::*;
-
-    #[test]
-    fn never_shortens_what_g_prints_exactly() {
-        // %g already round-trips these; the output must be byte-identical.
-        for v in [10.0, 60.0, 100.0, 500.0, 1000.0, 2000.0, 4096.0, 36.0, 864.0, 0.01, 0.1, 1.0] {
-            assert_eq!(c_g_roundtrip(v), c_g(v), "{v} must match plain %g");
-        }
-    }
-
-    #[test]
-    fn lengthens_only_where_g_loses_information() {
-        // Binary fractions %g truncates: recovered in full, exponent style kept.
-        assert_eq!(c_g_roundtrip(1.0 / 16384.0), "6.103515625e-05");
-        assert_eq!(c_g_roundtrip(2f64.powi(-38)), "3.637978807091713e-12");
-        assert_eq!(c_g_roundtrip(2f64.powi(-11)), "0.00048828125");
-        // and every result must parse back to the exact input
-        for v in [1.0 / 16384.0, 1.0 / 11.0, 2f64.powi(-23), 2.0 * std::f64::consts::PI / 65536.0] {
-            assert_eq!(c_g_roundtrip(v).parse::<f64>().unwrap(), v);
-        }
-    }
-}
-
 /// Escape text for XML element content or a double-quoted attribute value.
 ///
 /// Every attribute keel emits is double-quoted, so `"` is the only quote that
@@ -107,4 +82,36 @@ pub fn xml_escape(text: &str) -> String {
         .replace('<', "&lt;")
         .replace('>', "&gt;")
         .replace('"', "&quot;")
+}
+
+#[cfg(test)]
+mod roundtrip_tests {
+    use super::*;
+
+    #[test]
+    fn never_shortens_what_g_prints_exactly() {
+        // %g already round-trips these; the output must be byte-identical.
+        for v in [
+            10.0, 60.0, 100.0, 500.0, 1000.0, 2000.0, 4096.0, 36.0, 864.0, 0.01, 0.1, 1.0,
+        ] {
+            assert_eq!(c_g_roundtrip(v), c_g(v), "{v} must match plain %g");
+        }
+    }
+
+    #[test]
+    fn lengthens_only_where_g_loses_information() {
+        // Binary fractions %g truncates: recovered in full, exponent style kept.
+        assert_eq!(c_g_roundtrip(1.0 / 16384.0), "6.103515625e-05");
+        assert_eq!(c_g_roundtrip(2f64.powi(-38)), "3.637978807091713e-12");
+        assert_eq!(c_g_roundtrip(2f64.powi(-11)), "0.00048828125");
+        // and every result must parse back to the exact input
+        for v in [
+            1.0 / 16384.0,
+            1.0 / 11.0,
+            2f64.powi(-23),
+            2.0 * std::f64::consts::PI / 65536.0,
+        ] {
+            assert_eq!(c_g_roundtrip(v).parse::<f64>().unwrap(), v);
+        }
+    }
 }

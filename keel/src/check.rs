@@ -109,7 +109,10 @@ fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<
             }
         };
         if assembled.len() != 1 {
-            fail(format!("expected exactly one message, got {}", assembled.len()));
+            fail(format!(
+                "expected exactly one message, got {}",
+                assembled.len()
+            ));
             continue;
         }
         let a = &assembled[0];
@@ -120,7 +123,10 @@ fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<
         match decode::select_variant(db, a.pgn, &a.data, j1939) {
             Some(sel) if sel.id == p.id => {}
             Some(sel) => {
-                fail(format!("sample selects variant '{}', not '{}'", sel.id, p.id));
+                fail(format!(
+                    "sample selects variant '{}', not '{}'",
+                    sel.id, p.id
+                ));
                 continue;
             }
             None => {
@@ -142,7 +148,10 @@ fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<
                 }
                 _ => (key.as_str(), 1),
             };
-            let Some(d) = decoded.iter().find(|d| d.id == id && d.instance == instance) else {
+            let Some(d) = decoded
+                .iter()
+                .find(|d| d.id == id && d.instance == instance)
+            else {
                 fail(format!("expected field '{key}' was not decoded"));
                 continue;
             };
@@ -277,12 +286,12 @@ fn check_repeating(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
                 nfields
             ));
         }
-        if let Some(cf) = rep.count_field {
-            if cf == 0 || cf >= rep.start {
-                bad.push(format!(
-                    "countField {cf} must reference a field before the set"
-                ));
-            }
+        if let Some(cf) = rep.count_field
+            && (cf == 0 || cf >= rep.start)
+        {
+            bad.push(format!(
+                "countField {cf} must reference a field before the set"
+            ));
         }
         for msg in bad {
             v.push(Violation {
@@ -555,7 +564,10 @@ fn check_match_values(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violatio
                     rule: "R13",
                     error: true,
                     location: pgn_loc(prefix, p),
-                    message: format!("field '{}': match value {m:?} does not resolve ({hint})", f.id),
+                    message: format!(
+                        "field '{}': match value {m:?} does not resolve ({hint})",
+                        f.id
+                    ),
                 });
             }
             Some(val) if f.res_bits < 64 => {

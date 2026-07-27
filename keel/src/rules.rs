@@ -300,7 +300,10 @@ pub fn render_text() -> String {
         }
         out.push_str(&format!("\n{}\n", scope.title()));
         for r in group {
-            out.push_str(&format!("  {}  [{}]  {}\n", r.id, r.severity, r.enforced_in));
+            out.push_str(&format!(
+                "  {}  [{}]  {}\n",
+                r.id, r.severity, r.enforced_in
+            ));
             out.push_str(&format!("      {}\n", r.title));
             out.push_str(&format!("      {}\n", wrap(r.detail, 72, "      ")));
         }
@@ -324,11 +327,7 @@ pub fn render_md() -> String {
         for r in group {
             out.push_str(&format!(
                 "- **{}** ({}, _{}_) — {} {}\n",
-                r.id,
-                r.severity,
-                r.enforced_in,
-                r.title,
-                r.detail,
+                r.id, r.severity, r.enforced_in, r.title, r.detail,
             ));
         }
     }
@@ -363,8 +362,16 @@ mod tests {
         let mut prev = "";
         for r in RULES {
             assert!(r.id.len() == 3 && r.id.starts_with('R'), "bad id {}", r.id);
-            assert!(r.id > prev, "ids must be strictly ascending: {} after {prev}", r.id);
-            assert!(!r.title.is_empty() && !r.detail.is_empty(), "{} needs text", r.id);
+            assert!(
+                r.id > prev,
+                "ids must be strictly ascending: {} after {prev}",
+                r.id
+            );
+            assert!(
+                !r.title.is_empty() && !r.detail.is_empty(),
+                "{} needs text",
+                r.id
+            );
             assert!(!r.enforced_in.is_empty() && !r.severity.is_empty());
             prev = r.id;
         }
@@ -381,7 +388,10 @@ mod tests {
         while let Some(p) = src[i..].find("rule: \"R") {
             let start = i + p + "rule: \"".len();
             let id = &src[start..start + 3];
-            assert!(documented.contains(id), "check.rs emits {id} but rules.rs has no entry");
+            assert!(
+                documented.contains(id),
+                "check.rs emits {id} but rules.rs has no entry"
+            );
             i = start;
         }
     }

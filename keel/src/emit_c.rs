@@ -356,7 +356,9 @@ fn emit_field(db: &Database, f: &Field) -> String {
         // Compared numerically against the wire, so the resolved number is
         // emitted even when the match is authored as a lookup value name
         // (model::resolve_match).
-        let n = db.resolve_match(f).expect("match resolves (guaranteed by check R13)");
+        let n = db
+            .resolve_match(f)
+            .expect("match resolves (guaranteed by check R13)");
         parts.push(".hasMatchValue = true".into());
         parts.push(format!(".matchValue = {n}"));
     }
@@ -436,15 +438,15 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
         named.push(format!(".priority = {}", p.priority));
     }
     for (n, rep) in [(1, &p.repeating1), (2, &p.repeating2)] {
-        if let Some(rep) = rep {
-            if rep.count > 0 {
-                named.push(format!(".repeatingCount{n} = {}", rep.count));
-                named.push(format!(".repeatingStart{n} = {}", rep.start));
-                named.push(format!(
-                    ".repeatingField{n} = {}",
-                    rep.count_field.unwrap_or(255)
-                ));
-            }
+        if let Some(rep) = rep
+            && rep.count > 0
+        {
+            named.push(format!(".repeatingCount{n} = {}", rep.count));
+            named.push(format!(".repeatingStart{n} = {}", rep.start));
+            named.push(format!(
+                ".repeatingField{n} = {}",
+                rep.count_field.unwrap_or(255)
+            ));
         }
     }
     if let Some(v) = &p.explanation {

@@ -60,7 +60,7 @@
         },
         {
           "type": "generic",
-          "path": "rust/Cargo.toml"
+          "path": "Cargo.toml"
         }
       ]
     }

@@ -172,17 +172,12 @@ pub enum Expected {
     Unavailable, // YAML null
 }
 
-#[derive(Debug, Clone, PartialEq)]
+#[derive(Debug, Clone, PartialEq, Default)]
 pub enum Interval {
+    #[default]
     Unknown,
     Irregular,
     Ms(u32),
-}
-
-impl Default for Interval {
-    fn default() -> Self {
-        Interval::Unknown
-    }
 }
 
 #[derive(Debug, Clone, Default)]
@@ -299,11 +294,7 @@ impl Database {
     /// retired, so order is now simply alphabetical: derivable, stable, and
     /// one less file to keep in step when an enumeration is added.
     pub fn ordered_lookups(&self, kind: &str) -> Vec<&Lookup> {
-        let mut out: Vec<&Lookup> = self
-            .lookups
-            .values()
-            .filter(|lk| lk.kind == kind)
-            .collect();
+        let mut out: Vec<&Lookup> = self.lookups.values().filter(|lk| lk.kind == kind).collect();
         out.sort_by(|a, b| a.name.cmp(&b.name));
         out
     }

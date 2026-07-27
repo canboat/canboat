@@ -28,7 +28,10 @@ pub fn emit_artifacts(
             root.join("analyzer/fieldtype-data.h"),
             emit_c::emit_fieldtype_data_h(authored_fieldtypes),
         ),
-        (root.join("analyzer/pgn-data.h"), emit_c::emit_pgn_data_h(db, false)),
+        (
+            root.join("analyzer/pgn-data.h"),
+            emit_c::emit_pgn_data_h(db, false),
+        ),
         (
             root.join("analyzer/pgn-j1939-data.h"),
             emit_c::emit_pgn_data_h(db, true),

@@ -24,8 +24,8 @@ jobs:
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
   # release-please bumps VERSION in common/version.h and the workspace version in
-  # rust/Cargo.toml. Both are stamped into files it does NOT itself update:
-  # the generated docs/* + docs/canboat.dbc carry VERSION, and rust/Cargo.lock
+  # Cargo.toml. Both are stamped into files it does NOT itself update:
+  # the generated docs/* + docs/canboat.dbc carry VERSION, and Cargo.lock
   # records a version for every workspace member. A bumped Cargo.toml with a
   # stale Cargo.lock fails every `cargo --locked` job on the release PR, so both
   # are refreshed here on the release branch.
@@ -50,8 +50,8 @@ jobs:
           make
           make generated
 
-      # Sync rust/Cargo.lock to the workspace version release-please just wrote
-      # into rust/Cargo.toml. --workspace updates only the member packages;
+      # Sync Cargo.lock to the workspace version release-please just wrote
+      # into Cargo.toml. --workspace updates only the member packages;
       # third-party pins are left exactly as locked (cargo reports them as
       # "unchanged dependencies behind latest"), so this moves the member
       # version lines and nothing else.
@@ -60,14 +60,14 @@ jobs:
       # cargo cannot resolve even already-locked third-party crates from the
       # index and fails with "no matching package named `indexmap` found".
       # It only appeared in CI because a warm local cache hides it.
-      - name: re-stamp rust/Cargo.lock
-        run: cargo update --workspace --manifest-path rust/Cargo.toml
+      - name: re-stamp Cargo.lock
+        run: cargo update --workspace
 
       - name: commit regenerated files
         run: |
           if ! git diff --exit-code; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -am "chore: regenerate docs/*, canboat.dbc and rust/Cargo.lock for release"
+            git commit -am "chore: regenerate docs/*, canboat.dbc and Cargo.lock for release"
             git push
           fi

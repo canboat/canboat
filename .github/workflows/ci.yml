@@ -95,7 +95,7 @@ jobs:
 
       - name: Verify the binary is statically linked
         run: |
-          bin="keel/target/${{ matrix.target }}/release/keel"
+          bin="target/${{ matrix.target }}/release/keel"
           file "$bin"
           # musl release binaries must not carry a dynamic-linker/interpreter.
           if file "$bin" | grep -q "dynamically linked"; then
@@ -112,7 +112,7 @@ jobs:
 
       # keel is on the path of anyone regenerating the database (it is
       # cargo-shimmed from analyzer/Makefile), so its dependency closure must
-      # stay tiny — the Rust runtime in rust/ must never leak into it.
+      # stay tiny — the runtime crates in crates/ must never leak into it.
       # MERGE-CANBOAT-RS.md §9.
       - name: keel must not pull in the runtime dependency tree
         run: tools/check-keel-deps.sh

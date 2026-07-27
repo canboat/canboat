@@ -37,7 +37,7 @@ pub fn get_min_range(size: u32, resolution: f64, sign: bool, offset: i32) -> f64
     if !sign || offset != 0 {
         (offset as f64) * resolution
     } else {
-        (((1i128 << highbit) - 1) as f64) * resolution * -1.0
+        -((((1i128 << highbit) - 1) as f64) * resolution)
     }
 }
 
@@ -58,12 +58,13 @@ pub fn get_max_range(
     if offset != 0 {
         max_value += offset as i128;
     }
-    if let Some(lk) = lookup {
-        if lk.kind == "pair" && !lk.pairs.is_empty() {
-            // A lookup naming values in the sentinel region raises rangeMax
-            let named_max = lk.pairs.iter().map(|(v, _)| *v as i128).max().unwrap();
-            max_value = max_value.max(named_max);
-        }
+    if let Some(lk) = lookup
+        && lk.kind == "pair"
+        && !lk.pairs.is_empty()
+    {
+        // A lookup naming values in the sentinel region raises rangeMax
+        let named_max = lk.pairs.iter().map(|(v, _)| *v as i128).max().unwrap();
+        max_value = max_value.max(named_max);
     }
     (max_value as f64) * resolution
 }
@@ -109,11 +110,10 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
             if ft.url.is_none() {
                 ft.url = url.clone();
             }
-        } else if ft.unit.is_some() {
+        } else if let Some(unit) = ft.unit.as_ref() {
             return Err(format!(
-                "FieldType '{}' has unit '{}' but no physical quantity",
-                ft.name,
-                ft.unit.as_ref().unwrap()
+                "FieldType '{}' has unit '{unit}' but no physical quantity",
+                ft.name
             ));
         }
     }
@@ -166,12 +166,16 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
         // NB: an explicit .rangeMax initializer trips the C `rangeMax == 0.0`
         // guard and lands in the NaN branch (QUIRKS.md Q11).
         let authored_inert = !matches!(ft.range_max_authored, None | Some(0.0));
-        if ft.size != 0 && ft.resolution != 0.0 && ft.has_sign.is_some() && !authored_inert {
-            ft.range_min = get_min_range(ft.size, ft.resolution, ft.has_sign.unwrap(), ft.offset);
+        if let Some(has_sign) = ft.has_sign
+            && ft.size != 0
+            && ft.resolution != 0.0
+            && !authored_inert
+        {
+            ft.range_min = get_min_range(ft.size, ft.resolution, has_sign, ft.offset);
             ft.range_max = get_max_range(
                 ft.size,
                 ft.resolution,
-                ft.has_sign.unwrap(),
+                has_sign,
                 ft.offset,
                 None,
                 reserved_count_for_size(ft.size),
@@ -278,10 +282,10 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
                 f.res_range_min = ft.range_min;
                 f.res_range_max = ft.range_max;
             }
-            if let Some(unit) = &f.res_unit {
-                if f.res_resolution != 0.0 {
-                    fixup_unit(unit, f_has_sign, &mut f.res_range_min, &mut f.res_range_max);
-                }
+            if let Some(unit) = &f.res_unit
+                && f.res_resolution != 0.0
+            {
+                fixup_unit(unit, f_has_sign, &mut f.res_range_min, &mut f.res_range_max);
             }
 
             let by_size = reserved_count_for_size(f.res_bits);
@@ -330,12 +334,19 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
 
         // Resolve bitLengthField to the referenced field's order. R15 has the
         // diagnostics; an unresolvable id simply emits nothing here.
-        let by_id: std::collections::HashMap<&str, u32> =
-            pgn.fields.iter().map(|f| (f.id.as_str(), f.order)).collect();
+        let by_id: std::collections::HashMap<&str, u32> = pgn
+            .fields
+            .iter()
+            .map(|f| (f.id.as_str(), f.order))
+            .collect();
         let resolved: Vec<Option<u32>> = pgn
             .fields
             .iter()
-            .map(|f| f.bit_length_field.as_deref().and_then(|id| by_id.get(id).copied()))
+            .map(|f| {
+                f.bit_length_field
+                    .as_deref()
+                    .and_then(|id| by_id.get(id).copied())
+            })
             .collect();
         for (f, order) in pgn.fields.iter_mut().zip(resolved) {
             f.bit_length_field_order = order;
@@ -356,12 +367,12 @@ fn fill_pgn_length(pgn: &mut crate::model::Pgn) -> Result<(), String> {
     let field_count = pgn.fields.len() as u32;
     let mut counted = field_count as usize;
     let mut is_variable = false;
-    if let Some(rep1) = &pgn.repeating1 {
-        if rep1.count > 0 {
-            let rep2 = pgn.repeating2.as_ref().map(|r| r.count).unwrap_or(0);
-            counted -= (rep1.count + rep2) as usize;
-            is_variable = true;
-        }
+    if let Some(rep1) = &pgn.repeating1
+        && rep1.count > 0
+    {
+        let rep2 = pgn.repeating2.as_ref().map(|r| r.count).unwrap_or(0);
+        counted -= (rep1.count + rep2) as usize;
+        is_variable = true;
     }
 
     let mut length_bits = 0u32;
@@ -372,7 +383,7 @@ fn fill_pgn_length(pgn: &mut crate::model::Pgn) -> Result<(), String> {
             length_bits += f.res_bits;
         }
     }
-    if length_bits % 8 != 0 {
+    if !length_bits.is_multiple_of(8) {
         return Err(format!(
             "PGN {} '{}' has a length of {} bits that does not fill bytes exactly",
             pgn.pgn, pgn.description, length_bits

@@ -11,10 +11,15 @@
 # YAML. That invariant is load-bearing for goals #1 and #4, so it is enforced
 # here rather than trusted.
 #
-# keel/ and rust/ are separate Cargo workspaces, which already makes a
-# dependency edge between them impossible to express. This script exists so
-# that if the two are ever merged into one workspace, the invariant fails
-# loudly instead of silently eroding.
+# keel and the runtime crates share ONE workspace at the repo root, so a
+# dependency edge between them is a one-line edit away -- which is exactly why
+# this is checked. It used to be structurally impossible (separate
+# workspaces); it no longer is.
+#
+# NB: `cargo metadata` is useless for this now. In a workspace it reports every
+# member and every member's dependencies, so keel would appear to "depend on"
+# the whole runtime. `cargo tree -p keel` resolves keel's own subtree, which is
+# the thing we actually care about.
 
 set -eu
 
@@ -23,16 +28,20 @@ root="$(cd "$here/.." && pwd)"
 
 echo "== keel dependency-closure check =="
 
-# Every package cargo would build for keel, name only.
-closure="$(cd "$root/keel" && cargo metadata --format-version 1 --quiet \
-  | python3 -c 'import json,sys; print("\n".join(sorted(p["name"] for p in json.load(sys.stdin)["packages"])))')"
+closure="$(cd "$root" && cargo tree -p keel -e normal,build --prefix none 2>/dev/null \
+  | awk 'NF {print $1}' | sort -u)"
+
+if [ -z "$closure" ]; then
+  echo "ERROR: could not resolve keel's dependency tree." >&2
+  exit 2
+fi
 
 echo "keel's closure is $(echo "$closure" | wc -l | tr -d ' ') packages:"
 echo "$closure" | sed 's/^/  /'
 
 status=0
 
-# 1. No runtime crate may appear.
+# 1. No runtime crate may appear anywhere in the subtree.
 for forbidden in canboat-core canboat-io canboat-tokio canboat-bridge canboat-wire \
                  canboat-schema canboat-cli canboat tokio socketcan ratatui serde serde_json; do
   if echo "$closure" | grep -qx "$forbidden"; then
@@ -41,9 +50,10 @@ for forbidden in canboat-core canboat-io canboat-tokio canboat-bridge canboat-wi
   fi
 done
 
-# 2. Nothing may reach into rust/ by path.
-if grep -qE '^\s*[a-zA-Z0-9_-]+\s*=.*path\s*=\s*"[^"]*rust/' "$root/keel/Cargo.toml"; then
-  echo "ERROR: keel/Cargo.toml declares a path dependency into rust/." >&2
+# 2. Belt and braces: keel must not even name a workspace sibling. Rule 1 would
+#    catch it too, but this points at the offending line rather than the fallout.
+if grep -qE '^[[:space:]]*canboat[a-z-]*[[:space:]]*=' "$root/keel/Cargo.toml"; then
+  echo "ERROR: keel/Cargo.toml declares a dependency on a canboat-* crate." >&2
   status=1
 fi
 

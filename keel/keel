@@ -4,11 +4,14 @@
 set -e
 
 KEEL_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+# keel is a member of the Cargo workspace at the repo root, so cargo puts the
+# binary in the shared target/ one level up, not in keel/target/.
+ROOT_DIR=$(CDPATH= cd -- "$KEEL_DIR/.." && pwd)
 EXE=
 case "$(uname -s 2>/dev/null)" in
     CYGWIN*|MINGW*|MSYS*) EXE=.exe ;;
 esac
-BIN="$KEEL_DIR/target/release/keel$EXE"
+BIN="$ROOT_DIR/target/release/keel$EXE"
 
 stale() {
     [ ! -x "$BIN" ] && return 0
@@ -20,7 +23,7 @@ stale() {
 if stale; then
     if command -v cargo >/dev/null 2>&1; then
         echo "keel: building (cargo build --release) ..." >&2
-        (cd "$KEEL_DIR" && cargo build --release --quiet)
+        (cd "$ROOT_DIR" && cargo build --release --quiet -p keel)
     elif [ -x "$BIN" ]; then
         : # sources newer but no toolchain: run the stale binary rather than fail
         echo "keel: warning: sources changed but cargo is not installed; running stale binary" >&2
@@ -31,7 +34,7 @@ if stale; then
         case "$OS" in cygwin*|mingw*|msys*) OS=windows ;; esac
         ASSET="keel-$OS-$ARCH$EXE"
         REPO="https://github.com/canboat/canboat"
-        mkdir -p "$KEEL_DIR/target/release"
+        mkdir -p "$ROOT_DIR/target/release"
         get() { if command -v curl >/dev/null 2>&1; then curl -fsSL "$1"; else wget -qO- "$1"; fi; }
         dl() { if command -v curl >/dev/null 2>&1; then curl -fsSL -o "$BIN" "$1"; else wget -qO "$BIN" "$1"; fi; }
 
@@ -49,7 +52,7 @@ if stale; then
             if [ -z "$url" ] || ! dl "$url"; then
                 echo "keel: could not download $ASSET from 'latest' or any v8.0.0 release." >&2
                 echo "keel: install a Rust toolchain and re-run, or build it with" >&2
-                echo "keel:   (cd $KEEL_DIR && cargo build --release)" >&2
+                echo "keel:   (cd $ROOT_DIR && cargo build --release -p keel)" >&2
                 exit 1
             fi
         fi
