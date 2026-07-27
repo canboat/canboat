@@ -10,7 +10,7 @@
 //! No I/O. No formatting — the result is a structured event ready for
 //! the output formatter or for direct consumption by merrimac-rs.
 
-use crate::bits::{Extracted, Sentinel, classify_sentinel, extract_bits, is_unavailable};
+use crate::bits::{Extracted, Sentinel, classify_sentinel, extract_bits};
 use crate::db::PgnDatabase;
 use crate::frame::RawFrame;
 use crate::types::{FieldInfo, FieldType, PgnInfo};
@@ -1843,6 +1843,21 @@ fn decode_dynamic_field_length(
 /// when the key wasn't resolved. Returns the value plus how many bits
 /// it consumed so the iteration walker can advance correctly. Always
 /// clears the dynamic-* slots in the context.
+///
+/// **No top-of-range sentinel is stripped here.** The value is decoded
+/// against a pseudo-field synthesised from a fieldtype lookup entry,
+/// and in the C those never get a `reservedCount`: that is resolved in
+/// a pass over `pgnList`'s fields (fieldtype.c), which a lookup entry
+/// is not a member of. It therefore stays 0, `extractNumberNotEmpty`'s
+/// threshold becomes `maxValue`, and nothing is ever above it — so an
+/// all-ones dynamic value prints as a number. B&G's `Trip 2 Time`
+/// reads 0xFFFFFFFF on an unstarted trip and canboat renders it
+/// `1193:02:47.295`, where stripping it as "not available" would drop
+/// the field.
+///
+/// ISO_NAME is the exception, and not via this mechanism:
+/// `fieldPrintName` tests `value > maxValue - 2` itself, so it applies
+/// on this path as much as on any other.
 fn decode_dynamic_field_value(
     data: &[u8],
     bit_offset: u32,
@@ -1931,42 +1946,30 @@ fn decode_dynamic_field_value(
             // canboat's pgn.h.
             let known_signed_duration = matches!(entry.name, "Race Timer" | "Timezone offset");
             let want_signed = signed || known_signed_duration;
-            // Always sentinel-check against the unsigned bit pattern,
-            // even when the display interpretation is signed — canboat's
-            // "all-ones" N/A marker is 0xFF..FF in the raw bytes,
-            // regardless of how the value is shown.
             let Some(ex_unsigned) =
                 extract_bits(data, bit_offset as usize, bits as usize, false, 0)
             else {
                 return (FieldValue::NotAvailable, bits);
             };
-            if is_unavailable(ex_unsigned) {
-                FieldValue::NotAvailable
-            } else {
-                let ex = if want_signed {
-                    match extract_bits(data, bit_offset as usize, bits as usize, true, 0) {
-                        Some(e) => e,
-                        None => return (FieldValue::NotAvailable, bits),
-                    }
-                } else {
-                    ex_unsigned
-                };
-                let res = entry.resolution.unwrap_or(1.0);
-                FieldValue::Time {
-                    raw: ex.value,
-                    seconds: ex.value as f64 * res,
+            let ex = if want_signed {
+                match extract_bits(data, bit_offset as usize, bits as usize, true, 0) {
+                    Some(e) => e,
+                    None => return (FieldValue::NotAvailable, bits),
                 }
+            } else {
+                ex_unsigned
+            };
+            let res = entry.resolution.unwrap_or(1.0);
+            FieldValue::Time {
+                raw: ex.value,
+                seconds: ex.value as f64 * res,
             }
         }
         Some("DATE") => {
             let Some(ex) = extract_bits(data, bit_offset as usize, bits as usize, false, 0) else {
                 return (FieldValue::NotAvailable, bits);
             };
-            if is_unavailable(ex) {
-                FieldValue::NotAvailable
-            } else {
-                FieldValue::Date(ex.value as u16)
-            }
+            FieldValue::Date(ex.value as u16)
         }
         // The 130822 source-setting entries (Depth/Speed Source N,
         // Port/Stbd Boat Speed Source, …) carry a device's 8-byte
@@ -1988,9 +1991,6 @@ fn decode_dynamic_number(
     let Some(ex) = extract_bits(data, bit_offset as usize, bit_length as usize, signed, 0) else {
         return FieldValue::NotAvailable;
     };
-    if is_unavailable(ex) {
-        return FieldValue::NotAvailable;
-    }
     let raw = ex.value as f64;
     let res = entry.resolution.unwrap_or(1.0);
     if res == 1.0 && entry.unit.is_none() {
@@ -2110,6 +2110,70 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn all_ones_dynamic_value_is_a_value_not_a_sentinel() {
+        // A B&G key-value frame (samples/pgn130824.raw line 2) whose
+        // `Trip Time` and `Trip 2 Time` both read 0xFFFFFFFF, the trips
+        // never having been started.
+        //
+        // canboat prints those as `1193:02:47.295`. Its dynamic values
+        // are decoded against a pseudo-field built from a fieldtype
+        // lookup entry, which never gets a `reservedCount` — that pass
+        // walks `pgnList`'s fields — so no top-of-range value is ever
+        // stripped on this path. Treating all-ones as "not available"
+        // here silently drops the field instead.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x7d, 0x99, 0x64, 0x20, 0x2d, 0x00, 0x0d, 0x21, 0x43, 0x00, 0x0e, 0x41, 0xc0, 0xa1,
+            0xb2, 0x1f, 0x0f, 0x41, 0xce, 0x50, 0x3c, 0x03, 0x69, 0x20, 0x43, 0x7d, 0xd3, 0x20,
+            0x2a, 0x74, 0x81, 0x40, 0x70, 0xd3, 0x02, 0x00, 0x9a, 0x20, 0x35, 0xf0, 0x82, 0x20,
+            0x00, 0x00, 0x0a, 0x21, 0x98, 0x02, 0x0c, 0x21, 0xb8, 0x02, 0x75, 0x40, 0x20, 0x6c,
+            0xfb, 0xff, 0x09, 0x41, 0xff, 0xff, 0xff, 0xff, 0x0b, 0x41, 0xff, 0xff, 0xff, 0xff,
+            0xd0, 0x40, 0xe0, 0xaa, 0x8c, 0x0e, 0x7f, 0x20, 0x00, 0x00, 0x9d, 0x20, 0x54, 0xad,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        // Each `Key` of 265 / 267 must be followed by a Value carrying
+        // the raw 0xFFFFFFFF, not by nothing at all.
+        let mut expecting_value_for: Option<u64> = None;
+        let mut seen = 0;
+        for f in &dec.fields {
+            match (f.info.name, &f.value) {
+                ("Key", FieldValue::Lookup { value, .. }) => {
+                    assert!(
+                        expecting_value_for.is_none(),
+                        "key {} got no Value at all",
+                        expecting_value_for.unwrap()
+                    );
+                    if matches!(value, 265 | 267) {
+                        expecting_value_for = Some(*value);
+                    }
+                }
+                ("Value", v) => {
+                    if let Some(key) = expecting_value_for.take() {
+                        match v {
+                            FieldValue::Time { raw, .. } => {
+                                assert_eq!(*raw, 0xFFFF_FFFF, "key {key}");
+                                seen += 1;
+                            }
+                            other => panic!("key {key}: expected a Time, got {other:?}"),
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+        assert!(expecting_value_for.is_none(), "trailing key had no Value");
+        assert_eq!(seen, 2, "expected both trip-time records");
     }
 
     #[test]
