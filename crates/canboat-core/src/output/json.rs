@@ -480,18 +480,27 @@ fn write_field_value_debug<W: fmt::Write>(
                         w.write_char(',')?;
                     }
                     write!(w, "{{\"value\":{},\"name\":", bv)?;
-                    write_json_string(w, n)?;
+                    match n {
+                        Some(n) => write_json_string(w, n)?,
+                        // A set bit the enumeration does not name.
+                        None => w.write_str("null")?,
+                    }
                     w.write_char('}')?;
                 }
                 w.write_char(']')?;
             } else {
                 // Plain JSON: array of bare strings.
                 w.write_char('[')?;
-                for (i, (_, n)) in bits.iter().enumerate() {
+                for (i, (bv, n)) in bits.iter().enumerate() {
                     if i > 0 {
                         w.write_char(',')?;
                     }
-                    write_json_string(w, n)?;
+                    match n {
+                        Some(n) => write_json_string(w, n)?,
+                        // Unnamed: canboat prints the bit value bare,
+                        // so the array mixes strings and numbers.
+                        None => write!(w, "{}", bv)?,
+                    }
                 }
                 w.write_char(']')?;
             }
@@ -704,18 +713,27 @@ fn write_field_value<W: fmt::Write>(
                         w.write_char(',')?;
                     }
                     write!(w, "{{\"value\":{},\"name\":", bv)?;
-                    write_json_string(w, n)?;
+                    match n {
+                        Some(n) => write_json_string(w, n)?,
+                        // A set bit the enumeration does not name.
+                        None => w.write_str("null")?,
+                    }
                     w.write_char('}')?;
                 }
                 w.write_char(']')
             } else {
                 // Plain JSON: bare-string array.
                 w.write_char('[')?;
-                for (i, (_, n)) in bits.iter().enumerate() {
+                for (i, (bv, n)) in bits.iter().enumerate() {
                     if i > 0 {
                         w.write_char(',')?;
                     }
-                    write_json_string(w, n)?;
+                    match n {
+                        Some(n) => write_json_string(w, n)?,
+                        // Unnamed: canboat prints the bit value bare,
+                        // so the array mixes strings and numbers.
+                        None => write!(w, "{}", bv)?,
+                    }
                 }
                 w.write_char(']')
             }

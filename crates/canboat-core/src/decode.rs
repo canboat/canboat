@@ -232,7 +232,12 @@ pub enum FieldValue {
     /// (1 << bit) and resolved name for each.
     BitField {
         value: u64,
-        bits: Vec<(u64, &'static str)>,
+        /// One entry per *set bit*, in bit order: its value (`1 << bit`)
+        /// and its name, or `None` when the enumeration does not name
+        /// that bit. canboat emits unnamed set bits too — as
+        /// `{"value":N,"name":null}` under `-nv` and as a bare `N`
+        /// otherwise — so they must not be dropped.
+        bits: Vec<(u64, Option<&'static str>)>,
     },
     /// Decoded text (STRING_FIX, STRING_LZ, STRING_LAU).
     String(String),
@@ -1410,12 +1415,22 @@ fn decode_bitlookup(
     // Keep the BitField even when no bits are set — formatters
     // handle the empty case themselves: JSON drops it, text emits
     // "None" (matches canboat).
+    //
+    // Walk the *bit positions*, not the enumeration's entries: canboat
+    // loops `bit < *bits` and emits every set bit, naming it if the
+    // table has an entry and leaving the name null if not
+    // (`fieldPrintBitLookup`, print.c). Iterating the table instead
+    // made a set bit that nothing names invisible — PGN 65305's `Mode`
+    // sets bit 1, which SIMNET_AP_STATUS does not name, and it went
+    // missing from every autopilot status record.
     let mut bits = Vec::new();
-    if let Some(t) = f.lookup_bit_enumeration.and_then(|n| db.bit_lookup(n)) {
-        for v in t.values {
-            if raw & (1u64 << v.bit) != 0 {
-                bits.push((1u64 << v.bit, v.name));
-            }
+    let table = f.lookup_bit_enumeration.and_then(|n| db.bit_lookup(n));
+    for bit in 0..bit_length.min(64) {
+        if raw & (1u64 << bit) != 0 {
+            bits.push((
+                1u64 << bit,
+                table.and_then(|t| t.get(bit as u8)).map(|v| v.name),
+            ));
         }
     }
     FieldValue::BitField { value: raw, bits }
@@ -2207,6 +2222,57 @@ mod tests {
             FieldValue::String(s) => assert_eq!(s, "HELLO"),
             other => panic!("expected the truncated text, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn bitlookup_keeps_set_bits_the_enumeration_does_not_name() {
+        // PGN 65305 Simnet: Pilot Mode, from
+        // samples/ac42-commissioning.raw. Its `Mode` bitmap reads 0x0a
+        // — bits 1 and 3. SIMNET_AP_STATUS names bit 3 ("Standby") but
+        // has no entry for bit 1, and canboat still emits it as
+        // `{"value":2,"name":null}`.
+        //
+        // Walking the enumeration's entries instead of the bit
+        // positions makes an unnamed set bit invisible, which lost a
+        // real bit from every autopilot status record on the bus.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0x41, 0x9f, 0x00, 0x0a, 0x0a, 0x00, 0x80, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 65305,
+            src: 13,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let mode = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Mode")
+            .expect("a Mode field");
+        match &mode.value {
+            FieldValue::BitField { bits, .. } => {
+                assert_eq!(bits.as_slice(), &[(2, None), (8, Some("Standby"))]);
+            }
+            other => panic!("expected a BitField, got {other:?}"),
+        }
+
+        // …and it reaches JSON as a null-named entry, not as a gap.
+        let mut json = String::new();
+        crate::output::write_json(
+            &mut json,
+            &dec,
+            &crate::output::JsonOptions {
+                name_value: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(
+            json.contains(r#""Mode":[{"value":2,"name":null},{"value":8,"name":"Standby"}]"#),
+            "got: {json}"
+        );
     }
 
     #[test]

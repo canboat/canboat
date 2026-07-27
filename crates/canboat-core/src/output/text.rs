@@ -324,11 +324,15 @@ fn write_field_value<W: fmt::Write>(
                 // BITLOOKUP rather than omitting the field.
                 w.write_str("None")
             } else {
-                for (i, (_, n)) in bits.iter().enumerate() {
+                for (i, (bv, n)) in bits.iter().enumerate() {
                     if i > 0 {
                         w.write_char(',')?;
                     }
-                    w.write_str(n)?;
+                    match n {
+                        Some(n) => w.write_str(n)?,
+                        // Unnamed set bit — canboat prints its value.
+                        None => write!(w, "{}", bv)?,
+                    }
                 }
                 Ok(())
             }
