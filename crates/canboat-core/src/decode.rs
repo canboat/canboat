@@ -1632,10 +1632,15 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
         };
     }
     let start = bo / 8;
-    let end = start + bl / 8;
-    if end > data.len() {
+    if start >= data.len() {
         return FieldValue::NotAvailable;
     }
+    // Cap to what is actually in the message rather than dropping the
+    // field — `len = CB_MIN(len, dataLen)` in `fieldPrintStringFix`
+    // (print.c). Navico's 130821 ASCII Data declares a 230-byte
+    // Message and sends however much text it has, so the declared
+    // width is a maximum, not a promise.
+    let end = (start + bl / 8).min(data.len());
     // Canboat's `printString` first finds an embedded NUL and shortens
     // the string at that point (matches the C-string convention some
     // devices use to terminate inside a fixed-width buffer — e.g. a
@@ -2119,6 +2124,35 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn string_fix_is_capped_to_the_message_not_dropped() {
+        // Navico's 130821 ASCII Data declares a 230-byte `Message` and
+        // sends however much text it has, so the declared width is a
+        // maximum. canboat caps to what arrived
+        // (`len = CB_MIN(len, dataLen)`, fieldPrintStringFix); dropping
+        // the field instead loses the whole payload.
+        let mut data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![0x13, 0x99, 0x00];
+        data.extend_from_slice(b"HELLO");
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 130821,
+            src: 19,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let msg = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Message")
+            .expect("a Message field");
+        match &msg.value {
+            FieldValue::String(s) => assert_eq!(s, "HELLO"),
+            other => panic!("expected the truncated text, got {other:?}"),
+        }
     }
 
     #[test]
