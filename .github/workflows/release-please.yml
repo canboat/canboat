@@ -23,12 +23,18 @@ jobs:
           # push below re-triggers CI on the release PR. Falls back to GITHUB_TOKEN.
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
 
-  # release-please bumps VERSION in common/version.h, and that version is stamped
-  # into the generated docs/* + docs/canboat.dbc. Regenerate them on the
-  # release PR branch so it passes the build-ubuntu generated-files gate.
+  # release-please bumps VERSION in common/version.h and the workspace version in
+  # rust/Cargo.toml. Both are stamped into files it does NOT itself update:
+  # the generated docs/* + docs/canboat.dbc carry VERSION, and rust/Cargo.lock
+  # records a version for every workspace member. A bumped Cargo.toml with a
+  # stale Cargo.lock fails every `cargo --locked` job on the release PR, so both
+  # are refreshed here on the release branch.
+  #
+  # Runs whenever there is a release PR, not only when one is first created: an
+  # updated release PR needs the same re-stamping as a new one.
   regenerate:
     needs: release-please
-    if: ${{ needs.release-please.outputs.prs_created == 'true' }}
+    if: ${{ needs.release-please.outputs.pr != '' && needs.release-please.outputs.pr != 'null' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -44,11 +50,18 @@ jobs:
           make
           make generated
 
+      # Sync rust/Cargo.lock to the workspace version release-please just wrote
+      # into rust/Cargo.toml. --workspace touches only the member packages, and
+      # --offline keeps third-party resolution exactly as committed, so this
+      # moves the eight member version lines and nothing else.
+      - name: re-stamp rust/Cargo.lock
+        run: cargo update --workspace --offline --manifest-path rust/Cargo.toml
+
       - name: commit regenerated files
         run: |
           if ! git diff --exit-code; then
             git config user.name "github-actions[bot]"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git commit -am "chore: regenerate docs/* + canboat.dbc for release"
+            git commit -am "chore: regenerate docs/*, canboat.dbc and rust/Cargo.lock for release"
             git push
           fi
