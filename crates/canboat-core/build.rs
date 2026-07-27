@@ -845,19 +845,31 @@ fn sentinels(
 ) -> (Option<u64>, Option<u64>, Option<u64>) {
     let ft = ft_of(db, f);
     if f.reserved_count == 0
-        || f.res_bits >= 64
         || f.res_range_min.is_nan()
         || f.match_.is_some()
         || ft.root_sentinels != "TopOfRange"
     {
         return (None, None, None);
     }
+    // NB: emit_xml additionally suppresses these for 64-bit fields, and the
+    // XML/JSON therefore carry no UnknownValue for e.g. 129029's latitude
+    // (QUIRKS Q18). That is right for the *document* but wrong for a runtime
+    // schema: the decoder has nothing left to compare against, so an
+    // unavailable 64-bit lat/lon decoded as the number 922.3372037 instead of
+    // being reported unavailable. The C never had the problem because it
+    // recomputes the bound from the bit width at decode time. So: no width
+    // guard here.
     let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
         f.res_bits - 1
     } else {
         f.res_bits
     };
-    let raw = (1u64 << highbit) - 1;
+    // highbit == 64 for an unsigned 64-bit field, where 1u64 << 64 is UB.
+    let raw = if highbit >= 64 {
+        u64::MAX
+    } else {
+        (1u64 << highbit) - 1
+    };
     (
         Some(raw),
         (f.reserved_count >= 2).then(|| raw - 1),
