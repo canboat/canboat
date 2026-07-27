@@ -34,6 +34,47 @@ fn sentinel_field_value(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
     }
 }
 
+/// The same test, for a field whose FieldType declares
+/// `Sentinels: None` and so carries none of the hints above, but which
+/// still has a `RangeMax` below what its bit width can hold.
+///
+/// The C never consults the FieldType's `Sentinels` when it works out
+/// how many top-of-range values a field reserves — `reservedCount` is
+/// derived from `rangeMax` against the raw bit-width maximum, capped by
+/// `reservedCountForSize` (fieldtype.c). So an MMSI, whose range stops
+/// at 999999999 in a 32-bit field, still reserves its top three values,
+/// and `extractNumberNotEmpty` hands anything above the threshold to
+/// `printEmpty`. `Sentinels: None` only stops the hints being written
+/// into the document; it does not make every bit pattern valid.
+fn range_max_sentinel(f: &FieldInfo, ex: Extracted, bits: u32) -> Option<FieldValue> {
+    let range_max = f.range_max?;
+    let resolution = f.resolution.unwrap_or(1.0);
+    if bits == 0 || bits >= 64 || resolution <= 0.0 || !range_max.is_finite() {
+        return None;
+    }
+    let raw_max = (1u64 << bits) - 1;
+    let raw_range_max = (range_max / resolution + 0.5) as u64;
+    if raw_range_max >= raw_max {
+        return None;
+    }
+    // reservedCountForSize(): 3 from 8 bits up, 2 from 4, 1 from 2.
+    let by_size: u64 = match bits {
+        8.. => 3,
+        4..=7 => 2,
+        2..=3 => 1,
+        _ => 0,
+    };
+    let reserved = (raw_max - raw_range_max).min(by_size);
+    if reserved == 0 || ex.raw <= raw_max - reserved {
+        return None;
+    }
+    Some(match raw_max - ex.raw {
+        0 => FieldValue::NotAvailable,
+        1 => FieldValue::OutOfRange { value: ex.raw },
+        _ => FieldValue::ReservedValue { value: ex.raw },
+    })
+}
+
 /// One decoded field.
 ///
 /// Schema metadata (`id`, `name`, `order`, `unit`, `resolution`,
@@ -931,7 +972,7 @@ fn decode_one_field_at(
             decode_reserved(data, bit_offset, bit_length, signed, offset_k, false)
         }
         Some(FieldType::Binary) => decode_binary(data, bit_offset, bit_length),
-        Some(FieldType::Mmsi) => decode_mmsi(data, bit_offset, bit_length),
+        Some(FieldType::Mmsi) => decode_mmsi(f, data, bit_offset, bit_length),
         Some(FieldType::Pgn) => decode_pgn_field(data, bit_offset, bit_length, db),
         Some(FieldType::Date) => decode_date(f, data, bit_offset, bit_length),
         Some(FieldType::Time) | Some(FieldType::Duration) => {
@@ -1534,7 +1575,7 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     FieldValue::Binary(out)
 }
 
-fn decode_mmsi(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length != 32 {
         return FieldValue::Unsupported {
             field_type: "MMSI (non-32-bit)",
@@ -1543,9 +1584,17 @@ fn decode_mmsi(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     let Some(ex) = extract_bits(data, bit_offset as usize, 32, false, 0) else {
         return FieldValue::NotAvailable;
     };
-    // MMSI is an identifier — schema 2.5.0 declares Sentinels='None'
-    // on the FieldType. All 0..=2^32-1 values are legitimate (broadcast
-    // is 0xFFFFFFFF). No sentinel detection.
+    // The MMSI FieldType declares `Sentinels: None`, so the schema
+    // carries no per-field hints and `sentinel_field_value` finds
+    // nothing. That is not the whole rule: an MMSI field's RangeMax is
+    // 999999999, well inside 32 bits, and the C reserves its top three
+    // values on that basis alone (`fieldPrintMMSI` goes through
+    // `extractNumberNotEmpty`). PGN 130842's `Mothership User ID` reads
+    // 0xFFFFFFFF whenever the Class B unit has no mothership, and
+    // canboat omits it rather than printing 4294967295.
+    if let Some(sent) = range_max_sentinel(f, ex, 32) {
+        return sent;
+    }
     FieldValue::Mmsi(ex.value as u32)
 }
 
@@ -2186,6 +2235,52 @@ mod tests {
             FieldValue::Reserved { bytes, .. } => assert_eq!(bytes.as_slice(), &[0x10]),
             other => panic!("expected Reserved bytes, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn all_ones_mmsi_is_suppressed() {
+        // A real PGN 130842 Part B frame
+        // (samples/merrimac-actisense-serial-2011.raw) whose
+        // `Mothership User ID` is 0xFFFFFFFF — this Class B unit has no
+        // mothership.
+        //
+        // The MMSI FieldType declares `Sentinels: None`, so no
+        // per-field hint catches it. The field's RangeMax is 999999999
+        // though, and the C reserves the top three values on that basis
+        // alone, so canboat omits it rather than printing 4294967295.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x41, 0x9f, 0x81, 0xff, 0x18, 0x88, 0x87, 0x94, 0x0e, 0x24, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x50, 0x49, 0x36, 0x34, 0x34, 0x36, 0x00, 0x6e, 0x00, 0x28, 0x00,
+            0x1e, 0x00, 0x3c, 0x00, 0xff, 0xff, 0xff, 0xff, 0xc0,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn: 130842,
+            src: 8,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let mothership = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Mothership User ID")
+            .expect("a Mothership User ID field");
+        assert!(
+            mothership.value.is_sentinel(),
+            "an all-ones MMSI must read as a sentinel, got {:?}",
+            mothership.value
+        );
+
+        // The ordinary MMSI in the same frame still decodes.
+        let user_id = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "User ID")
+            .expect("a User ID field");
+        assert!(matches!(user_id.value, FieldValue::Mmsi(244_615_048)));
     }
 
     #[test]
