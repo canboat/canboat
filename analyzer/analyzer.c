@@ -1700,7 +1700,7 @@ extern bool printFields(const Pgn *pgn, const uint8_t *data, int length, bool sh
  * but this may have to be refined for proprietary PGNs or PGNs with
  * other match fields.
  */
-extern bool fieldPrintVariable(const Field   *field,
+extern bool fieldPrintVariable(const Field   *variableField,
                                const char    *fieldName,
                                const uint8_t *data,
                                size_t         dataLen,
@@ -1708,6 +1708,7 @@ extern bool fieldPrintVariable(const Field   *field,
                                size_t        *bits)
 {
   bool r;
+  bool usedCatchAll = false;
 
   if (g_refPrn != 0)
   {
@@ -1717,18 +1718,61 @@ extern bool fieldPrintVariable(const Field   *field,
       size_t         variableLen    = data + dataLen - variableFields;
       g_refPgn                      = getMatchingPgnByParameters(g_refPrn, variableFields, variableLen);
     }
+    if (g_refPgn == NULL)
+    {
+      /*
+       * The parameters seen so far do not pick a single variant. That is the
+       * normal case for a request against a proprietary PGN -- 126720 has
+       * dozens of variants and a Manufacturer/Industry pair alone narrows
+       * nothing -- and it used to fail the whole 126208 record, discarding the
+       * parameters that were perfectly decodable.
+       *
+       * Borrow the catch-all definition instead. Parameter indices address the
+       * leading fields, which the variants share (a proprietary PGN opens with
+       * Manufacturer / Reserved / Industry whichever variant it turns out to
+       * be), so the field this parameter names is the right one even though
+       * the variant is still unknown.
+       *
+       * It has to be the catch-all, not merely the first definition: the first
+       * definition of 126720 is somebody's specific variant whose Manufacturer
+       * Code is a *match* field, so borrowing it makes every request from a
+       * different manufacturer fail the match and skip the record.
+       */
+      g_refPgn   = searchForUnknownPgn(g_refPrn);
+      usedCatchAll = true;
+      logDebug("Field %s: PGN %d variant unresolved, using its catch-all definition\n", fieldName, g_refPrn);
+    }
     if (g_refPgn != NULL)
     {
-      int          field    = data[startBit / 8 - 1] - 1;
-      const Field *refField = &g_refPgn->fieldList[field];
+      int field = data[startBit / 8 - 1] - 1;
 
-      if (refField)
+      if (field >= 0 && (size_t) field < g_refPgn->fieldCount)
       {
+        const Field *refField = &g_refPgn->fieldList[field];
+
+        /*
+         * Only when we fell back to the catch-all: its trailing `Data` field
+         * is variable-length with nothing to derive a width from, so take the
+         * rest of the message as the value. For a request that is the useful
+         * reading: "match records whose field starts with these bytes".
+         *
+         * This must not catch a variable-length field of a *resolved* PGN --
+         * 126998's Configuration Information strings are size 0 too, and they
+         * print perfectly well through the normal path.
+         */
+        if (usedCatchAll && refField->size == 0 && dataLen * 8 > startBit)
+        {
+          logDebug("Field %s: variable-length target '%s', emitting the remainder\n", fieldName, refField->name);
+          *bits = dataLen * 8 - startBit;
+          return fieldPrintBinary(variableField, fieldName, data, dataLen, startBit, bits);
+        }
+
         logDebug("Field %s: found variable field %u '%s'\n", fieldName, g_refPrn, refField->name);
         r     = printField(refField, fieldName, data, dataLen, startBit, bits, false);
         *bits = (*bits + 7) & ~0x07; // round to bytes
         return r;
       }
+      logError("Field %s: PGN %d has no field # %d\n", fieldName, g_refPrn, field + 1);
     }
   }
 
