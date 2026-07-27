@@ -51,11 +51,17 @@ jobs:
           make generated
 
       # Sync rust/Cargo.lock to the workspace version release-please just wrote
-      # into rust/Cargo.toml. --workspace touches only the member packages, and
-      # --offline keeps third-party resolution exactly as committed, so this
-      # moves the eight member version lines and nothing else.
+      # into rust/Cargo.toml. --workspace updates only the member packages;
+      # third-party pins are left exactly as locked (cargo reports them as
+      # "unchanged dependencies behind latest"), so this moves the member
+      # version lines and nothing else.
+      #
+      # Deliberately NOT --offline: a fresh runner has no registry cache, so
+      # cargo cannot resolve even already-locked third-party crates from the
+      # index and fails with "no matching package named `indexmap` found".
+      # It only appeared in CI because a warm local cache hides it.
       - name: re-stamp rust/Cargo.lock
-        run: cargo update --workspace --offline --manifest-path rust/Cargo.toml
+        run: cargo update --workspace --manifest-path rust/Cargo.toml
 
       - name: commit regenerated files
         run: |
