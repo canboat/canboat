@@ -14,9 +14,6 @@
 //!   carries the PGN 262657 NMEA-0183-filter control channel between the
 //!   TUI and the pipeline's shared [`NmeaFilter`], request/response and
 //!   private per connection (see [`spawn_filter_control_server`]).
-//!
-//! * **Binary analyzer server** (RO) — the `canboat_wire` handshake
-//!   plus length-prefixed postcard `WirePgn` frames from a [`BinHub`].
 
 use std::io::{BufRead, BufReader, Write};
 use std::net::{Ipv4Addr, Shutdown, SocketAddrV4, TcpListener, TcpStream};
@@ -54,7 +51,6 @@ pub struct InjectPoint {
     pub claim_addr: Option<Arc<AtomicU8>>,
 }
 
-use crate::n2kd::serving::BinHub;
 use crate::n2kd::serving::tcp::accept_until;
 
 // Nagle's algorithm is deliberately left ENABLED on every client
@@ -526,69 +522,6 @@ fn send_override_report(
         return true;
     }
     stream.write_all(out.as_bytes()).is_ok()
-}
-
-/// Bind the binary analyzer server (`--analyzer-binary-port`).
-///
-/// Strictly read-only. On connect it writes the canboat-wire
-/// [`canboat_wire::Hello`] handshake — magic, wire-protocol version, and
-/// the [`canboat_core::SCHEMA_HASH`] — then streams length-prefixed
-/// postcard `WirePgn` frames from `hub` for the life of the connection.
-/// A client MUST read and verify the `Hello` first: the schema hash is
-/// what proves both ends share byte-identical field indices, without
-/// which the per-field `order` numbers on the wire are meaningless.
-pub fn spawn_binary_stream(
-    bind: Ipv4Addr,
-    port: u16,
-    hub: Arc<BinHub>,
-    stop: Option<Arc<AtomicBool>>,
-) -> Result<JoinHandle<()>> {
-    let listener = TcpListener::bind(SocketAddrV4::new(bind, port))
-        .with_context(|| format!("binding binary TCP port {}:{}", bind, port))?;
-    log::info!("binary analyzer server listening on {}:{} (RO)", bind, port);
-    Ok(thread::Builder::new()
-        .name("binary-accept".into())
-        .spawn(move || binary_accept(listener, hub, stop))
-        .expect("spawn binary accept"))
-}
-
-fn binary_accept(listener: TcpListener, hub: Arc<BinHub>, stop: Option<Arc<AtomicBool>>) {
-    accept_until("binary", listener, stop, |stream, peer| {
-        log::info!("binary client connected: {peer}");
-        let h = hub.clone();
-        thread::Builder::new()
-            .name("binary-client".into())
-            .spawn(move || run_binary_client(stream, h))
-            .ok();
-    });
-}
-
-fn run_binary_client(mut stream: TcpStream, hub: Arc<BinHub>) {
-    // Read-only: FIN the read direction so client writes get
-    // ECONNRESET / EPIPE rather than piling up unread.
-    if let Err(e) = stream.shutdown(Shutdown::Read) {
-        log::debug!("binary: shutdown(read) failed: {e}");
-    }
-    // Handshake first — a client can reject a schema/version mismatch
-    // before decoding a single record.
-    let mut hello = Vec::with_capacity(64);
-    if canboat_wire::append_frame(&mut hello, &canboat_wire::Hello::current()).is_err() {
-        return;
-    }
-    if stream.write_all(&hello).is_err() {
-        return;
-    }
-    // Each `Arc<[u8]>` chunk from the hub is already a run of whole
-    // frames (the pipeline's BinBatcher coalesces them), so forward it
-    // verbatim. Nagle — left enabled like the text ports — mops up the
-    // small writes into full segments.
-    let rx = hub.subscribe();
-    while let Ok(chunk) = rx.recv() {
-        if stream.write_all(&chunk).is_err() {
-            break;
-        }
-    }
-    drop(stream);
 }
 
 #[cfg(test)]

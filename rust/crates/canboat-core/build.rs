@@ -1021,9 +1021,9 @@ fn main() {
 
     // Content hash over the raw schema source bytes (canboat.json then
     // synthetic-pgns.json). This is the schema identity two processes
-    // exchange to prove they were built from byte-identical schema data
-    // before trusting each other's field indices on the wire (see
-    // canboat-wire). Any edit to either file — versioned or not —
+    // would exchange to prove they were built from byte-identical schema
+    // data before trusting each other's field indices. Any edit to either
+    // file — versioned or not —
     // changes this, so a mismatch fails the handshake loudly instead of
     // silently mis-decoding fields. FNV-1a/64: dependency-free, stable,
     // and drift-detection is all it needs to be (not security).

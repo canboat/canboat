@@ -244,6 +244,12 @@ first-class path. Expose the ready-made readers under `io`.
 > wrapper for those, add it then. `output::write_nmea0183` / `write_ais` still pending the
 > `nmea0183`/`ais` feature wiring.
 
+> **Superseded (2026-07-27):** `canboat-wire`, the `wire` feature and the
+> `--analyzer-binary-port` server were removed. The cross-process transport
+> existed for a separate-process pipeline; `canboat server` collapsed that into
+> one process and merrimac moved to the in-process `Bridge`, leaving a producer
+> with no consumers. Phases 3 and 5's wire steps are history, not plan.
+
 **Phase 3 — `wire`.** Mostly re-export; `canboat-wire` is already clean. Rename into
 `wire::` namespace; hide anything not in §2.
 

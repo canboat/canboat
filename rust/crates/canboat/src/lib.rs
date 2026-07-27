@@ -107,7 +107,6 @@
 //!   No threads, no async, no sockets.
 //! * `io` — byte-source readers (`read::*Reader`) for files / text, plus
 //!   `bus::open_*` to read+write a live NGT-1 / iKonvert / SocketCAN link.
-//! * `wire` — cross-process `wire` transport (postcard `WirePgn` + `Hello`).
 //! * `node` — `device`: be a compliant N2K node (address claim + responder).
 //! * `bridge` — `bridge`: the live CAN bus, fully assembled.
 //! * `nmea0183`, `ais` — output-formatter sub-features.
@@ -295,18 +294,6 @@ pub mod bus {
         };
         canboat_io::device::socketcan::run(iface, config, Arc::new(AtomicU8::new(address)))
     }
-}
-
-// ─────────────────────────────── wire ────────────────────────────────────
-
-/// Cross-process transport: send decoded records between processes that link
-/// a byte-identical schema, guarded by the [`Hello`](wire::Hello) handshake.
-#[cfg(feature = "wire")]
-pub mod wire {
-    pub use canboat_wire::{
-        FrameError, Hello, HelloError, MAX_FRAME_LEN, PgnIndex, WirePgn, append_frame,
-        decode_frame, pgn_id_hash, try_read_frame,
-    };
 }
 
 // ─────────────────────────────── device ──────────────────────────────────

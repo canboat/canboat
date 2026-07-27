@@ -23,14 +23,13 @@ pub struct PgnDatabase {
     pub version: &'static str,
     /// FNV-1a/64 content hash of the schema source (canboat.json +
     /// synthetic-pgns.json), emitted by `build.rs`. Two processes that
-    /// exchange field indices on the wire must share this exact value —
-    /// see canboat-wire's handshake.
+    /// exchange field indices must share this exact value before either
+    /// can trust the other's per-field `order` numbers.
     pub schema_hash: u64,
 
     /// Which unit system this database presents (see [`Units`]). The
     /// schema hash is identical for both, so anything exchanging decoded
-    /// *values* (not raw bits) across processes must also agree on this —
-    /// see canboat-wire's `Hello`.
+    /// *values* (not raw bits) across processes must also agree on this.
     units: Units,
 
     pgns: &'static [PgnInfo],

@@ -7,7 +7,7 @@
 //! layout — JSON snapshot / JSON stream / NMEA 0183 / raw input / AIS /
 //! status. The read-side machinery is identical, so it lives here once:
 //!
-//! - [`hub`] — the lazy per-stream broadcast [`Hub`] / [`BinHub`].
+//! - [`hub`] — the lazy per-stream broadcast [`Hub`].
 //! - [`tcp`] — the read-only TCP listeners (snapshot / AIS / stream).
 //!
 //! The snapshot *store* is already shared (`canboat_core::snapshot`);
@@ -18,4 +18,4 @@
 pub mod hub;
 pub mod tcp;
 
-pub use hub::{BinHub, Hub};
+pub use hub::Hub;

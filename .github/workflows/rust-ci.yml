@@ -167,8 +167,8 @@ jobs:
         run: |
           for set in \
             "decode" \
-            "decode,io,wire,nmea0183,ais" \
-            "decode,io,wire,node,bridge,nmea0183,ais"; do
+            "decode,io,nmea0183,ais" \
+            "decode,io,node,bridge,nmea0183,ais"; do
             echo "::group::cargo doc --features $set"
             cargo doc --no-deps -p canboat --no-default-features --features "$set" --locked
             echo "::endgroup::"

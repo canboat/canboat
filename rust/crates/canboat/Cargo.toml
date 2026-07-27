@@ -33,9 +33,8 @@ default = ["cli"]
 # ── library features (what external consumers pick) ──
 decode   = ["dep:canboat-core"]            # sans-I/O core: schema, decode, encode, formatters
 io       = ["decode", "dep:canboat-io"]    # byte-source readers (read::*Reader)
-wire     = ["decode", "dep:canboat-wire"]  # cross-process WirePgn / Hello handshake
 node     = ["decode", "dep:canboat-io"]    # device::{Name, Claimer, Responder}
-bridge   = ["io", "wire", "node", "dep:canboat-bridge"]  # live-bus: Bridge + BridgeConfig + serving
+bridge   = ["io", "node", "dep:canboat-bridge"]  # live-bus: Bridge + BridgeConfig + serving
 nmea0183 = ["decode"]                      # output::write_nmea0183
 ais      = ["decode"]                      # output::write_ais
 
@@ -43,7 +42,7 @@ ais      = ["decode"]                      # output::write_ais
 # `canboat-bridge` hosts the server/n2kd subcommand implementations (lifted out
 # of this crate); the CLI dispatches into it.
 cli = [
-    "decode", "io", "wire", "bridge", "nmea0183", "ais",
+    "decode", "io", "bridge", "nmea0183", "ais",
     "canboat-bridge/cli",
     "dep:canboat-cli", "dep:clap", "dep:env_logger", "dep:anyhow",
     "dep:serde", "dep:serde_json", "dep:tokio", "dep:crossterm",
@@ -54,7 +53,6 @@ cli = [
 # Library layer — optional, pulled in by the features above.
 canboat-core = { workspace = true, optional = true }
 canboat-io   = { workspace = true, optional = true }
-canboat-wire = { workspace = true, optional = true }
 # `log` is a zero-cost facade; kept non-optional so any layer can log.
 log          = { workspace = true }
 

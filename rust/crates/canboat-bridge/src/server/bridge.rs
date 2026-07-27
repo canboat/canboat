@@ -37,8 +37,8 @@ use canboat_core::{DecodedPgn, PgnDatabase, RawFrame};
 use canboat_io::device::{FrameSender, Supervisor};
 
 use crate::n2kd::request_engine::{self, RequestEngine};
+use crate::n2kd::serving::Hub;
 use crate::n2kd::serving::tcp as serving_tcp;
-use crate::n2kd::serving::{BinHub, Hub};
 use crate::server::pipeline::{self, Hubs, Nmea0183Options};
 use crate::server::snapshot::SnapshotStore;
 use crate::server::{BridgeConfig, OpenedSource, quirks, tcp};
@@ -65,7 +65,6 @@ pub struct Bridge {
     raw_hub: Arc<Hub>,
     nmea_hub: Arc<Hub>,
     analyzer_hub: Arc<Hub>,
-    bin_hub: Arc<BinHub>,
     snapshot: Option<Arc<SnapshotStore>>,
     engine: Arc<RequestEngine>,
     nmea_filter: Option<Arc<Mutex<crate::n2kd::nmea_filter::NmeaFilter>>>,
@@ -291,7 +290,6 @@ impl Bridge {
             raw_hub: Arc::new(Hub::new()),
             nmea_hub: Arc::new(Hub::new()),
             analyzer_hub: Arc::new(Hub::new()),
-            bin_hub: Arc::new(BinHub::new()),
             snapshot,
             engine,
             nmea_filter,
@@ -449,16 +447,6 @@ impl Bridge {
                 );
             }
         }
-        if config.analyzer_binary_port != 0 {
-            // Read-only binary analyzer stream. Shares the decode with the
-            // JSON/NMEA outputs; only the (lazy) WirePgn encode is extra.
-            self.tcp_joins.push(tcp::spawn_binary_stream(
-                config.bind,
-                config.analyzer_binary_port,
-                self.bin_hub.clone(),
-                stop(),
-            )?);
-        }
         // Dedicated bidirectional control port for the PGN 262657 filter
         // channel (always on now, like the filter itself).
         if let Some(filter) = self.nmea_filter.as_ref()
@@ -496,7 +484,6 @@ impl Bridge {
             raw: self.raw_hub.clone(),
             nmea: self.nmea_hub.clone(),
             analyzer: self.analyzer_hub.clone(),
-            bin: self.bin_hub.clone(),
             snapshot: self.snapshot.clone(),
             engine: Arc::clone(&self.engine),
             quirks: quirks::Quirks::new(self.config.quirk.clone()),
