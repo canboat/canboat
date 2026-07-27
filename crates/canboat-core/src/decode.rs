@@ -2153,7 +2153,10 @@ mod tests {
             }
         }
         if let Some(last) = pending {
-            assert_eq!(last, 3, "trailing record with no Value declared Length {last}");
+            assert_eq!(
+                last, 3,
+                "trailing record with no Value declared Length {last}"
+            );
         }
         assert!(records >= 6, "expected several records, got {records}");
     }

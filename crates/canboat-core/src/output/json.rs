@@ -179,10 +179,13 @@ fn write_json_inner<W: fmt::Write>(
         {
             continue;
         }
-        // Under `-debug` we keep unavailable fields so the byte/bit
-        // diagnostic is preserved; otherwise honour the canboat
-        // suppress rule.
-        if !opts.include_empty && !opts.debug && matches!(f.value, FieldValue::NotAvailable) {
+        // All three top-of-range sentinels — Unknown, Out Of Range and
+        // Reserved — are dropped from JSON. canboat routes every one of
+        // them through `printEmpty` (print.c), which in JSON mode emits
+        // `null` under `-empty` and otherwise sets `g_skip`. The
+        // "Out Of Range" / "Reserved" spellings are text-mode only.
+        // `-debug` still keeps them, so the byte/bit diagnostic survives.
+        if !opts.include_empty && !opts.debug && f.value.is_sentinel() {
             continue;
         }
         // SPARE fields: canboat C's `fieldPrintSpare` (print.c:900)
@@ -593,15 +596,12 @@ fn write_field_value_debug<W: fmt::Write>(
         FieldValue::Spare { .. } | FieldValue::NotAvailable => {
             w.write_str("null")?;
         }
-        FieldValue::OutOfRange { .. } => {
-            // Schema-2.4.0 `OutOfRangeValue` sentinel — render as the
-            // canboat C label. Matches `analyzer/print.c` after PR #672.
-            // TODO: thread the raw u64 through `-debug` byte/bit suffix.
-            write_json_string(w, "Out Of Range")?;
-        }
-        FieldValue::ReservedValue { .. } => {
-            // Schema-2.4.0 `ReservedValue` sentinel. See above.
-            write_json_string(w, "Reserved")?;
+        FieldValue::OutOfRange { .. } | FieldValue::ReservedValue { .. } => {
+            // Reached only under `-empty` / `-debug`, the filter above
+            // having dropped these otherwise. canboat's `printEmpty`
+            // spells every sentinel `null` in JSON; the "Out Of Range"
+            // and "Reserved" labels belong to text output.
+            w.write_str("null")?;
         }
         FieldValue::Unsupported { field_type } => {
             let mut buf = String::with_capacity(field_type.len() + 16);
@@ -845,9 +845,9 @@ fn write_field_value<W: fmt::Write>(
                 write!(w, "{}", value)
             }
         }
-        FieldValue::NotAvailable => w.write_str("null"),
-        FieldValue::OutOfRange { .. } => write_json_string(w, "Out Of Range"),
-        FieldValue::ReservedValue { .. } => write_json_string(w, "Reserved"),
+        FieldValue::NotAvailable
+        | FieldValue::OutOfRange { .. }
+        | FieldValue::ReservedValue { .. } => w.write_str("null"),
         FieldValue::Unsupported { field_type } => {
             // Encode as a string so the JSON stays valid; consumers can
             // detect by leading "<".
@@ -1034,6 +1034,48 @@ mod tests {
         )
         .unwrap();
         assert!(out.contains(r#""Offset":null"#), "got: {}", out);
+    }
+
+    #[test]
+    fn out_of_range_and_reserved_are_dropped_from_json() {
+        // canboat funnels all three top-of-range sentinels through
+        // `printEmpty`, which in JSON mode sets `g_skip` — the field
+        // simply isn't there. "Out Of Range" and "Reserved" are the
+        // text formatter's spellings and must never reach JSON.
+        for sentinel in [
+            FieldValue::OutOfRange { value: 254 },
+            FieldValue::ReservedValue { value: 253 },
+        ] {
+            let mut pgn = sample_pgn();
+            pgn.fields[0].value = sentinel;
+            let mut out = String::new();
+            write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+            assert!(!out.contains("\"fields\""), "sentinel leaked: {out}");
+        }
+    }
+
+    #[test]
+    fn include_empty_spells_every_sentinel_null() {
+        // Under `-empty` canboat prints `null` for all of them, not the
+        // text labels.
+        for sentinel in [
+            FieldValue::OutOfRange { value: 254 },
+            FieldValue::ReservedValue { value: 253 },
+        ] {
+            let mut pgn = sample_pgn();
+            pgn.fields[0].value = sentinel;
+            let mut out = String::new();
+            write_json(
+                &mut out,
+                &pgn,
+                &JsonOptions {
+                    include_empty: true,
+                    ..Default::default()
+                },
+            )
+            .unwrap();
+            assert!(out.contains(r#""Offset":null"#), "got: {out}");
+        }
     }
 
     #[test]
