@@ -1,6 +1,9 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Build script: read this crate's `data/canboat.json` (+ `data/synthetic-pgns.json`)
+//! Build script: derive the compiled-in schema from the repository's own
+//! `database/*.yaml`, via keel -- the same tool that generates the analyzer's
+//! C tables. One source of truth, and `cargo build` picks up a YAML edit
+//! with no `make` in between.
 //! and emit a Rust source file with the full schema as `&'static`
 //! tables. The output is `include!`d from `src/schema_data.rs` and
 //! published as a `static PgnDatabase` (see `src/db.rs`).
@@ -9,12 +12,11 @@
 //! 2.3 MB JSON document plus a HashMap build pass. After this, decoder
 //! callers pay zero startup cost for the schema.
 
-use serde::Deserialize;
 use std::collections::BTreeMap;
 use std::env;
 use std::fmt::Write as _;
 use std::fs;
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 
 // ---------------------------------------------------------------------
 // Build-script deserialization types.
@@ -23,59 +25,27 @@ use std::path::PathBuf;
 // build script and not exposed anywhere else — runtime types live in
 // `canboat-schema`. The mapping from these owned types to the const
 // form happens in the emit_* functions below.
-// ---------------------------------------------------------------------
-
-fn de_loose_string<'de, D: serde::Deserializer<'de>>(d: D) -> Result<Option<String>, D::Error> {
-    use serde_json::Value;
-    let v = Option::<Value>::deserialize(d)?;
-    Ok(match v {
-        None | Some(Value::Null) => None,
-        Some(Value::String(s)) => Some(s),
-        Some(Value::Number(n)) => Some(n.to_string()),
-        Some(Value::Bool(b)) => Some(b.to_string()),
-        Some(other) => Some(other.to_string()),
-    })
-}
-
-#[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
 struct CanboatJson {
     schema_version: String,
     version: String,
     copyright: String,
-    #[serde(rename = "PGNs")]
     pgns: Vec<RawPgn>,
-    #[serde(default)]
     lookup_enumerations: Vec<RawLookup>,
-    #[serde(default)]
     lookup_bit_enumerations: Vec<RawBitLookup>,
-    #[serde(default)]
     lookup_indirect_enumerations: Vec<RawIndirectLookup>,
-    #[serde(default)]
     lookup_field_type_enumerations: Vec<RawFieldTypeLookup>,
 }
 
-#[derive(Deserialize)]
-struct SyntheticJson {
-    #[serde(rename = "PGNs")]
-    pgns: Vec<RawPgn>,
-}
-
-#[derive(Deserialize, Clone)]
-#[serde(rename_all = "PascalCase")]
+#[derive(Clone)]
 struct RawPgn {
-    #[serde(rename = "PGN")]
     pgn: u32,
     id: String,
     description: String,
     explanation: Option<String>,
-    #[serde(rename = "URL")]
     url: Option<String>,
-    #[serde(rename = "Type")]
     packet_type: String,
     complete: Option<bool>,
     fallback: Option<bool>,
-    #[serde(default)]
     missing: Option<Vec<String>>,
     priority: Option<u8>,
     transmission_interval: Option<u32>,
@@ -92,16 +62,13 @@ struct RawPgn {
     repeating_field_set2_count_field: Option<u32>,
 }
 
-#[derive(Deserialize, Clone)]
-#[serde(rename_all = "PascalCase")]
+#[derive(Clone)]
 struct RawField {
     order: u8,
     id: String,
     name: String,
-    #[serde(default, deserialize_with = "de_loose_string")]
     description: Option<String>,
     bit_length: Option<u32>,
-    #[serde(default, deserialize_with = "de_loose_string")]
     bit_length_field: Option<String>,
     bit_length_variable: Option<bool>,
     bit_offset: Option<u32>,
@@ -111,11 +78,8 @@ struct RawField {
     offset: Option<i64>,
     range_min: Option<f64>,
     range_max: Option<f64>,
-    #[serde(rename = "UnknownValue")]
     unknown_value: Option<u64>,
-    #[serde(rename = "OutOfRangeValue")]
     out_of_range_value: Option<u64>,
-    #[serde(rename = "ReservedValue")]
     reserved_value: Option<u64>,
     unit: Option<String>,
     physical_quantity: Option<String>,
@@ -125,97 +89,59 @@ struct RawField {
     lookup_indirect_enumeration: Option<String>,
     lookup_indirect_enumeration_field_order: Option<u8>,
     lookup_field_type_enumeration: Option<String>,
-    #[serde(rename = "Match")]
     match_value: Option<i64>,
     part_of_primary_key: Option<bool>,
     condition: Option<String>,
 }
 
-#[derive(Deserialize)]
 struct RawLookup {
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "MaxValue")]
     max_value: Option<u64>,
-    #[serde(rename = "EnumValues")]
     values: Vec<RawLookupValue>,
 }
-#[derive(Deserialize)]
 struct RawLookupValue {
-    #[serde(rename = "Value")]
     value: u64,
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "Id")]
     id: Option<String>,
 }
 
-#[derive(Deserialize)]
 struct RawBitLookup {
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "MaxValue")]
     max_value: Option<u64>,
-    #[serde(rename = "EnumBitValues")]
     values: Vec<RawBitLookupValue>,
 }
-#[derive(Deserialize)]
 struct RawBitLookupValue {
-    #[serde(rename = "Bit")]
     bit: u8,
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "Id")]
     id: Option<String>,
 }
 
-#[derive(Deserialize)]
 struct RawIndirectLookup {
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "MaxValue")]
     max_value: Option<u64>,
-    #[serde(rename = "EnumValues")]
     values: Vec<RawIndirectLookupValue>,
 }
-#[derive(Deserialize)]
 struct RawIndirectLookupValue {
-    #[serde(rename = "Value1")]
     value1: u64,
-    #[serde(rename = "Value2")]
     value2: u64,
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "Id")]
     id: Option<String>,
 }
 
-#[derive(Deserialize)]
 struct RawFieldTypeLookup {
-    #[serde(rename = "Name")]
     name: String,
-    #[serde(rename = "MaxValue")]
     max_value: Option<u64>,
-    #[serde(rename = "EnumFieldTypeValues")]
     values: Vec<RawFieldTypeValue>,
 }
-#[derive(Deserialize, Clone)]
+#[derive(Clone)]
 struct RawFieldTypeValue {
-    #[serde(rename = "value")]
     value: u64,
-    #[serde(rename = "name")]
     name: String,
-    #[serde(rename = "FieldType")]
     field_type: Option<String>,
-    #[serde(rename = "Bits", default, deserialize_with = "de_loose_string")]
     bits: Option<String>,
-    #[serde(rename = "Resolution")]
     resolution: Option<f64>,
-    #[serde(rename = "Unit")]
     unit: Option<String>,
-    #[serde(rename = "LookupEnumeration")]
     lookup_enumeration: Option<String>,
-    #[serde(rename = "LookupBitEnumeration")]
     lookup_bit_enumeration: Option<String>,
 }
 
@@ -576,12 +502,12 @@ fn emit_field_array(out: &mut String, ident: &str, fields: &[RawField], units: U
 
 /// Emit one `PgnInfo` literal that references its fields by the named
 /// static `fields_ident` (so SI and Metric can share the same slice).
-fn emit_pgn(out: &mut String, p: &RawPgn, fields_ident: &str, from_synthetic: bool) {
+fn emit_pgn(out: &mut String, p: &RawPgn, fields_ident: &str, is_bem: bool) {
     // Synthetic PGNs (post-canboat.json list) never wrap — they're
     // not in canboat C's PGN list, so the camelDescription contract
     // doesn't apply. Otherwise: pinned iff the natural camelize of
     // the description doesn't yield the declared Id.
-    let id_is_pinned = !from_synthetic && camelize_lower(&p.description) != p.id;
+    let id_is_pinned = !is_bem && camelize_lower(&p.description) != p.id;
     writeln!(
         out,
         "PgnInfo{{pgn:{pgn},id:{id},description:{description},explanation:{explanation},\
@@ -899,6 +825,275 @@ fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[Computed
 }
 
 // ---------------------------------------------------------------------
+// keel -> Raw*: build the schema straight from database/*.yaml
+// ---------------------------------------------------------------------
+//
+// keel already stores, or derives, everything the emitter below needs. The
+// only two things it computes at *emission* time rather than storing are the
+// running bit offset and the sentinel triple, both reproduced here exactly as
+// emit_xml does (which is what canboat.json carried).
+
+fn ft_of<'a>(db: &'a keel::model::Database, f: &keel::model::Field) -> &'a keel::model::FieldType {
+    &db.fieldtypes[f.ft]
+}
+
+/// Sentinels, as emit_xml::field() emits them: only for a TopOfRange root with
+/// a real range, under 64 bits, and never on a match field.
+fn sentinels(
+    db: &keel::model::Database,
+    f: &keel::model::Field,
+) -> (Option<u64>, Option<u64>, Option<u64>) {
+    let ft = ft_of(db, f);
+    if f.reserved_count == 0
+        || f.res_bits >= 64
+        || f.res_range_min.is_nan()
+        || f.match_.is_some()
+        || ft.root_sentinels != "TopOfRange"
+    {
+        return (None, None, None);
+    }
+    let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
+        f.res_bits - 1
+    } else {
+        f.res_bits
+    };
+    let raw = (1u64 << highbit) - 1;
+    (
+        Some(raw),
+        (f.reserved_count >= 2).then(|| raw - 1),
+        (f.reserved_count >= 3).then(|| raw - 2),
+    )
+}
+
+fn raw_field(
+    db: &keel::model::Database,
+    f: &keel::model::Field,
+    bit_offset: u32,
+    show_offset: bool,
+) -> RawField {
+    let ft = ft_of(db, f);
+    let (unknown, oor, reserved) = sentinels(db, f);
+    let lookup_ref = f.lookup_ref();
+    let kind = |k: &str| lookup_ref.and_then(|(t, n)| (t == k).then(|| n.to_string()));
+    RawField {
+        order: f.order as u8,
+        id: f.id.clone(),
+        name: f.name.clone(),
+        description: f.description.clone(),
+        bit_length: (f.res_bits != 0).then_some(f.res_bits),
+        bit_length_field: f.bit_length_field_order.map(|o| o.to_string()),
+        bit_length_variable: (f.res_bits == 0).then_some(true),
+        bit_offset: show_offset.then_some(bit_offset),
+        bit_start: show_offset.then_some(bit_offset % 8),
+        // canboat.json carries Resolution even when it is 1 (the XSLT
+        // defaults it); only a genuinely unset resolution is absent.
+        resolution: (f.res_resolution != 0.0).then_some(f.res_resolution),
+        signed: ft.has_sign,
+        // Scaled, as the XML/JSON carry it: the model keeps the offset in raw
+        // units (PEUKERT_EXPONENT is 500) but the published Offset is in the
+        // field's own units (500 * 0.002 = 1), and the decoder adds it after
+        // scaling. Passing the raw value made Peukert read 500.002.
+        offset: Some((f.res_offset as f64 * f.res_resolution) as i64).filter(|o| *o != 0),
+        // Ranges follow emit_xml exactly, including its two special cases:
+        // a non-match lookup field with a NaN range still reports 0 ..
+        // 2^bits-1 (QUIRKS Q16), and an unsigned 64-bit resolution-1 field
+        // reports the integer u64::MAX rather than a rounded float (Q7).
+        range_min: if !f.res_range_min.is_nan() {
+            Some(f.res_range_min)
+        } else if lookup_ref.is_some() && f.match_.is_none() {
+            Some(0.0)
+        } else {
+            None
+        },
+        range_max: if !f.res_range_max.is_nan() {
+            if f.res_resolution == 1.0
+                && f.res_bits == 64
+                && ft.has_sign == Some(false)
+                && f.res_offset == 0
+            {
+                Some(u64::MAX as f64)
+            } else {
+                Some(f.res_range_max)
+            }
+        } else if lookup_ref.is_some() && f.match_.is_none() {
+            Some(((1u128 << f.res_bits) - 1) as f64)
+        } else {
+            None
+        },
+        unknown_value: unknown,
+        out_of_range_value: oor,
+        reserved_value: reserved,
+        unit: f.res_unit.clone(),
+        physical_quantity: ft.physical.clone(),
+        field_type: Some(ft.root_name.clone()),
+        lookup_enumeration: kind("pair"),
+        lookup_bit_enumeration: kind("bit"),
+        lookup_indirect_enumeration: kind("triplet"),
+        lookup_indirect_enumeration_field_order: f.lookup_indirect_order.map(|o| o as u8),
+        lookup_field_type_enumeration: kind("fieldtype"),
+        match_value: db.resolve_match(f).map(|v| v as i64),
+        part_of_primary_key: f.primary_key.then_some(true),
+        condition: f.proprietary.then(|| "PGNIsProprietary".to_string()),
+    }
+}
+
+fn from_keel(root: &Path) -> CanboatJson {
+    let db = keel::load(root).unwrap_or_else(|e| panic!("keel: {e}"));
+
+    let mut pgns = Vec::new();
+    for p in &db.pgns {
+        // emit_xml's running bit offset: it stops being meaningful once a
+        // variable-length field has been seen.
+        let mut bit_offset = 0u32;
+        let mut show = true;
+        let mut fields = Vec::with_capacity(p.fields.len());
+        for f in &p.fields {
+            fields.push(raw_field(&db, f, bit_offset, show));
+            bit_offset += f.res_bits;
+            // Same kill switch as emit_xml: once a field's position stops
+            // being statically knowable, no later field reports an offset.
+            if db.fieldtypes[f.ft].variable_size || f.proprietary || f.res_bits == 0 {
+                show = false;
+            }
+        }
+        let rep = |r: &Option<keel::model::Repeating>| {
+            r.as_ref().map(|r| (r.count, r.start, r.count_field))
+        };
+        let (r1, r2) = (rep(&p.repeating1), rep(&p.repeating2));
+        pgns.push(RawPgn {
+            pgn: p.pgn,
+            id: p.id.clone(),
+            description: p.description.clone(),
+            explanation: p.explanation.clone(),
+            url: p.url.clone(),
+            packet_type: p.type_.clone(),
+            complete: Some(p.is_complete()),
+            fallback: p.fallback.then_some(true),
+            missing: {
+                let m: Vec<String> = p
+                    .missing_effective()
+                    .iter()
+                    .map(|s| s.to_string())
+                    .collect();
+                (!m.is_empty()).then_some(m)
+            },
+            priority: (p.priority != 0).then_some(p.priority as u8),
+            transmission_interval: match p.interval {
+                keel::model::Interval::Ms(ms) => Some(ms),
+                _ => None,
+            },
+            transmission_irregular: matches!(p.interval, keel::model::Interval::Irregular)
+                .then_some(true),
+            field_count: p.field_count,
+            // A variable-length PGN (one with a repeating set) publishes
+            // MinLength and no Length -- its real length depends on the
+            // repeat count. Emitting Length for those made the runtime treat
+            // 43 as fixed and reject a legitimate 47-byte 129029.
+            length: (!p.is_variable).then_some(p.length),
+            min_length: p.is_variable.then_some(p.length),
+            fields,
+            repeating_field_set1_size: r1.map(|r| r.0),
+            repeating_field_set1_start_field: r1.map(|r| r.1),
+            repeating_field_set1_count_field: r1.and_then(|r| r.2),
+            repeating_field_set2_size: r2.map(|r| r.0),
+            repeating_field_set2_start_field: r2.map(|r| r.1),
+            repeating_field_set2_count_field: r2.and_then(|r| r.2),
+        });
+    }
+
+    let of_kind = |k: &str| -> Vec<&keel::model::Lookup> { db.ordered_lookups(k) };
+    CanboatJson {
+        schema_version: db.schema_version.clone(),
+        version: db.version.clone(),
+        copyright: keel::emit_xml::copyright(&db.version),
+        pgns,
+        lookup_enumerations: of_kind("pair")
+            .iter()
+            .map(|l| RawLookup {
+                name: l.name.clone(),
+                max_value: Some((1u64 << l.bits) - 1),
+                values: l
+                    .pairs
+                    .iter()
+                    .map(|(v, n)| RawLookupValue {
+                        value: *v,
+                        name: n.clone(),
+                        id: None,
+                    })
+                    .collect(),
+            })
+            .collect(),
+        lookup_bit_enumerations: of_kind("bit")
+            .iter()
+            .map(|l| RawBitLookup {
+                name: l.name.clone(),
+                max_value: Some(l.bits as u64 - 1),
+                values: l
+                    .pairs
+                    .iter()
+                    .map(|(b, n)| RawBitLookupValue {
+                        bit: *b as u8,
+                        name: n.clone(),
+                        id: None,
+                    })
+                    .collect(),
+            })
+            .collect(),
+        lookup_indirect_enumerations: of_kind("triplet")
+            .iter()
+            .map(|l| RawIndirectLookup {
+                name: l.name.clone(),
+                max_value: Some((1u64 << l.bits) - 1),
+                values: l
+                    .triplets
+                    .iter()
+                    .map(|(a, b, n)| RawIndirectLookupValue {
+                        value1: *a,
+                        value2: *b,
+                        name: n.clone(),
+                        id: None,
+                    })
+                    .collect(),
+            })
+            .collect(),
+        lookup_field_type_enumerations: of_kind("fieldtype")
+            .iter()
+            .map(|l| RawFieldTypeLookup {
+                name: l.name.clone(),
+                max_value: Some((1u64 << l.bits) - 1),
+                values: l
+                    .fieldtypes
+                    .iter()
+                    .map(|e| {
+                        let ftv = db.fieldtype(&e.fieldtype).ok().map(|i| &db.fieldtypes[i]);
+                        RawFieldTypeValue {
+                            value: e.value,
+                            name: e.name.clone(),
+                            field_type: ftv.map(|f| f.root_name.clone()),
+                            bits: e
+                                .bits
+                                .or_else(|| ftv.map(|f| f.size))
+                                .filter(|b| *b != 0)
+                                .map(|b| b.to_string()),
+                            resolution: ftv.map(|f| f.resolution).filter(|r| *r != 0.0),
+                            unit: ftv.and_then(|f| f.unit.clone()),
+                            lookup_enumeration: e
+                                .lookup
+                                .clone()
+                                .filter(|_| e.lookup_kind.as_deref() != Some("bit")),
+                            lookup_bit_enumeration: e
+                                .lookup
+                                .clone()
+                                .filter(|_| e.lookup_kind.as_deref() == Some("bit")),
+                        }
+                    })
+                    .collect(),
+            })
+            .collect(),
+    }
+}
+
+// ---------------------------------------------------------------------
 // main()
 // ---------------------------------------------------------------------
 
@@ -920,32 +1115,20 @@ fn main() {
         .parent()
         .and_then(|p| p.parent())
         .expect("crate is at <repo>/crates/canboat-core");
-    let canboat_path = repo_root.join("docs").join("canboat.json");
-    // The CANBOAT_BEM pseudo-PGNs (0x40000+) that analyzer/pgn.h defines
-    // directly never appear in canboat.json, so this mirror stays for now.
-    // keel already owns them in the YAML; folding them in is §7.
-    let synthetic_path = manifest.join("data").join("synthetic-pgns.json");
+    // Rebuild when any of the authored database changes. cargo watches a
+    // directory recursively, so this covers every pgn/lookup file.
+    for dir in ["database", "common"] {
+        println!("cargo:rerun-if-changed={}", repo_root.join(dir).display());
+    }
 
-    println!("cargo:rerun-if-changed={}", canboat_path.display());
-    println!("cargo:rerun-if-changed={}", synthetic_path.display());
+    let canboat = from_keel(repo_root);
 
-    let canboat_bytes =
-        fs::read(&canboat_path).unwrap_or_else(|e| panic!("read {}: {e}", canboat_path.display()));
-    let canboat: CanboatJson = serde_json::from_slice(&canboat_bytes)
-        .unwrap_or_else(|e| panic!("parse {}: {e}", canboat_path.display()));
-
-    let synthetic_bytes = fs::read(&synthetic_path)
-        .unwrap_or_else(|e| panic!("read {}: {e}", synthetic_path.display()));
-    let synthetic: SyntheticJson = serde_json::from_slice(&synthetic_bytes)
-        .unwrap_or_else(|e| panic!("parse {}: {e}", synthetic_path.display()));
-
-    // Concatenate: main PGNs + synthetic PGNs. Synthetic come last so
-    // the in-load-order `fallback_pgn` walk still matches today's
-    // behaviour (the synthetic range is at 0x40000+, well above any
-    // proprietary catch-all).
-    let mut pgns: Vec<RawPgn> = canboat.pgns;
-    let canboat_pgn_count = pgns.len();
-    pgns.extend(synthetic.pgns);
+    // The CANBOAT_BEM pseudo-PGNs (0x40000+) are ordinary members of the
+    // database now, and keel hands them over sorted by PGN — so they still
+    // land last, which is what the in-load-order `fallback_pgn` walk wants
+    // (the BEM range is well above any proprietary catch-all).
+    let pgns: Vec<RawPgn> = canboat.pgns;
+    let canboat_pgn_count = pgns.iter().filter(|p| p.pgn < 0x40000).count();
 
     // Apply non-SI fix-up to every field, capturing the derived
     // unit_offset / precision / is_dynamic_length_marker.
@@ -992,11 +1175,7 @@ fn main() {
         "// AUTO-GENERATED by canboat-core/build.rs — DO NOT EDIT."
     )
     .unwrap();
-    writeln!(
-        out,
-        "// Source: data/canboat.json + data/synthetic-pgns.json"
-    )
-    .unwrap();
+    writeln!(out, "// Source: database/*.yaml, via keel (see build.rs)").unwrap();
     writeln!(
         out,
         "use canboat_schema::{{BitLookupTable, BitLookupValue, FieldInfo, FieldType, \
@@ -1018,19 +1197,47 @@ fn main() {
     )
     .unwrap();
 
-    // Content hash over the raw schema source bytes (canboat.json then
-    // synthetic-pgns.json). This is the schema identity two processes
+    // Content hash over the authored schema source (database/**.yaml).
+    // This is the schema identity two processes
     // would exchange to prove they were built from byte-identical schema
-    // data before trusting each other's field indices. Any edit to either
-    // file — versioned or not —
-    // changes this, so a mismatch fails the handshake loudly instead of
+    // data before trusting each other's field indices. Any edit to the
+    // database — versioned or not — changes this, so a mismatch fails the handshake loudly instead of
     // silently mis-decoding fields. FNV-1a/64: dependency-free, stable,
     // and drift-detection is all it needs to be (not security).
     let schema_hash: u64 = {
+        // Hash every authored database file, path included, in a stable
+        // (sorted) order. Path as well as content, so a rename alone still
+        // moves the hash.
+        let mut files: Vec<PathBuf> = Vec::new();
+        let mut stack = vec![repo_root.join("database")];
+        while let Some(dir) = stack.pop() {
+            let Ok(rd) = fs::read_dir(&dir) else { continue };
+            for e in rd.flatten() {
+                let p = e.path();
+                if p.is_dir() {
+                    stack.push(p);
+                } else if p.extension().is_some_and(|x| x == "yaml") {
+                    files.push(p);
+                }
+            }
+        }
+        files.sort();
         let mut h: u64 = 0xcbf2_9ce4_8422_2325;
-        for &b in canboat_bytes.iter().chain(synthetic_bytes.iter()) {
-            h ^= b as u64;
-            h = h.wrapping_mul(0x0000_0100_0000_01b3);
+        let feed = |bytes: &[u8], h: &mut u64| {
+            for &b in bytes {
+                *h ^= b as u64;
+                *h = h.wrapping_mul(0x0000_0100_0000_01b3);
+            }
+        };
+        for f in &files {
+            feed(
+                f.strip_prefix(repo_root)
+                    .unwrap_or(f)
+                    .to_string_lossy()
+                    .as_bytes(),
+                &mut h,
+            );
+            feed(&fs::read(f).unwrap_or_default(), &mut h);
         }
         h
     };
@@ -1066,26 +1273,26 @@ fn main() {
     }
 
     // PGNS_SI / PGNS_METRIC. Entries past `canboat_pgn_count` come from
-    // synthetic-pgns.json — canboat C doesn't know about those, so their
+    // the CANBOAT_BEM range — the C analyzer has these too, but their
     // Ids shouldn't trigger the camelDescription wrapping even when they
     // happen to differ from camelize(description). The two arrays differ
     // only in which field slice each PgnInfo points at.
     writeln!(out, "pub static PGNS_SI: &[PgnInfo] = &[").unwrap();
     for (i, (p, _fields)) in pgn_with_fields.iter().enumerate() {
-        let from_synthetic = i >= canboat_pgn_count;
-        emit_pgn(&mut out, p, &format!("F{i}"), from_synthetic);
+        let is_bem = i >= canboat_pgn_count;
+        emit_pgn(&mut out, p, &format!("F{i}"), is_bem);
     }
     writeln!(out, "];").unwrap();
 
     writeln!(out, "pub static PGNS_METRIC: &[PgnInfo] = &[").unwrap();
     for (i, (p, fields)) in pgn_with_fields.iter().enumerate() {
-        let from_synthetic = i >= canboat_pgn_count;
+        let is_bem = i >= canboat_pgn_count;
         let ident = if fields.iter().any(field_converts) {
             format!("F{i}M")
         } else {
             format!("F{i}")
         };
-        emit_pgn(&mut out, p, &ident, from_synthetic);
+        emit_pgn(&mut out, p, &ident, is_bem);
     }
     writeln!(out, "];").unwrap();
 

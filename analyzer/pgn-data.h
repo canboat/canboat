@@ -10607,5 +10607,34 @@ Pgn pgnList[] = {
       {.name = "Source", .camelName = "source", .fieldType = "STRING_FIX", .size = 256},
       {.name = "Device", .camelName = "device", .fieldType = "STRING_FIX", .size = 256}
      },
-     .camelDescription = "canboatStartup"}
+     .camelDescription = "canboatStartup"},
+
+    {"CANboat: NMEA 0183 filter",
+     262657,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Function", .camelName = "function", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=Report (pipeline->tui), 1=Set (tui->pipeline)"},
+      {.name = "Source", .camelName = "source", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "N2K source address this record refers to"},
+      {.name = "Sentence", .camelName = "sentence", .fieldType = "STRING_FIX", .size = 24, .description = "3-letter NMEA 0183 formatter, or 'ALL' for the whole source"},
+      {.name = "Muted", .camelName = "muted", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=active (emitting), 1=muted"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
+     },
+     .camelDescription = "canboatNmea0183Filter",
+     .explanation = "Control channel for the NMEA 0183 sentence filter. Carried only on the server's dedicated bidirectional filter port, never on the CAN bus - it is a CANBOAT_BEM pseudo-PGN, like the rest of the 0x40000+ range."},
+
+    {"CANboat: PGN transmission-interval override",
+     262658,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Function", .camelName = "function", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=Report (server->tui), 1=Set, 2=Request, 3=Delete (tui->server)"},
+      {.name = "Source", .camelName = "source", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "N2K source address of the device the override targets"},
+      {.name = "PGN", .camelName = "pgn", .fieldType = "NUMBER", .size = 24, .resolution = 1.0, .description = "Commanded PGN whose transmission interval is overridden"},
+      {.name = "Interval", .camelName = "intervalMs", .fieldType = "NUMBER", .size = 32, .resolution = 1.0, .description = "Requested transmission interval in ms; 0 = stop transmitting"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "NUMBER", .size = 16, .resolution = 1.0, .description = "For proprietary PGNs; 0xffff = not applicable"},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "For proprietary PGNs; 0xff = not applicable"}
+     },
+     .camelDescription = "canboatPgnOverride",
+     .explanation = "Control channel for per-device transmission-interval overrides. A CANBOAT_BEM pseudo-PGN (0x40000+), exchanged between a server and its clients rather than on the CAN bus."}
 };

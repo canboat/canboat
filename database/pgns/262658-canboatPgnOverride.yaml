@@ -1,0 +1,36 @@
+pgn: 262658
+id: canboatPgnOverride
+description: 'CANboat: PGN transmission-interval override'
+type: Fast
+explanation: Control channel for per-device transmission-interval overrides. A CANBOAT_BEM pseudo-PGN (0x40000+), exchanged between a server and its clients rather than on the CAN bus.
+fields:
+- id: function
+  name: Function
+  type: NUMBER
+  bits: 8
+  description: 0=Report (server->tui), 1=Set, 2=Request, 3=Delete (tui->server)
+- id: source
+  name: Source
+  type: NUMBER
+  bits: 8
+  description: N2K source address of the device the override targets
+- id: pgn
+  name: PGN
+  type: NUMBER
+  bits: 24
+  description: Commanded PGN whose transmission interval is overridden
+- id: intervalMs
+  name: Interval
+  type: NUMBER
+  bits: 32
+  description: Requested transmission interval in ms; 0 = stop transmitting
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: NUMBER
+  bits: 16
+  description: For proprietary PGNs; 0xffff = not applicable
+- id: industryCode
+  name: Industry Code
+  type: NUMBER
+  bits: 8
+  description: For proprietary PGNs; 0xff = not applicable

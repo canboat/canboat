@@ -21,5 +21,9 @@ indexmap      = { workspace = true }
 itoa = "1"
 
 [build-dependencies]
-serde      = { workspace = true }
-serde_json = { workspace = true }
+# The schema is derived from database/*.yaml at build time by keel, the same
+# tool that generates the analyzer's C tables — one source of truth, and a
+# `cargo build` picks up a YAML edit with no `make` in between. keel is
+# deliberately dep-thin (yaml-rust2 only), so this costs almost nothing;
+# tools/check-keel-deps.sh keeps it that way.
+keel = { path = "../../keel" }
