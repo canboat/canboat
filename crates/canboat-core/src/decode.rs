@@ -1451,6 +1451,18 @@ fn decode_iso_name(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDataba
     for i in 0..8 {
         value |= (data[byte_off + i] as u64) << (i * 8);
     }
+    // An ISO NAME reserves its top *two* values rather than going
+    // through the usual per-field sentinel machinery, which is
+    // suppressed at 64 bits anyway (QUIRKS Q18): `fieldPrintName`
+    // (print.c) hands anything above `maxValue - 2` to `printEmpty`.
+    // Expanding one of those into subfields would invent a device —
+    // an all-ones NAME reads as Device Instance 31, "Arbitrary address
+    // capable: Yes" and so on, none of which is on the wire.
+    match value {
+        u64::MAX => return FieldValue::NotAvailable,
+        v if v == u64::MAX - 1 => return FieldValue::OutOfRange { value },
+        _ => {}
+    }
     let sub = &data[byte_off..byte_off + 8];
     let subfields = match db.first_pgn(60928) {
         Some(pgn) => decode_fields(pgn, sub, db).map(|x| x.0).unwrap_or_default(),
