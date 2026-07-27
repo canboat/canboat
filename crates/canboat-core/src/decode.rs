@@ -1901,15 +1901,24 @@ fn decode_dynamic_field_value(
         ctx.skip_field = true;
         return (FieldValue::NotAvailable, remaining);
     }
-    // Mirror canboat's fieldPrintKeyValue: no resolved length and
-    // no resolved field type → emit an empty BINARY blob (the
-    // `g_length = 0, g_ftf = NULL, fieldPrintBinary(bits=0)` path
-    // in print.c). Better than erroring out — this is how PGN
-    // 130845 with an unknown SIMNET_KEY_VALUE key renders.
     let bits = bits_signed as u32;
     let Some(entry) = entry else {
-        // Unresolved key — render as a raw BINARY blob over the
-        // declared length (zero bytes is fine, comes out as "").
+        // The key resolved to no field type, so there is no width to
+        // decode against. When there was no explicit length either, the
+        // value is simply the rest of the frame, and canboat dumps it
+        // as raw bytes — `*bits = dataLen * 8 - startBit` before
+        // `fieldPrintBinary` (fieldPrintKeyValue, print.c).
+        //
+        // PGN 130845 is the case that needs it: its `Value` has no
+        // preceding DYNAMIC_FIELD_LENGTH at all, so an unrecognised
+        // SIMNET_KEY_VALUE key leaves nothing to size the field with,
+        // and taking the declared zero would print `""` over bytes that
+        // are plainly on the bus.
+        let bits = if bits == 0 && explicit_len.is_none() {
+            remaining
+        } else {
+            bits
+        };
         return (decode_binary(data, bit_offset, bits), bits);
     };
     let signed = entry.signed || matches!(entry.field_type, Some(ft) if ft.starts_with("FIX"));
@@ -2110,6 +2119,38 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn unresolved_key_takes_the_rest_of_the_frame_as_its_value() {
+        // PGN 130845 Simnet: Key Value, from
+        // samples/ac42-commissioning.raw. Key 17671 is not in
+        // SIMNET_KEY_VALUE, so no field type resolves — and this PGN
+        // has no DYNAMIC_FIELD_LENGTH either, so nothing declares a
+        // width. canboat falls back to the rest of the frame and prints
+        // the bytes; the alternative is `""` over data that is plainly
+        // there.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x41, 0x9f, 0xff, 0xff, 0x01, 0xff, 0x07, 0x45, 0x00, 0x01, 0x2d, 0x7d, 0x10, 0x14,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 2,
+            pgn: 130845,
+            src: 13,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let value = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Value")
+            .expect("a Value field");
+        match &value.value {
+            FieldValue::Binary(b) => assert_eq!(b.as_slice(), &[0x2d, 0x7d, 0x10, 0x14]),
+            other => panic!("expected the trailing bytes, got {other:?}"),
+        }
     }
 
     #[test]
