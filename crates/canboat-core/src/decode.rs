@@ -1125,6 +1125,20 @@ fn decode_lookup(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
+    // Still nothing, and the table does not name this value. canboat does not
+    // fall back to printing the bare number here: fieldPrintLookup treats an
+    // unnamed value in the top reserved band as unavailable, using a bound it
+    // computes from the field width rather than any schema hint --
+    //     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
+    // so a 2-bit lookup reserves its top two values and anything wider its top
+    // three. Without this, PGN 127501's `Indicator11` reported {"value":2}
+    // where canboat omits the field entirely.
+    if bit_length > 1 {
+        let band = if bit_length > 2 { 2 } else { 1 };
+        if ex.value >= ex.max - band {
+            return FieldValue::NotAvailable;
+        }
+    }
     FieldValue::Lookup {
         value: raw,
         name: None,
@@ -1291,22 +1305,43 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
         let end = declared_end.min(data.len());
         return FieldValue::Binary(data[start..end].to_vec());
     }
-    // Bit-aligned binary: pack into bytes LSB-first to keep round-trip
-    // semantics with extract_bits.
-    let bytes = bit_length.div_ceil(8);
-    let mut out = vec![0u8; bytes];
-    let mut bo = bit_offset;
-    let mut remaining = bit_length;
-    let mut byte_i = 0usize;
-    while remaining > 0 {
-        let chunk = remaining.min(8);
-        let Some(ex) = extract_bits(data, bo, chunk, false, 0) else {
-            return FieldValue::NotAvailable;
+    // Not byte-aligned. This is NOT a clean bit-extraction, and must not
+    // become one: `fieldPrintBinary` masks the *first* byte to the field's
+    // width but then shifts it back to where it sat in the byte, and takes
+    // every later byte whole. So PGN 130829's two 4-bit nibbles render as
+    // "0F" (low) and "F0" (high) — the high nibble keeps its position rather
+    // than being normalised down. Packing LSB-first instead reported both as
+    // "0F", losing which nibble the bits came from.
+    let start_byte = bit_offset / 8;
+    let start_bit = bit_offset % 8;
+    // canboat clamps the width to what the payload actually holds.
+    let avail = data.len().saturating_mul(8).saturating_sub(bit_offset);
+    let bit_length = bit_length.min(avail);
+    if bit_length == 0 {
+        return FieldValue::NotAvailable;
+    }
+    let nbytes = bit_length.div_ceil(8);
+    let mut out = Vec::with_capacity(nbytes);
+    let mut remaining = bit_length as isize;
+    for i in 0..nbytes {
+        let Some(&raw) = data.get(start_byte + i) else {
+            break;
         };
-        out[byte_i] = ex.value as u8;
-        byte_i += 1;
-        bo += chunk;
-        remaining -= chunk;
+        let mut byte = raw;
+        if i == 0 && start_bit != 0 {
+            byte >>= start_bit;
+            if (remaining as usize) + start_bit < 8 {
+                byte &= (1u8 << remaining) - 1;
+            }
+            byte <<= start_bit;
+            remaining -= (8 - start_bit) as isize;
+        } else {
+            if remaining < 8 {
+                byte &= (1u8 << remaining) - 1;
+            }
+            remaining -= 8;
+        }
+        out.push(byte);
     }
     FieldValue::Binary(out)
 }
