@@ -94,6 +94,14 @@ pub struct FieldInfo {
     /// the decoder's dynamic-length dispatch doesn't `memcmp` every
     /// field.
     pub is_dynamic_length_marker: bool,
+    /// Bytes of per-record header that sit between this
+    /// `DYNAMIC_FIELD_LENGTH` field and the value it sizes, and that the
+    /// reported length counts. Subtract to get the value's own width.
+    ///
+    /// Navico's 130822/130823 dumps report the length of the whole
+    /// record — a class byte and a 16-bit data-type id ahead of the
+    /// value — so their overhead is 3. `0` everywhere else.
+    pub dynamic_field_length_overhead: u32,
 }
 
 /// A PGN definition.

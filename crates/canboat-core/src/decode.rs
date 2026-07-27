@@ -556,9 +556,16 @@ struct DecodeContext {
     /// after. Stored as cloned data so we don't have to thread a
     /// lifetime through every decoder.
     dynamic_field_type: Option<crate::types::LookupFieldTypeValue>,
-    /// Byte length from a DYNAMIC_FIELD_LENGTH field. Cleared with
-    /// `dynamic_field_type` after the value is decoded.
-    dynamic_length_bytes: Option<u32>,
+    /// Byte length from a DYNAMIC_FIELD_LENGTH field, net of the
+    /// record overhead. Cleared with `dynamic_field_type` after the
+    /// value is decoded. Signed, and legitimately negative when a
+    /// truncated record declares a length below its own header — the
+    /// C's `g_length` is `int64_t` for the same reason.
+    dynamic_length_bytes: Option<i64>,
+    /// Set by a decoder that wants its field omitted from the output
+    /// while the walk carries on past it — canboat's `g_skip`
+    /// (print.c). Read and cleared by the field walker.
+    skip_field: bool,
     /// Which definition of `target_pgn` the parameters address, and
     /// whether it had to be borrowed from the catch-all. Resolved at
     /// the first VARIABLE field and reused for the rest of the record,
@@ -657,6 +664,12 @@ fn decode_fields(
             decode_one_field_at(f, info, data, db, effective_offset, &mut ctx)
         {
             cursor_bits = effective_offset + bits_consumed;
+            // `skip_field` omits the field but keeps the walk going,
+            // and the cursor has already advanced past it.
+            if core::mem::take(&mut ctx.skip_field) {
+                i += 1;
+                continue;
+            }
             out.push(decoded);
         }
         i += 1;
@@ -772,8 +785,13 @@ fn decode_repeating(
                     Some(iter)
                 };
                 first_field_of_iter = false;
-                out.push(d);
                 sub_cursor = off + bits;
+                // The record is still real when a value is omitted for
+                // being explicitly empty, so this iteration counts as
+                // productive and the walk continues to the next record.
+                if !core::mem::take(&mut ctx.skip_field) {
+                    out.push(d);
+                }
                 produced_any = true;
             } else if let Some(bl) = sf.bit_length {
                 // Field couldn't decode but has a known size; advance
@@ -954,12 +972,12 @@ fn decode_one_field_at(
     // `DYNAMIC_FIELD_LENGTH` type (e.g. Simnet Parameter Set 130846).
     if f.is_dynamic_length_marker {
         let raw_len = match &value {
-            FieldValue::Integer(n) if *n >= 0 => Some(*n as u32),
-            FieldValue::Number(n) if *n >= 0.0 => Some(*n as u32),
+            FieldValue::Integer(n) if *n >= 0 => Some(*n),
+            FieldValue::Number(n) if *n >= 0.0 => Some(*n as i64),
             _ => None,
         };
         if let Some(n) = raw_len {
-            ctx.dynamic_length_bytes = Some(n);
+            ctx.dynamic_length_bytes = Some(n - i64::from(f.dynamic_field_length_overhead));
         }
     }
 
@@ -1797,7 +1815,12 @@ fn decode_dynamic_field_length(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
-    let len = ex.raw as u32;
+    // The reported length may cover a per-record header sitting between
+    // this field and the value — Navico's 130822/130823 dumps count the
+    // class byte and the 16-bit data-type id — so take that off to get
+    // the value's own width (`g_length = value - overhead`,
+    // analyzer.c::fillGlobalsBasedOnFieldName).
+    let len = ex.raw as i64 - i64::from(f.dynamic_field_length_overhead);
     ctx.dynamic_length_bytes = Some(len);
     FieldValue::Integer(ex.value)
 }
@@ -1815,17 +1838,48 @@ fn decode_dynamic_field_value(
     ctx: &mut DecodeContext,
 ) -> (FieldValue, u32) {
     let entry = ctx.dynamic_field_type.take();
-    let length_bits = ctx
-        .dynamic_length_bytes
-        .take()
+    let explicit_len = ctx.dynamic_length_bytes.take();
+    let length_bits: Option<i64> = explicit_len
         .map(|n| n * 8)
-        .or_else(|| entry.as_ref().and_then(|e| e.bit_length()));
+        .or_else(|| entry.as_ref().and_then(|e| e.bit_length()).map(i64::from));
+    // An explicit length of zero means the value is present but empty
+    // — PGN 130823 directory entries that declare only a data type.
+    // canboat omits the field rather than printing `""`
+    // (`g_lengthValid && *bits == 0` → `g_skip`, print.c). Note this
+    // is checked before the resolved-key branch below, so a known
+    // field type with a zero length is dropped too.
+    if explicit_len == Some(0) {
+        ctx.skip_field = true;
+        return (FieldValue::NotAvailable, 0);
+    }
+    let bits_signed = length_bits.unwrap_or(0);
+    let remaining = (data.len() as u32 * 8).saturating_sub(bit_offset);
+    if bits_signed < 0 {
+        // A record declaring a length below its own header width. The
+        // C subtracts the overhead into a signed `g_length` and then
+        // casts to `size_t` for the bounds test below, so the negative
+        // width wraps to something enormous, sails past that test and
+        // reaches `fieldPrintBinary`, which clamps it to what is left
+        // of the packet. Accidental, but the resulting reading — dump
+        // the rest of the frame — is the useful one, so match it
+        // deliberately rather than by arithmetic.
+        return (decode_binary(data, bit_offset, remaining), remaining);
+    }
+    // The declared value runs past the end of the packet: the frame
+    // ended mid-record. That is how a repeating key/value group
+    // normally terminates — the device packs as many records as fit
+    // and the last one is cut off — so canboat drops the partial value
+    // and stops there rather than failing the whole PGN (print.c).
+    if (data.len() as i64) < (bit_offset as i64 + bits_signed) >> 3 {
+        ctx.skip_field = true;
+        return (FieldValue::NotAvailable, remaining);
+    }
     // Mirror canboat's fieldPrintKeyValue: no resolved length and
     // no resolved field type → emit an empty BINARY blob (the
     // `g_length = 0, g_ftf = NULL, fieldPrintBinary(bits=0)` path
     // in print.c). Better than erroring out — this is how PGN
     // 130845 with an unknown SIMNET_KEY_VALUE key renders.
-    let bits = length_bits.unwrap_or(0);
+    let bits = bits_signed as u32;
     let Some(entry) = entry else {
         // Unresolved key — render as a raw BINARY blob over the
         // declared length (zero bytes is fine, comes out as "").
@@ -2044,6 +2098,64 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn dynamic_length_overhead_sizes_130823_records() {
+        // A reassembled PGN 130823 directory report (the first record
+        // of samples/navico-130823.raw). Each entry is
+        // [Length][Type][Data Type:16][Value…] and `Length` counts the
+        // three header bytes as well, so the value is `Length - 3`.
+        // Without the overhead the walk reads three bytes too many per
+        // record and every entry after the first is garbage.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x13, 0x99, 0xff, 0x00, 0x05, 0x01, 0x00, 0x0a, 0x00, 0x55, 0x02, 0xbc, 0x2f, 0x00,
+            0x96, 0x50, 0xc0, 0xff, 0x04, 0x02, 0x26, 0x00, 0x00, 0x04, 0x02, 0x27, 0x00, 0x00,
+            0x04, 0x02, 0x7d, 0x00, 0x00, 0x04, 0x02, 0xa5, 0x00, 0x00, 0x04, 0x02, 0x99, 0x01,
+            0x00, 0x04, 0x02, 0xf9, 0x01, 0x00,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130823,
+            src: 19,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        // Walk the repeating set and check every value against the
+        // length that introduced it.
+        let mut pending: Option<i64> = None;
+        let mut records = 0;
+        for f in &dec.fields {
+            match f.info.name {
+                "Length" => {
+                    if let FieldValue::Integer(n) = f.value {
+                        // A record that got its Value dropped for being
+                        // empty must have declared exactly the header.
+                        if let Some(prev) = pending.take() {
+                            assert_eq!(prev, 3, "record with no Value declared Length {prev}");
+                        }
+                        pending = Some(n);
+                        records += 1;
+                    }
+                }
+                "Value" => {
+                    let len = pending.take().expect("Value without a preceding Length");
+                    let bytes = match &f.value {
+                        FieldValue::Binary(b) => b.len() as i64,
+                        other => panic!("expected binary Value, got {other:?}"),
+                    };
+                    assert_eq!(bytes, len - 3, "Length {len} should give {} bytes", len - 3);
+                }
+                _ => {}
+            }
+        }
+        if let Some(last) = pending {
+            assert_eq!(last, 3, "trailing record with no Value declared Length {last}");
+        }
+        assert!(records >= 6, "expected several records, got {records}");
     }
 
     #[test]
