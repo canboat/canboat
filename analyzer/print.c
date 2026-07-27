@@ -1168,7 +1168,35 @@ extern bool fieldPrintTime(const Field   *field,
   hours    = minutes / 60;
   minutes  = minutes % 60;
 
-  digits = log10(unitspersecond);
+  /*
+   * How many decimals to show, and `fraction` expressed in them.
+   *
+   * `fraction` counts resolution units, not decimal places. Printing it as a
+   * decimal is only correct when there are a power of ten of those per second.
+   * DURATION_UFIX8_5MS has 200/s, so 19 units -- 0.095 s -- came out as
+   * "00:00:00.19", and 150 units (0.750 s) as "00:00:00.150", three digits in
+   * a two-digit field. Take the width from the units-per-second instead (the
+   * smallest power of ten that covers it) and scale the fraction into it.
+   *
+   * Done in integer arithmetic on purpose: deriving the width by multiplying
+   * the resolution by ten until it reaches 1.0 would be at the mercy of
+   * binary rounding, and 0.0001 -- 23 fields -- is exactly the sort of value
+   * that lands a hair under and gains a digit.
+   */
+  {
+    uint64_t scale = 1;
+
+    digits = 0;
+    while (scale < unitspersecond && digits < 9)
+    {
+      scale *= 10;
+      digits++;
+    }
+    if (digits > 0 && unitspersecond > 0)
+    {
+      fraction = (uint32_t) (((uint64_t) fraction * scale) / unitspersecond);
+    }
+  }
 
   if (showJson)
   {
