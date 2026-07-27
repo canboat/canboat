@@ -94,8 +94,8 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // along with proper negatives.
     let neg = v.is_sign_negative();
     if precision == 0 {
-        // Whole-number path: round half-away-from-zero, integer fmt.
-        let rounded = v.round() as i64;
+        // Whole-number path: integer fmt. Ties go to even, see below.
+        let rounded = v.round_ties_even() as i64;
         let mut buf = itoa::Buffer::new();
         let s = buf.format(rounded.unsigned_abs());
         let signed_len = (if neg && rounded != 0 { 1 } else { 0 }) + s.len();
@@ -111,7 +111,13 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // padded fractional digits — no float formatter on the hot path.
     let scale = 10f64.powi(precision as i32);
     let scaled = v * scale;
-    let rounded = scaled.round() as i128;
+    // Ties go to EVEN, not away from zero. canboat prints through printf,
+    // which rounds under the current FP mode -- FE_TONEAREST, i.e. half to
+    // even. `f64::round` rounds half away from zero, so an exact tie came out
+    // one ulp high: 127489's Power factor is 30976/16384 = 1.890625 exactly,
+    // scaling to 189062.5 at precision 5, and printed 1.89063 where canboat
+    // prints 1.89062.
+    let rounded = scaled.round_ties_even() as i128;
     let abs = rounded.unsigned_abs();
     let pow = 10u128.pow(precision as u32);
     let int_part = (abs / pow) as u64;
