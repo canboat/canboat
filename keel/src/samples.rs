@@ -67,18 +67,30 @@ pub fn parse_line(line: &str) -> Result<RawFrame> {
     let dst: u8 = parts[4].trim().parse().map_err(|e| format!("dst: {e}"))?;
     let len: usize = parts[5].trim().parse().map_err(|e| format!("len: {e}"))?;
     if parts.len() < 6 + len {
-        return Err(format!("PLAIN line declares {len} bytes but carries {}", parts.len() - 6));
+        return Err(format!(
+            "PLAIN line declares {len} bytes but carries {}",
+            parts.len() - 6
+        ));
     }
     let data = parts[6..6 + len]
         .iter()
         .map(|b| u8::from_str_radix(b.trim(), 16).map_err(|e| format!("hex byte: {e}")))
         .collect::<Result<Vec<u8>>>()?;
-    Ok(RawFrame { prio, pgn, src, dst, data })
+    Ok(RawFrame {
+        prio,
+        pgn,
+        src,
+        dst,
+        data,
+    })
 }
 
 pub fn parse_hex(s: &str) -> Result<Vec<u8>> {
-    let s: String = s.chars().filter(|c| !c.is_whitespace() && *c != ',').collect();
-    if s.len() % 2 != 0 {
+    let s: String = s
+        .chars()
+        .filter(|c| !c.is_whitespace() && *c != ',')
+        .collect();
+    if !s.len().is_multiple_of(2) {
         return Err("odd number of hex digits".into());
     }
     (0..s.len())
@@ -99,7 +111,13 @@ fn from_can_id(id: u32, data: Vec<u8>) -> RawFrame {
     } else {
         ((dp << 16) | (pf << 8) | ps, 255) // PDU2: broadcast
     };
-    RawFrame { prio, pgn, src, dst, data }
+    RawFrame {
+        prio,
+        pgn,
+        src,
+        dst,
+        data,
+    }
 }
 
 /// One reassembled message ready for decoding.
@@ -190,8 +208,16 @@ pub fn reassemble_lenient<F: Fn(u32) -> bool>(
             slot.seen |= 1 << index;
         }
         // Complete when every needed frame index is present
-        let frames_needed = if slot.total <= 6 { 1 } else { 1 + (slot.total - 6).div_ceil(7) };
-        let mask = if frames_needed >= 32 { u32::MAX } else { (1u32 << frames_needed) - 1 };
+        let frames_needed = if slot.total <= 6 {
+            1
+        } else {
+            1 + (slot.total - 6).div_ceil(7)
+        };
+        let mask = if frames_needed >= 32 {
+            u32::MAX
+        } else {
+            (1u32 << frames_needed) - 1
+        };
         if slot.total > 0 && slot.seen & mask == mask {
             let mut data = std::mem::take(&mut slot.data);
             data.truncate(slot.total);
@@ -222,7 +248,8 @@ mod tests {
 
     #[test]
     fn plain_single_frame() {
-        let f = parse_line("2023-01-01-00:00:00.000,2,130306,42,255,8,00,b4,01,ac,58,03,fa,ff").unwrap();
+        let f = parse_line("2023-01-01-00:00:00.000,2,130306,42,255,8,00,b4,01,ac,58,03,fa,ff")
+            .unwrap();
         assert_eq!(f.pgn, 130306);
         assert_eq!(f.src, 42);
         assert_eq!(f.data.len(), 8);
@@ -232,7 +259,12 @@ mod tests {
     #[test]
     fn candump_pdu2() {
         // 0x19F51423: prio 6, DP 1, PF 0xF5, PS 0x14 -> PGN 0x1F514, src 0x23
-        let f = parse_line("can0  19F51423   [8]  01 02 03 04 05 06 07 08".replace("   [8]  ", "#0102030405060708").as_str()).unwrap();
+        let f = parse_line(
+            "can0  19F51423   [8]  01 02 03 04 05 06 07 08"
+                .replace("   [8]  ", "#0102030405060708")
+                .as_str(),
+        )
+        .unwrap();
         assert_eq!(f.pgn, 0x1F514);
         assert_eq!(f.src, 0x23);
         assert_eq!(f.prio, 6);

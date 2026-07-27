@@ -217,7 +217,10 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
 fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
     let raw = match get(y, "raw") {
         Some(Yaml::String(s)) => vec![s.clone()],
-        Some(Yaml::Array(a)) => a.iter().filter_map(|l| l.as_str().map(String::from)).collect(),
+        Some(Yaml::Array(a)) => a
+            .iter()
+            .filter_map(|l| l.as_str().map(String::from))
+            .collect(),
         _ => return Err(format!("{ctx}: sample needs raw (string or list)")),
     };
     let mut expects = Vec::new();
@@ -234,7 +237,9 @@ fn sample(y: &Yaml, ctx: &str) -> Result<SampleSpec> {
                 Yaml::String(s) => Expected::Str(s.clone()),
                 Yaml::Boolean(b) => Expected::Str(if *b { "Yes" } else { "No" }.into()),
                 Yaml::Array(a) => Expected::List(
-                    a.iter().filter_map(|x| x.as_str().map(String::from)).collect(),
+                    a.iter()
+                        .filter_map(|x| x.as_str().map(String::from))
+                        .collect(),
                 ),
                 other => return Err(format!("{ctx}: unsupported expected value {other:?}")),
             };

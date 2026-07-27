@@ -11,12 +11,13 @@
 //!   * `expect_value` is the Rust mirror of the editor's `adoptExpectations`,
 //!     emitting each `Value` as a YAML scalar that parses back to the
 //!     `Expected` the checker compares against.
+//!
 //! Strings are always double-quoted to sidestep YAML 1.1 footguns (a lookup
 //! named `On`/`Off` would otherwise parse as a boolean).
 
 use crate::decode::{self, Value};
 use crate::model::Database;
-use crate::samples::{parse_line, RawFrame};
+use crate::samples::{RawFrame, parse_line};
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
 
@@ -38,11 +39,17 @@ struct Candidate {
 /// so pass merrimac captures first) into `database/pgns/*.yaml` under `root`.
 /// `per_pgn` caps samples per variant. Returns a human summary.
 pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> Result<String> {
-    let fast: HashSet<u32> =
-        db.pgns.iter().filter(|p| p.type_ == "Fast").map(|p| p.pgn).collect();
+    let fast: HashSet<u32> = db
+        .pgns
+        .iter()
+        .filter(|p| p.type_ == "Fast")
+        .map(|p| p.pgn)
+        .collect();
 
     // (pgn, variant-id) -> distinct-payload set + ordered candidates.
-    let mut cand: HashMap<(u32, String), (HashSet<Vec<u8>>, Vec<Candidate>)> = HashMap::new();
+    type VariantKey = (u32, String);
+    type VariantCandidates = (HashSet<Vec<u8>>, Vec<Candidate>);
+    let mut cand: HashMap<VariantKey, VariantCandidates> = HashMap::new();
     const CAP_PER_VARIANT: usize = 512;
 
     let mut files_read = 0usize;
@@ -71,9 +78,13 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
                 continue;
             }
             let Ok(f) = parse_line(t) else { continue };
-            let Some(a) = re.feed(f, |pgn| fast.contains(&pgn)) else { continue };
+            let Some(a) = re.feed(f, |pgn| fast.contains(&pgn)) else {
+                continue;
+            };
             msgs_seen += 1;
-            let Some(p) = decode::select_variant(db, a.pgn, &a.data, false) else { continue };
+            let Some(p) = decode::select_variant(db, a.pgn, &a.data, false) else {
+                continue;
+            };
             // Only decodable variants are worth a sample.
             if decode::decode(db, p, &a.data).is_err() {
                 continue;
@@ -111,12 +122,15 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
             missing_file += 1;
             continue;
         }
-        let existing = std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
+        let existing =
+            std::fs::read_to_string(&path).map_err(|e| format!("{}: {e}", path.display()))?;
         if has_samples_block(&existing) {
             skipped_existing += 1;
             continue;
         }
-        let Some(p) = db.pgns.iter().find(|q| q.pgn == pgn && q.id == *id) else { continue };
+        let Some(p) = db.pgns.iter().find(|q| q.pgn == pgn && q.id == *id) else {
+            continue;
+        };
 
         let is_fast = p.type_ == "Fast";
         let chosen = select_diverse(cands, per_pgn);
@@ -136,13 +150,20 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
                 }
             }
             block.push_str("  expects:\n");
-            let fields = decode::decode(db, p, &c.data).map_err(|e| format!("{}: {e}", path.display()))?;
+            let fields =
+                decode::decode(db, p, &c.data).map_err(|e| format!("{}: {e}", path.display()))?;
             for f in &fields {
                 if f.id.starts_with("reserved") || f.id.starts_with("spare") || f.id.is_empty() {
                     continue;
                 }
-                let Some(val) = expect_value(&f.value) else { continue };
-                let ekey = if f.instance > 1 { format!("{}.{}", f.id, f.instance) } else { f.id.clone() };
+                let Some(val) = expect_value(&f.value) else {
+                    continue;
+                };
+                let ekey = if f.instance > 1 {
+                    format!("{}.{}", f.id, f.instance)
+                } else {
+                    f.id.clone()
+                };
                 block.push_str(&format!("    {ekey}: {val}\n"));
             }
         }
@@ -166,7 +187,7 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
 
 /// Greedy max-min diversity: seed with the first candidate (highest-priority
 /// file), then repeatedly add the one farthest from everything chosen so far.
-fn select_diverse<'a>(cands: &'a [Candidate], n: usize) -> Vec<&'a Candidate> {
+fn select_diverse(cands: &[Candidate], n: usize) -> Vec<&Candidate> {
     let mut chosen: Vec<&Candidate> = Vec::new();
     if cands.is_empty() {
         return chosen;
@@ -178,8 +199,12 @@ fn select_diverse<'a>(cands: &'a [Candidate], n: usize) -> Vec<&'a Candidate> {
             if chosen.iter().any(|x| std::ptr::eq(*x, c)) {
                 continue;
             }
-            let d = chosen.iter().map(|x| dist(&x.data, &c.data)).min().unwrap_or(0);
-            if best.map_or(true, |(_, bd)| d > bd) {
+            let d = chosen
+                .iter()
+                .map(|x| dist(&x.data, &c.data))
+                .min()
+                .unwrap_or(0);
+            if best.is_none_or(|(_, bd)| d > bd) {
                 best = Some((c, d));
             }
         }
@@ -215,7 +240,15 @@ fn dist(a: &[u8], b: &[u8]) -> usize {
 fn raw_lines(pgn: u32, c: &Candidate, is_fast: bool) -> Vec<String> {
     let plain = |data: &[u8]| -> String {
         let hex: Vec<String> = data.iter().map(|b| format!("{b:02x}")).collect();
-        format!("{FIXED_TS},{},{},{},{},{},{}", c.prio, pgn, c.src, c.dst, data.len(), hex.join(","))
+        format!(
+            "{FIXED_TS},{},{},{},{},{},{}",
+            c.prio,
+            pgn,
+            c.src,
+            c.dst,
+            data.len(),
+            hex.join(",")
+        )
     };
     if !is_fast || c.data.len() > 8 {
         return vec![plain(&c.data)];
@@ -243,7 +276,8 @@ fn raw_lines(pgn: u32, c: &Candidate, is_fast: bool) -> Vec<String> {
 /// A top-level `samples:` key already present? (crude but sufficient: our
 /// files are keel-generated, so a line-start `samples:` is unambiguous.)
 fn has_samples_block(yaml: &str) -> bool {
-    yaml.lines().any(|l| l == "samples:" || l.starts_with("samples:"))
+    yaml.lines()
+        .any(|l| l == "samples:" || l.starts_with("samples:"))
 }
 
 /// `Value` -> YAML scalar for an `expects` entry. `None` = don't assert this
@@ -259,7 +293,10 @@ fn expect_value(v: &Value) -> Option<String> {
         Value::Lookup { name: Some(n), .. } => dq(n),
         Value::Lookup { name: None, value } => value.to_string(),
         Value::Bits(names) => {
-            format!("[{}]", names.iter().map(|s| dq(s)).collect::<Vec<_>>().join(", "))
+            format!(
+                "[{}]",
+                names.iter().map(|s| dq(s)).collect::<Vec<_>>().join(", ")
+            )
         }
         Value::Str(s) => dq(s),
         Value::Binary(h) => dq(&format!("0x{h}")),
@@ -318,7 +355,13 @@ impl Reassembler {
     fn feed<F: Fn(u32) -> bool>(&mut self, f: RawFrame, is_fast: F) -> Option<HarvestMsg> {
         // Single-frame (or already-assembled coalesced) -> pass straight through.
         if !is_fast(f.pgn) || f.data.len() > 8 {
-            return Some(HarvestMsg { prio: f.prio, pgn: f.pgn, src: f.src, dst: f.dst, data: f.data });
+            return Some(HarvestMsg {
+                prio: f.prio,
+                pgn: f.pgn,
+                src: f.src,
+                dst: f.dst,
+                data: f.data,
+            });
         }
         if f.data.is_empty() {
             return None;
@@ -352,15 +395,29 @@ impl Reassembler {
             }
             slot.seen |= 1 << index;
         }
-        let frames_needed = if slot.total <= 6 { 1 } else { 1 + (slot.total - 6).div_ceil(7) };
-        let mask = if frames_needed >= 32 { u32::MAX } else { (1u32 << frames_needed) - 1 };
+        let frames_needed = if slot.total <= 6 {
+            1
+        } else {
+            1 + (slot.total - 6).div_ceil(7)
+        };
+        let mask = if frames_needed >= 32 {
+            u32::MAX
+        } else {
+            (1u32 << frames_needed) - 1
+        };
         if slot.total > 0 && slot.seen & mask == mask {
             let mut data = std::mem::take(&mut slot.data);
             data.truncate(slot.total);
             let (pgn, src, _) = key;
             let prio = f.prio;
             self.slots.remove(&key);
-            return Some(HarvestMsg { prio, pgn, src, dst: f.dst, data });
+            return Some(HarvestMsg {
+                prio,
+                pgn,
+                src,
+                dst: f.dst,
+                data,
+            });
         }
         None
     }

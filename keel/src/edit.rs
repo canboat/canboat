@@ -33,8 +33,8 @@ pub struct UndoEntry {
 const INDEX_HTML: &str = include_str!("../web/index.html");
 
 pub fn serve(server: EditServer, port: u16) -> Result<(), String> {
-    let listener =
-        TcpListener::bind(("127.0.0.1", port)).map_err(|e| format!("bind 127.0.0.1:{port}: {e}"))?;
+    let listener = TcpListener::bind(("127.0.0.1", port))
+        .map_err(|e| format!("bind 127.0.0.1:{port}: {e}"))?;
     let addr = listener.local_addr().map_err(|e| e.to_string())?;
     println!("keel edit: http://{addr}/  (Ctrl-C to stop)");
     let _ = open_browser(&format!("http://{addr}/"));
@@ -80,7 +80,11 @@ fn handle(server: &EditServer, mut stream: TcpStream) -> std::io::Result<()> {
     let request = lines.next().unwrap_or_default().to_string();
     let mut content_length = 0usize;
     for l in lines {
-        if let Some(v) = l.to_ascii_lowercase().strip_prefix("content-length:").map(str::trim) {
+        if let Some(v) = l
+            .to_ascii_lowercase()
+            .strip_prefix("content-length:")
+            .map(str::trim)
+        {
             content_length = v.parse().unwrap_or(0);
         }
     }
@@ -180,18 +184,19 @@ fn api_generate(server: &EditServer) -> Result<String, String> {
     derive::fill(&mut db)?;
     let violations = check::check(&db);
     if let Some(v) = violations.iter().find(|v| v.error) {
-        return Err(format!("not generated - {} {}: {}", v.rule, v.location, v.message));
+        return Err(format!(
+            "not generated - {} {}: {}",
+            v.rule, v.location, v.message
+        ));
     }
     let mut written = Vec::new();
     for (path, content) in generate::emit_artifacts(&server.root, &db, &authored) {
         std::fs::write(&path, content).map_err(|e| format!("{}: {e}", path.display()))?;
-        written.push(js(
-            &path
-                .strip_prefix(&server.root)
-                .unwrap_or(&path)
-                .display()
-                .to_string(),
-        ));
+        written.push(js(&path
+            .strip_prefix(&server.root)
+            .unwrap_or(&path)
+            .display()
+            .to_string()));
     }
     Ok(format!("{{\"written\":[{}]}}", written.join(",")))
 }
@@ -329,7 +334,9 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
             "{{\"count\":{},\"start\":{},\"countField\":{}}}",
             r.count,
             r.start,
-            r.count_field.map(|c| c.to_string()).unwrap_or_else(|| "null".into())
+            r.count_field
+                .map(|c| c.to_string())
+                .unwrap_or_else(|| "null".into())
         ),
         None => "null".into(),
     };
@@ -399,7 +406,10 @@ fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
 
 fn find_pgn_file(server: &EditServer, id: &str) -> Result<PathBuf, String> {
     let dir = server.root.join("database/pgns");
-    for entry in std::fs::read_dir(&dir).map_err(|e| e.to_string())?.flatten() {
+    for entry in std::fs::read_dir(&dir)
+        .map_err(|e| e.to_string())?
+        .flatten()
+    {
         let name = entry.file_name().to_string_lossy().into_owned();
         if name.ends_with(&format!("-{id}.yaml")) {
             return Ok(entry.path());
@@ -489,7 +499,9 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
 
     let violations: Vec<String> = check::check(&db)
         .iter()
-        .filter(|v| v.location.contains(&format!("-{cand_id}.yaml")) || v.location.contains("candidate"))
+        .filter(|v| {
+            v.location.contains(&format!("-{cand_id}.yaml")) || v.location.contains("candidate")
+        })
         .map(|v| {
             format!(
                 "{{\"rule\":{},\"error\":{},\"message\":{}}}",
@@ -567,7 +579,10 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         let candidate = yamlio::parse_lookup_str(body, &file)?;
         let expect = format!("database/lookups/{}.yaml", candidate.name);
         if file != expect {
-            return Err(format!("lookup '{}' must be saved as {expect}", candidate.name));
+            return Err(format!(
+                "lookup '{}' must be saved as {expect}",
+                candidate.name
+            ));
         }
         db.lookups.insert(candidate.name.clone(), candidate);
     } else {
@@ -594,7 +609,11 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
             .iter()
             .map(|v| format!("{} {}: {}", v.rule, v.location, v.message))
             .collect();
-        return Err(format!("not saved - {} error(s):\n{}", errors.len(), list.join("\n")));
+        return Err(format!(
+            "not saved - {} error(s):\n{}",
+            errors.len(),
+            list.join("\n")
+        ));
     }
 
     if scratch {
@@ -609,7 +628,10 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         std::fs::create_dir_all(parent).map_err(|e| e.to_string())?;
     }
     std::fs::write(&path, body).map_err(|e| e.to_string())?;
-    *server.last_save.lock().unwrap() = Some(UndoEntry { file: file.clone(), prev });
+    *server.last_save.lock().unwrap() = Some(UndoEntry {
+        file: file.clone(),
+        prev,
+    });
     Ok(format!(
         "{{\"saved\":{},\"canUndo\":true,\"created\":{}}}",
         js(&file),
