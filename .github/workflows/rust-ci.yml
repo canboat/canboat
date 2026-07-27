@@ -1,15 +1,14 @@
-# CI for the Cargo workspace in rust/ (the canboat-rs runtime).
+# CI for the Cargo workspace at the repo root (crates/* and keel/).
 #
 # Ported from canboat-rs's own ci.yml when the crates moved in
-# (MERGE-CANBOAT-RS.md step 1). Two deliberate differences from that
-# original:
+# (MERGE-CANBOAT-RS.md step 1). One deliberate difference from that original:
+# the jobs are path-filtered. A C-only PR should not pay for a three-OS Rust
+# build, so these run only when the Rust tree or this workflow changes. That
+# means they are NOT suitable as *required* status checks — on a PR that
+# touches no Rust they will not run at all.
 #
-#   - Every job runs with working-directory rust/, since the workspace is a
-#     subtree rather than the repo root.
-#   - The jobs are path-filtered. A C-only or database-only PR should not pay
-#     for a three-OS Rust build, so these run only when rust/** or this
-#     workflow changes. That means they are NOT suitable as *required* status
-#     checks: on a PR that touches no Rust they will not run at all.
+# database/** is in the filter on purpose: the crates' build scripts read the
+# schema, so a database change can break the Rust build.
 #
 # canboat-rs's schema-pin job is gone: there is no vendored schema any more.
 # The build scripts read docs/canboat.json directly, so the runtime and the
@@ -27,23 +26,23 @@ name: Rust CI
 on:
   push:
     branches: [master]
-    paths:
-      - "rust/**"
+    paths: &rust_paths
+      - "crates/**"
+      - "keel/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - "database/**"
+      - "docs/canboat.json"
       - ".github/workflows/rust-ci.yml"
   pull_request:
-    paths:
-      - "rust/**"
-      - ".github/workflows/rust-ci.yml"
+    paths: *rust_paths
 
 # Cancel superseded runs when a newer commit arrives on the same PR / branch;
 # master is excluded so its runs always complete.
 concurrency:
   group: rust-ci-${{ github.head_ref || github.ref_name }}
   cancel-in-progress: ${{ github.ref_name != 'master' }}
-
-defaults:
-  run:
-    working-directory: rust
 
 jobs:
   test:
@@ -66,8 +65,6 @@ jobs:
 
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: rust
 
       - name: Build
         run: cargo build --workspace --locked
@@ -101,8 +98,6 @@ jobs:
 
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: rust
 
       - name: Check
         run: cargo check --workspace --locked
@@ -121,8 +116,6 @@ jobs:
 
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: rust
 
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
@@ -154,8 +147,6 @@ jobs:
 
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
-        with:
-          workspaces: rust
 
       # A broken intra-doc link or a missing doc (the crate denies
       # missing_docs under `decode`) fails the build. The feature sets match

@@ -919,8 +919,7 @@ fn main() {
     let repo_root = manifest
         .parent()
         .and_then(|p| p.parent())
-        .and_then(|p| p.parent())
-        .expect("crate is at <repo>/rust/crates/canboat-core");
+        .expect("crate is at <repo>/crates/canboat-core");
     let canboat_path = repo_root.join("docs").join("canboat.json");
     // The CANBOAT_BEM pseudo-PGNs (0x40000+) that analyzer/pgn.h defines
     // directly never appear in canboat.json, so this mirror stays for now.

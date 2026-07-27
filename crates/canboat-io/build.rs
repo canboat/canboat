@@ -26,7 +26,7 @@ fn main() {
     let manifest = env::var("CARGO_MANIFEST_DIR").unwrap();
     // The repository's own generated schema — see canboat-core/build.rs for
     // why the vendored copy under canboat-core/data/ is gone.
-    let json_path = Path::new(&manifest).join("../../../docs/canboat.json");
+    let json_path = Path::new(&manifest).join("../../docs/canboat.json");
     println!("cargo:rerun-if-changed={}", json_path.display());
     println!("cargo:rerun-if-changed=build.rs");
 

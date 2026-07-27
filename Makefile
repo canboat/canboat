@@ -43,20 +43,33 @@ tests:  compile
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 
-# The Rust runtime (rust/) is deliberately OPT-IN and is NOT a dependency of
-# all/compile/tests: a plain `make` of the C tools must never invoke cargo, so
-# C-only contributors and packagers need no Rust toolchain. keel is the one
-# exception and is shimmed separately from analyzer/Makefile; it is a different
-# workspace with a deliberately tiny dependency closure. See
-# MERGE-CANBOAT-RS.md goals #1 and #4.
+# The Cargo workspace at the repo root (crates/*, keel/) is deliberately
+# OPT-IN and is NOT a dependency of all/compile/tests: a plain `make` of the C
+# tools must never invoke cargo, so C-only contributors and packagers need no
+# Rust toolchain (MERGE-CANBOAT-RS.md goal #1). Rust contributors just use
+# cargo directly; these targets exist so `make` users have the same shortcuts.
+CARGO ?= cargo
+
 rust:
-	$(MAKE) -C rust
+	$(CARGO) build --release --workspace
+
+rust-debug:
+	$(CARGO) build --workspace
 
 rust-tests:
-	$(MAKE) -C rust test
+	$(CARGO) test --workspace
+
+rust-clippy:
+	$(CARGO) clippy --workspace --all-targets -- -D warnings
+
+rust-fmt:
+	$(CARGO) fmt --all
+
+# Everything worth having green before opening a PR that touches Rust.
+rust-precommit: rust-fmt rust-clippy rust-tests
 
 rust-clean:
-	$(MAKE) -C rust clean
+	$(CARGO) clean
 
 # Regenerate FIRST, then test against the fresh output. keel (run inside
 # `analyzer generated`) rewrites the C data tables and canboat.xml from the
@@ -146,7 +159,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-tests rust-clean
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-fmt rust-precommit rust-clean
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

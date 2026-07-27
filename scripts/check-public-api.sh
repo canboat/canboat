@@ -17,7 +17,7 @@
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
-OUT_DIR="docs/public-api"
+OUT_DIR="crates/doc/public-api"
 mkdir -p "$OUT_DIR"
 
 # The library feature sets whose surfaces we lock. `decode` is the lean

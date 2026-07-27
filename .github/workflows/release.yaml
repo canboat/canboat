@@ -99,10 +99,10 @@ jobs:
             # and the binary links fully static with no external musl toolchain.
             rustup target add "${{ matrix.rust_target }}"
             cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.rust_target }}"
-            cp "keel/target/${{ matrix.rust_target }}/release/keel" "keel-${{ matrix.os }}-${{ matrix.arch }}"
+            cp "target/${{ matrix.rust_target }}/release/keel" "keel-${{ matrix.os }}-${{ matrix.arch }}"
           else
             cargo build --release --manifest-path keel/Cargo.toml
-            cp keel/target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
+            cp target/release/keel "keel-${{ matrix.os }}-${{ matrix.arch }}"
           fi
 
       - name: Add release assets
@@ -133,7 +133,7 @@ jobs:
         run: |
           rustup target add x86_64-apple-darwin
           cargo build --release --manifest-path keel/Cargo.toml --target x86_64-apple-darwin
-          cp keel/target/x86_64-apple-darwin/release/keel keel-darwin-x86_64
+          cp target/x86_64-apple-darwin/release/keel keel-darwin-x86_64
 
       - name: Add release assets
         uses: softprops/action-gh-release@v2
@@ -183,7 +183,7 @@ jobs:
           export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER="$cc"
           export CC_armv7_unknown_linux_musleabihf="$cc"
           cargo build --release --manifest-path keel/Cargo.toml --target "${RUST_TARGET}"
-          cp "keel/target/${RUST_TARGET}/release/keel" keel-linux-armv7l
+          cp "target/${RUST_TARGET}/release/keel" keel-linux-armv7l
 
       - name: Add release assets
         uses: softprops/action-gh-release@v2
@@ -230,7 +230,7 @@ jobs:
         shell: pwsh
         run: |
           cargo build --release --manifest-path keel/Cargo.toml
-          Copy-Item keel/target/release/keel.exe keel-windows-x86_64.exe
+          Copy-Item target/release/keel.exe keel-windows-x86_64.exe
 
       - name: Add keel asset
         uses: softprops/action-gh-release@v2

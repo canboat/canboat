@@ -7,8 +7,10 @@ database Rust-authored and the C build already ships without a Rust toolchain.
 
 What landed (2026-07-27):
 
-- The crates live in **`rust/`** as their own workspace; `keel/` stays where it was, so
-  the analyzer Makefile shim, the release matrix and `build-keel-musl` are untouched.
+- The crates first landed in `rust/` as their own workspace, then moved to the **repo
+  root** (`crates/*`) with **`keel/` joining the same workspace** — the subtree was
+  costing Rust contributors discoverability for very little structural gain (only four
+  filenames actually collided). `cargo build` at the root now builds keel too.
 - **The vendored schema is gone.** Rather than waiting for §5, `canboat-core/build.rs`
   and `canboat-io/build.rs` now read the repository's own `docs/canboat.json`. That
   deletes `data/canboat.json`, `CANBOAT_REF`, `scripts/sync-canboat.sh`, the weekly
@@ -275,8 +277,10 @@ Step 4 is cleanup. Step 5 is a distinct project.
 - **Synthetic PGNs' authoritative home.** Confirm every `CANBOAT_BEM` PGN in
   `synthetic-pgns.json` is representable in the YAML / keel model, or decide they live in a
   keel-internal table. Either way keel must emit them to *both* C and Rust.
-- **Rust root layout.** `rust/` subtree vs. crates at repo root. Prefer a subtree so the C
-  tree is visually undisturbed and `.github`/`Makefile` ownership is obvious.
+- ~~**Rust root layout.** `rust/` subtree vs. crates at repo root.~~ **Settled:** one
+  workspace at the repo root. The subtree's advantage was overstated — measured against
+  the curated tree, only `CHANGELOG.md`, `docs/`, `Makefile` and `README.md` collided, and
+  each had an obvious home.
 - **MSRV / edition skew.** keel is edition 2024; canboat-rs is edition 2024, MSRV 1.88.
   A shared `canboat-primitives` must satisfy the stricter of the two.
 - **Version & release cadence.** canboat-rs uses release-please (`0.5.0`) independent of

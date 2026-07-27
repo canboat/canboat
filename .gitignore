@@ -24,3 +24,17 @@ lib64
 venv*/
 pyvenv*/
 pip-wheel-metadata/
+
+# Rust (workspace at the repo root: crates/*, keel/)
+/target
+**/*.rs.bk
+Cargo.lock.bak
+Makefile.local
+.idea/
+.vscode/
+
+# canboat-tui default capture save artifacts
+canboat-capture.*
+
+# local scratch (captures, experiments) — never committed
+/scratchpad/

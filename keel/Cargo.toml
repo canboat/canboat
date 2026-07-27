@@ -13,5 +13,8 @@ authors = ["Kees Verruijt <canboat@verruijt.net>"]
 # minimal HTTP dependency when it lands.
 yaml-rust2 = "0.10"
 
-[profile.release]
-lto = true
+# NOTE: no [profile.release] here. keel is a member of the workspace at the
+# repo root, and cargo only honours profiles from the workspace root manifest
+# (it warns and ignores them elsewhere). The root sets lto = "thin",
+# codegen-units = 1 and strip, which is at least as aggressive as the lto =
+# true this used to carry.
