@@ -559,6 +559,11 @@ struct DecodeContext {
     /// Byte length from a DYNAMIC_FIELD_LENGTH field. Cleared with
     /// `dynamic_field_type` after the value is decoded.
     dynamic_length_bytes: Option<u32>,
+    /// Which definition of `target_pgn` the parameters address, and
+    /// whether it had to be borrowed from the catch-all. Resolved at
+    /// the first VARIABLE field and reused for the rest of the record,
+    /// mirroring the C's `g_refPgn` (analyzer.c).
+    resolved_target: Option<(&'static PgnInfo, bool)>,
 }
 
 fn decode_fields(
@@ -979,6 +984,86 @@ fn decode_one_field_at(
 /// Used by PGN 126208 group functions where a `Parameter` /
 /// `FIELD_INDEX` field picks one of the target PGN's fields, and the
 /// next VARIABLE field carries that field's value in its native shape.
+/// True for the four proprietary PGN ranges (`IS_PGN_PROPRIETARY`,
+/// common/common.h).
+fn is_pgn_proprietary(n: u32) -> bool {
+    (0xEF00..=0xEFFF).contains(&n)
+        || (0xFF00..=0xFFFF).contains(&n)
+        || (0x1_EF00..=0x1_EFFF).contains(&n)
+        || (0x1_FF00..=0x1_FFFF).contains(&n)
+}
+
+/// Pick the definition of `pgn_id` that a PGN 126208 parameter list
+/// describes. Port of `getMatchingPgnByParameters` (analyzer/pgn.c).
+///
+/// `params` starts at the parameter-count byte: `[count, index, value…,
+/// index, value…]`, where each `index` is a 1-based field number of the
+/// target PGN and the value's width comes from that field. Walking the
+/// list with a candidate's own field sizes is what makes it a test: a
+/// definition whose `Match` fields all agree with the values present is
+/// the answer, and a definition that disagrees (or that has no such
+/// field at all) steps out.
+///
+/// Returns `None` when nothing matches — for a proprietary PGN with
+/// only Manufacturer and Industry given, that is the normal outcome.
+fn match_pgn_by_parameters(
+    db: &PgnDatabase,
+    pgn_id: u32,
+    params: &[u8],
+) -> Option<&'static PgnInfo> {
+    let first = db.first_pgn(pgn_id)?;
+
+    // A proprietary PGN can only be narrowed by Manufacturer (field 1)
+    // and Industry Code (field 3); without both there is nothing to go
+    // on and the C bails out rather than guessing.
+    if is_pgn_proprietary(pgn_id)
+        && (params.len() < 6 || params[0] < 2 || params[1] != 0x01 || params[4] != 3)
+    {
+        return None;
+    }
+
+    // `hasMatchFields` is set per *definition* (fieldtype.c), and the C
+    // tests it on the first one only -- so a PGN whose leading
+    // definition needs no matching is answered by that definition
+    // outright. This is how 126720 resolves: its catch-all is listed
+    // first and carries no `Match`, so a Raymarine request lands there
+    // without ever considering the 52 manufacturer variants behind it.
+    if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
+        return Some(first);
+    }
+
+    let nparams = *params.first()? as usize;
+    'variant: for cand in db.pgn_variants(pgn_id) {
+        let mut d = 1usize;
+        // Exactly `nparams` pairs — walking to the end of the data
+        // instead would read trailing bytes as a bogus extra parameter.
+        for _ in 0..nparams {
+            if d >= params.len() {
+                break; // truncated list: what was there matched
+            }
+            let index = params[d] as usize;
+            d += 1;
+            if index == 0 || index > cand.fields.len() {
+                continue 'variant;
+            }
+            let field = &cand.fields[index - 1];
+            let bits = field.bit_length.unwrap_or(0) as usize;
+            if let Some(want) = field.match_value {
+                let Some(ex) = extract_bits(params, d * 8, bits, field.signed.unwrap_or(false), 0)
+                else {
+                    continue 'variant;
+                };
+                if ex.value != want {
+                    continue 'variant;
+                }
+            }
+            d += bits.div_ceil(8);
+        }
+        return Some(cand);
+    }
+    None
+}
+
 fn decode_variable(
     f: &'static FieldInfo,
     data: &[u8],
@@ -988,11 +1073,79 @@ fn decode_variable(
 ) -> Option<(DecodedField, u32)> {
     let target_pgn = ctx.target_pgn?;
     let target_idx = ctx.current_param_idx?;
-    let target_info = db.first_pgn(target_pgn)?;
+    // Which definition of the target PGN does this parameter address?
+    //
+    // canboat answers this in `fieldPrintVariable` (analyzer.c): first try to
+    // resolve a *variant* from the parameter list itself -- a request for
+    // 130833 that sets Manufacturer=Furuno picks
+    // furunoShipParametersAndAntennaPosition, and its parameter 4 is a real
+    // typed field. Only when that fails (126720 has 53 variants and a
+    // Manufacturer/Industry pair narrows nothing) borrow the *catch-all*
+    // definition, whose leading fields every variant shares.
+    //
+    // It has to be the catch-all and not merely the first definition: the
+    // first definition of 126720 is somebody's specific variant whose
+    // Manufacturer Code is a `Match` field, so borrowing it would make every
+    // request from another manufacturer decode against the wrong layout.
+    //
+    // Resolved once per record and cached, as the C caches `g_refPgn`.
+    let (target_info, used_catch_all) = match ctx.resolved_target {
+        Some(r) => r,
+        None => {
+            // The C hands `getMatchingPgnByParameters` the message from two
+            // bytes back: [parameter count][field index][value...]. At the
+            // first VARIABLE field the cursor sits on the value, so -1 is this
+            // parameter's index byte and -2 the count.
+            let params = (bit_offset as usize / 8)
+                .checked_sub(2)
+                .and_then(|s| data.get(s..))
+                .unwrap_or(&[]);
+            let r = match match_pgn_by_parameters(db, target_pgn, params) {
+                Some(p) => (p, false),
+                None => (
+                    db.fallback_pgn(target_pgn)
+                        .or_else(|| db.first_pgn(target_pgn))?,
+                    true,
+                ),
+            };
+            ctx.resolved_target = Some(r);
+            r
+        }
+    };
     let target_field = target_info
         .fields
         .iter()
         .find(|tf| (tf.order as u32) == target_idx)?;
+    // The catch-all's trailing `Data` field is variable-length with nothing to
+    // size it, so the value is the rest of the message -- for a request or
+    // command that reads as "the field starts with these bytes". Only when we
+    // fell back: a *resolved* PGN's variable-length fields (126998's
+    // Configuration Information strings) decode properly through the normal
+    // path.
+    if used_catch_all
+        && (target_field.bit_length.unwrap_or(0) == 0
+            || target_field.bit_length_variable == Some(true))
+    {
+        let start = bit_offset as usize;
+        let total = data.len() * 8;
+        if start >= total {
+            return None;
+        }
+        let bits = (total - start) as u32;
+        let value = decode_binary(data, bit_offset, bits);
+        return Some((
+            DecodedField {
+                info: f,
+                value,
+                bit_offset: Some(bit_offset),
+                bit_length: Some(bits),
+                repeat_index: None,
+                repeat_set: 0,
+                overrides: None,
+            },
+            bits,
+        ));
+    }
     // Recurse with the target field's metadata at the current cursor.
     // The outer field's name (e.g. "Value", "Selection Value") wraps
     // the decoded result so the JSON keeps the right field label.
@@ -1891,6 +2044,46 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn parameters_resolve_a_proprietary_variant() {
+        // A 126208 request against PGN 130833 naming Manufacturer =
+        // Furuno (1855) and Industry = Marine (4) picks Furuno's
+        // definition out of the three, so parameter 4 decodes against a
+        // real typed field instead of the catch-all's raw `Data`. This
+        // is the half a "several variants → use the catch-all" shortcut
+        // gets wrong.
+        //   [count][1][mfg lo,hi][3][industry][4]
+        let params = [4u8, 0x01, 0x3f, 0x07, 0x03, 0x04, 0x04];
+        let picked = match_pgn_by_parameters(db(), 130833, &params).expect("a variant");
+        assert_eq!(picked.id, "furunoShipParametersAndAntennaPosition");
+    }
+
+    #[test]
+    fn manufacturer_alone_lands_on_the_126720_catch_all() {
+        // From samples/raymarine-ev1.raw: Manufacturer = Raymarine
+        // (1851), Industry = Marine, then parameter 4's value. 126720's
+        // catch-all is listed first and carries no `Match`, so it
+        // answers immediately — none of the 52 manufacturer variants is
+        // ever reachable this way, which is the point: their layouts
+        // would be a guess.
+        let params = [4u8, 0x01, 0x3b, 0x07, 0x03, 0x04, 0x04, 0x5c, 0x05, 0x0f];
+        let picked = match_pgn_by_parameters(db(), 126720, &params).expect("the catch-all");
+        assert!(
+            picked.fallback.unwrap_or(false),
+            "expected the Fallback definition, got id={}",
+            picked.id
+        );
+    }
+
+    #[test]
+    fn proprietary_target_without_manufacturer_does_not_resolve() {
+        // Without a Manufacturer/Industry pair in the first two
+        // parameters there is nothing to narrow a proprietary PGN with,
+        // so the caller has to fall back rather than pick a layout.
+        let params = [1u8, 0x04, 0x00];
+        assert!(match_pgn_by_parameters(db(), 126720, &params).is_none());
     }
 
     #[test]
