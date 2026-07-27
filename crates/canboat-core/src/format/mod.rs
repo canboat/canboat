@@ -167,12 +167,18 @@ fn looks_like_airmar(line: &str) -> bool {
 }
 
 fn looks_like_ydwg02(line: &str) -> bool {
+    // `HH:MM:SS.mmm R|T <hex CAN id> …`. The direction token is what makes
+    // this YDWG-02 rather than any other time-stamped line, and canboat
+    // insists on it:
+    //     sscanf(msg, "%d:%d:%d.%d %c %02X ", …) == 6 && (e == 'R' || e == 'T')
+    // Matching only the timestamp claimed canboat PLAIN captures whose
+    // timestamp happens to be a time of day -- samples/device_functions.csv
+    // decoded as nothing at all instead of its three ISO Address Claims.
     let bytes = line.as_bytes();
     if bytes.len() < 13 {
         return false;
     }
-    // HH:MM:SS.mmm pattern in the first 12 chars.
-    bytes[0].is_ascii_digit()
+    let stamp = bytes[0].is_ascii_digit()
         && bytes[1].is_ascii_digit()
         && bytes[2] == b':'
         && bytes[3].is_ascii_digit()
@@ -180,7 +186,27 @@ fn looks_like_ydwg02(line: &str) -> bool {
         && bytes[5] == b':'
         && bytes[6].is_ascii_digit()
         && bytes[7].is_ascii_digit()
-        && bytes[8] == b'.'
+        && bytes[8] == b'.';
+    if !stamp {
+        return false;
+    }
+    // Skip the fractional digits, then require ` R ` / ` T ` and a hex byte.
+    let mut i = 9;
+    while bytes.get(i).is_some_and(u8::is_ascii_digit) {
+        i += 1;
+    }
+    if bytes.get(i) != Some(&b' ') {
+        return false;
+    }
+    let dir = bytes.get(i + 1);
+    if dir != Some(&b'R') && dir != Some(&b'T') {
+        return false;
+    }
+    if bytes.get(i + 2) != Some(&b' ') {
+        return false;
+    }
+    bytes.get(i + 3).is_some_and(|c| c.is_ascii_hexdigit())
+        && bytes.get(i + 4).is_some_and(u8::is_ascii_hexdigit)
 }
 
 /// Parse a single line in `format`. iKonvert control sentences return
@@ -254,6 +280,25 @@ mod tests {
     #[test]
     fn detect_chetco() {
         assert_eq!(detect("$PCDIN,01F801,..."), Some(InputFormat::Chetco));
+    }
+
+    #[test]
+    fn detect_ydwg02_needs_its_direction_token() {
+        // Real YDWG-02: timestamp, R/T, CAN id.
+        assert_eq!(
+            detect("21:55:35.425 R 15FD0723 FF C0 D9 6F FF 7F FF FF"),
+            Some(InputFormat::Ydwg02)
+        );
+        assert_eq!(
+            detect("00:54:47.929 T 18EAFF44 14 F0 01"),
+            Some(InputFormat::Ydwg02)
+        );
+        // canboat PLAIN whose timestamp is a time of day is NOT YDWG-02,
+        // however much the prefix looks alike (samples/device_functions.csv).
+        assert_eq!(
+            detect("08:15:07.204,6,60928,64,255,8,4F,28,A9,59,00,89,32,C0"),
+            Some(InputFormat::Plain)
+        );
     }
 
     #[test]
