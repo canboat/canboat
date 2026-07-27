@@ -4,12 +4,12 @@ Status: **all six migration steps implemented.** The YAML database is the
 source of truth, keel generates canboat.xml and the analyzer's C tables, the
 editor is live (`keel edit`), and analyzer-explain plus the
 `-DEXPLAIN`/v1/macro-DSL machinery are deleted. The one-shot bootstrap
-converter has served its purpose and is gone. Still open: the QUIRKS.md
-review (its "cleanup" entries are meant to land together in one deliberate
-post-switchover release, reviewed through `tools/contract.py`).
+converter has served its purpose and is gone. The QUIRKS.md review is done
+too: all twenty entries are closed, and that file is now reference material
+for anyone writing an emitter rather than a migration to-do list.
 
 `keel` is the tool that will own the CANboat PGN database: a set of YAML
-source files that replace `analyzer/pgn.h`, `analyzer/lookup-generated-data.h` and
+source files that replaced `analyzer/pgn.h`, `analyzer/lookup.h` and
 `analyzer/fieldtype.h` as the place where NMEA 2000 message definitions are
 authored. Like the keel of a ship, everything else is built on top of it:
 the C analyzer, `canboat.xml`, `canboat.json`, the docs site and every
@@ -18,7 +18,7 @@ downstream consumer.
 ## 1. Why
 
 Today the database *is* C source. `pgn.h` (10.6k lines) holds a
-`Pgn pgnList[]` written in a macro DSL; `lookup-generated-data.h` (4.7k lines) is an
+`Pgn pgnList[]` written in a macro DSL; `lookup.h` (4.7k lines) is an
 X-macro file included six times with different macro definitions;
 `fieldtype.h` holds the type system. `analyzer-explain` is compiled with
 `-DEXPLAIN` (which swaps a union member from val→string functions to
@@ -344,7 +344,7 @@ anything (same policy as `docs/canboat.json` today).
 
 | Artifact | Notes |
 |---|---|
-| `docs/canboat.xml` | **Byte-identical to today's output at switchover.** Quirk-compatible: C `%g` float formatting (needs a small `%g` mimic — Python formats floats differently), the `RangeMax` UINT64_MAX special case, entity escaping, the 4-space `<Priority>` indent bug, element order. The full quirk inventory with keep/cleanup/fix recommendations lives in **[QUIRKS.md](./QUIRKS.md)**. After switchover the golden file retires; `contract.py` governs change. |
+| `docs/canboat.xml` | **Byte-identical to today's output at switchover.** Quirk-compatible: C `%g` float formatting (needs a small `%g` mimic — Python formats floats differently), the `RangeMax` UINT64_MAX special case, entity escaping, the 4-space `<Priority>` indent bug, element order. The reasons behind these live in **[QUIRKS.md](./QUIRKS.md)**, which outlived the migration as emitter reference. The golden file retired at switchover; `contract.py` governs change now. |
 | `docs/canboat.json`, `.html` | unchanged XSLT chain, still driven from the XML. |
 | `analyzer/pgn.h` | generated `Pgn pgnList[]`. May keep today's initializer shape initially; can later simplify (the `unit="=N"` pun can stay *internal* to the generated C or be replaced together with the runtime code that reads it). |
 | `analyzer/lookup-generated-data.h` | generated; the six-way X-macro include collapses — only the analyzer's val→string direction is needed once `-DEXPLAIN` dies. Plain static tables are an option. |

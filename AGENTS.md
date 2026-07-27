@@ -285,7 +285,7 @@ The database is a **YAML tree** under `database/`, one file per PGN variant in
 `pgns/` and one per enumeration in `lookups/`. You author only the real,
 observed data; `keel` derives everything computable (order, bit offsets,
 lengths, ranges, sentinels) and generates the C tables. The old C-macro DSL in
-`pgn.h`/`lookup-generated-data.h` is gone — `analyzer/pgn.h` now holds only the hand-written
+`pgn.h`/`lookup.h` is gone — `analyzer/pgn.h` now holds only the hand-written
 struct definitions and `#include`s the generated data.
 
 Essential facts before editing:

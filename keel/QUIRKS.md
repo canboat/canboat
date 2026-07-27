@@ -1,38 +1,29 @@
-# Quirk catalog
+# Why the generated output looks like this
 
-Every oddity of the old C generation pipeline that keel reproduced in order to
-keep `canboat.xml` byte-identical through the migration (DESIGN.md step 1).
-Each entry says where the quirk came from, where keel reproduced it, and what
-was decided.
+Reference for anyone writing or changing an emitter. Every entry is a rule the
+C pipeline established that keel still honours, or once honoured — the
+non-obvious reasons `canboat.xml`, the C tables and the Rust schema come out
+the way they do.
 
-Status legend:
+**This is no longer a migration document.** It began as the catalogue of
+oddities keel reproduced to keep `canboat.xml` byte-identical through the v8
+switchover; that gate retired with the switchover, and all twenty entries are
+closed. What is left is the half that still describes live behaviour, and a
+record of the half that does not.
 
-- **keep** — harmless or load-bearing; changing it costs more than it gains.
-- **done** — resolved; the entry is kept as a record of why the output looks
-  the way it does.
-- **open** — still to decide.
+It has already paid for itself twice over: porting `canboat-core/build.rs` to
+derive its schema from the YAML (PR #774) needed **Q16** and **Q7** to get the
+range rules right, and both are cited from that code. Sixteen places in the
+Rust sources point here by entry number, so **the Q-numbers are stable
+identifiers — never renumber them.**
 
-Reviewed with Kees on 2026-07-26, right after the v8 switchover merged
-(PR #752). The cleanup entries landed together as one change, verified
-contract-neutral by `tools/contract.py diff` (`No contract changes.`) — every
-edit below is formatting or dead configuration, not semantics.
+## Live — rules that still shape today's output
 
-Note that the historical "fix-in-C" tier is gone: it meant "fix before
-switchover so the C emitter and the golden test prove it". There is no C
-source to fix any more and no independent oracle — `canboat.xml` *is* keel's
-output. Those entries became ordinary database edits reviewed through
-`tools/contract.py`.
-
-## Output-format quirks (printf artifacts in analyzer-explain.c)
-
-| # | Quirk | Origin | In keel | Status |
+| # | Rule | Origin | In keel | Status |
 |---|---|---|---|---|
-| Q1 | `<Priority>` was indented 4 spaces where all sibling elements use 6 | `explainPGNXML`: `printf("    <Priority>...")` | `emit_xml::Emitter::pgn()` | **done** — now emitted through the normal `xml_u(6, ...)` helper |
-| Q2 | `EnumFieldType`'s `Signed` attribute was followed by a newline *inside* the tag, so the next attribute started a line with one leading space | `explainFieldtypeXMLv2`: `printf(" Signed='%s'\n", ...)` | `emit_xml::Emitter::enum_fieldtype()` | **done** — each `EnumFieldType` is one line |
-| Q3 | `printXML()` escaped `& < > "` but **not** the apostrophe — yet the lookup sections put names in single-quoted attributes (`Name='...'`), so a lookup name containing `'` would have produced malformed XML | `printXML()` | `cformat::xml_escape()` | **done** via Q5 — with every attribute double-quoted, `"` (already escaped) is the only quote that can break one. The interim "validator rule forbidding `'` in names" this entry proposed was never written and is no longer needed |
-| Q4 | The `FieldTypes` and `PhysicalQuantities` sections were emitted with raw `printf` — no XML escaping at all. Safe only because no current text contains `& < >` | `explainFieldTypesXML`, `explainPhysicalQuantityXML` | `emit_xml::Emitter::fieldtypes()` / `physical_quantities()` | **done** — both sections now route every name, element text and unit through `xml_escape()`. Byte-identical today (0 instances); the hazard is retired rather than deferred |
-| Q5 | Attribute quoting was inconsistent: lookup sections used single quotes, `FieldType`/`PhysicalQuantity`/`MissingAttribute` double quotes | different printf authors | `emit_xml` lookup sections + `enum_fieldtype()` | **done** — every attribute keel emits is double-quoted. This also retires Q3: `"` was already escaped, and `'` needs no escaping inside a double-quoted attribute |
 | Q6 | Floats print as C `%g` (6 significant digits) / `%.15g`. Notably lossy for resolutions: `1/16384` printed as `6.10352e-05`, `2^-38` as `3.63798e-12` | all float printfs | `cformat::c_g_roundtrip()` for Resolution, `c_15g()` for ranges | **Resolution done** (2026-07-26); rest **keep**. `<Resolution>` and the `EnumFieldType Resolution=` attribute now print at the fewest significant digits that round-trip, keeping `%g`'s exponent style. This was a real defect, not cosmetics: the old XML printed Resolution with `%g` but `RangeMax` with `%.15g`, so the bootstrap converter stored a **truncated resolution** (28 of them, rel. err up to 2.4e-6) plus a compensating explicit `rangeMax`. The exact values were recovered from the pre-switchover `pgn.h` (`1 / 16384.`, `POW2NEG(n)`, `2 * Pi / 65536`). Contract: minor (22 fields' decode moves in the 7th significant digit). The `--float-style c|rust` audit flag that existed to measure a wholesale switch has been **removed** now that Q6 is settled — it only ever emitted deliberately-worse artifacts (see "the other half" below) |
+| Q7 | `RangeMax` of an unsigned 64-bit resolution-1 field prints as the integer `18446744073709551615` instead of `%.15g` (which would print `1.84467440737096e+19`) | `explainPGNXML` special case | `emit_xml.Emitter.field()` | keep (it is the *more* correct output) |
+
 ### Q6, the other half: RangeMin/RangeMax stay on `%.15g`
 
 Measured 2026-07-26 by pointing `c_g_roundtrip` at the four range sites too.
@@ -57,53 +48,53 @@ a floating-point multiply. Resolution was different because it is an authored
 constant, not a computed product: there is a single exact intended value, and
 6 digits could not express it.
 
-| Q7 | `RangeMax` of an unsigned 64-bit resolution-1 field prints as the integer `18446744073709551615` instead of `%.15g` (which would print `1.84467440737096e+19`) | `explainPGNXML` special case | `emit_xml.Emitter.field()` | keep (it is the *more* correct output) |
-| Q8 | The `<Copyright>` element and the leading XML comment embed the license with a trailing blank line before the closing tag | `printf("  <Copyright>" COPYRIGHT "\n</Copyright>\n")` | `emit_xml.header()` | keep |
-| Q9 | The Actisense/iKonvert BEM documents carried the `canboat.xsl` stylesheet PI although no stylesheet ships for them and the sections it styles are absent | `explainXML()` shares one header path | `emit_xml::Emitter::header(styled)` | **done** — the PI is emitted for the main and J1939 documents only. The rest of the header (SchemaVersion/Version/Copyright) is kept: it identifies the document |
-
-## Data-model quirks (fieldtype.c / pgn.h semantics)
-
-| # | Quirk | Origin | In keel | Status |
+| # | Rule | Origin | In keel | Status |
 |---|---|---|---|---|
-| Q10 | The tri-state `Bool` enum is `{Null=0, False=1, True=2}`, so C lowercase `false` aliased to **Null** and `true` to **False**. ISO_NAME's `.hasSign = false` was a live instance: almost certainly meant `False` (unsigned), but produced *no* `Signed` attribute at all | `fieldtype.h` enum + ISO_NAME initializer | `database/fieldtypes.yaml` | **done** — ISO_NAME now carries `signed: false` and emits `<Signed>false</Signed>` (and `.hasSign = False` in `fieldtype-generated-data.h`). Contract-neutral: `Signed` is not part of the FieldType contract signature. Beware the second-order effect this surfaced — see Q11 |
-| Q11 | Fieldtype-level explicit `.rangeMin`/`.rangeMax` initializers (MMSI, FIELD_INDEX) never reach the XML: `fillFieldType`'s `rangeMax == 0.0` guard routes any explicit value to the NaN branch | `fieldtype.c:315` | `database/fieldtypes.yaml` + `emit_xml::Emitter::fieldtypes()` | **done** — initializers deleted. See the correction below: they were *suppressors*, not dead config |
 | Q12 | `min()`/`max()` macros are `x <= y ? x : y`: comparing NaN yields the *other* operand, so `fixupUnit()`'s rad clamp would turn a NaN range into a concrete ±π bound | `analyzer.h` macros + `fixupUnit()` | `derive::c_min()` / `c_max()` | **keep — audited 2026-07-26, the NaN branch is unexercised.** Reaching it needs a rad field whose fieldtype has `hasSign == Null`; all **76** rad fields carry an explicit `Signed` (4 FLOAT signed, 51 NUMBER unsigned, 21 NUMBER signed), so every emitted ±π/2π bound is a genuine clamp of a wider computed range — the FLOAT ones clamp down from FLT_MAX. The port stays faithful either way; re-check if a rad field is ever added on a sign-less type |
 | Q13 | A match field's `<Description>` is derived by scanning the lookup for the match value; when the lookup names no such value the element would be emitted *empty*. The C also called a fieldtype-lookup enumerator through the pair-enumerator union member, which worked by ABI accident | `explainPGNXML` + `filterPair()` | `emit_xml::Emitter::match_description()` | **keep** (the empty-description behaviour) — **the union pun is gone**: verified 2026-07-26 that `analyzer/analyzer-explain.c` no longer exists and no `filterPair` remains anywhere in the C. keel's port never punned; it resolves the enumerator by kind |
-| Q14 | `BitLengthField` (pointing at the length field of a variable BINARY field) was hardcoded to `order - 1` and only for fields whose *specific* type name is `BINARY` — not driven by any declared relationship | `explainPGNXML` | `bitLengthField:` in the YAML + `derive` + `emit_xml::Emitter::field()` | **done** — the reference is authored: `bitLengthField: <id>` on the 8 variable-length BINARY fields, resolved to an order by derive. Rule **R15** now validates the reference itself (present on exactly the variable-length BINARY fields, resolvable, positioned earlier, an unscaled integer bit count) — all four failure modes verified to trip. This closes the gap the earlier heuristic could not: a reference to the *wrong* integer is now impossible to express silently. Artifacts byte-identical |
 | Q15 | An unknown transmission interval (C `interval == 0`) *silently adds* `Interval` to `<Missing>`; the authored YAML therefore never stores that entry (`model.missing_effective()`) | `fieldtype.c:486` | derived, by design | keep — this is derivation, not a defect |
 | Q16 | Lookup fields whose type has `hasSign == Null` (e.g. BITLOOKUP) get NaN ranges, then a *fallback* emission branch prints `RangeMin 0` / `RangeMax 2^bits-1` anyway | `explainPGNXML` range else-branches | `emit_xml.Emitter.field()` | keep |
-| Q17 | `fixupUnit()` SI branch clamped `rad` field ranges to ±π (signed) / 2π (unsigned) with the magic literal `3.1415926` (not M_PI) | `fieldtype.c fixupUnit()` | `derive::fixup_unit()` + `common.h`'s `Pi` | **done** — keel uses `std::f64::consts::PI` (moved 101 emitted bounds in the 8th significant digit; contract-neutral). The project had **three** different πs: this `3.1415926`, `common.h`'s `Pi (3.141592654)` driving `RadianToDegree`, and `2 * Pi / 65536` baked into two 126720 resolutions. All now resolve to the one full-precision value — `common.h` defines `Pi (3.141592653589793)` (spelled out, since `M_PI` is not standard C and needs `_USE_MATH_DEFINES` on MSVC) and `fieldtype.c`'s clamp uses it, so the C runtime and keel finally agree. Don't reintroduce a local approximation |
 | Q18 | Sentinel (`UnknownValue`/...) emission is suppressed for 64-bit fields, match fields, and non-TopOfRange roots; `reservedCount` is a gap computation between raw bit-max and rangeMax, capped by width — subtle but semantically intended | `fieldtype.c:448` + `explainPGNXML` | `derive.fill_field()` + emitter | keep — this is the sentinel model, documented in fieldtype.h |
-| Q19 | The `unit` string doubled as the match encoding in C (`unit = "=275"`), 982 instances. No XML impact (`<Match>` is its own element), but the pun shaped the C tables | pgn.h macros | `struct Field` + `emit_c` | **done** — `struct Field` carries `hasMatchValue` / `matchValue`; the four sniff sites (fieldtype.c, pgn.c ×2, print.c) read the member. Fixed a latent display bug: print.c appends `unit` in plain text, so match fields printed `Report Type = 15 =15`. JSON was never affected. NB `struct Field` is duplicated in `pgn-j1939.h` — both copies need any new member |
-| Q20 | `camelName`/`camelDescription` **presence** was used as a proxy for the `-camel` mode in three runtime output decisions (plain-text repeating suffix `_N` vs ` N`, JSON `{"camelId": ...}` wrapper, a dead fieldName fallback). Broke down for pinned ids: PGN 130846 emitted *wrapped* JSON even in plain mode, baked into four test fixtures | analyzer.c:1304/1494/1657 | **FIXED in C** (2026-07): all three now key on `showCamel`; the generated tables set camelName/camelDescription on every entry; the 130846 fixtures were corrected. Behavior change surface: only pinned ids in plain modes (1 field, 1 PGN — scanned) | done (fix-in-C) |
 
-### Correction to Q11: those initializers were suppressors, not dead config
+## Fixed — for the record
 
-Q11 called the fieldtype-level `rangeMin`/`rangeMax` initializers "dead
-configuration". They were not: **their presence suppressed range emission**.
-`fillFieldType` routes an explicit value to the NaN branch, and NaN ranges are
-not emitted — so deleting them *un-suppressed* a derived range and **added**
-three range pairs to `canboat.xml` rather than removing config:
+Closed during the 2026-07-26/27 review. Kept because "why did it ever look
+like that?" is a fair question, and because a few carry a warning worth
+heeding.
 
-| FieldType | authored (never emitted) | derived once deleted |
+| # | Was | Resolution |
 |---|---|---|
-| MMSI | 2000000 .. 999999999 | 0 .. 4294967292 — the raw 32-bit span, actively misleading for a 9-digit identifier |
-| FIELD_INDEX | 0 .. 252 | 0 .. 252 — genuinely redundant |
-| ISO_NAME | *(none)* | 0 .. 1.84467440737096e+19 — surfaced by the Q10 fix, since `hasSign: Null` → NaN range but `False` → a computed unsigned one |
+| Q1 | `<Priority>` indented 4 spaces, siblings 6 | emitted through the normal `xml_u(6, ...)` helper |
+| Q2 | a newline *inside* the `EnumFieldType` tag after `Signed` | each `EnumFieldType` is one line |
+| Q3 | `'` unescaped inside single-quoted attributes | retired by Q5 — every attribute is double-quoted, and `"` was already escaped |
+| Q4 | `FieldTypes`/`PhysicalQuantities` emitted with no escaping at all | both route names, text and units through `xml_escape()` |
+| Q5 | attribute quoting inconsistent between sections | every attribute keel emits is double-quoted |
+| Q9 | BEM documents carried a `canboat.xsl` PI that ships for neither | the PI is emitted for the main and J1939 documents only |
+| Q10 | C's lowercase `false` aliased to the tri-state `Null`, so ISO_NAME emitted no `Signed` at all | ISO_NAME carries `signed: false`; see the Q11 note below for the second-order effect |
+| Q11 | fieldtype-level `rangeMin`/`rangeMax` initializers looked like dead config | they were **suppressors**, not dead — see below |
+| Q14 | `BitLengthField` hardcoded to `order - 1`, keyed on the type name | authored as `bitLengthField: <id>`, validated by rule **R15** |
+| Q17 | the rad clamp used the literal `3.1415926` | one full-precision `Pi` in `common.h`, used by both the C clamp and keel |
+| Q19 | a match value was encoded into the `unit` string as `"=275"` | `struct Field` carries `hasMatchValue` / `matchValue` |
+| Q20 | `camelName` presence used as a proxy for `-camel` mode | all three decisions key on `showCamel` |
 
-Two further notes: Q11's stated MMSI range was wrong (it says `0..999999999`;
-the initializer was `2000000..999999999`), and the new elements **failed XSD
-validation** — `canboat.xsd`'s `FieldType` complexType has no `RangeMin` or
-`RangeMax` at all.
+Three of those left a warning behind:
 
-The schema is the contract, so the resolution is upstream of all three rows:
-**the `FieldTypes` section no longer emits ranges.** A range only means
-something once bits, resolution and sign are concrete — i.e. per *field*,
-where it has always been emitted. The C emitter had the same dead branch; it
-stayed invisible because the only two fieldtypes that could reach it carried
-suppressors. With the branch gone the initializers are *actually* dead, and
-deleting them (plus the Q10 fix) leaves the XML byte-identical apart from
-ISO_NAME's intended `<Signed>false</Signed>`.
+- **Q11 — the initializers were suppressors.** An explicit fieldtype range hit
+  `fillFieldType`'s `rangeMax == 0.0` guard and landed in the NaN branch, and
+  NaN ranges are not emitted. So *deleting* them **added** three range pairs to
+  `canboat.xml` (MMSI would have advertised `0..4294967292`, the raw 32-bit
+  span, for a 9-digit identifier) and failed XSD validation — `canboat.xsd`'s
+  `FieldType` has no `RangeMin`/`RangeMax` at all. The fix was upstream of all
+  of it: **the `FieldTypes` section does not emit ranges.** A range only means
+  something once bits, resolution and sign are concrete, i.e. per *field*.
+- **Q17 — do not reintroduce a local π.** The project had three
+  (`3.1415926`, `common.h`'s `3.141592654`, and `2 * Pi / 65536` baked into two
+  126720 resolutions). `common.h` defines `Pi (3.141592653589793)`, spelled out
+  because `M_PI` is not standard C and needs `_USE_MATH_DEFINES` on MSVC.
+- **Q19 — `struct Field` is duplicated** in `analyzer/pgn.h` *and*
+  `analyzer/pgn-j1939.h`. Both copies need any new member or the `-DJ1939`
+  build breaks. Q19 also fixed a latent display bug: `print.c` appended the
+  fake unit, so match fields printed `Report Type = 15 =15`.
 
 ## Authored-override noise (converter reconciliation fallbacks)
 
@@ -152,13 +143,13 @@ authored data or a C-side inconsistency:
   pruned with the rest. Sentinels verified still present: 16777215 / 16777214 /
   16777213.
 
-- ~~`database/lookups.order.yaml` preserves lookup-generated-data.h definition order purely
+- ~~`database/lookups.order.yaml` preserved the generated lookup header's hand-authored definition order purely
   for the golden byte-diff; **dies at switchover** in favor of sorted order~~
   **done (2026-07-26)** — retired. `Database::ordered_lookups()` now sorts by
   name, and the manifest plus its six code sites (`model.rs`, `yamlio.rs`, and
   four in `edit.rs`, including the editor's undo snapshot of it) are gone.
   Emission order is derivable again, so adding an enumeration no longer means
-  keeping a second file in step. One reordering diff in `lookup-generated-data.h` and
+  keeping a second file in step. One reordering diff in the generated lookup header and
   `canboat.xml`; contract-neutral (order is not part of the signature).
 - ~~`variantOrder` fallback placement is asymmetric: the 0xE800 fallback sits
   first within 59392, but the 0x1EF00 fallback sits last within 126720~~
