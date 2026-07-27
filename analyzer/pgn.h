@@ -125,7 +125,7 @@ typedef struct
 #include "fieldtype.h"
 
 /* The field-definition macro DSL that used to live here died at the
- * keel switchover: pgn-data.h is generated with plain designated
+ * keel switchover: pgn-generated-data.h is generated with plain designated
  * initializers from database/ (see keel/DESIGN.md).
  */
 
@@ -134,7 +134,7 @@ typedef struct
 #define LOOKUP_TYPE_BITFIELD(type, length) extern const char *lookup##type(size_t val);
 #define LOOKUP_TYPE_FIELDTYPE(type, length) extern const char *lookup##type(size_t val);
 
-#include "lookup.h"
+#include "lookup-generated-data.h"
 
 typedef enum PacketComplete
 {
@@ -240,7 +240,7 @@ PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
                        {0x1f000, 0x1feff, 1, "NMEA", PACKET_MIXED},
                        {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_FAST}};
 
-#include "pgn-data.h"
+#include "pgn-generated-data.h"
 
 const size_t pgnListSize  = ARRAY_SIZE(pgnList);
 const size_t pgnRangeSize = ARRAY_SIZE(pgnRange);

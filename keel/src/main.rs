@@ -122,7 +122,7 @@ fn run() -> Result<i32, String> {
     }
 
     let mut db = yamlio::load_database(&db_dir, &version, &schema)?;
-    // fieldtype-data.h is emitted from the authored (pre-percolation) state
+    // fieldtype-generated-data.h is emitted from the authored (pre-percolation) state
     let authored_fieldtypes = db.fieldtypes.clone();
     derive::fill(&mut db)?;
 
@@ -154,21 +154,24 @@ fn run() -> Result<i32, String> {
                     root.join("docs/canboat.xml"),
                     emit_xml::emit_xml(&db, "normal"),
                 ),
-                (root.join("analyzer/lookup.h"), emit_c::emit_lookup_h(&db)),
                 (
-                    root.join("analyzer/physicalquantity-data.h"),
+                    root.join("analyzer/lookup-generated-data.h"),
+                    emit_c::emit_lookup_h(&db),
+                ),
+                (
+                    root.join("analyzer/physicalquantity-generated-data.h"),
                     emit_c::emit_physicalquantity_data_h(&db),
                 ),
                 (
-                    root.join("analyzer/fieldtype-data.h"),
+                    root.join("analyzer/fieldtype-generated-data.h"),
                     emit_c::emit_fieldtype_data_h(&authored_fieldtypes),
                 ),
                 (
-                    root.join("analyzer/pgn-data.h"),
+                    root.join("analyzer/pgn-generated-data.h"),
                     emit_c::emit_pgn_data_h(&db, false),
                 ),
                 (
-                    root.join("analyzer/pgn-j1939-data.h"),
+                    root.join("analyzer/pgn-j1939-generated-data.h"),
                     emit_c::emit_pgn_data_h(&db, true),
                 ),
             ];

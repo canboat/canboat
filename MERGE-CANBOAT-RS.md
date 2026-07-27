@@ -45,8 +45,8 @@ wiring is changed by this document.
 Two Rust codebases now exist against the same NMEA 2000 database:
 
 - **`keel`** (this repo, `keel/`, ~6.1k LoC, deps: `yaml-rust2` only). *Authoring/codegen.*
-  Owns the YAML database under `database/`. Generates `analyzer/pgn-data.h`,
-  `lookup.h`, `fieldtype-data.h`, `physicalquantity-data.h` and `canboat.xml`, all
+  Owns the YAML database under `database/`. Generates `analyzer/pgn-generated-data.h`,
+  `lookup-generated-data.h`, `fieldtype-generated-data.h`, `physicalquantity-generated-data.h` and `canboat.xml`, all
   **committed**, so the C analyzer builds with no cargo. `canboat.xml` → `canboat.json`
   via the unchanged XSLT chain.
 
@@ -183,7 +183,7 @@ up next to / into `canboat-primitives`.
 `synthetic-pgns.json` is a manual mirror of the `CANBOAT_BEM` PGNs that `analyzer/pgn.h`
 defines directly. In the merged world **keel owns `pgn.h` from the YAML**, so those PGNs
 are already in keel's model (or belong in the YAML). `emit_rust.rs` emits them into the
-Rust tables the same way `emit_c.rs` emits them into `pgn-data.h` — one source, one
+Rust tables the same way `emit_c.rs` emits them into `pgn-generated-data.h` — one source, one
 generator, the manual mirror gone. This removes an entire class of "I edited pgn.h but
 forgot the JSON mirror" drift.
 

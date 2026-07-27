@@ -30,9 +30,9 @@ XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
 HTML2FILE=../docs/canboat.html
-GENERATED_DATA=pgn-data.h physicalquantity-data.h fieldtype-data.h
-HEADERS=analyzer.h pgn.h lookup.h fieldtype.h $(GENERATED_DATA)
-HEADERS_J1939=analyzer.h pgn-j1939.h lookup.h fieldtype.h physicalquantity-data.h fieldtype-data.h pgn-j1939-data.h
+GENERATED_DATA=pgn-generated-data.h physicalquantity-generated-data.h fieldtype-generated-data.h
+HEADERS=analyzer.h pgn.h lookup-generated-data.h fieldtype.h $(GENERATED_DATA)
+HEADERS_J1939=analyzer.h pgn-j1939.h lookup-generated-data.h fieldtype.h physicalquantity-generated-data.h fieldtype-generated-data.h pgn-j1939-generated-data.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 CFLAGS?=-Wall -O2
@@ -50,7 +50,7 @@ $(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
-# canboat.xml AND the analyzer's data tables (lookup.h, *-data.h) are
+# canboat.xml AND the analyzer's data tables (lookup-generated-data.h, *-data.h) are
 # generated from ../database by keel (see keel/DESIGN.md). The keel shim
 # builds the keel binary with cargo on first use. keel-generate is phony:
 # keel itself is a fast no-op-detector, and the CI gate is a git diff.

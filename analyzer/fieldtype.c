@@ -194,7 +194,7 @@ void fixupUnit(Field *f)
 
 static LookupInfo fieldtypeEnums[] = {
 #define LOOKUP_TYPE_FIELDTYPE(type, length) {.name = xstr(type), .size = length, .function.pair = lookup##type},
-#include "lookup.h"
+#include "lookup-generated-data.h"
 };
 
 extern void fillFieldType(bool doUnitFixup)

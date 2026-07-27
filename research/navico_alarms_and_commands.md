@@ -125,7 +125,7 @@ Findings:
   the Triton menu has one setting for general/engine pressure and another for
   barometric pressure — and only some of their enum values were observed
   during the capture (see `SIMNET_PRESSURE_UNIT` / `SIMNET_BARO_PRESSURE_UNIT`
-  in `lookup.h`), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet
+  in `lookup-generated-data.h`), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet
   captured for the general Pressure key). See #729.
 
 ### Instrument damping — PGN 130845 (Simnet: Key Value)

@@ -136,7 +136,7 @@ limitations under the License.
   }
 
 
-#include "lookup.h"
+#include "lookup-generated-data.h"
 
 // Fill the lookup arrays
 
