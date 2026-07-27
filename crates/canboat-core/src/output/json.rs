@@ -198,22 +198,20 @@ fn write_json_inner<W: fmt::Write>(
         {
             continue;
         }
-        // Reserved fields whose raw value is all-ones (the "unused"
+        // Reserved fields whose value is all-ones (the "unused"
         // default) are skipped entirely — even under -debug, matching
-        // canboat. Other Reserved values flow through and emit their
-        // hex string.
-        if let FieldValue::Reserved {
-            value, bit_length, ..
-        } = &f.value
-        {
-            let max = if *bit_length >= 64 {
-                u64::MAX
-            } else {
-                (1u64 << bit_length) - 1
-            };
-            if *value == max {
-                continue;
-            }
+        // canboat's `fieldPrintReserved`. Other Reserved values flow
+        // through and emit their hex string.
+        //
+        // The decoder makes that call and signals it by returning no
+        // bytes; do not re-derive it from `bit_length` here. On a short
+        // frame the extractor truncates the field, so "all ones" means
+        // all ones of the *truncated* width — PGN 129039's trailing
+        // 15-bit Reserved on a 26-byte AIS Class B report reads 7 bits
+        // of 0xFF, which is not 0x7FFF, and the two computations
+        // disagreed.
+        if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty()) {
+            continue;
         }
         // Empty BITLOOKUPs (no bits set) are dropped in JSON output —
         // canboat doesn't emit them either. The text formatter, by

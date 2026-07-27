@@ -2122,6 +2122,31 @@ mod tests {
     }
 
     #[test]
+    fn truncated_trailing_reserved_is_omitted() {
+        // A 26-byte AIS Class B position report (PGN 129039 declares
+        // 27). Its trailing 15-bit `Reserved` starts at bit 201, so
+        // only 7 bits survive — and those read all-ones, which canboat
+        // skips. The all-ones test has to be made against the width
+        // actually read: 0x7F is not 0x7FFF.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x12, 0x10, 0xad, 0x8c, 0x0e, 0xb2, 0x33, 0x2c, 0x03, 0xe6, 0x96, 0x6d, 0x1f, 0x3e,
+            0xb8, 0x65, 0x71, 0x00, 0xc0, 0x00, 0xc1, 0xff, 0x7f, 0x00, 0xe2, 0xff,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 4,
+            pgn: 129039,
+            src: 8,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let mut json = String::new();
+        crate::output::write_json(&mut json, &dec, &crate::output::JsonOptions::default()).unwrap();
+        assert!(!json.contains("Reserved"), "got: {json}");
+    }
+
+    #[test]
     fn unresolved_key_takes_the_rest_of_the_frame_as_its_value() {
         // PGN 130845 Simnet: Key Value, from
         // samples/ac42-commissioning.raw. Key 17671 is not in
