@@ -289,7 +289,7 @@ impl Database {
     /// Enumerations of `kind`, sorted by name.
     ///
     /// Emission order used to be pinned by `database/lookups.order.yaml`, a
-    /// manifest that existed only to reproduce lookup.h's hand-authored
+    /// manifest that existed only to reproduce lookup-generated-data.h's hand-authored
     /// definition order for the migration's byte-diff gate. That gate is
     /// retired, so order is now simply alphabetical: derivable, stable, and
     /// one less file to keep in step when an enumeration is added.

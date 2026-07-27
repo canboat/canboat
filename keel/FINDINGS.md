@@ -76,7 +76,7 @@ J1939 conversion, all proven by the test suite:
 ## F3 — R22: unreferenced lookup enumerations (3 warnings)
 
 `AIRMAR_FILTER`, `FUSION_SIRIUS_ALERT`, `SEATALK1_ATT` are defined in
-lookup.h but referenced by no field. Verified 2026-07-07: they appear
+lookup-generated-data.h but referenced by no field. Verified 2026-07-07: they appear
 **nowhere else** — not in `pgn.h`, not in `pgn-j1939.h`, not in any C
 source. Genuinely dead enumerations; deleting them removes their
 `<LookupEnumeration>` from canboat.xml (contract: minor). Awaiting a

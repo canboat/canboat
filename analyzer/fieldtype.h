@@ -183,7 +183,7 @@ typedef struct PhysicalQuantity
 
 #ifdef FIELDTYPE_GLOBALS
 
-#include "physicalquantity-data.h"
+#include "physicalquantity-generated-data.h"
 
 #else /* FIELDTYPE_GLOBALS */
 
@@ -229,7 +229,7 @@ struct FieldType
 };
 
 #ifdef FIELDTYPE_GLOBALS
-#include "fieldtype-data.h"
+#include "fieldtype-generated-data.h"
 
 const size_t fieldTypeCount = ARRAY_SIZE(fieldTypeList);
 

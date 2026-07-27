@@ -11,7 +11,7 @@ variant in `pgns/`, one per enumeration in `lookups/`, plus
 `fieldtypes.yaml`; `database/j1939/` for the J1939 build). Validate your edit
 with `keel/keel check`. The files under `docs/` (`canboat.xml`,
 `canboat.html`, `canboat.json`), `docs/canboat.dbc`, AND the analyzer's C
-data tables (`analyzer/lookup.h`, `analyzer/*-data.h`) are **generated**
+data tables (`analyzer/lookup-generated-data.h`, `analyzer/*-data.h`) are **generated**
 from the database and committed to git. If your change touches the
 database, regenerate the artifacts in the **same** commit:
 

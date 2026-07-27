@@ -1,8 +1,12 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Static schema tables, generated at build time from
-//! `data/canboat.json` plus `data/synthetic-pgns.json` by
-//! `canboat-core/build.rs`.
+//! Static schema tables, generated at build time from the repository's own
+//! YAML database (`database/**`) by `canboat-core/build.rs`, via keel.
+//!
+//! This file is hand-written -- it is the documented wrapper that `include!`s
+//! the generated tables. The generated part is not in the repository; it is
+//! rebuilt into `OUT_DIR` whenever the database changes. To change the
+//! schema, edit `database/pgns/*.yaml` and rebuild.
 //!
 //! Exposes:
 //! - [`PGNS`] — `&[PgnInfo]` in JSON declaration order.

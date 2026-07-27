@@ -65,7 +65,7 @@ constant, not a computed product: there is a single exact intended value, and
 
 | # | Quirk | Origin | In keel | Status |
 |---|---|---|---|---|
-| Q10 | The tri-state `Bool` enum is `{Null=0, False=1, True=2}`, so C lowercase `false` aliased to **Null** and `true` to **False**. ISO_NAME's `.hasSign = false` was a live instance: almost certainly meant `False` (unsigned), but produced *no* `Signed` attribute at all | `fieldtype.h` enum + ISO_NAME initializer | `database/fieldtypes.yaml` | **done** — ISO_NAME now carries `signed: false` and emits `<Signed>false</Signed>` (and `.hasSign = False` in `fieldtype-data.h`). Contract-neutral: `Signed` is not part of the FieldType contract signature. Beware the second-order effect this surfaced — see Q11 |
+| Q10 | The tri-state `Bool` enum is `{Null=0, False=1, True=2}`, so C lowercase `false` aliased to **Null** and `true` to **False**. ISO_NAME's `.hasSign = false` was a live instance: almost certainly meant `False` (unsigned), but produced *no* `Signed` attribute at all | `fieldtype.h` enum + ISO_NAME initializer | `database/fieldtypes.yaml` | **done** — ISO_NAME now carries `signed: false` and emits `<Signed>false</Signed>` (and `.hasSign = False` in `fieldtype-generated-data.h`). Contract-neutral: `Signed` is not part of the FieldType contract signature. Beware the second-order effect this surfaced — see Q11 |
 | Q11 | Fieldtype-level explicit `.rangeMin`/`.rangeMax` initializers (MMSI, FIELD_INDEX) never reach the XML: `fillFieldType`'s `rangeMax == 0.0` guard routes any explicit value to the NaN branch | `fieldtype.c:315` | `database/fieldtypes.yaml` + `emit_xml::Emitter::fieldtypes()` | **done** — initializers deleted. See the correction below: they were *suppressors*, not dead config |
 | Q12 | `min()`/`max()` macros are `x <= y ? x : y`: comparing NaN yields the *other* operand, so `fixupUnit()`'s rad clamp would turn a NaN range into a concrete ±π bound | `analyzer.h` macros + `fixupUnit()` | `derive::c_min()` / `c_max()` | **keep — audited 2026-07-26, the NaN branch is unexercised.** Reaching it needs a rad field whose fieldtype has `hasSign == Null`; all **76** rad fields carry an explicit `Signed` (4 FLOAT signed, 51 NUMBER unsigned, 21 NUMBER signed), so every emitted ±π/2π bound is a genuine clamp of a wider computed range — the FLOAT ones clamp down from FLT_MAX. The port stays faithful either way; re-check if a rad field is ever added on a sign-less type |
 | Q13 | A match field's `<Description>` is derived by scanning the lookup for the match value; when the lookup names no such value the element would be emitted *empty*. The C also called a fieldtype-lookup enumerator through the pair-enumerator union member, which worked by ABI accident | `explainPGNXML` + `filterPair()` | `emit_xml::Emitter::match_description()` | **keep** (the empty-description behaviour) — **the union pun is gone**: verified 2026-07-26 that `analyzer/analyzer-explain.c` no longer exists and no `filterPair` remains anywhere in the C. keel's port never punned; it resolves the enumerator by kind |
@@ -135,14 +135,14 @@ authored data or a C-side inconsistency:
   that merely *differ* from the derived value are genuine bounds, not precision
   artifacts.
 - **`specialValues` — audited and pruned 2026-07-26.** Was 32 fields; now **8**.
-  All 32 emitted `.reservedOverride` into `pgn-data.h`, but only the 8 whose
+  All 32 emitted `.reservedOverride` into `pgn-generated-data.h`, but only the 8 whose
   count differs from `reservedCountForSize()` do anything: `Device Instance
   Lower` (3 bits, auto 1 -> 0), `Device Instance Upper` (5 bits, auto 2 -> 0)
   and `Sequence Number` (2 bits, auto 1 -> 0), each appearing in several PGNs —
   all saying "no special values, every raw value is valid". The other 24 merely
   restated the auto count and have been deleted; `canboat.xml` and
   `canboat.json` are byte-identical across the removal, and the only change to
-  `pgn-data.h` is the 24 dropped clauses.
+  `pgn-generated-data.h` is the 24 dropped clauses.
 
   Worth noting how this moved: an earlier pass found `129541
   rootOfSemiMajorAxis` load-bearing *despite* matching the auto count — dropping
@@ -152,13 +152,13 @@ authored data or a C-side inconsistency:
   pruned with the rest. Sentinels verified still present: 16777215 / 16777214 /
   16777213.
 
-- ~~`database/lookups.order.yaml` preserves lookup.h definition order purely
+- ~~`database/lookups.order.yaml` preserves lookup-generated-data.h definition order purely
   for the golden byte-diff; **dies at switchover** in favor of sorted order~~
   **done (2026-07-26)** — retired. `Database::ordered_lookups()` now sorts by
   name, and the manifest plus its six code sites (`model.rs`, `yamlio.rs`, and
   four in `edit.rs`, including the editor's undo snapshot of it) are gone.
   Emission order is derivable again, so adding an enumeration no longer means
-  keeping a second file in step. One reordering diff in `lookup.h` and
+  keeping a second file in step. One reordering diff in `lookup-generated-data.h` and
   `canboat.xml`; contract-neutral (order is not part of the signature).
 - ~~`variantOrder` fallback placement is asymmetric: the 0xE800 fallback sits
   first within 59392, but the 0x1EF00 fallback sits last within 126720~~

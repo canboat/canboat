@@ -1664,7 +1664,7 @@ fn decode_dynamic_field_value(
             None => decode_binary(data, bit_offset, bits),
         },
         Some("DURATION") | Some("TIME") => {
-            // canboat C's lookup.h is what really decides DURATION
+            // canboat C's lookup-generated-data.h is what really decides DURATION
             // signedness: most entries are `DURATION_UFIX*` (unsigned,
             // e.g. Layline Time, Sailing Time to Waypoint, Sailing
             // ETA, Trip Time), with `DURATION_FIX*` (signed) reserved
