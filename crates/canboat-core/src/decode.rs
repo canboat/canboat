@@ -1409,15 +1409,20 @@ fn decode_reserved(
             bit_length,
         };
     }
-    // Pack just the field's value into bytes (little-endian), one byte
-    // per `ceil(bit_length / 8)`. This avoids leaking neighboring
-    // fields' bits when the reserved span shares a byte with adjacent
-    // payload (which slicing `data[start..end]` would do).
-    let n_bytes = bit_length.div_ceil(8).max(1) as usize;
-    let mut bytes = Vec::with_capacity(n_bytes);
-    for i in 0..n_bytes {
-        bytes.push(((raw >> (i * 8)) & 0xff) as u8);
-    }
+    // A RESERVED or SPARE field that does need printing is handed
+    // straight to `fieldPrintBinary` by the C (`fieldPrintReserved` /
+    // `fieldPrintSpare`, print.c), so every bit stays where it sat:
+    // the first byte is masked to the field's width and shifted back
+    // into position, and later bytes come whole off the message.
+    //
+    // Packing the extracted value LSB-first instead moved the bits down
+    // to bit 0 — PGN 130824's 2-bit Reserved at bit 11 printed `02`
+    // where canboat prints `10`, and the same shift showed up on every
+    // proprietary PGN's Reserved field.
+    let bytes = match decode_binary(data, bit_offset, bit_length) {
+        FieldValue::Binary(b) => b,
+        _ => Vec::new(),
+    };
     if is_reserved {
         FieldValue::Reserved {
             value: raw,
@@ -2152,6 +2157,34 @@ mod tests {
         match &msg.value {
             FieldValue::String(s) => assert_eq!(s, "HELLO"),
             other => panic!("expected the truncated text, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn reserved_bytes_keep_their_bit_position() {
+        // PGN 130824's field 2 is a 2-bit Reserved at bit 11, i.e. bits
+        // 3..4 of byte 1. canboat prints it through `fieldPrintBinary`,
+        // which masks the first byte and shifts it back where it was,
+        // so a value of 0b10 renders `10` — not `02`.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0x7d, 0x91, 0x64, 0x20, 0x2d, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let r = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Reserved")
+            .expect("a Reserved field");
+        match &r.value {
+            FieldValue::Reserved { bytes, .. } => assert_eq!(bytes.as_slice(), &[0x10]),
+            other => panic!("expected Reserved bytes, got {other:?}"),
         }
     }
 
