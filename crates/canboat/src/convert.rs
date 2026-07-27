@@ -20,7 +20,9 @@ use anyhow::{Context, Result};
 
 use canboat_core::RawFrame;
 use canboat_core::format::InputFormat;
-use canboat_core::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
+use canboat_core::output::{
+    CamelCase, GeoFormat, JsonOptions, TextOptions, write_json, write_text,
+};
 use canboat_io::{
     EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter, TextLineWriter,
     analyze, container, copy,
@@ -177,6 +179,63 @@ pub struct Args {
     /// captures.
     #[arg(long)]
     filtered_only: bool,
+
+    // ----- decoded-output shape: the same knobs the `analyzer` alias
+    // exposes, so `convert --to json` can be diffed against canboat C.
+    /// Emit lookup values as `{"value":N,"name":"..."}` instead of the
+    /// bare name string. Matches canboat's `-nv`. JSON only.
+    #[arg(long)]
+    nv: bool,
+
+    /// Include unavailable fields — `null` in JSON, `Unknown` in text —
+    /// instead of omitting them. Matches canboat's `-empty`.
+    #[arg(long)]
+    empty: bool,
+
+    /// Annotate every field with its raw bytes and bits. Matches
+    /// canboat's `-debug`.
+    #[arg(long)]
+    debug: bool,
+
+    /// Emit field keys and PGN descriptions as camelCase identifiers.
+    /// Matches canboat's `-camel`.
+    #[arg(long)]
+    camel: bool,
+
+    /// As `--camel`, but UpperCamelCase. Matches canboat's
+    /// `-upper-camel`.
+    #[arg(long, conflicts_with = "camel")]
+    upper_camel: bool,
+
+    /// Strict SI units — radians, kelvin, pascals — rather than the
+    /// practical defaults (deg, °C, bar). Matches canboat's `-si`.
+    #[arg(long)]
+    si: bool,
+
+    /// Lat/lon display format. Matches canboat's `-geo`.
+    #[arg(long, value_name = "FMT", default_value = "dd")]
+    geo: GeoArg,
+}
+
+/// `--geo` values, mirroring canboat's `-geo {dd|dm|dms}`.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, clap::ValueEnum)]
+enum GeoArg {
+    /// Decimal degrees, `dd.dddddd`.
+    Dd,
+    /// Degrees and decimal minutes, `dd.mm.mmm`.
+    Dm,
+    /// Degrees, minutes, seconds, `dd.mm.sss`.
+    Dms,
+}
+
+impl From<GeoArg> for GeoFormat {
+    fn from(g: GeoArg) -> Self {
+        match g {
+            GeoArg::Dd => GeoFormat::Dd,
+            GeoArg::Dm => GeoFormat::Dm,
+            GeoArg::Dms => GeoFormat::Dms,
+        }
+    }
 }
 
 impl Args {
@@ -272,11 +331,23 @@ fn convert_decoded<W: Write>(
     ebl: bool,
     out: &mut W,
 ) -> Result<()> {
-    let json_opts = JsonOptions::default();
+    let camel_case = if args.upper_camel {
+        CamelCase::Upper
+    } else if args.camel {
+        CamelCase::Lower
+    } else {
+        CamelCase::Off
+    };
+    let json_opts = JsonOptions {
+        include_empty: args.empty,
+        name_value: args.nv,
+        debug: args.debug,
+        camel_case,
+    };
     let text_opts = TextOptions {
-        show_unavailable: false,
-        debug: false,
-        geo: GeoFormat::Dd,
+        show_unavailable: args.empty,
+        debug: args.debug,
+        geo: args.geo.into(),
     };
     let as_json = args.to == OutFormat::Json;
     let cfg = analyze::Config {
@@ -285,7 +356,11 @@ fn convert_decoded<W: Write>(
         src_filter: args.src,
         dst_filter: args.dst,
         suppress_startup_record: false,
-        units: canboat_core::Units::Metric,
+        units: if args.si {
+            canboat_core::Units::Si
+        } else {
+            canboat_core::Units::Metric
+        },
     };
 
     let mut line = String::with_capacity(512);
