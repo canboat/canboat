@@ -4,24 +4,13 @@
 //! generates the analyzer's C tables and canboat.xml, decodes sample frames
 //! and serves the editor.
 
-mod bits;
-mod cformat;
-mod check;
-mod decode;
-mod derive;
-mod edit;
-mod emit_c;
-mod emit_text;
-mod emit_xml;
-mod generate;
-mod harvest;
-mod model;
-mod rules;
-mod samples;
-mod yamlio;
+use keel::{
+    check, decode, derive, edit, emit_c, emit_text, emit_xml, harvest, rules, samples, yamlio,
+};
+use keel::{find_repo_root, read_versions};
 
 use std::fs;
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::ExitCode;
 
 // Die silently on SIGPIPE (keel explain | head) instead of a Rust panic.
@@ -29,35 +18,6 @@ use std::process::ExitCode;
 #[cfg(unix)]
 unsafe extern "C" {
     fn signal(signum: i32, handler: usize) -> usize;
-}
-
-fn find_repo_root(start: &Path) -> Result<PathBuf, String> {
-    let mut path = start
-        .canonicalize()
-        .map_err(|e| format!("{}: {e}", start.display()))?;
-    loop {
-        if path.join("analyzer").is_dir() && path.join("docs").is_dir() {
-            return Ok(path);
-        }
-        if !path.pop() {
-            return Err(
-                "cannot find canboat repository root (looked for analyzer/ and docs/)".into(),
-            );
-        }
-    }
-}
-
-fn read_versions(root: &Path) -> Result<(String, String), String> {
-    let text = fs::read_to_string(root.join("common/version.h"))
-        .map_err(|e| format!("common/version.h: {e}"))?;
-    let grab = |key: &str| -> Result<String, String> {
-        text.lines()
-            .find(|l| l.contains(&format!("#define {key} ")))
-            .and_then(|l| l.split('"').nth(1))
-            .map(String::from)
-            .ok_or_else(|| format!("common/version.h: no #define {key}"))
-    };
-    Ok((grab("VERSION")?, grab("SCHEMA_VERSION")?))
 }
 
 struct Args {

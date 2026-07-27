@@ -1,0 +1,30 @@
+pgn: 262657
+id: canboatNmea0183Filter
+description: 'CANboat: NMEA 0183 filter'
+type: Single
+explanation: Control channel for the NMEA 0183 sentence filter. Carried only on the server's dedicated bidirectional filter port, never on the CAN bus - it is a CANBOAT_BEM pseudo-PGN, like the rest of the 0x40000+ range.
+fields:
+- id: function
+  name: Function
+  type: NUMBER
+  bits: 8
+  description: 0=Report (pipeline->tui), 1=Set (tui->pipeline)
+- id: source
+  name: Source
+  type: NUMBER
+  bits: 8
+  description: N2K source address this record refers to
+- id: sentence
+  name: Sentence
+  type: STRING_FIX
+  bits: 24
+  description: 3-letter NMEA 0183 formatter, or 'ALL' for the whole source
+- id: muted
+  name: Muted
+  type: NUMBER
+  bits: 8
+  description: 0=active (emitting), 1=muted
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

@@ -230,9 +230,8 @@ dependencies = [
  "canboat-schema",
  "indexmap",
  "itoa",
+ "keel",
  "log",
- "serde",
- "serde_json",
  "smallvec",
  "thiserror",
 ]

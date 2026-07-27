@@ -25,7 +25,10 @@ const LICENSE: &str = concat!(
     "limitations under the License.\n",
 );
 
-fn copyright(version: &str) -> String {
+/// The copyright banner embedded in every emitted document. Public so the
+/// runtime's build script can take the same `(C)` line from the same place
+/// rather than re-deriving it.
+pub fn copyright(version: &str) -> String {
     format!(
         "CANboat version v{version}\n\n(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.\nFor more information see https://github.com/canboat/canboat\n\n{LICENSE}\n"
     )
