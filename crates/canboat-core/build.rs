@@ -147,6 +147,11 @@ struct RawFieldTypeValue {
     unit: Option<String>,
     lookup_enumeration: Option<String>,
     lookup_bit_enumeration: Option<String>,
+    /// Signedness of the fieldtype this entry resolves to — e.g.
+    /// `CURRENT_FIX32_MA` for VICTRON_VREG's "DC Current". Carried
+    /// explicitly because `field_type` above is the *root* name
+    /// (`NUMBER`), which says nothing about the sign.
+    signed: bool,
 }
 
 // ---------------------------------------------------------------------
@@ -267,7 +272,13 @@ struct ComputedFt {
 }
 
 fn compute_ft(v: &mut RawFieldTypeValue) -> ComputedFt {
-    let mut c = ComputedFt::default();
+    let mut c = ComputedFt {
+        // The fieldtype's own signedness is the answer. The unit test
+        // below only ever *adds* to it, for angle types that canboat
+        // spells FIX under the hood.
+        signed: v.signed,
+        ..ComputedFt::default()
+    };
     let Some(unit) = v.unit.clone() else {
         return c;
     };
@@ -1096,6 +1107,7 @@ fn from_keel(root: &Path) -> CanboatJson {
                                 .map(|b| b.to_string()),
                             resolution: ftv.map(|f| f.resolution).filter(|r| *r != 0.0),
                             unit: ftv.and_then(|f| f.unit.clone()),
+                            signed: ftv.and_then(|f| f.has_sign).unwrap_or(false),
                             lookup_enumeration: e
                                 .lookup
                                 .clone()
