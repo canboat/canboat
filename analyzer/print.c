@@ -602,6 +602,33 @@ extern bool fieldPrintDecimal(const Field   *field,
     *bits = dataLen * 8 - startBit;
   }
 
+  /*
+   * All bits set is "not available", as it is for every other field type.
+   * Without this the loop below prints nothing at all -- each 0xff byte is
+   * 255, which fails its own `value < 100` test -- and printField's
+   * "print routine did not print anything" guard then throws the whole PGN
+   * away. A DSC call whose MMSI of Ship In Distress is simply absent took
+   * every other field of the record with it.
+   */
+  {
+    size_t byteCount = (*bits + 7) / 8;
+    size_t i;
+    bool   allOnes = (byteCount > 0);
+
+    for (i = 0; i < byteCount && allOnes; i++)
+    {
+      if (data[i] != 0xff)
+      {
+        allOnes = false;
+      }
+    }
+    if (allOnes)
+    {
+      printEmpty(fieldName, DATAFIELD_UNKNOWN);
+      return true;
+    }
+  }
+
   for (bit = 0; bit < *bits && bit < sizeof(buf) * 8; bit++)
   {
     /* Act on the current bit */
