@@ -93,9 +93,33 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // still emit it as `-0.0`. Use `is_sign_negative` to catch that
     // along with proper negatives.
     let neg = v.is_sign_negative();
+    // Scaling by 10^precision can land exactly on .5 for a value that is
+    // not really a tie: `5 * 0.0001` is 0.000500000000000000010408…, above
+    // the tie, but multiplying by 1000 rounds the product to exactly 0.5 and
+    // the information is gone. printf never scales — it rounds off the
+    // double's own decimal expansion — so PGN 126208's `Air pressure offset`
+    // came out 0.000 where canboat prints 0.001.
+    //
+    // Hand an exact .5 to core::fmt, which is correctly rounded from the
+    // original value: a real tie (127489's 1.890625, a dyadic fraction)
+    // still goes to even, and a near-tie goes the way its true value points.
+    // Rare, so the fast path below keeps the common case.
+    fn lands_on_a_tie(v: f64, precision: usize) -> bool {
+        let scaled = v * 10f64.powi(precision as i32);
+        scaled.fract().abs() == 0.5
+    }
+    if lands_on_a_tie(v, precision) {
+        return write!(
+            w,
+            "{:>width$.prec$}",
+            v,
+            width = min_width,
+            prec = precision
+        );
+    }
     if precision == 0 {
-        // Whole-number path: round half-away-from-zero, integer fmt.
-        let rounded = v.round() as i64;
+        // Whole-number path: integer fmt. Ties go to even, see below.
+        let rounded = v.round_ties_even() as i64;
         let mut buf = itoa::Buffer::new();
         let s = buf.format(rounded.unsigned_abs());
         let signed_len = (if neg && rounded != 0 { 1 } else { 0 }) + s.len();
@@ -111,7 +135,13 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // padded fractional digits — no float formatter on the hot path.
     let scale = 10f64.powi(precision as i32);
     let scaled = v * scale;
-    let rounded = scaled.round() as i128;
+    // Ties go to EVEN, not away from zero. canboat prints through printf,
+    // which rounds under the current FP mode -- FE_TONEAREST, i.e. half to
+    // even. `f64::round` rounds half away from zero, so an exact tie came out
+    // one ulp high: 127489's Power factor is 30976/16384 = 1.890625 exactly,
+    // scaling to 189062.5 at precision 5, and printed 1.89063 where canboat
+    // prints 1.89062.
+    let rounded = scaled.round_ties_even() as i128;
     let abs = rounded.unsigned_abs();
     let pow = 10u128.pow(precision as u32);
     let int_part = (abs / pow) as u64;
@@ -133,6 +163,60 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
         w.write_char('0')?;
     }
     w.write_str(frac_str)
+}
+
+/// C `printf("%g")` — how canboat prints FLOAT fields
+/// (`fieldPrintFloat`, print.c).
+///
+/// Six significant digits: `%e` when the decimal exponent is below -4
+/// or at least 6, `%f` otherwise, then trailing fractional zeros and a
+/// bare `.` are stripped. C's exponent always carries a sign and at
+/// least two digits, which Rust's `{:e}` does not.
+///
+/// This is not the same function as Rust's `{}`, which prints the
+/// shortest string that round-trips. The two diverge exactly where a
+/// FLOAT field is a widened `f32`: Garmin's `Heading to Steer` is
+/// `2.7274` under `%g` and `2.7273988723754883` under `{}`.
+///
+/// Allocates, unlike the rest of this module — but only on the FLOAT
+/// path, which a handful of PGNs use.
+pub(crate) fn write_c_g<W: std::fmt::Write>(w: &mut W, v: f64) -> std::fmt::Result {
+    const PRECISION: i32 = 6;
+
+    if v.is_nan() {
+        return w.write_str("nan");
+    }
+    if v.is_infinite() {
+        return w.write_str(if v > 0.0 { "inf" } else { "-inf" });
+    }
+
+    // Take the exponent from the rounded `%e` form rather than from
+    // `log10`, so a value that rounds up into the next decade (9.9999995
+    // → 1e+01) picks the exponent it will actually be printed with.
+    let sci = format!("{:.*e}", (PRECISION - 1) as usize, v);
+    let (mantissa, exp_str) = sci.split_once('e').expect("{:e} always emits an 'e'");
+    let exp: i32 = exp_str
+        .parse()
+        .expect("{:e} always emits an integer exponent");
+
+    fn trim(s: &str) -> &str {
+        match s.split_once('.') {
+            Some(_) => s.trim_end_matches('0').trim_end_matches('.'),
+            None => s,
+        }
+    }
+
+    // Spelled as C's own condition rather than a range test, so it
+    // reads against the standard's wording for %g.
+    #[allow(clippy::manual_range_contains)]
+    let scientific = exp < -4 || exp >= PRECISION;
+    if scientific {
+        w.write_str(trim(mantissa))?;
+        write!(w, "e{}{:02}", if exp < 0 { '-' } else { '+' }, exp.abs())
+    } else {
+        let decimals = (PRECISION - 1 - exp).max(0) as usize;
+        w.write_str(trim(&format!("{v:.decimals$}")))
+    }
 }
 
 /// Format days-since-1970-01-01 as `YYYY.MM.DD` (canboat text style).
@@ -221,5 +305,82 @@ mod tests {
         let mut out = String::new();
         format_time(3661.5, 3, false, &mut out).unwrap();
         assert_eq!(out, "01:01:01.500");
+    }
+}
+
+#[cfg(test)]
+mod c_g_tests {
+    use super::write_c_g;
+
+    fn g(v: f32) -> String {
+        let mut s = String::new();
+        write_c_g(&mut s, v as f64).unwrap();
+        s
+    }
+
+    #[test]
+    fn matches_c_printf_g() {
+        // Expected strings produced by a C program printing `%g` of the
+        // same `(double)` promotions, compiled and run on this platform.
+        let cases: &[(f32, &str)] = &[
+            (2.727_398_9, "2.7274"), // Garmin Heading to Steer
+            (0.0, "0"),
+            (-0.0, "-0"),
+            (1.0, "1"),
+            (10.0, "10"),
+            (100_000.0, "100000"),  // last %f exponent
+            (1_000_000.0, "1e+06"), // first %e exponent
+            (1_234_567.0, "1.23457e+06"),
+            (0.0001, "0.0001"), // last %f exponent going down
+            (0.00001, "1e-05"), // first %e exponent going down
+            (9.999_999, "10"),  // rounds up into the next decade
+            (-core::f32::consts::PI, "-3.14159"),
+            (123_456.0, "123456"),
+            (0.5, "0.5"),
+            (1e-10, "1e-10"),
+            (1e20, "1e+20"),
+            (65535.0, "65535"),
+            (2.5e-5, "2.5e-05"),
+            (999_999.5, "1e+06"),
+            (1e6, "1e+06"),
+            (0.000_123_456, "0.000123456"),
+        ];
+        for (v, want) in cases {
+            assert_eq!(&g(*v), want, "%g of {v}");
+        }
+    }
+
+    #[test]
+    fn rounds_a_near_tie_the_way_printf_does() {
+        use super::write_fixed_float;
+        fn f(v: f64, p: usize) -> String {
+            let mut s = String::new();
+            write_fixed_float(&mut s, v, p, 0).unwrap();
+            s
+        }
+        // 5 * 0.0001 is 0.000500000000000000010408…, just *above* the
+        // tie, so printf rounds it up. Scaling by 1000 collapses the
+        // product onto exactly 0.5 and loses that. PGN 126208's
+        // `Air pressure offset` in samples/scx20-setting-tool-offsets.raw.
+        assert_eq!(f(5.0 * 0.0001, 3), "0.001");
+        // A genuine tie — 30976/16384 is exactly 1.890625 — still goes
+        // to even, as printf does under FE_TONEAREST. PGN 127489.
+        assert_eq!(f(30976.0 / 16384.0, 5), "1.89062");
+        // …and the even-side tie rounds up to the even digit.
+        assert_eq!(f(0.125, 2), "0.12");
+        assert_eq!(f(0.375, 2), "0.38");
+    }
+
+    #[test]
+    fn handles_non_finite() {
+        let mut s = String::new();
+        write_c_g(&mut s, f64::NAN).unwrap();
+        assert_eq!(s, "nan");
+        s.clear();
+        write_c_g(&mut s, f64::INFINITY).unwrap();
+        assert_eq!(s, "inf");
+        s.clear();
+        write_c_g(&mut s, f64::NEG_INFINITY).unwrap();
+        assert_eq!(s, "-inf");
     }
 }

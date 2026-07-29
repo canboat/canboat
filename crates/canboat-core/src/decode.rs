@@ -10,7 +10,7 @@
 //! No I/O. No formatting — the result is a structured event ready for
 //! the output formatter or for direct consumption by merrimac-rs.
 
-use crate::bits::{Extracted, Sentinel, classify_sentinel, extract_bits, is_unavailable};
+use crate::bits::{Extracted, Sentinel, classify_sentinel, extract_bits};
 use crate::db::PgnDatabase;
 use crate::frame::RawFrame;
 use crate::types::{FieldInfo, FieldType, PgnInfo};
@@ -32,6 +32,73 @@ fn sentinel_field_value(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
         Sentinel::Reserved => Some(FieldValue::ReservedValue { value: ex.raw }),
         Sentinel::None => None,
     }
+}
+
+/// The tail of canboat's `fieldPrintLookup` for a value the
+/// enumeration does not name: one in the top band of the field's width
+/// is unavailable rather than a bare number —
+///
+/// ```text
+///     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
+/// ```
+///
+/// so a 2-bit lookup reserves its top value and anything wider its top
+/// two. Shared, because the C reaches a *dynamic* LOOKUP through the
+/// very same `fieldPrintLookup` as a static one; PGN 127501's
+/// `Indicator11` and PGN 130845's `Auto calibration mode` are the same
+/// rule seen from the two paths.
+fn unnamed_lookup_value(ex: Extracted, bits: u32) -> FieldValue {
+    if bits > 1 {
+        let band = if bits > 2 { 2 } else { 1 };
+        if ex.value >= ex.max - band {
+            return FieldValue::NotAvailable;
+        }
+    }
+    FieldValue::Lookup {
+        value: ex.raw,
+        name: None,
+    }
+}
+
+/// The same test, for a field whose FieldType declares
+/// `Sentinels: None` and so carries none of the hints above, but which
+/// still has a `RangeMax` below what its bit width can hold.
+///
+/// The C never consults the FieldType's `Sentinels` when it works out
+/// how many top-of-range values a field reserves — `reservedCount` is
+/// derived from `rangeMax` against the raw bit-width maximum, capped by
+/// `reservedCountForSize` (fieldtype.c). So an MMSI, whose range stops
+/// at 999999999 in a 32-bit field, still reserves its top three values,
+/// and `extractNumberNotEmpty` hands anything above the threshold to
+/// `printEmpty`. `Sentinels: None` only stops the hints being written
+/// into the document; it does not make every bit pattern valid.
+fn range_max_sentinel(f: &FieldInfo, ex: Extracted, bits: u32) -> Option<FieldValue> {
+    let range_max = f.range_max?;
+    let resolution = f.resolution.unwrap_or(1.0);
+    if bits == 0 || bits >= 64 || resolution <= 0.0 || !range_max.is_finite() {
+        return None;
+    }
+    let raw_max = (1u64 << bits) - 1;
+    let raw_range_max = (range_max / resolution + 0.5) as u64;
+    if raw_range_max >= raw_max {
+        return None;
+    }
+    // reservedCountForSize(): 3 from 8 bits up, 2 from 4, 1 from 2.
+    let by_size: u64 = match bits {
+        8.. => 3,
+        4..=7 => 2,
+        2..=3 => 1,
+        _ => 0,
+    };
+    let reserved = (raw_max - raw_range_max).min(by_size);
+    if reserved == 0 || ex.raw <= raw_max - reserved {
+        return None;
+    }
+    Some(match raw_max - ex.raw {
+        0 => FieldValue::NotAvailable,
+        1 => FieldValue::OutOfRange { value: ex.raw },
+        _ => FieldValue::ReservedValue { value: ex.raw },
+    })
 }
 
 /// One decoded field.
@@ -191,8 +258,19 @@ pub enum FieldValue {
     /// (1 << bit) and resolved name for each.
     BitField {
         value: u64,
-        bits: Vec<(u64, &'static str)>,
+        /// One entry per *set bit*, in bit order: its value (`1 << bit`)
+        /// and its name, or `None` when the enumeration does not name
+        /// that bit. canboat emits unnamed set bits too — as
+        /// `{"value":N,"name":null}` under `-nv` and as a bare `N`
+        /// otherwise — so they must not be dropped.
+        bits: Vec<(u64, Option<&'static str>)>,
     },
+    /// A DECIMAL field's digits. canboat renders one byte as two
+    /// decimal digits (`%02u`) and simply drops a byte that is not a
+    /// valid pair, so the result is a run of digit pairs rather than a
+    /// number — leading zeros included. Kept as text to preserve them;
+    /// both formatters emit it unquoted, as the C does.
+    Decimal(String),
     /// Decoded text (STRING_FIX, STRING_LZ, STRING_LAU).
     String(String),
     /// 16-bit days since 1970-01-01.
@@ -556,9 +634,26 @@ struct DecodeContext {
     /// after. Stored as cloned data so we don't have to thread a
     /// lifetime through every decoder.
     dynamic_field_type: Option<crate::types::LookupFieldTypeValue>,
-    /// Byte length from a DYNAMIC_FIELD_LENGTH field. Cleared with
-    /// `dynamic_field_type` after the value is decoded.
-    dynamic_length_bytes: Option<u32>,
+    /// Byte length from a DYNAMIC_FIELD_LENGTH field, net of the
+    /// record overhead. Cleared with `dynamic_field_type` after the
+    /// value is decoded. Signed, and legitimately negative when a
+    /// truncated record declares a length below its own header — the
+    /// C's `g_length` is `int64_t` for the same reason.
+    dynamic_length_bytes: Option<i64>,
+    /// Raw value of the last field that went through canboat's
+    /// `extractNumberNotEmpty` — its `g_previousFieldValue`. A BINARY
+    /// field with no declared width takes its *bit* length from this
+    /// (`fieldPrintBinary`, print.c).
+    previous_field_value: u64,
+    /// Set by a decoder that wants its field omitted from the output
+    /// while the walk carries on past it — canboat's `g_skip`
+    /// (print.c). Read and cleared by the field walker.
+    skip_field: bool,
+    /// Which definition of `target_pgn` the parameters address, and
+    /// whether it had to be borrowed from the catch-all. Resolved at
+    /// the first VARIABLE field and reused for the rest of the record,
+    /// mirroring the C's `g_refPgn` (analyzer.c).
+    resolved_target: Option<(&'static PgnInfo, bool)>,
 }
 
 fn decode_fields(
@@ -652,6 +747,12 @@ fn decode_fields(
             decode_one_field_at(f, info, data, db, effective_offset, &mut ctx)
         {
             cursor_bits = effective_offset + bits_consumed;
+            // `skip_field` omits the field but keeps the walk going,
+            // and the cursor has already advanced past it.
+            if core::mem::take(&mut ctx.skip_field) {
+                i += 1;
+                continue;
+            }
             out.push(decoded);
         }
         i += 1;
@@ -767,8 +868,13 @@ fn decode_repeating(
                     Some(iter)
                 };
                 first_field_of_iter = false;
-                out.push(d);
                 sub_cursor = off + bits;
+                // The record is still real when a value is omitted for
+                // being explicitly empty, so this iteration counts as
+                // productive and the walk continues to the next record.
+                if !core::mem::take(&mut ctx.skip_field) {
+                    out.push(d);
+                }
                 produced_any = true;
             } else if let Some(bl) = sf.bit_length {
                 // Field couldn't decode but has a known size; advance
@@ -873,6 +979,15 @@ fn decode_one_field_at(
         let avail = avail - (avail & 7); // round down to whole bytes
         let value = match f.field_type {
             Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, avail),
+            // A BINARY field with no width of its own takes one, in
+            // *bits*, from the value of the field before it — canboat's
+            // `*bits = g_previousFieldValue` (fieldPrintBinary, print.c),
+            // which its own comment calls heuristic. Fusion's 130820
+            // SiriusXM Presets sizes `Values` by the preceding `Count`,
+            // as do AIS 129792 / 129795 / 129797.
+            _ if ctx.previous_field_value > 0 && (ctx.previous_field_value as u32) <= avail => {
+                decode_binary(data, bit_offset, ctx.previous_field_value as u32)
+            }
             _ => decode_binary(data, bit_offset, avail),
         };
         return Some((
@@ -892,9 +1007,8 @@ fn decode_one_field_at(
     let bit_length = f.bit_length?;
 
     let value = match f.field_type {
-        Some(FieldType::Number) | Some(FieldType::Decimal) => {
-            decode_number(f, data, bit_offset, bit_length, signed, offset_k)
-        }
+        Some(FieldType::Decimal) => decode_decimal(data, bit_offset, bit_length),
+        Some(FieldType::Number) => decode_number(f, data, bit_offset, bit_length, signed, offset_k),
         Some(FieldType::Float) => decode_float(data, bit_offset, bit_length),
         Some(FieldType::Lookup) => decode_lookup(f, data, bit_offset, bit_length, db),
         Some(FieldType::IndirectLookup) => {
@@ -908,7 +1022,7 @@ fn decode_one_field_at(
             decode_reserved(data, bit_offset, bit_length, signed, offset_k, false)
         }
         Some(FieldType::Binary) => decode_binary(data, bit_offset, bit_length),
-        Some(FieldType::Mmsi) => decode_mmsi(data, bit_offset, bit_length),
+        Some(FieldType::Mmsi) => decode_mmsi(f, data, bit_offset, bit_length),
         Some(FieldType::Pgn) => decode_pgn_field(data, bit_offset, bit_length, db),
         Some(FieldType::Date) => decode_date(f, data, bit_offset, bit_length),
         Some(FieldType::Time) | Some(FieldType::Duration) => {
@@ -941,6 +1055,14 @@ fn decode_one_field_at(
         }
         _ => {}
     }
+    // `g_previousFieldValue`, which the C sets inside
+    // `extractNumberNotEmpty` — so it tracks the numeric fields, and a
+    // following zero-width BINARY reads its bit count from it.
+    if let FieldValue::Integer(n) = &value
+        && *n >= 0
+    {
+        ctx.previous_field_value = *n as u64;
+    }
     // canboat C also picks up dynamic field lengths by FIELD NAME
     // (`analyzer/analyzer.c::fillGlobalsBasedOnFieldName`): any field
     // literally named `Length` updates `g_length`, which the next
@@ -949,12 +1071,12 @@ fn decode_one_field_at(
     // `DYNAMIC_FIELD_LENGTH` type (e.g. Simnet Parameter Set 130846).
     if f.is_dynamic_length_marker {
         let raw_len = match &value {
-            FieldValue::Integer(n) if *n >= 0 => Some(*n as u32),
-            FieldValue::Number(n) if *n >= 0.0 => Some(*n as u32),
+            FieldValue::Integer(n) if *n >= 0 => Some(*n),
+            FieldValue::Number(n) if *n >= 0.0 => Some(*n as i64),
             _ => None,
         };
         if let Some(n) = raw_len {
-            ctx.dynamic_length_bytes = Some(n);
+            ctx.dynamic_length_bytes = Some(n - i64::from(f.dynamic_field_length_overhead));
         }
     }
 
@@ -979,6 +1101,86 @@ fn decode_one_field_at(
 /// Used by PGN 126208 group functions where a `Parameter` /
 /// `FIELD_INDEX` field picks one of the target PGN's fields, and the
 /// next VARIABLE field carries that field's value in its native shape.
+/// True for the four proprietary PGN ranges (`IS_PGN_PROPRIETARY`,
+/// common/common.h).
+fn is_pgn_proprietary(n: u32) -> bool {
+    (0xEF00..=0xEFFF).contains(&n)
+        || (0xFF00..=0xFFFF).contains(&n)
+        || (0x1_EF00..=0x1_EFFF).contains(&n)
+        || (0x1_FF00..=0x1_FFFF).contains(&n)
+}
+
+/// Pick the definition of `pgn_id` that a PGN 126208 parameter list
+/// describes. Port of `getMatchingPgnByParameters` (analyzer/pgn.c).
+///
+/// `params` starts at the parameter-count byte: `[count, index, value…,
+/// index, value…]`, where each `index` is a 1-based field number of the
+/// target PGN and the value's width comes from that field. Walking the
+/// list with a candidate's own field sizes is what makes it a test: a
+/// definition whose `Match` fields all agree with the values present is
+/// the answer, and a definition that disagrees (or that has no such
+/// field at all) steps out.
+///
+/// Returns `None` when nothing matches — for a proprietary PGN with
+/// only Manufacturer and Industry given, that is the normal outcome.
+fn match_pgn_by_parameters(
+    db: &PgnDatabase,
+    pgn_id: u32,
+    params: &[u8],
+) -> Option<&'static PgnInfo> {
+    let first = db.first_pgn(pgn_id)?;
+
+    // A proprietary PGN can only be narrowed by Manufacturer (field 1)
+    // and Industry Code (field 3); without both there is nothing to go
+    // on and the C bails out rather than guessing.
+    if is_pgn_proprietary(pgn_id)
+        && (params.len() < 6 || params[0] < 2 || params[1] != 0x01 || params[4] != 3)
+    {
+        return None;
+    }
+
+    // `hasMatchFields` is set per *definition* (fieldtype.c), and the C
+    // tests it on the first one only -- so a PGN whose leading
+    // definition needs no matching is answered by that definition
+    // outright. This is how 126720 resolves: its catch-all is listed
+    // first and carries no `Match`, so a Raymarine request lands there
+    // without ever considering the 52 manufacturer variants behind it.
+    if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
+        return Some(first);
+    }
+
+    let nparams = *params.first()? as usize;
+    'variant: for cand in db.pgn_variants(pgn_id) {
+        let mut d = 1usize;
+        // Exactly `nparams` pairs — walking to the end of the data
+        // instead would read trailing bytes as a bogus extra parameter.
+        for _ in 0..nparams {
+            if d >= params.len() {
+                break; // truncated list: what was there matched
+            }
+            let index = params[d] as usize;
+            d += 1;
+            if index == 0 || index > cand.fields.len() {
+                continue 'variant;
+            }
+            let field = &cand.fields[index - 1];
+            let bits = field.bit_length.unwrap_or(0) as usize;
+            if let Some(want) = field.match_value {
+                let Some(ex) = extract_bits(params, d * 8, bits, field.signed.unwrap_or(false), 0)
+                else {
+                    continue 'variant;
+                };
+                if ex.value != want {
+                    continue 'variant;
+                }
+            }
+            d += bits.div_ceil(8);
+        }
+        return Some(cand);
+    }
+    None
+}
+
 fn decode_variable(
     f: &'static FieldInfo,
     data: &[u8],
@@ -988,11 +1190,79 @@ fn decode_variable(
 ) -> Option<(DecodedField, u32)> {
     let target_pgn = ctx.target_pgn?;
     let target_idx = ctx.current_param_idx?;
-    let target_info = db.first_pgn(target_pgn)?;
+    // Which definition of the target PGN does this parameter address?
+    //
+    // canboat answers this in `fieldPrintVariable` (analyzer.c): first try to
+    // resolve a *variant* from the parameter list itself -- a request for
+    // 130833 that sets Manufacturer=Furuno picks
+    // furunoShipParametersAndAntennaPosition, and its parameter 4 is a real
+    // typed field. Only when that fails (126720 has 53 variants and a
+    // Manufacturer/Industry pair narrows nothing) borrow the *catch-all*
+    // definition, whose leading fields every variant shares.
+    //
+    // It has to be the catch-all and not merely the first definition: the
+    // first definition of 126720 is somebody's specific variant whose
+    // Manufacturer Code is a `Match` field, so borrowing it would make every
+    // request from another manufacturer decode against the wrong layout.
+    //
+    // Resolved once per record and cached, as the C caches `g_refPgn`.
+    let (target_info, used_catch_all) = match ctx.resolved_target {
+        Some(r) => r,
+        None => {
+            // The C hands `getMatchingPgnByParameters` the message from two
+            // bytes back: [parameter count][field index][value...]. At the
+            // first VARIABLE field the cursor sits on the value, so -1 is this
+            // parameter's index byte and -2 the count.
+            let params = (bit_offset as usize / 8)
+                .checked_sub(2)
+                .and_then(|s| data.get(s..))
+                .unwrap_or(&[]);
+            let r = match match_pgn_by_parameters(db, target_pgn, params) {
+                Some(p) => (p, false),
+                None => (
+                    db.fallback_pgn(target_pgn)
+                        .or_else(|| db.first_pgn(target_pgn))?,
+                    true,
+                ),
+            };
+            ctx.resolved_target = Some(r);
+            r
+        }
+    };
     let target_field = target_info
         .fields
         .iter()
         .find(|tf| (tf.order as u32) == target_idx)?;
+    // The catch-all's trailing `Data` field is variable-length with nothing to
+    // size it, so the value is the rest of the message -- for a request or
+    // command that reads as "the field starts with these bytes". Only when we
+    // fell back: a *resolved* PGN's variable-length fields (126998's
+    // Configuration Information strings) decode properly through the normal
+    // path.
+    if used_catch_all
+        && (target_field.bit_length.unwrap_or(0) == 0
+            || target_field.bit_length_variable == Some(true))
+    {
+        let start = bit_offset as usize;
+        let total = data.len() * 8;
+        if start >= total {
+            return None;
+        }
+        let bits = (total - start) as u32;
+        let value = decode_binary(data, bit_offset, bits);
+        return Some((
+            DecodedField {
+                info: f,
+                value,
+                bit_offset: Some(bit_offset),
+                bit_length: Some(bits),
+                repeat_index: None,
+                repeat_set: 0,
+                overrides: None,
+            },
+            bits,
+        ));
+    }
     // Recurse with the target field's metadata at the current cursor.
     // The outer field's name (e.g. "Value", "Selection Value") wraps
     // the decoded result so the JSON keeps the right field label.
@@ -1125,24 +1395,8 @@ fn decode_lookup(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
-    // Still nothing, and the table does not name this value. canboat does not
-    // fall back to printing the bare number here: fieldPrintLookup treats an
-    // unnamed value in the top reserved band as unavailable, using a bound it
-    // computes from the field width rather than any schema hint --
-    //     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
-    // so a 2-bit lookup reserves its top two values and anything wider its top
-    // three. Without this, PGN 127501's `Indicator11` reported {"value":2}
-    // where canboat omits the field entirely.
-    if bit_length > 1 {
-        let band = if bit_length > 2 { 2 } else { 1 };
-        if ex.value >= ex.max - band {
-            return FieldValue::NotAvailable;
-        }
-    }
-    FieldValue::Lookup {
-        value: raw,
-        name: None,
-    }
+    // Still nothing, and the table does not name this value.
+    unnamed_lookup_value(ex, bit_length)
 }
 
 /// INDIRECT_LOOKUP: resolve `(value1, value2)` where `value1` is
@@ -1198,12 +1452,22 @@ fn decode_bitlookup(
     // Keep the BitField even when no bits are set — formatters
     // handle the empty case themselves: JSON drops it, text emits
     // "None" (matches canboat).
+    //
+    // Walk the *bit positions*, not the enumeration's entries: canboat
+    // loops `bit < *bits` and emits every set bit, naming it if the
+    // table has an entry and leaving the name null if not
+    // (`fieldPrintBitLookup`, print.c). Iterating the table instead
+    // made a set bit that nothing names invisible — PGN 65305's `Mode`
+    // sets bit 1, which SIMNET_AP_STATUS does not name, and it went
+    // missing from every autopilot status record.
     let mut bits = Vec::new();
-    if let Some(t) = f.lookup_bit_enumeration.and_then(|n| db.bit_lookup(n)) {
-        for v in t.values {
-            if raw & (1u64 << v.bit) != 0 {
-                bits.push((1u64 << v.bit, v.name));
-            }
+    let table = f.lookup_bit_enumeration.and_then(|n| db.bit_lookup(n));
+    for bit in 0..bit_length.min(64) {
+        if raw & (1u64 << bit) != 0 {
+            bits.push((
+                1u64 << bit,
+                table.and_then(|t| t.get(bit as u8)).map(|v| v.name),
+            ));
         }
     }
     FieldValue::BitField { value: raw, bits }
@@ -1238,15 +1502,20 @@ fn decode_reserved(
             bit_length,
         };
     }
-    // Pack just the field's value into bytes (little-endian), one byte
-    // per `ceil(bit_length / 8)`. This avoids leaking neighboring
-    // fields' bits when the reserved span shares a byte with adjacent
-    // payload (which slicing `data[start..end]` would do).
-    let n_bytes = bit_length.div_ceil(8).max(1) as usize;
-    let mut bytes = Vec::with_capacity(n_bytes);
-    for i in 0..n_bytes {
-        bytes.push(((raw >> (i * 8)) & 0xff) as u8);
-    }
+    // A RESERVED or SPARE field that does need printing is handed
+    // straight to `fieldPrintBinary` by the C (`fieldPrintReserved` /
+    // `fieldPrintSpare`, print.c), so every bit stays where it sat:
+    // the first byte is masked to the field's width and shifted back
+    // into position, and later bytes come whole off the message.
+    //
+    // Packing the extracted value LSB-first instead moved the bits down
+    // to bit 0 — PGN 130824's 2-bit Reserved at bit 11 printed `02`
+    // where canboat prints `10`, and the same shift showed up on every
+    // proprietary PGN's Reserved field.
+    let bytes = match decode_binary(data, bit_offset, bit_length) {
+        FieldValue::Binary(b) => b,
+        _ => Vec::new(),
+    };
     if is_reserved {
         FieldValue::Reserved {
             value: raw,
@@ -1280,12 +1549,78 @@ fn decode_iso_name(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDataba
     for i in 0..8 {
         value |= (data[byte_off + i] as u64) << (i * 8);
     }
+    // An ISO NAME reserves its top *two* values rather than going
+    // through the usual per-field sentinel machinery, which is
+    // suppressed at 64 bits anyway (QUIRKS Q18): `fieldPrintName`
+    // (print.c) hands anything above `maxValue - 2` to `printEmpty`.
+    // Expanding one of those into subfields would invent a device —
+    // an all-ones NAME reads as Device Instance 31, "Arbitrary address
+    // capable: Yes" and so on, none of which is on the wire.
+    match value {
+        u64::MAX => return FieldValue::NotAvailable,
+        v if v == u64::MAX - 1 => return FieldValue::OutOfRange { value },
+        _ => {}
+    }
     let sub = &data[byte_off..byte_off + 8];
     let subfields = match db.first_pgn(60928) {
         Some(pgn) => decode_fields(pgn, sub, db).map(|x| x.0).unwrap_or_default(),
         None => Vec::new(),
     };
     FieldValue::IsoName { value, subfields }
+}
+
+/// DECIMAL: each group of 8 bits is one decimal *pair*, printed as two
+/// digits — canboat's `fieldPrintDecimal` (print.c). A DSC address of
+/// `33 14 00 5F 1E` reads 5120009530, not the 40-bit integer those
+/// bytes spell.
+///
+/// A byte that is not a valid pair (>= 100) is dropped, as the C drops
+/// it. All bits set is "not available": that is the universal canboat
+/// convention, and reading it as digits would otherwise emit nothing at
+/// all, which in the C takes the whole record down with it.
+fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+    let start_byte = (bit_offset / 8) as usize;
+    if start_byte >= data.len() {
+        return FieldValue::NotAvailable;
+    }
+    let avail = (data.len() as u32 * 8).saturating_sub(bit_offset);
+    let bits = bit_length.min(avail);
+    let nbytes = bits.div_ceil(8) as usize;
+    let end = (start_byte + nbytes).min(data.len());
+    if data[start_byte..end].iter().all(|&b| b == 0xff) {
+        return FieldValue::NotAvailable;
+    }
+
+    let mut out = String::with_capacity(nbytes * 2);
+    let mut value: u32 = 0;
+    let mut magnitude: u32 = 1;
+    let mut mask: u8 = 1 << (bit_offset % 8);
+    let mut idx = start_byte;
+    for bit in 0..bits {
+        let Some(&byte) = data.get(idx) else { break };
+        if byte & mask != 0 {
+            value |= magnitude;
+        }
+        if mask == 128 {
+            mask = 1;
+            idx += 1;
+        } else {
+            mask <<= 1;
+        }
+        magnitude <<= 1;
+        if bit % 8 == 7 {
+            if value < 100 {
+                out.push((b'0' + (value / 10) as u8) as char);
+                out.push((b'0' + (value % 10) as u8) as char);
+            }
+            value = 0;
+            magnitude = 1;
+        }
+    }
+    if out.is_empty() {
+        return FieldValue::NotAvailable;
+    }
+    FieldValue::Decimal(out)
 }
 
 fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
@@ -1346,7 +1681,7 @@ fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     FieldValue::Binary(out)
 }
 
-fn decode_mmsi(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length != 32 {
         return FieldValue::Unsupported {
             field_type: "MMSI (non-32-bit)",
@@ -1355,9 +1690,17 @@ fn decode_mmsi(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     let Some(ex) = extract_bits(data, bit_offset as usize, 32, false, 0) else {
         return FieldValue::NotAvailable;
     };
-    // MMSI is an identifier — schema 2.5.0 declares Sentinels='None'
-    // on the FieldType. All 0..=2^32-1 values are legitimate (broadcast
-    // is 0xFFFFFFFF). No sentinel detection.
+    // The MMSI FieldType declares `Sentinels: None`, so the schema
+    // carries no per-field hints and `sentinel_field_value` finds
+    // nothing. That is not the whole rule: an MMSI field's RangeMax is
+    // 999999999, well inside 32 bits, and the C reserves its top three
+    // values on that basis alone (`fieldPrintMMSI` goes through
+    // `extractNumberNotEmpty`). PGN 130842's `Mothership User ID` reads
+    // 0xFFFFFFFF whenever the Class B unit has no mothership, and
+    // canboat omits it rather than printing 4294967295.
+    if let Some(sent) = range_max_sentinel(f, ex, 32) {
+        return sent;
+    }
     FieldValue::Mmsi(ex.value as u32)
 }
 
@@ -1449,26 +1792,25 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
         };
     }
     let start = bo / 8;
-    let end = start + bl / 8;
-    if end > data.len() {
+    if start >= data.len() {
         return FieldValue::NotAvailable;
     }
+    // Cap to what is actually in the message rather than dropping the
+    // field — `len = CB_MIN(len, dataLen)` in `fieldPrintStringFix`
+    // (print.c). Navico's 130821 ASCII Data declares a 230-byte
+    // Message and sends however much text it has, so the declared
+    // width is a maximum, not a promise.
+    let end = (start + bl / 8).min(data.len());
     // Canboat's `printString` first finds an embedded NUL and shortens
     // the string at that point (matches the C-string convention some
     // devices use to terminate inside a fixed-width buffer — e.g. a
     // Mastervolt Product Information field that has two records
-    // separated by NULs), then trims trailing '@' / NUL / space /
-    // 0xFF. Apply both passes here so STRING_FIX renders the leading
+    // separated by NULs), then trims the trailing padding run. Apply both passes here so STRING_FIX renders the leading
     // C-string portion only.
     let raw = &data[start..end];
     let mut len = raw.iter().position(|&b| b == 0).unwrap_or(raw.len());
-    while len > 0 {
-        let b = raw[len - 1];
-        if b == 0 || b == b'@' || b == b' ' || b == 0xff {
-            len -= 1;
-        } else {
-            break;
-        }
+    while len > 0 && is_string_padding(raw[len - 1]) {
+        len -= 1;
     }
     if len == 0 {
         return FieldValue::NotAvailable;
@@ -1532,7 +1874,7 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
             // PGN on "Unhandled string type 255".
             let end = body
                 .iter()
-                .rposition(|&b| !matches!(b, 0xff | 0x00 | b'@' | b' '))
+                .rposition(|&b| !is_string_padding(b))
                 .map_or(0, |i| i + 1);
             String::from_utf8_lossy(&body[..end]).into_owned()
         }
@@ -1552,8 +1894,25 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
 /// Strip trailing canboat-padding bytes (`\0`, `'@'`, space, `\xff`)
 /// from a string. Matches the trailing-byte loop in `printString` in
 /// analyzer/print.c.
+/// The trailing bytes canboat's `printString` strips off a decoded
+/// string: `0xff` (the NMEA 2000 filler), any `isspace()` character,
+/// NUL, and `'@'` (badly converted AIS data).
+///
+/// `isspace()` is the whole C set, not just a space — Navico's 130847
+/// ASCII Identifier ends its text with a newline, and trimming only
+/// `' '` left it on the value.
+fn is_string_padding(b: u8) -> bool {
+    matches!(b, 0xff | 0x00 | b'@') || b.is_ascii_whitespace() || b == 0x0b
+}
+
 fn trim_string_padding(s: &str) -> &str {
-    s.trim_end_matches(['\0', '@', ' ', '\u{ff}'])
+    s.trim_end_matches(|c: char| match c {
+        // 0xff survives as U+00FF when the bytes came through a
+        // latin-1-ish path rather than as a UTF-8 replacement char.
+        '\u{ff}' => true,
+        c if c.is_ascii() => is_string_padding(c as u8),
+        _ => false,
+    })
 }
 
 fn decode_string_lz(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
@@ -1644,7 +2003,12 @@ fn decode_dynamic_field_length(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
-    let len = ex.raw as u32;
+    // The reported length may cover a per-record header sitting between
+    // this field and the value — Navico's 130822/130823 dumps count the
+    // class byte and the 16-bit data-type id — so take that off to get
+    // the value's own width (`g_length = value - overhead`,
+    // analyzer.c::fillGlobalsBasedOnFieldName).
+    let len = ex.raw as i64 - i64::from(f.dynamic_field_length_overhead);
     ctx.dynamic_length_bytes = Some(len);
     FieldValue::Integer(ex.value)
 }
@@ -1655,6 +2019,21 @@ fn decode_dynamic_field_length(
 /// when the key wasn't resolved. Returns the value plus how many bits
 /// it consumed so the iteration walker can advance correctly. Always
 /// clears the dynamic-* slots in the context.
+///
+/// **No top-of-range sentinel is stripped here.** The value is decoded
+/// against a pseudo-field synthesised from a fieldtype lookup entry,
+/// and in the C those never get a `reservedCount`: that is resolved in
+/// a pass over `pgnList`'s fields (fieldtype.c), which a lookup entry
+/// is not a member of. It therefore stays 0, `extractNumberNotEmpty`'s
+/// threshold becomes `maxValue`, and nothing is ever above it — so an
+/// all-ones dynamic value prints as a number. B&G's `Trip 2 Time`
+/// reads 0xFFFFFFFF on an unstarted trip and canboat renders it
+/// `1193:02:47.295`, where stripping it as "not available" would drop
+/// the field.
+///
+/// ISO_NAME is the exception, and not via this mechanism:
+/// `fieldPrintName` tests `value > maxValue - 2` itself, so it applies
+/// on this path as much as on any other.
 fn decode_dynamic_field_value(
     data: &[u8],
     bit_offset: u32,
@@ -1662,20 +2041,60 @@ fn decode_dynamic_field_value(
     ctx: &mut DecodeContext,
 ) -> (FieldValue, u32) {
     let entry = ctx.dynamic_field_type.take();
-    let length_bits = ctx
-        .dynamic_length_bytes
-        .take()
+    let explicit_len = ctx.dynamic_length_bytes.take();
+    let length_bits: Option<i64> = explicit_len
         .map(|n| n * 8)
-        .or_else(|| entry.as_ref().and_then(|e| e.bit_length()));
-    // Mirror canboat's fieldPrintKeyValue: no resolved length and
-    // no resolved field type → emit an empty BINARY blob (the
-    // `g_length = 0, g_ftf = NULL, fieldPrintBinary(bits=0)` path
-    // in print.c). Better than erroring out — this is how PGN
-    // 130845 with an unknown SIMNET_KEY_VALUE key renders.
-    let bits = length_bits.unwrap_or(0);
+        .or_else(|| entry.as_ref().and_then(|e| e.bit_length()).map(i64::from));
+    // An explicit length of zero means the value is present but empty
+    // — PGN 130823 directory entries that declare only a data type.
+    // canboat omits the field rather than printing `""`
+    // (`g_lengthValid && *bits == 0` → `g_skip`, print.c). Note this
+    // is checked before the resolved-key branch below, so a known
+    // field type with a zero length is dropped too.
+    if explicit_len == Some(0) {
+        ctx.skip_field = true;
+        return (FieldValue::NotAvailable, 0);
+    }
+    let bits_signed = length_bits.unwrap_or(0);
+    let remaining = (data.len() as u32 * 8).saturating_sub(bit_offset);
+    if bits_signed < 0 {
+        // A record declaring a length below its own header width. The
+        // C subtracts the overhead into a signed `g_length` and then
+        // casts to `size_t` for the bounds test below, so the negative
+        // width wraps to something enormous, sails past that test and
+        // reaches `fieldPrintBinary`, which clamps it to what is left
+        // of the packet. Accidental, but the resulting reading — dump
+        // the rest of the frame — is the useful one, so match it
+        // deliberately rather than by arithmetic.
+        return (decode_binary(data, bit_offset, remaining), remaining);
+    }
+    // The declared value runs past the end of the packet: the frame
+    // ended mid-record. That is how a repeating key/value group
+    // normally terminates — the device packs as many records as fit
+    // and the last one is cut off — so canboat drops the partial value
+    // and stops there rather than failing the whole PGN (print.c).
+    if (data.len() as i64) < (bit_offset as i64 + bits_signed) >> 3 {
+        ctx.skip_field = true;
+        return (FieldValue::NotAvailable, remaining);
+    }
+    let bits = bits_signed as u32;
     let Some(entry) = entry else {
-        // Unresolved key — render as a raw BINARY blob over the
-        // declared length (zero bytes is fine, comes out as "").
+        // The key resolved to no field type, so there is no width to
+        // decode against. When there was no explicit length either, the
+        // value is simply the rest of the frame, and canboat dumps it
+        // as raw bytes — `*bits = dataLen * 8 - startBit` before
+        // `fieldPrintBinary` (fieldPrintKeyValue, print.c).
+        //
+        // PGN 130845 is the case that needs it: its `Value` has no
+        // preceding DYNAMIC_FIELD_LENGTH at all, so an unrecognised
+        // SIMNET_KEY_VALUE key leaves nothing to size the field with,
+        // and taking the declared zero would print `""` over bytes that
+        // are plainly on the bus.
+        let bits = if bits == 0 && explicit_len.is_none() {
+            remaining
+        } else {
+            bits
+        };
         return (decode_binary(data, bit_offset, bits), bits);
     };
     let signed = entry.signed || matches!(entry.field_type, Some(ft) if ft.starts_with("FIX"));
@@ -1689,11 +2108,16 @@ fn decode_dynamic_field_value(
                 else {
                     return (FieldValue::NotAvailable, bits);
                 };
-                let raw = ex.value as u64;
-                let nm = db.lookup(name).and_then(|t| t.get(raw)).map(|v| v.name);
-                FieldValue::Lookup {
-                    value: raw,
-                    name: nm,
+                match db.lookup(name).and_then(|t| t.get(ex.raw)).map(|v| v.name) {
+                    Some(nm) => FieldValue::Lookup {
+                        value: ex.raw,
+                        name: Some(nm),
+                    },
+                    // PGN 130845's `Auto calibration mode` reads 0xFF on a
+                    // Read request, which SIMNET_COMPASS_AUTOCAL_MODE does
+                    // not name, and canboat omits the field rather than
+                    // reporting `{"value":255}`.
+                    None => unnamed_lookup_value(ex, bits),
                 }
             }
             None => decode_binary(data, bit_offset, bits),
@@ -1712,42 +2136,30 @@ fn decode_dynamic_field_value(
             // canboat's pgn.h.
             let known_signed_duration = matches!(entry.name, "Race Timer" | "Timezone offset");
             let want_signed = signed || known_signed_duration;
-            // Always sentinel-check against the unsigned bit pattern,
-            // even when the display interpretation is signed — canboat's
-            // "all-ones" N/A marker is 0xFF..FF in the raw bytes,
-            // regardless of how the value is shown.
             let Some(ex_unsigned) =
                 extract_bits(data, bit_offset as usize, bits as usize, false, 0)
             else {
                 return (FieldValue::NotAvailable, bits);
             };
-            if is_unavailable(ex_unsigned) {
-                FieldValue::NotAvailable
-            } else {
-                let ex = if want_signed {
-                    match extract_bits(data, bit_offset as usize, bits as usize, true, 0) {
-                        Some(e) => e,
-                        None => return (FieldValue::NotAvailable, bits),
-                    }
-                } else {
-                    ex_unsigned
-                };
-                let res = entry.resolution.unwrap_or(1.0);
-                FieldValue::Time {
-                    raw: ex.value,
-                    seconds: ex.value as f64 * res,
+            let ex = if want_signed {
+                match extract_bits(data, bit_offset as usize, bits as usize, true, 0) {
+                    Some(e) => e,
+                    None => return (FieldValue::NotAvailable, bits),
                 }
+            } else {
+                ex_unsigned
+            };
+            let res = entry.resolution.unwrap_or(1.0);
+            FieldValue::Time {
+                raw: ex.value,
+                seconds: ex.value as f64 * res,
             }
         }
         Some("DATE") => {
             let Some(ex) = extract_bits(data, bit_offset as usize, bits as usize, false, 0) else {
                 return (FieldValue::NotAvailable, bits);
             };
-            if is_unavailable(ex) {
-                FieldValue::NotAvailable
-            } else {
-                FieldValue::Date(ex.value as u16)
-            }
+            FieldValue::Date(ex.value as u16)
         }
         // The 130822 source-setting entries (Depth/Speed Source N,
         // Port/Stbd Boat Speed Source, …) carry a device's 8-byte
@@ -1769,9 +2181,6 @@ fn decode_dynamic_number(
     let Some(ex) = extract_bits(data, bit_offset as usize, bit_length as usize, signed, 0) else {
         return FieldValue::NotAvailable;
     };
-    if is_unavailable(ex) {
-        return FieldValue::NotAvailable;
-    }
     let raw = ex.value as f64;
     let res = entry.resolution.unwrap_or(1.0);
     if res == 1.0 && entry.unit.is_none() {
@@ -1891,6 +2300,477 @@ mod tests {
             db().decode(&frame),
             Err(DecodeError::UnknownPgn { pgn: 1 })
         ));
+    }
+
+    #[test]
+    fn string_fix_is_capped_to_the_message_not_dropped() {
+        // Navico's 130821 ASCII Data declares a 230-byte `Message` and
+        // sends however much text it has, so the declared width is a
+        // maximum. canboat caps to what arrived
+        // (`len = CB_MIN(len, dataLen)`, fieldPrintStringFix); dropping
+        // the field instead loses the whole payload.
+        let mut data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![0x13, 0x99, 0x00];
+        data.extend_from_slice(b"HELLO");
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 130821,
+            src: 19,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let msg = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Message")
+            .expect("a Message field");
+        match &msg.value {
+            FieldValue::String(s) => assert_eq!(s, "HELLO"),
+            other => panic!("expected the truncated text, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn decimal_is_digit_pairs_and_all_ones_is_absent() {
+        // samples/pgn129808.raw. A DSC address is five bytes, each one
+        // a *decimal pair*: 0x33 0x14 0x00 0x5F 0x1E reads 5120009530,
+        // not the 40-bit integer 130442859571 those bytes spell. And
+        // this call's `MMSI of Ship In Distress` is all ones — absent.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x70, 0x70, 0x33, 0x14, 0x00, 0x5f, 0x1e, 0x6e, 0x64, 0xff, 0xff, 0xff, 0xff, 0xff,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x12, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 4,
+            pgn: 129808,
+            src: 3,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let addr = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "DSC Message Address")
+            .expect("a DSC Message Address");
+        match &addr.value {
+            FieldValue::Decimal(d) => assert_eq!(d, "5120009530"),
+            other => panic!("expected decimal digits, got {other:?}"),
+        }
+
+        // All ones is "not available" — every other field type says so,
+        // and reading it as digits yields nothing at all, which is what
+        // used to take the entire record down in the C.
+        for f in &dec.fields {
+            if f.info.name == "MMSI of Ship In Distress" {
+                assert!(
+                    f.value.is_not_available(),
+                    "an all-ones DECIMAL must be absent, got {:?}",
+                    f.value
+                );
+            }
+        }
+    }
+
+    #[test]
+    fn string_padding_covers_all_of_isspace() {
+        // canboat's `printString` rtrims with `isspace()`, not just a
+        // space. Navico's 130847 ASCII Identifier ends its text with a
+        // newline, which was being kept.
+        assert_eq!(trim_string_padding("107473373\n"), "107473373");
+        assert_eq!(trim_string_padding("abc\r\n"), "abc");
+        assert_eq!(trim_string_padding("abc\t \u{0}@\u{ff}"), "abc");
+        // Interior whitespace is untouched.
+        assert_eq!(trim_string_padding("a b"), "a b");
+    }
+
+    #[test]
+    fn dynamic_field_signedness_comes_from_the_field_type() {
+        // Victron's VE.Can Register 8220 (DC Current) resolves to
+        // CURRENT_FIX32_MA — signed. The generated table used to derive
+        // signedness from the *unit* alone (angles only), so a negative
+        // current read as 4294964.496 instead of -2.8.
+        let entry = db()
+            .field_type_lookup("VICTRON_VREG", 8220)
+            .expect("VICTRON_VREG 8220");
+        assert!(entry.signed, "DC Current must be signed");
+    }
+
+    #[test]
+    fn zero_width_binary_is_sized_by_the_previous_field() {
+        // Fusion 130820 SiriusXM Presets: `Values` is a BINARY with no
+        // declared width, and canboat takes its *bit* count from the
+        // preceding `Count` (`*bits = g_previousFieldValue`,
+        // fieldPrintBinary). Count = 4 here, so one byte masked to its
+        // low nibble.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0xa3, 0x99, 0x1e, 0x80, 0x00, 0x04, 0x64, 0x00, 0x00, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 130820,
+            src: 10,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        if let Some(v) = dec.fields.iter().find(|f| f.info.name == "Values") {
+            match &v.value {
+                FieldValue::Binary(b) => assert_eq!(b.as_slice(), &[0x04]),
+                other => panic!("expected one masked byte, got {other:?}"),
+            }
+        }
+    }
+
+    #[test]
+    fn bitlookup_keeps_set_bits_the_enumeration_does_not_name() {
+        // PGN 65305 Simnet: Pilot Mode, from
+        // samples/ac42-commissioning.raw. Its `Mode` bitmap reads 0x0a
+        // — bits 1 and 3. SIMNET_AP_STATUS names bit 3 ("Standby") but
+        // has no entry for bit 1, and canboat still emits it as
+        // `{"value":2,"name":null}`.
+        //
+        // Walking the enumeration's entries instead of the bit
+        // positions makes an unnamed set bit invisible, which lost a
+        // real bit from every autopilot status record on the bus.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0x41, 0x9f, 0x00, 0x0a, 0x0a, 0x00, 0x80, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 65305,
+            src: 13,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let mode = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Mode")
+            .expect("a Mode field");
+        match &mode.value {
+            FieldValue::BitField { bits, .. } => {
+                assert_eq!(bits.as_slice(), &[(2, None), (8, Some("Standby"))]);
+            }
+            other => panic!("expected a BitField, got {other:?}"),
+        }
+
+        // …and it reaches JSON as a null-named entry, not as a gap.
+        let mut json = String::new();
+        crate::output::write_json(
+            &mut json,
+            &dec,
+            &crate::output::JsonOptions {
+                name_value: true,
+                ..Default::default()
+            },
+        )
+        .unwrap();
+        assert!(
+            json.contains(r#""Mode":[{"value":2,"name":null},{"value":8,"name":"Standby"}]"#),
+            "got: {json}"
+        );
+    }
+
+    #[test]
+    fn reserved_bytes_keep_their_bit_position() {
+        // PGN 130824's field 2 is a 2-bit Reserved at bit 11, i.e. bits
+        // 3..4 of byte 1. canboat prints it through `fieldPrintBinary`,
+        // which masks the first byte and shifts it back where it was,
+        // so a value of 0b10 renders `10` — not `02`.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0x7d, 0x91, 0x64, 0x20, 0x2d, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let r = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Reserved")
+            .expect("a Reserved field");
+        match &r.value {
+            FieldValue::Reserved { bytes, .. } => assert_eq!(bytes.as_slice(), &[0x10]),
+            other => panic!("expected Reserved bytes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_ones_mmsi_is_suppressed() {
+        // A real PGN 130842 Part B frame
+        // (samples/merrimac-actisense-serial-2011.raw) whose
+        // `Mothership User ID` is 0xFFFFFFFF — this Class B unit has no
+        // mothership.
+        //
+        // The MMSI FieldType declares `Sentinels: None`, so no
+        // per-field hint catches it. The field's RangeMax is 999999999
+        // though, and the C reserves the top three values on that basis
+        // alone, so canboat omits it rather than printing 4294967295.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x41, 0x9f, 0x81, 0xff, 0x18, 0x88, 0x87, 0x94, 0x0e, 0x24, 0x00, 0x00, 0x00, 0x00,
+            0x00, 0x00, 0x00, 0x50, 0x49, 0x36, 0x34, 0x34, 0x36, 0x00, 0x6e, 0x00, 0x28, 0x00,
+            0x1e, 0x00, 0x3c, 0x00, 0xff, 0xff, 0xff, 0xff, 0xc0,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn: 130842,
+            src: 8,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let mothership = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Mothership User ID")
+            .expect("a Mothership User ID field");
+        assert!(
+            mothership.value.is_sentinel(),
+            "an all-ones MMSI must read as a sentinel, got {:?}",
+            mothership.value
+        );
+
+        // The ordinary MMSI in the same frame still decodes.
+        let user_id = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "User ID")
+            .expect("a User ID field");
+        assert!(matches!(user_id.value, FieldValue::Mmsi(244_615_048)));
+    }
+
+    #[test]
+    fn truncated_trailing_reserved_is_omitted() {
+        // A 26-byte AIS Class B position report (PGN 129039 declares
+        // 27). Its trailing 15-bit `Reserved` starts at bit 201, so
+        // only 7 bits survive — and those read all-ones, which canboat
+        // skips. The all-ones test has to be made against the width
+        // actually read: 0x7F is not 0x7FFF.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x12, 0x10, 0xad, 0x8c, 0x0e, 0xb2, 0x33, 0x2c, 0x03, 0xe6, 0x96, 0x6d, 0x1f, 0x3e,
+            0xb8, 0x65, 0x71, 0x00, 0xc0, 0x00, 0xc1, 0xff, 0x7f, 0x00, 0xe2, 0xff,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 4,
+            pgn: 129039,
+            src: 8,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let mut json = String::new();
+        crate::output::write_json(&mut json, &dec, &crate::output::JsonOptions::default()).unwrap();
+        assert!(!json.contains("Reserved"), "got: {json}");
+    }
+
+    #[test]
+    fn unresolved_key_takes_the_rest_of_the_frame_as_its_value() {
+        // PGN 130845 Simnet: Key Value, from
+        // samples/ac42-commissioning.raw. Key 17671 is not in
+        // SIMNET_KEY_VALUE, so no field type resolves — and this PGN
+        // has no DYNAMIC_FIELD_LENGTH either, so nothing declares a
+        // width. canboat falls back to the rest of the frame and prints
+        // the bytes; the alternative is `""` over data that is plainly
+        // there.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x41, 0x9f, 0xff, 0xff, 0x01, 0xff, 0x07, 0x45, 0x00, 0x01, 0x2d, 0x7d, 0x10, 0x14,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 2,
+            pgn: 130845,
+            src: 13,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let value = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "Value")
+            .expect("a Value field");
+        match &value.value {
+            FieldValue::Binary(b) => assert_eq!(b.as_slice(), &[0x2d, 0x7d, 0x10, 0x14]),
+            other => panic!("expected the trailing bytes, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn all_ones_dynamic_value_is_a_value_not_a_sentinel() {
+        // A B&G key-value frame (samples/pgn130824.raw line 2) whose
+        // `Trip Time` and `Trip 2 Time` both read 0xFFFFFFFF, the trips
+        // never having been started.
+        //
+        // canboat prints those as `1193:02:47.295`. Its dynamic values
+        // are decoded against a pseudo-field built from a fieldtype
+        // lookup entry, which never gets a `reservedCount` — that pass
+        // walks `pgnList`'s fields — so no top-of-range value is ever
+        // stripped on this path. Treating all-ones as "not available"
+        // here silently drops the field instead.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x7d, 0x99, 0x64, 0x20, 0x2d, 0x00, 0x0d, 0x21, 0x43, 0x00, 0x0e, 0x41, 0xc0, 0xa1,
+            0xb2, 0x1f, 0x0f, 0x41, 0xce, 0x50, 0x3c, 0x03, 0x69, 0x20, 0x43, 0x7d, 0xd3, 0x20,
+            0x2a, 0x74, 0x81, 0x40, 0x70, 0xd3, 0x02, 0x00, 0x9a, 0x20, 0x35, 0xf0, 0x82, 0x20,
+            0x00, 0x00, 0x0a, 0x21, 0x98, 0x02, 0x0c, 0x21, 0xb8, 0x02, 0x75, 0x40, 0x20, 0x6c,
+            0xfb, 0xff, 0x09, 0x41, 0xff, 0xff, 0xff, 0xff, 0x0b, 0x41, 0xff, 0xff, 0xff, 0xff,
+            0xd0, 0x40, 0xe0, 0xaa, 0x8c, 0x0e, 0x7f, 0x20, 0x00, 0x00, 0x9d, 0x20, 0x54, 0xad,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130824,
+            src: 26,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        // Each `Key` of 265 / 267 must be followed by a Value carrying
+        // the raw 0xFFFFFFFF, not by nothing at all.
+        let mut expecting_value_for: Option<u64> = None;
+        let mut seen = 0;
+        for f in &dec.fields {
+            match (f.info.name, &f.value) {
+                ("Key", FieldValue::Lookup { value, .. }) => {
+                    assert!(
+                        expecting_value_for.is_none(),
+                        "key {} got no Value at all",
+                        expecting_value_for.unwrap()
+                    );
+                    if matches!(value, 265 | 267) {
+                        expecting_value_for = Some(*value);
+                    }
+                }
+                ("Value", v) => {
+                    if let Some(key) = expecting_value_for.take() {
+                        match v {
+                            FieldValue::Time { raw, .. } => {
+                                assert_eq!(*raw, 0xFFFF_FFFF, "key {key}");
+                                seen += 1;
+                            }
+                            other => panic!("key {key}: expected a Time, got {other:?}"),
+                        }
+                    }
+                }
+                _ => {}
+            }
+        }
+        assert!(expecting_value_for.is_none(), "trailing key had no Value");
+        assert_eq!(seen, 2, "expected both trip-time records");
+    }
+
+    #[test]
+    fn dynamic_length_overhead_sizes_130823_records() {
+        // A reassembled PGN 130823 directory report (the first record
+        // of samples/navico-130823.raw). Each entry is
+        // [Length][Type][Data Type:16][Value…] and `Length` counts the
+        // three header bytes as well, so the value is `Length - 3`.
+        // Without the overhead the walk reads three bytes too many per
+        // record and every entry after the first is garbage.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x13, 0x99, 0xff, 0x00, 0x05, 0x01, 0x00, 0x0a, 0x00, 0x55, 0x02, 0xbc, 0x2f, 0x00,
+            0x96, 0x50, 0xc0, 0xff, 0x04, 0x02, 0x26, 0x00, 0x00, 0x04, 0x02, 0x27, 0x00, 0x00,
+            0x04, 0x02, 0x7d, 0x00, 0x00, 0x04, 0x02, 0xa5, 0x00, 0x00, 0x04, 0x02, 0x99, 0x01,
+            0x00, 0x04, 0x02, 0xf9, 0x01, 0x00,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 3,
+            pgn: 130823,
+            src: 19,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        // Walk the repeating set and check every value against the
+        // length that introduced it.
+        let mut pending: Option<i64> = None;
+        let mut records = 0;
+        for f in &dec.fields {
+            match f.info.name {
+                "Length" => {
+                    if let FieldValue::Integer(n) = f.value {
+                        // A record that got its Value dropped for being
+                        // empty must have declared exactly the header.
+                        if let Some(prev) = pending.take() {
+                            assert_eq!(prev, 3, "record with no Value declared Length {prev}");
+                        }
+                        pending = Some(n);
+                        records += 1;
+                    }
+                }
+                "Value" => {
+                    let len = pending.take().expect("Value without a preceding Length");
+                    let bytes = match &f.value {
+                        FieldValue::Binary(b) => b.len() as i64,
+                        other => panic!("expected binary Value, got {other:?}"),
+                    };
+                    assert_eq!(bytes, len - 3, "Length {len} should give {} bytes", len - 3);
+                }
+                _ => {}
+            }
+        }
+        if let Some(last) = pending {
+            assert_eq!(
+                last, 3,
+                "trailing record with no Value declared Length {last}"
+            );
+        }
+        assert!(records >= 6, "expected several records, got {records}");
+    }
+
+    #[test]
+    fn parameters_resolve_a_proprietary_variant() {
+        // A 126208 request against PGN 130833 naming Manufacturer =
+        // Furuno (1855) and Industry = Marine (4) picks Furuno's
+        // definition out of the three, so parameter 4 decodes against a
+        // real typed field instead of the catch-all's raw `Data`. This
+        // is the half a "several variants → use the catch-all" shortcut
+        // gets wrong.
+        //   [count][1][mfg lo,hi][3][industry][4]
+        let params = [4u8, 0x01, 0x3f, 0x07, 0x03, 0x04, 0x04];
+        let picked = match_pgn_by_parameters(db(), 130833, &params).expect("a variant");
+        assert_eq!(picked.id, "furunoShipParametersAndAntennaPosition");
+    }
+
+    #[test]
+    fn manufacturer_alone_lands_on_the_126720_catch_all() {
+        // From samples/raymarine-ev1.raw: Manufacturer = Raymarine
+        // (1851), Industry = Marine, then parameter 4's value. 126720's
+        // catch-all is listed first and carries no `Match`, so it
+        // answers immediately — none of the 52 manufacturer variants is
+        // ever reachable this way, which is the point: their layouts
+        // would be a guess.
+        let params = [4u8, 0x01, 0x3b, 0x07, 0x03, 0x04, 0x04, 0x5c, 0x05, 0x0f];
+        let picked = match_pgn_by_parameters(db(), 126720, &params).expect("the catch-all");
+        assert!(
+            picked.fallback.unwrap_or(false),
+            "expected the Fallback definition, got id={}",
+            picked.id
+        );
+    }
+
+    #[test]
+    fn proprietary_target_without_manufacturer_does_not_resolve() {
+        // Without a Manufacturer/Industry pair in the first two
+        // parameters there is nothing to narrow a proprietary PGN with,
+        // so the caller has to fall back rather than pick a layout.
+        let params = [1u8, 0x04, 0x00];
+        assert!(match_pgn_by_parameters(db(), 126720, &params).is_none());
     }
 
     #[test]

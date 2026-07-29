@@ -64,6 +64,8 @@ pub enum ParseError {
         value: String,
         offset: Option<usize>,
     },
+    #[error("line ends after the length field; no payload section")]
+    MissingPayload,
 }
 
 impl ParseError {
@@ -117,6 +119,18 @@ pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
 
     if len > RAWFRAME_MAX_SIZE {
         return Err(ParseError::LengthTooLarge { len });
+    }
+
+    // canboat requires a sixth comma — the one terminating `len` and
+    // opening the payload — whatever `len` itself says
+    // (`findOccurrence(p, ',', 6)` in `parseRawFormatFast`,
+    // common/parse.c). Captures contain lines that stop right after the
+    // length, `2020-08-22T13:52:36.981Z,0,16712965,255,0,0`, and the C
+    // rejects them outright with "cannot find sixth comma". Accepting
+    // them produced a zero-byte frame that reached the decoder and came
+    // out as a fields-less record for a PGN that does not exist.
+    if cursor == 0 || rest_bytes[cursor - 1] != b',' {
+        return Err(ParseError::MissingPayload);
     }
 
     // Payload: exactly `len` hex bytes, comma-separated. Fast path:
@@ -338,16 +352,26 @@ mod tests {
             parse_line(line),
             Err(ParseError::LengthTooLarge { .. })
         ));
-        // 250 declared bytes is in range since ISO-TP support; with no
-        // payload supplied it now fails on the byte count instead.
+        // 250 declared bytes is in range since ISO-TP support. The line
+        // stops after the length, so it is rejected for having no
+        // payload section at all — the C's "cannot find sixth comma" —
+        // before the byte count is ever counted.
         let line = "ts,3,129029,36,255,250";
-        assert!(matches!(
-            parse_line(line),
-            Err(ParseError::BadPayloadCount {
-                expected: 250,
-                found: 0
-            })
-        ));
+        assert!(matches!(parse_line(line), Err(ParseError::MissingPayload)));
+    }
+
+    #[test]
+    fn rejects_a_line_that_stops_after_the_length() {
+        // Real capture lines (samples/susteranna2020.raw and friends)
+        // that carry no data at all. canboat rejects them outright;
+        // accepting them yielded a zero-byte frame that decoded into a
+        // fields-less record for a PGN that does not exist.
+        let line = "2020-08-22T13:52:36.981Z,0,16712965,255,0,0";
+        assert!(matches!(parse_line(line), Err(ParseError::MissingPayload)));
+        // A declared-zero-length line *with* the payload comma is still
+        // accepted, matching the C's parser.
+        let ok = parse_line("2020-08-22T13:52:36.981Z,0,127250,255,0,0,").expect("parses");
+        assert!(ok.data.is_empty());
     }
 
     #[test]

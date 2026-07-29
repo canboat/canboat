@@ -275,6 +275,7 @@ fn write_field_value<W: fmt::Write>(
     payload: &[u8],
 ) -> fmt::Result {
     match &f.value {
+        FieldValue::Decimal(d) => w.write_str(d),
         FieldValue::Number(v) => {
             // Lat/lon are width 10, precision 7, and intentionally
             // suppress the `deg` unit (canboat's fieldPrintLatLon
@@ -296,9 +297,7 @@ fn write_field_value<W: fmt::Write>(
             Ok(())
         }
         FieldValue::Float(v) => {
-            // canboat uses %g for floats — Rust's `{}` for f64 is close
-            // enough for v0.
-            write!(w, "{}", v)?;
+            super::write_c_g(w, *v)?;
             if let Some(unit) = &f.unit() {
                 write!(w, " {}", unit)?;
             }
@@ -326,11 +325,15 @@ fn write_field_value<W: fmt::Write>(
                 // BITLOOKUP rather than omitting the field.
                 w.write_str("None")
             } else {
-                for (i, (_, n)) in bits.iter().enumerate() {
+                for (i, (bv, n)) in bits.iter().enumerate() {
                     if i > 0 {
                         w.write_char(',')?;
                     }
-                    w.write_str(n)?;
+                    match n {
+                        Some(n) => w.write_str(n)?,
+                        // Unnamed set bit — canboat prints its value.
+                        None => write!(w, "{}", bv)?,
+                    }
                 }
                 Ok(())
             }
