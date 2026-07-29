@@ -576,7 +576,13 @@ fn write_field_value_debug<W: fmt::Write>(
                     if !opts.include_empty && matches!(sf.value, FieldValue::NotAvailable) {
                         continue;
                     }
-                    if matches!(sf.value, FieldValue::Spare { .. }) {
+                    // A SPARE is dropped only when it is zero, the same
+                    // rule the top level applies: the C recurses into the
+                    // embedded 60928 through the very same `printFields`,
+                    // so `fieldPrintSpare` decides here too. Navico's
+                    // 130822/130840 carry a NAME whose Spare bit is set,
+                    // and canboat renders it as "01".
+                    if matches!(&sf.value, FieldValue::Spare { value, .. } if *value == 0) {
                         continue;
                     }
                     w.write_str(sep)?;
@@ -843,7 +849,13 @@ fn write_field_value<W: fmt::Write>(
                     if !opts.include_empty && matches!(sf.value, FieldValue::NotAvailable) {
                         continue;
                     }
-                    if matches!(sf.value, FieldValue::Spare { .. }) {
+                    // A SPARE is dropped only when it is zero, the same
+                    // rule the top level applies: the C recurses into the
+                    // embedded 60928 through the very same `printFields`,
+                    // so `fieldPrintSpare` decides here too. Navico's
+                    // 130822/130840 carry a NAME whose Spare bit is set,
+                    // and canboat renders it as "01".
+                    if matches!(&sf.value, FieldValue::Spare { value, .. } if *value == 0) {
                         continue;
                     }
                     w.write_str(sep)?;
