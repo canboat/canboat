@@ -1,7 +1,17 @@
 
+CANboat has two build systems, and they are independent — build whichever
+side you need, or both.
+
+* `make` builds the **C tools** (`analyzer`, the `*-serial` gateways, the
+  converters) into `rel/<platform>/`.
+* `cargo build --release` builds the **`canboat` binary and the Rust crates**
+  into `target/release/`.
+
+Both are tier 1. Neither is required to build the other.
+
 ### Compiler dependencies
 
-The following is always required:
+For the C tools:
 
 * GNU or compatible make tool (`make`)
 * C compiler (`gcc` or `clang`, msvc not tested nor do we have build utilities)
@@ -11,6 +21,26 @@ Optional if you want to re-generate the JSON, XML and DBC files:
 * `xsltproc`
 * `xmllint`
 * `python3`
+
+For the Rust side, a recent stable Rust toolchain via
+[rustup](https://rustup.rs/). The minimum supported version is enforced in CI;
+`cargo build` will tell you if yours is too old.
+
+### Building the Rust binary and crates
+
+    cargo build --release
+
+That produces `target/release/canboat`. `cargo test --workspace` runs the test
+suite. The PGN database is compiled in from `database/` at build time via
+`keel`, so there is nothing to load or distribute at runtime — and editing the
+YAML and rebuilding is all it takes to pick up a database change.
+
+To make the subcommands answer to the historical tool names:
+
+    ./target/release/canboat install-shims
+
+It only claims names that no other program already holds, so it is safe to run
+in a directory where the C tools are installed.
 
 
 ### Building everything in [Docker](https://www.docker.com/)
