@@ -15,6 +15,63 @@ To use the programs included in this project you may need a supported CAN interf
 
 For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
 
+## The programs
+
+CANboat ships two implementations. Both are **tier 1** — supported, tested and
+released together — and they are interchangeable for the jobs they both do.
+
+**C tools.** `analyzer` and the `*-serial` gateway drivers are the originals and
+stay tier 1. They are small, dependency-light and build with nothing but `make`
+and a C compiler.
+
+| | |
+| --- | --- |
+| `analyzer` | decode NMEA 2000 into text or JSON |
+| `actisense-serial` | Actisense NGT-1 / W2K-1 gateways |
+| `ikonvert-serial` | Digital Yacht iKonvert |
+| `socketcan-serial` | Linux SocketCAN |
+| `maretron-ipg` | Maretron IPG100 |
+| `candump2analyzer`, `replay`, `iptee`, `nmea0183-serial`, `analyzer-j1939` | converters and helpers |
+
+**`canboat`, the Rust binary.** One executable with subcommands. `convert` and
+the gateway support are tier 1 alongside their C counterparts; everything with
+no C equivalent is tier 1 as the only implementation.
+
+| | |
+| --- | --- |
+| `canboat convert` | decode a capture between any supported formats |
+| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN) |
+| `canboat n2kd` | multiplex an analyzer-JSON stream to TCP clients |
+| `canboat server` | the whole device → analyzer → n2kd pipeline in one process |
+| `canboat tui` | interactive terminal browser for a live stream or a capture |
+| `canboat format-message` | build a single frame from field values, for any PGN |
+| `canboat replay` | pace a capture at its original wall-clock rhythm |
+
+`canboat install-shims` drops symlinks so the subcommands answer to the old
+names (`analyzer`, `n2kd`, `actisense-serial`, …). It never takes a name that
+another program already holds, so it is safe to run in a directory that has the
+C tools installed — it reports what it left alone.
+
+The remaining C converters and the Python helper scripts will most likely move
+to Rust in time; the C `n2kd` and `n2kd_monitor` already have, and were removed
+in v8.
+
+## The library
+
+The decoder is also a set of Rust crates, so you can embed NMEA 2000 handling
+instead of parsing another program's output:
+
+| | |
+| --- | --- |
+| `canboat-core` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No `std::io`, no threads. The database is compiled in — nothing to load at runtime |
+| `canboat-io` | sync `std::io` adapters (stdin, serial, `std::net`) |
+| `canboat-tokio` | async tokio adapters |
+| `canboat-bridge` | the n2kd/server pipeline as a library |
+| `canboat-schema` | the schema types the others share |
+
+See [`crates/doc/README.md`](./crates/doc/README.md) for the design and
+[`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md) for the API.
+
 ## File formats
 
 `analyzer` reads NMEA 2000 data from a number of text formats on stdin and turns
@@ -58,8 +115,11 @@ the [`samples/`](./samples) directory.
 
 ## Building, Development and Testing
 
-In [Wiki](https://github.com/canboat/canboat/wiki) you can find instructions on how to build the programs on your own computer 
-and how to start extending the PGN database. Short instructions are also found in [BUILDING.md](./BUILDING.md).
+`make` builds the C tools into `rel/<platform>/`; `cargo build --release`
+builds `canboat` and the crates. Neither needs the other — you can build just
+the side you care about. Full instructions are in [BUILDING.md](./BUILDING.md),
+and the [Wiki](https://github.com/canboat/canboat/wiki) covers per-platform
+detail and how to start extending the PGN database.
 
 ## Adding or fixing a PGN
 
@@ -100,7 +160,9 @@ See [Changelog](CHANGELOG.md).
 ### Sibling projects (same authors)
 
 - [canboatjs](https://github.com/canboat/canboatjs) — pure JavaScript NMEA 2000 decoder and encoder
-- [canboat-rs](https://github.com/canboat/canboat-rs) — Rust NMEA 2000 library
+
+(The Rust library used to live separately as `canboat-rs`; it was merged into
+this repository in v8 and is the `canboat-*` crates described above.)
 
 ### Other projects using the CANboat PGN definitions
 

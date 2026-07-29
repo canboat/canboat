@@ -20,7 +20,7 @@ version = "7.1.0" # x-release-please-version
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Kees Verruijt <kees@verruijt.net>"]
-repository = "https://github.com/canboat/canboat-rs"
+repository = "https://github.com/canboat/canboat"
 rust-version = "1.88"
 
 [workspace.dependencies]

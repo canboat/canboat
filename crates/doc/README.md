@@ -1,10 +1,10 @@
-# canboat-rs
+# The Rust side of CANboat
 
-Advanced tooling for NMEA 2000. Sister project to
-[canboat](https://github.com/canboat/canboat) — same PGN database, same wire
-formats.
+Advanced tooling for NMEA 2000. This began life as the separate `canboat-rs`
+project and was merged into canboat in v8; it shares the one PGN database in
+`database/` rather than tracking a copy of it.
 
-The project serves two purposes. First, a more composable way of working with
+It serves two purposes. First, a more composable way of working with
 the CANboat database, built with modern tools: the PGN database is compiled
 into a sans-I/O core library, with thin sync and async adapters above it, so
 you can embed NMEA 2000 decoding in your own application instead of parsing
