@@ -424,6 +424,7 @@ fn write_field_value_debug<W: fmt::Write>(
     w.write_str("\"value\":")?;
     // The "bare value" emission for the inner `value` key.
     match &f.value {
+        FieldValue::Decimal(d) => w.write_str(d)?,
         FieldValue::Number(v) => {
             let p = effective_precision(f.precision(), f.resolution());
             let min_w = if p == 7 && f.unit() == Some("deg") {
@@ -744,6 +745,9 @@ fn write_field_value<W: fmt::Write>(
                 w.write_char(']')
             }
         }
+        // canboat prints a DECIMAL's digit pairs bare, so this lands in
+        // JSON as a number literal rather than a string.
+        FieldValue::Decimal(d) => w.write_str(d),
         FieldValue::String(s) => write_field_json_string(w, s),
         FieldValue::Date(d) => {
             let mut buf = String::with_capacity(10);

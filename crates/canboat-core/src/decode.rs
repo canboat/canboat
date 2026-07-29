@@ -265,6 +265,12 @@ pub enum FieldValue {
         /// otherwise — so they must not be dropped.
         bits: Vec<(u64, Option<&'static str>)>,
     },
+    /// A DECIMAL field's digits. canboat renders one byte as two
+    /// decimal digits (`%02u`) and simply drops a byte that is not a
+    /// valid pair, so the result is a run of digit pairs rather than a
+    /// number — leading zeros included. Kept as text to preserve them;
+    /// both formatters emit it unquoted, as the C does.
+    Decimal(String),
     /// Decoded text (STRING_FIX, STRING_LZ, STRING_LAU).
     String(String),
     /// 16-bit days since 1970-01-01.
@@ -1001,9 +1007,8 @@ fn decode_one_field_at(
     let bit_length = f.bit_length?;
 
     let value = match f.field_type {
-        Some(FieldType::Number) | Some(FieldType::Decimal) => {
-            decode_number(f, data, bit_offset, bit_length, signed, offset_k)
-        }
+        Some(FieldType::Decimal) => decode_decimal(data, bit_offset, bit_length),
+        Some(FieldType::Number) => decode_number(f, data, bit_offset, bit_length, signed, offset_k),
         Some(FieldType::Float) => decode_float(data, bit_offset, bit_length),
         Some(FieldType::Lookup) => decode_lookup(f, data, bit_offset, bit_length, db),
         Some(FieldType::IndirectLookup) => {
@@ -1562,6 +1567,60 @@ fn decode_iso_name(data: &[u8], bit_offset: u32, bit_length: u32, db: &PgnDataba
         None => Vec::new(),
     };
     FieldValue::IsoName { value, subfields }
+}
+
+/// DECIMAL: each group of 8 bits is one decimal *pair*, printed as two
+/// digits — canboat's `fieldPrintDecimal` (print.c). A DSC address of
+/// `33 14 00 5F 1E` reads 5120009530, not the 40-bit integer those
+/// bytes spell.
+///
+/// A byte that is not a valid pair (>= 100) is dropped, as the C drops
+/// it. All bits set is "not available": that is the universal canboat
+/// convention, and reading it as digits would otherwise emit nothing at
+/// all, which in the C takes the whole record down with it.
+fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+    let start_byte = (bit_offset / 8) as usize;
+    if start_byte >= data.len() {
+        return FieldValue::NotAvailable;
+    }
+    let avail = (data.len() as u32 * 8).saturating_sub(bit_offset);
+    let bits = bit_length.min(avail);
+    let nbytes = bits.div_ceil(8) as usize;
+    let end = (start_byte + nbytes).min(data.len());
+    if data[start_byte..end].iter().all(|&b| b == 0xff) {
+        return FieldValue::NotAvailable;
+    }
+
+    let mut out = String::with_capacity(nbytes * 2);
+    let mut value: u32 = 0;
+    let mut magnitude: u32 = 1;
+    let mut mask: u8 = 1 << (bit_offset % 8);
+    let mut idx = start_byte;
+    for bit in 0..bits {
+        let Some(&byte) = data.get(idx) else { break };
+        if byte & mask != 0 {
+            value |= magnitude;
+        }
+        if mask == 128 {
+            mask = 1;
+            idx += 1;
+        } else {
+            mask <<= 1;
+        }
+        magnitude <<= 1;
+        if bit % 8 == 7 {
+            if value < 100 {
+                out.push((b'0' + (value / 10) as u8) as char);
+                out.push((b'0' + (value % 10) as u8) as char);
+            }
+            value = 0;
+            magnitude = 1;
+        }
+    }
+    if out.is_empty() {
+        return FieldValue::NotAvailable;
+    }
+    FieldValue::Decimal(out)
 }
 
 fn decode_binary(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
@@ -2269,6 +2328,51 @@ mod tests {
         match &msg.value {
             FieldValue::String(s) => assert_eq!(s, "HELLO"),
             other => panic!("expected the truncated text, got {other:?}"),
+        }
+    }
+
+    #[test]
+    fn decimal_is_digit_pairs_and_all_ones_is_absent() {
+        // samples/pgn129808.raw. A DSC address is five bytes, each one
+        // a *decimal pair*: 0x33 0x14 0x00 0x5F 0x1E reads 5120009530,
+        // not the 40-bit integer 130442859571 those bytes spell. And
+        // this call's `MMSI of Ship In Distress` is all ones — absent.
+        let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
+            0x70, 0x70, 0x33, 0x14, 0x00, 0x5f, 0x1e, 0x6e, 0x64, 0xff, 0xff, 0xff, 0xff, 0xff,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0x12, 0x01, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+            0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff,
+        ];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 4,
+            pgn: 129808,
+            src: 3,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+
+        let addr = dec
+            .fields
+            .iter()
+            .find(|f| f.info.name == "DSC Message Address")
+            .expect("a DSC Message Address");
+        match &addr.value {
+            FieldValue::Decimal(d) => assert_eq!(d, "5120009530"),
+            other => panic!("expected decimal digits, got {other:?}"),
+        }
+
+        // All ones is "not available" — every other field type says so,
+        // and reading it as digits yields nothing at all, which is what
+        // used to take the entire record down in the C.
+        for f in &dec.fields {
+            if f.info.name == "MMSI of Ship In Distress" {
+                assert!(
+                    f.value.is_not_available(),
+                    "an all-ones DECIMAL must be absent, got {:?}",
+                    f.value
+                );
+            }
         }
     }
 

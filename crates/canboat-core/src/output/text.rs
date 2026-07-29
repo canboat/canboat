@@ -275,6 +275,7 @@ fn write_field_value<W: fmt::Write>(
     payload: &[u8],
 ) -> fmt::Result {
     match &f.value {
+        FieldValue::Decimal(d) => w.write_str(d),
         FieldValue::Number(v) => {
             // Lat/lon are width 10, precision 7, and intentionally
             // suppress the `deg` unit (canboat's fieldPrintLatLon
