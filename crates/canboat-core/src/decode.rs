@@ -1714,18 +1714,12 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
     // the string at that point (matches the C-string convention some
     // devices use to terminate inside a fixed-width buffer — e.g. a
     // Mastervolt Product Information field that has two records
-    // separated by NULs), then trims trailing '@' / NUL / space /
-    // 0xFF. Apply both passes here so STRING_FIX renders the leading
+    // separated by NULs), then trims the trailing padding run. Apply both passes here so STRING_FIX renders the leading
     // C-string portion only.
     let raw = &data[start..end];
     let mut len = raw.iter().position(|&b| b == 0).unwrap_or(raw.len());
-    while len > 0 {
-        let b = raw[len - 1];
-        if b == 0 || b == b'@' || b == b' ' || b == 0xff {
-            len -= 1;
-        } else {
-            break;
-        }
+    while len > 0 && is_string_padding(raw[len - 1]) {
+        len -= 1;
     }
     if len == 0 {
         return FieldValue::NotAvailable;
@@ -1789,7 +1783,7 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
             // PGN on "Unhandled string type 255".
             let end = body
                 .iter()
-                .rposition(|&b| !matches!(b, 0xff | 0x00 | b'@' | b' '))
+                .rposition(|&b| !is_string_padding(b))
                 .map_or(0, |i| i + 1);
             String::from_utf8_lossy(&body[..end]).into_owned()
         }
@@ -1809,8 +1803,25 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
 /// Strip trailing canboat-padding bytes (`\0`, `'@'`, space, `\xff`)
 /// from a string. Matches the trailing-byte loop in `printString` in
 /// analyzer/print.c.
+/// The trailing bytes canboat's `printString` strips off a decoded
+/// string: `0xff` (the NMEA 2000 filler), any `isspace()` character,
+/// NUL, and `'@'` (badly converted AIS data).
+///
+/// `isspace()` is the whole C set, not just a space — Navico's 130847
+/// ASCII Identifier ends its text with a newline, and trimming only
+/// `' '` left it on the value.
+fn is_string_padding(b: u8) -> bool {
+    matches!(b, 0xff | 0x00 | b'@') || b.is_ascii_whitespace() || b == 0x0b
+}
+
 fn trim_string_padding(s: &str) -> &str {
-    s.trim_end_matches(['\0', '@', ' ', '\u{ff}'])
+    s.trim_end_matches(|c: char| match c {
+        // 0xff survives as U+00FF when the bytes came through a
+        // latin-1-ish path rather than as a UTF-8 replacement char.
+        '\u{ff}' => true,
+        c if c.is_ascii() => is_string_padding(c as u8),
+        _ => false,
+    })
 }
 
 fn decode_string_lz(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
@@ -2222,6 +2233,18 @@ mod tests {
             FieldValue::String(s) => assert_eq!(s, "HELLO"),
             other => panic!("expected the truncated text, got {other:?}"),
         }
+    }
+
+    #[test]
+    fn string_padding_covers_all_of_isspace() {
+        // canboat's `printString` rtrims with `isspace()`, not just a
+        // space. Navico's 130847 ASCII Identifier ends its text with a
+        // newline, which was being kept.
+        assert_eq!(trim_string_padding("107473373\n"), "107473373");
+        assert_eq!(trim_string_padding("abc\r\n"), "abc");
+        assert_eq!(trim_string_padding("abc\t \u{0}@\u{ff}"), "abc");
+        // Interior whitespace is untouched.
+        assert_eq!(trim_string_padding("a b"), "a b");
     }
 
     #[test]
