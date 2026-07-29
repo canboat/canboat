@@ -11,19 +11,17 @@ DESTDIR ?= ""
 PREFIX ?= /usr/local
 EXEC_PREFIX ?= $(PREFIX)
 BINDIR=$(EXEC_PREFIX)/bin
-SYSCONFDIR= /etc
 DATAROOTDIR ?= $(PREFIX)/share
 MANDIR= $(DATAROOTDIR)/man
 
 PLATFORM ?= $(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
-SUBDIRS= actisense-serial analyzer n2kd nmea0183 ip group-function candump2analyzer socketcan-writer socketcan-serial ikonvert-serial maretron-ipg replay
+SUBDIRS= actisense-serial analyzer nmea0183 ip group-function candump2analyzer socketcan-writer socketcan-serial ikonvert-serial maretron-ipg replay
 
 BUILDDIR ?= ./rel/$(PLATFORM)
 
 MKDIR = mkdir -p
 export HELP2MAN=$(shell command -v help2man 2> /dev/null)
 
-CONFDIR=$(SYSCONFDIR)/default
 
 ROOT_UID=0
 ROOT_GID=0
@@ -39,7 +37,6 @@ compile: bin
 
 tests:  compile
 	$(MAKE) -C analyzer tests
-	$(MAKE) -C n2kd tests
 	$(MAKE) -C actisense-serial/tests tests
 	$(MAKE) -C candump2analyzer/tests tests
 
@@ -134,9 +131,8 @@ clean:
 	$(MAKE) -C dbc-exporter clean
 	-rm -R -f man $(BUILDDIR)
 
-install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(CONFDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in $(BUILDDIR)/* util/* */*_monitor; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR); done
-	for i in config/*; do f=`basename $$i`; if [ ! -f "$(DESTDIR)/$(CONFDIR)/$$f" ]; then install -b -m $(ROOT_MOD) $$i $(DESTDIR)$(CONFDIR); fi; done
+install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
+	for i in $(BUILDDIR)/* util/*; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR); done
 ifeq ($(notdir $(HELP2MAN)),help2man)
 	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
 endif
@@ -164,8 +160,6 @@ aarch64-linux-musl:
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)
 
-$(DESTDIR)$(CONFDIR):
-	$(MKDIR) $(DESTDIR)$(CONFDIR)
 
 $(DESTDIR)$(MANDIR)/man1:
 	$(MKDIR) $(DESTDIR)$(MANDIR)/man1
