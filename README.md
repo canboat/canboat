@@ -52,9 +52,9 @@ names (`analyzer`, `n2kd`, `actisense-serial`, …). It never takes a name that
 another program already holds, so it is safe to run in a directory that has the
 C tools installed — it reports what it left alone.
 
-The remaining C converters and the Python helper scripts will most likely move
-to Rust in time; the C `n2kd` and `n2kd_monitor` already have, and were removed
-in v8.
+The remaining C converters, the helper scripts in `util/` (PHP, perl and ksh)
+and the Python tooling will most likely move to Rust in time; the C `n2kd` and
+`n2kd_monitor` already have, and were removed in v8.
 
 ## The library
 
