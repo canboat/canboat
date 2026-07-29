@@ -34,6 +34,32 @@ fn sentinel_field_value(f: &FieldInfo, ex: Extracted) -> Option<FieldValue> {
     }
 }
 
+/// The tail of canboat's `fieldPrintLookup` for a value the
+/// enumeration does not name: one in the top band of the field's width
+/// is unavailable rather than a bare number —
+///
+/// ```text
+///     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
+/// ```
+///
+/// so a 2-bit lookup reserves its top value and anything wider its top
+/// two. Shared, because the C reaches a *dynamic* LOOKUP through the
+/// very same `fieldPrintLookup` as a static one; PGN 127501's
+/// `Indicator11` and PGN 130845's `Auto calibration mode` are the same
+/// rule seen from the two paths.
+fn unnamed_lookup_value(ex: Extracted, bits: u32) -> FieldValue {
+    if bits > 1 {
+        let band = if bits > 2 { 2 } else { 1 };
+        if ex.value >= ex.max - band {
+            return FieldValue::NotAvailable;
+        }
+    }
+    FieldValue::Lookup {
+        value: ex.raw,
+        name: None,
+    }
+}
+
 /// The same test, for a field whose FieldType declares
 /// `Sentinels: None` and so carries none of the hints above, but which
 /// still has a `RangeMax` below what its bit width can hold.
@@ -1342,24 +1368,8 @@ fn decode_lookup(
     if let Some(sent) = sentinel_field_value(f, ex) {
         return sent;
     }
-    // Still nothing, and the table does not name this value. canboat does not
-    // fall back to printing the bare number here: fieldPrintLookup treats an
-    // unnamed value in the top reserved band as unavailable, using a bound it
-    // computes from the field width rather than any schema hint --
-    //     *bits > 1 && value >= maxValue - (*bits > 2 ? 2 : 1)
-    // so a 2-bit lookup reserves its top two values and anything wider its top
-    // three. Without this, PGN 127501's `Indicator11` reported {"value":2}
-    // where canboat omits the field entirely.
-    if bit_length > 1 {
-        let band = if bit_length > 2 { 2 } else { 1 };
-        if ex.value >= ex.max - band {
-            return FieldValue::NotAvailable;
-        }
-    }
-    FieldValue::Lookup {
-        value: raw,
-        name: None,
-    }
+    // Still nothing, and the table does not name this value.
+    unnamed_lookup_value(ex, bit_length)
 }
 
 /// INDIRECT_LOOKUP: resolve `(value1, value2)` where `value1` is
@@ -2017,11 +2027,16 @@ fn decode_dynamic_field_value(
                 else {
                     return (FieldValue::NotAvailable, bits);
                 };
-                let raw = ex.value as u64;
-                let nm = db.lookup(name).and_then(|t| t.get(raw)).map(|v| v.name);
-                FieldValue::Lookup {
-                    value: raw,
-                    name: nm,
+                match db.lookup(name).and_then(|t| t.get(ex.raw)).map(|v| v.name) {
+                    Some(nm) => FieldValue::Lookup {
+                        value: ex.raw,
+                        name: Some(nm),
+                    },
+                    // PGN 130845's `Auto calibration mode` reads 0xFF on a
+                    // Read request, which SIMNET_COMPASS_AUTOCAL_MODE does
+                    // not name, and canboat omits the field rather than
+                    // reporting `{"value":255}`.
+                    None => unnamed_lookup_value(ex, bits),
                 }
             }
             None => decode_binary(data, bit_offset, bits),
@@ -2245,6 +2260,18 @@ mod tests {
         assert_eq!(trim_string_padding("abc\t \u{0}@\u{ff}"), "abc");
         // Interior whitespace is untouched.
         assert_eq!(trim_string_padding("a b"), "a b");
+    }
+
+    #[test]
+    fn dynamic_field_signedness_comes_from_the_field_type() {
+        // Victron's VE.Can Register 8220 (DC Current) resolves to
+        // CURRENT_FIX32_MA — signed. The generated table used to derive
+        // signedness from the *unit* alone (angles only), so a negative
+        // current read as 4294964.496 instead of -2.8.
+        let entry = db()
+            .field_type_lookup("VICTRON_VREG", 8220)
+            .expect("VICTRON_VREG 8220");
+        assert!(entry.signed, "DC Current must be signed");
     }
 
     #[test]
