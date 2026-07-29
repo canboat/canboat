@@ -634,6 +634,11 @@ struct DecodeContext {
     /// truncated record declares a length below its own header — the
     /// C's `g_length` is `int64_t` for the same reason.
     dynamic_length_bytes: Option<i64>,
+    /// Raw value of the last field that went through canboat's
+    /// `extractNumberNotEmpty` — its `g_previousFieldValue`. A BINARY
+    /// field with no declared width takes its *bit* length from this
+    /// (`fieldPrintBinary`, print.c).
+    previous_field_value: u64,
     /// Set by a decoder that wants its field omitted from the output
     /// while the walk carries on past it — canboat's `g_skip`
     /// (print.c). Read and cleared by the field walker.
@@ -968,6 +973,15 @@ fn decode_one_field_at(
         let avail = avail - (avail & 7); // round down to whole bytes
         let value = match f.field_type {
             Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, avail),
+            // A BINARY field with no width of its own takes one, in
+            // *bits*, from the value of the field before it — canboat's
+            // `*bits = g_previousFieldValue` (fieldPrintBinary, print.c),
+            // which its own comment calls heuristic. Fusion's 130820
+            // SiriusXM Presets sizes `Values` by the preceding `Count`,
+            // as do AIS 129792 / 129795 / 129797.
+            _ if ctx.previous_field_value > 0 && (ctx.previous_field_value as u32) <= avail => {
+                decode_binary(data, bit_offset, ctx.previous_field_value as u32)
+            }
             _ => decode_binary(data, bit_offset, avail),
         };
         return Some((
@@ -1035,6 +1049,14 @@ fn decode_one_field_at(
             ctx.current_param_idx = Some(*n as u32);
         }
         _ => {}
+    }
+    // `g_previousFieldValue`, which the C sets inside
+    // `extractNumberNotEmpty` — so it tracks the numeric fields, and a
+    // following zero-width BINARY reads its bit count from it.
+    if let FieldValue::Integer(n) = &value
+        && *n >= 0
+    {
+        ctx.previous_field_value = *n as u64;
     }
     // canboat C also picks up dynamic field lengths by FIELD NAME
     // (`analyzer/analyzer.c::fillGlobalsBasedOnFieldName`): any field
@@ -2272,6 +2294,32 @@ mod tests {
             .field_type_lookup("VICTRON_VREG", 8220)
             .expect("VICTRON_VREG 8220");
         assert!(entry.signed, "DC Current must be signed");
+    }
+
+    #[test]
+    fn zero_width_binary_is_sized_by_the_previous_field() {
+        // Fusion 130820 SiriusXM Presets: `Values` is a BINARY with no
+        // declared width, and canboat takes its *bit* count from the
+        // preceding `Count` (`*bits = g_previousFieldValue`,
+        // fieldPrintBinary). Count = 4 here, so one byte masked to its
+        // low nibble.
+        let data: smallvec::SmallVec<[u8; 8]> =
+            smallvec::smallvec![0xa3, 0x99, 0x1e, 0x80, 0x00, 0x04, 0x64, 0x00, 0x00, 0x00];
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 7,
+            pgn: 130820,
+            src: 10,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        if let Some(v) = dec.fields.iter().find(|f| f.info.name == "Values") {
+            match &v.value {
+                FieldValue::Binary(b) => assert_eq!(b.as_slice(), &[0x04]),
+                other => panic!("expected one masked byte, got {other:?}"),
+            }
+        }
     }
 
     #[test]
