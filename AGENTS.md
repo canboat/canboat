@@ -28,7 +28,7 @@ formats) on stdin, reassembles fast-packets, matches each PGN against the
 database compiled into the binary, and prints decoded fields as human-readable
 text or JSON. Around it sit gateway drivers (`actisense-serial`,
 `ikonvert-serial`, `maretron-ipg`, `nmea0183`, `socketcan-serial`), a
-relay/server daemon (`n2kd`), and format converters (`candump2analyzer`,
+format converters (`candump2analyzer`,
 `socketcan-writer`, `replay`, `ip`, `pcap2candump`, `analyzer2csv`,
 `group-function`).
 
@@ -85,7 +85,6 @@ to the YAML under `database/`, checked by `keel check`, followed by
 | `docs/canboat.dbc` | **generated** | CANdb file (CRLF, version-stamped, ~466 KB) from `docs/canboat.json`. |
 | `sources/nmea_1300.json` | fixture | Deterministic extract of the official NMEA 2000 v1.300 PGN-table PDF (`tools/nmea-pdf/extract.py`). `make validation` reconciles the database against it via `tools/nmea-pdf/reconcile.py` (gate on field-level type/sign/bits; PGN-level is report-only). Documented divergences live in `tools/nmea-pdf/allowlist.json`. The PDF itself is copyrighted and **not** committed. |
 | `samples/` | fixture | Raw N2K capture corpus; evidence cited in `pgn.h` comments. NOT used by the golden-file tests. |
-| `config/` | config | Env snippets for the `n2kd` launcher. |
 | `.clang-format` | config | Google-based clang-format (IndentWidth 2, ColumnLimit 132). |
 
 **Canonical definitions** are `docs/canboat.xml` and `docs/canboat.json` (both
@@ -126,7 +125,7 @@ Key facts:
   lines to stderr; that is normal, generation still succeeds.
 - **Required tools:** GNU make + a C compiler for binaries; additionally
   `xsltproc`, `xmllint` (`libxml2-utils`), `python3` (+`venv`) for
-  `make generated`. `help2man` is optional (n2kd man page); `clang-format` only
+  `make generated`. `help2man` is optional (man pages); `clang-format` only
   for `make format`; Docker only for `make docker-build`.
 - **`make generated` is unsupported on Windows/Cygwin.** Use Linux, or
   `make docker-build` (runs `make clean generated` in `ubuntu:22.04`).
@@ -138,7 +137,7 @@ Key facts:
 | Command | What it does |
 |---|---|
 | `make` | Builds all tool binaries into `rel/<platform>/`. |
-| `make tests` | Builds, then runs `analyzer` (test1..15) and `n2kd` (test1..2) golden tests. |
+| `make tests` | Builds, then runs the `analyzer` golden tests. |
 | `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}` + `canboat.dbc`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
 | `make format` | `clang-format -i` over `*/*.c */*.h` (one directory level deep). |
 | `make docker-build` | Runs `make clean generated` inside an `ubuntu:22.04` builder. |
@@ -158,7 +157,7 @@ Key facts:
 ## 5. The golden-file test model
 
 Tests are **golden-file based**: `.in` (stdin) + `.out` (expected stdout) +
-`.err` (expected stderr) triples under `analyzer/tests/` and `n2kd/tests/`. Each
+`.err` (expected stderr) triples under `analyzer/tests/`. Each
 test runs the binary, redirects stdout/stderr into `$(TEMPDIR)` (defaults to
 `/tmp`), and `diff`s against the committed `.out`/`.err`. A passing test = empty
 diff. Determinism comes from `-fixtime <str>` (replaces wall-clock receive
@@ -438,7 +437,6 @@ lengths, ranges and sentinels are **derived** — do not write them.
 - `analyzer/` — the database headers, the decoder sources, the XSLT/Python
   generators, and `tests/`.
 - `common/` — shared C (`common.c`, `parse.c`, `utf.c`, `version.h`).
-- `n2kd/` — relay daemon + NMEA0183 conversion + `tests/`.
 - Gateway/converter dirs: `actisense-serial/`, `ikonvert-serial/`,
   `maretron-ipg/`, `nmea0183/`, `socketcan-serial/`, `ip/`, `group-function/`,
   `candump2analyzer/`, `socketcan-writer/`, `replay/`, `analyzer2csv/`,
@@ -447,8 +445,7 @@ lengths, ranges and sentinels are **derived** — do not write them.
   (`https://canboat.github.io/canboat`).
 - `dbc-exporter/` — Python DBC exporter (venv-installed during generation).
 - `samples/` — raw capture corpus (evidence for definitions).
-- `sources/`, `config/`, `util/` — reference DB, n2kd config, maintenance
-  scripts.
+- `sources/`, `util/` — reference DB and maintenance scripts.
 - `rel/<platform>/` — built binaries + DBC venv (gitignored).
 
 ---

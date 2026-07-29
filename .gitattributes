@@ -19,5 +19,3 @@ samples/** -text
 # break the golden-file comparison.
 analyzer/tests/mixed-format.in    -text
 analyzer/tests/recombine-frames.in -text
-n2kd/tests/ais-lookup.out         -text
-n2kd/tests/nmea0183.out           -text
