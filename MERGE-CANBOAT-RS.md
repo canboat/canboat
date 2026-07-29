@@ -239,14 +239,19 @@ stay tiny. Concretely, in the merged workspace:
   keel-closure guard (§9). Release: the C release path (`rel/`) stays Rust-free; Rust
   artifacts build in their own job.
 
-## 11. Retiring C `n2kd`
+## 11. Retiring C `n2kd` — DONE
 
-Unchanged from prior discussion, and deliberately *not* part of the initial merge:
+1. ~~Land the Rust `n2kd` alongside C `n2kd`; keep C `n2kd` in `SUBDIRS`.~~ Done in the merge.
+2. ~~Prove parity with the harness (`crates/canboat/parity/run-parity.sh`) — a live
+   C-vs-Rust diff across all five ports — green **on the Pi**, on real traffic.~~
+   The harness is still there and still hand-run; it was not made a gate.
+3. ~~Only then drop the C `n2kd` subdir.~~ Done: `n2kd/` and `config/` are gone,
+   along with the `-fixtime … n2kd` hook in `analyzer.c` that existed only to
+   keep the version banner for C `n2kd`'s golden tests.
 
-1. Land the Rust `n2kd` alongside C `n2kd`; keep C `n2kd` in `SUBDIRS`.
-2. Prove parity with `canboat-rs`'s harness (`crates/n2kd/parity/run-parity.sh`) — a live
-   C-vs-Rust diff across all five ports — green **on the Pi**, on real traffic.
-3. Only then drop the C `n2kd` subdir. Retirement is a separate PR with its own decision.
+The Rust implementation lives in `crates/canboat-bridge/src/n2kd/` and is
+reached as `canboat n2kd` (or via the `n2kd` argv[0] shim that
+`canboat install-shims` drops).
 
 ## 12. Migration steps (each independently shippable)
 

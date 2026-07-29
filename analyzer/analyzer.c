@@ -299,10 +299,7 @@ int main(int argc, char **argv)
     {
       setFixedTimestamp(av[2]);
       fixedTime = true;
-      if (strstr(av[2], "n2kd") == NULL)
-      {
-        showVersion = false;
-      }
+      showVersion = false;
       ac--;
       av++;
     }
