@@ -116,20 +116,52 @@ pub fn install_shims(dir: &Path) -> Result<()> {
         .file_name()
         .context("canboat executable has no file name")?;
     let same_dir = exe.parent() == Some(dir);
+    let exe_canon = exe.canonicalize().unwrap_or_else(|_| exe.clone());
 
+    let mut installed = 0usize;
+    let mut kept = 0usize;
     for name in LEGACY_NAMES {
         let link = dir.join(name);
         if link == exe {
             continue; // never clobber the real binary
         }
-        // Replace any existing symlink/file at the target.
-        if std::fs::symlink_metadata(&link).is_ok() {
+        // Something is already called this. Only ever replace one of our
+        // own shims -- most of these names are C programs that are still
+        // supported and shipped (analyzer, the *-serial gateways,
+        // maretron-ipg, replay), and installing over one would delete it.
+        if let Ok(md) = std::fs::symlink_metadata(&link) {
+            let ours = md.file_type().is_symlink()
+                && match link.canonicalize() {
+                    // Resolves to this very binary: a shim we made before.
+                    Ok(p) => p == exe_canon,
+                    // Dangling: whatever it pointed at is gone, so it is
+                    // not a working program either way. Safe to refresh.
+                    Err(_) => true,
+                };
+            if !ours {
+                let what = if md.file_type().is_symlink() {
+                    "a symlink to something else"
+                } else {
+                    "a file"
+                };
+                println!("{}: left alone, {what} is already there", link.display());
+                kept += 1;
+                continue;
+            }
             std::fs::remove_file(&link)
                 .with_context(|| format!("removing existing {}", link.display()))?;
         }
         let target: &Path = if same_dir { Path::new(exe_name) } else { &exe };
         symlink(target, &link).with_context(|| format!("symlinking {}", link.display()))?;
         println!("{} -> {}", link.display(), target.display());
+        installed += 1;
+    }
+    if kept > 0 {
+        println!(
+            "\n{installed} shim(s) installed, {kept} name(s) left alone because a program of \
+             that name is already installed there. Remove those by hand first if you do want \
+             canboat to take the name over."
+        );
     }
     Ok(())
 }
@@ -137,4 +169,61 @@ pub fn install_shims(dir: &Path) -> Result<()> {
 #[cfg(not(unix))]
 pub fn install_shims(_dir: &Path) -> Result<()> {
     anyhow::bail!("install-shims is only supported on Unix");
+}
+
+#[cfg(all(test, unix))]
+mod shim_tests {
+    use super::*;
+
+    /// A name already taken by a real program must survive. Most of
+    /// `LEGACY_NAMES` are C binaries that are still shipped and still
+    /// supported — `analyzer`, the `*-serial` gateways, `maretron-ipg`,
+    /// `replay` — so installing over one would delete a working tool.
+    #[test]
+    fn install_shims_does_not_clobber_an_existing_program() {
+        let dir = std::env::temp_dir().join(format!("canboat-shim-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).expect("temp dir");
+
+        // Stand in for the C analyzer, and for a foreign symlink.
+        let c_analyzer = dir.join("analyzer");
+        std::fs::write(&c_analyzer, b"#!/bin/sh\necho C analyzer\n").expect("write");
+        let elsewhere = dir.join("some-other-tool");
+        std::fs::write(&elsewhere, b"x").expect("write");
+        std::os::unix::fs::symlink(&elsewhere, dir.join("replay")).expect("symlink");
+
+        install_shims(&dir).expect("install");
+
+        // Untouched: still a regular file with its own content.
+        let md = std::fs::symlink_metadata(&c_analyzer).expect("analyzer still there");
+        assert!(md.file_type().is_file(), "the C analyzer was replaced");
+        assert_eq!(
+            std::fs::read(&c_analyzer).expect("read"),
+            b"#!/bin/sh\necho C analyzer\n"
+        );
+        // A symlink pointing somewhere else is left pointing there.
+        assert_eq!(
+            std::fs::read_link(dir.join("replay")).expect("read_link"),
+            elsewhere
+        );
+        // A free name did get a shim.
+        assert!(
+            std::fs::symlink_metadata(dir.join("n2kd"))
+                .expect("n2kd shim")
+                .file_type()
+                .is_symlink()
+        );
+
+        // Idempotent: a second run refreshes our own shim rather than
+        // deciding it is somebody else's.
+        install_shims(&dir).expect("re-install");
+        assert!(
+            std::fs::symlink_metadata(dir.join("n2kd"))
+                .expect("n2kd shim still there")
+                .file_type()
+                .is_symlink()
+        );
+
+        let _ = std::fs::remove_dir_all(&dir);
+    }
 }
