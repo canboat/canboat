@@ -93,6 +93,30 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // still emit it as `-0.0`. Use `is_sign_negative` to catch that
     // along with proper negatives.
     let neg = v.is_sign_negative();
+    // Scaling by 10^precision can land exactly on .5 for a value that is
+    // not really a tie: `5 * 0.0001` is 0.000500000000000000010408…, above
+    // the tie, but multiplying by 1000 rounds the product to exactly 0.5 and
+    // the information is gone. printf never scales — it rounds off the
+    // double's own decimal expansion — so PGN 126208's `Air pressure offset`
+    // came out 0.000 where canboat prints 0.001.
+    //
+    // Hand an exact .5 to core::fmt, which is correctly rounded from the
+    // original value: a real tie (127489's 1.890625, a dyadic fraction)
+    // still goes to even, and a near-tie goes the way its true value points.
+    // Rare, so the fast path below keeps the common case.
+    fn lands_on_a_tie(v: f64, precision: usize) -> bool {
+        let scaled = v * 10f64.powi(precision as i32);
+        scaled.fract().abs() == 0.5
+    }
+    if lands_on_a_tie(v, precision) {
+        return write!(
+            w,
+            "{:>width$.prec$}",
+            v,
+            width = min_width,
+            prec = precision
+        );
+    }
     if precision == 0 {
         // Whole-number path: integer fmt. Ties go to even, see below.
         let rounded = v.round_ties_even() as i64;
@@ -324,6 +348,27 @@ mod c_g_tests {
         for (v, want) in cases {
             assert_eq!(&g(*v), want, "%g of {v}");
         }
+    }
+
+    #[test]
+    fn rounds_a_near_tie_the_way_printf_does() {
+        use super::write_fixed_float;
+        fn f(v: f64, p: usize) -> String {
+            let mut s = String::new();
+            write_fixed_float(&mut s, v, p, 0).unwrap();
+            s
+        }
+        // 5 * 0.0001 is 0.000500000000000000010408…, just *above* the
+        // tie, so printf rounds it up. Scaling by 1000 collapses the
+        // product onto exactly 0.5 and loses that. PGN 126208's
+        // `Air pressure offset` in samples/scx20-setting-tool-offsets.raw.
+        assert_eq!(f(5.0 * 0.0001, 3), "0.001");
+        // A genuine tie — 30976/16384 is exactly 1.890625 — still goes
+        // to even, as printf does under FE_TONEAREST. PGN 127489.
+        assert_eq!(f(30976.0 / 16384.0, 5), "1.89062");
+        // …and the even-side tie rounds up to the even digit.
+        assert_eq!(f(0.125, 2), "0.12");
+        assert_eq!(f(0.375, 2), "0.38");
     }
 
     #[test]
