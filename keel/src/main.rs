@@ -204,6 +204,13 @@ fn run() -> Result<i32, String> {
                             eprintln!("keel generate --check: diff written to {dpath}");
                         }
                     }
+                } else if fs::read_to_string(path).ok().as_deref() == Some(emitted.as_str()) {
+                    // Byte-identical: leave the file alone. Rewriting it would
+                    // bump its mtime and make every downstream `make` rule fire
+                    // — the C analyzer rebuilds off these headers, so an
+                    // unconditional write turns `make rust` into a full C
+                    // rebuild for no reason.
+                    println!("keel generate: {} is up to date", path.display());
                 } else {
                     fs::write(path, emitted).map_err(|e| e.to_string())?;
                     println!("keel generate: wrote {}", path.display());
