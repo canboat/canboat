@@ -47,13 +47,31 @@ tests:  compile
 # cargo directly; these targets exist so `make` users have the same shortcuts.
 CARGO ?= cargo
 
-rust:
+# The Rust schema tables are generated from database/ by keel and committed
+# (MERGE-CANBOAT-RS.md §5), so a `cargo build` alone will happily compile
+# against a stale table after a database edit. Regenerate first.
+#
+# Deliberately NOT a dependency on `generated`: that additionally produces
+# canboat.html/json via xsltproc, validates with xmllint, runs the C golden
+# tests and builds the DBC exporter, so it needs xsltproc, libxml2-utils,
+# python3 + venv and a C compiler. None of that is required to build the
+# Rust side, and demanding it would make `make rust` unusable on a machine
+# that only has a Rust toolchain.
+#
+# keel/keel is self-contained: it builds keel with cargo, or downloads a
+# prebuilt binary when there is no toolchain. It writes only the artifacts
+# whose content actually changed, so this does not disturb the C build.
+.PHONY: keel-generate
+keel-generate:
+	@keel/keel generate
+
+rust: keel-generate
 	$(CARGO) build --release --workspace
 
-rust-debug:
+rust-debug: keel-generate
 	$(CARGO) build --workspace
 
-rust-tests:
+rust-tests: keel-generate
 	$(CARGO) test --workspace
 
 rust-clippy:
@@ -155,7 +173,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-fmt rust-precommit rust-clean
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-fmt rust-precommit rust-clean keel-generate
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

@@ -7,7 +7,7 @@
 use keel::{
     check, decode, derive, edit, emit_c, emit_text, emit_xml, harvest, rules, samples, yamlio,
 };
-use keel::{find_repo_root, read_versions};
+use keel::{emit_rust, find_repo_root, read_versions};
 
 use std::fs;
 use std::path::PathBuf;
@@ -174,6 +174,18 @@ fn run() -> Result<i32, String> {
                     root.join("analyzer/pgn-j1939-generated-data.h"),
                     emit_c::emit_pgn_data_h(&db, true),
                 ),
+                // The Rust tables. These used to be produced by a build
+                // script in each crate, which could not be published: a
+                // build script cannot read `database/`, which sits above
+                // the package root. Generated here and committed instead.
+                (
+                    root.join("crates/canboat-core/src/schema_generated.rs"),
+                    emit_rust::emit_schema(&db, &root),
+                ),
+                (
+                    root.join("crates/canboat-io/src/fastpacket_generated.rs"),
+                    emit_rust::emit_fastpacket(&db),
+                ),
             ];
             let mut stale = 0;
             for (path, emitted) in &artifacts {
@@ -192,6 +204,13 @@ fn run() -> Result<i32, String> {
                             eprintln!("keel generate --check: diff written to {dpath}");
                         }
                     }
+                } else if fs::read_to_string(path).ok().as_deref() == Some(emitted.as_str()) {
+                    // Byte-identical: leave the file alone. Rewriting it would
+                    // bump its mtime and make every downstream `make` rule fire
+                    // — the C analyzer rebuilds off these headers, so an
+                    // unconditional write turns `make rust` into a full C
+                    // rebuild for no reason.
+                    println!("keel generate: {} is up to date", path.display());
                 } else {
                     fs::write(path, emitted).map_err(|e| e.to_string())?;
                     println!("keel generate: wrote {}", path.display());

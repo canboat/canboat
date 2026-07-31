@@ -31,9 +31,28 @@ For the Rust side, a recent stable Rust toolchain via
     cargo build --release
 
 That produces `target/release/canboat`. `cargo test --workspace` runs the test
-suite. The PGN database is compiled in from `database/` at build time via
-`keel`, so there is nothing to load or distribute at runtime — and editing the
-YAML and rebuilding is all it takes to pick up a database change.
+suite.
+
+The PGN database is compiled into the binary, so there is nothing to load or
+distribute at runtime. It reaches the Rust code as generated tables that `keel`
+writes from `database/` and that are **committed** to the repository — there is
+no build script, because one could not be published (a build script cannot read
+`database/`, which sits above the crate).
+
+That means **a bare `cargo build` will not pick up a `database/` edit.**
+Regenerate first:
+
+```bash
+make rust                  # keel generate, then cargo build --release
+```
+
+`make rust` (and `rust-debug`, `rust-tests`) depend on a `keel-generate`
+target that runs `keel/keel generate` and nothing else, so it needs no
+xsltproc, xmllint or python — unlike `make generated`, which additionally
+produces the XML/HTML/JSON/DBC artifacts. `keel` rewrites only the files whose
+content actually changed, so this does not disturb the C build.
+
+See [AGENTS.md §9](./AGENTS.md) and [CONTRIBUTING.md](./CONTRIBUTING.md) for the database workflow.
 
 To make the subcommands answer to the historical tool names:
 

@@ -66,7 +66,7 @@ against canboat C's output.
 
 ## Installation
 
-Each [release](https://github.com/canboat/canboat-rs/releases) ships all the
+Each [release](https://github.com/canboat/canboat/releases) ships all the
 binaries as one archive per platform: static musl Linux builds for x86_64,
 aarch64, and armv7 (Raspberry Pi class), a macOS universal binary, and
 Windows x86_64.
@@ -74,35 +74,52 @@ Windows x86_64.
 Or build from source (Rust 1.88+):
 
 ```
-git clone https://github.com/canboat/canboat-rs
-cd canboat-rs
-cargo build --release
+git clone https://github.com/canboat/canboat
+cd canboat
+make rust
 ```
+
+`make rust` is `keel generate` followed by `cargo build --release --workspace`.
+Use it rather than a bare `cargo build` whenever you have edited `database/` —
+see below.
 
 ## The PGN database
 
-The schema is read straight from the repository's own `docs/canboat.json`,
-which keel generates from `database/`. There is no vendored copy and no pin:
-the build scripts in `canboat-core` and `canboat-io` read the real file, so
-the runtime can never be a schema behind the analyzer. Regenerate it the
-normal way — `make generated` from the repository root — and the Rust test
-suite tells you whether the decoder needs work for the new schema.
+The schema comes from the repository's own `database/` YAML, the same source
+the C analyzer is generated from. There is no vendored copy and no pin, so the
+runtime can never be a schema behind the analyzer.
 
-The `CANBOAT_BEM` pseudo-PGNs (0x40000+) that `analyzer/pgn.h` defines
-directly never appear in `canboat.json`, so `crates/canboat-core/data/
-synthetic-pgns.json` still mirrors those by hand. Every binary reports the embedded
-schema version in `--help` and in its startup log line.
+`keel` compiles it into Rust tables which are **committed**:
+
+    crates/canboat-core/src/schema_generated.rs     the PGN tables
+    crates/canboat-io/src/fastpacket_generated.rs   fast-packet framing
+
+Neither crate has a build script. That is deliberate: a build script cannot
+read `database/`, which sits above the crate, so a published crate would carry
+no schema at all. The cost is that **a bare `cargo build` does not pick up a
+`database/` edit** — run `make rust`, which regenerates first, or
+`keel generate` by hand. `keel generate --check` is the staleness gate and CI
+enforces it.
+
+The `CANBOAT_BEM` pseudo-PGNs (0x40000+) are ordinary members of `database/`
+now — they are excluded from the public `docs/canboat.json`, since they never
+appear on a wire, but keel emits them into the Rust and C tables like any
+other. The hand-maintained `synthetic-pgns.json` mirror they used to need is
+gone.
+
+Every binary reports the embedded schema version in `--help` and in its startup
+log line.
 
 ## Performance
 
 Same decode work — `-json -nv` over 1.26 M PGN frames (canboat's
 `dirona-actisense-serial.raw` × 50) on an M4 Pro, release build:
 
-| Implementation         | Wall time | vs canboat-rs |
+| Implementation         | Wall time | vs canboat  |
 |------------------------|----------:|--------------:|
 | canboatjs (Node 25)    |  27.8 s   |   **8.1 ×**   |
 | canboat C              |   9.1 s   |   **2.6 ×**   |
-| canboat-rs `canboat convert` |   3.4 s   |       1.0 ×   |
+| canboat `convert`           |   3.4 s   |       1.0 ×   |
 
 `canboat server` goes one step further and collapses the
 `canboat convert | canboat n2kd` pipeline into a single process with no
