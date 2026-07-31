@@ -22,6 +22,7 @@ pub mod decode;
 pub mod derive;
 pub mod edit;
 pub mod emit_c;
+pub mod emit_rust;
 pub mod emit_text;
 pub mod emit_xml;
 pub mod generate;

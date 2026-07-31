@@ -133,34 +133,31 @@ generator; every consumer builds from committed output without needing the gener
 | Rust runtime        | generated Rust schema tables        | No (regen only)       |
 | keel itself         | `database/*.yaml`                   | — it is the tool      |
 
-## 5. The core move: `keel` gains `emit_rust.rs`
+## 5. The core move: `keel` gains `emit_rust.rs` — DONE
 
-keel already has `emit_c.rs`, `emit_xml.rs`, `emit_text.rs`, wired through
-`generate.rs::emit_artifacts()` and the `generate` / `emit` subcommands. Add
-`emit_rust.rs` beside them.
+Done, to make the crates publishable. `keel/src/emit_rust.rs` emits both Rust
+tables and `keel generate` writes them as committed files:
 
-It emits, directly from the in-memory `keel::model::Database`, the exact artifact that
-`canboat-core/build.rs` produces today from `canboat.json`:
+* `crates/canboat-core/src/schema_generated.rs` (5.6 MB)
+* `crates/canboat-io/src/fastpacket_generated.rs` (25 kB)
 
-- the static `&[FieldInfo]` / `&PgnInfo` tables (canboat-schema types),
-- the `by_value` / `by_bit` / `by_pair` lookup tables,
-- the id-keyed constant modules `pub mod pgn { pub static WIND_DATA: &PgnInfo … }` and
-  `pub mod field { pub mod wind_data { pub const WIND_ANGLE: FieldRef … } }`.
+Both build scripts are gone, and with them `canboat-core`'s path
+build-dependency on `keel` and `canboat-io`'s `serde_json` one. That was the
+blocker: a build script cannot read `database/`, which sits above the package
+root, so a published crate would have carried no schema.
 
-This is a **port, not a rewrite**: the table-writing back half of
-`canboat-core/build.rs` (the `write!(out, "static {ident}:&[FieldInfo]=&[…")` machinery
-and `emit_id_constants`) already knows how to serialize these structures. It moves into
-keel; only its *front end* changes — from "parse JSON into `RawPgn`/`RawField`" to "walk
-`keel::model`". keel's model is a strictly richer source than `canboat.json`, so no
-information is lost.
+The measurement in §3 still holds — this *adds* about 0.12 MB compressed to the
+repository rather than saving any. Publishability was the reason, not size.
 
-Output lands as a committed `schema_data.rs` (path TBD, e.g.
-`crates/canboat-core/src/schema_data.rs`), `include!`d exactly as today. `canboat-core`
-then has **no build script** and **no vendored data**.
+The move was verified by byte-comparing the emitter's output against what the
+build scripts produced: identical, 5,920,956 and 25,051 bytes. That mattered,
+because the ~500 lines that moved are not printing — they are the non-SI unit
+fix-up, sentinel resolution and precision derivation that decide how every
+field decodes.
 
-Add it to `generate.rs::emit_artifacts()` alongside the C/XML outputs so a single
-`keel generate` (or `make generated`) refreshes C, XML→JSON, *and* Rust together, and the
-same git-diff CI gate covers all three.
+**The trade accepted:** `cargo build` alone no longer picks up a `database/`
+edit. Run `make generated` (or `keel generate`) first. `keel generate --check`
+is the gate, and it covers all eight artifacts.
 
 ## 6. What gets deleted
 

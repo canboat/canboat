@@ -24,4 +24,4 @@
 // verbatim schema data, not an inexact use of the constant.
 #![allow(clippy::approx_constant)]
 
-include!(concat!(env!("OUT_DIR"), "/schema_generated.rs"));
+include!("schema_generated.rs");

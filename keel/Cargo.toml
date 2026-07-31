@@ -1,4 +1,7 @@
 [package]
+# The database tool, not a library: it is built from this repository and
+# has no meaning outside it. Keep it off crates.io.
+publish = false
 name = "keel"
 version = "0.1.0"
 edition = "2024"

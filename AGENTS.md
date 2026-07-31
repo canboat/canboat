@@ -138,7 +138,7 @@ Key facts:
 |---|---|
 | `make` | Builds all tool binaries into `rel/<platform>/`. |
 | `make tests` | Builds, then runs the `analyzer` golden tests. |
-| `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}` + `canboat.dbc`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
+| `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}`, `canboat.dbc`, the C `*-generated-data.h` and the Rust `schema_generated.rs` / `fastpacket_generated.rs`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
 | `make format` | `clang-format -i` over `*/*.c */*.h` (one directory level deep). |
 | `make docker-build` | Runs `make clean generated` inside an `ubuntu:22.04` builder. |
 | `make release` | **Maintainer-only:** `clean generated`, `git diff --exit-code`, tag `v<VERSION>`, push tags. |

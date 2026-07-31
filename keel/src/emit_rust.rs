@@ -1,19 +1,15 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Build script: derive the compiled-in schema from the repository's own
-//! `database/*.yaml`, via keel -- the same tool that generates the analyzer's
-//! C tables. One source of truth, and `cargo build` picks up a YAML edit
-//! with no `make` in between.
-//! and emit a Rust source file with the full schema as `&'static`
-//! tables. The output is `include!`d from `src/schema_data.rs` and
-//! published as a `static PgnDatabase` (see `src/db.rs`).
+//! Emit the Rust schema tables that `canboat-core` compiles in.
 //!
-//! Replaces what used to be a runtime `serde_json::from_reader` over a
-//! 2.3 MB JSON document plus a HashMap build pass. After this, decoder
-//! callers pay zero startup cost for the schema.
+//! This was `crates/canboat-core/build.rs` until the crates became
+//! publishable: a build script cannot reach `database/`, which lives above
+//! the package root, so the tables are generated here and committed instead.
+//! The code is otherwise a straight move — the derivation it performs (the
+//! non-SI unit fix-up, sentinel resolution, precision) decides how every
+//! field decodes, so it was not rewritten in passing.
 
 use std::collections::BTreeMap;
-use std::env;
 use std::fmt::Write as _;
 use std::fs;
 use std::path::{Path, PathBuf};
@@ -850,15 +846,18 @@ fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[Computed
 // running bit offset and the sentinel triple, both reproduced here exactly as
 // emit_xml does (which is what canboat.json carried).
 
-fn ft_of<'a>(db: &'a keel::model::Database, f: &keel::model::Field) -> &'a keel::model::FieldType {
+fn ft_of<'a>(
+    db: &'a crate::model::Database,
+    f: &crate::model::Field,
+) -> &'a crate::model::FieldType {
     &db.fieldtypes[f.ft]
 }
 
 /// Sentinels, as emit_xml::field() emits them: only for a TopOfRange root with
 /// a real range, under 64 bits, and never on a match field.
 fn sentinels(
-    db: &keel::model::Database,
-    f: &keel::model::Field,
+    db: &crate::model::Database,
+    f: &crate::model::Field,
 ) -> (Option<u64>, Option<u64>, Option<u64>) {
     let ft = ft_of(db, f);
     if f.reserved_count == 0
@@ -895,8 +894,8 @@ fn sentinels(
 }
 
 fn raw_field(
-    db: &keel::model::Database,
-    f: &keel::model::Field,
+    db: &crate::model::Database,
+    f: &crate::model::Field,
     bit_offset: u32,
     show_offset: bool,
 ) -> RawField {
@@ -967,9 +966,7 @@ fn raw_field(
     }
 }
 
-fn from_keel(root: &Path) -> CanboatJson {
-    let db = keel::load(root).unwrap_or_else(|e| panic!("keel: {e}"));
-
+fn from_keel(db: &crate::model::Database) -> CanboatJson {
     let mut pgns = Vec::new();
     for p in &db.pgns {
         // emit_xml's running bit offset: it stops being meaningful once a
@@ -978,7 +975,7 @@ fn from_keel(root: &Path) -> CanboatJson {
         let mut show = true;
         let mut fields = Vec::with_capacity(p.fields.len());
         for f in &p.fields {
-            fields.push(raw_field(&db, f, bit_offset, show));
+            fields.push(raw_field(db, f, bit_offset, show));
             bit_offset += f.res_bits;
             // Same kill switch as emit_xml: once a field's position stops
             // being statically knowable, no later field reports an offset.
@@ -986,7 +983,7 @@ fn from_keel(root: &Path) -> CanboatJson {
                 show = false;
             }
         }
-        let rep = |r: &Option<keel::model::Repeating>| {
+        let rep = |r: &Option<crate::model::Repeating>| {
             r.as_ref().map(|r| (r.count, r.start, r.count_field))
         };
         let (r1, r2) = (rep(&p.repeating1), rep(&p.repeating2));
@@ -1009,10 +1006,10 @@ fn from_keel(root: &Path) -> CanboatJson {
             },
             priority: (p.priority != 0).then_some(p.priority as u8),
             transmission_interval: match p.interval {
-                keel::model::Interval::Ms(ms) => Some(ms),
+                crate::model::Interval::Ms(ms) => Some(ms),
                 _ => None,
             },
-            transmission_irregular: matches!(p.interval, keel::model::Interval::Irregular)
+            transmission_irregular: matches!(p.interval, crate::model::Interval::Irregular)
                 .then_some(true),
             field_count: p.field_count,
             // A variable-length PGN (one with a repeating set) publishes
@@ -1031,11 +1028,11 @@ fn from_keel(root: &Path) -> CanboatJson {
         });
     }
 
-    let of_kind = |k: &str| -> Vec<&keel::model::Lookup> { db.ordered_lookups(k) };
+    let of_kind = |k: &str| -> Vec<&crate::model::Lookup> { db.ordered_lookups(k) };
     CanboatJson {
         schema_version: db.schema_version.clone(),
         version: db.version.clone(),
-        copyright: keel::emit_xml::copyright(&db.version),
+        copyright: crate::emit_xml::copyright(&db.version),
         pgns,
         lookup_enumerations: of_kind("pair")
             .iter()
@@ -1128,31 +1125,13 @@ fn from_keel(root: &Path) -> CanboatJson {
 // main()
 // ---------------------------------------------------------------------
 
-fn main() {
-    let manifest = PathBuf::from(env::var("CARGO_MANIFEST_DIR").expect("CARGO_MANIFEST_DIR"));
-    // The schema is read straight from the repository's own generated
-    // docs/canboat.json — the single source of truth, produced by keel from
-    // database/. This crate used to vendor a copy under data/ with a
-    // CANBOAT_REF pin and a weekly sync job; co-locating the two codebases
-    // made all of that redundant, and a vendored copy can only ever be stale
-    // (MERGE-CANBOAT-RS.md §3 and goal #2).
-    //
-    // The path reaches outside the package, so `cargo package` / a crates.io
-    // publish of this crate would not carry the schema. Nothing is published
-    // today; solve that when a publish is actually wanted, most likely by
-    // giving keel an emit_rust.rs and committing the generated tables so no
-    // build script is needed at all (§5).
-    let repo_root = manifest
-        .parent()
-        .and_then(|p| p.parent())
-        .expect("crate is at <repo>/crates/canboat-core");
-    // Rebuild when any of the authored database changes. cargo watches a
-    // directory recursively, so this covers every pgn/lookup file.
-    for dir in ["database", "common"] {
-        println!("cargo:rerun-if-changed={}", repo_root.join(dir).display());
-    }
-
-    let canboat = from_keel(repo_root);
+/// Render the whole `schema_generated.rs` body.
+///
+/// `root` is the repository root: the SCHEMA_HASH below is computed by
+/// walking the authored `database/*.yaml` on disk, so the emitter needs to
+/// know where they are.
+pub fn emit_schema(db: &crate::model::Database, root: &Path) -> String {
+    let canboat = from_keel(db);
 
     // The CANBOAT_BEM pseudo-PGNs (0x40000+) are ordinary members of the
     // database now, and keel hands them over sorted by PGN — so they still
@@ -1257,7 +1236,7 @@ fn main() {
         // (sorted) order. Path as well as content, so a rename alone still
         // moves the hash.
         let mut files: Vec<PathBuf> = Vec::new();
-        let mut stack = vec![repo_root.join("database")];
+        let mut stack = vec![root.join("database")];
         while let Some(dir) = stack.pop() {
             let Ok(rd) = fs::read_dir(&dir) else { continue };
             for e in rd.flatten() {
@@ -1279,7 +1258,7 @@ fn main() {
         };
         for f in &files {
             feed(
-                f.strip_prefix(repo_root)
+                f.strip_prefix(root)
                     .unwrap_or(f)
                     .to_string_lossy()
                     .as_bytes(),
@@ -1500,9 +1479,7 @@ fn main() {
     .unwrap();
     writeln!(out, "}}").unwrap();
 
-    let out_dir = PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR"));
-    let out_path = out_dir.join("schema_generated.rs");
-    fs::write(&out_path, &out).unwrap_or_else(|e| panic!("write {}: {e}", out_path.display()));
+    out
 }
 
 /// `true` iff this PGN number needs a generated dispatch function —
@@ -1629,4 +1606,66 @@ fn emit_per_pgn_dispatch(out: &mut String, pgn_num: u32, variants: &[VariantEntr
         None => writeln!(out, "    None").unwrap(),
     }
     writeln!(out, "}}").unwrap();
+}
+
+// ---------------------------------------------------------------------
+// canboat-io: the fast-packet lookup table
+// ---------------------------------------------------------------------
+
+const MIXED_START: u32 = 0x1F000;
+const MIXED_END: u32 = 0x20000; // exclusive; table covers 0x1F000..0x1FFFF
+const PROPRIETARY_START: u32 = 0x1FF00;
+
+/// Render `fastpacket_generated.rs` for `canboat-io`.
+///
+/// PGNs 0x1F000..0x1FFFF are the one range where single-frame and
+/// fast-packet messages are interleaved, so a receiver cannot tell them
+/// apart from the CAN id alone and needs this table.
+///
+/// Was `canboat-io/build.rs`, which derived the same table from
+/// `docs/canboat.json`. Reading the model directly removes the last
+/// out-of-package file read and drops the `serde_json` build dependency.
+pub fn emit_fastpacket(db: &crate::model::Database) -> String {
+    let size = (MIXED_END - MIXED_START) as usize;
+    // Default: the manufacturer-proprietary tail is fast-packet, the
+    // standardized part defaults to single frame; explicit PGN
+    // definitions override below.
+    let mut fast = vec![false; size];
+    for (i, slot) in fast.iter_mut().enumerate() {
+        *slot = MIXED_START + i as u32 >= PROPRIETARY_START;
+    }
+
+    for p in &db.pgns {
+        if !(MIXED_START..MIXED_END).contains(&p.pgn) {
+            continue;
+        }
+        if p.fallback {
+            continue; // range fallbacks, not a real PGN
+        }
+        fast[(p.pgn - MIXED_START) as usize] = p.type_ == "Fast";
+    }
+
+    let mut out = String::new();
+    out.push_str(&format!(
+        "pub const FASTPACKET_MIXED_START: u32 = 0x{MIXED_START:05X};\n"
+    ));
+    out.push_str(&format!(
+        "pub const FASTPACKET_MIXED_END: u32 = 0x{MIXED_END:05X};\n"
+    ));
+    out.push_str(&format!(
+        "/// 1 = fast-packet, 0 = single-frame, for PGNs 0x{:05X}..0x{:05X}.\n",
+        MIXED_START,
+        MIXED_END - 1
+    ));
+    out.push_str(&format!(
+        "pub static FASTPACKET_MIXED: [bool; 0x{size:X}] = ["
+    ));
+    for (i, v) in fast.iter().enumerate() {
+        if i % 32 == 0 {
+            out.push_str("\n    ");
+        }
+        out.push_str(if *v { "true," } else { "false," });
+    }
+    out.push_str("\n];\n");
+    out
 }
