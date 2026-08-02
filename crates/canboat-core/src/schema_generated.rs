@@ -18,7 +18,7 @@
 // ==========================================================================
 use canboat_schema::{BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, LookupTable, LookupValue, PacketType, PgnInfo};
 pub const SCHEMA_VERSION: &str = "2.5.0";
-pub const VERSION: &str = "7.1.0";
+pub const VERSION: &str = "8.0.0-beta1";
 pub const SCHEMA_HASH: u64 = 8596304599148973994;
 pub const COPYRIGHT_ID: &str = "(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.";
 static F0:&[FieldInfo]=&[FieldInfo{order:1,id:"data",name:"Data",description:None,bit_length:Some(64),bit_length_field:None,bit_length_variable:None,bit_offset:Some(0),bit_start:Some(0),resolution:Some(1.0),signed:None,offset:None,range_min:None,range_max:None,unknown_value:None,out_of_range_value:None,reserved_value:None,unit:None,physical_quantity:None,field_type:Some(FieldType::Binary),lookup_enumeration:None,lookup_bit_enumeration:None,lookup_indirect_enumeration:None,lookup_indirect_enumeration_field_order:None,lookup_field_type_enumeration:None,match_value:None,part_of_primary_key:None,condition:None,unit_offset:0.0,precision:0,is_dynamic_length_marker:false,dynamic_field_length_overhead:0},];
