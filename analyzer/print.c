@@ -1369,7 +1369,16 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
         return;
 
       default:
-        if (c > 0x00)
+        if (c < 0x20)
+        {
+          /* Every other control character has to be escaped or the result is
+           * not JSON at all -- a bare 0x03 in a string makes a strict parser
+           * reject the whole line. Seen on PGN 262657's Sentence field. The
+           * cases above cover the ones with a short form; these take the
+           * \u00XX one, which is what canboat's Rust output already emits. */
+          mprintf("\\u%04x", c);
+        }
+        else
         {
           mprintf("%c", c);
         }
