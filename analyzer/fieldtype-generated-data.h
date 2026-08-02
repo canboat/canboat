@@ -1265,7 +1265,7 @@ FieldType fieldTypeList[] = {
      .pf = fieldPrintStringLZ},
 
     {.name = "STRING_LAU",
-     .description = "A varying length string containing double or single byte codepoints encoded with a length byte and terminating zero.",
+     .description = "A varying length string containing double or single byte codepoints encoded with a length byte.",
      .encodingDescription = "The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE or 1 for ASCII.",
      .variableSize = True,
      .sentinels = SENTINEL_EMPTY_STRING,
