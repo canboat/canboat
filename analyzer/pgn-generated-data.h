@@ -5024,7 +5024,7 @@ Pgn pgnList[] = {
       {.name = "SNR", .camelName = "snr", .fieldType = "SIGNALTONOISERATIO_FIX16", .hasSign = true},
       {.name = "Range residuals", .camelName = "rangeResiduals", .fieldType = "DISTANCE_FIX32_MMM", .hasSign = true},
       {.name = "Status", .camelName = "status", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSATELLITE_STATUS, .lookup.name = "SATELLITE_STATUS"},
-      {.name = "Reserved", .camelName = "reserved11", .fieldType = "RESERVED", .size = 4, .resolution = 1.0}
+      {.name = "GNSS System", .camelName = "gnssSystem", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .description = "Constellation the PRN belongs to; PRN alone is not unique across systems", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGNSS_SYSTEM, .lookup.name = "GNSS_SYSTEM"}
      },
      .camelDescription = "gnssSatsInView",
      .interval = 1000,

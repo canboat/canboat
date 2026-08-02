@@ -16,6 +16,7 @@
     "128520": {"*": "known divergence (also in legacy validate-csv ignore_prn): canboat field split/repeating-set modeling differs throughout Tracked Target Data"},
     "129038": {"16": "canboat improvement: regional-applications reserved bits decoded as a lookup"},
     "129285": {"5": "minor: Navigation direction modeled as 3 bits (canboat) vs 4 (PDF); absorbed by adjacent reserved"},
+    "129540": {"11": "canboat improvement: PDF reserved nibble after Status decoded as the GNSS_SYSTEM lookup; receivers that populate it repeat a PRN across constellations in one message, so the nibble is load-bearing. Receivers that do not populate it leave 0xF (unavailable), which decodes as before"},
     "129550": {"7": "reconcile artifact: PDF skips field #6 (numbers 5 -> 7), so PDF #7 Differential Operation Mode misaligns against canboat #7 Reserved; the fields actually match (canboat #6)"},
     "129796": {"*": "reconcile artifact: AIS Acknowledge repeating Destination/Sequence set is modeled differently from the PDF's flat fields"},
     "129798": {"14": "reconcile artifact: AIS regional/repeating field alignment"},

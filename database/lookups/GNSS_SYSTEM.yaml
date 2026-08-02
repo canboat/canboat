@@ -1,0 +1,15 @@
+name: GNSS_SYSTEM
+kind: pair
+bits: 4
+values:
+  0: GPS
+  1: GLONASS
+  2: Galileo
+  3: BeiDou
+  4: QZSS
+valueNotes:
+  0: PRN 1-32
+  1: PRN 65-96, GLONASS slot = PRN - 64
+  2: PRN 1-36, Galileo E number
+  3: PRN 1-63, BeiDou C number
+  4: PRN 193-202

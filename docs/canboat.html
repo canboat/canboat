@@ -10395,8 +10395,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td class="repeating">10<div>Set 1</div></td><td>Status</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-SATELLITE_STATUS">SATELLITE_STATUS</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-129541">0x1FA05:
+                      <a href="#lookup-SATELLITE_STATUS">SATELLITE_STATUS</a></td><td/></tr><tr><td class="repeating">11<div>Set 1</div></td><td>GNSS System</td><td>Constellation the PRN belongs to; PRN alone is not unique across systems</td><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                      lookup
+                      <a href="#lookup-GNSS_SYSTEM">GNSS_SYSTEM</a></td><td/></tr></table><h3 id="pgn-129541">0x1FA05:
             PGN 129541
             - GPS Almanac Data</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -22777,7 +22779,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>GPS</td></tr><tr><td>1</td><td>GLONASS</td></tr><tr><td>2</td><td>GPS+GLONASS</td></tr><tr><td>3</td><td>GPS+SBAS/WAAS</td></tr><tr><td>4</td><td>GPS+SBAS/WAAS+GLONASS</td></tr><tr><td>5</td><td>Chayka</td></tr><tr><td>6</td><td>integrated</td></tr><tr><td>7</td><td>surveyed</td></tr><tr><td>8</td><td>Galileo</td></tr></table><h3 id="lookup-GNSS_MODE">GNSS_MODE
         (0 - 7)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>1D</td></tr><tr><td>1</td><td>2D</td></tr><tr><td>2</td><td>3D</td></tr><tr><td>3</td><td>Auto</td></tr></table><h3 id="lookup-GNS_INTEGRITY">GNS_INTEGRITY
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>1D</td></tr><tr><td>1</td><td>2D</td></tr><tr><td>2</td><td>3D</td></tr><tr><td>3</td><td>Auto</td></tr></table><h3 id="lookup-GNSS_SYSTEM">GNSS_SYSTEM
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>GPS</td></tr><tr><td>1</td><td>GLONASS</td></tr><tr><td>2</td><td>Galileo</td></tr><tr><td>3</td><td>BeiDou</td></tr><tr><td>4</td><td>QZSS</td></tr></table><h3 id="lookup-GNS_INTEGRITY">GNS_INTEGRITY
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>No integrity checking</td></tr><tr><td>1</td><td>Safe</td></tr><tr><td>2</td><td>Caution</td></tr><tr><td>3</td><td>Unsafe</td></tr></table><h3 id="lookup-GNS_METHOD">GNS_METHOD
         (0 - 15)
