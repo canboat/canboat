@@ -129,9 +129,25 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
             .encode(id)
             .or_else(|_| db.encode_by_pgn(pgn as u32))
             .map_err(|e| anyhow!("{e}"))?,
-        None => db
-            .encode_by_pgn(pgn as u32)
-            .map_err(|e| anyhow!("{e}; use the -camel wrapped form to select the exact variant"))?,
+        None => {
+            // A bare record may still name its variant: `description`
+            // carries either the human description ("System Time") or a
+            // camel id — enough to disambiguate multi-variant PGNs
+            // (canboatjs-style objects always include it).
+            let by_desc = record
+                .get("description")
+                .and_then(Value::as_str)
+                .and_then(|d| {
+                    db.pgn_variants(pgn as u32)
+                        .find(|p| p.description == d || p.id == d)
+                });
+            match by_desc {
+                Some(info) => db.encode_for(info),
+                None => db.encode_by_pgn(pgn as u32).map_err(|e| {
+                    anyhow!("{e}; use the -camel wrapped form to select the exact variant")
+                })?,
+            }
+        }
     };
 
     if let Some(p) = record.get("prio").and_then(Value::as_u64) {
@@ -252,6 +268,16 @@ fn to_encode_value(
                 Some(EncodeValue::Int(n.as_i64().ok_or_else(|| {
                     anyhow!("lookup value {n} is not an integer")
                 })?))
+            } else if matches!(f.field_type, Some(FieldType::Binary)) {
+                // canboatjs renders short BINARY fields as numbers (the
+                // raw bits); rebuild the little-endian bytes.
+                let raw = n
+                    .as_u64()
+                    .ok_or_else(|| anyhow!("binary value {n} is not an integer"))?;
+                let width = f.bit_length.map(|bl| bl.div_ceil(8) as usize).unwrap_or(8);
+                Some(EncodeValue::Bytes(
+                    raw.to_le_bytes()[..width.min(8)].to_vec(),
+                ))
             } else {
                 // A physical value in the field's display unit.
                 Some(EncodeValue::Number(
@@ -309,10 +335,25 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
             Ok(EncodeValue::Bytes(parse_hex(s)?))
         }
-        _ if is_lookup(f) => Ok(EncodeValue::Lookup(s.to_string())),
+        // The display renderings parse back: "2017.04.15" → days since
+        // epoch, "14:57:57(.1234)" → seconds. Both are the physical
+        // value in the field's unit (d / s), so Number staging scales
+        // them through the schema resolution.
+        Some(FieldType::Date) => parse_date_days(s)
+            .map(EncodeValue::Number)
+            .ok_or_else(|| anyhow!("field '{}': bad date '{s}'", f.name)),
+        Some(FieldType::Time) | Some(FieldType::Duration) => parse_time_seconds(s)
+            .map(EncodeValue::Number)
+            .ok_or_else(|| anyhow!("field '{}': bad time '{s}'", f.name)),
+        // A digit string on a lookup is the raw value beyond the
+        // enumeration (canboatjs renders unknown entries that way);
+        // anything else is a label.
+        _ if is_lookup(f) => Ok(match s.parse::<i64>() {
+            Ok(raw) => EncodeValue::Int(raw),
+            Err(_) => EncodeValue::Lookup(s.to_string()),
+        }),
         // Digit strings on numeric fields (e.g. an MMSI rendered as a
-        // string) parse back; display-formatted date/time/duration
-        // strings do not — that data needs the `-nv` form.
+        // string) parse back.
         _ => s.parse::<f64>().map(EncodeValue::Number).map_err(|_| {
             anyhow!(
                 "field '{}': cannot re-encode display string '{s}'; use -nv JSON input",
@@ -320,6 +361,39 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
             )
         }),
     }
+}
+
+/// `"YYYY.MM.DD"` (the analyzer/canboatjs date rendering) → days since
+/// the epoch, the DATE field's physical value.
+fn parse_date_days(s: &str) -> Option<f64> {
+    let mut it = s.split('.');
+    let (y, m, d) = (
+        it.next()?.parse::<i32>().ok()?,
+        it.next()?.parse::<u32>().ok()?,
+        it.next()?.parse::<u32>().ok()?,
+    );
+    if it.next().is_some() {
+        return None;
+    }
+    let date = chrono::NaiveDate::from_ymd_opt(y, m, d)?;
+    let epoch = chrono::NaiveDate::from_ymd_opt(1970, 1, 1)?;
+    Some((date - epoch).num_days() as f64)
+}
+
+/// `"HH:MM"`, `"HH:MM:SS"` or `"HH:MM:SS.ffff"` → seconds, the
+/// TIME/DURATION field's physical value.
+fn parse_time_seconds(s: &str) -> Option<f64> {
+    let mut it = s.split(':');
+    let h = it.next()?.parse::<f64>().ok()?;
+    let m = it.next()?.parse::<f64>().ok()?;
+    let sec = match it.next() {
+        Some(x) => x.parse::<f64>().ok()?,
+        None => 0.0,
+    };
+    if it.next().is_some() {
+        return None;
+    }
+    Some(h * 3600.0 + m * 60.0 + sec)
 }
 
 /// Resolve a bit name (`"Low Oil Pressure"`) to its bit position via
