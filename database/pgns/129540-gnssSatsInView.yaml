@@ -43,10 +43,22 @@ fields:
       type: LOOKUP
       bits: 4
       lookup: SATELLITE_STATUS
-    - id: reserved11
-      name: Reserved
-      type: RESERVED
+    - id: gnssSystem
+      name: GNSS System
+      type: LOOKUP
       bits: 4
+      lookup: GNSS_SYSTEM
+      description: Constellation the PRN belongs to; PRN alone is not unique across systems
+notes: |-
+  The nibble following Status is populated by some receivers with the constellation the PRN belongs
+  to, and left at 0xF (unavailable) by the rest. Evidence: a receiver reporting GPS+Galileo+BeiDou+QZSS
+  lists PRN 19 twice in one message with different elevation/azimuth/SNR and nibble 2 vs 3, so PRN is
+  per-system and the nibble disambiguates it. Turning GLONASS off on that same receiver removed every
+  nibble-1 entry while the ten nibble-0 (PRN 1-32) entries stayed put with elevations advanced a few
+  degrees. Across samples/ four further devices (src 19, 23, 24, 25 in ap48-tack.all, live.all,
+  maneuvers*.raw, nac3-reset-dockside-commissioning.raw, triton-engine-setup.all) use 0 for PRN 1-32
+  and 1 for PRN 65-88 and nothing else. PRN numbering is per-system as in NMEA 0183 talker-specific
+  GSV, not the unified numbering used by PGN 130845.
 samples:
 - raw: "2023-01-01-00:00:00.000,6,129540,12,255,147,37,fe,0c,01,51,0e,89,63,54,0b,00,00,00,00,f2,03,22,24,a1,3a,1c,0c,00,00,00,00,f2,11,68,12,ce,9c,1c,0c,00,00,00,00,f2,13,39,19,42,b1,48,0d,00,00,00,00,f2,04,73,32,e6,64,b8,0b,00,00,00,00,f2,1f,51,0e,50,1d,54,0b,00,00,00,00,f2,09,ff,1d,da,8f,68,10,00,00,00,00,f2,06,96,1a,f0,cf,e4,0c,00,00,00,00,f2,0b,c5,04,b6,d4,1c,0c,00,00,00,00,f2,47,f4,0c,2d,26,d0,07,00,00,00,00,f2,57,68,21,e6,82,74,0e,00,00,00,00,f2,48,5c,2e,39,19,c4,09,00,00,00,00,f2"  # from merrimac-2022.raw
   expects:
@@ -321,3 +333,130 @@ samples:
     snr.13: 43.00
     rangeResiduals.13: ~
     status.13: "Tracked+Diff"
+- raw: "2026-08-02T10:07:39.569Z,6,129540,25,255,207,e1,ff,11,0c,51,0e,50,1d,74,0e,00,00,00,00,02,20,f3,39,1e,e7,1c,0c,00,00,00,00,02,0d,00,00,00,00,b8,0b,00,00,00,00,00,0a,0b,11,66,8a,54,0b,00,00,00,00,02,1c,d0,24,1e,d8,8c,0a,00,00,00,00,02,1f,22,15,08,c5,c4,09,00,00,00,00,02,4a,ff,2c,7b,e8,60,09,00,00,00,00,10,41,45,0c,fb,e0,fc,08,00,00,00,00,10,49,68,12,dc,17,98,08,00,00,00,00,12,1d,22,15,8a,54,34,08,00,00,00,00,02,03,68,03,f0,de,d0,07,00,00,00,00,00,4b,e8,19,71,aa,a4,06,00,00,00,00,12,19,8a,27,ff,1d,dc,05,00,00,00,00,00,1a,ae,0f,7d,9d,78,05,00,00,00,00,00,48,67,30,2a,da,00,00,00,00,00,00,10,47,68,21,5b,6a,00,00,00,00,00,00,10,56,d1,06,7f,16,00,00,00,00,00,00,10"  # receiver with GPS+GLONASS enabled
+  expects:
+    sid: 225
+    rangeResidualMode: ~
+    satsInView: 17
+    prn: 12
+    elevation: 0.3665
+    azimuth: 0.7504
+    snr: 37.00
+    rangeResiduals: 0.00000
+    status: "Used"
+    gnssSystem: "GPS"
+    prn.2: 32
+    gnssSystem.2: "GPS"
+    prn.3: 13
+    gnssSystem.3: "GPS"
+    prn.4: 10
+    gnssSystem.4: "GPS"
+    prn.5: 28
+    gnssSystem.5: "GPS"
+    prn.6: 31
+    gnssSystem.6: "GPS"
+    prn.7: 74
+    elevation.7: 1.1519
+    azimuth.7: 5.9515
+    snr.7: 24.00
+    rangeResiduals.7: 0.00000
+    status.7: "Not tracked"
+    gnssSystem.7: "GLONASS"
+    prn.8: 65
+    gnssSystem.8: "GLONASS"
+    prn.9: 73
+    elevation.9: 0.4712
+    azimuth.9: 0.6108
+    snr.9: 22.00
+    rangeResiduals.9: 0.00000
+    status.9: "Used"
+    gnssSystem.9: "GLONASS"
+    prn.10: 29
+    gnssSystem.10: "GPS"
+    prn.11: 3
+    gnssSystem.11: "GPS"
+    prn.12: 75
+    gnssSystem.12: "GLONASS"
+    prn.13: 25
+    gnssSystem.13: "GPS"
+    prn.14: 26
+    gnssSystem.14: "GPS"
+    prn.15: 72
+    gnssSystem.15: "GLONASS"
+    prn.16: 71
+    gnssSystem.16: "GLONASS"
+    prn.17: 86
+    gnssSystem.17: "GLONASS"
+- raw: "2026-08-02T10:16:48.592Z,6,129540,25,255,231,09,ff,13,17,5c,1f,50,1d,30,11,00,00,00,00,32,19,22,24,50,1d,04,10,00,00,00,00,02,1d,2e,17,21,51,d8,0e,00,00,00,00,02,20,5b,3d,9e,ee,74,0e,00,00,00,00,02,0c,97,0b,50,1d,10,0e,00,00,00,00,02,1b,68,12,50,1d,ac,0d,00,00,00,00,22,09,00,00,00,00,ac,0d,00,00,00,00,30,0d,00,00,00,00,48,0d,00,00,00,00,00,13,73,32,35,eb,1c,0c,00,00,00,00,20,c2,dc,26,43,66,b8,0b,00,00,00,00,42,13,68,03,93,dd,b8,0b,00,00,00,00,32,1f,2e,17,c2,c7,54,0b,00,00,00,00,02,07,e7,28,b6,d4,54,0b,00,00,00,00,32,14,0b,20,f0,cf,54,0b,00,00,00,00,32,03,74,05,e4,dc,28,0a,00,00,00,00,02,1c,2d,26,e4,dc,c4,09,00,00,00,00,02,0a,ff,0e,09,89,6c,07,00,00,00,00,02,1a,68,12,88,9f,6c,07,00,00,00,00,02,04,a2,0d,13,d6,6c,07,00,00,00,00,20"  # same device 9 minutes later, GLONASS off, Galileo+BeiDou+QZSS+SBAS on
+  expects:
+    sid: 9
+    rangeResidualMode: ~
+    satsInView: 19
+    prn: 23
+    elevation: 0.8028
+    azimuth: 0.7504
+    snr: 44.00
+    rangeResiduals: 0.00000
+    status: "Used"
+    gnssSystem: "BeiDou"
+    prn.2: 25
+    gnssSystem.2: "GPS"
+    prn.3: 29
+    gnssSystem.3: "GPS"
+    prn.4: 32
+    gnssSystem.4: "GPS"
+    prn.5: 12
+    gnssSystem.5: "GPS"
+    prn.6: 27
+    elevation.6: 0.4712
+    azimuth.6: 0.7504
+    snr.6: 35.00
+    rangeResiduals.6: 0.00000
+    status.6: "Used"
+    gnssSystem.6: "Galileo"
+    prn.7: 9
+    gnssSystem.7: "BeiDou"
+    prn.8: 13
+    gnssSystem.8: "GPS"
+    prn.9: 19
+    elevation.9: 1.2915
+    azimuth.9: 6.0213
+    snr.9: 31.00
+    rangeResiduals.9: 0.00000
+    status.9: "Not tracked"
+    gnssSystem.9: "Galileo"
+    prn.10: 194
+    elevation.10: 0.9948
+    azimuth.10: 2.6179
+    snr.10: 30.00
+    rangeResiduals.10: 0.00000
+    status.10: "Used"
+    gnssSystem.10: "QZSS"
+    prn.11: 19
+    elevation.11: 0.0872
+    azimuth.11: 5.6723
+    snr.11: 30.00
+    rangeResiduals.11: 0.00000
+    status.11: "Used"
+    gnssSystem.11: "BeiDou"
+    prn.12: 31
+    gnssSystem.12: "GPS"
+    prn.13: 7
+    gnssSystem.13: "BeiDou"
+    prn.14: 20
+    gnssSystem.14: "BeiDou"
+    prn.15: 3
+    gnssSystem.15: "GPS"
+    prn.16: 28
+    gnssSystem.16: "GPS"
+    prn.17: 10
+    gnssSystem.17: "GPS"
+    prn.18: 26
+    gnssSystem.18: "GPS"
+    prn.19: 4
+    elevation.19: 0.3490
+    azimuth.19: 5.4803
+    snr.19: 19.00
+    rangeResiduals.19: 0.00000
+    status.19: "Not tracked"
+    gnssSystem.19: "Galileo"

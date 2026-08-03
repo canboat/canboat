@@ -2014,6 +2014,17 @@
         ]
       },
       {
+        "Name":"GNSS_SYSTEM",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"GPS", "Value":0},
+          {"Name":"GLONASS", "Value":1},
+          {"Name":"Galileo", "Value":2},
+          {"Name":"BeiDou", "Value":3},
+          {"Name":"QZSS", "Value":4}
+        ]
+      },
+      {
         "Name":"GNS_INTEGRITY",
         "MaxValue":3,
         "EnumValues":[
@@ -42028,13 +42039,20 @@
           },
           {
             "Order":11,
-            "Id":"reserved11",
-            "Name":"Reserved",
+            "Id":"gnssSystem",
+            "Name":"GNSS System",
+            "Description":"Constellation the PRN belongs to; PRN alone is not unique across systems",
             "BitLength":4,
             "BitOffset":116,
             "BitStart":4,
             "Resolution":1,
-            "FieldType":"RESERVED"
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GNSS_SYSTEM"
           }
         ]
       },
