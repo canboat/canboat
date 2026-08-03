@@ -328,9 +328,10 @@ functionality" when a heading or wind source is missing), so confirm the mode
 actually changed rather than trusting the acknowledgement alone.
 
 > **Frame length.** Every 130850 AP command variant is modelled as the full 12
-> bytes, matching the fixed layout above. The mode commands were modelled with 11
-> until the trailing `Reserved` was widened from 24 to 32 bits; the catch-all
-> `simnetApCommand` variant is still 14 and remains to be trimmed.
+> bytes, matching the fixed layout above. This was not always so: the mode
+> commands carried a 24-bit trailing `Reserved` and so came to only 11, while the
+> catch-all `simnetApCommand` carried two `Reserved` bytes too many and came to
+> 14. Both were corrected against the captured frames.
 
 ## Propagation — why an alarm sometimes stays local
 
