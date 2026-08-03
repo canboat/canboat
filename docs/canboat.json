@@ -79724,7 +79724,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
-        "Length":11,
+        "Length":12,
         "Fields":[
           {
             "Order":1,
@@ -79859,7 +79859,7 @@
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
@@ -79878,7 +79878,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
-        "Length":11,
+        "Length":12,
         "Fields":[
           {
             "Order":1,
@@ -80013,7 +80013,7 @@
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
@@ -80032,7 +80032,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
-        "Length":11,
+        "Length":12,
         "Fields":[
           {
             "Order":1,
@@ -80167,7 +80167,7 @@
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
@@ -80186,7 +80186,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
-        "Length":11,
+        "Length":12,
         "Fields":[
           {
             "Order":1,
@@ -80321,7 +80321,7 @@
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
@@ -80340,7 +80340,7 @@
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
         "FieldCount":10,
-        "Length":11,
+        "Length":12,
         "Fields":[
           {
             "Order":1,
@@ -80475,7 +80475,7 @@
             "Order":10,
             "Id":"reserved10",
             "Name":"Reserved",
-            "BitLength":24,
+            "BitLength":32,
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,

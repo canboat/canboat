@@ -327,11 +327,10 @@ Heading/Wind/Nav when its sensor stack is incomplete (a Triton² logs "Reduced
 functionality" when a heading or wind source is missing), so confirm the mode
 actually changed rather than trusting the acknowledgement alone.
 
-> **Frame length caveat.** Captured mode-command frames are 12 bytes, matching the
-> fixed layout above, but canboat currently models the mode-command variants with
-> only 11 (their trailing `Reserved` is 24 bits where the wire shows 32). The
-> extra `0xff` is harmless and decodes fine; `simnetCommandApChangeCourse` and the
-> 130851 reply are modelled at the full 12.
+> **Frame length.** Every 130850 AP command variant is modelled as the full 12
+> bytes, matching the fixed layout above. The mode commands were modelled with 11
+> until the trailing `Reserved` was widened from 24 to 32 bits; the catch-all
+> `simnetApCommand` variant is still 14 and remains to be trimmed.
 
 ## Propagation — why an alarm sometimes stays local
 

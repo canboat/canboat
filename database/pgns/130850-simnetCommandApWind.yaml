@@ -63,4 +63,4 @@ fields:
 - id: reserved10
   name: Reserved
   type: RESERVED
-  bits: 24
+  bits: 32

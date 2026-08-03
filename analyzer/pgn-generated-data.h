@@ -9889,7 +9889,7 @@ Pgn pgnList[] = {
       {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "AP Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE", .partOfPrimaryKey = true},
       {.name = "Event", .camelName = "event", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 6, .description = "Standby", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_AP_EVENTS, .lookup.name = "SIMNET_AP_EVENTS"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
      .camelDescription = "simnetCommandApStandby",
      .priority = 2,
@@ -9909,7 +9909,7 @@ Pgn pgnList[] = {
       {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "AP Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE", .partOfPrimaryKey = true},
       {.name = "Event", .camelName = "event", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 12, .description = "No Drift mode", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_AP_EVENTS, .lookup.name = "SIMNET_AP_EVENTS"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
      .camelDescription = "simnetCommandApNodrift",
      .priority = 2,
@@ -9929,7 +9929,7 @@ Pgn pgnList[] = {
       {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "AP Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE", .partOfPrimaryKey = true},
       {.name = "Event", .camelName = "event", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 15, .description = "Wind mode", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_AP_EVENTS, .lookup.name = "SIMNET_AP_EVENTS"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
      .camelDescription = "simnetCommandApWind",
      .priority = 2,
@@ -9949,7 +9949,7 @@ Pgn pgnList[] = {
       {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "AP Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE", .partOfPrimaryKey = true},
       {.name = "Event", .camelName = "event", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "Nav mode", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_AP_EVENTS, .lookup.name = "SIMNET_AP_EVENTS"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
      .camelDescription = "simnetCommandApNav",
      .priority = 2,
@@ -9969,7 +9969,7 @@ Pgn pgnList[] = {
       {.name = "Command Type", .camelName = "commandType", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "AP Command", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_EVENT_TYPE, .lookup.name = "SIMNET_EVENT_TYPE", .partOfPrimaryKey = true},
       {.name = "Event", .camelName = "event", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 9, .description = "Heading mode", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_AP_EVENTS, .lookup.name = "SIMNET_AP_EVENTS"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 32, .resolution = 1.0}
      },
      .camelDescription = "simnetCommandApHeading",
      .priority = 2,
