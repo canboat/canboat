@@ -254,17 +254,43 @@ release assets. **There is no npm publish** (no `package.json`).
 canboat no longer builds the downstream projects; instead it diffs the load-
 bearing surface of `docs/canboat.json` against the PR's merge-base and requires
 the change to be *declared* at a sufficient semver level (`tools/contract.py`
-classifies; `tools/contract-pr.sh --gate` enforces). It fails a PR that removes/
-renames/retypes a field, PGN, lookup or value — or makes a field required —
-unless the PR is marked breaking (`type!:` + `BREAKING CHANGE:` footer); an
-additive change (new PGN/field/lookup/value) needs at least `feat:`.
+classifies; `tools/contract-pr.sh --gate` enforces).
+
+| Change to `docs/canboat.json` | Severity | Needs at least |
+|---|---|---|
+| field/PGN/lookup/lookup-value **removed** or **renamed** | `minor` | `feat:` |
+| field `type`/`lookup`/`bits`/`signed`/`resolution`/`offset` changed | `minor` | `feat:` |
+| PGN `type`/`match` changed, `primaryKey` flipped, lookup label changed | `minor` | `feat:` |
+| new PGN/field/lookup/value | `additive` | `feat:` |
+| `description`/`unit` text | `cosmetic` | `patch` |
+
+Two things worth knowing, because the obvious guess is wrong both times:
+
+- **A removal or rename is `minor`, not major.** `contract.py` defines a
+  `breaking` severity but **never emits it**, so the gate cannot currently
+  demand `type!:` + a `BREAKING CHANGE:` footer at all. Declaring a removal as
+  `fix:` fails the gate — not because it is breaking, but because `fix` is a
+  patch and the change needs a minor.
+- The report's heading for that class reads **"Minor breaking (recompiles;
+  decode/encode changed)"**. That is the label of the *minor* section, not a
+  separate breaking level — read the `required by contract change:` line at the
+  bottom, which is what the gate actually enforces.
+
+So in practice almost every contract-visible change needs `feat:`, and `make pr`
+prints the required level directly.
 
 > **`docs/canboat.json` is the consumed contract.** Downstream projects
 > (`ts-pgns`, `canboatjs`, the Signal K plugins) generate their types, decoders
 > and test fixtures from it and pin to canboat releases. A rename/removal/retype
 > is therefore source-breaking for them; the gate makes sure such a change ships
-> as a major with a changelog entry, so downstream can plan the update. Run
-> `make pr` to preview the impact before pushing.
+> as at least a minor with a changelog entry, so downstream can plan the update.
+> Run `make pr` to preview the impact before pushing.
+>
+> The gate only checks that the *declaration* matches the change. It does **not**
+> verify that downstream still builds — canboat stopped building the downstream
+> projects when `test_canboatjs_sk.yml` was retired. Refreshing `ts-pgns` and the
+> `canboatjs` fixtures after a rename is a manual follow-up in those repos, and
+> nothing here will remind you.
 
 ---
 
@@ -491,10 +517,14 @@ lengths, ranges and sentinels are **derived** — do not write them.
   `CHANGELOG.md` are left untouched.
 - **Versioning follows [SemVer](https://semver.org/)**, derived from PR-title
   types: `fix`/`perf`/`refactor` → **patch**, `feat` → **minor**,
-  `feat!` / `BREAKING CHANGE` → **major**. As a rule of thumb, changing an
-  **existing** PGN or field definition (renaming, re-typing, re-interpreting) is
-  consumer-visible — title it `feat` (or `feat!` if it breaks the JSON contract);
-  a purely additive PGN/enum or a non-output-changing fix is a `fix`.
+  `feat!` / `BREAKING CHANGE` → **major**. As a rule of thumb, anything that
+  changes `docs/canboat.json` structurally — renaming, re-typing or
+  re-interpreting an existing PGN or field, **and equally a purely additive
+  PGN/enum** — needs `feat`, because the contract gate classifies additions as
+  `additive` and everything structural as `minor`, both of which require a minor
+  bump (§6). `fix` is for changes that leave `docs/canboat.json` untouched, or
+  touch only its `description`/`unit` text. Use `feat!` only when you judge the
+  change genuinely source-breaking for downstream; the gate never demands it.
 - **Schema bumps:** bump `SCHEMA_VERSION` in `common/version.h` (this one is
   *not* managed by release-please) only when the database *schema* changes. Run
   `make generated` afterward so the new string is stamped into `docs/*` +
