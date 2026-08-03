@@ -197,7 +197,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:string" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
+      <xs:element type="xs:byte" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             When the FieldType is INDIRECT_LOOKUP, the field value has meaning that
@@ -611,7 +611,7 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
-      <xs:element type="xs:string" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
+      <xs:element type="xs:byte" name="LookupIndirectEnumerationFieldOrder" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
             When the FieldType is INDIRECT_LOOKUP, the field value has meaning that

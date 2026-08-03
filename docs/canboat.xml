@@ -19992,7 +19992,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>1</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20007,7 +20006,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20131,7 +20129,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>1</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20146,7 +20143,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20270,7 +20266,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>1</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20285,7 +20280,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20409,7 +20403,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>1</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20424,7 +20417,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20549,7 +20541,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20564,7 +20555,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20579,7 +20569,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20714,7 +20703,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20729,7 +20717,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20744,7 +20731,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -20878,7 +20864,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -20893,7 +20878,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -20908,7 +20892,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21042,7 +21025,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21057,7 +21039,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21072,7 +21053,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>0</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21206,7 +21186,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21221,7 +21200,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21236,7 +21214,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21373,7 +21350,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21388,7 +21364,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21403,7 +21378,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21536,7 +21510,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21551,7 +21524,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21566,7 +21538,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>2</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21699,7 +21670,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21714,7 +21684,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21729,7 +21698,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>5</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -21865,7 +21833,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -21880,7 +21847,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -21895,7 +21861,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>5</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22031,7 +21996,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -22046,7 +22010,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -22061,7 +22024,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>1</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22196,7 +22158,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -22211,7 +22172,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -22226,7 +22186,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>5</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22362,7 +22321,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -22377,7 +22335,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -22392,7 +22349,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>21</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
@@ -22512,7 +22468,6 @@ limitations under the License.
           <Order>5</Order>
           <Id>wrapperByte1</Id>
           <Name>Wrapper Byte 1</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -22527,7 +22482,6 @@ limitations under the License.
           <Order>6</Order>
           <Id>wrapperByte2</Id>
           <Name>Wrapper Byte 2</Name>
-          <Description>4</Description>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
@@ -22542,7 +22496,6 @@ limitations under the License.
           <Order>7</Order>
           <Id>fieldGroup</Id>
           <Name>Field Group</Name>
-          <Description>38</Description>
           <BitLength>8</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>

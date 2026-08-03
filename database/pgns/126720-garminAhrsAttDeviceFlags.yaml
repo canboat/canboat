@@ -37,12 +37,10 @@ fields:
 - id: wrapperByte1
   name: Wrapper Byte 1
   type: UINT8
-  description: '1'
   match: 2
 - id: wrapperByte2
   name: Wrapper Byte 2
   type: UINT8
-  description: '2'
   match: 2
 - id: attMessageId
   name: ATT Message ID
