@@ -80076,7 +80076,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -80211,7 +80211,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -80234,7 +80234,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -80369,7 +80369,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -80392,7 +80392,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -80527,7 +80527,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -80550,7 +80550,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -80685,7 +80685,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
@@ -80708,7 +80708,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>10</FieldCount>
-      <Length>11</Length>
+      <Length>12</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -80843,7 +80843,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>10</Order>
           <Id>reserved10</Id>
           <Name>Reserved</Name>
-          <BitLength>24</BitLength>
+          <BitLength>32</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
