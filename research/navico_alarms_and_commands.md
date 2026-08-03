@@ -258,9 +258,80 @@ paired 127233.
 ## Autopilot commands — PGN 130850, byte 5 = 10
 
 Autopilot mode changes (Auto, Wind, Nav, No Drift), heading/course adjustments and
-the like ride 130850 with byte 5 = 10 (AP Command). The autopilot computer echoes
-accepted commands back on PGN 130851 (AP command reply). These share the same
-12-byte frame and the same byte-4 network group as the alarm and timer families.
+the like ride 130850 with byte 5 = 10 (AP Command). These share the same 12-byte
+frame and the same byte-4 network group as the alarm and timer families.
+
+### Finding the autopilot
+
+Every device broadcasts **PGN 60928 (ISO Address Claim)** at startup and after
+renumbering; the autopilot is the one claiming **Device Function 150**. Beware
+that `DEVICE_FUNCTION` is an *indirect* lookup — the function number only has
+meaning together with the **Device Class**. Function 150 is `Autopilot` only in
+class **40** (Steering and Control surfaces); in other classes the same 150 means
+Camera (class 20), Bridge (25), Function Controller (30) or Engine Controller
+(50). Matching on the function alone will latch onto the wrong device:
+
+```
+on PGN 60928:
+    if Device Class == 40 and Device Function == 150:
+        autopilot_address = message.src
+```
+
+The autopilot's address also appears in byte 2 of every 130851 reply, so watching
+the replies is an alternative to address-claim tracking.
+
+### The command set
+
+Byte 6 carries the action, from `SIMNET_AP_EVENTS`. The commands canboat models
+as their own 130850 variants:
+
+| Byte 6 | Command | canboat id |
+|-------:|---------|------------|
+| 6 | Standby (disengage) | `simnetCommandApStandby` |
+| 9 | Heading mode | `simnetCommandApHeading` |
+| 10 | Nav mode | `simnetCommandApNav` |
+| 12 | No Drift mode | `simnetCommandApNodrift` |
+| 15 | Wind mode | `simnetCommandApWind` |
+| 17 | Tack | `simnetCommandApTack` |
+| 26 | Change course | `simnetCommandApChangeCourse` |
+
+The mode commands carry no parameters — bytes 8–11 are `0xff`. Only *Change
+course* uses the trailing bytes:
+
+| Byte | Field | Meaning |
+|------|-------|---------|
+| 8 | **Direction** | `SIMNET_DIRECTION`: 2 = Port, 3 = Starboard (4/5 = left/right rudder) |
+| 9–10 | **Angle** | `ANGLE_UFIX16`, radians in units of 0.0001, little-endian |
+
+The angle is an unsigned magnitude; the sign lives in Direction. 10° to port is
+`Direction = 2`, `Angle = 1745` (0x06d1), because 10 × π/180 = 0.1745 rad.
+
+### The autopilot acknowledges — PGN 130851
+
+An addressed 130850 AP command **is** acknowledged: the autopilot echoes it back
+on **PGN 130851 (`Simnet: AP command Reply`)** byte-for-byte, exactly one reply
+per command, within roughly 20–70 ms, with byte 2 set to its own address.
+Commands sent to Address `0xff` (broadcast) are *not* acknowledged.
+
+So the reply is the direct success/failure signal, and is more reliable than
+inferring the outcome from state broadcasts. Watching only the state PGNs is
+still useful as a cross-check:
+
+- **PGN 65341 (`Simnet: Autopilot Angle`)** — current mode (`SIMNET_AP_MODE`) and
+  angle.
+- **PGN 127237 (Heading/Track Control)** — the standard PGN, carrying the active
+  heading-to-steer.
+
+An accepted command does not mean the mode engaged: the autopilot refuses
+Heading/Wind/Nav when its sensor stack is incomplete (a Triton² logs "Reduced
+functionality" when a heading or wind source is missing), so confirm the mode
+actually changed rather than trusting the acknowledgement alone.
+
+> **Frame length caveat.** Captured mode-command frames are 12 bytes, matching the
+> fixed layout above, but canboat currently models the mode-command variants with
+> only 11 (their trailing `Reserved` is 24 bits where the wire shows 32). The
+> extra `0xff` is harmless and decodes fine; `simnetCommandApChangeCourse` and the
+> 130851 reply are modelled at the full 12.
 
 ## Propagation — why an alarm sometimes stays local
 

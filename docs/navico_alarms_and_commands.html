@@ -168,7 +168,55 @@ a { color: #1a73e8; }
 <p>A man-overboard is an alarm-class event (byte 5 = 255) with byte 6 = <strong>107 MOB Activated</strong> / <strong>108 MOB Cancelled</strong>, broadcast to all groups (byte 4 = <code>0xff</code>, no alarm id). Unlike depth/wind alarms — which burst from several devices — the MOB is emitted only by the <strong>originating display</strong> and is not re-broadcast by the other devices.</p>
 <p>The MOB <strong>position</strong> does not ride 130850; it rides the standard NMEA 2000 PGN <strong>127233 (Man Overboard Notification)</strong>, emitted by the same source at the same instant. So a complete MOB is a <em>pair</em>: 130850 carries the lifecycle (Activated/Cancelled) and 127233 carries the latitude/longitude. To follow a MOB in a capture, watch for the 130850 <code>MOB Activated</code> and read the position from the paired 127233.</p>
 <h2 id="autopilot-commands-pgn-130850-byte-5-10">Autopilot commands — PGN 130850, byte 5 = 10</h2>
-<p>Autopilot mode changes (Auto, Wind, Nav, No Drift), heading/course adjustments and the like ride 130850 with byte 5 = 10 (AP Command). The autopilot computer echoes accepted commands back on PGN 130851 (AP command reply). These share the same 12-byte frame and the same byte-4 network group as the alarm and timer families.</p>
+<p>Autopilot mode changes (Auto, Wind, Nav, No Drift), heading/course adjustments and the like ride 130850 with byte 5 = 10 (AP Command). These share the same 12-byte frame and the same byte-4 network group as the alarm and timer families.</p>
+<h3 id="finding-the-autopilot">Finding the autopilot</h3>
+<p>Every device broadcasts <strong>PGN 60928 (ISO Address Claim)</strong> at startup and after renumbering; the autopilot is the one claiming <strong>Device Function 150</strong>. Beware that <code>DEVICE_FUNCTION</code> is an <em>indirect</em> lookup — the function number only has meaning together with the <strong>Device Class</strong>. Function 150 is <code>Autopilot</code> only in class <strong>40</strong> (Steering and Control surfaces); in other classes the same 150 means Camera (class 20), Bridge (25), Function Controller (30) or Engine Controller (50). Matching on the function alone will latch onto the wrong device:</p>
+<pre><code>on PGN 60928:
+    if Device Class == 40 and Device Function == 150:
+        autopilot_address = message.src</code></pre>
+<p>The autopilot's address also appears in byte 2 of every 130851 reply, so watching the replies is an alternative to address-claim tracking.</p>
+<h3 id="the-command-set">The command set</h3>
+<p>Byte 6 carries the action, from <code>SIMNET_AP_EVENTS</code>. The commands canboat models as their own 130850 variants:</p>
+<table>
+<thead><tr>
+<th>Byte 6</th>
+<th>Command</th>
+<th>canboat id</th>
+</tr></thead>
+<tbody>
+<tr><td>6</td><td>Standby (disengage)</td><td><code>simnetCommandApStandby</code></td></tr>
+<tr><td>9</td><td>Heading mode</td><td><code>simnetCommandApHeading</code></td></tr>
+<tr><td>10</td><td>Nav mode</td><td><code>simnetCommandApNav</code></td></tr>
+<tr><td>12</td><td>No Drift mode</td><td><code>simnetCommandApNodrift</code></td></tr>
+<tr><td>15</td><td>Wind mode</td><td><code>simnetCommandApWind</code></td></tr>
+<tr><td>17</td><td>Tack</td><td><code>simnetCommandApTack</code></td></tr>
+<tr><td>26</td><td>Change course</td><td><code>simnetCommandApChangeCourse</code></td></tr>
+</tbody>
+</table>
+<p>The mode commands carry no parameters — bytes 8–11 are <code>0xff</code>. Only <em>Change course</em> uses the trailing bytes:</p>
+<table>
+<thead><tr>
+<th>Byte</th>
+<th>Field</th>
+<th>Meaning</th>
+</tr></thead>
+<tbody>
+<tr><td>8</td><td><strong>Direction</strong></td><td><code>SIMNET_DIRECTION</code>: 2 = Port, 3 = Starboard (4/5 = left/right rudder)</td></tr>
+<tr><td>9–10</td><td><strong>Angle</strong></td><td><code>ANGLE_UFIX16</code>, radians in units of 0.0001, little-endian</td></tr>
+</tbody>
+</table>
+<p>The angle is an unsigned magnitude; the sign lives in Direction. 10° to port is <code>Direction = 2</code>, <code>Angle = 1745</code> (0x06d1), because 10 × π/180 = 0.1745 rad.</p>
+<h3 id="the-autopilot-acknowledges-pgn-130851">The autopilot acknowledges — PGN 130851</h3>
+<p>An addressed 130850 AP command <strong>is</strong> acknowledged: the autopilot echoes it back on <strong>PGN 130851 (<code>Simnet: AP command Reply</code>)</strong> byte-for-byte, exactly one reply per command, within roughly 20–70 ms, with byte 2 set to its own address. Commands sent to Address <code>0xff</code> (broadcast) are <em>not</em> acknowledged.</p>
+<p>So the reply is the direct success/failure signal, and is more reliable than inferring the outcome from state broadcasts. Watching only the state PGNs is still useful as a cross-check:</p>
+<ul>
+<li><strong>PGN 65341 (<code>Simnet: Autopilot Angle</code>)</strong> — current mode (<code>SIMNET_AP_MODE</code>) and angle.</li>
+<li><strong>PGN 127237 (Heading/Track Control)</strong> — the standard PGN, carrying the active heading-to-steer.</li>
+</ul>
+<p>An accepted command does not mean the mode engaged: the autopilot refuses Heading/Wind/Nav when its sensor stack is incomplete (a Triton² logs "Reduced functionality" when a heading or wind source is missing), so confirm the mode actually changed rather than trusting the acknowledgement alone.</p>
+<blockquote>
+<p><strong>Frame length caveat.</strong> Captured mode-command frames are 12 bytes, matching the fixed layout above, but canboat currently models the mode-command variants with only 11 (their trailing <code>Reserved</code> is 24 bits where the wire shows 32). The extra <code>0xff</code> is harmless and decodes fine; <code>simnetCommandApChangeCourse</code> and the 130851 reply are modelled at the full 12.</p>
+</blockquote>
 <h2 id="propagation-why-an-alarm-sometimes-stays-local">Propagation — why an alarm sometimes stays local</h2>
 <p>An alarm is only network-wide if it is actually broadcast. The same alarm type can behave differently depending on where it is enabled:</p>
 <ul>
