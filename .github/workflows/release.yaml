@@ -86,6 +86,24 @@ jobs:
       - name: Build C tools
         run: make
 
+      # The Rust `canboat` binary (analyzer + gateway shims + convert/n2kd/
+      # pipeline via argv[0] dispatch) uses the same static-musl treatment as
+      # keel on linux, so one binary runs on any distro/glibc. It is built
+      # BEFORE the archive is packed so it ships inside the platform tarball
+      # (next to the C tools) and is also uploaded standalone as
+      # canboat-rust-<os>-<arch> for direct fetch.
+      - name: Build canboat (Rust)
+        run: |
+          if [ -n "${{ matrix.rust_target }}" ]; then
+            rustup target add "${{ matrix.rust_target }}"
+            cargo build --release -p canboat --target "${{ matrix.rust_target }}"
+            cp "target/${{ matrix.rust_target }}/release/canboat" "canboat-rust-${{ matrix.os }}-${{ matrix.arch }}"
+          else
+            cargo build --release -p canboat
+            cp target/release/canboat "canboat-rust-${{ matrix.os }}-${{ matrix.arch }}"
+          fi
+          cp "canboat-rust-${{ matrix.os }}-${{ matrix.arch }}" "rel/${{ matrix.os }}-${{ matrix.arch }}/canboat"
+
       - name: Package canboat archive
         run: |
           plat="${{ matrix.os }}-${{ matrix.arch }}"
@@ -111,6 +129,7 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             canboat-${{ matrix.os }}-${{ matrix.arch }}-${{ github.ref_name }}.tar.gz
+            canboat-rust-${{ matrix.os }}-${{ matrix.arch }}
             keel-${{ matrix.os }}-${{ matrix.arch }}
 
   # Intel macOS: cross-built on the Apple-Silicon runner (-arch x86_64), so we
@@ -125,6 +144,13 @@ jobs:
 
       - name: Build C tools (x86_64)
         run: make PLATFORM=darwin-x86_64 CFLAGS="-Wall -O2 -arch x86_64" LDFLAGS="-arch x86_64"
+
+      - name: Build canboat (Rust, x86_64)
+        run: |
+          rustup target add x86_64-apple-darwin
+          cargo build --release -p canboat --target x86_64-apple-darwin
+          cp target/x86_64-apple-darwin/release/canboat canboat-rust-darwin-x86_64
+          cp canboat-rust-darwin-x86_64 rel/darwin-x86_64/canboat
 
       - name: Package canboat archive
         run: tar czf "canboat-darwin-x86_64-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C rel/darwin-x86_64 .
@@ -141,6 +167,7 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             canboat-darwin-x86_64-${{ github.ref_name }}.tar.gz
+            canboat-rust-darwin-x86_64
             keel-darwin-x86_64
 
   # 32-bit ARM (e.g. Raspberry Pi): static musl cross-build of both the C tools
@@ -172,6 +199,16 @@ jobs:
           export BUILDDIR="rel/${TARGET}"
           make
 
+      - name: Build canboat (Rust, static musl)
+        run: |
+          rustup target add "${RUST_TARGET}"
+          cc="$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc"
+          export CARGO_TARGET_ARMV7_UNKNOWN_LINUX_MUSLEABIHF_LINKER="$cc"
+          export CC_armv7_unknown_linux_musleabihf="$cc"
+          cargo build --release -p canboat --target "${RUST_TARGET}"
+          cp "target/${RUST_TARGET}/release/canboat" canboat-rust-linux-armv7l
+          cp canboat-rust-linux-armv7l "rel/${TARGET}/canboat"
+
       - name: Package canboat archive
         run: |
           tar czf "canboat-linux-armv7l-${GITHUB_REF_NAME}.tar.gz" --exclude venv -C "rel/${TARGET}" .
@@ -191,6 +228,7 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
             canboat-linux-armv7l-${{ github.ref_name }}.tar.gz
+            canboat-rust-linux-armv7l
             keel-linux-armv7l
 
   windows:
