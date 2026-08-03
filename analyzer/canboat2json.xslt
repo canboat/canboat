@@ -200,6 +200,27 @@
     </xsl:choose>
   </xsl:template>
 
+  <!-- Elements the schema declares xs:string are always emitted as JSON strings, even when
+       their text happens to look like a number or a boolean. Without this, the generic rules
+       below turn <Description>1</Description> into the JSON number 1, so one key ends up with
+       two value types across the file and downstream parsers cannot rely on it (#791).
+       Keep this list in sync with the xs:string elements in docs/canboat.xsd. The explicit
+       priority is required: these patterns and the generic text() predicates below both have
+       default priority 0.5, which would otherwise be an ambiguous rule match. -->
+  <xsl:template priority="2"
+                match="Comment/text() | Condition/text() | Copyright/text() | CreatorCode/text()
+                     | Description/text() | EncodingDescription/text() | Explanation/text()
+                     | FieldType/text() | Id/text() | License/text() | LookupBitEnumeration/text()
+                     | LookupEnumeration/text() | LookupFieldTypeEnumeration/text()
+                     | LookupIndirectEnumeration/text() | MissingAttribute/text() | Name/text()
+                     | PhysicalQuantity/text() | ResearchDoc/text() | SchemaVersion/text()
+                     | Type/text() | Unit/text() | UnitDescription/text() | URL/text()
+                     | Version/text()">
+    <xsl:call-template name="escape-string">
+      <xsl:with-param name="s" select="."/>
+    </xsl:call-template>
+  </xsl:template>
+
   <!-- number (no support for javascript mantissa) -->
   <xsl:template match="text()[string(number())!='NaN']">
     <xsl:value-of select="."/>

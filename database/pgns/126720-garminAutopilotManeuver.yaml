@@ -38,17 +38,14 @@ fields:
 - id: wrapperByte1
   name: Wrapper Byte 1
   type: UINT8
-  description: '4'
   match: 4
 - id: wrapperByte2
   name: Wrapper Byte 2
   type: UINT8
-  description: '4'
   match: 4
 - id: fieldGroup
   name: Field Group
   type: UINT8
-  description: '38'
   match: 38
 - id: maneuverCode
   name: Maneuver Code
