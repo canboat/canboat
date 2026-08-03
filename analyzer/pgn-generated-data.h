@@ -9607,10 +9607,9 @@ Pgn pgnList[] = {
       {.name = "B", .camelName = "b", .fieldType = "INT32", .resolution = 1.0, .hasSign = true},
       {.name = "C", .camelName = "c", .fieldType = "INT32", .resolution = 1.0, .hasSign = true},
       {.name = "D", .camelName = "d", .fieldType = "INT8", .resolution = 1.0, .hasSign = true},
-      {.name = "E", .camelName = "e", .fieldType = "INT32", .resolution = 1.0, .hasSign = true},
-      {.name = "F", .camelName = "f", .fieldType = "INT32", .resolution = 1.0, .hasSign = true},
-      {.name = "G", .camelName = "g", .fieldType = "INT16", .resolution = 1.0, .hasSign = true},
-      {.name = "H", .camelName = "h", .fieldType = "INT16", .resolution = 1.0, .hasSign = true},
+      {.name = "Roll Rate", .camelName = "rollRate", .fieldType = "ROTATION_FIX32_MDEG_S", .hasSign = true},
+      {.name = "Pitch Rate", .camelName = "pitchRate", .fieldType = "ROTATION_FIX32_MDEG_S", .hasSign = true},
+      {.name = "Yaw Rate", .camelName = "yawRate", .fieldType = "ROTATION_FIX32_MDEG_S", .hasSign = true},
       {.name = "I", .camelName = "i", .fieldType = "INT16", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "furunoSixDegreesOfFreedomMovement"},

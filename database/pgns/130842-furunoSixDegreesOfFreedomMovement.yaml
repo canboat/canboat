@@ -38,18 +38,15 @@ fields:
 - id: d
   name: D
   type: INT8
-- id: e
-  name: E
-  type: INT32
-- id: f
-  name: F
-  type: INT32
-- id: g
-  name: G
-  type: INT16
-- id: h
-  name: H
-  type: INT16
+- id: rollRate
+  name: Roll Rate
+  type: ROTATION_FIX32_MDEG_S
+- id: pitchRate
+  name: Pitch Rate
+  type: ROTATION_FIX32_MDEG_S
+- id: yawRate
+  name: Yaw Rate
+  type: ROTATION_FIX32_MDEG_S
 - id: i
   name: I
   type: INT16
@@ -62,10 +59,9 @@ samples:
     b: 15
     c: -27
     d: 0
-    e: 166
-    f: 54
-    g: -38
-    h: -1
+    rollRate: 0.00290
+    pitchRate: 0.00094
+    yawRate: -0.00066
     i: 0
 - raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,0e,00,00,00,fd,ff,ff,ff,0b,00,00,00,00,f7,ff,ff,ff,a6,ff,ff,ff,3d,00,00,00,00,00"  # from merrimac-2022.raw
   expects:
@@ -75,10 +71,9 @@ samples:
     b: -3
     c: 11
     d: 0
-    e: -9
-    f: -90
-    g: 61
-    h: 0
+    rollRate: -0.00016
+    pitchRate: -0.00157
+    yawRate: 0.00106
     i: 0
 - raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,20,00,00,00,db,ff,ff,ff,d2,ff,ff,ff,00,80,00,00,00,42,00,00,00,0f,00,00,00,00,00"  # from merrimac-2022.raw
   expects:
@@ -88,8 +83,19 @@ samples:
     b: -37
     c: -46
     d: 0
-    e: 128
-    f: 66
-    g: 15
-    h: 0
+    rollRate: 0.00223
+    pitchRate: 0.00115
+    yawRate: 0.00026
+    i: 0
+- raw: "2026-08-03T03:21:24.245Z,7,130842,52,255,29,3f,9f,59,ff,ff,ff,27,00,00,00,3f,00,00,00,00,f8,ff,ff,ff,f7,02,00,00,0e,e1,ff,ff,00,00"  # from furuno-130842.raw, peak of a hard turn
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: -167
+    b: 39
+    c: 63
+    d: 0
+    rollRate: -0.00014
+    pitchRate: 0.01325
+    yawRate: -0.13827
     i: 0
