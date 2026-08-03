@@ -738,6 +738,26 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
         }
     };
     if let Some(bl) = f.bit_length {
+        // Not every BINARY field is byte-aligned (the 19-bit AIS
+        // Communication State, for one). A sub-64-bit unaligned width
+        // stages as a masked scalar so the packer writes exactly `bl`
+        // bits; rendered hex always shows whole bytes, so one extra
+        // padding byte is tolerated on the way in.
+        if bl % 8 != 0 && bl <= 64 {
+            let want = bl.div_ceil(8) as usize;
+            if bytes.len() > want {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: bytes.len() as f64,
+                });
+            }
+            let mut raw: u64 = 0;
+            for (i, b) in bytes.iter().enumerate() {
+                raw |= u64::from(*b) << (8 * i);
+            }
+            raw &= u64::MAX >> (64 - bl);
+            return Ok(Staged::Scalar(raw));
+        }
         let want = bl as usize / 8;
         if bytes.len() > want {
             return Err(EncodeError::ValueOutOfRange {
