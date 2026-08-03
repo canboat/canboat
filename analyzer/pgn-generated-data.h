@@ -10101,9 +10101,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved11", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved12", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved13", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved14", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Reserved", .camelName = "reserved15", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved13", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "simnetApCommand",
      .interval = UINT16_MAX,

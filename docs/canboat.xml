@@ -81787,8 +81787,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Resolution</MissingAttribute>
       </Missing>
-      <FieldCount>15</FieldCount>
-      <Length>14</Length>
+      <FieldCount>13</FieldCount>
+      <Length>12</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -81957,26 +81957,6 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Name>Reserved</Name>
           <BitLength>8</BitLength>
           <BitOffset>88</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>14</Order>
-          <Id>reserved14</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>96</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>15</Order>
-          <Id>reserved15</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>104</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>

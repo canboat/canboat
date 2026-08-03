@@ -81397,8 +81397,8 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution"
         ],
-        "FieldCount":15,
-        "Length":14,
+        "FieldCount":13,
+        "Length":12,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -81567,26 +81567,6 @@
             "Name":"Reserved",
             "BitLength":8,
             "BitOffset":88,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":14,
-            "Id":"reserved14",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":96,
-            "BitStart":0,
-            "Resolution":1,
-            "FieldType":"RESERVED"
-          },
-          {
-            "Order":15,
-            "Id":"reserved15",
-            "Name":"Reserved",
-            "BitLength":8,
-            "BitOffset":104,
             "BitStart":0,
             "Resolution":1,
             "FieldType":"RESERVED"
