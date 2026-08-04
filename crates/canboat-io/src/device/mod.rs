@@ -27,6 +27,7 @@
 
 pub mod canboat_csv;
 pub mod ikonvert;
+pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
 pub mod socketcan;

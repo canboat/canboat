@@ -994,6 +994,14 @@ FieldType fieldTypeList[] = {
      .resolution = 3.125e-8,
      .physical = &ANGULAR_VELOCITY},
 
+    {.name = "ROTATION_FIX32_MDEG_S",
+     .description = "Rotational speed, thousandth of a degree per second",
+     .encodingDescription = "Angular rotation in 0.001 degrees per second, stored as radians per second",
+     .comment = "Used by Furuno, whose sensors quantize their gyro output in degrees rather than radians",
+     .baseFieldType = "FIX32",
+     .resolution = 1.7453292519943296e-5,
+     .physical = &ANGULAR_VELOCITY},
+
     {.name = "ROTATION_UFIX16_RPM",
      .description = "Rotational speed, RPM",
      .encodingDescription = "Angular rotation in 0.25 rpm",

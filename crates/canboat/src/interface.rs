@@ -17,7 +17,7 @@
 //! per-kind producer name is preserved so the n2kd parity harness keeps
 //! comparing like with like).
 
-use std::io::{self, BufWriter, Read, Write};
+use std::io::{self, BufRead, BufWriter, Read, Write};
 use std::net::TcpStream;
 use std::sync::Arc;
 use std::sync::atomic::AtomicU8;
@@ -27,7 +27,7 @@ use anyhow::{Context, Result};
 
 use canboat_core::RawFrame;
 use canboat_io::device::{self, DeviceHandle};
-use canboat_io::{FrameWriter, LineFrameReader, PlainWriter, copy, open_serial_rw};
+use canboat_io::{FrameWriter, PlainWriter, copy, open_serial_rw};
 
 /// `# format=FAST` tag every canboat reader prepends to its PLAIN
 /// stream so a downstream analyzer knows the frames are coalesced.
@@ -44,6 +44,13 @@ enum Kind {
     Maretron,
     /// Linux SocketCAN interface (e.g. `can0`).
     Socketcan,
+    /// Yacht Devices RAW gateway (YDWG-02 / YDEN / NavLink2 RAW port),
+    /// over TCP (`tcp://host[:port]`) or receive-only UDP
+    /// (`udp://[bind:]port`).
+    Ydwg,
+    /// Actisense W2K-1 in N2K ASCII mode, over TCP.
+    #[value(name = "w2k-ascii")]
+    W2kAscii,
 }
 
 impl Kind {
@@ -55,6 +62,8 @@ impl Kind {
             Kind::Ikonvert => "ikonvert-serial",
             Kind::Maretron => "maretron-ipg",
             Kind::Socketcan => "socketcan-serial",
+            Kind::Ydwg => "ydwg-gateway",
+            Kind::W2kAscii => "w2k-gateway",
         }
     }
 
@@ -63,7 +72,7 @@ impl Kind {
         match self {
             Kind::Ngt1 => 115_200,
             Kind::Ikonvert => 230_400,
-            Kind::Maretron | Kind::Socketcan => 0,
+            Kind::Maretron | Kind::Socketcan | Kind::Ydwg | Kind::W2kAscii => 0,
         }
     }
 }
@@ -191,9 +200,36 @@ pub fn run(args: Args) -> Result<()> {
 
 /// Pump PLAIN frames from stdin into `sender` until stdin ends.
 fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {
+    // Two stdin dialects, dispatched per line: canboat PLAIN/FAST CSV
+    // (the historical C contract — coalesced messages, the device layer
+    // fragments fast-packets) and analyzer JSON records ('{'-prefixed),
+    // encoded via the schema. The JSON path lets a driving process
+    // (e.g. signalk-server) hand decoded PGN objects straight to the
+    // bridge without running a separate encoder; both kinds may be
+    // interleaved on one stream. Physical values in JSON are taken as
+    // SI, the unit system canboatjs-style producers emit.
+    let db = canboat_core::PgnDatabase::embedded(canboat_core::Units::Si);
     let stdin = io::stdin();
-    let mut reader = LineFrameReader::new(stdin.lock());
-    copy(&mut reader, sender).map(|_| ())
+    for line in stdin.lock().lines() {
+        let line = line?;
+        let t = line.trim();
+        if t.is_empty() || t.starts_with('#') {
+            continue;
+        }
+        if t.starts_with('{') {
+            match crate::json_input::frame_from_json(db, t) {
+                Ok(Some(frame)) => sender.write_frame(&frame)?,
+                Ok(None) => {}
+                Err(e) => log::warn!("stdin json: {e:#}"),
+            }
+        } else {
+            match canboat_core::format::plain::parse_line(t) {
+                Ok(frame) => sender.write_frame(&frame)?,
+                Err(e) => log::warn!("stdin: {e}"),
+            }
+        }
+    }
+    Ok(())
 }
 
 /// A [`FrameWriter`] that throws frames away — used to keep a device's
@@ -261,6 +297,22 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             };
             Ok(device::maretron::run(reader, writer, config))
         }
+        Kind::Ydwg => {
+            let (reader, writer) = open_line_endpoint(&args.device, 1457)?;
+            Ok(device::line_gateway::run(
+                reader,
+                writer,
+                device::line_gateway::Protocol::YdwgRaw,
+            ))
+        }
+        Kind::W2kAscii => {
+            let (reader, writer) = open_line_endpoint(&args.device, 60002)?;
+            Ok(device::line_gateway::run(
+                reader,
+                writer,
+                device::line_gateway::Protocol::N2kAscii,
+            ))
+        }
         Kind::Socketcan => {
             let config = device::socketcan::Config {
                 address: args.address,
@@ -284,7 +336,64 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
 /// `interface` is live-device only — captured byte streams are decoded
 /// with `canboat convert`, not here.
 fn open_stream(args: &Args) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    // A serial-protocol gateway reached over the network (the NavLink2
+    // serves the iKonvert protocol on TCP 6001; ser2net setups do the
+    // same for an NGT-1): same codec, different transport.
+    if args.device.starts_with("tcp://") {
+        return open_tcp(&args.device, 6001);
+    }
     let baud = args.baud.unwrap_or_else(|| args.kind.default_baud());
     open_serial_rw(&args.device, baud)
         .with_context(|| format!("opening serial port {}", args.device))
+}
+
+/// Open `tcp://host[:port]` as a cloned read/write stream pair.
+fn open_tcp(
+    device: &str,
+    default_port: u16,
+) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    let endpoint = device.strip_prefix("tcp://").unwrap_or(device);
+    let endpoint = if endpoint.contains(':') {
+        endpoint.to_string()
+    } else {
+        format!("{endpoint}:{default_port}")
+    };
+    let stream =
+        TcpStream::connect(&endpoint).with_context(|| format!("connecting to {endpoint}"))?;
+    let reader: Box<dyn Read + Send> = Box::new(stream.try_clone().context("cloning TCP stream")?);
+    let writer: Box<dyn Write + Send> = Box::new(stream);
+    Ok((reader, writer))
+}
+
+/// Open a line-gateway endpoint: `tcp://host[:port]` bidirectional, or
+/// `udp://[bind:]port` receive-only (the YDWG-02's UDP mode has no
+/// transmit path — sent frames are dropped with a warning).
+fn open_line_endpoint(
+    device: &str,
+    default_tcp_port: u16,
+) -> Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    if let Some(rest) = device.strip_prefix("udp://") {
+        let bind = if rest.contains(':') {
+            rest.to_string()
+        } else {
+            format!("0.0.0.0:{rest}")
+        };
+        let sock =
+            std::net::UdpSocket::bind(&bind).with_context(|| format!("binding UDP {bind}"))?;
+        log::warn!("UDP gateway mode is receive-only; transmitted frames are dropped");
+        let reader: Box<dyn Read + Send> = Box::new(UdpRead(sock));
+        let writer: Box<dyn Write + Send> = Box::new(std::io::sink());
+        return Ok((reader, writer));
+    }
+    open_tcp(device, default_tcp_port)
+}
+
+/// [`Read`] over a bound UDP socket: each `read` yields one datagram.
+struct UdpRead(std::net::UdpSocket);
+
+impl Read for UdpRead {
+    fn read(&mut self, buf: &mut [u8]) -> io::Result<usize> {
+        let (n, _peer) = self.0.recv_from(buf)?;
+        Ok(n)
+    }
 }

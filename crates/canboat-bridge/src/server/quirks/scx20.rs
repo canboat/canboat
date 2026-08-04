@@ -161,6 +161,16 @@ fn is_scx20_name(name: u64) -> bool {
     mfg == FURUNO_MFG && class == NAV_CLASS && function == SCX20_FUNCTION
 }
 
+/// A STRING_FIX payload at the field's exact width, zero-padded — the
+/// padding the captured SCX-20 emits.
+fn zero_padded(fr: canboat_core::FieldRef, text: &str) -> Vec<u8> {
+    let len = (fr.field.bit_length.unwrap_or(0) / 8) as usize;
+    let mut buf = vec![0u8; len];
+    let n = text.len().min(len);
+    buf[..n].copy_from_slice(&text.as_bytes()[..n]);
+    buf
+}
+
 /// Encode PGN 126996 for source `src` via the schema-driven message
 /// encoder. Returns `None` only on an encoder error, which would be a
 /// schema/library bug (logged loudly).
@@ -176,10 +186,22 @@ fn build_scx20_product_info(src: u8) -> Option<RawFrame> {
         use field::product_information as pi;
         b.push(pi::NMEA2000_VERSION, SCX20_DB_VERSION)?;
         b.push(pi::PRODUCT_CODE, SCX20_PRODUCT_CODE)?;
-        b.push(pi::MODEL_ID, SCX20_MODEL_ID)?;
-        b.push(pi::SOFTWARE_VERSION_CODE, SCX20_SOFTWARE_VERSION)?;
-        b.push(pi::MODEL_VERSION, SCX20_MODEL_VERSION)?;
-        b.push(pi::MODEL_SERIAL_CODE, SCX20_MODEL_SERIAL)?;
+        // The captured SCX-20 pads its fixed strings with 0x00, not the
+        // encoder's 0xff default — stage the exact bytes so the
+        // fabricated frame keeps matching the capture bit for bit.
+        b.push(pi::MODEL_ID, zero_padded(pi::MODEL_ID, SCX20_MODEL_ID))?;
+        b.push(
+            pi::SOFTWARE_VERSION_CODE,
+            zero_padded(pi::SOFTWARE_VERSION_CODE, SCX20_SOFTWARE_VERSION),
+        )?;
+        b.push(
+            pi::MODEL_VERSION,
+            zero_padded(pi::MODEL_VERSION, SCX20_MODEL_VERSION),
+        )?;
+        b.push(
+            pi::MODEL_SERIAL_CODE,
+            zero_padded(pi::MODEL_SERIAL_CODE, SCX20_MODEL_SERIAL),
+        )?;
         b.push(pi::CERTIFICATION_LEVEL, SCX20_CERTIFICATION_LEVEL)?;
         b.push(pi::LOAD_EQUIVALENCY, SCX20_LOAD_EQUIVALENCY)?;
         b.build()

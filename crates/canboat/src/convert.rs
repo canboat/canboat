@@ -77,6 +77,10 @@ enum FromFormat {
     /// Digital Yacht iKonvert (`!PDGY,<pgn>,…`).
     #[value(name = "ikonvert")]
     Ikonvert,
+    /// Analyzer JSON records, re-encoded to wire frames (`-camel` and
+    /// bare shapes; `-nv` values are written back verbatim).
+    #[value(name = "json")]
+    Json,
     /// Airmar (`<ts> - <pgn> <canid> <hex>…`).
     #[value(name = "airmar")]
     Airmar,
@@ -109,7 +113,7 @@ impl FromFormat {
             FromFormat::Chetco => InputFormat::Chetco,
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
-            FromFormat::ActisenseEbl => return None,
+            FromFormat::ActisenseEbl | FromFormat::Json => return None,
         })
     }
 }
@@ -296,6 +300,19 @@ fn convert_raw<W: Write>(
     let source = open_source(args.input(), args.container_opts())?;
     let mut reader: Box<dyn FrameReader> = if ebl {
         Box::new(EblReader::new(source))
+    } else if args.from == Some(FromFormat::Json) {
+        // Bare physical values in the JSON are interpreted in the same
+        // unit system the output side uses (`--si` or metric); `-nv`
+        // raw values are unit-agnostic either way.
+        let units = if args.si {
+            canboat_core::Units::Si
+        } else {
+            canboat_core::Units::Metric
+        };
+        Box::new(crate::json_input::JsonFrameReader::new(
+            source,
+            canboat_core::PgnDatabase::embedded(units),
+        ))
     } else {
         match forced {
             Some(fmt) => Box::new(LineFrameReader::with_format(source, fmt)),
@@ -384,14 +401,19 @@ fn convert_decoded<W: Write>(
     };
 
     let source = open_source(args.input(), args.container_opts())?;
-    if ebl {
-        // `.ebl` records are already complete N2K messages, so skip the
-        // line-reader / reassembly / coalesced-mode machinery entirely:
-        // pull each frame and decode it directly, honouring the filters.
-        let db = canboat_core::PgnDatabase::embedded(canboat_core::Units::Metric);
-        let mut reader = EblReader::new(source);
+    if ebl || args.from == Some(FromFormat::Json) {
+        // `.ebl` records and re-encoded JSON records are already
+        // complete N2K messages, so skip the line-reader / reassembly /
+        // coalesced-mode machinery entirely: pull each frame and decode
+        // it directly, honouring the filters.
+        let db = canboat_core::PgnDatabase::embedded(cfg.units);
+        let mut reader: Box<dyn FrameReader> = if ebl {
+            Box::new(EblReader::new(source))
+        } else {
+            Box::new(crate::json_input::JsonFrameReader::new(source, db))
+        };
         let mut sink = sink;
-        while let Some(frame) = reader.read_frame().context("reading .ebl input")? {
+        while let Some(frame) = reader.read_frame().context("reading input")? {
             if cfg.pgn_filter.is_some_and(|w| frame.pgn != w)
                 || cfg.src_filter.is_some_and(|w| frame.src != w)
                 || cfg.dst_filter.is_some_and(|w| frame.dst != w)
