@@ -1102,8 +1102,9 @@ fn decode_one_field_at(
 /// `FIELD_INDEX` field picks one of the target PGN's fields, and the
 /// next VARIABLE field carries that field's value in its native shape.
 /// True for the four proprietary PGN ranges (`IS_PGN_PROPRIETARY`,
-/// common/common.h).
-fn is_pgn_proprietary(n: u32) -> bool {
+/// common/common.h). Shared with the encoder's target-variant
+/// matching, which mirrors [`match_pgn_by_parameters`].
+pub(crate) fn is_pgn_proprietary(n: u32) -> bool {
     (0xEF00..=0xEFFF).contains(&n)
         || (0xFF00..=0xFFFF).contains(&n)
         || (0x1_EF00..=0x1_EFFF).contains(&n)
