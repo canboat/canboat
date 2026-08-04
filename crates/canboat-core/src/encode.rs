@@ -767,9 +767,23 @@ fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
 /// (e.g. the Furuno SCX-20) emit and round-trips through the decoder,
 /// which trims trailing NUL / `0xff` / `@` / space.
 fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+    let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let text = match v {
         EncodeValue::Text(s) => s,
         EncodeValue::NotAvailable => String::new(),
+        // Pre-rendered field content, written verbatim at exactly the
+        // field width — for callers that must reproduce a specific
+        // capture's padding (fixed strings in the wild are padded with
+        // 0xff, 0x00 or '@' depending on the device).
+        EncodeValue::Bytes(b) => {
+            if b.len() != byte_len {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: b.len() as f64,
+                });
+            }
+            return Ok(Staged::Bytes(b));
+        }
         _ => {
             return Err(EncodeError::TypeMismatch {
                 field: f.name,
@@ -777,7 +791,6 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
             });
         }
     };
-    let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let bytes = text.as_bytes();
     if bytes.len() > byte_len {
         return Err(EncodeError::ValueOutOfRange {
