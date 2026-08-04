@@ -17,7 +17,7 @@
 //! per-kind producer name is preserved so the n2kd parity harness keeps
 //! comparing like with like).
 
-use std::io::{self, BufWriter, Read, Write};
+use std::io::{self, BufRead, BufWriter, Read, Write};
 use std::net::TcpStream;
 use std::sync::Arc;
 use std::sync::atomic::AtomicU8;
@@ -27,7 +27,7 @@ use anyhow::{Context, Result};
 
 use canboat_core::RawFrame;
 use canboat_io::device::{self, DeviceHandle};
-use canboat_io::{FrameWriter, LineFrameReader, PlainWriter, copy, open_serial_rw};
+use canboat_io::{FrameWriter, PlainWriter, copy, open_serial_rw};
 
 /// `# format=FAST` tag every canboat reader prepends to its PLAIN
 /// stream so a downstream analyzer knows the frames are coalesced.
@@ -191,9 +191,36 @@ pub fn run(args: Args) -> Result<()> {
 
 /// Pump PLAIN frames from stdin into `sender` until stdin ends.
 fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {
+    // Two stdin dialects, dispatched per line: canboat PLAIN/FAST CSV
+    // (the historical C contract — coalesced messages, the device layer
+    // fragments fast-packets) and analyzer JSON records ('{'-prefixed),
+    // encoded via the schema. The JSON path lets a driving process
+    // (e.g. signalk-server) hand decoded PGN objects straight to the
+    // bridge without running a separate encoder; both kinds may be
+    // interleaved on one stream. Physical values in JSON are taken as
+    // SI, the unit system canboatjs-style producers emit.
+    let db = canboat_core::PgnDatabase::embedded(canboat_core::Units::Si);
     let stdin = io::stdin();
-    let mut reader = LineFrameReader::new(stdin.lock());
-    copy(&mut reader, sender).map(|_| ())
+    for line in stdin.lock().lines() {
+        let line = line?;
+        let t = line.trim();
+        if t.is_empty() || t.starts_with('#') {
+            continue;
+        }
+        if t.starts_with('{') {
+            match crate::json_input::frame_from_json(db, t) {
+                Ok(Some(frame)) => sender.write_frame(&frame)?,
+                Ok(None) => {}
+                Err(e) => log::warn!("stdin json: {e:#}"),
+            }
+        } else {
+            match canboat_core::format::plain::parse_line(t) {
+                Ok(frame) => sender.write_frame(&frame)?,
+                Err(e) => log::warn!("stdin: {e}"),
+            }
+        }
+    }
+    Ok(())
 }
 
 /// A [`FrameWriter`] that throws frames away — used to keep a device's
