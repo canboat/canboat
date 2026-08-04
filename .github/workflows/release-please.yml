@@ -16,7 +16,7 @@ jobs:
       prs_created: ${{ steps.rp.outputs.prs_created }}
       releases_created: ${{ steps.rp.outputs.releases_created }}
     steps:
-      - uses: googleapis/release-please-action@v4
+      - uses: googleapis/release-please-action@v5
         id: rp
         with:
           # A PAT (RELEASE_PLEASE_TOKEN) is preferred so that the regenerate job's
@@ -37,7 +37,7 @@ jobs:
     if: ${{ needs.release-please.outputs.pr != '' && needs.release-please.outputs.pr != 'null' }}
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: ${{ fromJson(needs.release-please.outputs.pr).headBranchName }}
           token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}

@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
 
@@ -86,7 +86,7 @@ jobs:
             runner: ubuntu-24.04-arm
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build keel (static musl)
         run: |
@@ -108,7 +108,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       # keel is on the path of anyone regenerating the database (it is
       # cargo-shimmed from analyzer/Makefile), so its dependency closure must
@@ -125,7 +125,7 @@ jobs:
 
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4
