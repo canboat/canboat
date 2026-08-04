@@ -626,10 +626,13 @@ impl PgnBuilder {
                     as usize;
                 write_bits(buf, next_bit, bl, raw);
                 // The decoder consumes VARIABLE values rounded up to
-                // whole bytes; pad with 1s like every other fill.
+                // whole bytes. Pad with 0s: that is what canboatjs
+                // transmits and what fielded devices have accepted for
+                // years - a strict receiver may treat the pad bits as
+                // reserved-zero when parsing a command parameter.
                 if !next_bit.is_multiple_of(8) {
                     let pad = 8 - (*next_bit % 8);
-                    write_bits(buf, next_bit, pad, u64::MAX);
+                    write_bits(buf, next_bit, pad, 0);
                 }
             }
             Staged::Bytes(bytes) => {

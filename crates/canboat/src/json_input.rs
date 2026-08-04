@@ -141,7 +141,8 @@ pub fn frame_from_json(db: &'static PgnDatabase, line: &str) -> Result<Option<Ra
                     db.pgn_variants(pgn as u32)
                         .find(|p| p.description == d || p.id == d)
                 });
-            match by_desc {
+            let by_match = || variant_by_match_fields(db, pgn as u32, record.get("fields"));
+            match by_desc.or_else(by_match) {
                 Some(info) => db.encode_for(info),
                 None => db.encode_by_pgn(pgn as u32).map_err(|e| {
                     anyhow!("{e}; use the -camel wrapped form to select the exact variant")
@@ -421,6 +422,73 @@ fn parse_time_seconds(s: &str) -> Option<f64> {
     Some(h * 3600.0 + m * 60.0 + sec)
 }
 
+/// Select a PGN variant from a bare record's field values, the way
+/// canboatjs's encoder does: a variant qualifies when every one of its
+/// match-valued fields that the record provides agrees with the
+/// declared match value; among qualifiers the one agreeing on the most
+/// provided fields wins (a strict winner — a tie stays ambiguous).
+/// This is what resolves e.g. a 126208 with `"Function Code":"Command"`
+/// to the command variant without a camel wrapper or description.
+fn variant_by_match_fields(
+    db: &'static PgnDatabase,
+    pgn: u32,
+    fields: Option<&Value>,
+) -> Option<&'static canboat_core::types::PgnInfo> {
+    let fields = fields?.as_object()?;
+    let mut best: Option<(usize, &'static canboat_core::types::PgnInfo)> = None;
+    let mut tied = false;
+    'variants: for info in db.pgn_variants(pgn) {
+        let mut agreed = 0usize;
+        for f in info.fields {
+            let Some(mv) = f.match_value else { continue };
+            let Some(v) = fields.get(f.id).or_else(|| fields.get(f.name)) else {
+                continue;
+            };
+            match match_field_agrees(db, f, v, mv) {
+                Some(true) => agreed += 1,
+                Some(false) => continue 'variants,
+                None => continue,
+            }
+        }
+        if agreed == 0 {
+            continue;
+        }
+        match &best {
+            Some((n, _)) if *n == agreed => tied = true,
+            Some((n, _)) if *n > agreed => {}
+            _ => {
+                best = Some((agreed, info));
+                tied = false;
+            }
+        }
+    }
+    if tied { None } else { best.map(|(_, i)| i) }
+}
+
+/// Does a provided JSON value agree with a field's declared match
+/// value? `None` when the value cannot be interpreted for comparison.
+fn match_field_agrees(
+    db: &'static PgnDatabase,
+    f: &'static FieldInfo,
+    v: &Value,
+    mv: i64,
+) -> Option<bool> {
+    match v {
+        Value::Number(n) => Some(n.as_i64()? == mv),
+        Value::String(s) => {
+            let table = f.lookup_enumeration.and_then(|t| db.lookup(t))?;
+            let val = table
+                .values
+                .iter()
+                .find(|lv| lv.name == *s || lv.id == Some(s.as_str()))?
+                .value;
+            Some(val as i64 == mv)
+        }
+        Value::Object(o) => o.get("value").and_then(Value::as_i64).map(|x| x == mv),
+        _ => None,
+    }
+}
+
 /// Resolve a bit name (`"Low Oil Pressure"`) to its bit position via
 /// the field's BITLOOKUP table.
 fn bit_by_name(db: &'static PgnDatabase, f: &'static FieldInfo, name: &str) -> Result<u8> {
@@ -531,6 +599,26 @@ mod tests {
             }
             other => panic!("communicationState: {other:?}"),
         }
+    }
+
+    #[test]
+    fn bare_record_selects_variant_by_match_fields() {
+        // The exact shape signalk-server's device manager emits for an
+        // NMEA instance change: bare (no wrapper, no description), the
+        // variant named only by the Function Code match field. Must
+        // encode byte-identical to canboatjs.
+        let line = r#"{"pgn":126208,"prio":3,"dst":42,"fields":{
+            "Function Code":"Command","PGN":60928,"priority":8,
+            "numberOfParameters":2,
+            "list":[{"parameter":3,"value":5},{"parameter":4,"value":0}]}}"#
+            .replace('\n', " ");
+        let frame = frame_from_json(db(), &line).unwrap().unwrap();
+        assert_eq!(frame.pgn, 126208);
+        assert_eq!(frame.dst, 42);
+        assert_eq!(
+            frame.data.as_slice(),
+            &[0x01, 0x00, 0xee, 0x00, 0xf8, 0x02, 0x03, 0x05, 0x04, 0x00]
+        );
     }
 
     #[test]
