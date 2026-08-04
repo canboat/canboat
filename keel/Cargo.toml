@@ -14,7 +14,7 @@ authors = ["Kees Verruijt <canboat@verruijt.net>"]
 # *writer* is our own (the style is keel's spec), floats print via libc
 # snprintf (declared extern, no crate), and the editor server will use a
 # minimal HTTP dependency when it lands.
-yaml-rust2 = "0.10"
+yaml-rust2 = "0.11"
 
 # NOTE: no [profile.release] here. keel is a member of the workspace at the
 # repo root, and cargo only honours profiles from the workspace root manifest

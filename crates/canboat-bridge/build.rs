@@ -5,15 +5,14 @@
 //! built from. Non-fatal: a release build from a source tarball has no
 //! `.git`, so we fall back to a placeholder and the `env!` still resolves.
 
-use vergen_gitcl::{Emitter, GitclBuilder};
+use vergen_gitcl::{Emitter, Gitcl};
 
 fn main() {
     let emitted = (|| -> Option<()> {
-        let gitcl = GitclBuilder::default()
+        let gitcl = Gitcl::builder()
             .sha(true) // short SHA → VERGEN_GIT_SHA
             .dirty(false) // tracked-file changes only
-            .build()
-            .ok()?;
+            .build();
         Emitter::default()
             .add_instructions(&gitcl)
             .ok()?

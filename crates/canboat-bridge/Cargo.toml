@@ -34,4 +34,4 @@ env_logger   = { workspace = true, optional = true }
 
 [build-dependencies]
 # Capture the git short SHA (+ dirty flag) for the analyzer version banner.
-vergen-gitcl = { version = "1", default-features = false }
+vergen-gitcl = { version = "10", default-features = false }
