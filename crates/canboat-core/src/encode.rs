@@ -782,7 +782,10 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
             value: bytes.len() as f64,
         });
     }
-    let mut buf = vec![0u8; byte_len];
+    // Pad with 0xff, the convention real devices and canboatjs use
+    // (decoders trim 0xff, 0x00 and '@' runs alike, but matching the
+    // dominant on-wire bytes keeps re-encodes bit-identical).
+    let mut buf = vec![0xffu8; byte_len];
     buf[..bytes.len()].copy_from_slice(bytes);
     Ok(Staged::Bytes(buf))
 }
