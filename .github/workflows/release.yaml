@@ -15,7 +15,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: update & install tools
         run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils
@@ -43,7 +43,7 @@ jobs:
           test "${GITHUB_REF##*/}" == "v${CANBOAT_VERSION}"
 
       - name: Add release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
@@ -81,7 +81,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build C tools
         run: make
@@ -124,7 +124,7 @@ jobs:
           fi
 
       - name: Add release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
@@ -140,7 +140,7 @@ jobs:
       contents: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Build C tools (x86_64)
         run: make PLATFORM=darwin-x86_64 CFLAGS="-Wall -O2 -arch x86_64" LDFLAGS="-arch x86_64"
@@ -162,7 +162,7 @@ jobs:
           cp target/x86_64-apple-darwin/release/keel keel-darwin-x86_64
 
       - name: Add release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
@@ -181,7 +181,7 @@ jobs:
       RUST_TARGET: armv7-unknown-linux-musleabihf
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install build tools
         run: sudo apt-get update && sudo apt-get install -y make autoconf
@@ -223,7 +223,7 @@ jobs:
           cp "target/${RUST_TARGET}/release/keel" keel-linux-armv7l
 
       - name: Add release assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: |
@@ -240,7 +240,7 @@ jobs:
           shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
     steps:
       - name: checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4
@@ -259,7 +259,7 @@ jobs:
       # Upload the C-tool archive before building keel, so a keel build issue
       # can never block the archive.
       - name: Add canboat archive
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: rel/*.zip
@@ -271,7 +271,7 @@ jobs:
           Copy-Item target/release/keel.exe keel-windows-x86_64.exe
 
       - name: Add keel asset
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: keel-windows-x86_64.exe
