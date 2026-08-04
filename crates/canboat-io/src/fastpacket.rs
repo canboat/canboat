@@ -60,6 +60,37 @@ pub fn packet_type(pgn: u32) -> FramePacketType {
     FramePacketType::Single
 }
 
+/// Split a coalesced fast-packet payload into its ISO 11783-3 wire
+/// frames: every frame is exactly 8 bytes, byte 0 is
+/// `(seq << 5) | index`, frame 0 carries the total length in byte 1,
+/// and the last frame is padded with 0xff. The caller owns the
+/// per-(pgn, src) sequence counter. Mirrors the socketcan TX path.
+pub fn fragment(seq: u8, data: &[u8]) -> Vec<[u8; 8]> {
+    let mut out = Vec::with_capacity(data.len() / 7 + 1);
+    let mut index: u8 = 0;
+    let mut remaining = data.len();
+    let mut offset = 0;
+    while remaining > 0 || index == 0 {
+        let mut frame = [0xffu8; 8];
+        frame[0] = (seq << 5) | (index & 0x1f);
+        let (payload_start, chunk) = if index == 0 {
+            frame[1] = data.len() as u8;
+            (2, remaining.min(6))
+        } else {
+            (1, remaining.min(7))
+        };
+        frame[payload_start..payload_start + chunk].copy_from_slice(&data[offset..offset + chunk]);
+        out.push(frame);
+        offset += chunk;
+        remaining -= chunk;
+        index = index.wrapping_add(1);
+        if remaining == 0 {
+            break;
+        }
+    }
+    out
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
