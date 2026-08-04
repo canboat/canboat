@@ -133,5 +133,9 @@ jobs:
             packages: make gcc-core
             hardlinks: 1
 
+      # Derived from GITHUB_WORKSPACE (the login shell starts in the Cygwin
+      # home): a hardcoded /cygdrive/d/a/canboat/canboat path only exists
+      # when the repository is literally named "canboat", which breaks
+      # running the workflow from a fork.
       - name: make
-        run: make -C /cygdrive/d/a/canboat/canboat
+        run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"
