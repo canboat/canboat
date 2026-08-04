@@ -960,7 +960,10 @@ mod imp {
                 fd,
                 batch.msgs.as_mut_ptr(),
                 RX_BATCH as libc::c_uint,
-                libc::MSG_DONTWAIT,
+                // The flags parameter is c_int on glibc but c_uint on musl;
+                // `as _` lets the same call compile for both libc targets
+                // (the static-musl release build needs this).
+                libc::MSG_DONTWAIT as _,
                 std::ptr::null_mut(),
             )
         };
