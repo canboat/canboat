@@ -1,0 +1,33 @@
+# Keep the repo's dependencies up to date on a weekly schedule so versions
+# stop drifting (e.g. actions/checkout@v4 pinning the deprecated Node 20
+# runtime). Actions and cargo bumps arrive grouped into one PR each; the
+# Dockerfile has a single dependency (the base image), so no group needed.
+#
+# Covered ecosystems: GitHub Actions, the root cargo workspace (keel and
+# crates/* are members and share the root Cargo.lock), and the Dockerfile
+# base image. The Rust toolchain itself tracks `stable` via
+# rust-toolchain.toml and needs no updater.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      cargo:
+        patterns:
+          - "*"
+
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
