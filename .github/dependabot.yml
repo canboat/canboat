@@ -1,0 +1,13 @@
+# Keep GitHub Actions in the workflows up to date. Bumps arrive as a single
+# grouped weekly PR so the workflows stop drifting onto deprecated action
+# versions (e.g. actions/checkout@v4 pinning the deprecated Node 20 runtime).
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns:
+          - "*"
