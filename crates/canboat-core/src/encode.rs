@@ -146,6 +146,23 @@ pub enum EncodeError {
     /// an internal consistency failure (repeating/variable PGN, or a
     /// schema/encoder mismatch).
     LengthMismatch { pgn: u32, expected: u32, got: usize },
+    /// A group-function `VARIABLE` value could not be resolved against
+    /// the referenced PGN's field (missing/unknown target PGN or
+    /// FIELD_INDEX).
+    VariableUnresolved {
+        field: &'static str,
+        reason: &'static str,
+    },
+    /// [`PgnBuilder::add_set_instance`] / [`PgnBuilder::push_in_set`]
+    /// was called for a repeating set this PGN does not declare.
+    NoRepeatingSet { pgn_id: &'static str, set: usize },
+    /// [`PgnBuilder::push_in_set`] addressed an instance index that was
+    /// never created with [`PgnBuilder::add_set_instance`].
+    NoSuchInstance {
+        pgn_id: &'static str,
+        set: usize,
+        instance: usize,
+    },
 }
 
 impl fmt::Display for EncodeError {
@@ -171,6 +188,22 @@ impl fmt::Display for EncodeError {
                     "field '{field}': dynamic group-function field must be set explicitly"
                 )
             }
+            EncodeError::VariableUnresolved { field, reason } => {
+                write!(f, "field '{field}': {reason}")
+            }
+            EncodeError::NoRepeatingSet { pgn_id, set } => {
+                write!(f, "PGN '{pgn_id}' has no repeating field set {set}")
+            }
+            EncodeError::NoSuchInstance {
+                pgn_id,
+                set,
+                instance,
+            } => {
+                write!(
+                    f,
+                    "PGN '{pgn_id}' set {set}: instance {instance} was never added"
+                )
+            }
             EncodeError::TypeMismatch { field, expected } => {
                 write!(f, "field '{field}': expected {expected}")
             }
@@ -193,8 +226,14 @@ pub struct PgnBuilder {
     dst: u8,
     timestamp: Option<String>,
     /// Staged values per field, indexed by `order - 1`. `None` → fill
-    /// with the field default at build time.
+    /// with the field default at build time. For fields inside a
+    /// repeating set these slots are ignored; instances live in `sets`.
     staged: Vec<Option<Staged>>,
+    /// Staged repeating-set instances: `sets[0]` for set 1, `sets[1]`
+    /// for set 2. Each instance stages the set's fields by position
+    /// within the set (`order - start_field`). Zero instances → the
+    /// payload simply ends before the set, mirroring decode.
+    sets: [Vec<Vec<Option<Staged>>>; 2],
 }
 
 /// A staged field value: either a scalar bit pattern (numbers, lookups,
@@ -205,6 +244,12 @@ enum Staged {
     Scalar(u64),
     /// Byte-aligned payload of exactly `bit_length / 8` bytes.
     Bytes(Vec<u8>),
+    /// A group-function `VARIABLE` value, staged as-given: its width,
+    /// scaling and type come from the *referenced* PGN's field, which
+    /// is only known at build time (the record's PGN field plus the
+    /// instance's FIELD_INDEX select it). Resolved by
+    /// [`PgnBuilder::build`] exactly as the decoder resolves it.
+    Deferred(EncodeValue),
 }
 
 impl PgnBuilder {
@@ -219,6 +264,7 @@ impl PgnBuilder {
             dst: 255,
             timestamp: None,
             staged: vec![None; pgn.fields.len()],
+            sets: [Vec::new(), Vec::new()],
         }
     }
 
@@ -307,29 +353,152 @@ impl PgnBuilder {
         Ok(self)
     }
 
+    /// Resolve repeating set `set` (1 or 2) to `(start index, size,
+    /// count-field index)`, all zero-based, or `None` if this PGN does
+    /// not declare that set.
+    fn set_layout(&self, set: usize) -> Option<(usize, usize, Option<usize>)> {
+        let (start, size, count) = match set {
+            1 => (
+                self.pgn.repeating_field_set1_start_field,
+                self.pgn.repeating_field_set1_size,
+                self.pgn.repeating_field_set1_count_field,
+            ),
+            2 => (
+                self.pgn.repeating_field_set2_start_field,
+                self.pgn.repeating_field_set2_size,
+                self.pgn.repeating_field_set2_count_field,
+            ),
+            _ => (None, None, None),
+        };
+        Some((
+            start? as usize - 1,
+            size? as usize,
+            count.map(|c| c as usize - 1),
+        ))
+    }
+
+    /// Append a new instance of repeating set `set` (1 or 2) and return
+    /// its index for [`push_in_set`](Self::push_in_set). Fields left
+    /// unset in an instance are filled with their "not available"
+    /// defaults at build time, exactly like top-level fields. The set's
+    /// count field (when the schema declares one) is set automatically
+    /// from the number of instances unless staged explicitly.
+    pub fn add_set_instance(&mut self, set: usize) -> Result<usize, EncodeError> {
+        let (_, size, _) = self.set_layout(set).ok_or(EncodeError::NoRepeatingSet {
+            pgn_id: self.pgn.id,
+            set,
+        })?;
+        let instances = &mut self.sets[set - 1];
+        instances.push(vec![None; size]);
+        Ok(instances.len() - 1)
+    }
+
+    /// Set a field of repeating-set instance `instance` by schema name
+    /// (`"Parameter"`) or id (`"parameter"`). The instance must have
+    /// been created with [`add_set_instance`](Self::add_set_instance).
+    pub fn push_in_set(
+        &mut self,
+        set: usize,
+        instance: usize,
+        field: &str,
+        value: impl Into<EncodeValue>,
+    ) -> Result<&mut Self, EncodeError> {
+        let (start, size, _) = self.set_layout(set).ok_or(EncodeError::NoRepeatingSet {
+            pgn_id: self.pgn.id,
+            set,
+        })?;
+        let rel = self.pgn.fields[start..start + size]
+            .iter()
+            .position(|f| f.name == field || f.id == field)
+            .ok_or_else(|| EncodeError::NoSuchField {
+                pgn_id: self.pgn.id,
+                field: field.to_string(),
+            })?;
+        let f = &self.pgn.fields[start + rel];
+        // A VARIABLE value can't be staged yet — its metadata lives in
+        // the referenced PGN's field, selected by the record's PGN
+        // field and this instance's FIELD_INDEX. Defer to build().
+        let staged = if f.field_type == Some(FieldType::Variable) {
+            Staged::Deferred(value.into())
+        } else {
+            self.stage_value(f, value.into())?
+        };
+        let inst = self.sets[set - 1]
+            .get_mut(instance)
+            .ok_or(EncodeError::NoSuchInstance {
+                pgn_id: self.pgn.id,
+                set,
+                instance,
+            })?;
+        inst[rel] = Some(staged);
+        Ok(self)
+    }
+
     /// Build the wire frame: pack every field (staged value or default)
     /// LSB-first at its schema offset, verify the length, and return the
-    /// [`RawFrame`].
+    /// [`RawFrame`]. Repeating sets are emitted at their schema position,
+    /// one group per staged instance (zero instances → the payload ends
+    /// there, mirroring decode); a declared count field left unset is
+    /// filled with the instance count.
     pub fn build(&self) -> Result<RawFrame, EncodeError> {
         let mut buf: Vec<u8> = Vec::new();
         let mut next_bit = 0usize;
-        for (idx, f) in self.pgn.fields.iter().enumerate() {
-            match &self.staged[idx] {
-                // A string / binary: its packed bytes are written verbatim
-                // (byte-aligned — every string/binary field is).
-                Some(Staged::Bytes(bytes)) => {
-                    for &b in bytes {
-                        write_bits(&mut buf, &mut next_bit, 8, u64::from(b));
+        let set1 = self.set_layout(1);
+        let set2 = self.set_layout(2);
+        let mut idx = 0usize;
+        while idx < self.pgn.fields.len() {
+            // A repeating set starts at this field? Emit its staged
+            // instances and skip past the group's schema fields.
+            let mut in_set = false;
+            for (layout, instances) in [(&set1, &self.sets[0]), (&set2, &self.sets[1])] {
+                if let Some((start, size, _)) = *layout
+                    && idx == start
+                {
+                    for inst in instances {
+                        for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
+                            match &inst[j] {
+                                Some(Staged::Deferred(v)) => self.emit_variable(
+                                    &mut buf,
+                                    &mut next_bit,
+                                    f,
+                                    inst,
+                                    start,
+                                    size,
+                                    v,
+                                )?,
+                                other => emit_field(&mut buf, &mut next_bit, f, other.as_ref())?,
+                            }
+                        }
                     }
+                    idx += size;
+                    in_set = true;
+                    break;
                 }
-                // A fixed-width scalar (number, lookup, PGN, float, …).
-                Some(Staged::Scalar(v)) => {
-                    let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
-                    write_bits(&mut buf, &mut next_bit, bl, *v);
-                }
-                // Unset — fill the field's "not available" default.
-                None => write_unset(&mut buf, &mut next_bit, f)?,
             }
+            if in_set {
+                continue;
+            }
+            let f = &self.pgn.fields[idx];
+            // A declared count field left unset takes the number of
+            // staged instances for its set (0 when none were added — a
+            // zero-iteration message, not "unavailable").
+            let auto_count = [(&set1, &self.sets[0]), (&set2, &self.sets[1])]
+                .into_iter()
+                .find_map(|(layout, instances)| match *layout {
+                    Some((_, _, Some(count_idx)))
+                        if count_idx == idx && self.staged[idx].is_none() =>
+                    {
+                        Some(Staged::Scalar(instances.len() as u64))
+                    }
+                    _ => None,
+                });
+            emit_field(
+                &mut buf,
+                &mut next_bit,
+                f,
+                auto_count.as_ref().or(self.staged[idx].as_ref()),
+            )?;
+            idx += 1;
         }
         // Flush a trailing partial byte (LSB-first packing already grew
         // the buffer as it went, so this is only defensive).
@@ -384,6 +553,96 @@ impl PgnBuilder {
                 pgn_id: self.pgn.id,
                 field: key.to_string(),
             })
+    }
+
+    /// Emit a deferred group-function `VARIABLE` value: resolve the
+    /// referenced PGN (the record's staged PGN field) and the target
+    /// field (this instance's staged FIELD_INDEX), stage the value with
+    /// the target field's metadata — width, resolution, lookup table —
+    /// and pack it rounded up to whole bytes, mirroring the decoder's
+    /// `fieldPrintVariable` byte alignment.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_variable(
+        &self,
+        buf: &mut Vec<u8>,
+        next_bit: &mut usize,
+        f: &FieldInfo,
+        inst: &[Option<Staged>],
+        start: usize,
+        size: usize,
+        v: &EncodeValue,
+    ) -> Result<(), EncodeError> {
+        let unresolved = |reason| EncodeError::VariableUnresolved {
+            field: f.name,
+            reason,
+        };
+        let target_pgn = self
+            .pgn
+            .fields
+            .iter()
+            .position(|tf| tf.field_type == Some(FieldType::Pgn))
+            .and_then(|i| match self.staged[i] {
+                Some(Staged::Scalar(p)) => Some(p as u32),
+                _ => None,
+            })
+            .ok_or(unresolved("no staged PGN field names the referenced PGN"))?;
+        // Prefer the specific definition; the range catch-all is a last
+        // resort, mirroring decode (which only borrows it when variant
+        // matching fails).
+        let target_info = self
+            .db
+            .first_pgn(target_pgn)
+            .or_else(|| self.db.fallback_pgn(target_pgn))
+            .ok_or(unresolved("referenced PGN is not in the schema"))?;
+        let param_idx = self.pgn.fields[start..start + size]
+            .iter()
+            .enumerate()
+            .find(|(_, tf)| tf.field_type == Some(FieldType::FieldIndex))
+            .and_then(|(j, _)| match inst[j] {
+                Some(Staged::Scalar(n)) => Some(n as u32),
+                _ => None,
+            })
+            .ok_or(unresolved("no staged FIELD_INDEX selects the target field"))?;
+        let target_field = target_info
+            .fields
+            .iter()
+            .find(|tf| (tf.order as u32) == param_idx)
+            .ok_or(unresolved(
+                "FIELD_INDEX is beyond the referenced PGN's fields",
+            ))?;
+        // A label for a lookup-typed target arrives as Text (the caller
+        // cannot know the target's type up front); retype it.
+        let value = match v {
+            EncodeValue::Text(s) if target_field.lookup_enumeration.is_some() => {
+                EncodeValue::Lookup(s.clone())
+            }
+            other => other.clone(),
+        };
+        match self.stage_value(target_field, value)? {
+            Staged::Scalar(raw) => {
+                let bl = target_field
+                    .bit_length
+                    .ok_or(EncodeError::NotFixedLength(target_field.name))?
+                    as usize;
+                write_bits(buf, next_bit, bl, raw);
+                // The decoder consumes VARIABLE values rounded up to
+                // whole bytes. Pad with 0s: that is what canboatjs
+                // transmits and what fielded devices have accepted for
+                // years - a strict receiver may treat the pad bits as
+                // reserved-zero when parsing a command parameter.
+                if !next_bit.is_multiple_of(8) {
+                    let pad = 8 - (*next_bit % 8);
+                    write_bits(buf, next_bit, pad, 0);
+                }
+            }
+            Staged::Bytes(bytes) => {
+                for b in bytes {
+                    write_bits(buf, next_bit, 8, u64::from(b));
+                }
+            }
+            Staged::Deferred(_) => unreachable!("stage_value never defers"),
+        }
+        Ok(())
     }
 
     /// Stage a value for field `f`: strings and binary become byte
@@ -508,9 +767,23 @@ fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
 /// (e.g. the Furuno SCX-20) emit and round-trips through the decoder,
 /// which trims trailing NUL / `0xff` / `@` / space.
 fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+    let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let text = match v {
         EncodeValue::Text(s) => s,
         EncodeValue::NotAvailable => String::new(),
+        // Pre-rendered field content, written verbatim at exactly the
+        // field width — for callers that must reproduce a specific
+        // capture's padding (fixed strings in the wild are padded with
+        // 0xff, 0x00 or '@' depending on the device).
+        EncodeValue::Bytes(b) => {
+            if b.len() != byte_len {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: b.len() as f64,
+                });
+            }
+            return Ok(Staged::Bytes(b));
+        }
         _ => {
             return Err(EncodeError::TypeMismatch {
                 field: f.name,
@@ -518,7 +791,6 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
             });
         }
     };
-    let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let bytes = text.as_bytes();
     if bytes.len() > byte_len {
         return Err(EncodeError::ValueOutOfRange {
@@ -526,7 +798,10 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
             value: bytes.len() as f64,
         });
     }
-    let mut buf = vec![0u8; byte_len];
+    // Pad with 0xff, the convention real devices and canboatjs use
+    // (decoders trim 0xff, 0x00 and '@' runs alike, but matching the
+    // dominant on-wire bytes keeps re-encodes bit-identical).
+    let mut buf = vec![0xffu8; byte_len];
     buf[..bytes.len()].copy_from_slice(bytes);
     Ok(Staged::Bytes(buf))
 }
@@ -604,6 +879,26 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
         }
     };
     if let Some(bl) = f.bit_length {
+        // Not every BINARY field is byte-aligned (the 19-bit AIS
+        // Communication State, for one). A sub-64-bit unaligned width
+        // stages as a masked scalar so the packer writes exactly `bl`
+        // bits; rendered hex always shows whole bytes, so one extra
+        // padding byte is tolerated on the way in.
+        if bl % 8 != 0 && bl <= 64 {
+            let want = bl.div_ceil(8) as usize;
+            if bytes.len() > want {
+                return Err(EncodeError::ValueOutOfRange {
+                    field: f.name,
+                    value: bytes.len() as f64,
+                });
+            }
+            let mut raw: u64 = 0;
+            for (i, b) in bytes.iter().enumerate() {
+                raw |= u64::from(*b) << (8 * i);
+            }
+            raw &= u64::MAX >> (64 - bl);
+            return Ok(Staged::Scalar(raw));
+        }
         let want = bl as usize / 8;
         if bytes.len() > want {
             return Err(EncodeError::ValueOutOfRange {
@@ -645,6 +940,38 @@ fn default_raw(f: &FieldInfo) -> u64 {
 }
 
 /// Write the "not available" default for a field left unset by the caller.
+/// Emit one field: a staged value verbatim, or the field's "not
+/// available" default when unset. Shared by the top-level field walk
+/// and repeating-set instance emission in [`PgnBuilder::build`].
+fn emit_field(
+    buf: &mut Vec<u8>,
+    next_bit: &mut usize,
+    f: &FieldInfo,
+    staged: Option<&Staged>,
+) -> Result<(), EncodeError> {
+    match staged {
+        // A string / binary: its packed bytes are written verbatim
+        // (byte-aligned — every string/binary field is).
+        Some(Staged::Bytes(bytes)) => {
+            for &b in bytes {
+                write_bits(buf, next_bit, 8, u64::from(b));
+            }
+            Ok(())
+        }
+        // A fixed-width scalar (number, lookup, PGN, float, …).
+        Some(Staged::Scalar(v)) => {
+            let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize;
+            write_bits(buf, next_bit, bl, *v);
+            Ok(())
+        }
+        // Deferred values are resolved by the instance walk in build();
+        // one reaching here means a VARIABLE field outside a repeating
+        // set, which the schema does not produce.
+        Some(Staged::Deferred(_)) => Err(EncodeError::NotFixedLength(f.name)),
+        None => write_unset(buf, next_bit, f),
+    }
+}
+
 fn write_unset(buf: &mut Vec<u8>, next_bit: &mut usize, f: &FieldInfo) -> Result<(), EncodeError> {
     match f.field_type {
         // Fixed string / binary: all-1s (the decoder trims the 0xff run to
@@ -857,6 +1184,117 @@ mod tests {
     }
 
     #[test]
+    fn repeating_set_round_trips_through_decode() {
+        // 129540 GNSS Sats in View: fixed prefix (sid, mode, reserved,
+        // count) then N × {prn, elevation, azimuth, snr, residuals,
+        // status}. Stage two instances, leave the count field unset (it
+        // must auto-fill with 2), decode the frame back and compare the
+        // per-iteration values.
+        let db = db();
+        let mut b = db.encode("gnssSatsInView").unwrap();
+        b.push_by_name("SID", 9).unwrap();
+        for (prn, snr) in [(7i64, 30.0f64), (11, 42.5)] {
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "PRN", prn).unwrap();
+            b.push_in_set(1, i, "SNR", snr).unwrap();
+        }
+        let frame = b.build().unwrap();
+        assert_eq!(frame.pgn, 129540);
+
+        let decoded = db.decode(&frame).unwrap();
+        assert!(decoded.has_repeating_set[0]);
+        let count = match &decoded.field_by_name("Sats in View").unwrap().value {
+            crate::FieldValue::Integer(n) => *n,
+            crate::FieldValue::Number(x) => *x as i64,
+            other => panic!("Sats in View: expected a number, got {other:?}"),
+        };
+        assert_eq!(count, 2, "count field must auto-fill from instances");
+
+        let per_iter = |id: &str| -> Vec<f64> {
+            decoded
+                .fields
+                .iter()
+                .filter(|f| f.info.id == id && f.repeat_set == 1)
+                .map(|f| match &f.value {
+                    crate::FieldValue::Integer(n) => *n as f64,
+                    crate::FieldValue::Number(x) => *x,
+                    other => panic!("{id}: expected a number, got {other:?}"),
+                })
+                .collect()
+        };
+        assert_eq!(per_iter("prn"), vec![7.0, 11.0]);
+        let snrs = per_iter("snr");
+        assert_eq!(snrs.len(), 2);
+        assert!((snrs[0] - 30.0).abs() < 0.01);
+        assert!((snrs[1] - 42.5).abs() < 0.01);
+    }
+
+    #[test]
+    fn repeating_set_errors() {
+        let db = db();
+        // windData has no repeating sets.
+        assert!(matches!(
+            db.encode("windData").unwrap().add_set_instance(1),
+            Err(EncodeError::NoRepeatingSet { set: 1, .. })
+        ));
+        // An instance index that was never added is rejected.
+        assert!(matches!(
+            db.encode("gnssSatsInView")
+                .unwrap()
+                .push_in_set(1, 0, "PRN", 1),
+            Err(EncodeError::NoSuchInstance { instance: 0, .. })
+        ));
+    }
+
+    #[test]
+    fn group_function_variable_values_encode_via_the_referenced_pgn() {
+        // A 126208 Command Group Function for PGN 127250 (Vessel
+        // Heading): parameter 2 is the Heading field, whose width
+        // (16 bits) and resolution (1e-4 rad) live in 127250, not in
+        // 126208. The deferred VARIABLE path must resolve them.
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127250)).unwrap();
+        let heading_order = db
+            .first_pgn(127250)
+            .unwrap()
+            .fields
+            .iter()
+            .find(|f| f.id == "heading")
+            .unwrap()
+            .order as i64;
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", heading_order).unwrap();
+        b.push_in_set(1, i, "Value", 1.5f64).unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        assert_eq!(frame.pgn, 126208);
+
+        let decoded = db.decode(&frame).unwrap();
+        let val = decoded
+            .fields
+            .iter()
+            .find(|f| f.repeat_set == 1 && f.info.field_type == Some(FieldType::Variable))
+            .expect("decoded VARIABLE value");
+        match &val.value {
+            crate::FieldValue::Number(x) => assert!((x - 1.5).abs() < 0.01, "got {x}"),
+            crate::FieldValue::Integer(n) => assert!((*n as f64 - 1.5).abs() < 1.0, "got {n}"),
+            other => panic!("value: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn variable_without_target_is_a_clear_error() {
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Value", 1i64).unwrap();
+        assert!(matches!(
+            b.build(),
+            Err(EncodeError::VariableUnresolved { .. })
+        ));
+    }
+
+    #[test]
     fn unknown_lookup_label_is_rejected() {
         assert!(matches!(
             db().encode("windData")
@@ -1037,13 +1475,39 @@ mod tests {
     #[test]
     fn dynamic_group_function_field_is_a_clear_error() {
         // The 126208 group-function dynamic types can't be defaulted in
-        // isolation; an unset one is a descriptive error, not wrong bytes.
-        let err = db()
-            .encode("nmeaRequestGroupFunction")
-            .and_then(|b| b.build());
+        // isolation; an unset one inside a staged parameter pair is a
+        // descriptive error, not wrong bytes.
+        let mut b = db().encode("nmeaRequestGroupFunction").unwrap();
+        b.add_set_instance(1).unwrap();
+        let err = b.build();
         assert!(
             matches!(err, Err(EncodeError::NotFixedLength(_))),
             "got {err:?}"
         );
+    }
+
+    #[test]
+    fn zero_instance_repeating_pgn_builds_with_zero_count() {
+        // A bare group-function request is a legitimate zero-parameter
+        // message: the repeating set is absent from the payload and the
+        // count field auto-fills with 0 (a real count, not
+        // "unavailable"). The repeating fields' dynamic widths never
+        // come into play.
+        let frame = db()
+            .encode("nmeaRequestGroupFunction")
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(frame.pgn, 126208);
+        let decoded = db().decode(&frame).unwrap();
+        match &decoded
+            .field_by_name("Number of Parameters")
+            .expect("count field decoded")
+            .value
+        {
+            crate::FieldValue::Integer(n) => assert_eq!(*n, 0),
+            crate::FieldValue::Number(x) => assert_eq!(*x, 0.0),
+            other => panic!("count: expected a number, got {other:?}"),
+        }
     }
 }
