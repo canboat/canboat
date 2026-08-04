@@ -80,7 +80,9 @@ pub struct Args {
     device: String,
 
     /// Serial baud rate. Defaults to 115200 (ngt1) / 230400 (ikonvert).
-    #[arg(short = 'b', long)]
+    /// `-s` is the C actisense-serial/ikonvert-serial spelling; the
+    /// argv[0] shims must stay drop-in compatible with it.
+    #[arg(short = 'b', long, short_alias = 's')]
     baud: Option<u32>,
 
     /// Read-only: emit received frames, ignore stdin.
@@ -237,8 +239,19 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
             Ok(device::ikonvert::run(r, w, config))
         }
         Kind::Maretron => {
-            let stream = TcpStream::connect(&args.device)
-                .with_context(|| format!("connecting to {}", args.device))?;
+            // The C maretron-ipg takes `tcp://<host>[:<port>]` with the
+            // port defaulting to 6543; the argv[0] shim must stay
+            // drop-in compatible with that syntax (signalk-server
+            // spawns it exactly so), and the bare `host:port` form
+            // keeps working.
+            let endpoint = args.device.strip_prefix("tcp://").unwrap_or(&args.device);
+            let endpoint = if endpoint.contains(':') {
+                endpoint.to_string()
+            } else {
+                format!("{endpoint}:6543")
+            };
+            let stream = TcpStream::connect(&endpoint)
+                .with_context(|| format!("connecting to {endpoint}"))?;
             let reader: Box<dyn Read + Send> =
                 Box::new(stream.try_clone().context("cloning TCP stream")?);
             let writer: Box<dyn Write + Send> = Box::new(stream);
