@@ -146,6 +146,13 @@ pub enum EncodeError {
     /// an internal consistency failure (repeating/variable PGN, or a
     /// schema/encoder mismatch).
     LengthMismatch { pgn: u32, expected: u32, got: usize },
+    /// A group-function `VARIABLE` value could not be resolved against
+    /// the referenced PGN's field (missing/unknown target PGN or
+    /// FIELD_INDEX).
+    VariableUnresolved {
+        field: &'static str,
+        reason: &'static str,
+    },
     /// [`PgnBuilder::add_set_instance`] / [`PgnBuilder::push_in_set`]
     /// was called for a repeating set this PGN does not declare.
     NoRepeatingSet { pgn_id: &'static str, set: usize },
@@ -180,6 +187,9 @@ impl fmt::Display for EncodeError {
                     f,
                     "field '{field}': dynamic group-function field must be set explicitly"
                 )
+            }
+            EncodeError::VariableUnresolved { field, reason } => {
+                write!(f, "field '{field}': {reason}")
             }
             EncodeError::NoRepeatingSet { pgn_id, set } => {
                 write!(f, "PGN '{pgn_id}' has no repeating field set {set}")
@@ -234,6 +244,12 @@ enum Staged {
     Scalar(u64),
     /// Byte-aligned payload of exactly `bit_length / 8` bytes.
     Bytes(Vec<u8>),
+    /// A group-function `VARIABLE` value, staged as-given: its width,
+    /// scaling and type come from the *referenced* PGN's field, which
+    /// is only known at build time (the record's PGN field plus the
+    /// instance's FIELD_INDEX select it). Resolved by
+    /// [`PgnBuilder::build`] exactly as the decoder resolves it.
+    Deferred(EncodeValue),
 }
 
 impl PgnBuilder {
@@ -398,7 +414,15 @@ impl PgnBuilder {
                 pgn_id: self.pgn.id,
                 field: field.to_string(),
             })?;
-        let staged = self.stage_value(&self.pgn.fields[start + rel], value.into())?;
+        let f = &self.pgn.fields[start + rel];
+        // A VARIABLE value can't be staged yet — its metadata lives in
+        // the referenced PGN's field, selected by the record's PGN
+        // field and this instance's FIELD_INDEX. Defer to build().
+        let staged = if f.field_type == Some(FieldType::Variable) {
+            Staged::Deferred(value.into())
+        } else {
+            self.stage_value(f, value.into())?
+        };
         let inst = self.sets[set - 1]
             .get_mut(instance)
             .ok_or(EncodeError::NoSuchInstance {
@@ -432,7 +456,18 @@ impl PgnBuilder {
                 {
                     for inst in instances {
                         for (j, f) in self.pgn.fields[start..start + size].iter().enumerate() {
-                            emit_field(&mut buf, &mut next_bit, f, inst[j].as_ref())?;
+                            match &inst[j] {
+                                Some(Staged::Deferred(v)) => self.emit_variable(
+                                    &mut buf,
+                                    &mut next_bit,
+                                    f,
+                                    inst,
+                                    start,
+                                    size,
+                                    v,
+                                )?,
+                                other => emit_field(&mut buf, &mut next_bit, f, other.as_ref())?,
+                            }
                         }
                     }
                     idx += size;
@@ -518,6 +553,93 @@ impl PgnBuilder {
                 pgn_id: self.pgn.id,
                 field: key.to_string(),
             })
+    }
+
+    /// Emit a deferred group-function `VARIABLE` value: resolve the
+    /// referenced PGN (the record's staged PGN field) and the target
+    /// field (this instance's staged FIELD_INDEX), stage the value with
+    /// the target field's metadata — width, resolution, lookup table —
+    /// and pack it rounded up to whole bytes, mirroring the decoder's
+    /// `fieldPrintVariable` byte alignment.
+    #[allow(clippy::too_many_arguments)]
+    fn emit_variable(
+        &self,
+        buf: &mut Vec<u8>,
+        next_bit: &mut usize,
+        f: &FieldInfo,
+        inst: &[Option<Staged>],
+        start: usize,
+        size: usize,
+        v: &EncodeValue,
+    ) -> Result<(), EncodeError> {
+        let unresolved = |reason| EncodeError::VariableUnresolved {
+            field: f.name,
+            reason,
+        };
+        let target_pgn = self
+            .pgn
+            .fields
+            .iter()
+            .position(|tf| tf.field_type == Some(FieldType::Pgn))
+            .and_then(|i| match self.staged[i] {
+                Some(Staged::Scalar(p)) => Some(p as u32),
+                _ => None,
+            })
+            .ok_or(unresolved("no staged PGN field names the referenced PGN"))?;
+        // Prefer the specific definition; the range catch-all is a last
+        // resort, mirroring decode (which only borrows it when variant
+        // matching fails).
+        let target_info = self
+            .db
+            .first_pgn(target_pgn)
+            .or_else(|| self.db.fallback_pgn(target_pgn))
+            .ok_or(unresolved("referenced PGN is not in the schema"))?;
+        let param_idx = self.pgn.fields[start..start + size]
+            .iter()
+            .enumerate()
+            .find(|(_, tf)| tf.field_type == Some(FieldType::FieldIndex))
+            .and_then(|(j, _)| match inst[j] {
+                Some(Staged::Scalar(n)) => Some(n as u32),
+                _ => None,
+            })
+            .ok_or(unresolved("no staged FIELD_INDEX selects the target field"))?;
+        let target_field = target_info
+            .fields
+            .iter()
+            .find(|tf| (tf.order as u32) == param_idx)
+            .ok_or(unresolved(
+                "FIELD_INDEX is beyond the referenced PGN's fields",
+            ))?;
+        // A label for a lookup-typed target arrives as Text (the caller
+        // cannot know the target's type up front); retype it.
+        let value = match v {
+            EncodeValue::Text(s) if target_field.lookup_enumeration.is_some() => {
+                EncodeValue::Lookup(s.clone())
+            }
+            other => other.clone(),
+        };
+        match self.stage_value(target_field, value)? {
+            Staged::Scalar(raw) => {
+                let bl = target_field
+                    .bit_length
+                    .ok_or(EncodeError::NotFixedLength(target_field.name))?
+                    as usize;
+                write_bits(buf, next_bit, bl, raw);
+                // The decoder consumes VARIABLE values rounded up to
+                // whole bytes; pad with 1s like every other fill.
+                if !next_bit.is_multiple_of(8) {
+                    let pad = 8 - (*next_bit % 8);
+                    write_bits(buf, next_bit, pad, u64::MAX);
+                }
+            }
+            Staged::Bytes(bytes) => {
+                for b in bytes {
+                    write_bits(buf, next_bit, 8, u64::from(b));
+                }
+            }
+            Staged::Deferred(_) => unreachable!("stage_value never defers"),
+        }
+        Ok(())
     }
 
     /// Stage a value for field `f`: strings and binary become byte
@@ -823,6 +945,10 @@ fn emit_field(
             write_bits(buf, next_bit, bl, *v);
             Ok(())
         }
+        // Deferred values are resolved by the instance walk in build();
+        // one reaching here means a VARIABLE field outside a repeating
+        // set, which the schema does not produce.
+        Some(Staged::Deferred(_)) => Err(EncodeError::NotFixedLength(f.name)),
         None => write_unset(buf, next_bit, f),
     }
 }
@@ -1098,6 +1224,54 @@ mod tests {
                 .unwrap()
                 .push_in_set(1, 0, "PRN", 1),
             Err(EncodeError::NoSuchInstance { instance: 0, .. })
+        ));
+    }
+
+    #[test]
+    fn group_function_variable_values_encode_via_the_referenced_pgn() {
+        // A 126208 Command Group Function for PGN 127250 (Vessel
+        // Heading): parameter 2 is the Heading field, whose width
+        // (16 bits) and resolution (1e-4 rad) live in 127250, not in
+        // 126208. The deferred VARIABLE path must resolve them.
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(127250)).unwrap();
+        let heading_order = db
+            .first_pgn(127250)
+            .unwrap()
+            .fields
+            .iter()
+            .find(|f| f.id == "heading")
+            .unwrap()
+            .order as i64;
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", heading_order).unwrap();
+        b.push_in_set(1, i, "Value", 1.5f64).unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        assert_eq!(frame.pgn, 126208);
+
+        let decoded = db.decode(&frame).unwrap();
+        let val = decoded
+            .fields
+            .iter()
+            .find(|f| f.repeat_set == 1 && f.info.field_type == Some(FieldType::Variable))
+            .expect("decoded VARIABLE value");
+        match &val.value {
+            crate::FieldValue::Number(x) => assert!((x - 1.5).abs() < 0.01, "got {x}"),
+            crate::FieldValue::Integer(n) => assert!((*n as f64 - 1.5).abs() < 1.0, "got {n}"),
+            other => panic!("value: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn variable_without_target_is_a_clear_error() {
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Value", 1i64).unwrap();
+        assert!(matches!(
+            b.build(),
+            Err(EncodeError::VariableUnresolved { .. })
         ));
     }
 

@@ -335,6 +335,10 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Binary) | Some(FieldType::DynamicFieldValue) => {
             Ok(EncodeValue::Bytes(parse_hex(s)?))
         }
+        // A group-function VARIABLE value: its real type lives in the
+        // referenced PGN's field and is resolved at build time — pass
+        // the text through, the builder retypes labels for lookups.
+        Some(FieldType::Variable) => Ok(EncodeValue::Text(s.to_string())),
         // The display renderings parse back: "2017.04.15" → days since
         // epoch, "14:57:57(.1234)" → seconds. Both are the physical
         // value in the field's unit (d / s), so Number staging scales
