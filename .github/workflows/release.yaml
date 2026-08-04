@@ -264,6 +264,21 @@ jobs:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: rel/*.zip
 
+      # Like keel below, the Rust canboat binary is a native MSVC build
+      # released standalone — the zip above stays Cygwin-only. Each asset
+      # uploads right after its build so no later build issue blocks it.
+      - name: Build canboat (Rust, MSVC)
+        shell: pwsh
+        run: |
+          cargo build --release -p canboat
+          Copy-Item target/release/canboat.exe canboat-rust-windows-x86_64.exe
+
+      - name: Add canboat-rust asset
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: canboat-rust-windows-x86_64.exe
+
       - name: Build keel (MSVC)
         shell: pwsh
         run: |
