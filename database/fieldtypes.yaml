@@ -819,6 +819,13 @@
   comment: Whoever came up with 1/32th of 1e-6 of a radian?
   resolution: 3.125e-08
   physical: ANGULAR_VELOCITY
+- name: ROTATION_FIX32_MDEG_S
+  base: FIX32
+  description: Rotational speed, thousandth of a degree per second
+  encodingDescription: Angular rotation in 0.001 degrees per second, stored as radians per second
+  comment: Used by Furuno, whose sensors quantize their gyro output in degrees rather than radians
+  resolution: 1.7453292519943295e-05
+  physical: ANGULAR_VELOCITY
 - name: ROTATION_UFIX16_RPM
   base: UFIX16
   description: Rotational speed, RPM

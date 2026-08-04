@@ -77866,7 +77866,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>11</FieldCount>
       <Length>29</Length>
       <Fields>
         <Field>
@@ -77977,70 +77977,60 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>e</Id>
-          <Name>E</Name>
+          <Id>rollRate</Id>
+          <Name>Roll Rate</Name>
           <BitLength>32</BitLength>
           <BitOffset>120</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483644</RangeMax>
+          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMax>37480.6602205258</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
           <ReservedValue>2147483645</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGULAR_VELOCITY</PhysicalQuantity>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>f</Id>
-          <Name>F</Name>
+          <Id>pitchRate</Id>
+          <Name>Pitch Rate</Name>
           <BitLength>32</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
-          <RangeMax>2147483644</RangeMax>
+          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMax>37480.6602205258</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
           <ReservedValue>2147483645</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGULAR_VELOCITY</PhysicalQuantity>
         </Field>
         <Field>
           <Order>10</Order>
-          <Id>g</Id>
-          <Name>G</Name>
-          <BitLength>16</BitLength>
+          <Id>yawRate</Id>
+          <Name>Yaw Rate</Name>
+          <BitLength>32</BitLength>
           <BitOffset>184</BitOffset>
           <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
+          <Unit>rad/s</Unit>
+          <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32764</RangeMax>
-          <UnknownValue>32767</UnknownValue>
-          <OutOfRangeValue>32766</OutOfRangeValue>
-          <ReservedValue>32765</ReservedValue>
+          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMax>37480.6602205258</RangeMax>
+          <UnknownValue>2147483647</UnknownValue>
+          <OutOfRangeValue>2147483646</OutOfRangeValue>
+          <ReservedValue>2147483645</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ANGULAR_VELOCITY</PhysicalQuantity>
         </Field>
         <Field>
           <Order>11</Order>
-          <Id>h</Id>
-          <Name>H</Name>
-          <BitLength>16</BitLength>
-          <BitOffset>200</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
-          <RangeMax>32764</RangeMax>
-          <UnknownValue>32767</UnknownValue>
-          <OutOfRangeValue>32766</OutOfRangeValue>
-          <ReservedValue>32765</ReservedValue>
-          <FieldType>NUMBER</FieldType>
-        </Field>
-        <Field>
-          <Order>12</Order>
           <Id>i</Id>
           <Name>I</Name>
           <BitLength>16</BitLength>
