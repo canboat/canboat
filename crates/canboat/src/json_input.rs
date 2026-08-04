@@ -221,6 +221,27 @@ fn stage_fields(
                 .map_err(|e| anyhow!("{key}: {e}"))?;
         }
     }
+    // canboatjs writes an *unavailable* count when a record carries
+    // neither the count field nor its list; the builder would otherwise
+    // auto-fill 0. Match canboatjs so re-encodes stay bit-identical.
+    let info = builder.pgn_info();
+    for (set_key, count_order) in [
+        ("list", info.repeating_field_set1_count_field),
+        ("list2", info.repeating_field_set2_count_field),
+    ] {
+        let Some(order) = count_order else { continue };
+        let Some(count_field) = info.fields.get(order as usize - 1) else {
+            continue;
+        };
+        if !fields.contains_key(set_key)
+            && !fields.contains_key(count_field.id)
+            && !fields.contains_key(count_field.name)
+        {
+            builder
+                .push_by_name(count_field.name, EncodeValue::NotAvailable)
+                .map_err(|e| anyhow!("{}: {e}", count_field.name))?;
+        }
+    }
     Ok(())
 }
 
