@@ -344,34 +344,9 @@ mod imp {
             if !is_fast {
                 self.tx_buf.push(can_id, data);
             } else {
-                // Per ISO 11783-3: every fast-packet CAN frame is
-                // exactly 8 bytes; the last chunk is padded with 0xff.
-                // The first byte is `(seq << 5) | index`, with `seq`
-                // incrementing per-(pgn, src) instance so consecutive
-                // first frames are distinguishable from continuations.
                 let seq = self.tx_buf.next_fast_seq(pgn, src);
-                let mut index: u8 = 0;
-                let mut remaining = data.len();
-                let mut offset = 0;
-                while remaining > 0 {
-                    let mut frame = [0xffu8; 8];
-                    frame[0] = (seq << 5) | (index & 0x1f);
-                    let chunk;
-                    let payload_start;
-                    if index == 0 {
-                        frame[1] = data.len() as u8;
-                        chunk = remaining.min(6);
-                        payload_start = 2;
-                    } else {
-                        chunk = remaining.min(7);
-                        payload_start = 1;
-                    }
-                    frame[payload_start..payload_start + chunk]
-                        .copy_from_slice(&data[offset..offset + chunk]);
-                    self.tx_buf.push(can_id, &frame[..]);
-                    offset += chunk;
-                    remaining -= chunk;
-                    index = index.wrapping_add(1);
+                for frame in fastpacket::fragment(seq, data) {
+                    self.tx_buf.push(can_id, &frame);
                 }
             }
             if emit {
