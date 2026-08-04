@@ -80,7 +80,9 @@ pub struct Args {
     device: String,
 
     /// Serial baud rate. Defaults to 115200 (ngt1) / 230400 (ikonvert).
-    #[arg(short = 'b', long)]
+    /// `-s` is the C actisense-serial/ikonvert-serial spelling; the
+    /// argv[0] shims must stay drop-in compatible with it.
+    #[arg(short = 'b', long, short_alias = 's')]
     baud: Option<u32>,
 
     /// Read-only: emit received frames, ignore stdin.
