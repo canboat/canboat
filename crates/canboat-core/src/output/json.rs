@@ -36,9 +36,14 @@ fn field_display_name(field: &DecodedField, mode: CamelCase) -> std::borrow::Cow
     }
 }
 
-/// Display description for a PGN. canboat uses `id` as the camelized
-/// form (e.g. `isoAddressClaim`), so the same id maps cleanly.
-fn pgn_display_description(pgn: &DecodedPgn, mode: CamelCase) -> std::borrow::Cow<'_, str> {
+/// Wrapper-object key for a record under `-camel` / `-upper-camel`.
+/// canboat uses `id` as the camelized form (e.g. `isoAddressClaim`,
+/// C: `pgn->camelDescription`). Only the wrapper key camelizes — the
+/// `description` field inside the record stays the human-readable
+/// string in every mode (see `analyzer/analyzer.c::printPgn`), and
+/// consumers rely on that: n2k-signalk's Seatalk mapper filters on
+/// `description === 'Seatalk: Pilot Heading'`.
+fn pgn_wrapper_key(pgn: &DecodedPgn, mode: CamelCase) -> std::borrow::Cow<'_, str> {
     use std::borrow::Cow;
     match mode {
         CamelCase::Off => Cow::Borrowed(pgn.description),
@@ -119,7 +124,7 @@ pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions
     if wrap {
         w.write_char('{')?;
         w.write_str("\"")?;
-        w.write_str(pgn_display_description(pgn, opts.camel_case).as_ref())?;
+        w.write_str(pgn_wrapper_key(pgn, opts.camel_case).as_ref())?;
         w.write_str("\":")?;
     }
     w.write_char('{')?;
@@ -134,7 +139,7 @@ pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions
         pgn.prio, pgn.src, pgn.dst, pgn.pgn
     )?;
     w.write_str(",\"description\":")?;
-    write_json_string(w, pgn_display_description(pgn, opts.camel_case).as_ref())?;
+    write_json_string(w, pgn.description)?;
 
     // Build the body of the `fields` object into a buffer so we can
     // skip the wrapping `,"fields":{ ... }` entirely when no field
@@ -1029,6 +1034,27 @@ mod tests {
         assert_eq!(
             out,
             r#"{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"Offset":0.000}}"#
+        );
+    }
+
+    #[test]
+    fn camel_mode_keeps_the_human_description() {
+        // canboat C camelizes only the wrapper key and the field names;
+        // the description field stays human-readable in every mode
+        // (analyzer.c uses pgn->camelDescription for the key and
+        // pgn->description for the field). n2k-signalk's Seatalk
+        // mapper matches on the human string, so this is contract,
+        // not cosmetics.
+        let pgn = sample_pgn();
+        let mut out = String::new();
+        let opts = JsonOptions {
+            camel_case: CamelCase::Lower,
+            ..JsonOptions::default()
+        };
+        write_json(&mut out, &pgn, &opts).unwrap();
+        assert_eq!(
+            out,
+            r#"{"waterDepth":{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"offset":0.000}}}"#
         );
     }
 

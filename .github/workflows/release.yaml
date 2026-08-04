@@ -248,12 +248,17 @@ jobs:
             packages: make gcc-core zip
             hardlinks: 1
 
+      # The login shell starts in the Cygwin home directory, so the repo
+      # path must be spelled out — but derived from GITHUB_WORKSPACE, not
+      # hardcoded: a hardcoded /cygdrive/d/a/canboat/canboat only exists
+      # when the repository is literally named "canboat", which breaks
+      # running the workflow from a fork.
       - name: make
-        run: make -C /cygdrive/d/a/canboat/canboat
+        run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"
 
       - name: zip
         run: |
-          cd /cygdrive/d/a/canboat/canboat/rel/cygwin*/
+          cd "$(cygpath -u "$GITHUB_WORKSPACE")"/rel/cygwin*/
           zip "../canboat-windows-x86_64-${GITHUB_REF##*/}.zip" *.exe *.dll
 
       # Upload the C-tool archive before building keel, so a keel build issue
@@ -263,6 +268,21 @@ jobs:
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: rel/*.zip
+
+      # Like keel below, the Rust canboat binary is a native MSVC build
+      # released standalone — the zip above stays Cygwin-only. Each asset
+      # uploads right after its build so no later build issue blocks it.
+      - name: Build canboat (Rust, MSVC)
+        shell: pwsh
+        run: |
+          cargo build --release -p canboat
+          Copy-Item target/release/canboat.exe canboat-rust-windows-x86_64.exe
+
+      - name: Add canboat-rust asset
+        uses: softprops/action-gh-release@v3
+        with:
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          files: canboat-rust-windows-x86_64.exe
 
       - name: Build keel (MSVC)
         shell: pwsh

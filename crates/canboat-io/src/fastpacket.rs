@@ -64,7 +64,8 @@ pub fn packet_type(pgn: u32) -> FramePacketType {
 /// frames: every frame is exactly 8 bytes, byte 0 is
 /// `(seq << 5) | index`, frame 0 carries the total length in byte 1,
 /// and the last frame is padded with 0xff. The caller owns the
-/// per-(pgn, src) sequence counter. Mirrors the socketcan TX path.
+/// per-(pgn, src) sequence counter. Both TX paths — socketcan and the
+/// line gateways — fragment through here.
 pub fn fragment(seq: u8, data: &[u8]) -> Vec<[u8; 8]> {
     let mut out = Vec::with_capacity(data.len() / 7 + 1);
     let mut index: u8 = 0;

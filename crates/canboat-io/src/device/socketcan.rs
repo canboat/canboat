@@ -344,34 +344,9 @@ mod imp {
             if !is_fast {
                 self.tx_buf.push(can_id, data);
             } else {
-                // Per ISO 11783-3: every fast-packet CAN frame is
-                // exactly 8 bytes; the last chunk is padded with 0xff.
-                // The first byte is `(seq << 5) | index`, with `seq`
-                // incrementing per-(pgn, src) instance so consecutive
-                // first frames are distinguishable from continuations.
                 let seq = self.tx_buf.next_fast_seq(pgn, src);
-                let mut index: u8 = 0;
-                let mut remaining = data.len();
-                let mut offset = 0;
-                while remaining > 0 {
-                    let mut frame = [0xffu8; 8];
-                    frame[0] = (seq << 5) | (index & 0x1f);
-                    let chunk;
-                    let payload_start;
-                    if index == 0 {
-                        frame[1] = data.len() as u8;
-                        chunk = remaining.min(6);
-                        payload_start = 2;
-                    } else {
-                        chunk = remaining.min(7);
-                        payload_start = 1;
-                    }
-                    frame[payload_start..payload_start + chunk]
-                        .copy_from_slice(&data[offset..offset + chunk]);
-                    self.tx_buf.push(can_id, &frame[..]);
-                    offset += chunk;
-                    remaining -= chunk;
-                    index = index.wrapping_add(1);
+                for frame in fastpacket::fragment(seq, data) {
+                    self.tx_buf.push(can_id, &frame);
                 }
             }
             if emit {
@@ -1374,6 +1349,75 @@ mod imp {
                 claim_addr.store(live, Ordering::Relaxed);
                 last_published_addr = live;
             }
+        }
+    }
+
+    #[cfg(test)]
+    mod tests {
+        use super::*;
+
+        /// Run one `send_pgn` against a fresh (or provided) TX ring and
+        /// return every queued CAN payload, so the tests pin the exact
+        /// wire bytes the chunking produces.
+        fn send(tx_buf: &mut TxBuffer, pgn: u32, data: &[u8]) -> Vec<Vec<u8>> {
+            let before = tx_buf.queue.len();
+            let (frames_tx, _frames_rx) = mpsc::channel();
+            let mut bus = Bus {
+                tx_buf,
+                frames_tx: &frames_tx,
+            };
+            bus.send_pgn(6, pgn, 42, ADDR_GLOBAL, data, false);
+            bus.tx_buf
+                .queue
+                .iter()
+                .skip(before)
+                .map(|f| f.data().to_vec())
+                .collect()
+        }
+
+        /// PGN 127508 (Battery Status) is single-frame even at exactly
+        /// 8 bytes of payload: no fast-packet shell.
+        #[test]
+        fn single_frame_pgn_goes_out_verbatim() {
+            let data: Vec<u8> = (1..=8).collect();
+            let frames = send(&mut TxBuffer::new(), 127508, &data);
+            assert_eq!(frames, vec![data]);
+        }
+
+        /// A fast-packet payload splits per ISO 11783-3: 6 bytes after
+        /// the (seq|index, length) header, then 7 per continuation,
+        /// last frame padded to 8 with 0xff.
+        #[test]
+        fn fast_packet_frame_layout_is_pinned() {
+            let data: Vec<u8> = (1..=17).collect();
+            let frames = send(&mut TxBuffer::new(), 126996, &data);
+            assert_eq!(
+                frames,
+                vec![
+                    vec![0x00, 17, 1, 2, 3, 4, 5, 6],
+                    vec![0x01, 7, 8, 9, 10, 11, 12, 13],
+                    vec![0x02, 14, 15, 16, 17, 0xff, 0xff, 0xff],
+                ]
+            );
+        }
+
+        /// A fast-packet PGN keeps its shell even when the payload fits
+        /// a single CAN frame: receivers key framing on the PGN type.
+        #[test]
+        fn short_fast_packet_payload_keeps_the_shell() {
+            let frames = send(&mut TxBuffer::new(), 126208, &[9, 8, 7, 6, 5, 4]);
+            assert_eq!(frames, vec![vec![0x00, 6, 9, 8, 7, 6, 5, 4]]);
+        }
+
+        /// Consecutive sends of the same (pgn, src) advance the 3-bit
+        /// sequence counter in the upper bits of byte 0.
+        #[test]
+        fn fast_seq_advances_between_sends() {
+            let mut tx_buf = TxBuffer::new();
+            let first = send(&mut tx_buf, 126996, &[0xaa; 10]);
+            let second = send(&mut tx_buf, 126996, &[0xaa; 10]);
+            assert_eq!(first[0][0], 0x00);
+            assert_eq!(second[0][0], 0x20);
         }
     }
 }
