@@ -382,6 +382,15 @@ pub mod bridge {
     pub use canboat_bridge::server::{Bridge, BridgeConfig, QuirkKind as Quirk, Transmitter};
 }
 
+// ───────────────────────────── json input ────────────────────────────────
+
+/// Analyzer/canboatjs JSON records → wire frames (`convert --from json`,
+/// the gateway bridges' stdin TX, and the wasm bindings). Behind its own
+/// feature because it is the one place a real JSON parser (serde_json)
+/// is warranted.
+#[cfg(feature = "json-input")]
+pub mod json_input;
+
 // ─────────────────────────────── prelude ─────────────────────────────────
 
 /// The 90% path in one glob import: `use canboat::prelude::*;`.

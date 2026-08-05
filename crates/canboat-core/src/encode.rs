@@ -555,6 +555,89 @@ impl PgnBuilder {
             })
     }
 
+    /// Every staged group-function parameter pair across both repeating
+    /// sets: the instance's FIELD_INDEX scalar and its deferred VARIABLE
+    /// value. Feeds [`match_target_variant`](Self::match_target_variant).
+    fn staged_parameter_pairs(&self) -> Vec<(u32, &EncodeValue)> {
+        let mut pairs = Vec::new();
+        for set in 1..=2 {
+            let Some((start, size, _)) = self.set_layout(set) else {
+                continue;
+            };
+            for inst in &self.sets[set - 1] {
+                let mut index = None;
+                let mut value = None;
+                for (j, tf) in self.pgn.fields[start..start + size].iter().enumerate() {
+                    match &inst[j] {
+                        Some(Staged::Scalar(n)) if tf.field_type == Some(FieldType::FieldIndex) => {
+                            index = Some(*n as u32)
+                        }
+                        Some(Staged::Deferred(v)) => value = Some(v),
+                        _ => {}
+                    }
+                }
+                if let (Some(i), Some(v)) = (index, value) {
+                    pairs.push((i, v));
+                }
+            }
+        }
+        pairs
+    }
+
+    /// Pick the definition of `target_pgn` that the staged parameter
+    /// pairs describe — the encode-side mirror of decode's
+    /// `match_pgn_by_parameters` (itself a port of the C analyzer's
+    /// `getMatchingPgnByParameters`). A candidate qualifies when every
+    /// pair that lands on one of its `Match` fields stages to exactly
+    /// the match value; the first qualifying variant wins, and a PGN
+    /// whose leading definition has no match fields is answered by it
+    /// outright (the 126720 catch-all-first case). Returns `None` when
+    /// nothing can be narrowed — the caller falls back to the leading
+    /// definition, so every previously-working single-variant target
+    /// resolves exactly as before.
+    fn match_target_variant(&self, target_pgn: u32) -> Option<&'static PgnInfo> {
+        let first = self.db.first_pgn(target_pgn)?;
+        if !first.fields.iter().any(|fi| fi.match_value.is_some()) {
+            return Some(first);
+        }
+        let pairs = self.staged_parameter_pairs();
+        // A proprietary target can only be narrowed by Manufacturer
+        // (field 1) followed by Industry Code (field 3); like the C,
+        // bail out rather than guess when they don't lead the list.
+        if crate::decode::is_pgn_proprietary(target_pgn)
+            && (pairs.len() < 2 || pairs[0].0 != 1 || pairs[1].0 != 3)
+        {
+            return None;
+        }
+        'variant: for cand in self.db.pgn_variants(target_pgn) {
+            for &(idx, value) in &pairs {
+                if idx == 0 {
+                    continue 'variant;
+                }
+                let Some(field) = cand.fields.get(idx as usize - 1) else {
+                    continue 'variant;
+                };
+                let Some(want) = field.match_value else {
+                    continue;
+                };
+                // A label for a lookup-typed match field arrives as
+                // Text; retype it the same way emit_variable does.
+                let staged_value = match value {
+                    EncodeValue::Text(s) if field.lookup_enumeration.is_some() => {
+                        EncodeValue::Lookup(s.clone())
+                    }
+                    other => other.clone(),
+                };
+                match self.stage_value(field, staged_value) {
+                    Ok(Staged::Scalar(raw)) if raw as i64 == want => {}
+                    _ => continue 'variant,
+                }
+            }
+            return Some(cand);
+        }
+        None
+    }
+
     /// Emit a deferred group-function `VARIABLE` value: resolve the
     /// referenced PGN (the record's staged PGN field) and the target
     /// field (this instance's staged FIELD_INDEX), stage the value with
@@ -586,12 +669,14 @@ impl PgnBuilder {
                 _ => None,
             })
             .ok_or(unresolved("no staged PGN field names the referenced PGN"))?;
-        // Prefer the specific definition; the range catch-all is a last
-        // resort, mirroring decode (which only borrows it when variant
-        // matching fails).
+        // Resolve the target the way decode does: first let the staged
+        // parameter pairs pick the variant (a command that sets
+        // Manufacturer=Furuno must use the Furuno variant's widths, not
+        // whichever definition happens to be listed first), then fall
+        // back to the leading definition, then to the range catch-all.
         let target_info = self
-            .db
-            .first_pgn(target_pgn)
+            .match_target_variant(target_pgn)
+            .or_else(|| self.db.first_pgn(target_pgn))
             .or_else(|| self.db.fallback_pgn(target_pgn))
             .ok_or(unresolved("referenced PGN is not in the schema"))?;
         let param_idx = self.pgn.fields[start..start + size]
@@ -1280,6 +1365,70 @@ mod tests {
             crate::FieldValue::Integer(n) => assert!((*n as f64 - 1.5).abs() < 1.0, "got {n}"),
             other => panic!("value: {other:?}"),
         }
+    }
+
+    #[test]
+    fn variable_target_variant_follows_the_parameter_pairs() {
+        // A 126208 Command for PGN 130833, which has three variants:
+        // Maretron (listed first), B&G, Furuno. The pairs set
+        // Manufacturer=1855/Industry=4, so parameter 5 must use the
+        // *Furuno* variant's field 5 — Antenna position X, 16 bits at
+        // 0.01 — and not Maretron's Memory Capacity (64 bits at 1),
+        // which resolving the leading definition blindly would give.
+        // Decode already matches the variant from the pairs (the C's
+        // getMatchingPgnByParameters), so without this the encoder
+        // produced frames its own decoder mis-read.
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130833)).unwrap();
+        for (param, value) in [(1i64, 1855f64), (3, 4.0), (5, 3.21)] {
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "Parameter", param).unwrap();
+            b.push_in_set(1, i, "Value", value).unwrap();
+        }
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        // 6 header bytes + (1,manufacturer 11b→2) + (3,industry 3b→1)
+        // + (5, 16b→2) pairs = 14 bytes; the Maretron mis-resolution
+        // would stretch parameter 5 to 8 bytes (20 total).
+        assert_eq!(frame.data.len(), 14, "data: {:02x?}", frame.data);
+        // 3.21 at the Furuno resolution of 0.01 → raw 321, LE.
+        assert_eq!(
+            &frame.data[12..],
+            &[0x41, 0x01],
+            "data: {:02x?}",
+            frame.data
+        );
+
+        // Round-trip: the decoder picks the variant independently from
+        // the wire bytes and must recover the commanded value.
+        let decoded = db.decode(&frame).unwrap();
+        let val = decoded
+            .fields
+            .iter()
+            .rfind(|f| f.repeat_set == 1 && f.info.field_type == Some(FieldType::Variable))
+            .expect("decoded VARIABLE value");
+        match &val.value {
+            crate::FieldValue::Number(x) => assert!((x - 3.21).abs() < 0.005, "got {x}"),
+            other => panic!("value: {other:?}"),
+        }
+    }
+
+    #[test]
+    fn variable_target_without_narrowing_pairs_keeps_the_leading_definition() {
+        // A proprietary multi-variant target commanded without leading
+        // Manufacturer/Industry pairs cannot be narrowed; the encoder
+        // must fall back to the leading definition exactly as before
+        // (Maretron's Memory Capacity: 64 bits at resolution 1).
+        let db = db();
+        let mut b = db.encode("nmeaCommandGroupFunction").unwrap();
+        b.push_by_name("PGN", EncodeValue::Pgn(130833)).unwrap();
+        let i = b.add_set_instance(1).unwrap();
+        b.push_in_set(1, i, "Parameter", 5i64).unwrap();
+        b.push_in_set(1, i, "Value", 3f64).unwrap();
+        let frame = b.build().map_err(|e| format!("{e}")).unwrap();
+        // 6 header bytes + param byte + 64-bit value.
+        assert_eq!(frame.data.len(), 15, "data: {:02x?}", frame.data);
+        assert_eq!(frame.data[7], 3, "data: {:02x?}", frame.data);
     }
 
     #[test]

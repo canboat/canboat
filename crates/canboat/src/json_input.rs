@@ -74,7 +74,8 @@ pub struct JsonFrameReader<R> {
 }
 
 impl<R: BufRead> JsonFrameReader<R> {
-    /// `db` supplies the unit system to assume until (and unless) the
+    /// Read analyzer-JSON lines from `src`, encoding against `db` —
+    /// which supplies the unit system to assume until (and unless) the
     /// stream declares its own in a banner.
     pub fn new(src: R, db: &'static PgnDatabase) -> Self {
         Self {

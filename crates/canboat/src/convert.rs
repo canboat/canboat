@@ -312,7 +312,7 @@ fn convert_raw<W: Write>(
         // Bare physical values are read against whatever unit system the
         // input's banner declares; `--units` is only the assumption for
         // a bannerless stream. `-nv` raw values are unit-agnostic.
-        Box::new(crate::json_input::JsonFrameReader::new(
+        Box::new(canboat::json_input::JsonFrameReader::new(
             source,
             canboat_core::PgnDatabase::embedded(args.shape.units()),
         ))
@@ -424,7 +424,7 @@ fn convert_decoded<W: Write>(
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
         } else {
-            Box::new(crate::json_input::JsonFrameReader::new(source, db))
+            Box::new(canboat::json_input::JsonFrameReader::new(source, db))
         };
         let mut sink = sink;
         while let Some(frame) = reader.read_frame().context("reading input")? {

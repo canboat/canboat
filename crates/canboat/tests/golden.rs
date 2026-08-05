@@ -26,19 +26,20 @@ use std::os::unix::process::CommandExt;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
-/// Where the canboat C repo's `analyzer/tests/` lives, relative to
-/// this crate.
+/// Where `analyzer/tests/` lives, relative to this crate.
 ///
 /// Resolution order, first match wins:
 ///
 /// 1. `$CANBOAT_DIR` (when set) — explicit override for CI / local
-///    development against an in-flight branch.
-/// 2. `../canboat-*` — every sibling worktree (alphabetical, so a
-///    `canboat-fix-pk` worktree carrying staged schema changes is
-///    preferred over the main `canboat/` checkout while the PR is
-///    open). Skip non-directories and any entry whose
-///    `analyzer/tests/` doesn't exist.
-/// 3. `../canboat` — the default sibling clone.
+///    development against another checkout.
+/// 2. The repo this crate is part of (`../../analyzer/tests`) — the
+///    fixtures and the code under test come from the same tree. This
+///    must come before any sibling scan: a stale checkout next door
+///    (e.g. a leftover worktree on an old branch) would otherwise
+///    shadow the tree actually being tested.
+/// 3. `../canboat-*` sibling checkouts (alphabetical), then
+///    `../canboat` — legacy fallbacks from when the Rust crates lived
+///    outside the canboat repo; kept for out-of-tree builds.
 ///
 /// Returns `None` only when none of the above resolves — in that
 /// case `run_case_skipping` skips the test gracefully so users
@@ -51,6 +52,10 @@ fn canboat_tests_dir() -> Option<PathBuf> {
         }
     }
     let manifest: PathBuf = env!("CARGO_MANIFEST_DIR").into();
+    let own = manifest.parent()?.parent()?.join("analyzer").join("tests");
+    if own.is_dir() {
+        return Some(own);
+    }
     let github_root = manifest.parent()?.parent()?.parent()?; // …/github
     let mut worktree_candidates: Vec<PathBuf> = std::fs::read_dir(github_root)
         .ok()?
