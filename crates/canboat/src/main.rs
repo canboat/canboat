@@ -24,7 +24,6 @@ use clap::{Parser, Subcommand};
 mod convert;
 mod format_message;
 mod interface;
-mod json_input;
 mod legacy;
 mod replay;
 mod tui;

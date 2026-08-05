@@ -309,7 +309,7 @@ fn convert_raw<W: Write>(
         } else {
             canboat_core::Units::Metric
         };
-        Box::new(crate::json_input::JsonFrameReader::new(
+        Box::new(canboat::json_input::JsonFrameReader::new(
             source,
             canboat_core::PgnDatabase::embedded(units),
         ))
@@ -410,7 +410,7 @@ fn convert_decoded<W: Write>(
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
         } else {
-            Box::new(crate::json_input::JsonFrameReader::new(source, db))
+            Box::new(canboat::json_input::JsonFrameReader::new(source, db))
         };
         let mut sink = sink;
         while let Some(frame) = reader.read_frame().context("reading input")? {

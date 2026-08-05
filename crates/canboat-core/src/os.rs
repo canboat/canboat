@@ -50,6 +50,18 @@ fn machine_string() -> Option<String> {
     Some(line[start..end].to_string())
 }
 
+// Targets without an OS machine identifier (wasm32, BSDs, …): no
+// fingerprint. get_machine_id() then hashes just the salt — stable,
+// but IDENTICAL on every host. That is fine for the wasm bindings
+// (pure decode/encode, no bus identity), but a bus-facing consumer on
+// such a target must supply an explicit unique number for its ISO
+// NAME instead of relying on this value, or two hosts on one bus
+// would claim with colliding NAMEs.
+#[cfg(not(any(target_os = "linux", target_os = "macos", target_os = "windows")))]
+fn machine_string() -> Option<String> {
+    None
+}
+
 #[cfg(target_os = "windows")]
 fn machine_string() -> Option<String> {
     // Shell out to `reg query` to stay dependency-free.
