@@ -26,7 +26,6 @@ mod format_message;
 mod interface;
 mod json_input;
 mod legacy;
-mod output_opts;
 mod replay;
 mod tui;
 
@@ -94,6 +93,7 @@ fn main() -> ExitCode {
             // The pipeline library no longer initialises logging — the host
             // (this binary) owns it. Convert the clap Args to the plain config,
             // then set up env_logger from its verbosity before running.
+            args.warn_deprecated();
             let mut config: server::BridgeConfig = (*args).into();
             // Config-dir *discovery* is a binary concern, not the library's:
             // when the user didn't pass `--config-dir`, probe for the

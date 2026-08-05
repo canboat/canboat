@@ -213,7 +213,7 @@ pub struct Args {
     /// Identifier spelling (`--id`) and unit system (`--units`), plus
     /// their deprecated canboat C spellings. Defaults: camelCase + SI.
     #[command(flatten)]
-    shape: crate::output_opts::ShapeArgs,
+    shape: canboat_cli::ShapeArgs,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]

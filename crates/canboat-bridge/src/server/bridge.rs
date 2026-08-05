@@ -137,20 +137,9 @@ impl Bridge {
         // The schema is compiled into the binary; no JSON loading, no
         // path discovery, no synthetic-PGN merge — `canboat-core/build.rs`
         // already folded `data/synthetic-pgns.json` into the static tables.
-        let units = if config.si {
-            canboat_core::Units::Si
-        } else {
-            canboat_core::Units::Metric
-        };
+        let units = config.units;
         let db = PgnDatabase::embedded(units);
 
-        let camel_case = if config.upper_camel {
-            canboat_core::output::CamelCase::Upper
-        } else if config.camel {
-            canboat_core::output::CamelCase::Lower
-        } else {
-            canboat_core::output::CamelCase::Off
-        };
         // JsonOptions mirror the pipeline's per-record serializer settings
         // so per-iteration snapshot lines (PGN 130824 etc.) come out
         // byte-identical to the regular `analyzer` port stream.
@@ -158,12 +147,8 @@ impl Bridge {
             include_empty: false,
             name_value: true,
             debug: false,
-            camel_case,
-            // `server` still spells this canboat C's way: `--camel` /
-            // `--upper-camel` both mean "camelCase keys *and* wrap each
-            // record under its PGN id". `convert` / `analyzer` have
-            // since split the two into `--id` and `--wrap`.
-            wrap: config.camel || config.upper_camel,
+            camel_case: config.camel_case,
+            wrap: config.wrap,
         };
 
         // The analyzer version banner (version, commit, units,
@@ -175,7 +160,10 @@ impl Bridge {
         let banner: &'static [u8] = Box::leak(
             format!(
                 "{}\n",
-                crate::build_info::version_banner(config.si, json_opts.name_value)
+                crate::build_info::version_banner(
+                    units == canboat_core::Units::Si,
+                    json_opts.name_value,
+                )
             )
             .into_bytes()
             .into_boxed_slice(),

@@ -65,7 +65,7 @@ struct Cli {
     /// their deprecated canboat C spellings. Defaults: camelCase + SI.
     /// canboat C's historical shape is `--id spaces --units metric`.
     #[command(flatten)]
-    shape: crate::output_opts::ShapeArgs,
+    shape: canboat_cli::ShapeArgs,
 
     /// Use the given string in place of any analyzer-generated
     /// timestamps (matches canboat's `-fixtime`).

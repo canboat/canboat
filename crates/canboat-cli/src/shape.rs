@@ -1,13 +1,14 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Shared decoded-output shape flags for `canboat convert` and the
-//! `analyzer` shim.
+//! Shared decoded-output shape flags for every canboat binary that
+//! emits analyzer JSON: `canboat convert`, the `analyzer` shim and
+//! `canboat server`.
 //!
-//! Both CLIs decide three orthogonal things about a decoded record: how
+//! Each decides three orthogonal things about a decoded record: how
 //! field keys and PGN descriptions are spelled (`--id`), which unit
 //! system numeric fields are decoded into (`--units`), and whether the
 //! record is nested under its PGN id (`--wrap`). They are declared once
-//! here and `#[command(flatten)]`ed into both parsers so the two can't
+//! here and `#[command(flatten)]`ed into each parser so they can't
 //! drift.
 //!
 //! **The defaults are camelCase identifiers, strict SI units and no
