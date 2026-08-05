@@ -217,7 +217,7 @@ fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {
             continue;
         }
         if t.starts_with('{') {
-            match crate::json_input::frame_from_json(db, t) {
+            match canboat::json_input::frame_from_json(db, t) {
                 Ok(Some(frame)) => sender.write_frame(&frame)?,
                 Ok(None) => {}
                 Err(e) => log::warn!("stdin json: {e:#}"),

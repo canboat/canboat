@@ -60,6 +60,7 @@ pub struct JsonFrameReader<R> {
 }
 
 impl<R: BufRead> JsonFrameReader<R> {
+    /// Read analyzer-JSON lines from `src`, encoding against `db`.
     pub fn new(src: R, db: &'static PgnDatabase) -> Self {
         Self {
             src,

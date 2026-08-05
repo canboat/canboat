@@ -41,8 +41,13 @@ ais      = ["decode"]                      # output::write_ais
 # ── the CLI (not part of the public library surface) ──
 # `canboat-bridge` hosts the server/n2kd subcommand implementations (lifted out
 # of this crate); the CLI dispatches into it.
+# JSON record -> wire frame driver (`convert --from json`, gateway stdin
+# TX, and the wasm bindings). A real JSON parser is warranted here, so it
+# pulls serde_json — kept out of the default library surface.
+json-input = ["decode", "dep:serde_json", "dep:anyhow", "dep:chrono"]
+
 cli = [
-    "decode", "io", "bridge", "nmea0183", "ais",
+    "decode", "io", "bridge", "nmea0183", "ais", "json-input",
     "canboat-bridge/cli",
     "dep:canboat-cli", "dep:clap", "dep:env_logger", "dep:anyhow",
     "dep:serde", "dep:serde_json", "dep:tokio", "dep:crossterm",
