@@ -66,6 +66,75 @@ fn actisense_round_trips_to_plain() {
     assert!(s.contains(BODY), "round-trip lost the body: {s}");
 }
 
+/// `--to json` leads with the same producer banner `analyzer` emits.
+/// `n2kd` reads `"units"` off it to pick the schema it rebuilds records
+/// against, so a missing banner means a stream decoded in the wrong
+/// unit system, silently.
+#[test]
+fn json_leads_with_the_version_banner() {
+    let out = run(&["convert", "--to", "json"], PLAIN);
+    let s = String::from_utf8(out).unwrap();
+    let banner = s.lines().next().expect("a first line");
+    assert!(banner.starts_with(r#"{"version":"#), "banner: {banner}");
+    assert!(banner.contains(r#""units":"si""#), "banner: {banner}");
+    assert!(
+        banner.contains(r#""showLookupValues":false"#),
+        "banner: {banner}"
+    );
+    // …and the records still follow it.
+    assert!(
+        s.lines()
+            .nth(1)
+            .is_some_and(|l| l.contains("\"pgn\":127251"))
+    );
+}
+
+#[test]
+fn banner_tracks_the_output_shape() {
+    let metric = String::from_utf8(run(
+        &["convert", "--to", "json", "--units", "metric", "--nv"],
+        PLAIN,
+    ))
+    .unwrap();
+    let banner = metric.lines().next().unwrap();
+    assert!(banner.contains(r#""units":"std""#), "banner: {banner}");
+    assert!(
+        banner.contains(r#""showLookupValues":true"#),
+        "banner: {banner}"
+    );
+}
+
+#[test]
+fn no_banner_suppresses_it_and_text_never_has_one() {
+    let bare = String::from_utf8(run(&["convert", "--to", "json", "--no-banner"], PLAIN)).unwrap();
+    assert!(
+        !bare.contains("\"version\""),
+        "banner leaked through --no-banner: {bare}"
+    );
+    // canboat C emits no banner in text mode either.
+    let text = String::from_utf8(run(&["convert", "--to", "text"], PLAIN)).unwrap();
+    assert!(!text.contains("\"version\""), "text got a banner: {text}");
+}
+
+/// The banner must not break `--from json`: it is not a record, and the
+/// re-encoder skips `{"version":…}` lines. Uses PGN 127250 rather than
+/// the shared `PLAIN` fixture because 127251's trailing Reserved field
+/// renders as a hex display string that the encoder can't take back —
+/// a pre-existing limitation, unrelated to the banner.
+const HEADING: &[u8] = b"2026-01-01T00:00:00.000Z,3,127250,27,255,8,00,ca,8f,ff,7f,ff,7f,fd\n";
+
+#[test]
+fn json_round_trips_through_its_own_banner() {
+    let json = run(&["convert", "--to", "json", "--nv"], HEADING);
+    assert!(String::from_utf8_lossy(&json).starts_with(r#"{"version":"#));
+    let back = run(&["convert", "--from", "json", "--to", "plain"], &json);
+    assert_eq!(
+        String::from_utf8(back).unwrap().as_bytes(),
+        HEADING,
+        "round trip through the banner is not byte-exact"
+    );
+}
+
 #[test]
 fn actisense_ebl_emits_binary_framing() {
     // EBL is output-only; assert it produced a binary record that opens

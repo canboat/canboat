@@ -143,6 +143,7 @@ Decoded-output shape (json/text only):
   --id STYLE     spaces | camel (default) | uppercamel
   --units SYSTEM si (default) | metric
   --wrap         nest each JSON record in {\"<pgnId>\":{…}} (off by default)
+  --no-banner    drop the leading {\"version\":…,\"units\":…} line (json only)
 
   Decoded output defaults to flat records with camelCase keys and strict
   SI units — the shape machine consumers want. For canboat C's historical
@@ -214,6 +215,13 @@ pub struct Args {
     /// their deprecated canboat C spellings. Defaults: camelCase + SI.
     #[command(flatten)]
     shape: canboat_cli::ShapeArgs,
+
+    /// Suppress the leading `{"version":…,"units":…}` banner that
+    /// `--to json` emits. Use when the output is diffed as a pure
+    /// record stream; leave it on when piping into `n2kd`, which reads
+    /// the unit system off that line.
+    #[arg(long)]
+    no_banner: bool,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
@@ -356,6 +364,23 @@ fn convert_decoded<W: Write>(
         geo: args.geo.into(),
     };
     let as_json = args.to == OutFormat::Json;
+
+    // Lead a JSON stream with the same one-line banner `analyzer` emits
+    // (version, commit, units, showLookupValues). It is a producer
+    // contract, not decoration: `n2kd` reads `"units"` off it to pick
+    // the schema it rebuilds each record against, and without it a
+    // bannerless stream is assumed Metric — which would silently read
+    // this converter's radians as degrees. Text output has no banner in
+    // canboat C either.
+    if as_json && !args.no_banner {
+        writeln!(
+            out,
+            "{}",
+            canboat_bridge::build_info::version_banner(args.shape.is_si(), args.nv)
+        )
+        .context("writing JSON banner")?;
+    }
+
     let cfg = analyze::Config {
         forced_format: forced,
         pgn_filter: args.pgn,
