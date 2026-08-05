@@ -2468,6 +2468,7 @@ mod tests {
             &dec,
             &crate::output::JsonOptions {
                 name_value: true,
+                camel_case: crate::output::CamelCase::Off,
                 ..Default::default()
             },
         )

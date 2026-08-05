@@ -201,8 +201,8 @@ pub struct Args {
     #[arg(long)]
     debug: bool,
 
-    /// Emit field keys and PGN descriptions as camelCase identifiers.
-    /// Matches canboat's `-camel`.
+    /// camelCase identifiers for field keys and PGN names. This is the
+    /// Rust default; the flag is accepted for canboat C compatibility.
     #[arg(long)]
     camel: bool,
 
@@ -211,10 +211,21 @@ pub struct Args {
     #[arg(long, conflicts_with = "camel")]
     upper_camel: bool,
 
-    /// Strict SI units — radians, kelvin, pascals — rather than the
-    /// practical defaults (deg, °C, bar). Matches canboat's `-si`.
+    /// Human-readable names ("Wind Speed", "ISO Address Claim") — i.e.
+    /// canboat C's default output, instead of the Rust default of
+    /// camelCase identifiers.
+    #[arg(long, conflicts_with_all = ["camel", "upper_camel"])]
+    human: bool,
+
+    /// Strict SI units — radians, kelvin, pascals. This is the Rust
+    /// default; the flag is accepted for canboat C compatibility.
     #[arg(long)]
     si: bool,
+
+    /// Practical units — degrees, °C, bar — i.e. canboat C's default
+    /// output, instead of the Rust default of strict SI.
+    #[arg(long, conflicts_with = "si")]
+    metric: bool,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
@@ -304,10 +315,10 @@ fn convert_raw<W: Write>(
         // Bare physical values in the JSON are interpreted in the same
         // unit system the output side uses (`--si` or metric); `-nv`
         // raw values are unit-agnostic either way.
-        let units = if args.si {
-            canboat_core::Units::Si
-        } else {
+        let units = if args.metric {
             canboat_core::Units::Metric
+        } else {
+            canboat_core::Units::Si
         };
         Box::new(canboat::json_input::JsonFrameReader::new(
             source,
@@ -348,12 +359,14 @@ fn convert_decoded<W: Write>(
     ebl: bool,
     out: &mut W,
 ) -> Result<()> {
+    // Rust defaults to camelCase identifiers; --human restores
+    // canboat C's human-readable names.
     let camel_case = if args.upper_camel {
         CamelCase::Upper
-    } else if args.camel {
-        CamelCase::Lower
-    } else {
+    } else if args.human {
         CamelCase::Off
+    } else {
+        CamelCase::Lower
     };
     let json_opts = JsonOptions {
         include_empty: args.empty,
@@ -373,10 +386,10 @@ fn convert_decoded<W: Write>(
         src_filter: args.src,
         dst_filter: args.dst,
         suppress_startup_record: false,
-        units: if args.si {
-            canboat_core::Units::Si
-        } else {
+        units: if args.metric {
             canboat_core::Units::Metric
+        } else {
+            canboat_core::Units::Si
         },
     };
 

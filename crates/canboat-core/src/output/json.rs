@@ -92,10 +92,12 @@ pub struct JsonOptions {
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum CamelCase {
     /// Use human-readable names (`"Unique Number"`, `"ISO Address
-    /// Claim"`). Default; matches canboat C's default output.
-    #[default]
+    /// Claim"`). Matches canboat C's default output.
     Off,
-    /// lowerCamelCase identifiers (`"uniqueNumber"`).
+    /// lowerCamelCase identifiers (`"uniqueNumber"`). The Rust
+    /// default — legal identifiers first, so consumers beyond Signal K
+    /// meet machine-friendly data.
+    #[default]
     Lower,
     /// UpperCamelCase identifiers (`"UniqueNumber"`).
     Upper,
@@ -990,6 +992,16 @@ mod tests {
     use super::*;
     use crate::decode::{DecodedField, FieldValue};
 
+    /// canboat C's default output shape — human names — which several
+    /// tests below pin byte-for-byte against C. The Rust-wide default
+    /// is camelCase (see `camel_is_the_default`).
+    fn c_shape_options() -> JsonOptions {
+        JsonOptions {
+            camel_case: CamelCase::Off,
+            ..JsonOptions::default()
+        }
+    }
+
     fn sample_pgn() -> DecodedPgn {
         // PGN 128267 (Water Depth) field 3 is `Offset` — m, res 0.001 —
         // which matches the legacy hand-rolled fixture this test used
@@ -1028,13 +1040,29 @@ mod tests {
     fn matches_canboat_json_shape() {
         let pgn = sample_pgn();
         let mut out = String::new();
-        write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+        write_json(&mut out, &pgn, &c_shape_options()).unwrap();
         // The sample timestamp lacks a trailing `Z`; the formatter
         // canonicalises it to ISO-8601 UTC on emit.
         assert_eq!(
             out,
             r#"{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"Offset":0.000}}"#
         );
+    }
+
+    #[test]
+    fn camel_is_the_default() {
+        // The Rust-wide policy: camelCase identifiers and SI units are
+        // what consumers meet without asking (canboat C defaults to
+        // human names + practical units; --human/--metric restore
+        // those). Units::default() is pinned in db.rs; this pins the
+        // identifier half.
+        assert_eq!(JsonOptions::default().camel_case, CamelCase::Lower);
+        assert_eq!(crate::Units::default(), crate::Units::Si);
+        let pgn = sample_pgn();
+        let mut out = String::new();
+        write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+        assert!(out.starts_with("{\"waterDepth\":{"), "got: {out}");
+        assert!(out.contains("\"offset\":"), "got: {out}");
     }
 
     #[test]
@@ -1066,7 +1094,7 @@ mod tests {
         let mut pgn = sample_pgn();
         pgn.fields[0].value = FieldValue::NotAvailable;
         let mut out = String::new();
-        write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+        write_json(&mut out, &pgn, &c_shape_options()).unwrap();
         assert!(
             !out.contains("\"fields\""),
             "fields wrapper leaked through: {out}"
@@ -1084,6 +1112,7 @@ mod tests {
             &pgn,
             &JsonOptions {
                 include_empty: true,
+                camel_case: CamelCase::Off,
                 ..Default::default()
             },
         )
@@ -1104,7 +1133,7 @@ mod tests {
             let mut pgn = sample_pgn();
             pgn.fields[0].value = sentinel;
             let mut out = String::new();
-            write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+            write_json(&mut out, &pgn, &c_shape_options()).unwrap();
             assert!(!out.contains("\"fields\""), "sentinel leaked: {out}");
         }
     }
@@ -1125,6 +1154,7 @@ mod tests {
                 &pgn,
                 &JsonOptions {
                     include_empty: true,
+                    camel_case: CamelCase::Off,
                     ..Default::default()
                 },
             )
@@ -1155,6 +1185,7 @@ mod tests {
             &pgn,
             &JsonOptions {
                 name_value: true,
+                camel_case: CamelCase::Off,
                 ..Default::default()
             },
         )
@@ -1171,7 +1202,7 @@ mod tests {
         let mut pgn = sample_pgn();
         pgn.description = r#"He said "hi""#;
         let mut out = String::new();
-        write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
+        write_json(&mut out, &pgn, &c_shape_options()).unwrap();
         assert!(
             out.contains(r#""description":"He said \"hi\"""#),
             "got: {}",

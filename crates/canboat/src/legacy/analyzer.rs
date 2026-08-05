@@ -53,10 +53,15 @@ struct Cli {
     #[arg(long)]
     nv: bool,
 
-    /// Show values in strict SI units — radians, kelvin, pascals — rather
-    /// than the practical defaults (deg, °C, bar). Matches canboat's `-si`.
+    /// Strict SI units — radians, kelvin, pascals. This is the Rust
+    /// default; the flag is accepted for canboat C compatibility.
     #[arg(long)]
     si: bool,
+
+    /// Practical units — degrees, °C, bar — i.e. canboat C's default
+    /// output, instead of the Rust default of strict SI.
+    #[arg(long, conflicts_with = "si")]
+    metric: bool,
 
     /// JSON: wrap every field with byte/bit diagnostics (`-debug`).
     #[arg(long)]
@@ -66,13 +71,20 @@ struct Cli {
     #[arg(long, value_name = "FMT", default_value = "dd")]
     geo: String,
 
-    /// Emit field keys + PGN descriptions as camelCase identifiers.
+    /// camelCase identifiers for field keys and PGN names. This is the
+    /// Rust default; the flag is accepted for canboat C compatibility.
     #[arg(long, conflicts_with = "upper_camel")]
     camel: bool,
 
     /// Same as `--camel` but UpperCamelCase.
     #[arg(long = "upper-camel")]
     upper_camel: bool,
+
+    /// Human-readable names ("Wind Speed", "ISO Address Claim") — i.e.
+    /// canboat C's default output, instead of the Rust default of
+    /// camelCase identifiers.
+    #[arg(long, conflicts_with_all = ["camel", "upper_camel"])]
+    human: bool,
 
     /// Use the given string in place of any analyzer-generated
     /// timestamps (matches canboat's `-fixtime`).
@@ -117,18 +129,21 @@ pub fn run(argv: Vec<OsString>) -> Result<()> {
 }
 
 fn run_cli(cli: Cli) -> Result<()> {
-    let units = if cli.si {
-        canboat_core::Units::Si
-    } else {
+    // Rust defaults are strict SI and camelCase identifiers — the
+    // machine-friendly forms new consumers should meet first; --metric
+    // and --human restore canboat C's human-oriented output.
+    let units = if cli.metric {
         canboat_core::Units::Metric
+    } else {
+        canboat_core::Units::Si
     };
 
     let camel_case = if cli.upper_camel {
         CamelCase::Upper
-    } else if cli.camel {
-        CamelCase::Lower
-    } else {
+    } else if cli.human {
         CamelCase::Off
+    } else {
+        CamelCase::Lower
     };
     let json_opts = JsonOptions {
         include_empty: cli.empty,

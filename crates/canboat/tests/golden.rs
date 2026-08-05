@@ -109,8 +109,20 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
 
     // Invoke the canboat binary as `analyzer` so its argv[0] alias
     // dispatches into the analyzer path — same as the installed shim.
+    // The golden fixtures are canboat C's own outputs, whose defaults
+    // are human names and practical units; the Rust binary defaults to
+    // camelCase + SI, so pin the C forms explicitly unless a case
+    // opts into the identifier/unit flags itself.
+    let mut base: Vec<&str> = Vec::new();
+    if !args.iter().any(|a| a.contains("camel")) {
+        base.push("--human");
+    }
+    if !args.iter().any(|a| *a == "--si" || *a == "-si") {
+        base.push("--metric");
+    }
     let mut child = Command::new(canboat_path())
         .arg0("analyzer")
+        .args(&base)
         .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
