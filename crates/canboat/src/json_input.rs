@@ -1,7 +1,8 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! `canboat convert --from json` — re-encode analyzer JSON into wire
-//! frames.
+//! Analyzer JSON records → wire frames: the driver behind `canboat
+//! convert --from json`, the gateway bridges' stdin TX, and the wasm
+//! bindings.
 //!
 //! The input is line-delimited analyzer JSON, one record per line, in
 //! either shape the analyzer emits: bare `-json` (unwrapped, fields
@@ -28,10 +29,12 @@
 //! assumption stands (`--units`, SI by default). `-nv` raw values are
 //! unit-agnostic and unaffected.
 //!
-//! This lives in the CLI crate (not `canboat-core`) because it is the
-//! one place a real JSON parser is warranted: nested repeating lists
-//! and `-nv` objects are beyond `analyzer_json`'s deliberate
-//! substring-scan minimalism.
+//! This lives in the `canboat` crate behind the `json-input` feature
+//! rather than in `canboat-core` because it is the one place a real
+//! JSON parser is warranted — nested repeating lists and `-nv` objects
+//! are beyond `analyzer_json`'s deliberate substring-scan minimalism —
+//! and `serde_json` has no business in the core's dependency closure.
+//! The `cli` feature folds it in, so the binary always has it.
 
 use std::io::BufRead;
 
