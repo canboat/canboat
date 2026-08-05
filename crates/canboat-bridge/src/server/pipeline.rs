@@ -572,6 +572,7 @@ mod tests {
                     name_value: true,
                     debug: false,
                     camel_case: canboat_core::output::CamelCase::Off,
+                    wrap: false,
                 },
                 Nmea0183Options {
                     emit_stdout: false,

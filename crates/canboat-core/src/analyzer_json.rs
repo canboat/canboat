@@ -29,6 +29,54 @@ pub(crate) fn camel_wrapper_id(line: &str) -> Option<&str> {
     }
 }
 
+/// Top-level keys every analyzer record carries. A field whose `id` or
+/// `name` collides with one of these can't tell us anything about the
+/// record's key style, so [`uses_camel_keys`] skips it.
+const RECORD_KEYS: [&str; 7] = [
+    "timestamp",
+    "prio",
+    "src",
+    "dst",
+    "pgn",
+    "description",
+    "fields",
+];
+
+/// True when `msg` contains `"<field>":` as an object key.
+/// Allocation-free, unlike the `format!`-based scan in [`value`] — this
+/// runs per record on the n2kd hot path.
+pub(crate) fn has_key(msg: &str, field: &str) -> bool {
+    msg.match_indices(field).any(|(i, _)| {
+        i > 0 && msg.as_bytes()[i - 1] == b'"' && msg[i + field.len()..].starts_with("\":")
+    })
+}
+
+/// Whether a record keys its fields by camelCase `id` rather than human
+/// `name`.
+///
+/// canboat C ties camelCase keys to the `{"<pgnId>":{…}}` wrapper, so
+/// [`camel_wrapper_id`] alone used to answer this. The Rust binaries
+/// default to camelCase keys on an *unwrapped* record (`--id camel`
+/// without `--wrap`), so an unwrapped line has to be sniffed: the first
+/// field whose `id` or `name` shows up as a key decides.
+pub(crate) fn uses_camel_keys(line: &str, fields: &[crate::types::FieldInfo]) -> bool {
+    for fi in fields {
+        // `id == name` (e.g. all-lowercase one-word names) is
+        // indistinguishable, and a field called `pgn` or `src` would
+        // match the record's own keys in either style.
+        if fi.id == fi.name || RECORD_KEYS.contains(&fi.id) || RECORD_KEYS.contains(&fi.name) {
+            continue;
+        }
+        if has_key(line, fi.id) {
+            return true;
+        }
+        if has_key(line, fi.name) {
+            return false;
+        }
+    }
+    false
+}
+
 /// Pull `"<field>":<value>` out of `msg`. Returns the value as a
 /// borrowed slice with any surrounding quotes stripped. Skips
 /// whitespace between `:` and the value. Returns `None` if the

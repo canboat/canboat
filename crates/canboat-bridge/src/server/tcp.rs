@@ -548,6 +548,7 @@ mod tests {
             name_value: true,
             debug: false,
             camel_case: CamelCase::Off,
+            wrap: false,
         };
         let filter = Mutex::new(filter);
         let out = filter_report_lines(&filter, db, &json_opts);

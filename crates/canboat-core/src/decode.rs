@@ -2472,7 +2472,7 @@ mod tests {
         )
         .unwrap();
         assert!(
-            json.contains(r#""Mode":[{"value":2,"name":null},{"value":8,"name":"Standby"}]"#),
+            json.contains(r#""mode":[{"value":2,"name":null},{"value":8,"name":"Standby"}]"#),
             "got: {json}"
         );
     }
@@ -2573,7 +2573,12 @@ mod tests {
         let dec = db().decode(&frame).expect("decode");
         let mut json = String::new();
         crate::output::write_json(&mut json, &dec, &crate::output::JsonOptions::default()).unwrap();
-        assert!(!json.contains("Reserved"), "got: {json}");
+        // Default output is camelCase, so match the key case-insensitively
+        // — `"Reserved"` alone would pass even if the field were emitted.
+        assert!(
+            !json.to_ascii_lowercase().contains("reserved"),
+            "got: {json}"
+        );
     }
 
     #[test]

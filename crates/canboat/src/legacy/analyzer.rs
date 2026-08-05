@@ -3,7 +3,7 @@
 //! `analyzer` legacy alias-module.
 //!
 //! `analyzer` has a rich, golden-tested CLI (JSON banner, `--fixtime`
-//! startup-record suppression, `--nv/--empty/--geo/--camel/--debug`)
+//! startup-record suppression, `--nv/--empty/--geo/--id/--debug`)
 //! that doesn't map onto a `convert` flag prefix, so it is preserved
 //! verbatim here and dispatched by argv[0] rather than translated. The
 //! heavy lifting still lives in [`canboat_io::analyze`]; this is only
@@ -23,7 +23,7 @@ use clap::Parser;
 
 use canboat_core::{
     format::InputFormat,
-    output::{CamelCase, GeoFormat, JsonOptions, TextOptions, write_json, write_text},
+    output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text},
 };
 use canboat_io::analyze::{self, Config};
 
@@ -53,11 +53,6 @@ struct Cli {
     #[arg(long)]
     nv: bool,
 
-    /// Show values in strict SI units — radians, kelvin, pascals — rather
-    /// than the practical defaults (deg, °C, bar). Matches canboat's `-si`.
-    #[arg(long)]
-    si: bool,
-
     /// JSON: wrap every field with byte/bit diagnostics (`-debug`).
     #[arg(long)]
     debug: bool,
@@ -66,13 +61,11 @@ struct Cli {
     #[arg(long, value_name = "FMT", default_value = "dd")]
     geo: String,
 
-    /// Emit field keys + PGN descriptions as camelCase identifiers.
-    #[arg(long, conflicts_with = "upper_camel")]
-    camel: bool,
-
-    /// Same as `--camel` but UpperCamelCase.
-    #[arg(long = "upper-camel")]
-    upper_camel: bool,
+    /// Identifier spelling (`--id`) and unit system (`--units`), plus
+    /// their deprecated canboat C spellings. Defaults: camelCase + SI.
+    /// canboat C's historical shape is `--id spaces --units metric`.
+    #[command(flatten)]
+    shape: crate::output_opts::ShapeArgs,
 
     /// Use the given string in place of any analyzer-generated
     /// timestamps (matches canboat's `-fixtime`).
@@ -117,24 +110,15 @@ pub fn run(argv: Vec<OsString>) -> Result<()> {
 }
 
 fn run_cli(cli: Cli) -> Result<()> {
-    let units = if cli.si {
-        canboat_core::Units::Si
-    } else {
-        canboat_core::Units::Metric
-    };
+    cli.shape.warn_deprecated();
+    let units = cli.shape.units();
 
-    let camel_case = if cli.upper_camel {
-        CamelCase::Upper
-    } else if cli.camel {
-        CamelCase::Lower
-    } else {
-        CamelCase::Off
-    };
     let json_opts = JsonOptions {
         include_empty: cli.empty,
         name_value: cli.nv,
         debug: cli.debug,
-        camel_case,
+        camel_case: cli.shape.camel_case(),
+        wrap: cli.shape.wrap(),
     };
     let geo = match cli.geo.as_str() {
         "dd" => GeoFormat::Dd,
@@ -160,7 +144,7 @@ fn run_cli(cli: Cli) -> Result<()> {
         writeln!(
             out,
             "{}",
-            canboat_bridge::build_info::version_banner(cli.si, cli.nv)
+            canboat_bridge::build_info::version_banner(cli.shape.is_si(), cli.nv)
         )
         .context("writing JSON banner")?;
     }

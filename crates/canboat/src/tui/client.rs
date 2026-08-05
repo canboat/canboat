@@ -180,8 +180,17 @@ fn ingest_raw_capture(path: &Path, tx: &mpsc::UnboundedSender<LoadItem>) -> anyh
     use canboat_core::frame::RawFrame;
     use canboat_core::output::{JsonOptions, write_json};
     use canboat_core::snapshot::classify_json_line;
-    let cfg = canboat_io::analyze::Config::default();
-    let json_opts = JsonOptions::default();
+    // The TUI is the human-facing surface: it shows spaced field names
+    // and humanized units, so it pins both rather than following the
+    // machine-facing library defaults (camelCase + SI).
+    let cfg = canboat_io::analyze::Config {
+        units: canboat_core::Units::Metric,
+        ..Default::default()
+    };
+    let json_opts = JsonOptions {
+        camel_case: canboat_core::output::CamelCase::Off,
+        ..Default::default()
+    };
     let mut buf = String::with_capacity(512);
     let mut raw = String::with_capacity(128);
     canboat_io::analyze::decode_file(path, &cfg, |decoded| {

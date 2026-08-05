@@ -20,9 +20,7 @@ use anyhow::{Context, Result};
 
 use canboat_core::RawFrame;
 use canboat_core::format::InputFormat;
-use canboat_core::output::{
-    CamelCase, GeoFormat, JsonOptions, TextOptions, write_json, write_text,
-};
+use canboat_core::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
 use canboat_io::{
     EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter, TextLineWriter,
     analyze, container, copy,
@@ -77,8 +75,8 @@ enum FromFormat {
     /// Digital Yacht iKonvert (`!PDGY,<pgn>,…`).
     #[value(name = "ikonvert")]
     Ikonvert,
-    /// Analyzer JSON records, re-encoded to wire frames (`-camel` and
-    /// bare shapes; `-nv` values are written back verbatim).
+    /// Analyzer JSON records, re-encoded to wire frames (camelCase and
+    /// spaced-name shapes; `-nv` values are written back verbatim).
     #[value(name = "json")]
     Json,
     /// Airmar (`<ts> - <pgn> <canid> <hex>…`).
@@ -139,7 +137,18 @@ Output formats (--to, default json):
   text           canboat human-readable text, one line per record
   ydwg02         Yacht Devices YDWG-02 / YDEN received lines (raw frames)
   actisense      Actisense N2K-ASCII lines (raw frames)
-  actisense-ebl  Actisense .ebl binary log (raw frames)";
+  actisense-ebl  Actisense .ebl binary log (raw frames)
+
+Decoded-output shape (json/text only):
+  --id STYLE     spaces | camel (default) | uppercamel
+  --units SYSTEM si (default) | metric
+  --wrap         nest each JSON record in {\"<pgnId>\":{…}} (off by default)
+
+  Decoded output defaults to flat records with camelCase keys and strict
+  SI units — the shape machine consumers want. For canboat C's historical
+  output pass --id spaces --units metric. The old --camel / --upper-camel
+  / --si flags still work but are deprecated (--camel and --upper-camel
+  imply --wrap, as they do in canboat C).";
 
 #[derive(Debug, clap::Args)]
 pub struct Args {
@@ -201,20 +210,10 @@ pub struct Args {
     #[arg(long)]
     debug: bool,
 
-    /// Emit field keys and PGN descriptions as camelCase identifiers.
-    /// Matches canboat's `-camel`.
-    #[arg(long)]
-    camel: bool,
-
-    /// As `--camel`, but UpperCamelCase. Matches canboat's
-    /// `-upper-camel`.
-    #[arg(long, conflicts_with = "camel")]
-    upper_camel: bool,
-
-    /// Strict SI units — radians, kelvin, pascals — rather than the
-    /// practical defaults (deg, °C, bar). Matches canboat's `-si`.
-    #[arg(long)]
-    si: bool,
+    /// Identifier spelling (`--id`) and unit system (`--units`), plus
+    /// their deprecated canboat C spellings. Defaults: camelCase + SI.
+    #[command(flatten)]
+    shape: crate::output_opts::ShapeArgs,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
@@ -265,6 +264,7 @@ pub fn run(args: Args) -> Result<()> {
     // `RUST_LOG` for more. Ignore a double-init if a shim already set one.
     let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("warn"))
         .try_init();
+    args.shape.warn_deprecated();
     let forced = args.from.and_then(FromFormat::to_input_format);
     let ebl = ebl_input(&args);
     let stdout = io::stdout();
@@ -302,16 +302,11 @@ fn convert_raw<W: Write>(
         Box::new(EblReader::new(source))
     } else if args.from == Some(FromFormat::Json) {
         // Bare physical values in the JSON are interpreted in the same
-        // unit system the output side uses (`--si` or metric); `-nv`
-        // raw values are unit-agnostic either way.
-        let units = if args.si {
-            canboat_core::Units::Si
-        } else {
-            canboat_core::Units::Metric
-        };
+        // unit system the output side uses (`--units`); `-nv` raw
+        // values are unit-agnostic either way.
         Box::new(crate::json_input::JsonFrameReader::new(
             source,
-            canboat_core::PgnDatabase::embedded(units),
+            canboat_core::PgnDatabase::embedded(args.shape.units()),
         ))
     } else {
         match forced {
@@ -348,18 +343,12 @@ fn convert_decoded<W: Write>(
     ebl: bool,
     out: &mut W,
 ) -> Result<()> {
-    let camel_case = if args.upper_camel {
-        CamelCase::Upper
-    } else if args.camel {
-        CamelCase::Lower
-    } else {
-        CamelCase::Off
-    };
     let json_opts = JsonOptions {
         include_empty: args.empty,
         name_value: args.nv,
         debug: args.debug,
-        camel_case,
+        camel_case: args.shape.camel_case(),
+        wrap: args.shape.wrap(),
     };
     let text_opts = TextOptions {
         show_unavailable: args.empty,
@@ -373,11 +362,7 @@ fn convert_decoded<W: Write>(
         src_filter: args.src,
         dst_filter: args.dst,
         suppress_startup_record: false,
-        units: if args.si {
-            canboat_core::Units::Si
-        } else {
-            canboat_core::Units::Metric
-        },
+        units: args.shape.units(),
     };
 
     let mut line = String::with_capacity(512);

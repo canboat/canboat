@@ -159,6 +159,11 @@ impl Bridge {
             name_value: true,
             debug: false,
             camel_case,
+            // `server` still spells this canboat C's way: `--camel` /
+            // `--upper-camel` both mean "camelCase keys *and* wrap each
+            // record under its PGN id". `convert` / `analyzer` have
+            // since split the two into `--id` and `--wrap`.
+            wrap: config.camel || config.upper_camel,
         };
 
         // The analyzer version banner (version, commit, units,
