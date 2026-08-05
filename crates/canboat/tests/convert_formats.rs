@@ -135,6 +135,45 @@ fn json_round_trips_through_its_own_banner() {
     );
 }
 
+/// `--from json` reads bare physical values against the unit system the
+/// input's *banner* declares, not the one `--units` asks for on output.
+/// That makes the pair a unit converter — and, more importantly, stops a
+/// canboat C `"units":"std"` stream from having its degrees re-encoded
+/// as radians now that SI is the default.
+#[test]
+fn json_input_follows_the_banners_units() {
+    // Metric out: heading in degrees, banner says "std".
+    let metric = run(&["convert", "--to", "json", "--units", "metric"], HEADING);
+    let s = String::from_utf8(metric.clone()).unwrap();
+    assert!(s.lines().next().unwrap().contains(r#""units":"std""#));
+    assert!(s.contains(r#""heading":210.9"#), "metric json: {s}");
+
+    // Feed it back with the default (SI) output: the same record must
+    // come out in radians, not have 210.9 read as radians.
+    let si = String::from_utf8(run(&["convert", "--from", "json"], &metric)).unwrap();
+    assert!(si.lines().next().unwrap().contains(r#""units":"si""#));
+    assert!(si.contains(r#""heading":3.68"#), "si json: {si}");
+}
+
+#[test]
+fn the_banner_outranks_the_units_flag_on_input() {
+    // SI-bannered input, `--units metric` on the command line: the flag
+    // governs the output, the banner governs how the input is read, so
+    // the wire bits survive.
+    let si_json = run(&["convert", "--to", "json"], HEADING);
+    let back = run(
+        &[
+            "convert", "--from", "json", "--to", "plain", "--units", "metric",
+        ],
+        &si_json,
+    );
+    assert_eq!(
+        String::from_utf8(back).unwrap().as_bytes(),
+        HEADING,
+        "banner-declared input units were ignored"
+    );
+}
+
 #[test]
 fn actisense_ebl_emits_binary_framing() {
     // EBL is output-only; assert it produced a binary record that opens

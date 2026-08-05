@@ -22,6 +22,12 @@
 //! (set 1) and `"list2"` (set 2) arrays inside `fields`, one object per
 //! iteration.
 //!
+//! Bare physical values are read against the unit system the stream's
+//! `{"version":…,"units":…}` banner declares — degrees in a `"std"`
+//! stream, radians in an `"si"` one. Without a banner the caller's
+//! assumption stands (`--units`, SI by default). `-nv` raw values are
+//! unit-agnostic and unaffected.
+//!
 //! This lives in the CLI crate (not `canboat-core`) because it is the
 //! one place a real JSON parser is warranted: nested repeating lists
 //! and `-nv` objects are beyond `analyzer_json`'s deliberate
@@ -51,7 +57,15 @@ const BARE_TOP_LEVEL: [&str; 7] = [
 /// A [`FrameSource`] that reads analyzer-JSON lines from `src` and
 /// yields the re-encoded frames. Lines that fail to encode are skipped
 /// with a warning (mirroring the analyzer's tolerance of undecodable
-/// input) — the startup `{"version":…}` header is skipped silently.
+/// input).
+///
+/// The stream's `{"version":…,"units":…}` banner is not merely skipped:
+/// its `units` decides how bare physical values in the following
+/// records are read back. A `43.0` in a `"units":"std"` stream is
+/// degrees; the same number in an SI stream is radians, and encoding it
+/// against the wrong schema puts the wrong bits on the wire. The
+/// constructor's `db` is only the assumption for a bannerless stream —
+/// the banner always wins.
 pub struct JsonFrameReader<R> {
     src: R,
     db: &'static PgnDatabase,
@@ -60,6 +74,8 @@ pub struct JsonFrameReader<R> {
 }
 
 impl<R: BufRead> JsonFrameReader<R> {
+    /// `db` supplies the unit system to assume until (and unless) the
+    /// stream declares its own in a banner.
     pub fn new(src: R, db: &'static PgnDatabase) -> Self {
         Self {
             src,
@@ -67,6 +83,21 @@ impl<R: BufRead> JsonFrameReader<R> {
             buf: String::with_capacity(512),
             line_no: 0,
         }
+    }
+}
+
+/// The unit system an analyzer banner declares, or `None` when `line`
+/// isn't a banner or doesn't say. canboat spells them `"si"` (strict SI)
+/// and `"std"` (canboat's practical Metric).
+fn banner_units(line: &str) -> Option<canboat_core::Units> {
+    if !line.starts_with("{\"version\"") {
+        return None;
+    }
+    let root: Value = serde_json::from_str(line).ok()?;
+    match root.as_object()?.get("units")?.as_str()? {
+        "si" => Some(canboat_core::Units::Si),
+        "std" => Some(canboat_core::Units::Metric),
+        _ => None,
     }
 }
 
@@ -80,6 +111,23 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
             self.line_no += 1;
             let line = self.buf.trim();
             if line.is_empty() {
+                continue;
+            }
+            // Adopt the producer's declared unit system for the rest of
+            // the stream. The banner itself is not a record, so either
+            // way this line yields no frame.
+            if let Some(units) = banner_units(line) {
+                if units != self.db.units() {
+                    log::info!(
+                        "input declares {} units; reading values against that schema",
+                        if units == canboat_core::Units::Si {
+                            "SI (rad/K/Pa)"
+                        } else {
+                            "Metric (deg/°C/bar)"
+                        }
+                    );
+                    self.db = PgnDatabase::embedded(units);
+                }
                 continue;
             }
             match frame_from_json(self.db, line) {
@@ -625,5 +673,42 @@ mod tests {
     fn ambiguous_bare_pgn_is_a_clear_error() {
         let err = frame_from_json(db(), r#"{"pgn":126208,"fields":{}}"#).unwrap_err();
         assert!(err.to_string().contains("-camel"), "got: {err:#}");
+    }
+
+    #[test]
+    fn banner_units_reads_the_producers_declaration() {
+        let si = r#"{"version":"8.0.0","commit":"abc","units":"si","showLookupValues":true}"#;
+        let std = r#"{"version":"7.1.0","units":"std","showLookupValues":true}"#;
+        assert_eq!(banner_units(si), Some(Units::Si));
+        assert_eq!(banner_units(std), Some(Units::Metric));
+        // Not a banner, or a banner that doesn't say — the caller's
+        // assumption stands rather than being silently overridden.
+        assert_eq!(banner_units(r#"{"version":"7.1.0"}"#), None);
+        assert_eq!(banner_units(r#"{"pgn":127250,"fields":{}}"#), None);
+    }
+
+    /// The whole point of tracking the banner: the same decimal means
+    /// different bits depending on the stream's units.
+    #[test]
+    fn banner_units_decide_how_bare_values_encode() {
+        let deg = frame_from_json(
+            PgnDatabase::embedded(Units::Metric),
+            r#"{"pgn":127250,"src":27,"description":"Vessel Heading","fields":{"heading":210.9}}"#,
+        )
+        .unwrap()
+        .unwrap();
+        let rad = frame_from_json(
+            PgnDatabase::embedded(Units::Si),
+            r#"{"pgn":127250,"src":27,"description":"Vessel Heading","fields":{"heading":210.9}}"#,
+        )
+        .unwrap()
+        .unwrap();
+        assert_ne!(
+            deg.data.as_slice(),
+            rad.data.as_slice(),
+            "210.9 deg and 210.9 rad must not encode alike"
+        );
+        // 210.9 deg = 3.68094 rad, i.e. 36809 in 0.0001 rad units.
+        assert_eq!(&deg.data[1..3], &[0xc9, 0x8f]);
     }
 }

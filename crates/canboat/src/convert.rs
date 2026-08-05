@@ -309,9 +309,9 @@ fn convert_raw<W: Write>(
     let mut reader: Box<dyn FrameReader> = if ebl {
         Box::new(EblReader::new(source))
     } else if args.from == Some(FromFormat::Json) {
-        // Bare physical values in the JSON are interpreted in the same
-        // unit system the output side uses (`--units`); `-nv` raw
-        // values are unit-agnostic either way.
+        // Bare physical values are read against whatever unit system the
+        // input's banner declares; `--units` is only the assumption for
+        // a bannerless stream. `-nv` raw values are unit-agnostic.
         Box::new(crate::json_input::JsonFrameReader::new(
             source,
             canboat_core::PgnDatabase::embedded(args.shape.units()),
@@ -416,6 +416,10 @@ fn convert_decoded<W: Write>(
         // complete N2K messages, so skip the line-reader / reassembly /
         // coalesced-mode machinery entirely: pull each frame and decode
         // it directly, honouring the filters.
+        // `db` decodes into the *output* unit system (`--units`). The
+        // JSON reader tracks the *input's* separately, from its banner,
+        // so `--from json` doubles as a unit converter: read a canboat C
+        // `"units":"std"` stream, emit SI (or the other way round).
         let db = canboat_core::PgnDatabase::embedded(cfg.units);
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
