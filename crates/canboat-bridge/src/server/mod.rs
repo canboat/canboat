@@ -308,25 +308,13 @@ pub struct Args {
     #[arg(long, default_value_t = 2606)]
     overrides_port: u16,
 
-    /// Emit field keys + PGN descriptions as camelCase
-    /// identifiers (`"uniqueNumber"` instead of `"Unique Number"`)
-    /// on the analyzer JSON / snapshot TCP ports. Matches canboat
-    /// C's `-camel`.
-    #[arg(long, conflicts_with = "upper_camel")]
-    camel: bool,
-
-    /// Same as `--camel` but UpperCamelCase (`"UniqueNumber"`).
-    /// Matches canboat C's `-upper-camel`.
-    #[arg(long = "upper-camel")]
-    upper_camel: bool,
-
-    /// Decode numeric fields into strict SI base units (`rad`, `K`,
-    /// `Pa`, …) instead of canboat's humanized Metric (`deg`, `°C`,
-    /// `bar`, …) on the analyzer JSON / snapshot TCP ports. Matches
-    /// canboat C's `-si`. Orthogonal to `--camel`. NMEA 0183 / AIS
-    /// output is unaffected — those always emit their spec units.
-    #[arg(long)]
-    si: bool,
+    /// Shape of the records on the analyzer JSON / snapshot TCP ports:
+    /// identifier spelling (`--id`), unit system (`--units`) and record
+    /// wrapping (`--wrap`), plus their deprecated canboat C spellings.
+    /// Defaults to flat camelCase records in SI. NMEA 0183 / AIS output
+    /// is unaffected — those always emit their spec units.
+    #[command(flatten)]
+    shape: canboat_cli::ShapeArgs,
 
     /// Verbose logging.
     #[arg(short = 'v', long)]
@@ -380,9 +368,17 @@ pub struct BridgeConfig {
     pub config_dir: Option<PathBuf>,
     pub nmea0183_filter_port: u16,
     pub overrides_port: u16,
-    pub camel: bool,
-    pub upper_camel: bool,
-    pub si: bool,
+    /// How field keys and PGN descriptions are spelled on the analyzer
+    /// JSON / snapshot ports (`--id`). Defaults to
+    /// [`CamelCase::Lower`](canboat_core::output::CamelCase::Lower).
+    pub camel_case: canboat_core::output::CamelCase,
+    /// Unit system those ports decode into (`--units`). Defaults to
+    /// [`Units::Si`](canboat_core::Units::Si). NMEA 0183 / AIS output is
+    /// unaffected — those always emit their spec units.
+    pub units: canboat_core::Units,
+    /// Nest each JSON record in `{"<pgnId>":{…}}` (`--wrap`). Off by
+    /// default; canboat C ties this to `-camel`, we don't.
+    pub wrap: bool,
     pub verbose: bool,
     pub quiet: bool,
 }
@@ -418,12 +414,24 @@ impl Default for BridgeConfig {
             config_dir: None,
             nmea0183_filter_port: 2605,
             overrides_port: 2606,
-            camel: false,
-            upper_camel: false,
-            si: false,
+            // Machine-facing defaults, matching `convert` / `analyzer`
+            // and what canboatjs consumers expect.
+            camel_case: canboat_core::output::CamelCase::Lower,
+            units: canboat_core::Units::Si,
+            wrap: false,
             verbose: false,
             quiet: false,
         }
+    }
+}
+
+#[cfg(feature = "cli")]
+impl Args {
+    /// Nudge users off canboat C's `--camel` / `--upper-camel` / `--si`
+    /// spellings. The host binary calls this before converting to a
+    /// [`BridgeConfig`], which only carries the resolved shape.
+    pub fn warn_deprecated(&self) {
+        self.shape.warn_deprecated();
     }
 }
 
@@ -461,9 +469,9 @@ impl From<Args> for BridgeConfig {
             config_dir: a.config_dir,
             nmea0183_filter_port: a.nmea0183_filter_port,
             overrides_port: a.overrides_port,
-            camel: a.camel,
-            upper_camel: a.upper_camel,
-            si: a.si,
+            camel_case: a.shape.camel_case(),
+            units: a.shape.units(),
+            wrap: a.shape.wrap(),
             verbose: a.verbose,
             quiet: a.quiet,
         }

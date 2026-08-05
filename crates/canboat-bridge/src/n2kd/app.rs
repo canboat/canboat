@@ -425,14 +425,18 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
             continue;
         }
         // canboat C aborts here unless the first line was the banner; we
-        // are lenient (a bannerless stream is assumed Metric), but warn
-        // once so a misconfigured producer is visible. `-si` streams
-        // *must* carry the banner or their radians decode as degrees.
+        // are lenient (a bannerless stream is assumed Metric, matching
+        // canboat C's default), but warn once so a misconfigured
+        // producer is visible. An SI stream *must* carry the banner or
+        // its radians decode as degrees — and SI is now what `analyzer`
+        // emits by default, so a bannerless producer (`canboat convert`
+        // writes no banner) is more likely to be mismatched than before.
         if !saw_banner && !warned_no_banner {
             log::warn!(
                 "input has no analyzer version banner; assuming Metric units. \
-                 Pipe from `analyzer -json -nv` (add `-si` for SI units) so the \
-                 unit system is declared."
+                 Pipe from `analyzer --json --nv` (which declares its unit \
+                 system, SI unless you pass `--units metric`), or make the \
+                 producer emit Metric."
             );
             warned_no_banner = true;
         }

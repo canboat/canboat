@@ -34,19 +34,20 @@ use crate::types::{FieldInfo, FieldType};
 /// `None` if the line has no `pgn`, the PGN is unknown, or it isn't the
 /// object we expect.
 pub fn json_to_decoded(line: &str, db: &PgnDatabase) -> Option<DecodedPgn> {
-    // `-camel` output wraps the record in `{"<pgnId>":{…}}` and keys
-    // fields by their camelCase `id`; bare `-json` is unwrapped and
-    // keys by human `name`. Detect once so the rest of the reconstruction
-    // uses the matching key and, for camel, the exact variant.
+    // A wrapped record — canboat C's `-camel`, the Rust binaries'
+    // `--wrap` — nests everything under `{"<pgnId>":{…}}`, and the
+    // wrapper id names one exact variant of `pgn`.
     let camel_id = json::camel_wrapper_id(line);
-    let use_camel = camel_id.is_some();
     let pgn = json::int(line, "pgn")? as u32;
     let info = match camel_id {
-        // The wrapper id names one exact variant of `pgn`; fall back to
-        // the PGN number if this schema doesn't know that id.
+        // Fall back to the PGN number if this schema doesn't know that id.
         Some(id) => db.pgn_by_id(id).or_else(|| db.first_pgn(pgn))?,
         None => db.first_pgn(pgn)?,
     };
+    // Field keys are camelCase `id`s or human `name`s. The wrapper
+    // implies camel; an unwrapped record can be either (camelCase
+    // unwrapped is the current default), so sniff its field keys.
+    let use_camel = camel_id.is_some() || json::uses_camel_keys(line, info.fields);
 
     let src = json::int(line, "src").unwrap_or(0) as u8;
     let dst = json::int(line, "dst").unwrap_or(255) as u8;
@@ -238,6 +239,43 @@ mod tests {
             json::camel_wrapper_id(r#"{"windData":{"pgn":130306}}"#),
             Some("windData")
         );
+    }
+
+    /// The default output shape: camelCase keys, no wrapper. There is
+    /// no wrapper id to key off, so the reader has to sniff the field
+    /// keys — before it did, every field silently dropped out.
+    #[test]
+    fn flat_camel_record_decodes() {
+        let db = crate::PgnDatabase::embedded(Units::Si);
+        let line = r#"{"prio":2,"src":7,"dst":255,"pgn":130306,"description":"Wind Data","fields":{"windSpeed":5.0,"windAngle":1.2,"reference":{"value":2,"name":"Apparent"}}}"#;
+        let d = json_to_decoded(line, db).expect("flat camel decodes");
+        assert_eq!(d.pgn, 130306);
+        assert_eq!(field_f64(&d, "windSpeed"), Some(5.0));
+        assert_eq!(field_f64(&d, "windAngle"), Some(1.2));
+        let reference = d
+            .fields
+            .iter()
+            .find(|f| f.info.id == "reference")
+            .expect("reference field");
+        assert!(
+            matches!(reference.value, FieldValue::Lookup { value: 2, .. }),
+            "got: {:?}",
+            reference.value
+        );
+    }
+
+    #[test]
+    fn key_style_sniffing() {
+        let info = crate::PgnDatabase::embedded(Units::Si)
+            .first_pgn(130306)
+            .expect("PGN 130306 present");
+        let camel = r#"{"pgn":130306,"fields":{"windSpeed":5.0,"windAngle":1.2}}"#;
+        let bare = r#"{"pgn":130306,"fields":{"Wind Speed":5.0,"Wind Angle":1.2}}"#;
+        assert!(json::uses_camel_keys(camel, info.fields));
+        assert!(!json::uses_camel_keys(bare, info.fields));
+        // Nothing to go on (no fields emitted) → assume human names,
+        // which is what the pre-existing readers did.
+        assert!(!json::uses_camel_keys(r#"{"pgn":130306}"#, info.fields));
     }
 
     #[test]

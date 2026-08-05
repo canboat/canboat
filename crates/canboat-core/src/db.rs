@@ -55,12 +55,15 @@ pub struct PgnDatabase {
 #[non_exhaustive]
 pub enum Units {
     /// Strict SI base units: `rad`, `K`, `Pa`, `C` (coulomb). What a
-    /// physics-facing consumer (Signal K, control code) wants. Matches
-    /// canboat C's `analyzer -si`.
+    /// physics-facing consumer (Signal K, control code) wants — and
+    /// therefore **the default**. Matches `--units si` (canboat C's
+    /// `analyzer -si`).
+    #[default]
     Si,
     /// canboat's practical humanized units: `deg`, `°C`, `bar`, `Ah`.
-    /// The default, matching canboat C's `analyzer` without `-si`.
-    #[default]
+    /// What a human reads; matches `--units metric`, i.e. canboat C's
+    /// `analyzer` without `-si`. Was the default before the Rust
+    /// binaries standardised on SI.
     Metric,
 }
 

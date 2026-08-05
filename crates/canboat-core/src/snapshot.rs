@@ -305,13 +305,16 @@ where
     let description = crate::analyzer_json::value(line, "description")
         .unwrap_or("")
         .to_string();
-    // `-camel` lines key fields by their camelCase `id`; bare `-json` by
-    // human `name`. Pick the matching secondary-key field key so the
-    // snapshot stays correctly split per instance / function code.
-    let use_camel = crate::analyzer_json::camel_wrapper_id(line).is_some();
-    let field_key = move |f: &crate::FieldInfo| if use_camel { f.id } else { f.name };
     let is_ais = is_ais_pgn(pgn);
     let info = crate::PgnDatabase::embedded(crate::Units::Metric).first_pgn(pgn);
+    // Records key fields by camelCase `id` or by human `name`. A
+    // wrapper (`--wrap` / canboat C's `-camel`) always means camel;
+    // otherwise sniff, since camelCase unwrapped is the default. Pick
+    // the matching secondary-key field key so the snapshot stays
+    // correctly split per instance / function code.
+    let use_camel = crate::analyzer_json::camel_wrapper_id(line).is_some()
+        || info.is_some_and(|i| crate::analyzer_json::uses_camel_keys(line, i.fields));
+    let field_key = move |f: &crate::FieldInfo| if use_camel { f.id } else { f.name };
     let repeat_set = info.and_then(repeating_pk_set);
 
     let Some(rs) = repeat_set else {
