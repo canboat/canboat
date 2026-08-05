@@ -899,28 +899,50 @@ pub(crate) fn field_value(line: &Value, f: FieldRef) -> Option<&Value> {
     line.pointer(&format!("/fields/{}", json_pointer_escape(f.field.name)))
 }
 
-/// Canonicalize a `server --camel` analyzer record back to bare `-json`
-/// shape. `-camel` wraps each record `{"<pgnId>":{…}}` and keys its fields
-/// by camelCase `id`; this strips the wrapper and renames every field key
-/// (recursing into `list`/`list2` repeat sets) to its human name via the
-/// schema, using the wrapper id to pick the exact PGN variant. A bare
-/// record has no single-key wrapper and is returned untouched — so this
-/// is a no-op on the default stream, and every reader downstream stays
-/// name-keyed and camel-oblivious.
+/// Canonicalize a camelCase analyzer record to the spaced-name shape
+/// every reader below expects, in both flavours the servers emit:
+///
+/// * **flat** (`--id camel`, the default) — field keys are camelCase
+///   `id`s on an unwrapped record; rename them to their human names.
+/// * **wrapped** (`--wrap`, canboat C's `-camel`) — additionally strip
+///   the `{"<pgnId>":{…}}` envelope, whose id names the exact PGN
+///   variant, and restore the human `description` the wrapper replaced.
+///
+/// Renaming recurses into `list`/`list2` repeat sets. A spaced-name
+/// record passes through untouched (no key matches a schema `id`), so
+/// every reader downstream stays name-keyed and camel-oblivious.
 pub(crate) fn normalize_camel(line: Value) -> Value {
-    // The camel wrapper is the only shape that presents as a one-key
-    // object whose value is itself a record (`{"windData":{"pgn":…}}`);
-    // a bare record always has several top-level keys.
+    // The wrapper is the only shape that presents as a one-key object
+    // whose value is itself a record (`{"windData":{"pgn":…}}`); any
+    // unwrapped record has several top-level keys.
     let is_wrapper = matches!(&line, Value::Object(o)
         if o.len() == 1 && o.values().next().is_some_and(|v| v.get("pgn").is_some()));
-    if !is_wrapper {
-        return line;
-    }
     let Value::Object(top) = line else {
-        unreachable!("checked Object above")
+        return line;
     };
-    let (wrapper_id, mut record) = top.into_iter().next().expect("one entry");
     let db = PgnDatabase::embedded(Units::Metric);
+    if !is_wrapper {
+        // Flat record: `description` still carries the human string in
+        // every `--id` mode, so it picks the variant; fall back to the
+        // PGN number.
+        let mut record = Value::Object(top);
+        let pgn = record.get("pgn").and_then(Value::as_u64).unwrap_or(0) as u32;
+        let info = record
+            .get("description")
+            .and_then(Value::as_str)
+            .and_then(|d| {
+                db.pgn_variants(pgn)
+                    .find(|p| p.description == d || p.id == d)
+            })
+            .or_else(|| db.first_pgn(pgn));
+        if let Some(info) = info
+            && let Some(Value::Object(fields)) = record.get_mut("fields")
+        {
+            rekey_fields(fields, info);
+        }
+        return record;
+    }
+    let (wrapper_id, mut record) = top.into_iter().next().expect("one entry");
     let pgn = record.get("pgn").and_then(Value::as_u64).unwrap_or(0) as u32;
     if let Some(info) = db.pgn_by_id(&wrapper_id).or_else(|| db.first_pgn(pgn))
         && let Value::Object(obj) = &mut record
@@ -1134,6 +1156,51 @@ mod tests {
             entry.line.get("productInformation").is_none(),
             "wrapper stripped"
         );
+    }
+
+    #[test]
+    fn flat_camel_record_normalizes_to_bare_and_reads() {
+        // The default `server` shape: camelCase field keys on an
+        // *unwrapped* record. There is no wrapper to key off, so the
+        // normalizer has to rekey from the field ids — before it did,
+        // every name-keyed reader in the TUI came up empty.
+        let mut s = state();
+        let flat = json!({
+            "prio": 6, "src": 11, "pgn": 126996,
+            "description": "Product Information",
+            "fields": {
+                "modelId": "ACME Radar",
+                "softwareVersionCode": "1.2.3",
+                "certificationLevel": 2
+            }
+        });
+        s.upsert(126996, 11, None, "Product Information".into(), flat);
+
+        let devs = s.device_list();
+        let dev = devs.iter().find(|d| d.src == 11).expect("device src 11");
+        assert_eq!(dev.model, "ACME Radar");
+        assert_eq!(dev.software, "1.2.3");
+
+        let entry = s.entries.values().next().expect("one entry");
+        assert_eq!(entry.description, "Product Information");
+        assert_eq!(
+            entry
+                .line
+                .pointer("/fields/Model ID")
+                .and_then(Value::as_str),
+            Some("ACME Radar")
+        );
+    }
+
+    #[test]
+    fn spaced_name_record_passes_through_untouched() {
+        // `--id spaces` output must not be disturbed by the rekeying.
+        let line = json!({
+            "prio": 6, "src": 12, "pgn": 126996,
+            "description": "Product Information",
+            "fields": {"Model ID": "ACME Radar", "Certification Level": 2}
+        });
+        assert_eq!(normalize_camel(line.clone()), line);
     }
 
     #[test]

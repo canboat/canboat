@@ -83,6 +83,14 @@ fn canboat_path() -> PathBuf {
     PathBuf::from(env!("CARGO_BIN_EXE_canboat"))
 }
 
+/// The `.out` fixtures are canboat C's output, and canboat C prints
+/// spaced field names in its humanized units. The Rust `analyzer` now
+/// defaults to the machine-facing shape (camelCase keys, strict SI, no
+/// record wrapper), so every golden case asks for the C shape back
+/// explicitly. Comparing against C is the whole point of these tests —
+/// the defaults are exercised by the unit tests in `output_opts`.
+const C_SHAPE: &[&str] = &["--id", "spaces", "--units", "metric"];
+
 /// Drive the analyzer binary on `<test_dir>/<in_name>` with `args`,
 /// then byte-diff stdout against `<test_dir>/<expected_name>`.
 fn run_case(in_name: &str, expected_name: &str, args: &[&str]) {
@@ -111,6 +119,7 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     // dispatches into the analyzer path — same as the installed shim.
     let mut child = Command::new(canboat_path())
         .arg0("analyzer")
+        .args(C_SHAPE)
         .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())

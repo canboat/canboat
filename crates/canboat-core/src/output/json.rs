@@ -6,12 +6,14 @@
 //!
 //! ```json
 //! {"timestamp":"...","prio":N,"src":N,"dst":N,"pgn":N,
-//!  "description":"...","fields":{"Name":Value,"Name":Value,...}}
+//!  "description":"...","fields":{"id":Value,"id":Value,...}}
 //! ```
 //!
-//! Compact (no whitespace), keys in canboat order. Field names use the
-//! human-readable `Name` from canboat.json by default. The output is
-//! written without a trailing newline.
+//! Compact (no whitespace), keys in canboat order. Field keys are the
+//! camelCase `Id` from canboat.json by default ([`CamelCase::Lower`]);
+//! [`CamelCase::Off`] switches them to the human-readable `Name`, which
+//! is what canboat C prints. The output is written without a trailing
+//! newline.
 //!
 //! JSON is hand-emitted rather than constructed via serde_json so the
 //! output bytes match canboat exactly (number formatting, key order,
@@ -36,7 +38,8 @@ fn field_display_name(field: &DecodedField, mode: CamelCase) -> std::borrow::Cow
     }
 }
 
-/// Wrapper-object key for a record under `-camel` / `-upper-camel`.
+/// Wrapper-object key for a record under `--wrap`, spelled per
+/// [`JsonOptions::camel_case`].
 /// canboat uses `id` as the camelized form (e.g. `isoAddressClaim`,
 /// C: `pgn->camelDescription`). Only the wrapper key camelizes — the
 /// `description` field inside the record stays the human-readable
@@ -77,12 +80,19 @@ pub struct JsonOptions {
     pub debug: bool,
     /// Emit field keys + PGN descriptions as camelCase or
     /// UpperCamelCase identifiers instead of canboat's human-
-    /// readable form. Matches canboat C's `-camel` / `-upper-camel`
-    /// flags. See [`CamelCase`].
+    /// readable form. Defaults to [`CamelCase::Lower`] — the shape
+    /// JSON consumers want, and what the binaries emit unless
+    /// `--id spaces` asks otherwise.
     pub camel_case: CamelCase,
+    /// Nest each record in `{"<pgnKey>":{…}}` instead of emitting it
+    /// flat (matches canboat C's `-camel` wrapping, here its own
+    /// `--wrap` flag). Off by default: the flat record is what
+    /// canboatjs and the Signal K stack consume.
+    pub wrap: bool,
 }
 
-/// Identifier style selector for `-camel` / `-upper-camel`.
+/// Identifier style selector for `--id` (canboat C's `-camel` /
+/// `-upper-camel`).
 ///
 /// canboat C builds these by stripping spaces/punctuation from
 /// `"Unique Number"` → `"uniqueNumber"` (camelCase) or
@@ -92,12 +102,13 @@ pub struct JsonOptions {
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq)]
 pub enum CamelCase {
     /// Use human-readable names (`"Unique Number"`, `"ISO Address
-    /// Claim"`). Default; matches canboat C's default output.
-    #[default]
+    /// Claim"`). `--id spaces`; matches canboat C's default output.
     Off,
-    /// lowerCamelCase identifiers (`"uniqueNumber"`).
+    /// lowerCamelCase identifiers (`"uniqueNumber"`). **The default**
+    /// (`--id camel`).
+    #[default]
     Lower,
-    /// UpperCamelCase identifiers (`"UniqueNumber"`).
+    /// UpperCamelCase identifiers (`"UniqueNumber"`). `--id uppercamel`.
     Upper,
 }
 
@@ -113,14 +124,19 @@ thread_local! {
 }
 
 pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions) -> fmt::Result {
-    // In camelCase mode (`-camel` / `-upper-camel`) every record is
-    // wrapped in `{"<camelId>":{...}}`, keyed on the PGN's camelCase
-    // identifier; the trailing `}` is balanced after the body closes.
-    // Plain `-json` never wraps. canboat C originally keyed this on the
-    // presence of a pinned `camelDescription` (so PGN 130846 wrapped
-    // even in plain `-json`); canboat#746 corrected it to key on the
-    // `-camel` flag instead. See `analyzer/analyzer.c::printPgn`.
-    let wrap = opts.camel_case != CamelCase::Off;
+    // Under [`JsonOptions::wrap`] every record is nested in
+    // `{"<pgnKey>":{...}}`, keyed on the PGN's identifier (spelled per
+    // [`JsonOptions::camel_case`]); the trailing `}` is balanced after
+    // the body closes.
+    //
+    // canboat C ties this to `-camel`: camelCase output always wraps.
+    // (It originally keyed on a pinned `camelDescription`, so PGN
+    // 130846 wrapped even in plain `-json`; canboat#746 changed it to
+    // the `-camel` flag. See `analyzer/analyzer.c::printPgn`.) The Rust
+    // binaries decouple the two — camelCase keys are the default and
+    // wrapping is not, which is the flat shape canboatjs emits — so
+    // `--id` and `--wrap` are independent here.
+    let wrap = opts.wrap;
     if wrap {
         w.write_char('{')?;
         w.write_str("\"")?;
@@ -1025,12 +1041,31 @@ mod tests {
     }
 
     #[test]
-    fn matches_canboat_json_shape() {
+    fn default_shape_is_flat_camel_case() {
+        // The default: camelCase field keys, no record wrapper — the
+        // shape canboatjs emits and the Signal K stack consumes.
         let pgn = sample_pgn();
         let mut out = String::new();
         write_json(&mut out, &pgn, &JsonOptions::default()).unwrap();
         // The sample timestamp lacks a trailing `Z`; the formatter
         // canonicalises it to ISO-8601 UTC on emit.
+        assert_eq!(
+            out,
+            r#"{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"offset":0.000}}"#
+        );
+    }
+
+    #[test]
+    fn matches_canboat_json_shape() {
+        // `--id spaces`: canboat C's own output, spaced field names and
+        // no wrapper.
+        let pgn = sample_pgn();
+        let mut out = String::new();
+        let opts = JsonOptions {
+            camel_case: CamelCase::Off,
+            ..JsonOptions::default()
+        };
+        write_json(&mut out, &pgn, &opts).unwrap();
         assert_eq!(
             out,
             r#"{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"Offset":0.000}}"#
@@ -1049,12 +1084,34 @@ mod tests {
         let mut out = String::new();
         let opts = JsonOptions {
             camel_case: CamelCase::Lower,
+            wrap: true,
             ..JsonOptions::default()
         };
         write_json(&mut out, &pgn, &opts).unwrap();
         assert_eq!(
             out,
             r#"{"waterDepth":{"timestamp":"2018-10-16T22:25:25.166Z","prio":3,"src":35,"dst":255,"pgn":128267,"description":"Water Depth","fields":{"offset":0.000}}}"#
+        );
+    }
+
+    #[test]
+    fn wrapping_is_independent_of_identifier_style() {
+        // canboat C ties the wrapper to `-camel`; here `--wrap` and
+        // `--id` are orthogonal, so a wrapped record can carry spaced
+        // names — and then the wrapper key is the human description,
+        // exactly as `pgn_wrapper_key` spells it.
+        let pgn = sample_pgn();
+        let mut out = String::new();
+        let opts = JsonOptions {
+            camel_case: CamelCase::Off,
+            wrap: true,
+            ..JsonOptions::default()
+        };
+        write_json(&mut out, &pgn, &opts).unwrap();
+        assert!(out.starts_with(r#"{"Water Depth":{"#), "got: {out}");
+        assert!(
+            out.ends_with(r#""fields":{"Offset":0.000}}}"#),
+            "got: {out}"
         );
     }
 
@@ -1088,7 +1145,7 @@ mod tests {
             },
         )
         .unwrap();
-        assert!(out.contains(r#""Offset":null"#), "got: {}", out);
+        assert!(out.contains(r#""offset":null"#), "got: {}", out);
     }
 
     #[test]
@@ -1129,7 +1186,7 @@ mod tests {
                 },
             )
             .unwrap();
-            assert!(out.contains(r#""Offset":null"#), "got: {out}");
+            assert!(out.contains(r#""offset":null"#), "got: {out}");
         }
     }
 
@@ -1160,7 +1217,7 @@ mod tests {
         )
         .unwrap();
         assert!(
-            out.contains(r#""Offset":{"value":275,"name":"Navico"}"#),
+            out.contains(r#""offset":{"value":275,"name":"Navico"}"#),
             "got: {}",
             out
         );

@@ -45,8 +45,9 @@ pub struct Config {
     /// producer's build version doesn't leak into version-agnostic
     /// output.
     pub suppress_startup_record: bool,
-    /// Unit system to decode into — `Metric` (the default: deg/°C/bar,
-    /// matching `analyzer` without `-si`) or `Si` (rad/K/Pa, `-si`).
+    /// Unit system to decode into — `Si` (the default: rad/K/Pa,
+    /// `--units si`) or `Metric` (deg/°C/bar, `--units metric`, which
+    /// is what canboat C prints without `-si`).
     pub units: canboat_core::Units,
 }
 

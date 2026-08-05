@@ -2,16 +2,23 @@
 
 //! Shared CLI plumbing for the canboat-rs binaries.
 //!
-//! At the moment the only thing here is [`canboat_argv`], an argv
-//! pre-processor that lets clap accept canboat's single-dash long
-//! options (`-json`, `-rx`, `-fixtime`, …). canboat's C tools use
-//! that form throughout; clap defaults to requiring a double-dash
-//! for any option longer than one character. Each binary calls
-//! `canboat_argv()` to normalise its own argv before handing it to
-//! `Cli::parse_from`.
+//! [`canboat_argv`] is an argv pre-processor that lets clap accept
+//! canboat's single-dash long options (`-json`, `-rx`, `-fixtime`, …).
+//! canboat's C tools use that form throughout; clap defaults to
+//! requiring a double-dash for any option longer than one character.
+//! Each binary calls `canboat_argv()` to normalise its own argv before
+//! handing it to `Cli::parse_from`.
+//!
+//! [`shape`] holds the decoded-output flags every binary that emits
+//! analyzer JSON shares — `--id`, `--units`, `--wrap` — so `convert`,
+//! the `analyzer` shim and `server` can't drift apart.
 
 use std::env;
 use std::ffi::OsString;
+
+pub mod shape;
+
+pub use shape::{IdStyle, ShapeArgs, UnitSystem};
 
 /// The canboat copyright line and schema version, extracted from
 /// `crates/canboat-core/data/canboat.json` at build time by
