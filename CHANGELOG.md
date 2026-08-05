@@ -6,6 +6,49 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.0.0-beta2](https://github.com/canboat/canboat/compare/v8.0.0-beta1...v8.0.0-beta2) (2026-08-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **json:** default decoded output to camelCase ids and SI units ([#814](https://github.com/canboat/canboat/issues/814))
+
+### Added
+
+* **129540:** decode the reserved nibble as GNSS System ([#792](https://github.com/canboat/canboat/issues/792)) ([08ea954](https://github.com/canboat/canboat/commit/08ea954f4d8c782523d6353784db5ab66d0b5bc3))
+* **130842:** decode Furuno 6DOF roll/pitch/yaw rates ([#798](https://github.com/canboat/canboat/issues/798)) ([7fda918](https://github.com/canboat/canboat/commit/7fda91804e7ccdeb9cd262fd0930a1a626ab8833))
+* **130850:** model the AP mode commands as the full 12 bytes ([#795](https://github.com/canboat/canboat/issues/795)) ([c9b2fc7](https://github.com/canboat/canboat/commit/c9b2fc7d7589d86a9128ddcbc5e1ba8043fd884a))
+* **130850:** trim the catch-all AP command to the full 12 bytes ([#796](https://github.com/canboat/canboat/issues/796)) ([a1d4b54](https://github.com/canboat/canboat/commit/a1d4b54252b3a5f21e5b38fce29c7b64aa7a14cf))
+* **canboat:** expose the JSON input driver as a library feature ([3130bf1](https://github.com/canboat/canboat/commit/3130bf1e44e6dcd5f3032de2f3c795ca4720e29c))
+* **canboat:** wasm32 support — target fixes and the JSON input driver as a library feature ([1d7450c](https://github.com/canboat/canboat/commit/1d7450c5a3314ac6654998529138bed8f6c3678c))
+* **convert:** re-encode analyzer JSON to wire frames with --from json ([#800](https://github.com/canboat/canboat/issues/800)) ([294520b](https://github.com/canboat/canboat/commit/294520b5ab1715885b5bd2c9782d6cd524bb5d02))
+* **encode:** match the VARIABLE target variant from the parameter pairs ([#811](https://github.com/canboat/canboat/issues/811)) ([c301bd5](https://github.com/canboat/canboat/commit/c301bd5f19ef607f3d9ebc73ad61676601f5efec))
+* **interface:** network line gateways - Yacht Devices RAW and W2K-1 N2K ASCII ([#807](https://github.com/canboat/canboat/issues/807)) ([7664d29](https://github.com/canboat/canboat/commit/7664d29801af2f6fda5c10a9bae830af47cae4ed))
+* **json:** default decoded output to camelCase ids and SI units ([#814](https://github.com/canboat/canboat/issues/814)) ([9a0ad2c](https://github.com/canboat/canboat/commit/9a0ad2c2a531c7be8505376a9de648a1daee01aa))
+* **release:** publish the Rust canboat binary for Windows ([#808](https://github.com/canboat/canboat/issues/808)) ([b4e84cf](https://github.com/canboat/canboat/commit/b4e84cf6f1d92d948e2a38aa96d8dcb82a482cf5))
+* **release:** publish the Rust canboat binary with every release ([#799](https://github.com/canboat/canboat/issues/799)) ([e33247c](https://github.com/canboat/canboat/commit/e33247ccd01b1110f59c9c773297510fa8ef2a0e))
+
+
+### Fixed
+
+* **convert:** keep the human PGN description in camelCase mode ([#810](https://github.com/canboat/canboat/issues/810)) ([b039e00](https://github.com/canboat/canboat/commit/b039e008eb00c55612405e7f24d2532f7d7d609c))
+* **core:** build and run on wasm32 targets ([c981917](https://github.com/canboat/canboat/commit/c981917fd2aa713478896611dda39d0cf2d1b5e7))
+* **encode:** absent repeating-list count encodes as zero ([#816](https://github.com/canboat/canboat/issues/816)) ([d7f47d8](https://github.com/canboat/canboat/commit/d7f47d82f527b3af3c31817862deb97bdf6ebae0))
+* **fieldtypes:** drop the phantom terminating zero from STRING_LAU ([e336627](https://github.com/canboat/canboat/commit/e336627a601cc81e34298b261aab3c7efede59f9))
+* **fieldtypes:** drop the phantom terminating zero from STRING_LAU ([6fa05aa](https://github.com/canboat/canboat/commit/6fa05aa862522001a958cc43b8a9a1a3918519eb)), closes [#760](https://github.com/canboat/canboat/issues/760)
+* **interface:** accept the C maretron-ipg device syntax in the shim ([#801](https://github.com/canboat/canboat/issues/801)) ([9737785](https://github.com/canboat/canboat/commit/973778585b9ba96d49d9cd739df254ff3d8d200f))
+* **json:** always emit string-typed elements as JSON strings ([#793](https://github.com/canboat/canboat/issues/793)) ([d6a1cab](https://github.com/canboat/canboat/commit/d6a1cab1a3133cb55c6be8091889dd7a4939d629))
+
+
+### Changed
+
+* **socketcan:** fragment fast-packet TX through the shared helper ([#809](https://github.com/canboat/canboat/issues/809)) ([d3b3fbf](https://github.com/canboat/canboat/commit/d3b3fbf78eeb54e8a205ee94f517071d2124802f))
+
+
+### Internal
+
+* release 9.0.0-beta1 as 8.0.0-beta2 ([1c1dfdd](https://github.com/canboat/canboat/commit/1c1dfdda8e1e333fa41b57501682f2b33cfa7aa1))
+
 ## [8.0.0-beta1](https://github.com/canboat/canboat/compare/v7.1.0...v8.0.0-beta1) (2026-08-02)
 
 
