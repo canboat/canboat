@@ -79,7 +79,21 @@ fn range_max_sentinel(f: &FieldInfo, ex: Extracted, bits: u32) -> Option<FieldVa
         return None;
     }
     let raw_max = (1u64 << bits) - 1;
-    let raw_range_max = (range_max / resolution + 0.5) as u64;
+    // `rangeMax` is stated in DISPLAY units, so both display shifts have
+    // to come off before it can be compared against the raw bit-width
+    // maximum: the schema's `offset` (J1939 Excess-K: raw 0 reads
+    // 233 K) and the unit conversion the Metric schema variant applies
+    // on top of it (the same field's range is 485 K in SI and
+    // 209.85 C in Metric — both raw 252). Dropping either term makes
+    // the range look wider than the field can hold, the check bails
+    // out, and the all-ones "not available" pattern decodes as a real
+    // reading where the C prints Unknown.
+    let display_offset = f.offset.map(|o| o as f64).unwrap_or(0.0);
+    let raw_range_max_f = (range_max - display_offset - f.unit_offset) / resolution + 0.5;
+    if raw_range_max_f < 0.0 {
+        return None;
+    }
+    let raw_range_max = raw_range_max_f as u64;
     if raw_range_max >= raw_max {
         return None;
     }
@@ -1336,6 +1350,19 @@ fn decode_number(
         return FieldValue::NotAvailable;
     };
     if let Some(sent) = sentinel_field_value(f, ex) {
+        return sent;
+    }
+    // No explicit hints in the schema: fall back to the range-derived
+    // check. The C resolves `reservedCount` for every number field from
+    // `rangeMax` against the raw bit-width maximum
+    // (`extractNumberNotEmpty`), whether or not per-field hints exist,
+    // so a field carrying only a range — every J1939 definition — must
+    // get the same treatment here.
+    //
+    // Unsigned only: for a signed field the all-ones pattern is -1, a
+    // legitimate reading the C prints as such, and the comparison below
+    // is against the *unsigned* raw.
+    if !effective_signed && let Some(sent) = range_max_sentinel(f, ex, bit_length) {
         return sent;
     }
     let resolution = f.resolution.unwrap_or(1.0);
