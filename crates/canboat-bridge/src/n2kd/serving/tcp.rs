@@ -307,29 +307,54 @@ mod tests {
     use std::net::TcpStream;
     use std::sync::atomic::AtomicBool;
 
+    /// Start a shutdown-aware stream server on a free port, returning the
+    /// port it actually got.
+    ///
+    /// The port number comes from an ephemeral bind we immediately drop,
+    /// so between learning the number and re-binding it inside
+    /// `spawn_stream_server` it is up for grabs — the likeliest thief
+    /// being another test in this same binary, which cargo runs in
+    /// parallel. Losing that race is not a product defect and must not
+    /// fail the run (it did, on loaded macOS CI runners: `Address already
+    /// in use (os error 48)`), so take a fresh port and try again.
+    fn spawn_on_a_free_port(stop: &Arc<AtomicBool>) -> (u16, JoinHandle<()>) {
+        for _ in 0..16 {
+            let port = TcpListener::bind((Ipv4Addr::LOCALHOST, 0))
+                .expect("reserve an ephemeral port")
+                .local_addr()
+                .expect("ephemeral listener has a local address")
+                .port();
+            match spawn_stream_server(
+                "test",
+                Ipv4Addr::LOCALHOST,
+                port,
+                Arc::new(Hub::new()),
+                None,
+                Some(stop.clone()),
+            ) {
+                Ok(join) => return (port, join),
+                // Only the race is retryable; anything else is a real bug.
+                Err(e) if is_addr_in_use(&e) => continue,
+                Err(e) => panic!("bind test stream server: {e:#}"),
+            }
+        }
+        panic!("no ephemeral port stayed free across 16 attempts");
+    }
+
+    /// True when `e` (or anything it wraps) is `AddrInUse`.
+    fn is_addr_in_use(e: &anyhow::Error) -> bool {
+        e.chain()
+            .filter_map(|c| c.downcast_ref::<std::io::Error>())
+            .any(|io| io.kind() == std::io::ErrorKind::AddrInUse)
+    }
+
     /// A shutdown-aware listener drops its socket when the stop flag trips,
     /// so the port is immediately re-bindable — the core of Bridge shutdown
     /// (no more leaked accept threads holding ports open).
     #[test]
     fn shutdown_aware_listener_releases_its_port() {
-        // Grab an OS-assigned free port, then let go of it.
-        let port = TcpListener::bind((Ipv4Addr::LOCALHOST, 0))
-            .unwrap()
-            .local_addr()
-            .unwrap()
-            .port();
-
         let stop = Arc::new(AtomicBool::new(false));
-        let hub = Arc::new(Hub::new());
-        let join = spawn_stream_server(
-            "test",
-            Ipv4Addr::LOCALHOST,
-            port,
-            hub,
-            None,
-            Some(stop.clone()),
-        )
-        .expect("bind test stream server");
+        let (port, join) = spawn_on_a_free_port(&stop);
 
         // The port accepts connections while serving.
         let mut connected = false;
@@ -346,7 +371,11 @@ mod tests {
         stop.store(true, Ordering::Relaxed);
         join.join().expect("accept thread joins after shutdown");
 
-        // Port is free again — a fresh bind succeeds.
+        // Port is free again — a fresh bind succeeds. Deliberately not
+        // retried like the setup bind above: this one *is* the assertion,
+        // and it isn't exposed to the same race — our own server held the
+        // port until the line above, so the OS could not have handed the
+        // number to anyone else in the meantime.
         let rebind = TcpListener::bind(SocketAddrV4::new(Ipv4Addr::LOCALHOST, port));
         assert!(
             rebind.is_ok(),
