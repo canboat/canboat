@@ -1,0 +1,27 @@
+pgn: 65188
+id: engineTemperature2
+description: Engine Temperature 2
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineOilTemperature2
+  name: Engine Oil Temperature 2
+  description: SPN 1135
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineEcuTemperature
+  name: Engine ECU Temperature
+  description: SPN 1136
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineExhaustGasRecirculation1DifferentialPressure
+  name: Engine Exhaust Gas Recirculation 1 Differential Pressure
+  description: SPN 411, 1/128 kPa per bit with a -250 kPa offset
+  type: NUMBER
+  bits: 16
+  unit: kPa
+  resolution: 0.0078125
+- id: engineExhaustGasRecirculation1Temperature
+  name: Engine Exhaust Gas Recirculation 1 Temperature
+  description: SPN 412
+  type: TEMPERATURE_UFIX16_J1939
+notes: 'Engine Temperature 2 (ET2) PGN 65188, layout per SAE J1939-71'

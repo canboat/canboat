@@ -1,0 +1,24 @@
+pgn: 65031
+id: exhaustTemperature
+description: Exhaust Temperature
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineExhaustManifoldBank2Temperature1
+  name: Engine Exhaust Manifold Bank 2 Temperature 1
+  description: SPN 2433
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineExhaustManifoldBank1Temperature1
+  name: Engine Exhaust Manifold Bank 1 Temperature 1
+  description: SPN 2434
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineExhaustManifoldBank2Temperature2
+  name: Engine Exhaust Manifold Bank 2 Temperature 2
+  description: SPN 5969
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineExhaustManifoldBank1Temperature2
+  name: Engine Exhaust Manifold Bank 1 Temperature 2
+  description: SPN 5970
+  type: TEMPERATURE_UFIX16_J1939
+notes: 'Exhaust Temperature (ET) PGN 65031, layout per SAE J1939-71. Bank 2 precedes bank 1 in this message.'

@@ -1,0 +1,33 @@
+pgn: 61450
+id: engineGasFlowRate1
+description: Engine Gas Flow Rate 1
+type: Single
+priority: 6
+interval: 50
+fields:
+- id: engineExhaustGasRecirculation1MassFlowRate
+  name: Engine Exhaust Gas Recirculation 1 Mass Flow Rate
+  description: SPN 2659, 0.05 kg/h per bit
+  type: NUMBER
+  bits: 16
+  unit: kg/h
+  resolution: 0.05
+- id: engineIntakeAirMassFlowRate
+  name: Engine Intake Air Mass Flow Rate
+  description: SPN 132, 0.05 kg/h per bit
+  type: NUMBER
+  bits: 16
+  unit: kg/h
+  resolution: 0.05
+- id: engineExhaustGasRecirculation2MassFlowRate
+  name: Engine Exhaust Gas Recirculation 2 Mass Flow Rate
+  description: SPN 5257, 0.05 kg/h per bit
+  type: NUMBER
+  bits: 16
+  unit: kg/h
+  resolution: 0.05
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: 'Engine Gas Flow Rate 1 (EGF1) PGN 61450, layout per SAE J1939-71'

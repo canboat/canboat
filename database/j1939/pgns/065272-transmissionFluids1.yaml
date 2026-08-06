@@ -1,0 +1,52 @@
+pgn: 65272
+id: transmissionFluids1
+description: Transmission Fluids 1
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: transmissionClutch1Pressure
+  name: Transmission Clutch 1 Pressure
+  description: SPN 123, 16 kPa per bit
+  type: NUMBER
+  bits: 8
+  unit: kPa
+  resolution: 16
+- id: transmissionOilLevel1
+  name: Transmission Oil Level 1
+  description: SPN 124
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: transmissionFilterDifferentialPressure
+  name: Transmission Filter Differential Pressure
+  description: SPN 126
+  type: PRESSURE_UINT8_2KPA
+- id: transmission1OilPressure
+  name: Transmission 1 Oil Pressure
+  description: SPN 127, 16 kPa per bit
+  type: NUMBER
+  bits: 8
+  unit: kPa
+  resolution: 16
+- id: transmission1OilTemperature1
+  name: Transmission 1 Oil Temperature 1
+  description: SPN 177
+  type: TEMPERATURE_UFIX16_J1939
+- id: transmissionOilLevel1HighLow
+  name: Transmission Oil Level 1 High / Low
+  description: SPN 3027, 0.5 litre per bit with a -62.5 litre offset
+  type: NUMBER
+  bits: 8
+  unit: L
+  resolution: 0.5
+- id: transmissionOilLevel1CountdownTimer
+  name: Transmission Oil Level 1 Countdown Timer
+  description: SPN 3028
+  type: NUMBER
+  bits: 4
+- id: transmissionOilLevel1MeasurementStatus
+  name: Transmission Oil Level 1 Measurement Status
+  description: SPN 3026
+  type: NUMBER
+  bits: 4
+notes: 'Transmission Fluids 1 (TRF1) PGN 65272, layout per SAE J1939-71. SPN 3027 is transmitted with a -62.5 litre offset; canboat reports the raw value.'

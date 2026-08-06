@@ -1,0 +1,71 @@
+pgn: 65130
+id: engineFuelLubeSystems
+description: Engine Fuel/Lube Systems
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineOilLevelRemoteReservoir
+  name: Engine Oil Level Remote Reservoir
+  description: SPN 1380
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: engineFuelSupplyPumpIntakeAbsolutePressure
+  name: Engine Fuel Supply Pump Intake Absolute Pressure
+  description: SPN 1381
+  type: PRESSURE_UINT8_2KPA
+- id: engineFuelFilterSuctionSideDifferentialPressure
+  name: Engine Fuel Filter (suction side) Differential Pressure
+  description: SPN 1382
+  type: PRESSURE_UINT8_2KPA
+- id: engineWasteOilReservoirLevel
+  name: Engine Waste Oil Reservoir Level
+  description: SPN 3548
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: engineOilFilterOutletPressure
+  name: Engine Oil Filter Outlet Pressure
+  description: SPN 3549, 4 kPa per bit
+  type: NUMBER
+  bits: 8
+  unit: kPa
+  resolution: 4
+- id: engineOilPrimingPumpSwitch
+  name: Engine Oil Priming Pump Switch
+  description: SPN 3550
+  type: NUMBER
+  bits: 2
+- id: engineOilPrimingState
+  name: Engine Oil Priming State
+  description: SPN 3551
+  type: NUMBER
+  bits: 2
+- id: engineOilPreHeatedState
+  name: Engine Oil Pre-Heated State
+  description: SPN 3552
+  type: NUMBER
+  bits: 2
+- id: engineCoolantPreHeatedState
+  name: Engine Coolant Pre-heated State
+  description: SPN 3553
+  type: NUMBER
+  bits: 2
+- id: engineVentilationStatus
+  name: Engine Ventilation Status
+  description: SPN 3554
+  type: NUMBER
+  bits: 3
+- id: fuelPumpPrimerStatus
+  name: Fuel Pump Primer Status
+  description: SPN 4083
+  type: NUMBER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: engineFuelSupplyPumpIntakePressure
+  name: Engine Fuel Supply Pump Intake Pressure
+  description: SPN 7104
+  type: PRESSURE_UINT8_2KPA
+notes: 'Engine Fuel/Lube Systems (EFS) PGN 65130, layout per SAE J1939-71'

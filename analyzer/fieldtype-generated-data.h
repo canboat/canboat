@@ -471,6 +471,14 @@ FieldType fieldTypeList[] = {
      .resolution = 1.0,
      .physical = &TEMPERATURE},
 
+    {.name = "TEMPERATURE_UFIX16_J1939",
+     .description = "Temperature, J1939 16 bit",
+     .encodingDescription = "SAE J1939's 16-bit temperature encoding, 0.03125 K per bit offset by -273 K",
+     .baseFieldType = "UFIX16",
+     .offset = -273,
+     .resolution = 0.03125,
+     .physical = &TEMPERATURE},
+
     {.name = "TEMPERATURE_HIGH",
      .description = "Temperature, high range",
      .encodingDescription = "This has a higher range but lower resolution than TEMPERATURE",
@@ -528,6 +536,13 @@ FieldType fieldTypeList[] = {
      .resolution = 0.0001,
      .physical = &VOLUME},
 
+    {.name = "VOLUME_UFIX32_HL",
+     .description = "Volume, J1939 fuel total",
+     .encodingDescription = "SAE J1939's fuel consumption encoding, 0.5 litre per bit",
+     .baseFieldType = "UFIX32",
+     .resolution = 0.5,
+     .physical = &VOLUME},
+
     {.name = "TIME",
      .description = "Time",
      .sentinels = SENTINEL_TOP_OF_RANGE,
@@ -545,6 +560,14 @@ FieldType fieldTypeList[] = {
      .size = 32,
      .baseFieldType = "DURATION",
      .resolution = 0.0001,
+     .hasSign = False},
+
+    {.name = "DURATION_UFIX32_J1939_HOURS",
+     .description = "Time duration, 32 bits with J1939's 0.05 hour resolution",
+     .encodingDescription = "SAE J1939's engine-hours encoding, 0.05 hours (180 seconds) per bit",
+     .size = 32,
+     .baseFieldType = "DURATION",
+     .resolution = 180.0,
      .hasSign = False},
 
     {.name = "DURATION_UFIX16_S",
@@ -1034,6 +1057,13 @@ FieldType fieldTypeList[] = {
      .description = "Pressure, 8 bit unsigned in .5 kilopascal resolution",
      .baseFieldType = "UINT8",
      .resolution = 500.0,
+     .physical = &PRESSURE},
+
+    {.name = "PRESSURE_UINT8_005KPA",
+     .description = "Pressure, 8 bit unsigned in 0.05 kilopascal resolution",
+     .encodingDescription = "SAE J1939's low-range differential pressure encoding",
+     .baseFieldType = "UINT8",
+     .resolution = 50.0,
      .physical = &PRESSURE},
 
     {.name = "PRESSURE_UFIX16_KPA",

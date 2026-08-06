@@ -1,0 +1,97 @@
+pgn: 64914
+id: engineOperatingInformation
+description: Engine Operating Information
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineOperatingState
+  name: Engine Operating State
+  description: SPN 3543
+  type: NUMBER
+  bits: 4
+- id: fuelPumpPrimerControl
+  name: Fuel Pump Primer Control
+  description: SPN 4082
+  type: NUMBER
+  bits: 2
+- id: engineAutomaticStartEnableStatus
+  name: Engine Automatic Start Enable Status
+  description: SPN 6385
+  type: NUMBER
+  bits: 2
+- id: timeRemainingInEngineOperatingState
+  name: Time Remaining in Engine Operating State
+  description: SPN 3544
+  type: DURATION_UFIX16_S
+- id: engineFuelShutoffVentControl
+  name: Engine Fuel Shutoff Vent Control
+  description: SPN 3608
+  type: NUMBER
+  bits: 2
+- id: engineFuelShutoff1Control
+  name: Engine Fuel Shutoff 1 Control
+  description: SPN 632
+  type: NUMBER
+  bits: 2
+- id: engineFuelShutoff2Control
+  name: Engine Fuel Shutoff 2 Control
+  description: SPN 2807
+  type: NUMBER
+  bits: 2
+- id: engineFuelShutoffValveLeakTestControl
+  name: Engine Fuel Shutoff Valve Leak Test Control
+  description: SPN 3601
+  type: NUMBER
+  bits: 2
+- id: engineOilPrimingPumpControl
+  name: Engine Oil Priming Pump Control
+  description: SPN 3589
+  type: NUMBER
+  bits: 2
+- id: engineOilPreheaterControl
+  name: Engine Oil Preheater Control
+  description: SPN 3602
+  type: NUMBER
+  bits: 2
+- id: engineElectricalSystemPowerConservationControl
+  name: Engine Electrical System Power Conservation Control
+  description: SPN 3603
+  type: NUMBER
+  bits: 2
+- id: engineBlockCoolantPreheaterControl
+  name: Engine Block/Coolant Preheater Control
+  description: SPN 3604
+  type: NUMBER
+  bits: 2
+- id: engineCoolantCirculatingPumpControl
+  name: Engine Coolant Circulating Pump Control
+  description: SPN 3605
+  type: NUMBER
+  bits: 2
+- id: engineControlledShutdownRequest
+  name: Engine Controlled Shutdown Request
+  description: SPN 3606
+  type: NUMBER
+  bits: 2
+- id: engineEmergencyImmediateShutdownIndication
+  name: Engine Emergency (Immediate) Shutdown Indication
+  description: SPN 3607
+  type: NUMBER
+  bits: 2
+- id: engineAutomaticStartSafetyInterlockStatus
+  name: Engine Automatic Start Safety Interlock Status
+  description: SPN 6884
+  type: NUMBER
+  bits: 2
+- id: engineAutomaticStartEnableTimeRemaining
+  name: Engine Automatic Start Enable Time Remaining
+  description: SPN 6807
+  type: NUMBER
+  bits: 8
+- id: engineDerateRequest
+  name: Engine Derate Request
+  description: SPN 3644
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+notes: 'Engine Operating Information (EOI) PGN 64914, layout per SAE J1939-71'
