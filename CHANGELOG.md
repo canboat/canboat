@@ -6,6 +6,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.1.0-beta2](https://github.com/canboat/canboat/compare/v8.0.0-beta2...v8.1.0-beta2) (2026-08-06)
+
+
+### Added
+
+* **j1939:** add 22 engine, aftertreatment and fluid PGNs ([e1f9556](https://github.com/canboat/canboat/commit/e1f95567ba2ecd6d502236a4d09642e4a233336c))
+* **j1939:** add 25 engine, transmission, aftertreatment and fluid PGNs ([0724548](https://github.com/canboat/canboat/commit/07245480e31a7ce70e67c9821db3fa2c5652e2d9))
+* **j1939:** add transmission, rated power and gear PGNs ([bf6cfe7](https://github.com/canboat/canboat/commit/bf6cfe7adebfd86286fcbc80b7524d5e2b10f3d0))
+* **j1939:** bring the J1939 schema flavor to the Rust tools, with candump input ([bdd469d](https://github.com/canboat/canboat/commit/bdd469d8f7cece4ea5c88d311abe432b4ed74b65))
+* **j1939:** complete the standard engine PGN definitions ([13ebfc5](https://github.com/canboat/canboat/commit/13ebfc5ba61dd744b54fa9c1faba1bc79353edba))
+* **j1939:** complete the standard engine PGN definitions ([253bebd](https://github.com/canboat/canboat/commit/253bebd7d38152532487caa9f1adf651dca8df4e))
+* **j1939:** J1939 schema flavor for the Rust tools, with candump input ([8c2ab99](https://github.com/canboat/canboat/commit/8c2ab99b2510d0e142dcf9b6f19b1ac273369bbb))
+
+
+### Fixed
+
+* **decode:** apply the range-derived sentinels to hints-less number fields ([5696fca](https://github.com/canboat/canboat/commit/5696fca1e69d664cb4bae3480ad8431d8fa753e5)), closes [#823](https://github.com/canboat/canboat/issues/823)
+
 ## [8.0.0-beta2](https://github.com/canboat/canboat/compare/v8.0.0-beta1...v8.0.0-beta2) (2026-08-05)
 
 
