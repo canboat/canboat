@@ -9,6 +9,7 @@
 
 pub mod actisense_ascii;
 pub mod airmar;
+pub mod candump;
 pub mod chetco;
 pub mod common;
 pub mod ebl;
@@ -60,6 +61,11 @@ pub enum InputFormat {
     /// Garmin CSV2 (absolute `M_D_Y_H_M_S_ms` timestamps + an extra
     /// `Processed PGN` column).
     GarminCsv2,
+    /// Linux SocketCAN `candump` text — the pretty per-frame shape
+    /// (`  can0  18EEFF00   [8]  8E F2 …`) or the `-l`/`-L` log shape
+    /// (`(1436509053.762905) can0 18EEFF00#8EF2…`). One raw CAN frame
+    /// per line; canboat C reads these via `candump2analyzer`.
+    Candump,
 }
 
 /// Parse a `# format=<NAME>` header comment line. Returns the
@@ -92,6 +98,7 @@ pub fn parse_format_header(line: &str) -> Option<InputFormat> {
         "CHETCO" => Some(InputFormat::Chetco),
         "GARMIN_CSV1" | "GARMIN" => Some(InputFormat::GarminCsv),
         "GARMIN_CSV2" => Some(InputFormat::GarminCsv2),
+        "CANDUMP" => Some(InputFormat::Candump),
         _ => None,
     }
 }
@@ -109,7 +116,7 @@ pub fn header_implies_coalesced(line: &str) -> bool {
     let name = rest.trim().to_ascii_uppercase();
     !matches!(
         name.as_str(),
-        "PLAIN" | "PLAIN_OR_FAST" | "PLAIN_MIX_FAST" | "YDWG02"
+        "PLAIN" | "PLAIN_OR_FAST" | "PLAIN_MIX_FAST" | "YDWG02" | "CANDUMP"
     )
 }
 
@@ -148,6 +155,12 @@ pub fn detect(line: &str) -> Option<InputFormat> {
     // here.
     if looks_like_airmar(t) {
         return Some(InputFormat::Airmar);
+    }
+    // SocketCAN candump text, either shape. Comma-free, so this can
+    // never shadow PLAIN; checked after YDWG-02/Airmar, whose lines a
+    // candump capture cannot resemble (no `[len]`, no `#`).
+    if candump::looks_like_pretty(t) || candump::looks_like_log(t) {
+        return Some(InputFormat::Candump);
     }
     // PLAIN/FAST: ISO-like timestamp + `,prio,pgn,…`.
     if t.contains(',') {
@@ -217,6 +230,7 @@ pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, p
         InputFormat::Plain | InputFormat::PlainMixFast => plain::parse_line(line).map(Some),
         InputFormat::ActisenseAscii => actisense_ascii::parse_line(line).map(Some),
         InputFormat::Ydwg02 => ydwg02::parse_line(line).map(Some),
+        InputFormat::Candump => candump::parse_line(line).map(Some),
         InputFormat::Ikonvert => match ikonvert::parse_line(line)? {
             ikonvert::IkonvertLine::Frame(f) => Ok(Some(f)),
             // Control sentences and stray noise are not frames.

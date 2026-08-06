@@ -84,6 +84,11 @@ struct Cli {
     #[arg(long, value_name = "NAME")]
     format: Option<String>,
 
+    /// Decode against the J1939 schema instead of NMEA 2000 — the
+    /// equivalent of running canboat C's `analyzer-j1939` binary.
+    #[arg(long)]
+    j1939: bool,
+
     /// Filter: only process frames with this PGN number.
     #[arg(value_name = "PGN")]
     pgn: Option<u32>,
@@ -100,6 +105,7 @@ fn parse_format_flag(name: &str) -> Result<InputFormat> {
         "chetco" => InputFormat::Chetco,
         "garmin" | "garmin-csv" | "garmin_csv1" => InputFormat::GarminCsv,
         "garmin-csv2" | "garmin_csv2" => InputFormat::GarminCsv2,
+        "candump" => InputFormat::Candump,
         other => anyhow::bail!("unknown --format {other:?}"),
     })
 }
@@ -158,6 +164,8 @@ fn run_cli(cli: Cli) -> Result<()> {
         dst_filter: cli.dst,
         suppress_startup_record: cli.fixtime.as_deref().is_some_and(|s| !s.contains("n2kd")),
         units,
+        j1939: cli.j1939,
+        fixed_time: cli.fixtime.as_deref(),
     };
 
     let mut sink_err: Option<anyhow::Error> = None;

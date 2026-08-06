@@ -291,6 +291,22 @@ fn short_frame_text_debug() {
     run_case("short-frame.in", "short-frame.out", &["--debug"]);
 }
 
+/// A real Yamaha outboard J1939 capture in candump's pretty format,
+/// against the C fixture (regenerated with today's database via
+/// `candump2analyzer | analyzer-j1939`). Exercises the J1939 schema
+/// flavor (`--j1939`), candump input auto-detection, and the
+/// anomalous-Reserved text rendering (`Reserved = FC` on ECU #2).
+/// candump pretty lines carry no timestamps, so `--fixtime` supplies
+/// the fixture's stamp.
+#[test]
+fn j1939_candump_text() {
+    run_case(
+        "j1939-pgn-test.in",
+        "j1939-pgn-test.out",
+        &["--j1939", "--fixtime", "2023-12-10T18:58:21.487Z"],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),

@@ -966,9 +966,10 @@ fn raw_field(
     }
 }
 
-fn from_keel(db: &crate::model::Database) -> CanboatJson {
+fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
     let mut pgns = Vec::new();
-    for p in &db.pgns {
+    let source = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    for p in source {
         // emit_xml's running bit offset: it stops being meaningful once a
         // variable-length field has been seen.
         let mut bit_offset = 0u32;
@@ -1130,8 +1131,16 @@ fn from_keel(db: &crate::model::Database) -> CanboatJson {
 /// `root` is the repository root: the SCHEMA_HASH below is computed by
 /// walking the authored `database/*.yaml` on disk, so the emitter needs to
 /// know where they are.
-pub fn emit_schema(db: &crate::model::Database, root: &Path) -> String {
-    let canboat = from_keel(db);
+///
+/// With `j1939` set, emits the J1939 PGN tables (from
+/// `database/j1939/pgns/`) instead — the Rust mirror of
+/// `pgn-j1939-generated-data.h`. That flavor carries only the PGN and
+/// dispatch tables: the version constants, lookup tables and id
+/// constants are shared with the main schema (both files are included
+/// as sibling modules of one crate, and the J1939 YAMLs reference the
+/// same enumerations).
+pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> String {
+    let canboat = from_keel(db, j1939);
 
     // The CANBOAT_BEM pseudo-PGNs (0x40000+) are ordinary members of the
     // database now, and keel hands them over sorted by PGN — so they still
@@ -1193,98 +1202,111 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path) -> String {
 //\n\
 //   To change a PGN, a lookup or a field type, edit the YAML:\n\
 //\n\
-//       database/pgns/<pgn>-<id>.yaml     one file per PGN variant\n\
+//       database/{pgns}/<pgn>-<id>.yaml     one file per PGN variant\n\
 //       database/lookups/<NAME>.yaml      one file per enumeration\n\
 //       database/fieldtypes.yaml          the field-type hierarchy\n\
 //\n\
 //   `cargo build` picks the change up on its own; `make generated` also\n\
 //   refreshes the C tables and canboat.xml.\n\
 //\n\
-// =========================================================================="
+// ==========================================================================",
+        pgns = if j1939 { "j1939/pgns" } else { "pgns" }
     )
     .unwrap();
-    writeln!(
-        out,
-        "use canboat_schema::{{BitLookupTable, BitLookupValue, FieldInfo, FieldType, \
-         IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, \
-         LookupTable, LookupValue, PacketType, PgnInfo}};"
-    )
-    .unwrap();
+    if j1939 {
+        writeln!(
+            out,
+            "use canboat_schema::{{FieldInfo, FieldType, PacketType, PgnInfo}};"
+        )
+        .unwrap();
+    } else {
+        writeln!(
+            out,
+            "use canboat_schema::{{BitLookupTable, BitLookupValue, FieldInfo, FieldType, \
+             IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, \
+             LookupTable, LookupValue, PacketType, PgnInfo}};"
+        )
+        .unwrap();
+    }
 
-    writeln!(
-        out,
-        "pub const SCHEMA_VERSION: &str = {};",
-        quote(&canboat.schema_version)
-    )
-    .unwrap();
-    writeln!(
-        out,
-        "pub const VERSION: &str = {};",
-        quote(&canboat.version)
-    )
-    .unwrap();
+    if !j1939 {
+        writeln!(
+            out,
+            "pub const SCHEMA_VERSION: &str = {};",
+            quote(&canboat.schema_version)
+        )
+        .unwrap();
+        writeln!(
+            out,
+            "pub const VERSION: &str = {};",
+            quote(&canboat.version)
+        )
+        .unwrap();
+    }
 
-    // Content hash over the authored schema source (database/**.yaml).
-    // This is the schema identity two processes
-    // would exchange to prove they were built from byte-identical schema
-    // data before trusting each other's field indices. Any edit to the
-    // database — versioned or not — changes this, so a mismatch fails the handshake loudly instead of
-    // silently mis-decoding fields. FNV-1a/64: dependency-free, stable,
-    // and drift-detection is all it needs to be (not security).
-    let schema_hash: u64 = {
-        // Hash every authored database file, path included, in a stable
-        // (sorted) order. Path as well as content, so a rename alone still
-        // moves the hash.
-        let mut files: Vec<PathBuf> = Vec::new();
-        let mut stack = vec![root.join("database")];
-        while let Some(dir) = stack.pop() {
-            let Ok(rd) = fs::read_dir(&dir) else { continue };
-            for e in rd.flatten() {
-                let p = e.path();
-                if p.is_dir() {
-                    stack.push(p);
-                } else if p.extension().is_some_and(|x| x == "yaml") {
-                    files.push(p);
+    if !j1939 {
+        // Content hash over the authored schema source (database/**.yaml).
+        // This is the schema identity two processes
+        // would exchange to prove they were built from byte-identical schema
+        // data before trusting each other's field indices. Any edit to the
+        // database — versioned or not — changes this, so a mismatch fails the handshake loudly instead of
+        // silently mis-decoding fields. FNV-1a/64: dependency-free, stable,
+        // and drift-detection is all it needs to be (not security).
+        let schema_hash: u64 = {
+            // Hash every authored database file, path included, in a stable
+            // (sorted) order. Path as well as content, so a rename alone still
+            // moves the hash.
+            let mut files: Vec<PathBuf> = Vec::new();
+            let mut stack = vec![root.join("database")];
+            while let Some(dir) = stack.pop() {
+                let Ok(rd) = fs::read_dir(&dir) else { continue };
+                for e in rd.flatten() {
+                    let p = e.path();
+                    if p.is_dir() {
+                        stack.push(p);
+                    } else if p.extension().is_some_and(|x| x == "yaml") {
+                        files.push(p);
+                    }
                 }
             }
-        }
-        files.sort();
-        let mut h: u64 = 0xcbf2_9ce4_8422_2325;
-        let feed = |bytes: &[u8], h: &mut u64| {
-            for &b in bytes {
-                *h ^= b as u64;
-                *h = h.wrapping_mul(0x0000_0100_0000_01b3);
+            files.sort();
+            let mut h: u64 = 0xcbf2_9ce4_8422_2325;
+            let feed = |bytes: &[u8], h: &mut u64| {
+                for &b in bytes {
+                    *h ^= b as u64;
+                    *h = h.wrapping_mul(0x0000_0100_0000_01b3);
+                }
+            };
+            for f in &files {
+                feed(
+                    f.strip_prefix(root)
+                        .unwrap_or(f)
+                        .to_string_lossy()
+                        .as_bytes(),
+                    &mut h,
+                );
+                feed(&fs::read(f).unwrap_or_default(), &mut h);
             }
+            h
         };
-        for f in &files {
-            feed(
-                f.strip_prefix(root)
-                    .unwrap_or(f)
-                    .to_string_lossy()
-                    .as_bytes(),
-                &mut h,
-            );
-            feed(&fs::read(f).unwrap_or_default(), &mut h);
-        }
-        h
-    };
-    writeln!(out, "pub const SCHEMA_HASH: u64 = {};", schema_hash).unwrap();
+        writeln!(out, "pub const SCHEMA_HASH: u64 = {};", schema_hash).unwrap();
 
-    // The Copyright field is a multi-line banner (version, (C) line,
-    // Apache license boilerplate). The (C) line is the one the C
-    // tools print in their usage/verbose output — extract just that.
-    let copyright_line = canboat
-        .copyright
-        .lines()
-        .map(str::trim)
-        .find(|l| l.starts_with("(C)"))
-        .expect("no \"(C) ...\" line in canboat.json Copyright field");
-    writeln!(
-        out,
-        "pub const COPYRIGHT_ID: &str = {};",
-        quote(copyright_line)
-    )
-    .unwrap();
+        // The Copyright field is a multi-line banner (version, (C) line,
+        // Apache license boilerplate). The (C) line is the one the C
+        // tools print in their usage/verbose output — extract just that.
+        let copyright_line = canboat
+            .copyright
+            .lines()
+            .map(str::trim)
+            .find(|l| l.starts_with("(C)"))
+            .expect("no \"(C) ...\" line in canboat.json Copyright field");
+        writeln!(
+            out,
+            "pub const COPYRIGHT_ID: &str = {};",
+            quote(copyright_line)
+        )
+        .unwrap();
+    }
 
     // Field arrays, one (or two) per PGN. `F{i}` is the SI/base slice;
     // a `F{i}M` Metric slice is emitted only when the PGN actually
@@ -1327,7 +1349,12 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path) -> String {
     // `pgn::WIND_DATA` / `field::wind_data::WIND_ANGLE` instead of the
     // stringly-typed `("windData","windAngle")` pair. They index the SI
     // arrays (`PGNS_SI` / `F{i}`); id/name/order are unit-invariant.
-    emit_id_constants(&mut out, &pgn_with_fields);
+    // The J1939 flavor skips them: nothing encodes against that table
+    // by constant yet, and the two modules would otherwise export
+    // colliding-by-name constants for the shared ISO PGNs.
+    if !j1939 {
+        emit_id_constants(&mut out, &pgn_with_fields);
+    }
 
     // PGN_INDEX — sorted by pgn number, value is &[u32] of indices.
     writeln!(out, "pub static PGN_INDEX: &[(u32, &[u32])] = &[").unwrap();
@@ -1340,41 +1367,46 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path) -> String {
     }
     writeln!(out, "];").unwrap();
 
-    // LOOKUPS — sorted by name.
-    writeln!(out, "pub static LOOKUPS: &[LookupTable] = &[").unwrap();
-    for t in &lookups {
-        emit_lookup(&mut out, t);
-    }
-    writeln!(out, "];").unwrap();
+    // Lookup tables are shared between the two schema flavors — the
+    // J1939 YAMLs reference the same enumerations, so its module leans
+    // on the main schema's statics instead of duplicating them.
+    if !j1939 {
+        // LOOKUPS — sorted by name.
+        writeln!(out, "pub static LOOKUPS: &[LookupTable] = &[").unwrap();
+        for t in &lookups {
+            emit_lookup(&mut out, t);
+        }
+        writeln!(out, "];").unwrap();
 
-    // BIT_LOOKUPS.
-    writeln!(out, "pub static BIT_LOOKUPS: &[BitLookupTable] = &[").unwrap();
-    for t in &bit_lookups {
-        emit_bit_lookup(&mut out, t);
-    }
-    writeln!(out, "];").unwrap();
+        // BIT_LOOKUPS.
+        writeln!(out, "pub static BIT_LOOKUPS: &[BitLookupTable] = &[").unwrap();
+        for t in &bit_lookups {
+            emit_bit_lookup(&mut out, t);
+        }
+        writeln!(out, "];").unwrap();
 
-    // INDIRECT_LOOKUPS.
-    writeln!(
-        out,
-        "pub static INDIRECT_LOOKUPS: &[IndirectLookupTable] = &["
-    )
-    .unwrap();
-    for t in &indirect_lookups {
-        emit_indirect_lookup(&mut out, t);
-    }
-    writeln!(out, "];").unwrap();
+        // INDIRECT_LOOKUPS.
+        writeln!(
+            out,
+            "pub static INDIRECT_LOOKUPS: &[IndirectLookupTable] = &["
+        )
+        .unwrap();
+        for t in &indirect_lookups {
+            emit_indirect_lookup(&mut out, t);
+        }
+        writeln!(out, "];").unwrap();
 
-    // FIELD_TYPE_LOOKUPS.
-    writeln!(
-        out,
-        "pub static FIELD_TYPE_LOOKUPS: &[LookupFieldTypeTable] = &["
-    )
-    .unwrap();
-    for (t, c) in &ft_indexed {
-        emit_ft_lookup(&mut out, t, c);
+        // FIELD_TYPE_LOOKUPS.
+        writeln!(
+            out,
+            "pub static FIELD_TYPE_LOOKUPS: &[LookupFieldTypeTable] = &["
+        )
+        .unwrap();
+        for (t, c) in &ft_indexed {
+            emit_ft_lookup(&mut out, t, c);
+        }
+        writeln!(out, "];").unwrap();
     }
-    writeln!(out, "];").unwrap();
 
     // --- Phase 3 codegen: per-PGN dispatch on Match fields. ---
     //

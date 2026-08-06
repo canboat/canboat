@@ -73,13 +73,19 @@ pub fn write_text<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &TextOptions
         // canboat text mode always emits unavailable fields as
         // `Unknown` (see `printEmpty` in print.c). We keep them too,
         // regardless of -debug / -empty.
-        // Reserved/Spare drop unconditionally (handled below).
-        // Reserved/Spare are noise in text output — drop them
-        // unconditionally (canboat does too).
-        if matches!(
-            f.value,
-            FieldValue::Reserved { .. } | FieldValue::Spare { .. }
-        ) {
+        // Reserved/Spare print only when anomalous — a Reserved that is
+        // not all-ones or a Spare that is not all-zeros flags an
+        // incorrect PGN definition, and canboat C renders its bytes
+        // (`fieldPrintReserved` / `fieldPrintSpare`, print.c). Same
+        // conditions as the JSON walker: the decoder signals a
+        // conforming Reserved with empty bytes, and a conforming Spare
+        // by value 0.
+        if matches!(&f.value, FieldValue::Reserved { bytes, .. } if bytes.is_empty()) {
+            continue;
+        }
+        if let FieldValue::Spare { value, .. } = &f.value
+            && *value == 0
+        {
             continue;
         }
         // Fields whose first byte is past the payload end are dropped —
@@ -352,7 +358,18 @@ fn write_field_value<W: fmt::Write>(
             }
             Ok(())
         }
-        FieldValue::Reserved { .. } | FieldValue::Spare { .. } => Ok(()),
+        // Anomalous Reserved/Spare (the conforming ones were dropped by
+        // the walker above): canboat C hands these to `fieldPrintBinary`,
+        // so render the rode-along bytes exactly like Binary.
+        FieldValue::Reserved { bytes, .. } | FieldValue::Spare { bytes, .. } => {
+            for (i, b) in bytes.iter().enumerate() {
+                if i > 0 {
+                    w.write_char(' ')?;
+                }
+                write!(w, "{:02X}", b)?;
+            }
+            Ok(())
+        }
         FieldValue::IsoName { value, subfields } => {
             // canboat text format: 0x<hex> name = [<sub1>;<sub2>;...]
             // Under -debug each subfield carries its own
