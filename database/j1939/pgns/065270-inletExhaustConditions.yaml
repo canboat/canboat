@@ -2,22 +2,35 @@ pgn: 65270
 id: inletExhaustConditions
 description: Inlet/Exhaust Conditions
 type: Single
-missing:
-- Fields
-- FieldLengths
-- Resolution
+priority: 6
+interval: 500
 fields:
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 16
+- id: particulateTrapInletPressure
+  name: Particulate Trap Inlet Pressure
+  description: SPN 81
+  type: PRESSURE_UINT8_2KPA
+- id: boostPressure
+  name: Boost Pressure
+  description: SPN 102
+  type: PRESSURE_UINT8_2KPA
 - id: intakeManifoldTemp
   name: Intake Manifold Temp
+  description: SPN 105
   type: TEMPERATURE_UINT8_OFFSET
 - id: airInletPressure
   name: Air Inlet Pressure
+  description: SPN 106
   type: PRESSURE_UINT8_2KPA
-- id: reserved4
-  name: Reserved
-  type: RESERVED
-  bits: 32
+- id: airFilterDifferentialPressure
+  name: Air Filter Differential Pressure
+  description: SPN 107, 0.05 kPa per bit
+  type: PRESSURE_UINT8_005KPA
+- id: exhaustGasTemperature
+  name: Exhaust Gas Temperature
+  description: SPN 173
+  type: TEMPERATURE_UFIX16_J1939
+- id: coolantFilterDifferentialPressure
+  name: Coolant Filter Differential Pressure
+  description: SPN 112, 0.5 kPa per bit
+  type: PRESSURE_UINT8_KPA
+notes: 'J1939 Inlet/Exhaust Conditions 1 (IC1) PGN 65270, layout per SAE J1939-71'

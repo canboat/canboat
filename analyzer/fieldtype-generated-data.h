@@ -505,6 +505,19 @@ FieldType fieldTypeList[] = {
      .resolution = 0.1,
      .physical = &VOLUMETRIC_FLOW},
 
+    {.name = "VOLUMETRIC_FLOW_UFIX16_J1939",
+     .description = "Volumetric flow, J1939 fuel rate",
+     .encodingDescription = "SAE J1939's fuel rate encoding, 0.05 litre per hour per bit",
+     .baseFieldType = "UFIX16",
+     .resolution = 0.05,
+     .physical = &VOLUMETRIC_FLOW},
+
+    {.name = "DISTANCE_PER_VOLUME_UFIX16_J1939",
+     .description = "Fuel economy, distance per volume in km/l",
+     .encodingDescription = "SAE J1939's fuel economy encoding, 1/512 kilometre per litre per bit. No physical quantity is declared - canboat has none for distance per volume.",
+     .baseFieldType = "UFIX16",
+     .resolution = 0.001953125},
+
     {.name = "CONCENTRATION_UINT16_PPM",
      .description = "Concentration of one substance in another, in this context usually the amount of salts in water",
      .encodingDescription = "Expressed in parts per million",
