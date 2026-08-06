@@ -1,0 +1,16 @@
+pgn: 65257
+id: fuelConsumptionLiquid1
+description: Fuel Consumption (Liquid) 1
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineTripFuel
+  name: Engine Trip Fuel
+  description: SPN 182, 0.5 litre per bit
+  type: VOLUME_UFIX32_HL
+- id: engineTotalFuelUsed
+  name: Engine Total Fuel Used
+  description: SPN 250, 0.5 litre per bit
+  type: VOLUME_UFIX32_HL
+notes: 'Fuel Consumption (Liquid) 1 (LFC1) PGN 65257, layout per SAE J1939-71'

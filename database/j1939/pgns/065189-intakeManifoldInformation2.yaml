@@ -1,0 +1,32 @@
+pgn: 65189
+id: intakeManifoldInformation2
+description: Intake Manifold Information 2
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineIntakeManifold2Temperature
+  name: Engine Intake Manifold 2 Temperature
+  description: SPN 1131
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineIntakeManifold3Temperature
+  name: Engine Intake Manifold 3 Temperature
+  description: SPN 1132
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineIntakeManifold4Temperature
+  name: Engine Intake Manifold 4 Temperature
+  description: SPN 1133
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineIntakeManifold5Temperature
+  name: Engine Intake Manifold 5 Temperature
+  description: SPN 1802
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineIntakeManifold6Temperature
+  name: Engine Intake Manifold 6 Temperature
+  description: SPN 1803
+  type: TEMPERATURE_UINT8_OFFSET
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+notes: 'Intake Manifold Information 2 (IMT2) PGN 65189, layout per SAE J1939-71'

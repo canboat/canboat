@@ -1,0 +1,39 @@
+pgn: 64976
+id: intakeExhaustConditions2
+description: Intake/Exhaust Conditions 2
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineAirFilter2DifferentialPressure
+  name: Engine Air Filter 2 Differential Pressure
+  description: SPN 2809, 0.05 kPa per bit
+  type: PRESSURE_UINT8_005KPA
+- id: engineAirFilter3DifferentialPressure
+  name: Engine Air Filter 3 Differential Pressure
+  description: SPN 2810, 0.05 kPa per bit
+  type: PRESSURE_UINT8_005KPA
+- id: engineAirFilter4DifferentialPressure
+  name: Engine Air Filter 4 Differential Pressure
+  description: SPN 2811, 0.05 kPa per bit
+  type: PRESSURE_UINT8_005KPA
+- id: engineIntakeManifold2Pressure
+  name: Engine Intake Manifold #2 Pressure
+  description: SPN 3562
+  type: PRESSURE_UINT8_2KPA
+- id: engineIntakeManifold1AbsolutePressure
+  name: Engine Intake Manifold #1 Absolute Pressure
+  description: SPN 3563, 0.1 kPa per bit
+  type: NUMBER
+  bits: 8
+  unit: kPa
+  resolution: 0.1
+- id: engineIntakeManifold1AbsolutePressureHighResolution
+  name: Engine Intake Manifold 1 Absolute Pressure (High Resolution)
+  description: SPN 4817, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: engineIntakeManifold2AbsolutePressure
+  name: Engine Intake Manifold 2 Absolute Pressure
+  description: SPN 5422
+  type: PRESSURE_UINT8_2KPA
+notes: 'Intake/Exhaust Conditions 2 (IC2) PGN 64976, layout per SAE J1939-71'

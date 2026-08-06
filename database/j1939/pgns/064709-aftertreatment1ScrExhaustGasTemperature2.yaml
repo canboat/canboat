@@ -1,0 +1,21 @@
+pgn: 64709
+id: aftertreatment1ScrExhaustGasTemperature2
+description: Aftertreatment 1 SCR Exhaust Gas Temperature 2
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: aftertreatment1ScrCatalystIntakeGasTemperature2
+  name: Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2
+  description: SPN 5862
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1ScrCatalystIntakeGasTemperature2PreliminaryFmi
+  name: Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI
+  description: SPN 5863
+  type: NUMBER
+  bits: 5
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 43
+notes: 'Aftertreatment 1 SCR Exhaust Gas Temperature 2 PGN 64709, layout per SAE J1939-71. The Preliminary FMI field carries a 5 bit J1939 Failure Mode Identifier.'

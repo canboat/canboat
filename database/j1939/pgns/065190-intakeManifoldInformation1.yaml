@@ -1,0 +1,36 @@
+pgn: 65190
+id: intakeManifoldInformation1
+description: Intake Manifold Information 1
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineTurbocharger1BoostPressure
+  name: Engine Turbocharger 1 Boost Pressure
+  description: SPN 1127, 0.125 kPa per bit
+  type: NUMBER
+  bits: 16
+  unit: kPa
+  resolution: 0.125
+- id: engineTurbocharger2BoostPressure
+  name: Engine Turbocharger 2 Boost Pressure
+  description: SPN 1128, 0.125 kPa per bit
+  type: NUMBER
+  bits: 16
+  unit: kPa
+  resolution: 0.125
+- id: engineTurbocharger3BoostPressure
+  name: Engine Turbocharger 3 Boost Pressure
+  description: SPN 1129, 0.125 kPa per bit
+  type: NUMBER
+  bits: 16
+  unit: kPa
+  resolution: 0.125
+- id: engineTurbocharger4BoostPressure
+  name: Engine Turbocharger 4 Boost Pressure
+  description: SPN 1130, 0.125 kPa per bit
+  type: NUMBER
+  bits: 16
+  unit: kPa
+  resolution: 0.125
+notes: 'Intake Manifold Information 1 (IMT1) PGN 65190, layout per SAE J1939-71'
