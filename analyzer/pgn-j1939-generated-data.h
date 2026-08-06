@@ -242,6 +242,21 @@ Pgn pgnList[] = {
      },
      .camelDescription = "ecu1"},
 
+    {"Electronic Transmission Controller 2",
+     61445,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Transmission Selected Gear", .camelName = "transmissionSelectedGear", .fieldType = "INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 524, offset by -125 in J1939; negative gears are reverse, 0 is neutral"},
+      {.name = "Transmission Actual Gear Ratio", .camelName = "transmissionActualGearRatio", .fieldType = "NUMBER", .size = 16, .resolution = 0.001, .description = "SPN 526, 0.001 per bit"},
+      {.name = "Transmission Current Gear", .camelName = "transmissionCurrentGear", .fieldType = "INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 523, offset by -125 in J1939; negative gears are reverse, 0 is neutral"},
+      {.name = "Transmission Requested Range", .camelName = "transmissionRequestedRange", .fieldType = "STRING_FIX", .size = 16, .description = "SPN 162, two ASCII characters"},
+      {.name = "Transmission Current Range", .camelName = "transmissionCurrentRange", .fieldType = "STRING_FIX", .size = 16, .description = "SPN 163, two ASCII characters"}
+     },
+     .camelDescription = "electronicTransmissionController2",
+     .interval = 100,
+     .priority = 6},
+
     {"Engine Gas Flow Rate 1",
      61450,
      PACKET_COMPLETE,
@@ -885,6 +900,22 @@ Pgn pgnList[] = {
      .interval = 1000,
      .priority = 6},
 
+    {"Electronic Engine Controller 4",
+     65214,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Engine Rated Power", .camelName = "engineRatedPower", .fieldType = "NUMBER", .size = 16, .resolution = 0.5, .unit = "kW", .description = "SPN 166, 0.5 kW per bit"},
+      {.name = "Engine Rated Speed", .camelName = "engineRatedSpeed", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES", .description = "SPN 189"},
+      {.name = "Engine Rotation Direction", .camelName = "engineRotationDirection", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 3669"},
+      {.name = "Engine Intake Manifold Pressure Control Mode", .camelName = "engineIntakeManifoldPressureControlMode", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 5465"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
+      {.name = "Crank Attempt Count on Present Start Attempt", .camelName = "crankAttemptCountOnPresentStartAttempt", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "SPN 3671"},
+      {.name = "Reserved", .camelName = "reserved8", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
+     },
+     .camelDescription = "electronicEngineController4",
+     .priority = 6},
+
     {"Active Trouble Codes",
      65226,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -1015,6 +1046,24 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved3", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
      },
      .camelDescription = "vehicleElectricalPower"},
+
+    {"Transmission Fluids 1",
+     65272,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Transmission Clutch 1 Pressure", .camelName = "transmissionClutch1Pressure", .fieldType = "NUMBER", .size = 8, .resolution = 16.0, .unit = "kPa", .description = "SPN 123, 16 kPa per bit"},
+      {.name = "Transmission Oil Level 1", .camelName = "transmissionOilLevel1", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 124"},
+      {.name = "Transmission Filter Differential Pressure", .camelName = "transmissionFilterDifferentialPressure", .fieldType = "PRESSURE_UINT8_2KPA", .description = "SPN 126"},
+      {.name = "Transmission 1 Oil Pressure", .camelName = "transmission1OilPressure", .fieldType = "NUMBER", .size = 8, .resolution = 16.0, .unit = "kPa", .description = "SPN 127, 16 kPa per bit"},
+      {.name = "Transmission 1 Oil Temperature 1", .camelName = "transmission1OilTemperature1", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 177"},
+      {.name = "Transmission Oil Level 1 High / Low", .camelName = "transmissionOilLevel1HighLow", .fieldType = "NUMBER", .size = 8, .resolution = 0.5, .unit = "L", .description = "SPN 3027, 0.5 litre per bit with a -62.5 litre offset"},
+      {.name = "Transmission Oil Level 1 Countdown Timer", .camelName = "transmissionOilLevel1CountdownTimer", .fieldType = "NUMBER", .size = 4, .resolution = 1.0, .description = "SPN 3028"},
+      {.name = "Transmission Oil Level 1 Measurement Status", .camelName = "transmissionOilLevel1MeasurementStatus", .fieldType = "NUMBER", .size = 4, .resolution = 1.0, .description = "SPN 3026"}
+     },
+     .camelDescription = "transmissionFluids1",
+     .interval = 1000,
+     .priority = 6},
 
     {"0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed",
      65280,
