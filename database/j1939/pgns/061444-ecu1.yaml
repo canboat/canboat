@@ -2,20 +2,53 @@ pgn: 61444
 id: ecu1
 description: 'ECU #1'
 type: Single
-missing:
-- Fields
-- FieldLengths
-- Resolution
+priority: 3
+interval: 20
 fields:
+- id: engineTorqueMode
+  name: Engine Torque Mode
+  description: SPN 899
+  type: NUMBER
+  bits: 4
+  rangeMax: 14.0
+- id: actualEnginePercentTorqueHighResolution
+  name: Actual Engine - Percent Torque High Resolution
+  description: SPN 4154, fractional part of the actual engine torque in 0.125 % steps
+  unit: '%'
+  resolution: 0.125
+  type: NUMBER
+  bits: 4
+  rangeMax: 1.75
+- id: driversDemandEnginePercentTorque
+  name: Driver's Demand Engine - Percent Torque
+  description: SPN 512
+  type: PERCENTAGE_INT8
+- id: actualEnginePercentTorque
+  name: Actual Engine - Percent Torque
+  description: SPN 513
+  type: PERCENTAGE_INT8
+- id: engineRpm
+  name: Engine RPM
+  description: SPN 190
+  type: ROTATION_UFIX16_RPM_HIGHRES
+- id: sourceAddressOfControllingDeviceForEngineControl
+  name: Source Address of Controlling Device for Engine Control
+  description: SPN 1483
+  type: NUMBER
+  bits: 8
+  rangeMax: 253.0
+- id: engineStarterMode
+  name: Engine Starter Mode
+  description: SPN 1675
+  type: NUMBER
+  bits: 4
+  rangeMax: 14.0
 - id: reserved
   name: Reserved
   type: RESERVED
-  bits: 24
-- id: engineRpm
-  name: Engine RPM
-  type: ROTATION_UFIX16_RPM_HIGHRES
-- id: reserved3
-  name: Reserved
-  type: RESERVED
-  bits: 24
-notes: 'J1939 ECU #1 PGN 61444'
+  bits: 4
+- id: engineDemandPercentTorque
+  name: Engine Demand - Percent Torque
+  description: SPN 2432
+  type: PERCENTAGE_INT8
+notes: 'J1939 ECU #1 (EEC1) PGN 61444, layout per SAE J1939-71. The percent-torque fields are offset by -125 % in J1939; canboat reports the raw signed byte.'

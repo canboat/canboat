@@ -1,0 +1,19 @@
+pgn: 65253
+id: engineHours
+description: Engine Hours, Revolutions
+type: Single
+priority: 6
+interval: 10000
+fields:
+- id: engineTotalHoursOfOperation
+  name: Engine Total Hours of Operation
+  description: SPN 247, 0.05 hours per bit
+  type: DURATION_UFIX32_J1939_HOURS
+- id: engineTotalRevolutions
+  name: Engine Total Revolutions
+  description: SPN 249, 1000 revolutions per bit
+  type: NUMBER
+  unit: r
+  resolution: 1000
+  bits: 32
+notes: 'J1939 Engine Hours, Revolutions (HOURS) PGN 65253, layout per SAE J1939-71. Broadcast periodically by some engines and on request by others - Volvo Penta OpenCAN documents it as transmit-on-request.'

@@ -2,21 +2,75 @@ pgn: 61443
 id: ecu2
 description: 'ECU #2'
 type: Single
-missing:
-- Fields
-- FieldLengths
-- Resolution
+priority: 3
+interval: 50
 fields:
+- id: accelerationPedalKickdownSwitch
+  name: Accelerator Pedal 1 Low Idle Switch
+  description: SPN 558
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
+- id: accelerationPedalKickdownSwitchStatus
+  name: Accelerator Pedal Kickdown Switch
+  description: SPN 559
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
+- id: roadSpeedLimitStatus
+  name: Road Speed Limit Status
+  description: SPN 1437
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
+- id: accelerationPedal2LowIdleSwitch
+  name: Accelerator Pedal 2 Low Idle Switch
+  description: SPN 2970
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
+- id: throttleLever
+  name: Accelerator Pedal Position 1
+  description: SPN 91, historically reported as Throttle Lever
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: engineLoadAtCurrentSpeed
+  name: Engine Percent Load At Current Speed
+  description: SPN 92
+  type: PERCENTAGE_UINT8
+- id: remoteAcceleratorPedalPosition
+  name: Remote Accelerator Pedal Position
+  description: SPN 974
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: acceleratorPedalPosition2
+  name: Accelerator Pedal Position 2
+  description: SPN 29
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: vehicleAccelerationRateLimitStatus
+  name: Vehicle Acceleration Rate Limit Status
+  description: SPN 2979
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
+- id: momentaryEngineMaximumPowerEnable
+  name: Momentary Engine Maximum Power Enable
+  description: SPN 2896
+  type: NUMBER
+  bits: 2
+  rangeMax: 2.0
 - id: reserved
   name: Reserved
   type: RESERVED
-  bits: 8
-- id: throttleLever
-  name: Throttle Lever
+  bits: 4
+- id: actualMaximumAvailableEnginePercentTorque
+  name: Actual Maximum Available Engine - Percent Torque
+  description: SPN 3357
   type: PERCENTAGE_UINT8
   resolution: 0.4
-- id: reserved3
-  name: Reserved
-  type: RESERVED
-  bits: 48
-notes: 'J1939 ECU #2 PGN 61443'
+- id: estimatedPumpingPercentTorque
+  name: Estimated Pumping - Percent Torque
+  description: SPN 2978
+  type: PERCENTAGE_INT8
+notes: 'J1939 ECU #2 (EEC2) PGN 61443, layout per SAE J1939-71'

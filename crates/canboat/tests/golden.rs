@@ -126,13 +126,18 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
         .stderr(Stdio::piped())
         .spawn()
         .expect("spawn analyzer");
-    child
-        .stdin
-        .as_mut()
-        .unwrap()
-        .write_all(&input)
-        .expect("write stdin");
+    // Feed stdin from its own thread: a fixture whose decoded output
+    // exceeds the pipe buffer (~64 KiB) deadlocks otherwise — the child
+    // blocks writing stdout that nobody drains while this thread blocks
+    // writing stdin that the child is not reading. Only the J1939
+    // fixture is currently large enough to hit it.
+    let mut stdin = child.stdin.take().expect("stdin piped");
+    let writer = std::thread::spawn(move || {
+        stdin.write_all(&input).expect("write stdin");
+        // Drop closes the pipe, signalling EOF to the analyzer.
+    });
     let out = child.wait_with_output().expect("wait analyzer");
+    writer.join().expect("stdin writer thread");
     assert!(
         out.status.success(),
         "analyzer exited with {:?}\nstderr: {}",
@@ -298,6 +303,7 @@ fn short_frame_text_debug() {
 /// anomalous-Reserved text rendering (`Reserved = FC` on ECU #2).
 /// candump pretty lines carry no timestamps, so `--fixtime` supplies
 /// the fixture's stamp.
+///
 #[test]
 fn j1939_candump_text() {
     run_case(
