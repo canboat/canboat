@@ -180,7 +180,11 @@ fn run() -> Result<i32, String> {
                 // the package root. Generated here and committed instead.
                 (
                     root.join("crates/canboat-core/src/schema_generated.rs"),
-                    emit_rust::emit_schema(&db, &root),
+                    emit_rust::emit_schema(&db, &root, false),
+                ),
+                (
+                    root.join("crates/canboat-core/src/schema_generated_j1939.rs"),
+                    emit_rust::emit_schema(&db, &root, true),
                 ),
                 (
                     root.join("crates/canboat-io/src/fastpacket_generated.rs"),

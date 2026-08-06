@@ -22,9 +22,11 @@ use crate::types::{
 pub struct PgnDatabase {
     pub schema_version: &'static str,
     pub version: &'static str,
-    /// FNV-1a/64 content hash of the schema source (canboat.json +
-    /// synthetic-pgns.json), emitted by `build.rs`. Two processes that
-    /// exchange field indices must share this exact value before either
+    /// FNV-1a/64 content hash of the schema source (the whole
+    /// `database/**` YAML tree, `database/j1939/` included), emitted by
+    /// keel. Two processes that exchange field indices must share this
+    /// exact value — plus [`Self::units`] and [`Self::is_j1939`], the
+    /// other two components of the database identity — before either
     /// can trust the other's per-field `order` numbers.
     pub schema_hash: u64,
 
@@ -32,6 +34,13 @@ pub struct PgnDatabase {
     /// schema hash is identical for both, so anything exchanging decoded
     /// *values* (not raw bits) across processes must also agree on this.
     units: Units,
+
+    /// Which schema flavor this database's `pgns` array came from. The
+    /// schema hash covers the whole database tree and is identical for
+    /// both flavors, so anything exchanging field *indices* across
+    /// processes must agree on `(schema_hash, units, flavor)` — the
+    /// same index resolves to different PGNs in the two tables.
+    j1939: bool,
 
     pgns: &'static [PgnInfo],
     /// `(pgn_number, indices_into_pgns)`, sorted by `pgn_number` for
@@ -43,6 +52,14 @@ pub struct PgnDatabase {
     bit_lookups: &'static [BitLookupTable],
     indirect_lookups: &'static [IndirectLookupTable],
     field_type_lookups: &'static [LookupFieldTypeTable],
+
+    /// Generated variant dispatch for this database's PGN table. Each
+    /// schema flavor (NMEA 2000, J1939) emits its own — the returned
+    /// index is only meaningful against `pgns`, so the two must never
+    /// be mixed.
+    pub(crate) dispatch: fn(u32, &[u8]) -> Option<usize>,
+    /// Generated `Fallback: true` catch-all search for `pgns`.
+    pub(crate) catchall: fn(u32) -> Option<usize>,
 }
 
 /// Unit system a [`PgnDatabase`] presents its numeric fields in.
@@ -67,25 +84,36 @@ pub enum Units {
     Metric,
 }
 
+// Version constants and lookup tables always come from the main
+// schema: the J1939 flavor shares them (its YAMLs reference the same
+// enumerations, and SCHEMA_HASH already covers the whole database
+// tree, `database/j1939/` included). Only the PGN table, its index
+// and the generated dispatch/catchall vary per flavor.
 macro_rules! embedded_db {
-    ($pgns:expr, $units:expr) => {
+    ($flavor:ident, $pgns:ident, $units:expr, $j1939:expr) => {
         PgnDatabase {
             schema_version: schema_data::SCHEMA_VERSION,
             version: schema_data::VERSION,
             schema_hash: schema_data::SCHEMA_HASH,
             units: $units,
-            pgns: $pgns,
-            pgn_index: schema_data::PGN_INDEX,
+            j1939: $j1939,
+            pgns: crate::$flavor::$pgns,
+            pgn_index: crate::$flavor::PGN_INDEX,
             lookups: schema_data::LOOKUPS,
             bit_lookups: schema_data::BIT_LOOKUPS,
             indirect_lookups: schema_data::INDIRECT_LOOKUPS,
             field_type_lookups: schema_data::FIELD_TYPE_LOOKUPS,
+            dispatch: crate::$flavor::dispatch,
+            catchall: crate::$flavor::find_catchall,
         }
     };
 }
 
-static EMBEDDED_SI: PgnDatabase = embedded_db!(schema_data::PGNS_SI, Units::Si);
-static EMBEDDED_METRIC: PgnDatabase = embedded_db!(schema_data::PGNS_METRIC, Units::Metric);
+static EMBEDDED_SI: PgnDatabase = embedded_db!(schema_data, PGNS_SI, Units::Si, false);
+static EMBEDDED_METRIC: PgnDatabase = embedded_db!(schema_data, PGNS_METRIC, Units::Metric, false);
+static EMBEDDED_J1939_SI: PgnDatabase = embedded_db!(schema_data_j1939, PGNS_SI, Units::Si, true);
+static EMBEDDED_J1939_METRIC: PgnDatabase =
+    embedded_db!(schema_data_j1939, PGNS_METRIC, Units::Metric, true);
 
 impl PgnDatabase {
     /// The build-time embedded database in the requested [`Units`].
@@ -97,10 +125,34 @@ impl PgnDatabase {
         }
     }
 
+    /// The build-time embedded **J1939** database — the Rust mirror of
+    /// the C `analyzer-j1939` tables, generated from
+    /// `database/j1939/pgns/`. Decoding against it is exclusive:
+    /// J1939-only PGNs (EEC1, DTCs, …) resolve here and nowhere else,
+    /// and NMEA-2000-only PGNs deliberately do not. The ISO PGNs both
+    /// buses share (address claim, requests, TP) are present in both
+    /// flavors.
+    #[inline]
+    pub fn embedded_j1939(units: Units) -> &'static Self {
+        match units {
+            Units::Si => &EMBEDDED_J1939_SI,
+            Units::Metric => &EMBEDDED_J1939_METRIC,
+        }
+    }
+
     /// The unit system this database decodes into.
     #[inline]
     pub fn units(&self) -> Units {
         self.units
+    }
+
+    /// True when this database carries the J1939 PGN tables. Part of
+    /// the database identity alongside [`Self::units`] and
+    /// `schema_hash` — the flavors share the hash but not the index
+    /// space.
+    #[inline]
+    pub fn is_j1939(&self) -> bool {
+        self.j1939
     }
 
     /// Total number of PGN definitions (including manufacturer variants).
@@ -214,9 +266,10 @@ impl PgnDatabase {
     /// `Fallback: true` whose pgn number is `<= pgn`. O(log n) via the
     /// build-time sparse fallback table.
     pub fn fallback_pgn(&self, pgn: u32) -> Option<&'static PgnInfo> {
-        // `find_catchall` returns a schema index shared by both unit
-        // arrays; resolve it against this db's own `pgns`.
-        Some(&self.pgns[crate::schema_data::find_catchall(pgn)?])
+        // The catch-all search returns a schema index shared by both
+        // unit arrays of this db's flavor; resolve it against its own
+        // `pgns`.
+        Some(&self.pgns[(self.catchall)(pgn)?])
     }
 
     /// Look up an enum table by name (e.g. `"MANUFACTURER_CODE"`).

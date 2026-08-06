@@ -26,7 +26,7 @@ use crate::{FrameReader, LineFrameReader};
 
 /// Per-call options for [`decode_stream`] / [`decode_file`].
 #[derive(Debug, Default, Clone, Copy)]
-pub struct Config {
+pub struct Config<'a> {
     /// Force a specific input format instead of auto-detecting from
     /// the first content line. Equivalent to the `--format` flag on
     /// the analyzer binary.
@@ -49,6 +49,16 @@ pub struct Config {
     /// `--units si`) or `Metric` (deg/°C/bar, `--units metric`, which
     /// is what canboat C prints without `-si`).
     pub units: canboat_core::Units,
+    /// Decode against the J1939 schema flavor instead of NMEA 2000 —
+    /// the Rust counterpart of running `analyzer-j1939`. Table choice
+    /// is exclusive (see `PgnDatabase::embedded_j1939`).
+    pub j1939: bool,
+    /// Stamp for frames whose input format carries no timestamp at all
+    /// (e.g. candump's pretty shape). `None` stamps the wall clock —
+    /// what `candump2analyzer` does; a fixed string keeps golden
+    /// outputs deterministic (the analyzer's `--fixtime`). Frames that
+    /// arrive with a timestamp keep it either way, matching canboat C.
+    pub fixed_time: Option<&'a str>,
 }
 
 /// Open `path` and stream-decode it via [`decode_stream`]. Binary
@@ -56,7 +66,11 @@ pub struct Config {
 /// PLAIN on the fly. Parse / reassembly / decode errors are logged via
 /// the `log` crate and the stream continues; only a hard I/O error
 /// stops the loop.
-pub fn decode_file<F: FnMut(&DecodedPgn)>(path: &Path, cfg: &Config, sink: F) -> io::Result<()> {
+pub fn decode_file<F: FnMut(&DecodedPgn)>(
+    path: &Path,
+    cfg: &Config<'_>,
+    sink: F,
+) -> io::Result<()> {
     if crate::container::is_container(path) {
         let reader = crate::container::plain_reader(path, Default::default())
             .map_err(|e| open_error(path, e))?;
@@ -72,6 +86,29 @@ fn open_error(path: &Path, e: io::Error) -> io::Error {
     io::Error::new(e.kind(), format!("opening {}: {e}", path.display()))
 }
 
+/// Wall-clock receive timestamp in the analyzer's ISO shape.
+#[cfg(not(target_arch = "wasm32"))]
+fn now_iso_timestamp() -> String {
+    use std::time::{SystemTime, UNIX_EPOCH};
+    let (secs, millis) = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| (d.as_secs() as i64, d.subsec_millis()))
+        .unwrap_or((0, 0));
+    let days = secs.div_euclid(86_400);
+    let day_secs = secs.rem_euclid(86_400) as u32;
+    let (y, mo, d) = canboat_core::format::days_to_ymd(days);
+    let (h, m, s) = (day_secs / 3600, (day_secs / 60) % 60, day_secs % 60);
+    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{millis:03}Z")
+}
+
+/// wasm32-unknown-unknown has no host clock — `SystemTime::now()`
+/// PANICS there rather than erroring. Wasm hosts stamp receive time
+/// themselves; the epoch keeps the ISO shape without touching a clock.
+#[cfg(target_arch = "wasm32")]
+fn now_iso_timestamp() -> String {
+    "1970-01-01T00:00:00.000Z".to_string()
+}
+
 /// Drive the analyzer pipeline over `source`. For each decoded
 /// record, invoke `sink` with the resulting [`DecodedPgn`]. The
 /// `DecodedPgn` borrows static schema data so callers can pass it
@@ -83,10 +120,14 @@ fn open_error(path: &Path, e: io::Error) -> io::Error {
 /// back half: filtering, fast-packet/TP reassembly, and schema decode.
 pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     source: R,
-    cfg: &Config,
+    cfg: &Config<'_>,
     mut sink: F,
 ) -> io::Result<()> {
-    let db = PgnDatabase::embedded(cfg.units);
+    let db = if cfg.j1939 {
+        PgnDatabase::embedded_j1939(cfg.units)
+    } else {
+        PgnDatabase::embedded(cfg.units)
+    };
     let mut reader = match cfg.forced_format {
         Some(fmt) => LineFrameReader::with_format(source, fmt),
         None => LineFrameReader::new(source),
@@ -99,10 +140,21 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     let mut warned_mislabeled = false;
     let mut reasm = Reassembler::new();
 
-    while let Some(frame) = reader.read_frame()? {
+    while let Some(mut frame) = reader.read_frame()? {
         // A `# format=<NAME>` header (consumed inside `read_frame`)
         // may have declared an already-coalesced format.
         coalesced_mode |= reader.header_coalesced();
+
+        // Formats without any time information (candump's pretty
+        // shape) arrive with no timestamp; stamp receive time — the
+        // same thing `candump2analyzer` does when it converts for the
+        // C analyzer — or the caller's fixed string in test mode.
+        if frame.timestamp.is_none() {
+            frame.timestamp = Some(match cfg.fixed_time {
+                Some(s) => s.to_string(),
+                None => now_iso_timestamp(),
+            });
+        }
 
         // Defensive: a stream that declared itself coalesced
         // (`# format=FAST`) but carries an 8-byte frame of a fast-packet
