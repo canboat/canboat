@@ -802,6 +802,23 @@ Pgn pgnList[] = {
      .explanation = "CZone circuit control command from a plotter (or other commander) to CZone modules. The plotter broadcasts; each module independently checks whether the 16-bit Circuit ID matches one of its own. Observed wire patterns: byte 6 = 0xF1 for ON commands, 0xF2 for OFF: Level Or Value = 1 (ON) or 2 (OFF) with Command Active and several flag bits asserted. The seven Unknown bits in bytes 6-7 have not yet been mapped to specific actions (likely candidates: dim direction, momentary vs latched, transient vs persistent, dim ramp-rate select, source priority).",
      .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65280.md"},
 
+    {"Sleipner: Thruster Command",
+     65280,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 306, .description = "Sleipner Motor AS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Thruster Group", .camelName = "thrusterGroup", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSLEIPNER_THRUSTER_GROUP, .lookup.name = "SLEIPNER_THRUSTER_GROUP"},
+      {.name = "State", .camelName = "state", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSLEIPNER_THRUSTER_COMMAND_STATE, .lookup.name = "SLEIPNER_THRUSTER_COMMAND_STATE"},
+      {.name = "Thrust", .camelName = "thrust", .fieldType = "PERCENTAGE_UFIX16_D", .description = "Commanded thrust, 0 to 100%"},
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 24, .resolution = 1.0, .description = "Zero in every observed frame, including at full deflection"}
+     },
+     .camelDescription = "sleipnerThrusterCommand",
+     .priority = 2,
+     .explanation = "Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per thruster group, at priority 2. The state field carries both the operating state and the direction of the commanded thrust; the thruster group field selects which pair of thrusters the command applies to. The thrusters answer with PGN 130827, whose signed thrust field takes the sign of the commanded direction. Bytes 5-7 were zero in every observed frame, including at full deflection, so they are left unmapped."},
+
     {"Yanmar: Engine Data B",
      65281,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN,
@@ -1491,6 +1508,23 @@ Pgn pgnList[] = {
      },
      .camelDescription = "lowranceVesselSetupEngineAndTankConfigurationBroadcast",
      .explanation = "Periodic broadcast of the current vessel-setup configuration (number of engines, number of fuel tanks and total fuel capacity). Same layout as the on-change variant (PGN 65303); observed broadcast at the default (1 engine, 1 tank, 1200 L) by autopilot-computer and display devices."},
+
+    {"Sleipner: Device Status",
+     65304,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 306, .description = "Sleipner Motor AS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Device Type", .camelName = "deviceType", .fieldType = "UINT8", .resolution = 1.0, .description = "Constant per device"},
+      {.name = "Device Index", .camelName = "deviceIndex", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Stable per-device index"},
+      {.name = "A", .camelName = "a", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Varies with system state; the value set is wider than the thruster state reported in PGN 130827 and is not yet understood"},
+      {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "UNSIGNED_INTEGER", .size = 24, .resolution = 1.0, .description = "ISO Identity Number, as claimed by this device in PGN 60928"},
+      {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "sleipnerDeviceStatus",
+     .explanation = "Sent by Sleipner S-Link devices once the system is switched on. Carries the same identity and state layout as the fast-packet PGN 130828; the unique number matches the ISO identity number the same device claims in PGN 60928, which is how the field was identified."},
 
     {"Simnet: Device Status",
      65305,
@@ -9118,6 +9152,28 @@ Pgn pgnList[] = {
      .camelDescription = "furunoNavpilotStatus",
      .explanation = "Broadcast by Furuno NavPilot autopilots. Carries the current rudder angle and, while engaged, the commanded course to steer; the commanded course reads unset (0xFFFF) in standby. Fields A, B, C, D are not yet fully understood."},
 
+    {"Sleipner: Thruster Status",
+     130827,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 306, .description = "Sleipner Motor AS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Controller Type", .camelName = "controllerType", .fieldType = "UINT8", .resolution = 1.0, .description = "Constant per device; distinguishes the fitted controller models"},
+      {.name = "Thruster Id", .camelName = "thrusterId", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Stable per-unit index within the thruster group"},
+      {.name = "State", .camelName = "state", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSLEIPNER_THRUSTER_STATE, .lookup.name = "SLEIPNER_THRUSTER_STATE"},
+      {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "UNSIGNED_INTEGER", .size = 24, .resolution = 1.0, .description = "ISO Identity Number, as claimed by this device in PGN 60928"},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "B", .camelName = "b", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "C", .camelName = "c", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "D", .camelName = "d", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Thrust", .camelName = "thrust", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "Reported thrust, -100 to 100%; the sign is the direction"},
+      {.name = "E", .camelName = "e", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "sleipnerThrusterStatus",
+     .explanation = "Sent by Sleipner S-Link thruster controllers (PPC-series) once the system is switched on. The unique number matches the ISO identity number the same device claims in PGN 60928, which is how the field was identified. Thrust is signed, and its sign follows the direction commanded in PGN 65280: commands with state \"Thrust direction 2\" produce positive thrust, \"Thrust direction 1\" negative. On retractable units the state field also reports the deployment travel. Fields A, B, C, D and the trailing byte E are not yet understood."},
+
     {"Simnet: Set Serial Number",
      130828,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN,
@@ -9149,6 +9205,23 @@ Pgn pgnList[] = {
      },
      .camelDescription = "maretronDometicHvacControlStatus",
      .priority = 2},
+
+    {"Sleipner: Device Status (Fast)",
+     130828,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 306, .description = "Sleipner Motor AS", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Device Type", .camelName = "deviceType", .fieldType = "UINT8", .resolution = 1.0, .description = "Constant per device"},
+      {.name = "Device Index", .camelName = "deviceIndex", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "Stable per-device index"},
+      {.name = "State", .camelName = "state", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSLEIPNER_THRUSTER_STATE, .lookup.name = "SLEIPNER_THRUSTER_STATE"},
+      {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "UNSIGNED_INTEGER", .size = 24, .resolution = 1.0, .description = "ISO Identity Number, as claimed by this device in PGN 60928"},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "sleipnerDeviceStatusFast",
+     .explanation = "Sent at ~2 Hz by Sleipner S-Link devices, including while the system is in standby. The unique number matches the ISO identity number the same device claims in PGN 60928, which is how the field was identified. The device index and state occupy the same byte and take the same values as in PGN 130827."},
 
     {"Mercury: Engine Status",
      130829,
