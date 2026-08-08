@@ -1,0 +1,8 @@
+name: SLEIPNER_THRUSTER_STATE
+kind: pair
+bits: 4
+values:
+  0: Stowing or deploying
+  1: Off
+  10: Ready
+  11: Thrusting
