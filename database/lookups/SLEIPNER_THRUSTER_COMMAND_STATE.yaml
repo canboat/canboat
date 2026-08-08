@@ -1,8 +1,0 @@
-name: SLEIPNER_THRUSTER_COMMAND_STATE
-kind: pair
-bits: 4
-values:
-  4: Ready
-  5: Thrust direction 2
-  6: Thrust direction 1
-  8: Standby

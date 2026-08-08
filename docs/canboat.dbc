@@ -274,12 +274,13 @@ BO_ 2566848766 PGN_65280_multiplexed: 8 Vector__XXX
  SG_ m39207_unknownA m39207 : 52|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_levelOrValue m39207 : 48|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m40767_reserved5 m40767 : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m39218_data_5 m39218 : 40|24@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39218_reserved10 m39218 : 34|30@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_fieldB m39207 : 32|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m39218_thrust m39218 : 24|16@1+ (0.1,0) [0|0] "%" Vector__XXX
+ SG_ m39218_thrust m39218 : 24|10@1+ (0.1,0) [0|0] "%" Vector__XXX
  SG_ m39187_data_4 m39187 : 24|40@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m39218_state m39218 : 20|4@1+ (1,0) [0|0] "" Vector__XXX
- SG_ m39218_thrusterGroup m39218 : 16|4@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39218_deviceAction m39218 : 22|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39218_direction m39218 : 20|2@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ m39218_thrusterInstance m39218 : 16|4@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39207_circuitId m39207 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39187_reportType m39187 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ m39056_data_3 m39056 : 16|48@1+ (1,0) [0|0] "" Vector__XXX
@@ -2156,10 +2157,11 @@ CM_ BO_ 2566784766 "Generator Average Basic AC Quantities";
 CM_ BO_ 2566848766 "Multiplexed message";
 CM_ SG_ 2566848766 m39207_commandActive "Receiver ignores frame if zero";
 CM_ SG_ 2566848766 m39207_levelOrValue "0x1 for ON, 0x2 for OFF; possibly a control mode";
-CM_ SG_ 2566848766 m39218_data_5 "Zero in every observed frame, including at full deflection";
+CM_ SG_ 2566848766 m39218_reserved10 "Zero in every observed frame, including at full deflection";
 CM_ SG_ 2566848766 m39207_fieldB "Purpose unknown; observed 0x0000 in all known traffic";
 CM_ SG_ 2566848766 m39218_thrust "Commanded thrust, 0 to 100%";
 CM_ SG_ 2566848766 m39187_data_4 "Payload; constant in all observed traffic";
+CM_ SG_ 2566848766 m39218_thrusterInstance "Selects the thruster (pair) the command applies to";
 CM_ SG_ 2566848766 m39207_circuitId "Low 16 bits of the .zcf-stored 32-bit circuit ID";
 CM_ SG_ 2566848766 m39187_reportType "Tracks the emitting device's software platform: 4 = NOS, 5 = NEON. NOS devices broadcast this roughly four times a second, NEON devices at a much lower rate.";
 CM_ BO_ 2566849022 "Multiplexed message";
@@ -2783,8 +2785,8 @@ VAL_ 2566781950 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566782718 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566783486 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
 VAL_ 2566784254 powerFactorLagging 0 "Leading" 1 "Lagging" 2 "Error" ;
-VAL_ 2566848766 m39218_state 4 "Ready" 5 "Thrust direction 2" 6 "Thrust direction 1" 8 "Standby" ;
-VAL_ 2566848766 m39218_thrusterGroup 1 "Group 1" 2 "Group 2" ;
+VAL_ 2566848766 m39218_deviceAction 1 "Active" 2 "Standby" ;
+VAL_ 2566848766 m39218_direction 0 "None" 1 "Direction 1" 2 "Direction 2" ;
 VAL_ 2566848766 manufacturerIndustry 40767 "Furuno" 39087 "Honda Marine" 39084 "Yanmar Marine" 39049 "Maretron" 39056 "Mercury Marine" 39187 "Navico" 39207 "BEP Marine 2" 39218 "Sleipner Motor AS" ;
 VAL_ 2566849022 manufacturerIndustry 39084 "Yanmar Marine" 39207 "BEP Marine 2" ;
 VAL_ 2566849278 manufacturerIndustry 39049 "Maretron" 39207 "BEP Marine 2" ;
@@ -3088,12 +3090,13 @@ SG_MUL_VAL_ 2566848766 m39049_data_2 manufacturerIndustry 39049-39049;
 SG_MUL_VAL_ 2566848766 m39056_data_3 manufacturerIndustry 39056-39056;
 SG_MUL_VAL_ 2566848766 m39187_reportType manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39207_circuitId manufacturerIndustry 39207-39207;
-SG_MUL_VAL_ 2566848766 m39218_thrusterGroup manufacturerIndustry 39218-39218;
-SG_MUL_VAL_ 2566848766 m39218_state manufacturerIndustry 39218-39218;
+SG_MUL_VAL_ 2566848766 m39218_thrusterInstance manufacturerIndustry 39218-39218;
+SG_MUL_VAL_ 2566848766 m39218_direction manufacturerIndustry 39218-39218;
+SG_MUL_VAL_ 2566848766 m39218_deviceAction manufacturerIndustry 39218-39218;
 SG_MUL_VAL_ 2566848766 m39187_data_4 manufacturerIndustry 39187-39187;
 SG_MUL_VAL_ 2566848766 m39218_thrust manufacturerIndustry 39218-39218;
 SG_MUL_VAL_ 2566848766 m39207_fieldB manufacturerIndustry 39207-39207;
-SG_MUL_VAL_ 2566848766 m39218_data_5 manufacturerIndustry 39218-39218;
+SG_MUL_VAL_ 2566848766 m39218_reserved10 manufacturerIndustry 39218-39218;
 SG_MUL_VAL_ 2566848766 m40767_reserved5 manufacturerIndustry 40767-40767;
 SG_MUL_VAL_ 2566848766 m39207_levelOrValue manufacturerIndustry 39207-39207;
 SG_MUL_VAL_ 2566848766 m39207_unknownA manufacturerIndustry 39207-39207;

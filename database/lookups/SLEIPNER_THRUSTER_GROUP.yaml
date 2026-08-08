@@ -1,6 +1,0 @@
-name: SLEIPNER_THRUSTER_GROUP
-kind: pair
-bits: 4
-values:
-  1: Group 1
-  2: Group 2

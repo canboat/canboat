@@ -3729,15 +3729,14 @@ limitations under the License.
       <EnumPair Value="2" Name="Miles per hour" />
       <EnumPair Value="3" Name="Kilometers per hour" />
     </LookupEnumeration>
-    <LookupEnumeration Name="SLEIPNER_THRUSTER_COMMAND_STATE" MaxValue="15">
-      <EnumPair Value="4" Name="Ready" />
-      <EnumPair Value="5" Name="Thrust direction 2" />
-      <EnumPair Value="6" Name="Thrust direction 1" />
-      <EnumPair Value="8" Name="Standby" />
+    <LookupEnumeration Name="SLEIPNER_THRUSTER_ACTION" MaxValue="3">
+      <EnumPair Value="1" Name="Active" />
+      <EnumPair Value="2" Name="Standby" />
     </LookupEnumeration>
-    <LookupEnumeration Name="SLEIPNER_THRUSTER_GROUP" MaxValue="15">
-      <EnumPair Value="1" Name="Group 1" />
-      <EnumPair Value="2" Name="Group 2" />
+    <LookupEnumeration Name="SLEIPNER_THRUSTER_DIRECTION" MaxValue="3">
+      <EnumPair Value="0" Name="None" />
+      <EnumPair Value="1" Name="Direction 1" />
+      <EnumPair Value="2" Name="Direction 2" />
     </LookupEnumeration>
     <LookupEnumeration Name="SLEIPNER_THRUSTER_STATE" MaxValue="15">
       <EnumPair Value="0" Name="Stowing or deploying" />
@@ -9404,7 +9403,7 @@ limitations under the License.
       <Id>sleipnerThrusterCommand</Id>
       <Description>Sleipner: Thruster Command</Description>
       <Priority>2</Priority>
-      <Explanation>Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per thruster group, at priority 2. The state field carries both the operating state and the direction of the commanded thrust; the thruster group field selects which pair of thrusters the command applies to. The thrusters answer with PGN 130827, whose signed thrust field takes the sign of the commanded direction. Bytes 5-7 were zero in every observed frame, including at full deflection, so they are left unmapped.</Explanation>
+      <Explanation>Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per thruster instance, at priority 2. The instance selects which thruster the command applies to; direction and device action are separate two-bit fields; thrust is a ten-bit per-mille demand. The thrusters answer with PGN 130827, whose signed thrust field takes the sign of the commanded direction. The remaining bits were zero in every observed frame, including at full deflection.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
@@ -9412,7 +9411,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>7</FieldCount>
+      <FieldCount>8</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -9459,8 +9458,9 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>thrusterGroup</Id>
-          <Name>Thruster Group</Name>
+          <Id>thrusterInstance</Id>
+          <Name>Thruster Instance</Name>
+          <Description>Selects the thruster (pair) the command applies to</Description>
           <BitLength>4</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -9470,52 +9470,64 @@ limitations under the License.
           <RangeMax>13</RangeMax>
           <UnknownValue>15</UnknownValue>
           <OutOfRangeValue>14</OutOfRangeValue>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SLEIPNER_THRUSTER_GROUP</LookupEnumeration>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>state</Id>
-          <Name>State</Name>
-          <BitLength>4</BitLength>
+          <Id>direction</Id>
+          <Name>Direction</Name>
+          <BitLength>2</BitLength>
           <BitOffset>20</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
-          <UnknownValue>15</UnknownValue>
-          <OutOfRangeValue>14</OutOfRangeValue>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>SLEIPNER_THRUSTER_COMMAND_STATE</LookupEnumeration>
+          <LookupEnumeration>SLEIPNER_THRUSTER_DIRECTION</LookupEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
+          <Id>deviceAction</Id>
+          <Name>Device Action</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>SLEIPNER_THRUSTER_ACTION</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
           <Id>thrust</Id>
           <Name>Thrust</Name>
           <Description>Commanded thrust, 0 to 100%</Description>
-          <BitLength>16</BitLength>
+          <BitLength>10</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Unit>%</Unit>
           <Resolution>0.1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>6553.2</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
+          <Order>8</Order>
+          <Id>reserved10</Id>
+          <Name>Reserved</Name>
           <Description>Zero in every observed frame, including at full deflection</Description>
-          <BitLength>24</BitLength>
-          <BitOffset>40</BitOffset>
-          <BitStart>0</BitStart>
+          <BitLength>30</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
         </Field>
@@ -62130,6 +62142,470 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>sleipnerThrusterStatusPpc820</Id>
+      <Description>Sleipner: PPC820 Thruster Status</Description>
+      <Explanation>Status and telemetry from a Sleipner PPC-series electric thruster controller on the S-Link bus. PGN 130817 is multiplexed by the device-type byte; this variant is the PPC820 (device type 25). The PPC520 (device type 24) carries the identical layout. The field layout follows Sleipner's own S-Link device definition; each field was verified against a live capture: motor voltage sags under load while motor current rises with commanded thrust, and the signed output thrust tracks PGN 130827 for the same unit. Fields A, B, C and the trailing byte D were not identified.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>14</FieldCount>
+      <Length>17</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Sleipner Motor AS</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>306</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>deviceType</Id>
+          <Name>Device Type</Name>
+          <Description>PPC820</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>25</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>motorTemperature</Id>
+          <Name>Motor Temperature</Name>
+          <Description>Temperature in degrees Celsius</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>powerTemperature</Id>
+          <Name>Power Temperature</Name>
+          <Description>Temperature in degrees Celsius</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>motorVoltage</Id>
+          <Name>Motor Voltage</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>V</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>655.32</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>motorCurrent</Id>
+          <Name>Motor Current</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>A</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>outputThrust</Id>
+          <Name>Output Thrust</Name>
+          <Description>Reported thrust, -100 to 100%; the sign is the direction</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130817</PGN>
+      <Id>sleipnerThrusterStatusPpc520</Id>
+      <Description>Sleipner: PPC520 Thruster Status</Description>
+      <Explanation>Status and telemetry from a Sleipner PPC-series electric thruster controller on the S-Link bus. PGN 130817 is multiplexed by the device-type byte; this variant is the PPC520 (device type 24). The PPC820 (device type 25) carries the identical layout. The field layout follows Sleipner's own S-Link device definition; each field was verified against a live capture: motor voltage sags under load while motor current rises with commanded thrust, and the signed output thrust tracks PGN 130827 for the same unit. Fields A, B, C and the trailing byte D were not identified.</Explanation>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>14</FieldCount>
+      <Length>17</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Sleipner Motor AS</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>306</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>deviceType</Id>
+          <Name>Device Type</Name>
+          <Description>PPC520</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>24</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>a</Id>
+          <Name>A</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>status</Id>
+          <Name>Status</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>motorTemperature</Id>
+          <Name>Motor Temperature</Name>
+          <Description>Temperature in degrees Celsius</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>powerTemperature</Id>
+          <Name>Power Temperature</Name>
+          <Description>Temperature in degrees Celsius</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>b</Id>
+          <Name>B</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>motorVoltage</Id>
+          <Name>Motor Voltage</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>V</Unit>
+          <Resolution>0.01</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>655.32</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>c</Id>
+          <Name>C</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>88</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>motorCurrent</Id>
+          <Name>Motor Current</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>A</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6553.2</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>ELECTRICAL_CURRENT</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>outputThrust</Id>
+          <Name>Output Thrust</Name>
+          <Description>Reported thrust, -100 to 100%; the sign is the direction</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>120</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>14</Order>
+          <Id>d</Id>
+          <Name>D</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>128</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>130818</PGN>
       <Id>simnetReprogramData</Id>
       <Description>Simnet: Reprogram Data</Description>
@@ -74606,7 +75082,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>4</Order>
           <Id>controllerType</Id>
           <Name>Controller Type</Name>
-          <Description>Constant per device; distinguishes the fitted controller models</Description>
+          <Description>Constant per device; 24 = PPC520, 25 = PPC820</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
