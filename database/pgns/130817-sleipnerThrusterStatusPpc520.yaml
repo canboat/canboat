@@ -1,0 +1,101 @@
+pgn: 130817
+id: sleipnerThrusterStatusPpc520
+description: 'Sleipner: PPC520 Thruster Status'
+type: Fast
+variantOrder: 7
+missing:
+- Fields
+- FieldLengths
+explanation: >-
+  Status and telemetry from a Sleipner PPC-series electric thruster controller on the
+  S-Link bus. PGN 130817 is multiplexed by the device-type byte; this variant is the
+  PPC520 (device type 24). The PPC820 (device type 25) carries the identical layout. The
+  field layout follows Sleipner's own S-Link device definition; each field was verified
+  against a live capture: motor voltage sags under load while motor current rises with
+  commanded thrust, and the signed output thrust tracks PGN 130827 for the same unit.
+  Fields A, B, C and the trailing byte D were not identified.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Sleipner Motor AS
+  match: 306
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: deviceType
+  name: Device Type
+  type: UINT8
+  description: PPC520
+  match: 24
+  primaryKey: true
+- id: a
+  name: A
+  type: UINT8
+- id: status
+  name: Status
+  type: BINARY
+  bits: 16
+- id: motorTemperature
+  name: Motor Temperature
+  type: UNSIGNED_INTEGER
+  bits: 8
+  description: Temperature in degrees Celsius
+- id: powerTemperature
+  name: Power Temperature
+  type: UNSIGNED_INTEGER
+  bits: 8
+  description: Temperature in degrees Celsius
+- id: b
+  name: B
+  type: UINT8
+- id: motorVoltage
+  name: Motor Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: c
+  name: C
+  type: BINARY
+  bits: 16
+- id: motorCurrent
+  name: Motor Current
+  type: CURRENT_UFIX16_DA
+- id: outputThrust
+  name: Output Thrust
+  type: PERCENTAGE_INT8
+  description: Reported thrust, -100 to 100%; the sign is the direction
+- id: d
+  name: D
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130817,9,255,17,32,99,18,14,00,00,18,1a,00,b7,0a,00,00,00,00,00,64"  # from sleipner-slink-ppc.raw
+  expects:
+    manufacturerCode: "Sleipner Motor AS"
+    industryCode: "Marine Industry"
+    deviceType: 24
+    motorTemperature: 24
+    powerTemperature: 26
+    motorVoltage: 27.43
+    motorCurrent: 0.0
+    outputThrust: 0
+    d: 100
+- raw: "2023-01-01-00:00:00.000,6,130817,9,255,17,32,99,18,14,00,00,18,1a,00,ea,09,00,00,c0,0d,9c,64"  # from sleipner-slink-ppc.raw
+  expects:
+    manufacturerCode: "Sleipner Motor AS"
+    industryCode: "Marine Industry"
+    deviceType: 24
+    motorTemperature: 24
+    powerTemperature: 26
+    motorVoltage: 25.38
+    motorCurrent: 352.0
+    outputThrust: -100
+    d: 100
