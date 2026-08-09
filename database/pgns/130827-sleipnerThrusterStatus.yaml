@@ -36,7 +36,7 @@ fields:
 - id: controllerType
   name: Controller Type
   type: UINT8
-  description: Constant per device; distinguishes the fitted controller models
+  description: Constant per device; 24 = PPC520, 25 = PPC820
 - id: thrusterId
   name: Thruster Id
   type: UNSIGNED_INTEGER

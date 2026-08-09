@@ -1,0 +1,6 @@
+name: SLEIPNER_THRUSTER_ACTION
+kind: pair
+bits: 2
+values:
+  1: Active
+  2: Standby

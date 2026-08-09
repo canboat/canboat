@@ -1463,14 +1463,14 @@ limitations under the License.
             PGN 65280
             - Sleipner: Thruster Command</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>306</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per thruster group, at priority 2. The state field carries both the operating state and the direction of the commanded thrust; the thruster group field selects which pair of thrusters the command applies to. The thrusters answer with PGN 130827, whose signed thrust field takes the sign of the commanded direction. Bytes 5-7 were zero in every observed frame, including at full deflection, so they are left unmapped.</p><p>
+              <table><tr><td>Manufacturer Code</td><td>306</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per thruster instance, at priority 2. The instance selects which thruster the command applies to; direction and device action are separate two-bit fields; thrust is a ten-bit per-mille demand. The thrusters answer with PGN 130827, whose signed thrust field takes the sign of the commanded direction. The remaining bits were zero in every observed frame, including at full deflection.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 7 fields.
+            bytes long and contains 8 fields.
 
             
               The default priority (as observed in the field) is 2.
@@ -1483,16 +1483,19 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Thruster Group</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
-                  
-                      lookup
-                      <a href="#lookup-SLEIPNER_THRUSTER_GROUP">SLEIPNER_THRUSTER_GROUP</a></td><td/></tr><tr><td>5</td><td>State</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
-                  
-                      lookup
-                      <a href="#lookup-SLEIPNER_THRUSTER_COMMAND_STATE">SLEIPNER_THRUSTER_COMMAND_STATE</a></td><td/></tr><tr><td>6</td><td>Thrust</td><td>Commanded thrust, 0 to 100%</td><td>0.1 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Thruster Instance</td><td>Selects the thruster (pair) the command applies to</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Data</td><td>Zero in every observed frame, including at full deflection</td><td/><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Direction</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-SLEIPNER_THRUSTER_DIRECTION">SLEIPNER_THRUSTER_DIRECTION</a></td><td/></tr><tr><td>6</td><td>Device Action</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-SLEIPNER_THRUSTER_ACTION">SLEIPNER_THRUSTER_ACTION</a></td><td/></tr><tr><td>7</td><td>Thrust</td><td>Commanded thrust, 0 to 100%</td><td>0.1 %<div class="xs">0 .. 102</div></td><td>10 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td>Zero in every observed frame, including at full deflection</td><td/><td>30 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65281">0xFF01:
             PGN 65281
             - Yanmar: Engine Data B</h3><p>
@@ -15721,7 +15724,111 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Records</td><td>N records of 3 bytes each, N = (payload_length - 4) / 3, capped at 8</td><td/><td>192 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
-              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md</a></p><h3 id="pgn-130818">0x1FF02:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-130817.md</a></p><h3 id="pgn-130817">0x1FF01:
+            PGN 130817
+            - Sleipner: PPC820 Thruster Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>306</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Device Type</td><td>25</td></tr></table></p><p>Status and telemetry from a Sleipner PPC-series electric thruster controller on the S-Link bus. PGN 130817 is multiplexed by the device-type byte; this variant is the PPC820 (device type 25). The PPC520 (device type 24) carries the identical layout. The field layout follows Sleipner's own S-Link device definition; each field was verified against a live capture: motor voltage sags under load while motor current rises with commanded thrust, and the signed output thrust tracks PGN 130827 for the same unit. Fields A, B, C and the trailing byte D were not identified.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            17
+            bytes long and contains 14 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>306:
+                  Sleipner Motor AS</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Device Type</td><td>25:
+                  PPC820</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Status</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Motor Temperature</td><td>Temperature in degrees Celsius</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Power Temperature</td><td>Temperature in degrees Celsius</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Motor Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>C</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>Motor Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130817">0x1FF01:
+            PGN 130817
+            - Sleipner: PPC520 Thruster Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>306</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Device Type</td><td>24</td></tr></table></p><p>Status and telemetry from a Sleipner PPC-series electric thruster controller on the S-Link bus. PGN 130817 is multiplexed by the device-type byte; this variant is the PPC520 (device type 24). The PPC820 (device type 25) carries the identical layout. The field layout follows Sleipner's own S-Link device definition; each field was verified against a live capture: motor voltage sags under load while motor current rises with commanded thrust, and the signed output thrust tracks PGN 130827 for the same unit. Fields A, B, C and the trailing byte D were not identified.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            17
+            bytes long and contains 14 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>306:
+                  Sleipner Motor AS</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Device Type</td><td>24:
+                  PPC520</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>5</td><td>A</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Status</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Motor Temperature</td><td>Temperature in degrees Celsius</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Power Temperature</td><td>Temperature in degrees Celsius</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>B</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Motor Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>C</td><td/><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>12</td><td>Motor Current</td><td/><td>0.1 <a href="#pq-ELECTRICAL_CURRENT">A</a><div class="xs">0 .. 6553.2</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Output Thrust</td><td>Reported thrust, -100 to 100%; the sign is the direction</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>D</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130818">0x1FF02:
             PGN 130818
             - Simnet: Reprogram Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -19317,7 +19424,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Controller Type</td><td>Constant per device; distinguishes the fitted controller models</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Controller Type</td><td>Constant per device; 24 = PPC520, 25 = PPC820</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Thruster Id</td><td>Stable per-unit index within the thruster group</td><td><div class="xs">0 .. 13</div></td><td>4 bits
@@ -23126,11 +23233,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Liters</td></tr><tr><td>1</td><td>Gallons</td></tr></table><h3 id="lookup-SIMNET_WIND_SPEED_UNIT">SIMNET_WIND_SPEED_UNIT
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Meters per second</td></tr><tr><td>2</td><td>Miles per hour</td></tr><tr><td>3</td><td>Kilometers per hour</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_COMMAND_STATE">SLEIPNER_THRUSTER_COMMAND_STATE
-        (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>4</td><td>Ready</td></tr><tr><td>5</td><td>Thrust direction 2</td></tr><tr><td>6</td><td>Thrust direction 1</td></tr><tr><td>8</td><td>Standby</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_GROUP">SLEIPNER_THRUSTER_GROUP
-        (0 - 15)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Group 1</td></tr><tr><td>2</td><td>Group 2</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_STATE">SLEIPNER_THRUSTER_STATE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Meters per second</td></tr><tr><td>2</td><td>Miles per hour</td></tr><tr><td>3</td><td>Kilometers per hour</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_ACTION">SLEIPNER_THRUSTER_ACTION
+        (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Active</td></tr><tr><td>2</td><td>Standby</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_DIRECTION">SLEIPNER_THRUSTER_DIRECTION
+        (0 - 3)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>None</td></tr><tr><td>1</td><td>Direction 1</td></tr><tr><td>2</td><td>Direction 2</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_STATE">SLEIPNER_THRUSTER_STATE
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Stowing or deploying</td></tr><tr><td>1</td><td>Off</td></tr><tr><td>10</td><td>Ready</td></tr><tr><td>11</td><td>Thrusting</td></tr></table><h3 id="lookup-SONICHUB_COMMAND">SONICHUB_COMMAND
         (0 - 255)
