@@ -1,13 +1,8 @@
 pgn: 127751
 id: dcVoltageCurrent
 description: DC Voltage/Current
-type: Fast
-missing:
-- SampleData
-explanation: 'This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a
-  single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter
-  in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission
-  interval is likewise unknown. See github issue #655.'
+type: Single
+explanation: 'This PGN has been observed only on Maretron devices so far.'
 fields:
 - id: sid
   name: SID
@@ -25,3 +20,40 @@ fields:
   name: Reserved
   type: RESERVED
   bits: 8
+samples:
+- raw: "2026-08-09-13:09:44.748,6,127751,3,255,8,63,0f,0c,01,00,00,00,ff"
+  expects:
+    sid: 99
+    connectionNumber: 15
+    dcVoltage: 26.8
+    dcCurrent: 0.00
+- raw: "2026-08-09-13:09:44.768,6,127751,3,255,8,63,10,2c,00,ff,ff,ff,ff"
+  expects:
+    sid: 99
+    connectionNumber: 16
+    dcVoltage: 4.4
+    dcCurrent: -0.01
+- raw: "2026-08-09-13:09:44.788,6,127751,3,255,8,63,11,2c,00,ff,ff,ff,ff"
+  expects:
+    sid: 99
+    connectionNumber: 17
+    dcVoltage: 4.4
+    dcCurrent: -0.01
+- raw: "2026-08-09-13:09:44.838,6,127751,4,255,8,f5,00,07,00,0a,00,00,ff"
+  expects:
+    sid: 245
+    connectionNumber: 0
+    dcVoltage: 0.7
+    dcCurrent: 0.10
+- raw: "2026-08-09-13:09:44.859,6,127751,3,255,8,63,14,04,00,ff,ff,ff,ff"
+  expects:
+    sid: 99
+    connectionNumber: 20
+    dcVoltage: 0.4
+    dcCurrent: -0.01
+- raw: "2026-08-09-13:09:44.878,6,127751,4,255,8,f5,02,17,00,00,00,00,ff"
+  expects:
+    sid: 245
+    connectionNumber: 2
+    dcVoltage: 2.3
+    dcCurrent: 0.00

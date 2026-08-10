@@ -35785,10 +35785,10 @@
         "PGN":127751,
         "Id":"dcVoltageCurrent",
         "Description":"DC Voltage/Current",
-        "Explanation":"This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission interval is likewise unknown. See github issue #655.",
-        "Type":"Fast",
+        "Explanation":"This PGN has been observed only on Maretron devices so far.",
+        "Type":"Single",
         "Complete":false,
-        "Missing":["SampleData","Interval"
+        "Missing":["Interval"
         ],
         "FieldCount":5,
         "Length":8,
