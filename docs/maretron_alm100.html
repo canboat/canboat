@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Maretron ALM100 annunciator: which PGN actually drives it</title>
+<style>
+:root { color-scheme: light dark; }
+body { font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+       line-height: 1.55; max-width: 50rem; margin: 2rem auto; padding: 0 1rem;
+       color: #1a1a1a; background: #fff; }
+@media (prefers-color-scheme: dark) { body { color: #ddd; background: #1a1a1a; } }
+h1, h2, h3, h4 { line-height: 1.25; margin-top: 1.6em; }
+h1 { border-bottom: 2px solid #8884; padding-bottom: .2em; }
+h2 { border-bottom: 1px solid #8884; padding-bottom: .2em; }
+code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+       background: #8881; padding: .1em .3em; border-radius: 4px; font-size: .9em; }
+pre { background: #8881; padding: .8em 1em; border-radius: 6px; overflow-x: auto; }
+pre code { background: none; padding: 0; }
+table { border-collapse: collapse; margin: 1em 0; display: block; overflow-x: auto; }
+th, td { border: 1px solid #8886; padding: .35em .7em; text-align: left; }
+th { background: #8882; }
+blockquote { border-left: 4px solid #8884; margin: 1em 0; padding: .2em 1em; color: #666; }
+a { color: #1a73e8; }
+</style>
+</head>
+<body>
+<h1 id="maretron-alm100-annunciator-which-pgn-actually-drives-it">Maretron ALM100 annunciator: which PGN actually drives it</h1>
+<p>This note records what a live Maretron ALM100 reports about itself, and how it is actually driven. Two questions the database left open are now settled:</p>
+<ul>
+<li>PGN 130824 (<code>Maretron: Annunciator</code>) is <strong>not</strong> a command channel. It is a status report, and writing it at the device does nothing.</li>
+<li>The annunciator is commanded by a <strong>126208 NMEA Command group function addressed to the device, targeting PGN 130824 and writing its fields</strong>. This was confirmed by capturing the vessel's own configuration software doing it, then reproducing both the sounding and the silent state from canboat against real hardware.</li>
+</ul>
+<h2 id="the-device">The device</h2>
+<p>An ISO Request (59904) for 126996 identifies it:</p>
+<pre><code>Product Code = 8165; Model ID = ALM100; Software Version Code = 1.0.6;
+Model Version = 1.0; Model Serial Code = 1462536; Certification Level = Level A;
+Load Equivalency = 2</code></pre>
+<p>Its ISO Address Claim carries a two-field fingerprint that identifies an annunciator without needing the product code at all:</p>
+<pre><code>Manufacturer Code = Maretron; Device Function = Alarm Enunciator;
+Device Class = Safety systems</code></pre>
+<p><code>MARETRON_PRODUCT_CODE</code> already contained <code>8165: ALM100</code>, so 126996 named the device correctly before any of this work.</p>
+<h2 id="130817-annunciator-capabilities-confirmed">130817 Annunciator Capabilities — confirmed</h2>
+<p>The existing definition was never backed by a capture: every 130817 frame in the sample corpus belonged to another manufacturer. Soliciting it directly from the ALM100 produces the first real Maretron evidence, and the definition decodes it exactly as written:</p>
+<pre><code>Annunciator Instance = 0; Number of Tones = 5;
+Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
+<table>
+<thead><tr>
+<th>Byte</th>
+<th>Field</th>
+<th>Value</th>
+</tr></thead>
+<tbody>
+<tr><td>0–1</td><td>Manufacturer + Industry</td><td>Maretron (137), Marine (4)</td></tr>
+<tr><td>2</td><td>Annunciator Instance</td><td>0</td></tr>
+<tr><td>3</td><td>Number of Tones</td><td>5</td></tr>
+<tr><td>4..</td><td>Tone, UINT16 × count</td><td>0, 1, 2, 3, 4</td></tr>
+</tbody>
+</table>
+<p>So an ALM100 supports five tones, numbered 0 to 4. The tones are reported as bare integers; the device does not name them on the bus, so there is no tone enumeration to add — a lookup here would be invented, not observed.</p>
+<p>Capture: <code>samples/maretron-alm100-capabilities.raw</code>.</p>
+<h2 id="130824-annunciator-a-status-report-not-a-command">130824 Annunciator — a status report, not a command</h2>
+<p>Idle, the ALM100 emits 130824 about every ten seconds with a constant payload:</p>
+<pre><code>89 98 00 00 ff ff ff ff ff</code></pre>
+<p>This is byte-for-byte what M/V Dirona's annunciator emitted in 2016, and it does not vary over a three minute idle capture — which is why this PGN looked like a contentless beacon for a long time.</p>
+<p><strong>It is not contentless. It reports the sounding state, and it had simply never been captured while the annunciator was actually sounding.</strong> With N2KView driving the device for a real alarm, the payload becomes:</p>
+<pre><code>89 98 00 64 04 00 17 0d 50        at 1 Hz, instead of one frame per 10 s</code></pre>
+<p>The trailing <code>0d 50</code> is <strong>alert id 20493, little-endian</strong> — precisely the alert that was active in 130819 and 126983 at that moment. So the last field identifies <em>which</em> alert the annunciator is sounding for. When that alert is acknowledged the device falls silent and reverts to the idle payload and the ten second rate; in 126983 the same transition shows as <code>Acknowledge Status</code> going No→Yes and <code>Alert State</code> going Active→Acknowledged.</p>
+<table>
+<thead><tr>
+<th>Byte</th>
+<th>Field</th>
+<th>Idle</th>
+<th>Sounding</th>
+</tr></thead>
+<tbody>
+<tr><td>0–1</td><td>Manufacturer + Industry</td><td>Maretron, Marine</td><td>same</td></tr>
+<tr><td>2</td><td>Annunciator Instance</td><td>0</td><td>0</td></tr>
+<tr><td>3</td><td><strong>Annunciator State</strong></td><td>0</td><td><strong>100</strong></td></tr>
+<tr><td>4–5</td><td><strong>Pattern</strong></td><td>unavailable</td><td>4</td></tr>
+<tr><td>6</td><td><em>unidentified</em></td><td>unavailable</td><td>23</td></tr>
+<tr><td>7–8</td><td><strong>Alert ID</strong></td><td>unavailable</td><td><strong>20493</strong></td></tr>
+</tbody>
+</table>
+<p>The field <em>count</em> is not guesswork. Asked for this PGN, the device replies with a 126208 Acknowledge group function reporting exactly <strong>five parameters</strong>, matching the five fields carved after the proprietary preamble. The names above were confirmed by commanding each field and watching the device echo the value back in its own status — see below. Byte 6 was 23 in every frame ever observed and remains unidentified.</p>
+<p>Capture: <code>samples/maretron-alm100-sounding.raw</code>.</p>
+<h3 id="it-is-not-written-directly">It is not written directly</h3>
+<p>The ALM100 reports 130824 only on its <em>transmit</em> list, its receive list does not contain it, and writing it at the device — broadcast or addressed — does nothing. It is commanded indirectly, through 126208, as described below.</p>
+<p>Two independent lines of evidence show it is not itself a writable channel.</p>
+<p><strong>The device says so.</strong> Asked for its PGN list (126464), the ALM100 answers:</p>
+<ul>
+<li><em>Transmit</em> list: 59392, 59904, 60160, 60416, 60928, 61184, 65282, 126208, 126464, 126720, 126996, 126998, <strong>130818, 130825, 130817, 130824</strong></li>
+<li><em>Receive</em> list: 59392, 59904, 60160, 60416, 60928, 61184, 65240, 126208, <strong>130819</strong></li>
+</ul>
+<p>130824 appears only on the transmit side. The receive list ends at <strong>130819 (<code>Maretron: Alert Transmission</code>)</strong> and does not contain 130824 at all.</p>
+<p><strong>Writing it does nothing.</strong> Sending 130824 with tone values 1 through 4, both broadcast and addressed to the device, produced no sound and no change in the beacon. The frames demonstrably reached the bus — they were observed coming back with the gateway's source address and the injected payload — so this is a rejection by the device, not a failed transmit. Note that the IPG100 rewrites the destination to broadcast, so an "addressed" 130824 arrives as <code>dst=255</code>.</p>
+<p>Captures: <code>samples/maretron-alm100-pgnlist.raw</code>, <code>samples/maretron-alm100-capabilities.raw</code>.</p>
+<h2 id="confirmation-from-the-firmware">Confirmation from the firmware</h2>
+<p>The ALM100 1.0.6 firmware image contains a PGN descriptor table that names these PGNs in Maretron's own words — the strings <code>Annunciator Capabilities</code>, <code>Alert Transmission</code> and <code>Annunciator</code> sit consecutively, and the three descriptor records point at them in that order. Each record carries an interval field:</p>
+<table>
+<thead><tr>
+<th>PGN</th>
+<th>Firmware name</th>
+<th>Interval field</th>
+</tr></thead>
+<tbody>
+<tr><td>130817</td><td>Annunciator Capabilities</td><td>0</td></tr>
+<tr><td>130819</td><td>Alert Transmission</td><td>0</td></tr>
+<tr><td>130824</td><td>Annunciator</td><td><strong>1000</strong></td></tr>
+</tbody>
+</table>
+<p>Only 130824 has a non-zero interval. The firmware classifies it as a timed periodic broadcast, which is independent confirmation of the beacon behaviour observed on the wire.</p>
+<h2 id="130819-is-accepted-but-an-alert-alone-does-not-sound-it">130819 is accepted, but an alert alone does not sound it</h2>
+<p>The ALM100 lists 130819 on its receive side, so that is the only one of the three annunciator PGNs it will take from the bus. Replaying a captured, well-formed 130819 alert at it — unique alert id, occurrence number 1, on an otherwise completely silent bus — produced <strong>no sound and no response of any kind</strong>. Repeating the frame at 1 Hz for several seconds changed nothing; the device carried on emitting only its 10-second beacon.</p>
+<p>This result is worth stating carefully, because an earlier round of testing appeared to show the opposite. During that round the vessel's N2KView installation was running and continuously broadcasting eight genuine <code>Emergency Alarm</code> / "Tripped" alerts (ids 20493–20502) plus two state alerts, at roughly 1 Hz. The annunciator was responding to <em>those</em>, not to the injected frames. Stopping N2KView removed all 130819 traffic from the bus and the annunciator fell silent, at which point the injected frames demonstrably did nothing. Any tone-selection experiment run against that noisy background is likewise uninformative, so none of it is recorded here.</p>
+<p>The lesson generalises: when reverse-engineering an alarm device, first confirm the bus is silent, then confirm your stimulus is the only thing on it.</p>
+<h2 id="the-command-channel-126208-targeting-130824">The command channel: 126208 targeting 130824</h2>
+<p>Replaying alert traffic never worked — not the 126988/126983/130819 triplet, not a byte-for-byte replay of frames captured while the device <em>was</em> sounding, not an acknowledged-to-active transition, not the full five-PGN set including 126986 Alert Configuration. All were verified onto the bus; none produced any reaction. That was the clue: <strong>the trigger is not in the alert frames at all.</strong></p>
+<p>Capturing the vessel's configuration software from a cold start, with the bus otherwise silent, showed what it actually sends. Immediately on connecting it addresses the annunciator directly with a series of <strong>126208 NMEA Command group functions targeting PGN 130824</strong>, one per alert it wants annunciated:</p>
+<pre><code>,3,126208,128,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,16,50
+                        |  \______/    |  \___/ \______/ \___/ \______/
+                        |   PGN 130824 |  state  pattern  fld7   alert id
+                        |              field 4 = instance
+                        Function Code 1 = Command</code></pre>
+<p>The parameter pairs are <code>&lt;field number&gt; &lt;value&gt;</code>, matching 130824's fields:</p>
+<table>
+<thead><tr>
+<th>Pair</th>
+<th>Field</th>
+<th>Arming value</th>
+<th>Sounding value</th>
+</tr></thead>
+<tbody>
+<tr><td><code>04 00</code></td><td>Annunciator Instance</td><td>0</td><td>0</td></tr>
+<tr><td><code>05 nn</code></td><td>Annunciator State</td><td><code>00</code></td><td><code>64</code> (100)</td></tr>
+<tr><td><code>06 nn nn</code></td><td>Pattern</td><td><code>ff ff</code></td><td><code>04 00</code></td></tr>
+<tr><td><code>07 17</code></td><td><em>unidentified</em></td><td>23</td><td>23</td></tr>
+<tr><td><code>08 nn nn</code></td><td>Alert ID</td><td>e.g. <code>16 50</code> = 20502</td><td><code>0d 50</code> = 20493</td></tr>
+</tbody>
+</table>
+<p>Ten such commands went out at startup, one for each alert id the operator had bound to the annunciator (20493–20502 plus 8204). Those carry <code>state = 0</code>; they register the binding. The command that actually sounds the device is identical but carries <code>state = 100</code> and a pattern.</p>
+<h3 id="reproduced-from-canboat">Reproduced from canboat</h3>
+<p>Both directions were then driven from this repository against the real device, with the vessel's software stopped and the bus silent:</p>
+<pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
+
+# sound it
+echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,64,06,04,00,07,17,08,0d,50&quot; \
+  | maretron-ipg -w -q $IPG
+
+# stop it
+echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,0d,50&quot; \
+  | maretron-ipg -w -q $IPG</code></pre>
+<p>The first makes the ALM100 sound and its 130824 status switches to the 1 Hz sounding form echoing the commanded values; the second silences it and returns it to the 10 second idle form. Note the destination is preserved for 126208 (<code>dst=164</code>), unlike 130824.</p>
+<h3 id="pattern-not-pitch">Pattern, not pitch</h3>
+<p>Sweeping the Pattern field through 0, 1, 2, 3 and 4 — the five entries 130817 advertises — produces audibly different results, but they differ in <strong>beep cadence rather than pitch</strong>: single beeps versus more frequent repeated beeps. Each commanded value is echoed back distinctly in the device's own 130824 status, so the mapping is certain even though naming the five patterns would be guesswork. For that reason no lookup is added for them.</p>
+<p>Capture: <code>samples/maretron-alm100-command.raw</code>.</p>
+<h2 id="stopping-it-which-is-fully-understood">Stopping it, which is fully understood</h2>
+<p>Silencing is not mysterious, and it is not annunciator-specific. The annunciator sounds while a bound alert is <strong>Active</strong>, and stops the moment that alert becomes <strong>Acknowledged</strong> — observed directly: the operator acknowledged alert 20493, 126983 for that id flipped <code>Acknowledge Status</code> No→Yes and <code>Alert State</code> Active→Acknowledged, and in the same second 130824 dropped from its 1 Hz sounding payload back to the idle one.</p>
+<p>126983 advertises <code>Acknowledge Support = Yes</code> for these alerts, and the standard acknowledge path is 126984 Alert Response. So a consumer that wants to silence the annunciator acknowledges the alert; it does not talk to the annunciator at all.</p>
+<h2 id="what-remains-open">What remains open</h2>
+<p>The binding turned out to live in 126208, not in 126720 — the alert-to-annunciator association is established by the same Command group function that sounds the device, carrying <code>state = 0</code>. So no proprietary configuration exchange is needed to drive an ALM100, and 126720 opcodes 64/65 (Write/Read Alert Config) were never involved in any of the observed traffic. Bare 126720 opcode requests (65, 2 and 0) addressed to the device were ignored; whatever they are for, it is not this.</p>
+<p>Two smaller things are still unidentified:</p>
+<ul>
+<li><strong>Field 7</strong> of 130824, which was 23 in every frame ever observed, from the vessel's own software and in the commands replayed here alike. Nothing varied it, so nothing constrains it.</li>
+<li><strong>Names for the five patterns.</strong> Values 0 to 4 are confirmed distinct and audibly different in cadence, but the device does not name them on the bus, so a lookup would be invented rather than observed.</li>
+</ul>
+<h3 id="the-maretron-extension">The Maretron extension</h3>
+<p>The 128-bit extension is not fully carved, but its tail is now clear. On a live bus the last bytes are consistently a canboat-style counted ASCII string — a length byte holding the text length <strong>plus two</strong>, then <code>01</code>, then the text:</p>
+<table>
+<thead><tr>
+<th>Bytes</th>
+<th>Text</th>
+<th>Length byte</th>
+</tr></thead>
+<tbody>
+<tr><td><code>32 00 09 01 54 72 69 70 70 65 64</code></td><td><code>Tripped</code> (7)</td><td>9</td></tr>
+<tr><td><code>32 00 05 01 4f 66 66</code></td><td><code>Off</code> (3)</td><td>5</td></tr>
+<tr><td><code>32 00 04 01 4f 6e</code></td><td><code>On</code> (2)</td><td>4</td></tr>
+</tbody>
+</table>
+<p>That is exactly canboat's <code>STRING_LAU</code> encoding. What the leading two bytes select is unknown; on this bus they were always <code>32 00</code>. They are an obvious place to look for a tone or severity selector, given that 130817 reports five supported tones, but nothing here confirms that.</p>
+<p>Capture: <code>samples/maretron-alm100-alert.raw</code>.</p>
+<h2 id="method">Method</h2>
+<p>Everything here is reproducible with the tools in this repository:</p>
+<pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
+
+# passive capture
+maretron-ipg -r -q $IPG &gt; capture.raw
+
+# solicit a PGN from the device (canboat encodes, the IPG segments and addresses)
+canboat format-message isoRequest --dst 164 pgn=130817 | maretron-ipg -p -q $IPG
+canboat format-message isoRequest --dst 164 pgn=126464 | maretron-ipg -p -q $IPG</code></pre>
+<p>The 126464 PGN-list request is worth reaching for early on any unfamiliar device: it answers "can I command this thing, and with what?" directly, and it saved carving a heartbeat here.</p>
+</body>
+</html>

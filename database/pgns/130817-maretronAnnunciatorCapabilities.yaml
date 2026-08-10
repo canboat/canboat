@@ -4,10 +4,7 @@ description: 'Maretron: Annunciator Capabilities'
 type: Fast
 variantOrder: 4
 priority: 6
-missing:
-- Fields
-- FieldLengths
-- Resolution
+researchDoc: maretron_alm100
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -40,3 +37,23 @@ fields:
     - id: tone
       name: Tone
       type: UINT16
+notes: >-
+  Confirmed against a Maretron ALM100 (product code 8165, software 1.0.6) by sending an
+  ISO Request (59904) for this PGN and capturing the reply through a Maretron IPG100; see
+  samples/maretron-alm100-capabilities.raw. The device reported annunciator instance 0 and
+  five supported tones numbered 0 to 4, which this layout decodes cleanly. The values are
+  reported as bare numbers and the ALM100 does not name them on the bus, so no lookup is
+  added. Note that commanding the corresponding Pattern field of 130824 through 0 to 4
+  varies the beep cadence rather than the pitch; see research/maretron_alm100.md.
+samples:
+- raw: "2023-01-01-00:00:00.000,6,130817,164,255,14,89,98,00,05,00,00,01,00,02,00,03,00,04,00"  # from maretron-alm100-capabilities.raw
+  expects:
+    manufacturerCode: "Maretron"
+    industryCode: "Marine Industry"
+    annunciatorInstance: 0
+    numberOfTones: 5
+    tone: 0
+    tone.2: 1
+    tone.3: 2
+    tone.4: 3
+    tone.5: 4

@@ -1,0 +1,18 @@
+# format=FAST
+# Maretron ALM100 (product code 8165, sw 1.0.6) at source 164: the command channel.
+#
+# The annunciator is driven by a 126208 NMEA Command group function addressed to it,
+# targeting PGN 130824 and writing that PGN's fields. Writing 130824 itself does
+# nothing, which is why this went unfound for a long time; the ALM100's receive list
+# contains 126208 but not 130824.
+#
+# Captured from N2KView arming and sounding the device, then reproduced from canboat:
+# sending the command below made a real ALM100 sound, and the zero form silenced it.
+#
+#   sound: ...,04,00, 05,64, 06,04,00, 07,17, 08,0d,50
+#   stop:  ...,04,00, 05,00, 06,ff,ff, 07,17, 08,0d,50
+#
+# field4=0 annunciator instance, field5=100 sound / 0 stop, field6 pulse pattern,
+# field7=23, field8=20493 the alert id being annunciated.
+2026-08-10T22:37:18.889Z,3,126208,128,164,18,01,08,ff,01,f8,05,04,00,05,64,06,04,00,07,17,08,0d,50
+2026-08-10T22:36:28.402Z,3,126208,128,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,16,50
