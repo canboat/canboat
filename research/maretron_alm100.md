@@ -196,9 +196,9 @@ The parameter pairs are `<field number> <value>`, matching 130824's fields:
 | `07 17` | *unidentified* | 23 | 23 |
 | `08 nn nn` | Alert ID | e.g. `16 50` = 20502 | `0d 50` = 20493 |
 
-Ten such commands went out at startup, one for each alert id the operator had bound to the
-annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry `state = 0`;
-they register the binding.
+Nine such commands went out at startup, one for each alert id the operator had bound to
+the annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry
+`state = 0`; they register the binding.
 The command that actually sounds the device is identical but carries `state = 100` and a
 pattern.
 
@@ -208,7 +208,7 @@ Both directions were then driven from this repository against the real device, w
 vessel's software stopped and the bus silent:
 
 ```sh
-IPG=tcp://<ipg100-host>:6543
+IPG=tcp://ipg100.example.lan:6543
 
 # sound it
 echo ",3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,64,06,04,00,07,17,08,0d,50" \
@@ -300,7 +300,7 @@ the live alert traffic described above.
 Everything here is reproducible with the tools in this repository:
 
 ```sh
-IPG=tcp://<ipg100-host>:6543
+IPG=tcp://ipg100.example.lan:6543
 
 # passive capture
 maretron-ipg -r -q $IPG > capture.raw

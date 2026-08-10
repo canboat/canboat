@@ -138,10 +138,10 @@ Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
 <tr><td><code>08 nn nn</code></td><td>Alert ID</td><td>e.g. <code>16 50</code> = 20502</td><td><code>0d 50</code> = 20493</td></tr>
 </tbody>
 </table>
-<p>Ten such commands went out at startup, one for each alert id the operator had bound to the annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry <code>state = 0</code>; they register the binding. The command that actually sounds the device is identical but carries <code>state = 100</code> and a pattern.</p>
+<p>Nine such commands went out at startup, one for each alert id the operator had bound to the annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry <code>state = 0</code>; they register the binding. The command that actually sounds the device is identical but carries <code>state = 100</code> and a pattern.</p>
 <h3 id="reproduced-from-canboat">Reproduced from canboat</h3>
 <p>Both directions were then driven from this repository against the real device, with the vessel's software stopped and the bus silent:</p>
-<pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
+<pre><code class="language-sh">IPG=tcp://ipg100.example.lan:6543
 
 # sound it
 echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,64,06,04,00,07,17,08,0d,50&quot; \
@@ -184,7 +184,7 @@ echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,0d
 <p>Capture: <code>samples/maretron-alm100-alert.raw</code> (prefix <code>01 00</code>); the <code>32 00</code> rows are from the live alert traffic described above.</p>
 <h2 id="method">Method</h2>
 <p>Everything here is reproducible with the tools in this repository:</p>
-<pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
+<pre><code class="language-sh">IPG=tcp://ipg100.example.lan:6543
 
 # passive capture
 maretron-ipg -r -q $IPG &gt; capture.raw
