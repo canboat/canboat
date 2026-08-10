@@ -332,6 +332,13 @@ Essential facts before editing:
   to inherit the field type's default. Fields are contiguous bit-packed — no
   implicit alignment; use a `RESERVED` field for gaps. Variable-length fields
   (strings, `DYNAMIC_FIELD_VALUE`) carry no fixed `bits`.
+- **All database text is ASCII** — names, descriptions, and units. The
+  `build-ubuntu` gate runs `validate-json.py`, which rejects any non-ASCII in
+  the generated JSON, so a `unit: '°C'` fails there even though it passes
+  `keel check` locally. Physical quantities are stored in SI: temperatures are
+  Kelvin and carry **no** `unit:` string at all (the base `TEMPERATURE` types
+  set none), with the analyzer rendering Celsius on output. Put any "°C"-style
+  note in an ASCII `description`, never in `unit:`.
 - A PGN file's top-level keys are `pgn` (PRN), `id`, `description`, `type`, and
   the field list under `fields:`. You may set `priority`, `interval`,
   `explanation`, `url`, `missing`, `repeating1`/`repeating2`, `notes:`, and
