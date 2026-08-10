@@ -72,9 +72,10 @@ notes: >-
 
   Replaying a captured 130819 frame at an ALM100 on an otherwise silent bus did NOT make
   it sound, and produced no response from the device at all, so a well-formed alert alone
-  is not sufficient to drive the annunciator. The device most likely has to be configured
-  to react to a particular alert first, via 126720 (Maretron proprietary configuration,
-  opcodes 64 and 65, Write and Read Alert Config). See research/maretron_alm100.md.
+  is not sufficient to drive the annunciator. The annunciator is instead bound and driven
+  by 126208 NMEA Command group functions addressed to the device and targeting PGN 130824:
+  a command carrying Annunciator State 0 registers an alert binding, and one carrying 100
+  sounds it. See research/maretron_alm100.md and samples/maretron-alm100-command.raw.
 
   The trailing Maretron Extension is not yet carved. On a live bus its last bytes are
   consistently a canboat-style counted ASCII string: a length byte holding the text length

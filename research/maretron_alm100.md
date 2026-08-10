@@ -77,9 +77,10 @@ for a real alarm, the payload becomes:
 
 The trailing `0d 50` is **alert id 20493, little-endian** — precisely the alert that was
 active in 130819 and 126983 at that moment. So the last field identifies *which* alert the
-annunciator is sounding for. When that alert is acknowledged the device falls silent and
-reverts to the idle payload and the ten second rate; in 126983 the same transition shows
-as `Acknowledge Status` going No→Yes and `Alert State` going Active→Acknowledged.
+annunciator is sounding for. When that alert was acknowledged the device fell silent and
+reverted to the idle payload and the ten second rate; in 126983 the same transition shows
+as `Acknowledge Status` going No→Yes and `Alert State` going Active→Acknowledged. See
+"Stopping it" below for what that does and does not establish.
 
 | Byte | Field | Idle | Sounding |
 |------|-------|------|----------|
@@ -93,8 +94,9 @@ as `Acknowledge Status` going No→Yes and `Alert State` going Active→Acknowle
 The field *count* is not guesswork. Asked for this PGN, the device replies with a 126208
 Acknowledge group function reporting exactly **five parameters**, matching the five fields
 carved after the proprietary preamble. The names above were confirmed by commanding each
-field and watching the device echo the value back in its own status — see below. Byte 6
-was 23 in every frame ever observed and remains unidentified.
+field over 126208 and watching the device echo the value back in its own status — see
+"The command channel" below. Byte 6 was 23 in every frame ever observed and is
+unidentified.
 
 Capture: `samples/maretron-alm100-sounding.raw`.
 
@@ -152,8 +154,9 @@ beacon.
 
 This result is worth stating carefully, because an earlier round of testing appeared to
 show the opposite. During that round the vessel's N2KView installation was running and
-continuously broadcasting eight genuine `Emergency Alarm` / "Tripped" alerts (ids
-20493–20502) plus two state alerts, at roughly 1 Hz. The annunciator was responding to
+continuously broadcasting eight genuine `Emergency Alarm` / "Tripped" alerts (ids 20493,
+20494, 20496, 20497, 20499, 20500, 20501 and 20502 — the range is not contiguous) plus two
+state alerts, at roughly 1 Hz. The annunciator was responding to
 *those*, not to the injected frames. Stopping N2KView removed all 130819 traffic from the
 bus and the annunciator fell silent, at which point the injected frames demonstrably did
 nothing. Any tone-selection experiment run against that noisy background is likewise
@@ -194,7 +197,8 @@ The parameter pairs are `<field number> <value>`, matching 130824's fields:
 | `08 nn nn` | Alert ID | e.g. `16 50` = 20502 | `0d 50` = 20493 |
 
 Ten such commands went out at startup, one for each alert id the operator had bound to the
-annunciator (20493–20502 plus 8204). Those carry `state = 0`; they register the binding.
+annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry `state = 0`;
+they register the binding.
 The command that actually sounds the device is identical but carries `state = 100` and a
 pattern.
 
@@ -229,17 +233,28 @@ the five patterns would be guesswork. For that reason no lookup is added for the
 
 Capture: `samples/maretron-alm100-command.raw`.
 
-## Stopping it, which is fully understood
+## Stopping it
 
-Silencing is not mysterious, and it is not annunciator-specific. The annunciator sounds
-while a bound alert is **Active**, and stops the moment that alert becomes
-**Acknowledged** — observed directly: the operator acknowledged alert 20493, 126983 for
-that id flipped `Acknowledge Status` No→Yes and `Alert State` Active→Acknowledged, and in
-the same second 130824 dropped from its 1 Hz sounding payload back to the idle one.
+There are two ways to silence the annunciator, and both were observed.
 
-126983 advertises `Acknowledge Support = Yes` for these alerts, and the standard
-acknowledge path is 126984 Alert Response. So a consumer that wants to silence the
-annunciator acknowledges the alert; it does not talk to the annunciator at all.
+**Directly.** A 126208 command carrying Annunciator State 0 and Pattern unavailable
+silences it immediately. This was driven from canboat against the real device — see
+"Reproduced from canboat" above — so it is proven rather than inferred, and it is the
+mechanism a consumer that already commands the annunciator would use.
+
+**By acknowledging the alert.** When the vessel's own software was driving the device, the
+operator acknowledged alert 20493: 126983 for that id flipped `Acknowledge Status` No→Yes
+and `Alert State` Active→Acknowledged, and in the same second 130824 dropped from its 1 Hz
+sounding payload back to the idle one. 126983 advertises `Acknowledge Support = Yes` for
+these alerts.
+
+Note what that second observation does and does not establish. The annunciator was being
+driven by software that was also watching the alert state, so the correlation is real but
+the causal step in between — whether the acknowledgement reached the annunciator directly,
+or whether the driving software noticed it and sent a state 0 command — was not isolated.
+No 126984 Alert Response frame was captured in that window, and 126984 does not appear on
+the ALM100's receive list, so acknowledgement most likely acts through the controlling
+software rather than on the annunciator itself.
 
 ## What remains open
 
@@ -272,11 +287,13 @@ the text length **plus two**, then `01`, then the text:
 | `32 00 04 01 4f 6e` | `On` (2) | 4 |
 
 That is exactly canboat's `STRING_LAU` encoding. What the leading two bytes select is
-unknown; on this bus they were always `32 00`. They are an obvious place to look for a
-tone or severity selector, given that 130817 reports five supported tones, but nothing
-here confirms that.
+unknown. The three rows above come from the vessel's own alert traffic, where they were
+always `32 00`; the frame stored in `samples/maretron-alm100-alert.raw` is one that was
+replayed with `01 00` in that position instead, so the prefix is at least not fixed by the
+protocol. Nothing observed constrains what it means.
 
-Capture: `samples/maretron-alm100-alert.raw`.
+Capture: `samples/maretron-alm100-alert.raw` (prefix `01 00`); the `32 00` rows are from
+the live alert traffic described above.
 
 ## Method
 

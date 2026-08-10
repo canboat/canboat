@@ -65,7 +65,7 @@ Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
 <p>This is byte-for-byte what M/V Dirona's annunciator emitted in 2016, and it does not vary over a three minute idle capture — which is why this PGN looked like a contentless beacon for a long time.</p>
 <p><strong>It is not contentless. It reports the sounding state, and it had simply never been captured while the annunciator was actually sounding.</strong> With N2KView driving the device for a real alarm, the payload becomes:</p>
 <pre><code>89 98 00 64 04 00 17 0d 50        at 1 Hz, instead of one frame per 10 s</code></pre>
-<p>The trailing <code>0d 50</code> is <strong>alert id 20493, little-endian</strong> — precisely the alert that was active in 130819 and 126983 at that moment. So the last field identifies <em>which</em> alert the annunciator is sounding for. When that alert is acknowledged the device falls silent and reverts to the idle payload and the ten second rate; in 126983 the same transition shows as <code>Acknowledge Status</code> going No→Yes and <code>Alert State</code> going Active→Acknowledged.</p>
+<p>The trailing <code>0d 50</code> is <strong>alert id 20493, little-endian</strong> — precisely the alert that was active in 130819 and 126983 at that moment. So the last field identifies <em>which</em> alert the annunciator is sounding for. When that alert was acknowledged the device fell silent and reverted to the idle payload and the ten second rate; in 126983 the same transition shows as <code>Acknowledge Status</code> going No→Yes and <code>Alert State</code> going Active→Acknowledged. See "Stopping it" below for what that does and does not establish.</p>
 <table>
 <thead><tr>
 <th>Byte</th>
@@ -82,7 +82,7 @@ Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
 <tr><td>7–8</td><td><strong>Alert ID</strong></td><td>unavailable</td><td><strong>20493</strong></td></tr>
 </tbody>
 </table>
-<p>The field <em>count</em> is not guesswork. Asked for this PGN, the device replies with a 126208 Acknowledge group function reporting exactly <strong>five parameters</strong>, matching the five fields carved after the proprietary preamble. The names above were confirmed by commanding each field and watching the device echo the value back in its own status — see below. Byte 6 was 23 in every frame ever observed and remains unidentified.</p>
+<p>The field <em>count</em> is not guesswork. Asked for this PGN, the device replies with a 126208 Acknowledge group function reporting exactly <strong>five parameters</strong>, matching the five fields carved after the proprietary preamble. The names above were confirmed by commanding each field over 126208 and watching the device echo the value back in its own status — see "The command channel" below. Byte 6 was 23 in every frame ever observed and is unidentified.</p>
 <p>Capture: <code>samples/maretron-alm100-sounding.raw</code>.</p>
 <h3 id="it-is-not-written-directly">It is not written directly</h3>
 <p>The ALM100 reports 130824 only on its <em>transmit</em> list, its receive list does not contain it, and writing it at the device — broadcast or addressed — does nothing. It is commanded indirectly, through 126208, as described below.</p>
@@ -112,7 +112,7 @@ Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
 <p>Only 130824 has a non-zero interval. The firmware classifies it as a timed periodic broadcast, which is independent confirmation of the beacon behaviour observed on the wire.</p>
 <h2 id="130819-is-accepted-but-an-alert-alone-does-not-sound-it">130819 is accepted, but an alert alone does not sound it</h2>
 <p>The ALM100 lists 130819 on its receive side, so that is the only one of the three annunciator PGNs it will take from the bus. Replaying a captured, well-formed 130819 alert at it — unique alert id, occurrence number 1, on an otherwise completely silent bus — produced <strong>no sound and no response of any kind</strong>. Repeating the frame at 1 Hz for several seconds changed nothing; the device carried on emitting only its 10-second beacon.</p>
-<p>This result is worth stating carefully, because an earlier round of testing appeared to show the opposite. During that round the vessel's N2KView installation was running and continuously broadcasting eight genuine <code>Emergency Alarm</code> / "Tripped" alerts (ids 20493–20502) plus two state alerts, at roughly 1 Hz. The annunciator was responding to <em>those</em>, not to the injected frames. Stopping N2KView removed all 130819 traffic from the bus and the annunciator fell silent, at which point the injected frames demonstrably did nothing. Any tone-selection experiment run against that noisy background is likewise uninformative, so none of it is recorded here.</p>
+<p>This result is worth stating carefully, because an earlier round of testing appeared to show the opposite. During that round the vessel's N2KView installation was running and continuously broadcasting eight genuine <code>Emergency Alarm</code> / "Tripped" alerts (ids 20493, 20494, 20496, 20497, 20499, 20500, 20501 and 20502 — the range is not contiguous) plus two state alerts, at roughly 1 Hz. The annunciator was responding to <em>those</em>, not to the injected frames. Stopping N2KView removed all 130819 traffic from the bus and the annunciator fell silent, at which point the injected frames demonstrably did nothing. Any tone-selection experiment run against that noisy background is likewise uninformative, so none of it is recorded here.</p>
 <p>The lesson generalises: when reverse-engineering an alarm device, first confirm the bus is silent, then confirm your stimulus is the only thing on it.</p>
 <h2 id="the-command-channel-126208-targeting-130824">The command channel: 126208 targeting 130824</h2>
 <p>Replaying alert traffic never worked — not the 126988/126983/130819 triplet, not a byte-for-byte replay of frames captured while the device <em>was</em> sounding, not an acknowledged-to-active transition, not the full five-PGN set including 126986 Alert Configuration. All were verified onto the bus; none produced any reaction. That was the clue: <strong>the trigger is not in the alert frames at all.</strong></p>
@@ -138,7 +138,7 @@ Tone 1 = 0; Tone 2 = 1; Tone 3 = 2; Tone 4 = 3; Tone 5 = 4</code></pre>
 <tr><td><code>08 nn nn</code></td><td>Alert ID</td><td>e.g. <code>16 50</code> = 20502</td><td><code>0d 50</code> = 20493</td></tr>
 </tbody>
 </table>
-<p>Ten such commands went out at startup, one for each alert id the operator had bound to the annunciator (20493–20502 plus 8204). Those carry <code>state = 0</code>; they register the binding. The command that actually sounds the device is identical but carries <code>state = 100</code> and a pattern.</p>
+<p>Ten such commands went out at startup, one for each alert id the operator had bound to the annunciator — the eight "Tripped" ids listed above, plus 8204. Those carry <code>state = 0</code>; they register the binding. The command that actually sounds the device is identical but carries <code>state = 100</code> and a pattern.</p>
 <h3 id="reproduced-from-canboat">Reproduced from canboat</h3>
 <p>Both directions were then driven from this repository against the real device, with the vessel's software stopped and the bus silent:</p>
 <pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
@@ -154,9 +154,11 @@ echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,0d
 <h3 id="pattern-not-pitch">Pattern, not pitch</h3>
 <p>Sweeping the Pattern field through 0, 1, 2, 3 and 4 — the five entries 130817 advertises — produces audibly different results, but they differ in <strong>beep cadence rather than pitch</strong>: single beeps versus more frequent repeated beeps. Each commanded value is echoed back distinctly in the device's own 130824 status, so the mapping is certain even though naming the five patterns would be guesswork. For that reason no lookup is added for them.</p>
 <p>Capture: <code>samples/maretron-alm100-command.raw</code>.</p>
-<h2 id="stopping-it-which-is-fully-understood">Stopping it, which is fully understood</h2>
-<p>Silencing is not mysterious, and it is not annunciator-specific. The annunciator sounds while a bound alert is <strong>Active</strong>, and stops the moment that alert becomes <strong>Acknowledged</strong> — observed directly: the operator acknowledged alert 20493, 126983 for that id flipped <code>Acknowledge Status</code> No→Yes and <code>Alert State</code> Active→Acknowledged, and in the same second 130824 dropped from its 1 Hz sounding payload back to the idle one.</p>
-<p>126983 advertises <code>Acknowledge Support = Yes</code> for these alerts, and the standard acknowledge path is 126984 Alert Response. So a consumer that wants to silence the annunciator acknowledges the alert; it does not talk to the annunciator at all.</p>
+<h2 id="stopping-it">Stopping it</h2>
+<p>There are two ways to silence the annunciator, and both were observed.</p>
+<p><strong>Directly.</strong> A 126208 command carrying Annunciator State 0 and Pattern unavailable silences it immediately. This was driven from canboat against the real device — see "Reproduced from canboat" above — so it is proven rather than inferred, and it is the mechanism a consumer that already commands the annunciator would use.</p>
+<p><strong>By acknowledging the alert.</strong> When the vessel's own software was driving the device, the operator acknowledged alert 20493: 126983 for that id flipped <code>Acknowledge Status</code> No→Yes and <code>Alert State</code> Active→Acknowledged, and in the same second 130824 dropped from its 1 Hz sounding payload back to the idle one. 126983 advertises <code>Acknowledge Support = Yes</code> for these alerts.</p>
+<p>Note what that second observation does and does not establish. The annunciator was being driven by software that was also watching the alert state, so the correlation is real but the causal step in between — whether the acknowledgement reached the annunciator directly, or whether the driving software noticed it and sent a state 0 command — was not isolated. No 126984 Alert Response frame was captured in that window, and 126984 does not appear on the ALM100's receive list, so acknowledgement most likely acts through the controlling software rather than on the annunciator itself.</p>
 <h2 id="what-remains-open">What remains open</h2>
 <p>The binding turned out to live in 126208, not in 126720 — the alert-to-annunciator association is established by the same Command group function that sounds the device, carrying <code>state = 0</code>. So no proprietary configuration exchange is needed to drive an ALM100, and 126720 opcodes 64/65 (Write/Read Alert Config) were never involved in any of the observed traffic. Bare 126720 opcode requests (65, 2 and 0) addressed to the device were ignored; whatever they are for, it is not this.</p>
 <p>Two smaller things are still unidentified:</p>
@@ -178,8 +180,8 @@ echo &quot;,3,126208,0,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,0d
 <tr><td><code>32 00 04 01 4f 6e</code></td><td><code>On</code> (2)</td><td>4</td></tr>
 </tbody>
 </table>
-<p>That is exactly canboat's <code>STRING_LAU</code> encoding. What the leading two bytes select is unknown; on this bus they were always <code>32 00</code>. They are an obvious place to look for a tone or severity selector, given that 130817 reports five supported tones, but nothing here confirms that.</p>
-<p>Capture: <code>samples/maretron-alm100-alert.raw</code>.</p>
+<p>That is exactly canboat's <code>STRING_LAU</code> encoding. What the leading two bytes select is unknown. The three rows above come from the vessel's own alert traffic, where they were always <code>32 00</code>; the frame stored in <code>samples/maretron-alm100-alert.raw</code> is one that was replayed with <code>01 00</code> in that position instead, so the prefix is at least not fixed by the protocol. Nothing observed constrains what it means.</p>
+<p>Capture: <code>samples/maretron-alm100-alert.raw</code> (prefix <code>01 00</code>); the <code>32 00</code> rows are from the live alert traffic described above.</p>
 <h2 id="method">Method</h2>
 <p>Everything here is reproducible with the tools in this repository:</p>
 <pre><code class="language-sh">IPG=tcp://&lt;ipg100-host&gt;:6543
