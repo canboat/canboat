@@ -4282,8 +4282,8 @@ Pgn pgnList[] = {
 
     {"DC Voltage/Current",
      127751,
-     PACKET_NOT_SEEN,
-     PACKET_FAST,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
      {
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Connection Number", .camelName = "connectionNumber", .fieldType = "UINT8", .resolution = 1.0},
@@ -4292,7 +4292,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "dcVoltageCurrent",
-     .explanation = "This PGN has not been observed live on a real bus, so its framing is unconfirmed. The 8-byte payload fits a single frame, but CSS Electronics lists it as fast packet and a single-frame variant was not recognized by a Navico chartplotter in testing, so it is defined here as fast packet (the more likely framing) until a live capture settles it. The transmission interval is likewise unknown. See github issue #655."},
+     .explanation = "This PGN has been observed only on Maretron devices so far."},
 
     {"Leeway Angle",
      128000,
