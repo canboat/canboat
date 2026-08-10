@@ -57,7 +57,12 @@ pub const RULES: &[Rule] = &[
         title: "Well-formed objects: required and allowed keys, value types, enum membership.",
         detail: "Enforced while parsing YAML into the model: an unknown key, a \
                  wrong value type, or an out-of-set enum value fails the load \
-                 before any semantic rule runs.",
+                 before any semantic rule runs. The allowed-key lists live in \
+                 yamlio and include the documentation-only annotations \
+                 (`notes:` on a PGN, `note:` / `valueNotes:` on a lookup) that \
+                 are authored deliberately and never reach the model. Closed \
+                 value sets: a PGN's packet type, a fieldtype's sentinels, a \
+                 lookup's kind, and every `missing:` attribute.",
     },
     Rule {
         id: "R02",
