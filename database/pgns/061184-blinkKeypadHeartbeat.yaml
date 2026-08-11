@@ -1,0 +1,74 @@
+pgn: 61184
+id: blinkKeypadHeartbeat
+description: 'Blink Marine: Keypad Heartbeat'
+type: Single
+variantOrder: 7
+priority: 6
+explanation: >-
+  Periodic heartbeat broadcast by a Blink Marine J1939 keypad to indicate it is
+  still functioning, carrying the current state of every key. Disabled by
+  default; enabled with a proprietary configuration command that also sets the
+  period (50 ms to 2.54 s). The message counter increments with each heartbeat
+  sent, so a stalled counter indicates a wedged keypad. Key State is a bitmap
+  spanning bytes 4 and 5, one bit per key; the number of keys actually present
+  varies by model (4 on the PKP-2200, up to 15 on the PKP-3500).
+url: https://blinkmarine.com/documentation/
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Blink Marine
+  match: 772
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Global
+  match: 0
+  lookup: INDUSTRY_CODE
+- id: messageType
+  name: Message Type
+  type: UINT8
+  description: Heartbeat
+  match: 249
+  primaryKey: true
+- id: messageCounter
+  name: Message Counter
+  type: UINT8
+  description: Incremented for each heartbeat message sent
+- id: keyState
+  name: Key State
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: BLINK_KEY_STATE
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: keypadIdentifier
+  name: Keypad Identifier
+  type: UINT8
+  description: Source keypad identifier, 0x21 by default
+samples:
+- raw: "2023-01-01-00:00:00.000,6,61184,33,255,8,04,1b,f9,03,01,00,ff,21"
+  expects:
+    manufacturerCode: "Blink Marine"
+    industryCode: "Global"
+    messageType: 249
+    messageCounter: 3
+    keyState: ["Key 1"]
+    keypadIdentifier: 33
+- raw: "2023-01-01-00:00:00.000,6,61184,33,255,8,04,1b,f9,03,08,00,ff,21"
+  expects:
+    manufacturerCode: "Blink Marine"
+    industryCode: "Global"
+    messageType: 249
+    messageCounter: 3
+    keyState: ["Key 4"]
+    keypadIdentifier: 33

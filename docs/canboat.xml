@@ -1817,6 +1817,7 @@ limitations under the License.
       <EnumPair Value="743" Name="DaeMyung" />
       <EnumPair Value="744" Name="Woosung" />
       <EnumPair Value="748" Name="ISOTTA IFRA srl" />
+      <EnumPair Value="772" Name="Blink Marine" />
       <EnumPair Value="773" Name="Clarion US" />
       <EnumPair Value="776" Name="HMI Systems" />
       <EnumPair Value="777" Name="Ocean Signal" />
@@ -4110,6 +4111,23 @@ limitations under the License.
     </LookupIndirectEnumeration>
   </LookupIndirectEnumerations>
   <LookupBitEnumerations>
+    <LookupBitEnumeration Name="BLINK_KEY_STATE" MaxValue="15">
+      <BitPair Bit="0" Name="Key 1" />
+      <BitPair Bit="1" Name="Key 2" />
+      <BitPair Bit="2" Name="Key 3" />
+      <BitPair Bit="3" Name="Key 4" />
+      <BitPair Bit="4" Name="Key 5" />
+      <BitPair Bit="5" Name="Key 6" />
+      <BitPair Bit="6" Name="Key 7" />
+      <BitPair Bit="7" Name="Key 8" />
+      <BitPair Bit="8" Name="Key 9" />
+      <BitPair Bit="9" Name="Key 10" />
+      <BitPair Bit="10" Name="Key 11" />
+      <BitPair Bit="11" Name="Key 12" />
+      <BitPair Bit="12" Name="Key 13" />
+      <BitPair Bit="13" Name="Key 14" />
+      <BitPair Bit="14" Name="Key 15" />
+    </LookupBitEnumeration>
     <LookupBitEnumeration Name="DISABLED_SATELLITES" MaxValue="39">
       <BitPair Bit="0" Name="Disable SV #1" />
       <BitPair Bit="1" Name="Disable SV #2" />
@@ -6254,6 +6272,138 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>61184</PGN>
+      <Id>blinkKeypadHeartbeat</Id>
+      <Description>Blink Marine: Keypad Heartbeat</Description>
+      <Priority>6</Priority>
+      <Explanation>Periodic heartbeat broadcast by a Blink Marine J1939 keypad to indicate it is still functioning, carrying the current state of every key. Disabled by default; enabled with a proprietary configuration command that also sets the period (50 ms to 2.54 s). The message counter increments with each heartbeat sent, so a stalled counter indicates a wedged keypad. Key State is a bitmap spanning bytes 4 and 5, one bit per key; the number of keys actually present varies by model (4 on the PKP-2200, up to 15 on the PKP-3500).</Explanation>
+      <URL>https://blinkmarine.com/documentation/</URL>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Blink Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>772</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Global</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>0</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageType</Id>
+          <Name>Message Type</Name>
+          <Description>Heartbeat</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>249</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>messageCounter</Id>
+          <Name>Message Counter</Name>
+          <Description>Incremented for each heartbeat message sent</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>keyState</Id>
+          <Name>Key State</Name>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>BLINK_KEY_STATE</LookupBitEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>keypadIdentifier</Id>
+          <Name>Keypad Identifier</Name>
+          <Description>Source keypad identifier, 0x21 by default</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

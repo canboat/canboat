@@ -1,0 +1,19 @@
+name: BLINK_KEY_STATE
+kind: bit
+bits: 16
+values:
+  0: Key 1
+  1: Key 2
+  2: Key 3
+  3: Key 4
+  4: Key 5
+  5: Key 6
+  6: Key 7
+  7: Key 8
+  8: Key 9
+  9: Key 10
+  10: Key 11
+  11: Key 12
+  12: Key 13
+  13: Key 14
+  14: Key 15
