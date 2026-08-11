@@ -62004,9 +62004,10 @@
         "Id":"maretronAnnunciatorCapabilities",
         "Description":"Maretron: Annunciator Capabilities",
         "Priority":6,
+        "ResearchDoc":"maretron_alm100",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","Interval"
+        "Missing":["Interval"
         ],
         "FieldCount":6,
         "MinLength":4,
@@ -63432,6 +63433,7 @@
         "Id":"maretronAlertTransmission",
         "Description":"Maretron: Alert Transmission",
         "Priority":7,
+        "ResearchDoc":"maretron_alm100",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -73369,6 +73371,7 @@
         "Id":"maretronAnnunciator",
         "Description":"Maretron: Annunciator",
         "Priority":7,
+        "ResearchDoc":"maretron_alm100",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -73420,8 +73423,8 @@
           },
           {
             "Order":4,
-            "Id":"field4",
-            "Name":"Field 4",
+            "Id":"annunciatorInstance",
+            "Name":"Annunciator Instance",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -73432,12 +73435,14 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":5,
-            "Id":"field5",
-            "Name":"Field 5",
+            "Id":"annunciatorState",
+            "Name":"Annunciator State",
+            "Description":"100 while the annunciator is sounding, 0 while it is idle.",
             "BitLength":8,
             "BitOffset":24,
             "BitStart":0,
@@ -73452,8 +73457,9 @@
           },
           {
             "Order":6,
-            "Id":"field6",
-            "Name":"Field 6",
+            "Id":"pattern",
+            "Name":"Pattern",
+            "Description":"Selects the pulse pattern; observed values 0 to 4 give audibly different beep cadences, not different pitches. Unavailable while idle.",
             "BitLength":16,
             "BitOffset":32,
             "BitStart":0,
@@ -73484,8 +73490,9 @@
           },
           {
             "Order":8,
-            "Id":"field8",
-            "Name":"Field 8",
+            "Id":"alertId",
+            "Name":"Alert ID",
+            "Description":"Identifies the alert the annunciator is currently sounding for.",
             "BitLength":16,
             "BitOffset":56,
             "BitStart":0,

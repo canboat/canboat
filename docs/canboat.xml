@@ -61928,12 +61928,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronAnnunciatorCapabilities</Id>
       <Description>Maretron: Annunciator Capabilities</Description>
       <Priority>6</Priority>
+      <ResearchDoc>maretron_alm100</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>6</FieldCount>
@@ -63391,6 +63389,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronAlertTransmission</Id>
       <Description>Maretron: Alert Transmission</Description>
       <Priority>7</Priority>
+      <ResearchDoc>maretron_alm100</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73483,6 +73482,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>maretronAnnunciator</Id>
       <Description>Maretron: Annunciator</Description>
       <Priority>7</Priority>
+      <ResearchDoc>maretron_alm100</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -73538,8 +73538,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>field4</Id>
-          <Name>Field 4</Name>
+          <Id>annunciatorInstance</Id>
+          <Name>Annunciator Instance</Name>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -73551,11 +73551,13 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>field5</Id>
-          <Name>Field 5</Name>
+          <Id>annunciatorState</Id>
+          <Name>Annunciator State</Name>
+          <Description>100 while the annunciator is sounding, 0 while it is idle.</Description>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
@@ -73570,8 +73572,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>6</Order>
-          <Id>field6</Id>
-          <Name>Field 6</Name>
+          <Id>pattern</Id>
+          <Name>Pattern</Name>
+          <Description>Selects the pulse pattern; observed values 0 to 4 give audibly different beep cadences, not different pitches. Unavailable while idle.</Description>
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -73602,8 +73605,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         </Field>
         <Field>
           <Order>8</Order>
-          <Id>field8</Id>
-          <Name>Field 8</Name>
+          <Id>alertId</Id>
+          <Name>Alert ID</Name>
+          <Description>Identifies the alert the annunciator is currently sounding for.</Description>
           <BitLength>16</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>

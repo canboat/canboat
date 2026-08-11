@@ -1,0 +1,7 @@
+# format=FAST
+# Maretron 130819 Alert Transmission, as republished onto the bus by a Maretron
+# IPG100 gateway (hence source 128). Captured on Dirk Wahrheit's bus while N2KView
+# was running and broadcasting alerts from the vessel's switching system.
+# Retained as a decode sample only: an ALM100 (product code 8165, sw 1.0.6) did NOT
+# sound when this frame was replayed at it on an otherwise silent bus.
+2026-08-10T21:49:32.206Z,2,130819,128,255,29,89,98,01,ff,ff,92,10,e8,d2,ff,06,18,01,02,0c,80,18,11,01,00,09,01,54,72,69,70,70,65,64

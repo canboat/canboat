@@ -7531,7 +7531,7 @@ Pgn pgnList[] = {
 
     {"Maretron: Annunciator Capabilities",
      130817,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_COMPLETE,
      PACKET_FAST,
      {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 137, .description = "Maretron", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
@@ -7545,7 +7545,8 @@ Pgn pgnList[] = {
      .priority = 6,
      .repeatingCount1 = 1,
      .repeatingStart1 = 6,
-     .repeatingField1 = 5},
+     .repeatingField1 = 5,
+     .researchDoc = "maretron_alm100"},
 
     {"BEP Marine: CZone Status Extended",
      130817,
@@ -7726,7 +7727,8 @@ Pgn pgnList[] = {
       {.name = "Maretron Extension", .camelName = "maretronExtension", .fieldType = "BINARY", .size = 128, .resolution = 1.0, .description = "Maretron-specific payload following the standard Alert identity header."}
      },
      .camelDescription = "maretronAlertTransmission",
-     .priority = 7},
+     .priority = 7,
+     .researchDoc = "maretron_alm100"},
 
     {"Webasto: HVAC Command",
      130819,
@@ -8999,14 +9001,15 @@ Pgn pgnList[] = {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 137, .description = "Maretron", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Field 4", .camelName = "field4", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Field 5", .camelName = "field5", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Field 6", .camelName = "field6", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Annunciator Instance", .camelName = "annunciatorInstance", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Annunciator State", .camelName = "annunciatorState", .fieldType = "UINT8", .resolution = 1.0, .description = "100 while the annunciator is sounding, 0 while it is idle."},
+      {.name = "Pattern", .camelName = "pattern", .fieldType = "UINT16", .resolution = 1.0, .description = "Selects the pulse pattern; observed values 0 to 4 give audibly different beep cadences, not different pitches. Unavailable while idle."},
       {.name = "Field 7", .camelName = "field7", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Field 8", .camelName = "field8", .fieldType = "UINT16", .resolution = 1.0}
+      {.name = "Alert ID", .camelName = "alertId", .fieldType = "UINT16", .resolution = 1.0, .description = "Identifies the alert the annunciator is currently sounding for."}
      },
      .camelDescription = "maretronAnnunciator",
-     .priority = 7},
+     .priority = 7,
+     .researchDoc = "maretron_alm100"},
 
     {"Mercury: Engine Key-Value Data",
      130824,

@@ -1,0 +1,24 @@
+# format=FAST
+# Maretron ALM100 (product code 8165, sw 1.0.6): the command channel. In these records
+# 164 is the destination, the annunciator being commanded; 128 is the gateway sending.
+#
+# The annunciator is driven by a 126208 NMEA Command group function addressed to it,
+# targeting PGN 130824 and writing that PGN's fields. Writing 130824 itself does
+# nothing, which is why this went unfound for a long time; the ALM100's receive list
+# contains 126208 but not 130824.
+#
+# Captured from the vessel's configuration software arming and sounding the device.
+# Both forms were then reproduced from canboat against the real hardware: the sounding
+# command below made the ALM100 sound, and the same command with Annunciator State 0
+# and Pattern unavailable silenced it.
+#
+# Parameter pairs are <field number> <value>, matching 130824's fields:
+#   04 = Annunciator Instance, 05 = Annunciator State, 06 = Pattern,
+#   07 = unidentified (always 23), 08 = Alert ID.
+#
+# Record 1 sounds alert 20493 (0d 50): state 100 (0x64), pattern 4.
+# Record 2 is one of nine arming commands sent at startup, one per bound alert; this
+# one is for alert 20502 (16 50) and carries state 0 with Pattern unavailable. The
+# same state 0 form, addressed at a sounding alert, is what silences the device.
+2026-08-10T22:37:18.889Z,3,126208,128,164,18,01,08,ff,01,f8,05,04,00,05,64,06,04,00,07,17,08,0d,50
+2026-08-10T22:36:28.402Z,3,126208,128,164,18,01,08,ff,01,f8,05,04,00,05,00,06,ff,ff,07,17,08,16,50

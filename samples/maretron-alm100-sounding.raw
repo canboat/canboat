@@ -1,0 +1,18 @@
+# format=FAST
+# Maretron ALM100 (product code 8165, sw 1.0.6) at source 164, WHILE SOUNDING.
+# Captured on Dirk Wahrheit's bus with N2KView driving the annunciator for a real
+# alarm. This is the state 130824 was never previously observed in.
+#
+# While the annunciator sounds, 130824 changes from its idle 00 00 ff ff ff ff ff
+# to 00 64 04 00 17 0d 50 and its rate rises from one frame per 10s to 1 Hz.
+# The last two bytes, 0d 50, are alert id 20493 little-endian -- the very alert
+# that was active in 130819/126983 at the time. So the annunciator reports which
+# alert it is sounding for.
+#
+# The 126208 Acknowledge group function the device emits confirms 130824 carries
+# exactly 5 parameters, matching field4..field8.
+2026-08-10T22:18:41.525Z,2,130824,164,255,9,89,98,00,64,04,00,17,0d,50
+2026-08-10T22:18:42.504Z,2,130824,164,255,9,89,98,00,64,04,00,17,0d,50
+2026-08-10T22:18:43.515Z,2,130824,164,255,9,89,98,00,64,04,00,17,0d,50
+2026-08-10T22:19:13.497Z,2,130824,164,255,9,89,98,00,00,ff,ff,ff,ff,ff
+2026-08-10T22:18:41.749Z,3,126208,164,128,9,02,08,ff,01,00,05,00,00,f0
