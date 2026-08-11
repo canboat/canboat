@@ -2324,6 +2324,7 @@
           {"Name":"DaeMyung", "Value":743},
           {"Name":"Woosung", "Value":744},
           {"Name":"ISOTTA IFRA srl", "Value":748},
+          {"Name":"Blink Marine", "Value":772},
           {"Name":"Clarion US", "Value":773},
           {"Name":"HMI Systems", "Value":776},
           {"Name":"Ocean Signal", "Value":777},
@@ -5103,6 +5104,27 @@
     ],
     "LookupBitEnumerations":[
       {
+        "Name":"BLINK_KEY_STATE",
+        "MaxValue":15,
+        "EnumBitValues":[
+          {"Name":"Key 1", "Bit":0},
+          {"Name":"Key 2", "Bit":1},
+          {"Name":"Key 3", "Bit":2},
+          {"Name":"Key 4", "Bit":3},
+          {"Name":"Key 5", "Bit":4},
+          {"Name":"Key 6", "Bit":5},
+          {"Name":"Key 7", "Bit":6},
+          {"Name":"Key 8", "Bit":7},
+          {"Name":"Key 9", "Bit":8},
+          {"Name":"Key 10", "Bit":9},
+          {"Name":"Key 11", "Bit":10},
+          {"Name":"Key 12", "Bit":11},
+          {"Name":"Key 13", "Bit":12},
+          {"Name":"Key 14", "Bit":13},
+          {"Name":"Key 15", "Bit":14}
+        ]
+      },
+      {
         "Name":"DISABLED_SATELLITES",
         "MaxValue":39,
         "EnumBitValues":[
@@ -7284,6 +7306,137 @@
             "BitStart":0,
             "Resolution":1,
             "FieldType":"BINARY"
+          }
+        ]
+      },
+      {
+        "PGN":61184,
+        "Id":"blinkKeypadHeartbeat",
+        "Description":"Blink Marine: Keypad Heartbeat",
+        "Priority":6,
+        "Explanation":"Periodic heartbeat broadcast by a Blink Marine J1939 keypad to indicate it is still functioning, carrying the current state of every key. Disabled by default; enabled with a proprietary configuration command that also sets the period (50 ms to 2.54 s). The message counter increments with each heartbeat sent, so a stalled counter indicates a wedged keypad. Key State is a bitmap spanning bytes 4 and 5, one bit per key; the number of keys actually present varies by model (4 on the PKP-2200, up to 15 on the PKP-3500).",
+        "URL":"https://blinkmarine.com/documentation/",
+        "Type":"Single",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":8,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Blink Marine",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":772,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Global",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageType",
+            "Name":"Message Type",
+            "Description":"Heartbeat",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":249,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"messageCounter",
+            "Name":"Message Counter",
+            "Description":"Incremented for each heartbeat message sent",
+            "BitLength":8,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
+          },
+          {
+            "Order":6,
+            "Id":"keyState",
+            "Name":"Key State",
+            "BitLength":16,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "RangeMin":0,
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"BLINK_KEY_STATE"
+          },
+          {
+            "Order":7,
+            "Id":"reserved7",
+            "Name":"Reserved",
+            "BitLength":8,
+            "BitOffset":48,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":8,
+            "Id":"keypadIdentifier",
+            "Name":"Keypad Identifier",
+            "Description":"Source keypad identifier, 0x21 by default",
+            "BitLength":8,
+            "BitOffset":56,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           }
         ]
       },

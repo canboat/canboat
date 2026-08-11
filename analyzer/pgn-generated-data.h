@@ -281,6 +281,25 @@ Pgn pgnList[] = {
      .priority = 7,
      .explanation = "Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status."},
 
+    {"Blink Marine: Keypad Heartbeat",
+     61184,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 772, .description = "Blink Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 0, .description = "Global", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message Type", .camelName = "messageType", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 249, .description = "Heartbeat", .partOfPrimaryKey = true},
+      {.name = "Message Counter", .camelName = "messageCounter", .fieldType = "UINT8", .resolution = 1.0, .description = "Incremented for each heartbeat message sent"},
+      {.name = "Key State", .camelName = "keyState", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupBLINK_KEY_STATE, .lookup.name = "BLINK_KEY_STATE"},
+      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
+      {.name = "Keypad Identifier", .camelName = "keypadIdentifier", .fieldType = "UINT8", .resolution = 1.0, .description = "Source keypad identifier, 0x21 by default"}
+     },
+     .camelDescription = "blinkKeypadHeartbeat",
+     .priority = 6,
+     .explanation = "Periodic heartbeat broadcast by a Blink Marine J1939 keypad to indicate it is still functioning, carrying the current state of every key. Disabled by default; enabled with a proprietary configuration command that also sets the period (50 ms to 2.54 s). The message counter increments with each heartbeat sent, so a stalled counter indicates a wedged keypad. Key State is a bitmap spanning bytes 4 and 5, one bit per key; the number of keys actually present varies by model (4 on the PKP-2200, up to 15 on the PKP-3500).",
+     .url = "https://blinkmarine.com/documentation/"},
+
     {"0xF000-0xFEFF: Standardized single-frame non-addressed",
      61440,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
