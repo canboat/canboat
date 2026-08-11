@@ -1,0 +1,32 @@
+pgn: 64776
+id: engineOilMessage
+description: Engine Oil Message
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineOilViscosity
+  name: Engine Oil Viscosity
+  description: SPN 5055, 0.015625 cP per bit
+  type: NUMBER
+  bits: 16
+  unit: cP
+  resolution: 0.015625
+- id: engineOilDensity
+  name: Engine Oil Density
+  description: SPN 5056, 1/32768 g/cm3 per bit
+  type: NUMBER
+  bits: 16
+  unit: g/cm3
+  resolution: 3.05175781e-05
+- id: engineOilRelativeDielectricity
+  name: Engine Oil Relative Dielectricity
+  description: SPN 5468, 1/8192 per bit
+  type: NUMBER
+  bits: 16
+  resolution: 0.0001220703125
+- id: engineOilTemperature3
+  name: Engine Oil Temperature 3
+  description: SPN 5925
+  type: TEMPERATURE_UFIX16_J1939
+notes: 'Engine Oil Message (EOM) PGN 64776, layout per SAE J1939-71'

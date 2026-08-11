@@ -375,6 +375,13 @@
   offset: 233
   resolution: 1.0
   physical: TEMPERATURE
+- name: TEMPERATURE_UFIX16_J1939
+  base: UFIX16
+  description: Temperature, J1939 16 bit
+  encodingDescription: SAE J1939's 16-bit temperature encoding, 0.03125 K per bit offset by -273 K
+  offset: -273
+  resolution: 0.03125
+  physical: TEMPERATURE
 - name: TEMPERATURE_HIGH
   base: UFIX16
   description: Temperature, high range
@@ -397,6 +404,17 @@
   description: Volumetric flow
   resolution: 0.1
   physical: VOLUMETRIC_FLOW
+- name: VOLUMETRIC_FLOW_UFIX16_J1939
+  base: UFIX16
+  description: Volumetric flow, J1939 fuel rate
+  encodingDescription: SAE J1939's fuel rate encoding, 0.05 litre per hour per bit
+  resolution: 0.05
+  physical: VOLUMETRIC_FLOW
+- name: DISTANCE_PER_VOLUME_UFIX16_J1939
+  base: UFIX16
+  description: Fuel economy, distance per volume in km/l
+  encodingDescription: SAE J1939's fuel economy encoding, 1/512 kilometre per litre per bit. No physical quantity is declared - canboat has none for distance per volume.
+  resolution: 0.001953125
 - name: CONCENTRATION_UINT16_PPM
   base: UINT16
   description: Concentration of one substance in another, in this context usually the amount of salts in water
@@ -423,6 +441,12 @@
   description: Volume
   resolution: 0.0001
   physical: VOLUME
+- name: VOLUME_UFIX32_HL
+  base: UFIX32
+  description: Volume, J1939 fuel total
+  encodingDescription: SAE J1939's fuel consumption encoding, 0.5 litre per bit
+  resolution: 0.5
+  physical: VOLUME
 - name: TIME
   description: Time
   sentinels: TopOfRange
@@ -438,6 +462,13 @@
   description: Duration
   bits: 32
   resolution: 0.0001
+  signed: false
+- name: DURATION_UFIX32_J1939_HOURS
+  base: DURATION
+  description: Time duration, 32 bits with J1939's 0.05 hour resolution
+  encodingDescription: SAE J1939's engine-hours encoding, 0.05 hours (180 seconds) per bit
+  bits: 32
+  resolution: 180.0
   signed: false
 - name: DURATION_UFIX16_S
   base: DURATION
@@ -854,6 +885,12 @@
   base: UINT8
   description: Pressure, 8 bit unsigned in .5 kilopascal resolution
   resolution: 500.0
+  physical: PRESSURE
+- name: PRESSURE_UINT8_005KPA
+  base: UINT8
+  description: Pressure, 8 bit unsigned in 0.05 kilopascal resolution
+  encodingDescription: SAE J1939's low-range differential pressure encoding
+  resolution: 50.0
   physical: PRESSURE
 - name: PRESSURE_UFIX16_KPA
   base: UFIX16

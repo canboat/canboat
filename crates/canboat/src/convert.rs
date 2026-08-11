@@ -91,6 +91,10 @@ enum FromFormat {
     /// Garmin CSV2 (absolute timestamps + `Processed PGN` column).
     #[value(name = "garmin-csv2")]
     GarminCsv2,
+    /// SocketCAN `candump` text (pretty `can0 <id> [len] <hex>…` or
+    /// `-l`/`-L` log `(<epoch>) can0 <id>#<hex>` lines).
+    #[value(name = "candump")]
+    Candump,
     /// Actisense `.ebl` binary log. Not a line format — decoded via the
     /// EBL frame reader, so it has no [`InputFormat`] mapping.
     #[value(name = "actisense-ebl")]
@@ -111,6 +115,7 @@ impl FromFormat {
             FromFormat::Chetco => InputFormat::Chetco,
             FromFormat::Garmin => InputFormat::GarminCsv,
             FromFormat::GarminCsv2 => InputFormat::GarminCsv2,
+            FromFormat::Candump => InputFormat::Candump,
             FromFormat::ActisenseEbl | FromFormat::Json => return None,
         })
     }
@@ -125,7 +130,7 @@ Convert a capture between formats: any supported input → PLAIN, JSON, or text.
 
 Input line formats (auto-detected from the first line, or forced with --from):
   plain, plain-mix-fast, actisense, ydwg02, ikonvert, airmar, chetco,
-  garmin, garmin-csv2.
+  garmin, garmin-csv2, candump.
 
 Container files (unwrapped automatically by file extension):
   .pcap / .pcap.gz   libpcap SocketCAN capture (link-type 227)
@@ -223,6 +228,13 @@ pub struct Args {
     #[arg(long)]
     no_banner: bool,
 
+    /// Decode against the J1939 schema (`database/j1939/pgns/`)
+    /// instead of NMEA 2000 — the counterpart of running the C
+    /// `analyzer-j1939`. For plain J1939 buses (engines, gensets);
+    /// table choice is exclusive, the ISO PGNs exist in both.
+    #[arg(long)]
+    j1939: bool,
+
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
     geo: GeoArg,
@@ -314,7 +326,11 @@ fn convert_raw<W: Write>(
         // a bannerless stream. `-nv` raw values are unit-agnostic.
         Box::new(canboat::json_input::JsonFrameReader::new(
             source,
-            canboat_core::PgnDatabase::embedded(args.shape.units()),
+            if args.j1939 {
+                canboat_core::PgnDatabase::embedded_j1939(args.shape.units())
+            } else {
+                canboat_core::PgnDatabase::embedded(args.shape.units())
+            },
         ))
     } else {
         match forced {
@@ -388,6 +404,8 @@ fn convert_decoded<W: Write>(
         dst_filter: args.dst,
         suppress_startup_record: false,
         units: args.shape.units(),
+        j1939: args.j1939,
+        fixed_time: None,
     };
 
     let mut line = String::with_capacity(512);
@@ -420,7 +438,11 @@ fn convert_decoded<W: Write>(
         // JSON reader tracks the *input's* separately, from its banner,
         // so `--from json` doubles as a unit converter: read a canboat C
         // `"units":"std"` stream, emit SI (or the other way round).
-        let db = canboat_core::PgnDatabase::embedded(cfg.units);
+        let db = if cfg.j1939 {
+            canboat_core::PgnDatabase::embedded_j1939(cfg.units)
+        } else {
+            canboat_core::PgnDatabase::embedded(cfg.units)
+        };
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
         } else {

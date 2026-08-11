@@ -1,0 +1,38 @@
+pgn: 65213
+id: fanDrive
+description: Fan Drive
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: estimatedPercentFanSpeed
+  name: Estimated Percent Fan Speed
+  description: SPN 975
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: fanDriveState
+  name: Fan Drive State
+  description: SPN 977
+  type: NUMBER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: fanSpeed
+  name: Fan Speed
+  description: SPN 1639
+  type: ROTATION_UFIX16_RPM_HIGHRES
+- id: hydraulicFanMotorPressure
+  name: Hydraulic Fan Motor Pressure
+  description: SPN 4211
+  type: PRESSURE_UFIX16_KPA
+- id: hydraulicFanMotorPressure2
+  name: Hydraulic Fan Motor Pressure 2
+  description: SPN 4212
+  type: PRESSURE_UINT8_KPA
+- id: reserved2
+  name: Reserved
+  type: RESERVED
+  bits: 8
+notes: 'Fan Drive (FD) PGN 65213, layout per SAE J1939-71'

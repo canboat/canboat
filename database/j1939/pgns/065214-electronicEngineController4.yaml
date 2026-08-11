@@ -1,0 +1,41 @@
+pgn: 65214
+id: electronicEngineController4
+description: Electronic Engine Controller 4
+type: Single
+priority: 6
+fields:
+- id: engineRatedPower
+  name: Engine Rated Power
+  description: SPN 166, 0.5 kW per bit
+  type: NUMBER
+  bits: 16
+  unit: kW
+  resolution: 0.5
+- id: engineRatedSpeed
+  name: Engine Rated Speed
+  description: SPN 189
+  type: ROTATION_UFIX16_RPM_HIGHRES
+- id: engineRotationDirection
+  name: Engine Rotation Direction
+  description: SPN 3669
+  type: NUMBER
+  bits: 2
+- id: engineIntakeManifoldPressureControlMode
+  name: Engine Intake Manifold Pressure Control Mode
+  description: SPN 5465
+  type: NUMBER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: crankAttemptCountOnPresentStartAttempt
+  name: Crank Attempt Count on Present Start Attempt
+  description: SPN 3671
+  type: NUMBER
+  bits: 8
+- id: reserved8
+  name: Reserved
+  type: RESERVED
+  bits: 16
+notes: 'Electronic Engine Controller 4 (EEC4) PGN 65214, layout per SAE J1939-71. Sent on request rather than cyclically.'

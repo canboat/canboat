@@ -1,0 +1,36 @@
+pgn: 65243
+id: engineFluidLevelPressure2
+description: Engine Fluid Level/Pressure 2
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineFuelInjectionControlPressure
+  name: Engine Fuel Injection Control Pressure
+  description: SPN 164, 1/256 MPa per bit
+  type: NUMBER
+  bits: 16
+  unit: MPa
+  resolution: 0.00390625
+- id: engineFuel1InjectorMeteringRail1Pressure
+  name: Engine Fuel 1 Injector Metering Rail 1 Pressure
+  description: SPN 157, 1/256 MPa per bit
+  type: NUMBER
+  bits: 16
+  unit: MPa
+  resolution: 0.00390625
+- id: engineFuel1InjectorTimingRail1Pressure
+  name: Engine Fuel 1 Injector Timing Rail 1 Pressure
+  description: SPN 156, 1/256 MPa per bit
+  type: NUMBER
+  bits: 16
+  unit: MPa
+  resolution: 0.00390625
+- id: engineFuel1InjectorMeteringRail2Pressure
+  name: Engine Fuel 1 Injector Metering Rail 2 Pressure
+  description: SPN 1349, 1/256 MPa per bit
+  type: NUMBER
+  bits: 16
+  unit: MPa
+  resolution: 0.00390625
+notes: 'Engine Fluid Level/Pressure 2 (EFL/P2) PGN 65243, layout per SAE J1939-71'

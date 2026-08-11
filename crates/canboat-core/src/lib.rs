@@ -21,6 +21,7 @@ pub mod os;
 pub mod output;
 pub mod reassembly;
 mod schema_data;
+mod schema_data_j1939;
 pub mod snapshot;
 pub mod source;
 pub mod startup;

@@ -1,0 +1,34 @@
+pgn: 64947
+id: aftertreatment1OutletGas2
+description: Aftertreatment 1 Outlet Gas 2
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: aftertreatment1OutletGasTemperature2
+  name: Aftertreatment 1 Outlet Gas Temperature 2
+  description: SPN 3245
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1OutletGasPressure2
+  name: Aftertreatment 1 Outlet Gas Pressure 2
+  description: SPN 3246, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: aftertreatment1OutletGasTemperature2PreliminaryFMI
+  name: Aftertreatment 1 Outlet Gas Temperature 2 Preliminary FMI
+  description: SPN 3247
+  type: NUMBER
+  bits: 5
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 3
+- id: aftertreatment1OutletGasPressure2PreliminaryFMI
+  name: Aftertreatment 1 Outlet Gas Pressure 2 Preliminary FMI
+  description: SPN 3248
+  type: NUMBER
+  bits: 5
+- id: reserved2
+  name: Reserved
+  type: RESERVED
+  bits: 19
+notes: 'Aftertreatment 1 Outlet Gas 2 (AT1OG2) PGN 64947, layout per SAE J1939-71. The Preliminary FMI fields carry a 5 bit J1939 Failure Mode Identifier.'

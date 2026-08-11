@@ -1,0 +1,7 @@
+name: SLEIPNER_THRUSTER_DIRECTION
+kind: pair
+bits: 2
+values:
+  0: None
+  1: Direction 1
+  2: Direction 2

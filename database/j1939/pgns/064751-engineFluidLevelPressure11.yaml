@@ -1,0 +1,24 @@
+pgn: 64751
+id: engineFluidLevelPressure11
+description: Engine Fluid Level/Pressure 11
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineExhaustGasRecirculation1IntakeAbsolutePressure
+  name: Engine Exhaust Gas Recirculation 1 Intake Absolute Pressure
+  description: SPN 5430, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: engineExhaustGasRecirculation1OutletAbsolutePressure
+  name: Engine Exhaust Gas Recirculation 1 Outlet Absolute Pressure
+  description: SPN 5431, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: engineExhaustGasRecirculation2IntakeAbsolutePressure
+  name: Engine Exhaust Gas Recirculation 2 Intake Absolute Pressure
+  description: SPN 7468, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: engineExhaustGasRecirculation2OutletAbsolutePressure
+  name: Engine Exhaust Gas Recirculation 2 Outlet Absolute Pressure
+  description: SPN 7469, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+notes: 'Engine Fluid Level/Pressure 11 (EFL/P11) PGN 64751, layout per SAE J1939-71'
