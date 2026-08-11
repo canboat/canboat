@@ -404,9 +404,38 @@ mod tests {
     const NAME_A: u64 = 0x0004_0000_1066_7913;
     const NAME_B: u64 = 0x0004_0000_0761_9208;
 
+    /// Each engine gets its own file. Tests call `save()` for real, so a
+    /// shared path would let concurrently-running tests clobber each other,
+    /// and a PID-only name would collide across repeated `cargo test` runs.
+    struct TempPath(PathBuf);
+
+    impl Drop for TempPath {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_file(&self.0);
+        }
+    }
+
+    thread_local! {
+        static TEMP_PATHS: std::cell::RefCell<Vec<TempPath>> =
+            const { std::cell::RefCell::new(Vec::new()) };
+    }
+
+    fn temp_path() -> PathBuf {
+        use std::sync::atomic::{AtomicU64, Ordering};
+        static COUNTER: AtomicU64 = AtomicU64::new(0);
+        let path = std::env::temp_dir().join(format!(
+            "cb-ov-test-{}-{}.json",
+            std::process::id(),
+            COUNTER.fetch_add(1, Ordering::Relaxed)
+        ));
+        // Held until the test thread ends, then removed.
+        TEMP_PATHS.with(|p| p.borrow_mut().push(TempPath(path.clone())));
+        path
+    }
+
     fn engine() -> OverrideEngine {
         OverrideEngine {
-            path: std::env::temp_dir().join(format!("cb-ov-test-{}.json", std::process::id())),
+            path: temp_path(),
             src_name: [None; 256],
             rules: HashMap::new(),
             replayed: HashMap::new(),
