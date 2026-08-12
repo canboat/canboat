@@ -2,7 +2,8 @@
 //!
 //! Generates the *data* halves of the analyzer's tables from database/:
 //!
-//!   analyzer/lookup-generated-data.h                  - whole file (it is all data)
+//!   analyzer/lookup-generated-data.h             - lookups the marine tree uses
+//!   analyzer/lookup-j1939-generated-data.h       - lookups the J1939 tree uses
 //!   analyzer/physicalquantity-generated-data.h   - PhysicalQuantity statics + list
 //!   analyzer/fieldtype-generated-data.h          - fieldTypeList[]
 //!   analyzer/pgn-generated-data.h                - pgnList[]
@@ -128,20 +129,24 @@ const LOOKUP_EPILOGUE: &str = "// Keep this at the end, so a next include does n
 #undef LOOKUP_END
 ";
 
-pub fn emit_lookup_h(db: &Database) -> String {
+/// With `j1939` set, emits only the lookups the J1939 tree references, into
+/// `analyzer/lookup-j1939-generated-data.h`. The marine flavor keeps
+/// everything else, so neither binary compiles the other's tables.
+pub fn emit_lookup_h(db: &Database, j1939: bool) -> String {
+    let keep = db.lookups_used(j1939);
     let mut out = String::with_capacity(256 << 10);
     out.push_str(BANNER);
     out.push_str(LOOKUP_PROLOGUE);
     out.push('\n');
 
-    for lk in db.ordered_lookups("pair") {
+    for lk in db.ordered_lookups_for("pair", &keep) {
         out.push_str(&format!("LOOKUP_TYPE({}, BITS({}))\n", lk.name, lk.bits));
         for (value, name) in &lk.pairs {
             out.push_str(&format!("LOOKUP({}, {value}, {})\n", lk.name, c_str(name)));
         }
         out.push_str("LOOKUP_END\n\n");
     }
-    for lk in db.ordered_lookups("triplet") {
+    for lk in db.ordered_lookups_for("triplet", &keep) {
         out.push_str(&format!(
             "LOOKUP_TYPE_TRIPLET({}, BITS({}))\n",
             lk.name, lk.bits
@@ -155,7 +160,7 @@ pub fn emit_lookup_h(db: &Database) -> String {
         }
         out.push_str("LOOKUP_END\n\n");
     }
-    for lk in db.ordered_lookups("bit") {
+    for lk in db.ordered_lookups_for("bit", &keep) {
         out.push_str(&format!(
             "LOOKUP_TYPE_BITFIELD({}, BITS({}))\n",
             lk.name, lk.bits
@@ -169,7 +174,7 @@ pub fn emit_lookup_h(db: &Database) -> String {
         }
         out.push_str("LOOKUP_END\n\n");
     }
-    for lk in db.ordered_lookups("fieldtype") {
+    for lk in db.ordered_lookups_for("fieldtype", &keep) {
         out.push_str(&format!(
             "LOOKUP_TYPE_FIELDTYPE({}, BITS({}))\n",
             lk.name, lk.bits

@@ -60,9 +60,18 @@ limitations under the License.
 #define max(x, y) ((x) >= (y) ? (x) : (y))
 #endif
 
+/* The two binaries carry different lookup tables: the marine one has no use
+ * for the ISO 11783/J1939 manufacturer registry, and vice versa. keel emits
+ * one file per tree; lookup.c and fieldtype.c are shared, so they include
+ * whichever this build selected.
+ */
 #ifdef J1939
+#define LOOKUP_GENERATED_DATA "lookup-j1939-generated-data.h"
+#define lookupManufacturerCode lookupJ1939_MANUFACTURER_CODE
 #include "pgn-j1939.h"
 #else
+#define LOOKUP_GENERATED_DATA "lookup-generated-data.h"
+#define lookupManufacturerCode lookupMANUFACTURER_CODE
 #include "pgn.h"
 #endif
 

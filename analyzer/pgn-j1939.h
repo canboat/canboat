@@ -128,7 +128,7 @@ typedef struct
 #define LOOKUP_TYPE_BITFIELD(type, length) extern const char *lookup##type(size_t val);
 #define LOOKUP_TYPE_FIELDTYPE(type, length) extern const char *lookup##type(size_t val);
 
-#include "lookup-generated-data.h"
+#include "lookup-j1939-generated-data.h"
 
 typedef enum PacketComplete
 {
