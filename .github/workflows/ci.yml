@@ -29,6 +29,12 @@ jobs:
       - name: make
         run: make
 
+      # The C regression suite (analyzer, actisense-serial, candump2analyzer)
+      # ran only from release.yaml, so a decode regression stayed invisible
+      # until release day. Gate it on every PR instead.
+      - name: make tests
+        run: make tests
+
       - name: make generated
         run: make generated
 
