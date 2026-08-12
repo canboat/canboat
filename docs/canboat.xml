@@ -1759,11 +1759,10 @@ limitations under the License.
       <EnumPair Value="459" Name="Alltek Marine Electronics" />
       <EnumPair Value="460" Name="SAN GIORGIO S.E.I.N" />
       <EnumPair Value="466" Name="Veethree Electronics &amp; Marine" />
-      <EnumPair Value="467" Name="Humminbird Marine Electronics" />
       <EnumPair Value="470" Name="SI-TEX Marine Electronics" />
       <EnumPair Value="471" Name="Sea Cross Marine" />
       <EnumPair Value="475" Name="GME aka Standard Communications" />
-      <EnumPair Value="476" Name="Humminbird Marine Electronics 2" />
+      <EnumPair Value="476" Name="Humminbird Marine Electronics" />
       <EnumPair Value="478" Name="Ocean Sat" />
       <EnumPair Value="481" Name="Chetco Digital Instruments" />
       <EnumPair Value="493" Name="Watcheye" />
