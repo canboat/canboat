@@ -19,7 +19,7 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: Sleipner Motor AS
+  description: Sleipner Motor
   match: 306
   lookup: MANUFACTURER_CODE
 - id: reserved
@@ -79,7 +79,7 @@ fields:
 samples:
 - raw: "2023-01-01-00:00:00.000,6,130817,8,255,17,32,99,19,11,00,00,20,18,00,bf,0a,00,00,00,00,00,64"  # from sleipner-slink-ppc.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     deviceType: 25
     motorTemperature: 32
@@ -90,7 +90,7 @@ samples:
     d: 100
 - raw: "2023-01-01-00:00:00.000,6,130817,8,255,17,32,99,19,11,00,00,19,18,00,ab,09,00,00,f2,15,9c,64"  # from sleipner-slink-ppc.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     deviceType: 25
     motorTemperature: 25

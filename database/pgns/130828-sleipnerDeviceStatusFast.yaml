@@ -17,7 +17,7 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: Sleipner Motor AS
+  description: Sleipner Motor
   match: 306
   lookup: MANUFACTURER_CODE
 - id: reserved
