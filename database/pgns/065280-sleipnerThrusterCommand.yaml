@@ -19,7 +19,7 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: Sleipner Motor AS
+  description: Sleipner Motor
   match: 306
   lookup: MANUFACTURER_CODE
 - id: reserved
@@ -63,7 +63,7 @@ fields:
 samples:
 - raw: "2023-01-01-00:00:00.000,2,65280,6,255,8,32,99,81,00,00,00,00,00"  # from sleipner-slink-thruster.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     thrusterInstance: 1
     direction: "None"
@@ -71,7 +71,7 @@ samples:
     thrust: 0.0
 - raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,41,00,00,00,00,00"  # from sleipner-slink-thruster.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     thrusterInstance: 1
     direction: "None"
@@ -79,7 +79,7 @@ samples:
     thrust: 0.0
 - raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,51,e8,03,00,00,00"  # from sleipner-slink-thruster.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     thrusterInstance: 1
     direction: "Direction 1"
@@ -87,7 +87,7 @@ samples:
     thrust: 100.0
 - raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,61,e8,03,00,00,00"  # from sleipner-slink-thruster.raw
   expects:
-    manufacturerCode: "Sleipner Motor AS"
+    manufacturerCode: "Sleipner Motor"
     industryCode: "Marine Industry"
     thrusterInstance: 1
     direction: "Direction 2"

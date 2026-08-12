@@ -12,7 +12,7 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: BEP Marine 2
+  description: BEP Marine
   match: 295
   lookup: MANUFACTURER_CODE
 - id: reserved

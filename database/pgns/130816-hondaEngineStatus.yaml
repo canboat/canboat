@@ -13,8 +13,8 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: Honda Marine
-  match: 175
+  description: Honda Motor
+  match: 257
   lookup: MANUFACTURER_CODE
 - id: reserved
   name: Reserved
