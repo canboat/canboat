@@ -21,7 +21,11 @@ pub fn emit_artifacts(
         ),
         (
             root.join("analyzer/lookup-generated-data.h"),
-            emit_c::emit_lookup_h(db),
+            emit_c::emit_lookup_h(db, false),
+        ),
+        (
+            root.join("analyzer/lookup-j1939-generated-data.h"),
+            emit_c::emit_lookup_h(db, true),
         ),
         (
             root.join("analyzer/physicalquantity-generated-data.h"),

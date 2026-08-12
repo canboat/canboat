@@ -1029,7 +1029,12 @@ fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
         });
     }
 
-    let of_kind = |k: &str| -> Vec<&crate::model::Lookup> { db.ordered_lookups(k) };
+    // Each flavor carries only the enumerations its own PGNs reference, so
+    // the marine crate does not embed the J1939 manufacturer registry (and
+    // vice versa). Lookups no tree references stay with the marine flavor,
+    // where docs/canboat.json already publishes them.
+    let keep = db.lookups_used(j1939);
+    let of_kind = |k: &str| -> Vec<&crate::model::Lookup> { db.ordered_lookups_for(k, &keep) };
     CanboatJson {
         schema_version: db.schema_version.clone(),
         version: db.version.clone(),
@@ -1135,10 +1140,10 @@ fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
 /// With `j1939` set, emits the J1939 PGN tables (from
 /// `database/j1939/pgns/`) instead — the Rust mirror of
 /// `pgn-j1939-generated-data.h`. That flavor carries only the PGN and
-/// dispatch tables: the version constants, lookup tables and id
-/// constants are shared with the main schema (both files are included
-/// as sibling modules of one crate, and the J1939 YAMLs reference the
-/// same enumerations).
+/// dispatch tables plus its own lookup tables: only the version
+/// constants and id constants are shared with the main schema. The two
+/// trees no longer draw on one manufacturer registry, so each carries
+/// just the enumerations its own PGNs reference.
 pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> String {
     let canboat = from_keel(db, j1939);
 
@@ -1213,21 +1218,34 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         pgns = if j1939 { "j1939/pgns" } else { "pgns" }
     )
     .unwrap();
-    if j1939 {
-        writeln!(
-            out,
-            "use canboat_schema::{{FieldInfo, FieldType, PacketType, PgnInfo}};"
-        )
-        .unwrap();
-    } else {
-        writeln!(
-            out,
-            "use canboat_schema::{{BitLookupTable, BitLookupValue, FieldInfo, FieldType, \
-             IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, \
-             LookupTable, LookupValue, PacketType, PgnInfo}};"
-        )
-        .unwrap();
+    // The table types are always needed (every static is declared, even
+    // when empty); the *value* types only when some table has entries. A
+    // tree with no bit lookups must not import BitLookupValue, or the
+    // generated file warns.
+    let mut imports = vec![
+        "BitLookupTable",
+        "FieldInfo",
+        "FieldType",
+        "IndirectLookupTable",
+        "LookupFieldTypeTable",
+        "LookupTable",
+        "PacketType",
+        "PgnInfo",
+    ];
+    if lookups.iter().any(|t| !t.values.is_empty()) {
+        imports.push("LookupValue");
     }
+    if bit_lookups.iter().any(|t| !t.values.is_empty()) {
+        imports.push("BitLookupValue");
+    }
+    if indirect_lookups.iter().any(|t| !t.values.is_empty()) {
+        imports.push("IndirectLookupValue");
+    }
+    if ft_indexed.iter().any(|(t, _)| !t.values.is_empty()) {
+        imports.push("LookupFieldTypeValue");
+    }
+    imports.sort_unstable();
+    writeln!(out, "use canboat_schema::{{{}}};", imports.join(", ")).unwrap();
 
     if !j1939 {
         writeln!(
@@ -1367,10 +1385,11 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     }
     writeln!(out, "];").unwrap();
 
-    // Lookup tables are shared between the two schema flavors — the
-    // J1939 YAMLs reference the same enumerations, so its module leans
-    // on the main schema's statics instead of duplicating them.
-    if !j1939 {
+    // Each flavor emits its own lookup statics, holding only the
+    // enumerations that flavor's PGNs reference. They used to be shared,
+    // but the two trees no longer draw from one manufacturer registry:
+    // marine uses MANUFACTURER_CODE, J1939 uses J1939_MANUFACTURER_CODE.
+    {
         // LOOKUPS — sorted by name.
         writeln!(out, "pub static LOOKUPS: &[LookupTable] = &[").unwrap();
         for t in &lookups {

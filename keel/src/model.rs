@@ -7,7 +7,7 @@
 //!
 //! Tri-state booleans (C `Bool`: True/False/Null) are `Option<bool>`.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 /// `<MissingAttribute>` names in emission order (analyzer-explain.c).
 pub const MISSING_ATTRIBUTES: [&str; 7] = [
@@ -297,5 +297,138 @@ impl Database {
         let mut out: Vec<&Lookup> = self.lookups.values().filter(|lk| lk.kind == kind).collect();
         out.sort_by(|a, b| a.name.cmp(&b.name));
         out
+    }
+
+    /// `ordered_lookups`, restricted to the lookups one tree actually needs.
+    pub fn ordered_lookups_for(&self, kind: &str, keep: &HashSet<String>) -> Vec<&Lookup> {
+        self.ordered_lookups(kind)
+            .into_iter()
+            .filter(|lk| keep.contains(&lk.name))
+            .collect()
+    }
+
+    /// The lookups a tree's PGNs reference, transitively: a `kind: fieldtype`
+    /// lookup can name a nested lookup per entry, and that nested one has to
+    /// travel with it.
+    ///
+    /// The marine tree additionally keeps every lookup that *no* tree
+    /// references. Those orphans are already published in `docs/canboat.json`,
+    /// so dropping them here would be a silent contract change; they stay put
+    /// until something deliberately retires them.
+    pub fn lookups_used(&self, j1939: bool) -> HashSet<String> {
+        let names = |pgns: &'_ [Pgn]| -> Vec<String> {
+            pgns.iter()
+                .flat_map(|p| p.fields.iter())
+                .filter_map(|f| f.lookup_ref())
+                .map(|(_, n)| n.to_string())
+                .collect()
+        };
+        let pgns = if j1939 { &self.pgns_j1939 } else { &self.pgns };
+        let mut used: HashSet<String> = names(pgns).into_iter().collect();
+
+        if !j1939 {
+            let referenced: HashSet<String> = names(&self.pgns)
+                .into_iter()
+                .chain(names(&self.pgns_j1939))
+                .collect();
+            used.extend(
+                self.lookups
+                    .keys()
+                    .filter(|n| !referenced.contains(*n))
+                    .cloned(),
+            );
+        }
+
+        // Close over nested lookups named by fieldtype-lookup entries.
+        loop {
+            let nested: Vec<String> = used
+                .iter()
+                .filter_map(|n| self.lookups.get(n))
+                .flat_map(|lk| lk.fieldtypes.iter())
+                .filter_map(|e| e.lookup.clone())
+                .filter(|n| !used.contains(n))
+                .collect();
+            if nested.is_empty() {
+                break;
+            }
+            used.extend(nested);
+        }
+        used
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn pgn_with(lookup: &str) -> Pgn {
+        Pgn {
+            fields: vec![Field {
+                lookup: Some(lookup.to_string()),
+                ..Default::default()
+            }],
+            ..Default::default()
+        }
+    }
+
+    fn lookup_named(name: &str) -> Lookup {
+        Lookup {
+            name: name.to_string(),
+            kind: "pair".to_string(),
+            ..Default::default()
+        }
+    }
+
+    /// Two trees, two manufacturer registries: neither may see the other's.
+    #[test]
+    fn each_tree_gets_only_its_own_lookups() {
+        let mut db = Database::default();
+        db.pgns.push(pgn_with("MANUFACTURER_CODE"));
+        db.pgns_j1939.push(pgn_with("J1939_MANUFACTURER_CODE"));
+        for n in ["MANUFACTURER_CODE", "J1939_MANUFACTURER_CODE"] {
+            db.lookups.insert(n.to_string(), lookup_named(n));
+        }
+
+        let marine = db.lookups_used(false);
+        assert!(marine.contains("MANUFACTURER_CODE"));
+        assert!(!marine.contains("J1939_MANUFACTURER_CODE"));
+
+        let j1939 = db.lookups_used(true);
+        assert!(j1939.contains("J1939_MANUFACTURER_CODE"));
+        assert!(!j1939.contains("MANUFACTURER_CODE"));
+    }
+
+    /// A lookup nothing references is already published in canboat.json, so
+    /// it stays with the marine tree rather than vanishing.
+    #[test]
+    fn orphan_lookups_stay_with_the_marine_tree() {
+        let mut db = Database::default();
+        db.pgns_j1939.push(pgn_with("J1939_MANUFACTURER_CODE"));
+        for n in ["ORPHAN", "J1939_MANUFACTURER_CODE"] {
+            db.lookups.insert(n.to_string(), lookup_named(n));
+        }
+        assert!(db.lookups_used(false).contains("ORPHAN"));
+        assert!(!db.lookups_used(true).contains("ORPHAN"));
+    }
+
+    /// A fieldtype lookup names a nested lookup per entry; it has to travel
+    /// with the tree that uses the outer one.
+    #[test]
+    fn nested_fieldtype_lookups_come_along() {
+        let mut db = Database::default();
+        db.pgns.push(pgn_with("OUTER"));
+        let mut outer = lookup_named("OUTER");
+        outer.kind = "fieldtype".to_string();
+        outer.fieldtypes.push(FieldTypeLookupEntry {
+            lookup: Some("NESTED".to_string()),
+            ..Default::default()
+        });
+        db.lookups.insert("OUTER".to_string(), outer);
+        db.lookups
+            .insert("NESTED".to_string(), lookup_named("NESTED"));
+
+        let marine = db.lookups_used(false);
+        assert!(marine.contains("OUTER") && marine.contains("NESTED"));
+        assert!(!db.lookups_used(true).contains("NESTED"));
     }
 }

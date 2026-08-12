@@ -33,7 +33,7 @@ all:	bin compile
 	@echo "Use 'make generated' to recreate generated XML, HTML, JSON and DBC files."
 
 compile: bin
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir || exit 1; done
 
 tests:  compile
 	$(MAKE) -C analyzer tests
