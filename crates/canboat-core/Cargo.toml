@@ -1,0 +1,22 @@
+[package]
+name        = "canboat-core"
+version     = { workspace = true }
+edition     = { workspace = true }
+license     = { workspace = true }
+authors     = { workspace = true }
+repository  = { workspace = true }
+rust-version = { workspace = true }
+description = "Sans-I/O NMEA 2000 (canboat) PGN database, parsers, decoder, and formatters."
+
+[dependencies]
+canboat-schema = { workspace = true }
+thiserror     = { workspace = true }
+log           = { workspace = true }
+smallvec      = { workspace = true }
+indexmap      = { workspace = true }
+# `itoa` for fast u64 → ASCII in the fixed-precision float formatter.
+# core::fmt::Display::<u64>::fmt was a measurable share of
+# output/json.rs's CPU on the merrimac-2022 workload; itoa is several
+# x faster and writes into a stack buffer.
+itoa = "1"
+

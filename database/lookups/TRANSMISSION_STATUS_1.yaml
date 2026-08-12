@@ -1,0 +1,9 @@
+name: TRANSMISSION_STATUS_1
+kind: bit
+bits: 8
+values:
+  0: Check Transmission
+  1: Over Temperature
+  2: Low Oil Pressure
+  3: Low Oil Level
+  4: Sail Drive

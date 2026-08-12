@@ -1,0 +1,68 @@
+pgn: 126720
+id: garminNightMode
+description: 'Garmin: Night Mode'
+type: Fast
+variantOrder: 52
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Garmin
+  match: 229
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: unknownId1
+  name: Unknown ID 1
+  type: UINT8
+  description: Always 222
+  match: 222
+- id: unknownId2
+  name: Unknown ID 2
+  type: UINT8
+  description: Always 5
+  match: 5
+- id: unknownId3
+  name: Unknown ID 3
+  type: UINT8
+  description: Always 5
+  match: 5
+- id: unknownId4
+  name: Unknown ID 4
+  type: UINT8
+  description: Always 5
+  match: 5
+- id: spare8
+  name: Spare
+  type: SPARE
+  bits: 16
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 8
+  description: Night
+  match: 1
+  lookup: GARMIN_COLOR_MODE
+- id: spare10
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: backlight
+  name: Backlight
+  type: LOOKUP
+  bits: 8
+  lookup: GARMIN_BACKLIGHT_LEVEL

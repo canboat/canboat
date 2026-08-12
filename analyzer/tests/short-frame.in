@@ -1,0 +1,5 @@
+# Short fast-packet first frame: only index and size bytes, no payload.
+# The analyzer should fill missing bytes with 0xFF instead of reading uninitialized memory.
+# See https://github.com/canboat/canboat/issues/623
+2026-04-12-01:00:00.000,3,129029,0,255,2,00,08
+2026-04-12-01:00:00.001,3,129029,0,255,8,01,aa,bb,cc,dd,ee,ff,11

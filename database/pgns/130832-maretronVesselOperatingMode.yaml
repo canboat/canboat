@@ -1,0 +1,58 @@
+pgn: 130832
+id: maretronVesselOperatingMode
+description: 'Maretron: Vessel Operating Mode'
+type: Fast
+variantOrder: 1
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Maretron
+  match: 137
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: alertSystem
+  name: Alert System
+  type: UINT8
+- id: alertSubSystem
+  name: Alert Sub-System
+  type: UINT8
+- id: alertSystemInstance
+  name: Alert System Instance
+  type: UINT8
+  primaryKey: true
+- id: operatingMode
+  name: Operating Mode
+  type: UINT8
+- id: generatingGlobalAlerts
+  name: Generating Global Alerts
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: userChanged
+  name: User Changed
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: inIndependentMode
+  name: In Independent Mode
+  type: UNSIGNED_INTEGER
+  bits: 1
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 5

@@ -1,0 +1,8 @@
+name: GNSS_MODE
+kind: pair
+bits: 3
+values:
+  0: 1D
+  1: 2D
+  2: 3D
+  3: Auto

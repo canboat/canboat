@@ -1,0 +1,30 @@
+pgn: 128778
+id: anchorWindlassMonitoringStatus
+description: Anchor Windlass Monitoring Status
+type: Single
+url: https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: windlassId
+  name: Windlass ID
+  type: UINT8
+- id: windlassMonitoringEvents
+  name: Windlass Monitoring Events
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: WINDLASS_MONITORING
+- id: controllerVoltage
+  name: Controller voltage
+  type: VOLTAGE_UFIX8_200MV
+- id: motorCurrent
+  name: Motor current
+  type: CURRENT_UFIX8_A
+- id: totalMotorTime
+  name: Total Motor Time
+  type: DURATION_UFIX16_MIN
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

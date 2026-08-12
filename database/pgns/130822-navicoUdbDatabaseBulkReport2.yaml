@@ -1,0 +1,92 @@
+pgn: 130822
+id: navicoUdbDatabaseBulkReport2
+description: 'Navico: UDB Database, Bulk Report 2'
+type: Fast
+variantOrder: 3
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+researchDoc: navico_udb
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: marker
+  name: Marker
+  type: UINT8
+  description: Always 0xFF
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 6
+  description: Bulk Report 2
+  match: 2
+  primaryKey: true
+- id: spare6
+  name: Spare
+  type: SPARE
+  bits: 2
+- id: address
+  name: Address
+  type: UINT8
+  description: Part of the object address
+- id: section
+  name: Section
+  type: UINT8
+- id: item
+  name: Item
+  type: UINT8
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1728
+  description: Bulk variant payload (length-prefixed); layout not yet observed on the wire
+samples:
+- raw: "2023-01-01-00:00:00.000,3,130822,32,255,52,13,99,ff,02,00,09,02,00,01,00,00,00,66,6d,24,00,04,43,66,e7,4c,82,50,c0,02,01,00,a1,36,00,82,32,c0,02,d2,44,d3,15,00,91,47,c0,03,1f,19,36,e8,00,c8,a0,c0,02"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 2
+    address: 0
+    section: 9
+    item: 2
+    data: "0x0001000000666d2400044366e74c8250c0020100a136008232c002d244d315009147c0031f1936e800c8a0c002"
+- raw: "2023-01-01-00:00:00.000,3,130822,50,255,19,13,99,ff,02,00,01,0a,00,07,00,ff,ff,0a,e5,03,00,02,00,00"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 2
+    address: 0
+    section: 1
+    item: 10
+    data: "0x000700ffff0ae50300020000"
+- raw: "2023-01-01-00:00:00.000,3,130822,32,255,34,13,99,ff,02,00,03,01,00,07,00,ff,ff,2d,29,12,00,06,5c,00,0a,00,01,00,a1,36,00,82,32,c0,00,00,00,00,00"  # from navico-source-selection.raw
+  expects:
+    manufacturerCode: "Navico"
+    industryCode: "Marine Industry"
+    marker: ~
+    command: 2
+    address: 0
+    section: 3
+    item: 1
+    data: "0x000700ffff2d291200065c000a000100a136008232c00000000000"

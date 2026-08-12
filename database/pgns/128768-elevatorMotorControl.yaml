@@ -1,0 +1,32 @@
+pgn: 128768
+id: elevatorMotorControl
+description: Elevator Motor Control
+type: Single
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: This PGN provides the status of an elevator motor controller. Settings of the elevator motor controller may be changed using the NMEA Command Group Function.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: elevatorCarId
+  name: Elevator Car ID
+  type: UINT8
+- id: elevatorCarUsage
+  name: Elevator Car Usage
+  type: UINT8
+- id: motorAccelerationDecelerationProfileSelection
+  name: Motor Acceleration/Deceleration profile selection
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: motorRotationalControlStatus
+  name: Motor Rotational Control Status
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 34

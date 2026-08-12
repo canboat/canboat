@@ -1,0 +1,38 @@
+pgn: 127490
+id: electricDriveStatusDynamic
+description: Electric Drive Status, Dynamic
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'This PGN is used to report status of Electric Drive Status control and can be used with Command Group Function
+  (PGN Electric propulsion motor status) to command equipment. '
+fields:
+- id: inverterMotorIdentifier
+  name: Inverter/Motor Identifier
+  type: UINT8
+  primaryKey: true
+- id: operatingMode
+  name: Operating Mode
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: motorTemperature
+  name: Motor Temperature
+  type: TEMPERATURE
+- id: inverterTemperature
+  name: Inverter Temperature
+  type: TEMPERATURE
+- id: coolantTemperature
+  name: Coolant Temperature
+  type: TEMPERATURE
+- id: gearTemperature
+  name: Gear Temperature
+  type: TEMPERATURE
+- id: shaftTorque
+  name: Shaft Torque
+  type: UINT16

@@ -1,0 +1,39 @@
+pgn: 64800
+id: aftertreatment1DieselOxidationCatalyst
+description: Aftertreatment 1 Diesel Oxidation Catalyst
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: aftertreatment1DieselOxidationCatalystIntakeGasTemperature
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature
+  description: SPN 4765
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1DieselOxidationCatalystOutletGasTemperature
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature
+  description: SPN 4766
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1DieselOxidationCatalystDifferentialPressure
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure
+  description: SPN 4767, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: aftertreatment1DieselOxidationCatalystIntakeGasTemperaturePreliminaryFmi
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature Preliminary FMI
+  description: SPN 4768
+  type: NUMBER
+  bits: 5
+- id: aftertreatment1DieselOxidationCatalystOutletGasTemperaturePreliminaryFmi
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature Preliminary FMI
+  description: SPN 4769
+  type: NUMBER
+  bits: 5
+- id: aftertreatment1DieselOxidationCatalystDifferentialPressurePreliminaryFmi
+  name: Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure Preliminary FMI
+  description: SPN 4770
+  type: NUMBER
+  bits: 5
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+notes: 'Aftertreatment 1 Diesel Oxidation Catalyst (A1DOC) PGN 64800, layout per SAE J1939-71'

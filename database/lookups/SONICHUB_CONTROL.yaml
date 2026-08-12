@@ -1,0 +1,6 @@
+name: SONICHUB_CONTROL
+kind: pair
+bits: 8
+values:
+  0: Set
+  128: Ack

@@ -1,0 +1,51 @@
+pgn: 126720
+id: airmarCalibrateTemperature
+description: 'Airmar: Calibrate Temperature'
+type: Fast
+variantOrder: 40
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Calibrate Temperature
+  match: 42
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: temperatureInstance
+  name: Temperature instance
+  type: LOOKUP
+  bits: 2
+  lookup: AIRMAR_TEMPERATURE_INSTANCE
+  primaryKey: true
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: temperatureOffset
+  name: Temperature offset
+  type: INT16
+  resolution: 0.001
+  unit: K
+  rangeMin: -9.999
+  rangeMax: 9.999

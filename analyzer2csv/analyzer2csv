@@ -1,0 +1,59 @@
+#!/usr/bin/env php
+<?php
+# .sw=2
+
+if ($argc > 1)
+{
+  $keys = array_slice($argv, 1);
+}
+else
+{
+  $keys = array('timestamp', 'src', 'dst', 'pgn', 'length', 'data', 'message');
+}
+
+$file = fopen('php://stdin', 'r');
+if ($file === false)
+{ 
+  die("Cannot read stdin");
+}
+
+$sep='';
+foreach ($keys as $key)
+{
+  print($sep . $key);
+  $sep=',';
+}
+print("\n");
+
+while (($line = fgets($file)) !== false)
+{
+  $line = rtrim($line);
+  $p = json_decode($line, true);
+  if (is_array($p))
+  {
+    if (array_key_exists('timestamp', $p) && array_key_exists('pgn', $p))
+    {
+      $sep='';
+      foreach($keys as $key)
+      {
+        print($sep);
+        $sep = ',';
+        if (array_key_exists($key, $p)) 
+        {
+          print($p[$key]);
+        }
+        else if ($key == 'message')
+        {
+          print('"' . str_replace('"', '""', $line) . '"');
+        }
+        else if ($key == 'length' && array_key_exists('data', $p))
+        {
+          print(strlen($p['data'])/2);
+        }
+      }
+      print("\n");
+    }
+  }
+}
+
+?>

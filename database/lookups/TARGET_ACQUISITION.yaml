@@ -1,0 +1,6 @@
+name: TARGET_ACQUISITION
+kind: pair
+bits: 1
+values:
+  0: Manual
+  1: Automatic

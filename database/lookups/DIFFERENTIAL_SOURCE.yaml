@@ -1,0 +1,12 @@
+name: DIFFERENTIAL_SOURCE
+kind: pair
+bits: 4
+values:
+  0: Auto
+  1: Loran
+  2: MSK Beacon
+  3: FM Subcarrier
+  4: AIS
+  5: Ground based radio
+  6: SBAS
+  7: Satellite

@@ -1,0 +1,64 @@
+name: CZONE_ALARM_TYPE
+kind: pair
+bits: 16
+values:
+  1: AC Voltage Error
+  2: AC Frequency Error
+  3: AC High Power
+  4: DC Low Voltage
+  5: DC Very Low Voltage
+  6: DC High Voltage
+  7: DC Low Battery Capacity
+  10: Out of Range
+  11: Low Run Current
+  12: Over Current
+  13: Short Circuit
+  14: Missing Commander
+  15: Reverse Current
+  16: Calibration Error
+  17: Missing Output
+  18: Systems On
+  19: AC Very High Power
+  20: AC Low Power
+  21: DC Very Low Battery Capacity
+  22: Battery Full
+  23: DC Load Shed Low
+  24: DC Load Shed Very Low
+  25: AC Load Shed Low
+  26: AC Load Shed Very Low
+  27: Reverse Polarity
+  28: Manual Override
+  29: Mastervolt
+  30: Hardware Fault
+  31: No AC Supply
+  34: PGN Switching On
+  35: Low Canbus Voltage
+  36: Blown Fuse
+  37: Manual Bypass
+  38: Generic Alarm
+  39: Battery Temperature Alarm
+  40: Temperature Sensor Error
+  41: AC IN Out Of Range
+  42: Device In Overload
+  43: High Temperature
+  44: Inverter/Charger Installation Error
+  45: Inverter Installation Error
+  46: Charger Installation Error
+  47: Cable Voltage Drop Too High
+  48: Shunt mistmatch
+  49: Cooling Fan Error
+  50: Mastershunt Fuse Blown
+  51: High Temperature
+  52: Over Pressure
+  53: Low Pressure
+  54: Rapid Deflation
+  55: Inverter/Charger Over Temperature
+  56: Confirm On
+  57: Battery Safety
+  58: Stop Charging
+  59: Check Battery Relay
+  60: Battery Hardware Failure
+  61: Battery Over Current
+  62: Battery Temperature Low
+  63: Battery Temperature High
+  64: Battery Last 100

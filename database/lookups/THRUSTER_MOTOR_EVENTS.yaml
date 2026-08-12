@@ -1,0 +1,10 @@
+name: THRUSTER_MOTOR_EVENTS
+kind: bit
+bits: 8
+values:
+  0: Motor over temperature cutout
+  1: Motor over current cutout
+  2: Low oil level warning
+  3: Oil over temperature warning
+  4: Controller under voltage cutout
+  5: Manufacturer defined

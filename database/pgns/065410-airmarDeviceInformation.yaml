@@ -1,0 +1,65 @@
+pgn: 65410
+id: airmarDeviceInformation
+description: 'Airmar: Device Information'
+type: Single
+priority: 7
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: internalDeviceTemperature
+  name: Internal Device Temperature
+  type: TEMPERATURE
+- id: supplyVoltage
+  name: Supply Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65410,36,255,8,87,98,2e,0f,7c,ce,04,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 46
+    internalDeviceTemperature: 317.59
+    supplyVoltage: 12.30
+- raw: "2023-01-01-00:00:00.000,7,65410,35,255,8,87,98,ff,78,74,9a,04,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    internalDeviceTemperature: 298.16
+    supplyVoltage: 11.78
+- raw: "2023-01-01-00:00:00.000,7,65410,36,255,8,87,98,31,12,7c,cd,04,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 49
+    internalDeviceTemperature: 317.62
+    supplyVoltage: 12.29

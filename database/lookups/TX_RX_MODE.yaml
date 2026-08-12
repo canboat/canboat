@@ -1,0 +1,7 @@
+name: TX_RX_MODE
+kind: pair
+bits: 4
+values:
+  0: Tx A/Tx B, Rx A/Rx B
+  1: Tx A, Rx A/Rx B
+  2: Tx B, Rx A/Rx B

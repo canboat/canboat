@@ -1,0 +1,72 @@
+pgn: 130816
+id: sonichubFmRadio
+description: 'SonicHub: FM Radio'
+type: Fast
+variantOrder: 8
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: FM Radio
+  match: 12
+  lookup: SONICHUB_COMMAND
+  primaryKey: true
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_CONTROL
+- id: item
+  name: Item
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_TUNING
+- id: frequency
+  name: Frequency
+  type: RADIO_FREQUENCY_UFIX32
+- id: noiseLevel
+  name: Noise level
+  type: UNSIGNED_INTEGER
+  bits: 2
+  note: Not sure about this
+- id: signalLevel
+  name: Signal level
+  type: UNSIGNED_INTEGER
+  bits: 4
+  note: '... and this, doesn''t make complete sense compared to display'
+- id: reserved11
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: text
+  name: Text
+  type: STRING_LZ
+  bits: 256

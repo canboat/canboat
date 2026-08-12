@@ -1,0 +1,30 @@
+name: SIMNET_DATA_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Heading
+  1: Navigation
+  2: Position
+  3: Apparent Wind
+  4: True Wind
+  5: Speed Through Water
+  6: Sea Temperature
+  7: Distance Log
+  8: Depth
+  9: Rudder Feedback
+  19: Monitor Compass
+  20: Position Backup
+  21: Boat Speed Backup
+  22: Air Temperature
+  28: Barometric Pressure
+  30: Heel Angle
+  34: Sailing Navigation
+  35: Trim Angle
+  36: Sailing
+  37: Aft Depth
+  38: Speed Log
+  39: RTCM Signal
+  40: RTCM Corrections
+  54: Autopilot
+  59: Autopilot Function Backup
+  104: Autopilot Control

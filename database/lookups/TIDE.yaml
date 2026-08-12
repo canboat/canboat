@@ -1,0 +1,6 @@
+name: TIDE
+kind: pair
+bits: 2
+values:
+  0: Falling
+  1: Rising

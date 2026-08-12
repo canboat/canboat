@@ -1,0 +1,32 @@
+pgn: 61445
+id: electronicTransmissionController2
+description: Electronic Transmission Controller 2
+type: Single
+priority: 6
+interval: 100
+fields:
+- id: transmissionSelectedGear
+  name: Transmission Selected Gear
+  description: SPN 524, offset by -125 in J1939; negative gears are reverse, 0 is neutral
+  type: INT8
+- id: transmissionActualGearRatio
+  name: Transmission Actual Gear Ratio
+  description: SPN 526, 0.001 per bit
+  type: NUMBER
+  bits: 16
+  resolution: 0.001
+- id: transmissionCurrentGear
+  name: Transmission Current Gear
+  description: SPN 523, offset by -125 in J1939; negative gears are reverse, 0 is neutral
+  type: INT8
+- id: transmissionRequestedRange
+  name: Transmission Requested Range
+  description: SPN 162, two ASCII characters
+  type: STRING_FIX
+  bits: 16
+- id: transmissionCurrentRange
+  name: Transmission Current Range
+  description: SPN 163, two ASCII characters
+  type: STRING_FIX
+  bits: 16
+notes: 'Electronic Transmission Controller 2 (ETC2) PGN 61445, layout per SAE J1939-71. The gear fields are transmitted with a -125 offset, so the raw signed byte is the gear number: negative is reverse, 0 is neutral.'

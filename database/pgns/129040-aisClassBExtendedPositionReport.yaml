@@ -1,0 +1,125 @@
+pgn: 129040
+id: aisClassBExtendedPositionReport
+description: AIS Class B Extended Position Report
+type: Fast
+priority: 4
+interval: irregular
+missing:
+- SampleData
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  lookup: TIME_STAMP
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: regionalApplication
+  name: Regional Application
+  type: SPARE
+  bits: 8
+- id: regionalApplicationB
+  name: Regional Application B
+  type: SPARE
+  bits: 4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: typeOfShip
+  name: Type of ship
+  type: LOOKUP
+  bits: 8
+  lookup: SHIP_TYPE
+- id: trueHeading
+  name: True Heading
+  type: ANGLE_UFIX16
+- id: reserved16
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: gnssType
+  name: GNSS type
+  type: LOOKUP
+  bits: 4
+  lookup: POSITION_FIX_DEVICE
+- id: length
+  name: Length
+  type: LENGTH_UFIX16_DM
+- id: beam
+  name: Beam
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromStarboard
+  name: Position reference from Starboard
+  type: LENGTH_UFIX16_DM
+- id: positionReferenceFromBow
+  name: Position reference from Bow
+  type: LENGTH_UFIX16_DM
+- id: name
+  name: Name
+  type: STRING_FIX
+  bits: 160
+- id: dte
+  name: DTE
+  type: LOOKUP
+  bits: 1
+  lookup: AVAILABLE
+- id: aisMode
+  name: AIS mode
+  type: LOOKUP
+  bits: 1
+  lookup: AIS_MODE
+- id: spare25
+  name: Spare
+  type: SPARE
+  bits: 4
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: reserved27
+  name: Reserved
+  type: RESERVED
+  bits: 5

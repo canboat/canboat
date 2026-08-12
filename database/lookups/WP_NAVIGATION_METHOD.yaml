@@ -1,0 +1,6 @@
+name: WP_NAVIGATION_METHOD
+kind: pair
+bits: 2
+values:
+  0: Great Circle
+  1: Rhumb Line

@@ -1,0 +1,29 @@
+pgn: 130583
+id: availableAudioEqPresets
+description: Available Audio EQ presets
+type: Fast
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: firstPreset
+  name: First preset
+  type: UINT8
+  description: First preset in this PGN
+- id: presetCount
+  name: Preset count
+  type: UINT8
+- id: totalPresetCount
+  name: Total preset count
+  type: UINT8
+- repeat:
+    countField: presetCount
+    fields:
+    - id: presetType
+      name: Preset type
+      type: LOOKUP
+      bits: 8
+      lookup: ENTERTAINMENT_EQ
+    - id: presetName
+      name: Preset name
+      type: STRING_LAU

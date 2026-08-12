@@ -1,0 +1,6 @@
+name: EQUIPMENT_STATUS
+kind: pair
+bits: 2
+values:
+  0: Operational
+  1: Fault

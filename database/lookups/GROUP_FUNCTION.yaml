@@ -1,0 +1,11 @@
+name: GROUP_FUNCTION
+kind: pair
+bits: 8
+values:
+  0: Request
+  1: Command
+  2: Acknowledge
+  3: Read Fields
+  4: Read Fields Reply
+  5: Write Fields
+  6: Write Fields Reply

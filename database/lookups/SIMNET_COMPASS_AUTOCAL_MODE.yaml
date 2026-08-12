@@ -1,0 +1,8 @@
+name: SIMNET_COMPASS_AUTOCAL_MODE
+kind: pair
+bits: 8
+values:
+  0: 'Off'
+  1: 'On'
+  2: Auto locked
+  3: Auto

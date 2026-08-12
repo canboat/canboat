@@ -1,0 +1,101 @@
+name: release-please
+
+on:
+  push:
+    branches: [master]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    runs-on: ubuntu-latest
+    outputs:
+      pr: ${{ steps.rp.outputs.pr }}
+      prs_created: ${{ steps.rp.outputs.prs_created }}
+      releases_created: ${{ steps.rp.outputs.releases_created }}
+    steps:
+      - uses: googleapis/release-please-action@v5
+        id: rp
+        with:
+          # A PAT (RELEASE_PLEASE_TOKEN) is preferred so that the regenerate job's
+          # push below re-triggers CI on the release PR. Falls back to GITHUB_TOKEN.
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+  # release-please bumps VERSION in common/version.h and the workspace version in
+  # Cargo.toml. Both are stamped into files it does NOT itself update:
+  # the generated docs/* + docs/canboat.dbc carry VERSION, and Cargo.lock
+  # records a version for every workspace member. A bumped Cargo.toml with a
+  # stale Cargo.lock fails every `cargo --locked` job on the release PR, so both
+  # are refreshed here on the release branch.
+  #
+  # Runs whenever there is a release PR, not only when one is first created: an
+  # updated release PR needs the same re-stamping as a new one.
+  regenerate:
+    needs: release-please
+    if: ${{ needs.release-please.outputs.pr != '' && needs.release-please.outputs.pr != 'null' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ fromJson(needs.release-please.outputs.pr).headBranchName }}
+          token: ${{ secrets.RELEASE_PLEASE_TOKEN || secrets.GITHUB_TOKEN }}
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: regenerate
+        run: |
+          make
+          make generated
+
+      # Sync Cargo.lock to the workspace version release-please just wrote
+      # into Cargo.toml. --workspace updates only the member packages;
+      # third-party pins are left exactly as locked (cargo reports them as
+      # "unchanged dependencies behind latest"), so this moves the member
+      # version lines and nothing else.
+      #
+      # Deliberately NOT --offline: a fresh runner has no registry cache, so
+      # cargo cannot resolve even already-locked third-party crates from the
+      # index and fails with "no matching package named `indexmap` found".
+      # It only appeared in CI because a warm local cache hides it.
+      - name: re-stamp Cargo.lock
+        run: cargo update --workspace
+
+      # Fold the regenerated files into release-please's own commit rather than
+      # adding a second one.
+      #
+      # release-please pushes a bumped Cargo.toml with a stale Cargo.lock, so
+      # every `cargo --locked` job starts failing within seconds - well before
+      # this job can push a fix. A measured cycle: release commit at 07:46:06,
+      # Rust CI red at 07:46:48, fix pushed at 07:47:18. The workflows' own
+      # cancel-in-progress cannot help, because the doomed run is already over
+      # by the time the second push arrives.
+      #
+      # Amending moves the branch head, so the PR's checks are those of the
+      # corrected commit and the transient red is no longer attached to it. It
+      # also keeps the release history at one commit instead of trailing a
+      # "chore: regenerate" every time.
+      #
+      # Only ever amends release-please's own commit; anything else gets a
+      # normal commit, so a hand-pushed change to the release branch is never
+      # rewritten.
+      - name: commit regenerated files
+        run: |
+          if git diff --quiet; then
+            echo "nothing regenerated"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          case "$(git log -1 --format=%s)" in
+            "chore: release "*)
+              git commit -a --amend --no-edit
+              git push --force-with-lease
+              ;;
+            *)
+              git commit -am "chore: regenerate docs/*, canboat.dbc and Cargo.lock for release"
+              git push
+              ;;
+          esac

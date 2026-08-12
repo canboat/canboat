@@ -1,0 +1,13 @@
+name: NAVICO_DIAGNOSTIC
+kind: fieldtype
+bits: 8
+values:
+- value: 4
+  name: Rx Messages
+  type: UINT32
+- value: 5
+  name: Tx Messages
+  type: UINT32
+- value: 7
+  name: Fast Packet Errors
+  type: UINT32

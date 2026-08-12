@@ -1,0 +1,48 @@
+pgn: 262400
+id: nmea2000GatewayNetworkStatus
+description: 'NMEA 2000 gateway: network status'
+type: Fast
+fields:
+- id: canNetworkLoad
+  name: CAN network load
+  type: UINT8
+- id: errors
+  name: Errors
+  type: UINT32
+- id: deviceCount
+  name: Device count
+  type: UINT8
+- id: uptime
+  name: Uptime
+  type: DURATION_UFIX32_S
+- id: gatewayAddress
+  name: Gateway address
+  type: UINT8
+- id: rejectedTxRequests
+  name: Rejected TX requests
+  type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,7,262400,0,255,15,2a,01,00,00,00,22,d9,9f,00,00,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    canNetworkLoad: 42
+    errors: 1
+    deviceCount: 34
+    uptime: 40921
+    gatewayAddress: ~
+    rejectedTxRequests: ~
+- raw: "2023-01-01-00:00:00.000,7,262400,200,255,15,2d,4a,1f,00,00,2a,0a,60,00,00,c8,00,00,00,00"  # from triton-engine-setup.all
+  expects:
+    canNetworkLoad: 45
+    errors: 8010
+    deviceCount: 42
+    uptime: 24586
+    gatewayAddress: 200
+    rejectedTxRequests: 0
+- raw: "2023-01-01-00:00:00.000,7,262400,0,255,15,0c,01,00,00,00,0f,01,00,00,00,ff,ff,ff,ff,ff"  # from merrimac-2022.raw
+  expects:
+    canNetworkLoad: 12
+    errors: 1
+    deviceCount: 15
+    uptime: 1
+    gatewayAddress: ~
+    rejectedTxRequests: ~

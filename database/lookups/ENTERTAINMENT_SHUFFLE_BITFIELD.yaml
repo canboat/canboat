@@ -1,0 +1,6 @@
+name: ENTERTAINMENT_SHUFFLE_BITFIELD
+kind: bit
+bits: 2
+values:
+  0: Play queue
+  1: All

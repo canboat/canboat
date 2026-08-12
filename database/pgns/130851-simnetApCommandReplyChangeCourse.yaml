@@ -1,0 +1,107 @@
+pgn: 130851
+id: simnetApCommandReplyChangeCourse
+description: 'Simnet: AP command Reply: Change Course'
+type: Fast
+variantOrder: 1
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Reply emitted by the autopilot (NAC-3/AC-42) echoing a 130850 'Command AP Change Course' that was addressed to it.
+researchDoc: navico_alarms_and_commands
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of the autopilot that ran the command
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: networkGroup
+  name: Network Group
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_NETWORK_GROUP
+- id: commandType
+  name: Command Type
+  type: LOOKUP
+  bits: 8
+  description: AP Command
+  match: 10
+  lookup: SIMNET_EVENT_TYPE
+  primaryKey: true
+- id: event
+  name: Event
+  type: LOOKUP
+  bits: 8
+  description: Change course
+  match: 26
+  lookup: SIMNET_AP_EVENTS
+- id: spare9
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: direction
+  name: Direction
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DIRECTION
+- id: angle
+  name: Angle
+  type: ANGLE_UFIX16
+  description: Absolute change in desired attitude, generally 1 or 10 degrees
+- id: reserved12
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130851,2,255,12,41,9f,02,ff,ff,0a,1a,00,02,d1,06,ff"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 2
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Change course"
+    direction: "Port"
+    angle: 0.1745
+- raw: "2023-01-01-00:00:00.000,7,130851,13,255,12,41,9f,0d,ff,ff,0a,1a,00,03,5d,01,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Change course"
+    direction: "Starboard"
+    angle: 0.0349
+- raw: "2023-01-01-00:00:00.000,7,130851,13,255,12,41,9f,0d,ff,ff,0a,1a,00,02,ba,02,ff"  # from ac42-commissioning.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 13
+    networkGroup: ~
+    commandType: "AP Command"
+    event: "Change course"
+    direction: "Port"
+    angle: 0.0698

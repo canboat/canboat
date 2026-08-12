@@ -1,0 +1,66 @@
+pgn: 130816
+id: sonichubPlaylist
+description: 'SonicHub: Playlist'
+type: Fast
+variantOrder: 9
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Navico
+  match: 275
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Playlist
+  match: 13
+  lookup: SONICHUB_COMMAND
+  primaryKey: true
+- id: control
+  name: Control
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_CONTROL
+- id: item
+  name: Item
+  type: LOOKUP
+  bits: 8
+  lookup: SONICHUB_PLAYLIST
+- id: a
+  name: A
+  type: UINT8
+- id: currentTrack
+  name: Current Track
+  type: UINT32
+- id: tracks
+  name: Tracks
+  type: UINT32
+- id: length
+  name: Length
+  type: DURATION_UFIX32_MS
+- id: positionInTrack
+  name: Position in track
+  type: DURATION_UFIX32_MS

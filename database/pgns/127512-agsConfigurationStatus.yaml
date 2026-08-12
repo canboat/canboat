@@ -1,0 +1,26 @@
+pgn: 127512
+id: agsConfigurationStatus
+description: AGS Configuration Status
+type: Fast
+priority: 6
+interval: irregular
+missing:
+- SampleData
+fields:
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: generatorInstance
+  name: Generator Instance
+  type: UINT8
+  primaryKey: true
+- id: agsMode
+  name: AGS Mode
+  type: LOOKUP
+  bits: 4
+  lookup: AGS_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 4

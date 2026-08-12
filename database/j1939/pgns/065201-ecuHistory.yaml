@@ -1,0 +1,22 @@
+pgn: 65201
+id: ecuHistory
+description: ECU History
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: totalEcuDistance
+  name: Total ECU Distance
+  description: SPN 1032, 0.125 kilometre per bit
+  type: NUMBER
+  bits: 32
+  unit: km
+  resolution: 0.125
+- id: totalEcuRunTime
+  name: Total ECU Run Time
+  description: SPN 1033, 0.05 hour per bit
+  type: NUMBER
+  bits: 32
+  unit: h
+  resolution: 0.05
+notes: 'ECU History (EH) PGN 65201, layout per SAE J1939-71'

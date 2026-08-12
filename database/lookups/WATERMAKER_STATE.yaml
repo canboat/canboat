@@ -1,0 +1,12 @@
+name: WATERMAKER_STATE
+kind: pair
+bits: 6
+values:
+  0: Stopped
+  1: Starting
+  2: Running
+  3: Stopping
+  4: Flushing
+  5: Rinsing
+  6: Initiating
+  7: Manual

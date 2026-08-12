@@ -1,0 +1,32 @@
+pgn: 60416
+id: isoTransportProtocolConnectionManagementClearToSend
+description: ISO Transport Protocol, Connection Management - Clear To Send
+type: Single
+variantOrder: 2
+interval: irregular
+explanation: ISO 11783 defines this group function PGN as part of the Transport Protocol method used for transmitting messages that have 9 or more data bytes. This PGN's role in the transport process is to signal to the sender that the receive is ready to receive a number of frames.
+url: https://embeddedflakes.com/j1939-transport-protocol/
+fields:
+- id: groupFunctionCode
+  name: Group Function Code
+  type: LOOKUP
+  bits: 8
+  description: CTS
+  match: 17
+  lookup: ISO_COMMAND
+- id: maxPackets
+  name: Max packets
+  type: UINT8
+  description: Number of frames that can be sent before another CTS is required
+- id: nextSid
+  name: Next SID
+  type: UINT8
+  description: Number of next frame to be transmitted
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24

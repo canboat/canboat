@@ -1,0 +1,94 @@
+pgn: 129538
+id: gnssControlStatus
+description: GNSS Control Status
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: svElevationMask
+  name: SV Elevation Mask
+  type: ANGLE_FIX16
+  description: Will not use SV below this elevation
+- id: pdopMask
+  name: PDOP Mask
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Will not report position above this PDOP
+- id: pdopSwitch
+  name: PDOP Switch
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Will report 2D position above this PDOP
+- id: snrMask
+  name: SNR Mask
+  type: SIGNALTONOISERATIO_FIX16
+  description: Will not use SV below this SNR
+- id: gnssModeDesired
+  name: GNSS Mode (desired)
+  type: LOOKUP
+  bits: 3
+  lookup: GNSS_MODE
+- id: dgnssModeDesired
+  name: DGNSS Mode (desired)
+  type: LOOKUP
+  bits: 3
+  lookup: DGNSS_MODE
+- id: positionVelocityFilter
+  name: Position/Velocity Filter
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: maxCorrectionAge
+  name: Max Correction Age
+  type: DURATION_UFIX16_CS
+- id: antennaAltitudeFor2dMode
+  name: Antenna Altitude for 2D Mode
+  type: DISTANCE_FIX32_CM
+- id: useAntennaAltitudeFor2dMode
+  name: Use Antenna Altitude for 2D Mode
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 6
+notes: |-
+  https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+
+  Haven't seen this yet (no way to send PGN 059904 yet) so lengths unknown
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129538,36,255,16,ff,7f,ff,7f,ff,7f,ff,7f,cb,ff,ff,00,00,00,00,fc"  # from furuno-fap7011c-autopilot-maneuvers.raw
+  expects:
+    svElevationMask: ~
+    pdopMask: ~
+    pdopSwitch: ~
+    snrMask: ~
+    gnssModeDesired: "Auto"
+    dgnssModeDesired: "SBAS if available"
+    positionVelocityFilter: ~
+    maxCorrectionAge: ~
+    antennaAltitudeFor2dMode: 0.00
+    useAntennaAltitudeFor2dMode: "No"
+- raw: "2023-01-01-00:00:00.000,4,129538,8,255,16,69,03,01,00,64,00,64,00,00,00,ff,ff,ff,ff,7f,fc"  # from pgn129538.raw
+  expects:
+    svElevationMask: 0.0873
+    pdopMask: 0.01
+    pdopSwitch: 1.00
+    snrMask: 1.00
+    gnssModeDesired: "1D"
+    dgnssModeDesired: "None"
+    positionVelocityFilter: "No"
+    maxCorrectionAge: 652.80
+    antennaAltitudeFor2dMode: ~
+    useAntennaAltitudeFor2dMode: "No"
+- raw: "2023-01-01-00:00:00.000,4,129538,8,255,16,69,03,ff,7f,ff,7f,ff,7f,0b,ff,ff,40,fc,ff,ff,fd"  # from pgn129538.raw
+  expects:
+    svElevationMask: 0.0873
+    pdopMask: ~
+    pdopSwitch: ~
+    snrMask: ~
+    gnssModeDesired: "Auto"
+    dgnssModeDesired: "SBAS if available"
+    positionVelocityFilter: "No"
+    maxCorrectionAge: ~
+    antennaAltitudeFor2dMode: -9.60
+    useAntennaAltitudeFor2dMode: "Yes"

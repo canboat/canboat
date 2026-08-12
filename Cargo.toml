@@ -1,0 +1,70 @@
+[workspace]
+resolver = "2"
+members = [
+    # keel: the database tool. A member so `cargo build` at the repo root
+    # builds it too, and so the whole tree shares one lockfile and one
+    # target/. Its dependency closure is guarded by tools/check-keel-deps.sh
+    # — it must never gain the runtime's tree (MERGE-CANBOAT-RS.md §9).
+    "keel",
+    "crates/canboat-schema",
+    "crates/canboat-core",
+    "crates/canboat-io",
+    "crates/canboat-tokio",
+    "crates/canboat-cli",
+    "crates/canboat",
+    "crates/canboat-bridge",
+]
+
+[workspace.package]
+version = "8.1.0-beta2" # x-release-please-version
+edition = "2024"
+license = "Apache-2.0"
+authors = ["Kees Verruijt <kees@verruijt.net>"]
+repository = "https://github.com/canboat/canboat"
+rust-version = "1.88"
+
+[workspace.dependencies]
+canboat-schema = { path = "crates/canboat-schema", version = "8.1.0-beta2" } # x-release-please-version
+canboat-core   = { path = "crates/canboat-core",   version = "8.1.0-beta2" } # x-release-please-version
+canboat-io     = { path = "crates/canboat-io",     version = "8.1.0-beta2" } # x-release-please-version
+canboat-cli    = { path = "crates/canboat-cli",    version = "8.1.0-beta2" } # x-release-please-version
+canboat-bridge = { path = "crates/canboat-bridge", version = "8.1.0-beta2" } # x-release-please-version
+
+serde      = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror  = "2"
+log        = "0.4"
+smallvec   = { version = "1", features = ["union"] }
+indexmap   = "2"
+
+clap       = { version = "4", features = ["derive"] }
+anyhow     = "1"
+env_logger = { version = "0.11", default-features = false, features = ["humantime", "auto-color"] }
+# default-features = false drops the libudev port-enumeration backend:
+# nothing in the workspace enumerates ports (devices are opened by
+# path), and libudev can't be linked into the static musl release
+# builds.
+serialport = { version = "4", default-features = false }
+
+tokio        = { version = "1", features = ["rt", "rt-multi-thread", "io-util", "macros", "sync"] }
+tokio-serial = "5"
+futures      = "0.3"
+
+# Container formats: `.nif` is gzip(tar); the inner CAN captures are
+# gzip(pcap). flate2's default (miniz_oxide) backend keeps the static
+# musl release builds pure-Rust — no system zlib to link.
+flate2 = "1"
+tar    = "0.4"
+
+[profile.release]
+lto         = "thin"
+codegen-units = 1
+strip       = true
+
+# Mirrors `release` but keeps debug info and disables strip, for use
+# with profilers like samply / `cargo flamegraph`. Build with
+#   cargo build --profile=profiling -p analyzer
+[profile.profiling]
+inherits = "release"
+debug    = "full"
+strip    = false

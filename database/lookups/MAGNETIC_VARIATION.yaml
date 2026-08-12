@@ -1,0 +1,14 @@
+name: MAGNETIC_VARIATION
+kind: pair
+bits: 4
+values:
+  0: Manual
+  1: Automatic Chart
+  2: Automatic Table
+  3: Automatic Calculation
+  4: WMM 2000
+  5: WMM 2005
+  6: WMM 2010
+  7: WMM 2015
+  8: WMM 2020
+  9: WMM 2025

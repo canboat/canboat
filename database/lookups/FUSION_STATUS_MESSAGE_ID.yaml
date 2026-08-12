@@ -1,0 +1,62 @@
+name: FUSION_STATUS_MESSAGE_ID
+kind: pair
+bits: 16
+values:
+  0: Unknown
+  32769: API Version
+  32770: Source
+  32771: Source Count
+  32772: Track Info
+  32773: Track Title
+  32774: Track Artist
+  32775: Track Album
+  32776: Cover Art
+  32777: Track Progress
+  32778: Tuner Align
+  32779: Tuner
+  32780: Marine Tuner
+  32781: Marine Squelch
+  32782: Marine Scan Mode
+  32783: Menu Action
+  32784: Menu Count
+  32785: Menu Item
+  32786: Menu Lock ID
+  32787: Aux Gain
+  32788: Setting
+  32789: Settings
+  32790: Update Firmware Result
+  32791: Mute
+  32792: Balance
+  32793: Low Pass Filter
+  32794: Sublevels
+  32795: Tone
+  32796: Volume Limits
+  32797: Volume
+  32798: Capabilities
+  32799: Line Level Control
+  32800: Power
+  32801: Unit Name
+  32802: Sirius
+  32803: SiriusXM Preset Event
+  32804: SiriusXM Channel
+  32805: SiriusXM Title
+  32806: SiriusXM Artist
+  32807: SiriusXM Genre
+  32808: SiriusXM Category
+  32809: SiriusXm Signal
+  32810: SiriusXM Parental Request
+  32811: SiriusXM Diagnostics
+  32812: SiriusXM Presets
+  32813: Zone Name
+  32819: IP Setting
+  32824: Multiroom
+  32825: Multiroom Status
+  32829: System Capabilities
+  32830: Part Number
+  32832: Processing Bypass
+  32846: Server Info
+  32850: RDS Data
+  32859: Ignition Switch State
+  32862: Mono
+  32863: Speed Volume Current Speed
+  32865: Zone Capabilities Extended

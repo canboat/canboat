@@ -1,0 +1,48 @@
+pgn: 126720
+id: airmarTrueWindOptions
+description: 'Airmar: True Wind Options'
+type: Fast
+variantOrder: 36
+interval: irregular
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://web.archive.org/web/20231224200258/www.airmartechnology.com/uploads/installguide/PB200UserManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: True Wind Options
+  match: 34
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: cogSubstitutionForHdg
+  name: COG substitution for HDG
+  type: LOOKUP
+  bits: 2
+  description: Allow use of COG when HDG not available?
+  lookup: YES_NO
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 22

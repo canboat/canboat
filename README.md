@@ -1,0 +1,211 @@
+# CANBOAT
+
+A small but effective set of command-line utilities to work with CAN networks on BOATs.  The most common version of CAN networks on board, and in fact at the moment the only ones that this suite can analyse, is NMEA 2000.
+
+The NMEA 2000 database and implementation is copyrighted by the NMEA (National Marine Electronics Association). Access is restricted to members and parties that pay for it. If they do so they are not able to divulge the content of the database, thus making it impossible for open source developers to get access to it.
+
+For this reason we have reverse engineered the NMEA 2000 database by network observation and assembling data from public sources.
+
+## Quick reference
+
+If you just want to know how the NMEA 2000 protocol works, with an explanation of all reverse engineered data, please go to the
+[documentation](https://canboat.github.io/canboat) page.
+
+To use the programs included in this project you may need a supported CAN interface. This can be a marketed-as-such NMEA 2000 Gateway or a non NMEA specific CAN interface. 
+
+For more information go to the [CANBoat Wiki](http://github.com/canboat/canboat/wiki).
+
+## The programs
+
+CANboat ships two implementations. Both are **tier 1** — supported, tested and
+released together — and they are interchangeable for the jobs they both do.
+
+**C tools.** `analyzer` and the `*-serial` gateway drivers are the originals and
+stay tier 1. They are small, dependency-light and build with nothing but `make`
+and a C compiler.
+
+| | |
+| --- | --- |
+| `analyzer` | decode NMEA 2000 into text or JSON |
+| `actisense-serial` | Actisense NGT-1 / W2K-1 gateways |
+| `ikonvert-serial` | Digital Yacht iKonvert |
+| `socketcan-serial` | Linux SocketCAN |
+| `maretron-ipg` | Maretron IPG100 |
+| `candump2analyzer`, `replay`, `iptee`, `nmea0183-serial`, `analyzer-j1939` | converters and helpers |
+
+**`canboat`, the Rust binary.** One executable with subcommands. `convert` and
+the gateway support are tier 1 alongside their C counterparts; everything with
+no C equivalent is tier 1 as the only implementation.
+
+| | |
+| --- | --- |
+| `canboat convert` | decode a capture between any supported formats |
+| `canboat interface` | bridge a live gateway (NGT-1 / iKonvert / Maretron / SocketCAN) |
+| `canboat n2kd` | multiplex an analyzer-JSON stream to TCP clients |
+| `canboat server` | the whole device → analyzer → n2kd pipeline in one process |
+| `canboat tui` | interactive terminal browser for a live stream or a capture |
+| `canboat format-message` | build a single frame from field values, for any PGN |
+| `canboat replay` | pace a capture at its original wall-clock rhythm |
+
+`canboat install-shims` drops symlinks so the subcommands answer to the old
+names (`analyzer`, `n2kd`, `actisense-serial`, …). It never takes a name that
+another program already holds, so it is safe to run in a directory that has the
+C tools installed — it reports what it left alone.
+
+The remaining C converters, the helper scripts in `util/` (PHP, perl and ksh)
+and the Python tooling will most likely move to Rust in time; the C `n2kd` and
+`n2kd_monitor` already have, and were removed in v8.
+
+## The library
+
+The decoder is also a set of Rust crates, so you can embed NMEA 2000 handling
+instead of parsing another program's output:
+
+| | |
+| --- | --- |
+| `canboat-core` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No `std::io`, no threads. The database is compiled in — nothing to load at runtime |
+| `canboat-io` | sync `std::io` adapters (stdin, serial, `std::net`) |
+| `canboat-tokio` | async tokio adapters |
+| `canboat-bridge` | the n2kd/server pipeline as a library |
+| `canboat-schema` | the schema types the others share |
+
+See [`crates/doc/README.md`](./crates/doc/README.md) for the design and
+[`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md) for the API.
+
+## File formats
+
+`analyzer` reads NMEA 2000 data from a number of text formats on stdin and turns
+each message into human readable text or JSON. Some formats it understands
+directly; capture formats from specific gateways or CAN tools are first turned
+into the analyzer's `PLAIN` format by a small helper program that you pipe into
+`analyzer`:
+
+- **Directly by `analyzer`** — text logs that already contain decoded
+  CAN identifiers. The format is auto-detected, or can be forced with
+  `-format <NAME>`.
+- **Via `actisense-serial`** — Actisense NGT-1 binary streams and log files.
+  `actisense-serial -r <file> | analyzer`
+- **Via `candump2analyzer`** — Linux can-utils dumps and other raw CAN captures.
+  `candump2analyzer <file> | analyzer`
+
+The full list of understood formats:
+
+| Format | Origin | Example line | How to read |
+| --- | --- | --- | --- |
+| `PLAIN` | canboat native, one CAN frame per line | `2016-02-28T19:57:41.000Z,3,126208,40,72,8,01,0d,f2,01,f8,01,03,01` | `analyzer` (auto, or `-format PLAIN`) |
+| `FAST` | canboat native, a whole fast-packet message per line | `2021-01-18T01:23:06.960Z,6,129540,26,255,216,ec,ff,…` | `analyzer` (auto, or `-format FAST`) |
+| `AIRMAR` | Airmar weather/depth devices | `0123 -8 09F80 …` | `analyzer` (auto) |
+| `CHETCO` | Chetco devices | `$PCDIN,01F119,00000000,0F,FFFFFFFFFFFFFFFF*21` | `analyzer` (auto) |
+| `GARMIN_CSV1` / `GARMIN_CSV2` | Garmin CSV export | `0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF` | `analyzer` (auto) |
+| `YDWG02` | Yacht Devices RAW (YDWG-02 / YDNU-02) | `19:07:21.014 R 09F8017F 50 C3 …` | `analyzer` (auto) |
+| `ACTISENSE_N2K_ASCII` | Actisense N2K ASCII | `A173321.107 23FF7 1F513 012F…` | `analyzer` (auto) |
+| Actisense NGT-1 binary | Actisense NGT-1 USB / serial / TCP gateway | _(binary)_ | `actisense-serial -r <dev> \| analyzer` |
+| Actisense EBL | Actisense `.ebl` log files | _(binary)_ | `actisense-serial -r <file.ebl> \| analyzer` |
+| Actisense W2K-1 | W2K-1 gateway capture | `{"pgn":60928,"payload":[147,19,6,0,238,…]}` | `actisense-serial -r <file> \| analyzer` |
+| candump (Angstrom) | Linux can-utils | `<0x18eeff01> [8] 05 a0 be 1c 00 a0 a0 c0` | `candump2analyzer <file> \| analyzer` |
+| candump (Debian) | Linux can-utils | `can0  09F8027F  [8]  00 FC FF FF 00 00 FF FF` | `candump2analyzer <file> \| analyzer` |
+| candump log | Linux can-utils (`candump -l`) | `(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF` | `candump2analyzer <file> \| analyzer` |
+| tshark / pcap | Wireshark text export of a CAN pcap | `… CAN 16 XTD: 0x09fd0223   00 49 02 1c a7 fa ff ff` | `candump2analyzer <file> \| analyzer` |
+| Navico (TCP port 8086) | Navico raw dump | `0021200 0e 1d ff 9d 08 00 00 00 80 df 3f 9f 34 12 ff 0d` | `candump2analyzer <file> \| analyzer` |
+| PCAN-View | PEAK PCAN-View v1.1 trace | `1)  2.7  Rx  09F11324  8  53 84 9E 01 00 FF FF FF` | `candump2analyzer <file> \| analyzer` |
+
+`pcap2candump` can additionally turn a raw `.pcap` capture into the candump log
+format for `candump2analyzer`. Example captures for many of these formats live in
+the [`samples/`](./samples) directory.
+
+## Building, Development and Testing
+
+`make` builds the C tools into `rel/<platform>/`; `make rust` builds `canboat`
+and the crates into `target/release/`. Neither needs the other — you can build
+just the side you care about.
+
+Use `make rust` rather than a bare `cargo build` if you have edited
+`database/`: the Rust PGN tables are generated by `keel` and committed, so
+cargo alone will compile against the previous ones.
+
+Full instructions are in [BUILDING.md](./BUILDING.md), and the
+[Wiki](https://github.com/canboat/canboat/wiki) covers per-platform detail and
+how to start extending the PGN database.
+
+## Adding or fixing a PGN
+
+PGN definitions live as YAML under [`database/`](./database) (one file per PGN
+variant in `pgns/`, one per enumeration in `lookups/`). The easiest way to add
+a new message or correct an existing one is the built-in, evidence-first
+editor:
+
+```sh
+./keel/keel edit
+```
+
+Paste one or more real captures, and the local web editor stacks the bytes,
+decodes them live as you define fields, suggests an existing definition to
+clone when your frame nearly matches one, and lets you save your captures as
+regression tests — all rule-checked before it will write. See
+[AGENTS.md §9](./AGENTS.md) for the full workflow (editor and by-hand) and
+[CONTRIBUTING.md](./CONTRIBUTING.md) for the evidence and commit rules.
+
+## Contributing
+
+Pull requests are welcome! See [CONTRIBUTING.md](./CONTRIBUTING.md) for how to write your PR title
+(it becomes the release changelog entry), the source/generated lockstep rule, and what evidence a
+database change needs.
+
+## Using the definitions in your own project
+
+If you just want to use the definitions in XML or JSON format, use the versions in the `docs` directory, e.g. (./docs/canboat.xml) or (./docs/canboat.json).
+We recommend that you pin your retrieval to a particular release. Semantic versioning is used to warn you of major (x.0.0) or minor (0.x.0) changes to the 
+definitions.
+
+## Version history
+
+See [Changelog](CHANGELOG.md).
+
+## Related Projects
+
+### Sibling projects (same authors)
+
+- [canboatjs](https://github.com/canboat/canboatjs) — pure JavaScript NMEA 2000 decoder and encoder
+
+(The Rust library used to live separately as `canboat-rs`; it was merged into
+this repository in v8 and is the `canboat-*` crates described above.)
+
+### Other projects using the CANboat PGN definitions
+
+- [go-nmea-client](https://github.com/aldas/go-nmea-client) — Go
+- [korri-n2k](https://github.com/fard-draf/korri-n2k) — NMEA 2000 stack for embedded Rust targets
+- [n2k](https://github.com/mbj4668/n2k) — Erlang
+- [NMEA2000-Analyzer](https://github.com/negrusti/NMEA2000-Analyzer) — Windows GUI
+- [nmea2000](https://github.com/tomer-w/nmea2000) — pure Python NMEA 2000 decoder and encoder library
+- [nmea2000 Home Assistant custom integration](https://github.com/tomer-w/ha-nmea2000) — expose NMEA 2000 PGNs as Home Assistant devices and entities
+
+### For non-technical sailors
+
+CANboat and its sibling [canboatjs](https://github.com/canboat/canboatjs) are command-line tools. If you
+just want to use your NMEA 2000 network, these projects build on them and provide a friendlier experience:
+
+- [OpenPlotter](https://openplotter.org/)
+- [Signal K](https://signalk.org/)
+
+## Sponsorship
+
+If you find CANboat useful, please consider supporting its development via
+[GitHub Sponsors](https://github.com/sponsors/keesverruijt).
+
+---
+
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+
+This file is part of CANboat.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.

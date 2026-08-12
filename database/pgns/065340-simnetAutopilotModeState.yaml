@@ -1,0 +1,83 @@
+pgn: 65340
+id: simnetAutopilotModeState
+description: 'Simnet: Autopilot Mode State'
+type: Single
+priority: 3
+interval: 1000
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: 'Autopilot mode/state broadcast by the AC (AutoPilot Computer). Field 1 is the standby/engaged class, field 2
+  the engaged mode. Observed emitted by the AC-42 (Standby = Mode Class 0 / Mode 0, Heading hold = Mode Class 16 / Mode 1);
+  the newer NAC-3 does not emit this PGN and reports its mode/state on 65305 (Simnet: Pilot Mode) instead.'
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: modeClass
+  name: Mode Class
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_AUTOPILOT_MODE_CLASS
+- id: mode
+  name: Mode
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_AUTOPILOT_MODE
+- id: c
+  name: C
+  type: UINT8
+- id: d
+  name: D
+  type: UINT8
+- id: spare8
+  name: Spare
+  type: SPARE
+  bits: 8
+- id: flags
+  name: Flags
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,00,00,fe,f8,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Standby"
+    mode: "Standby"
+    c: "OutOfRange"
+    d: 248
+    flags: 128
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,10,01,fe,fa,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Engaged"
+    mode: "Heading"
+    c: "OutOfRange"
+    d: 250
+    flags: 128
+- raw: "2023-01-01-00:00:00.000,3,65340,2,255,8,41,9f,00,00,fe,f9,00,80"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    modeClass: "Standby"
+    mode: "Standby"
+    c: "OutOfRange"
+    d: 249
+    flags: 128

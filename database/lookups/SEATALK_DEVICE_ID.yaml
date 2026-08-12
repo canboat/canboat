@@ -1,0 +1,6 @@
+name: SEATALK_DEVICE_ID
+kind: pair
+bits: 8
+values:
+  3: S100
+  5: Course Computer

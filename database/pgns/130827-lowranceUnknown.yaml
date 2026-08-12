@@ -1,0 +1,47 @@
+pgn: 130827
+id: lowranceUnknown
+description: 'Lowrance: unknown'
+type: Fast
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lowrance
+  match: 140
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: UINT8
+- id: b
+  name: B
+  type: UINT8
+- id: c
+  name: C
+  type: UINT8
+- id: d
+  name: D
+  type: UINT8
+- id: e
+  name: E
+  type: UINT16
+- id: f
+  name: F
+  type: UINT16

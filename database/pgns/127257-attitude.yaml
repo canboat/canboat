@@ -1,0 +1,42 @@
+pgn: 127257
+id: attitude
+description: Attitude
+type: Single
+priority: 3
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: yaw
+  name: Yaw
+  type: ANGLE_FIX16
+- id: pitch
+  name: Pitch
+  type: ANGLE_FIX16
+- id: roll
+  name: Roll
+  type: ANGLE_FIX16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+samples:
+- raw: "2023-01-01-00:00:00.000,3,127257,14,255,8,ff,59,7a,51,00,9f,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    yaw: 3.1321
+    pitch: 0.0081
+    roll: -0.0097
+- raw: "2023-01-01-00:00:00.000,3,127257,20,255,8,00,ff,7f,3d,00,26,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: 0
+    yaw: ~
+    pitch: 0.0061
+    roll: -0.0218
+- raw: "2023-01-01-00:00:00.000,3,127257,14,255,8,ff,fe,79,59,00,a8,ff,ff"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    yaw: 3.1230
+    pitch: 0.0089
+    roll: -0.0088

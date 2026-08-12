@@ -1,0 +1,33 @@
+pgn: 65262
+id: engineTemp1
+description: 'Engine Temp #1'
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineCoolantTemp
+  name: Engine Coolant Temp
+  description: SPN 110
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineFuelTemp
+  name: Engine Fuel Temp 1
+  description: SPN 174
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineOilTemp
+  name: Engine Oil Temp 1
+  description: SPN 175, 0.03125 K per bit with a -273 K offset
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineTurbochargerOilTemp
+  name: Engine Turbocharger Oil Temp
+  description: SPN 176
+  type: TEMPERATURE_UFIX16_J1939
+- id: engineInterCoolerTemp
+  name: Engine Intercooler Temp
+  description: SPN 52
+  type: TEMPERATURE_UINT8_OFFSET
+- id: engineInterCoolerThermostatOpening
+  name: Engine Intercooler Thermostat Opening
+  description: SPN 1134
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+notes: 'J1939 Engine Temperature 1 (ET1) PGN 65262, layout per SAE J1939-71'

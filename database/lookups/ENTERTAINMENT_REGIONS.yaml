@@ -1,0 +1,12 @@
+name: ENTERTAINMENT_REGIONS
+kind: pair
+bits: 4
+values:
+  0: USA
+  1: Europe
+  2: Asia
+  3: Middle East
+  4: Latin America
+  5: Australia
+  6: Russia
+  7: Japan

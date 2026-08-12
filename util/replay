@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+#
+# (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+#  
+# This file is part of CANboat.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+
+use Date::Parse qw(str2time);
+
+my $prevTime = 0;
+my $filterSource = 0;
+my $tstamp, $rest, $time, $msec, $src;
+
+if ($ARGC > 1)
+{
+  $filterSource = $ARGV[1];
+}
+
+$| = 1;
+
+while (my $line = <STDIN>)
+{
+  ($tstamp, $src, $rest) = split(/,/, $line, 3);
+  $time = str2time($tstamp);
+
+  if ($prevTime == 0)
+  {
+    $prevTime = $time;
+  }
+
+  if ($filterSource == 0 || $filterSource == $src)
+  {
+    if ($time > $prevTime)
+    { 
+      $sec = ($time - $prevTime);
+      select(undef, undef, undef, $sec);
+    }
+    $prevTime = $time;
+    print $line;
+  }
+}

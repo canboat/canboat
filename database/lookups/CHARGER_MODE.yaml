@@ -1,0 +1,8 @@
+name: CHARGER_MODE
+kind: pair
+bits: 4
+values:
+  0: Standalone
+  1: Primary
+  2: Secondary
+  3: Echo

@@ -1,0 +1,29 @@
+pgn: 65266
+id: fuelEconomy
+description: Fuel Economy
+type: Single
+priority: 6
+interval: 100
+fields:
+- id: fuelRate
+  name: Fuel Rate
+  description: SPN 183, 0.05 l/h per bit
+  type: VOLUMETRIC_FLOW_UFIX16_J1939
+- id: instantaneousFuelEconomy
+  name: Instantaneous Fuel Economy
+  description: SPN 184, 1/512 km/l per bit
+  type: DISTANCE_PER_VOLUME_UFIX16_J1939
+- id: averageFuelEconomy
+  name: Average Fuel Economy
+  description: SPN 185, 1/512 km/l per bit
+  type: DISTANCE_PER_VOLUME_UFIX16_J1939
+- id: throttlePosition
+  name: Throttle Position
+  description: SPN 51
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+notes: 'J1939 Fuel Economy (LFE) PGN 65266, layout per SAE J1939-71'

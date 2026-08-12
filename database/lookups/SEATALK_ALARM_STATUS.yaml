@@ -1,0 +1,7 @@
+name: SEATALK_ALARM_STATUS
+kind: pair
+bits: 8
+values:
+  0: Alarm condition not met
+  1: Alarm condition met and not silenced
+  2: Alarm condition met and silenced

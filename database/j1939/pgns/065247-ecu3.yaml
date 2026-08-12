@@ -1,0 +1,29 @@
+pgn: 65247
+id: ecu3
+description: 'ECU #3'
+type: Single
+priority: 6
+interval: 250
+fields:
+- id: nominalFrictionPercentTorque
+  name: Nominal Friction - Percent Torque
+  description: SPN 514
+  type: PERCENTAGE_INT8
+- id: engineDesiredOperatingSpeed
+  name: Engine's Desired Operating Speed
+  description: SPN 515
+  type: ROTATION_UFIX16_RPM_HIGHRES
+- id: engineDesiredOperatingSpeedAsymmetryAdjustment
+  name: Engine's Desired Operating Speed Asymmetry Adjustment
+  description: SPN 519
+  type: NUMBER
+  bits: 8
+- id: estimatedEnginePowerLossAccessories
+  name: Estimated Engine Power Loss - Accessories
+  description: SPN 2978
+  type: PERCENTAGE_UINT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 24
+notes: 'J1939 Electronic Engine Controller 3 (EEC3) PGN 65247, layout per SAE J1939-71. Volvo Penta OpenCAN also carries SPN 27/94/100/109/111 in this frame on some configurations.'

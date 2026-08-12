@@ -1,0 +1,434 @@
+//! The in-memory PGN database model.
+//!
+//! Authored attributes mirror what the YAML files store (decisions only);
+//! derived attributes (suffix `res_*` and the "filled by derive" fields) are
+//! computed exactly like the C analyzer computes them, so the XML emitter can
+//! reproduce analyzer-explain.c's output byte-for-byte.
+//!
+//! Tri-state booleans (C `Bool`: True/False/Null) are `Option<bool>`.
+
+use std::collections::{HashMap, HashSet};
+
+/// `<MissingAttribute>` names in emission order (analyzer-explain.c).
+pub const MISSING_ATTRIBUTES: [&str; 7] = [
+    "Fields",
+    "FieldLengths",
+    "Resolution",
+    "Lookups",
+    "SampleData",
+    "Interval",
+    "MissingCompanyFields",
+];
+
+pub const ACTISENSE_BEM: u32 = 0x40000;
+pub const IKONVERT_BEM: u32 = 0x40100;
+
+#[derive(Debug, Clone, Default)]
+pub struct PhysicalQuantity {
+    pub name: String,
+    pub description: Option<String>,
+    pub comment: Option<String>,
+    pub url: Option<String>,
+    pub unit_description: Option<String>,
+    pub unit: Option<String>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct FieldType {
+    pub name: String,
+    pub description: Option<String>,
+    pub encoding_description: Option<String>,
+    pub comment: Option<String>,
+    pub url: Option<String>,
+    pub size: u32, // bits; 0 = per-field
+    pub variable_size: bool,
+    pub base: Option<String>,
+    pub unit: Option<String>,
+    pub offset: i32,
+    pub resolution: f64,
+    pub has_sign: Option<bool>,
+    pub sentinels: String, // "None" | "TopOfRange" | "NaN" | "EmptyString" | "Variable"
+    pub physical: Option<String>,
+    pub print_function: Option<String>,
+    /// Inert in C (QUIRKS.md Q11); kept to regenerate fieldtype.h faithfully.
+    /// range_min becomes readable once the fieldtype.h generator (migration
+    /// step 3) lands; range_max already participates in the Q11 guard.
+    #[allow(dead_code)]
+    pub range_min_authored: Option<f64>,
+    pub range_max_authored: Option<f64>,
+
+    // --- filled by derive::fill_fieldtypes ---
+    pub range_min: f64,
+    pub range_max: f64,
+    pub root_name: String,
+    pub root_sentinels: String,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct FieldTypeLookupEntry {
+    pub value: u64,
+    pub name: String,
+    pub fieldtype: String,
+    pub bits: Option<u32>,
+    pub lookup: Option<String>,
+    pub lookup_kind: Option<String>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct Lookup {
+    pub name: String,
+    pub kind: String, // "pair" | "triplet" | "bit" | "fieldtype"
+    pub bits: u32,
+    pub pairs: Vec<(u64, String)>,
+    pub triplets: Vec<(u64, u64, String)>,
+    pub fieldtypes: Vec<FieldTypeLookupEntry>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct Field {
+    // --- authored ---
+    pub id: String,
+    pub name: String,
+    pub type_: String,
+    pub bits: Option<u32>,
+    pub resolution: Option<f64>,
+    pub unit: Option<String>,
+    pub offset: Option<i32>,
+    pub description: Option<String>,
+    /// Authored research note, YAML-only documentation (never emitted to an
+    /// artifact). Modeled so the editor can round-trip it through a fields:
+    /// block rewrite instead of silently dropping it.
+    pub note: Option<String>,
+    pub match_: Option<String>, // printed verbatim; int-parsed for the lookup description
+    pub lookup: Option<String>,
+    pub lookup_indirect: Option<String>,
+    pub lookup_indirect_order: Option<u32>,
+    pub lookup_bits: Option<String>,
+    pub lookup_fieldtype: Option<String>,
+    pub primary_key: bool,
+    pub proprietary: bool,
+    /// Explicit opt-in for a field width that differs from its lookup's
+    /// declared width (R08): shared enumerations (DISABLED_SATELLITES over
+    /// 32/24-bit constellations) and flag idioms (YES_NO in 1 bit).
+    pub allow_lookup_width_mismatch: bool,
+    pub special_values: Option<u32>,
+    /// Id of the field holding this field's length in bits. Authored only on
+    /// variable-length BINARY fields; emitted as <BitLengthField> (QUIRKS Q14).
+    pub bit_length_field: Option<String>,
+    pub dynamic_field_length: bool,
+    pub dynamic_field_length_overhead: u32,
+    pub range_min: Option<f64>,
+    pub range_max: Option<f64>,
+
+    // --- filled by derive::fill ---
+    pub ft: usize, // index into Database::fieldtypes
+    pub res_bits: u32,
+    pub res_resolution: f64,
+    pub res_unit: Option<String>,
+    pub res_offset: i32,
+    pub res_range_min: f64,
+    pub res_range_max: f64,
+    pub reserved_count: u32,
+    pub order: u32,
+    /// 1-based order of the field named by `bit_length_field`.
+    pub bit_length_field_order: Option<u32>,
+}
+
+impl Field {
+    /// (kind, name) of whichever lookup this field references.
+    pub fn lookup_ref(&self) -> Option<(&'static str, &str)> {
+        if let Some(n) = &self.lookup {
+            return Some(("pair", n));
+        }
+        if let Some(n) = &self.lookup_indirect {
+            return Some(("triplet", n));
+        }
+        if let Some(n) = &self.lookup_bits {
+            return Some(("bit", n));
+        }
+        if let Some(n) = &self.lookup_fieldtype {
+            return Some(("fieldtype", n));
+        }
+        None
+    }
+}
+
+/// One captured sample plus (partial) decode expectations (R40).
+#[derive(Debug, Clone, Default)]
+pub struct SampleSpec {
+    /// Sample lines: PLAIN / candump frames (reassembled), or one
+    /// pre-assembled coalesced PLAIN line.
+    pub raw: Vec<String>,
+    /// field id (optionally `id.N` for the Nth repeating instance) ->
+    /// expected value. Partial: unlisted fields are not checked.
+    pub expects: Vec<(String, Expected)>,
+}
+
+#[derive(Debug, Clone, PartialEq)]
+pub enum Expected {
+    Number(f64),
+    Str(String),
+    List(Vec<String>),
+    Unavailable, // YAML null
+}
+
+#[derive(Debug, Clone, PartialEq, Default)]
+pub enum Interval {
+    #[default]
+    Unknown,
+    Irregular,
+    Ms(u32),
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct Repeating {
+    pub count: u32,
+    pub start: u32,
+    pub count_field: Option<u32>,
+}
+
+#[derive(Debug, Clone, Default)]
+pub struct Pgn {
+    // --- authored ---
+    pub pgn: u32,
+    pub id: String,
+    pub description: String,
+    pub type_: String, // "Single" | "Fast" | "ISO" | "Mixed"
+    pub priority: u32,
+    pub interval: Interval,
+    pub explanation: Option<String>,
+    pub url: Option<String>,
+    pub research_doc: Option<String>,
+    pub fallback: bool,
+    pub missing: Vec<String>, // sans the automatic Interval entry
+    pub repeating1: Option<Repeating>,
+    pub repeating2: Option<Repeating>,
+    pub variant_order: u32,
+    pub fields: Vec<Field>,
+    pub samples: Vec<SampleSpec>,
+
+    // --- filled by derive::fill ---
+    pub field_count: u32,
+    pub length: u32,
+    pub is_variable: bool,
+}
+
+impl Pgn {
+    /// The `<Missing>` list as emitted: authored plus the automatic Interval
+    /// attribute when the interval is unknown (fieldtype.c:486).
+    pub fn missing_effective(&self) -> Vec<&'static str> {
+        MISSING_ATTRIBUTES
+            .iter()
+            .copied()
+            .filter(|m| {
+                if *m == "Interval" {
+                    self.interval == Interval::Unknown
+                } else {
+                    self.missing.iter().any(|x| x == m)
+                }
+            })
+            .collect()
+    }
+
+    pub fn is_complete(&self) -> bool {
+        self.missing_effective().is_empty()
+    }
+}
+
+#[derive(Debug, Default)]
+pub struct Database {
+    pub physical_quantities: Vec<PhysicalQuantity>,
+    pub fieldtypes: Vec<FieldType>,
+    pub ft_index: HashMap<String, usize>,
+    pub lookups: HashMap<String, Lookup>,
+    pub pgns: Vec<Pgn>,
+    /// The parallel J1939 list (pgn-j1939.h); shares every other section.
+    pub pgns_j1939: Vec<Pgn>,
+    pub version: String,
+    pub schema_version: String,
+}
+
+impl Database {
+    pub fn index(&mut self) {
+        self.ft_index = self
+            .fieldtypes
+            .iter()
+            .enumerate()
+            .map(|(i, ft)| (ft.name.clone(), i))
+            .collect();
+    }
+
+    pub fn fieldtype(&self, name: &str) -> Result<usize, String> {
+        self.ft_index
+            .get(name)
+            .copied()
+            .ok_or_else(|| format!("fieldType '{name}' not found"))
+    }
+
+    /// Resolve a field's `match:` to the numeric discriminator that every
+    /// consumer needs: the value `select_variant` compares against the wire,
+    /// the C `.unit = "=N"` tables, and the XML `<Match>`. A plain
+    /// non-negative integer parses directly; on a lookup field a non-numeric
+    /// value is taken as an enum NAME and resolved to its value (pair or
+    /// fieldtype). `None` means unresolvable — R13 rejects those before any
+    /// consumer relies on this, so the fallbacks elsewhere are only defensive.
+    pub fn resolve_match(&self, f: &Field) -> Option<u64> {
+        let m = f.match_.as_ref()?;
+        if let Ok(n) = m.parse::<u64>() {
+            return Some(n);
+        }
+        // Non-numeric: only meaningful as an enum name on a lookup field.
+        let (kind, name) = f.lookup_ref()?;
+        let lk = self.lookups.get(name)?;
+        match kind {
+            "fieldtype" => lk.fieldtypes.iter().find(|e| e.name == *m).map(|e| e.value),
+            _ => lk.pairs.iter().find(|(_, n)| n == m).map(|(v, _)| *v),
+        }
+    }
+
+    /// Enumerations of `kind`, sorted by name.
+    ///
+    /// Emission order used to be pinned by `database/lookups.order.yaml`, a
+    /// manifest that existed only to reproduce lookup-generated-data.h's hand-authored
+    /// definition order for the migration's byte-diff gate. That gate is
+    /// retired, so order is now simply alphabetical: derivable, stable, and
+    /// one less file to keep in step when an enumeration is added.
+    pub fn ordered_lookups(&self, kind: &str) -> Vec<&Lookup> {
+        let mut out: Vec<&Lookup> = self.lookups.values().filter(|lk| lk.kind == kind).collect();
+        out.sort_by(|a, b| a.name.cmp(&b.name));
+        out
+    }
+
+    /// `ordered_lookups`, restricted to the lookups one tree actually needs.
+    pub fn ordered_lookups_for(&self, kind: &str, keep: &HashSet<String>) -> Vec<&Lookup> {
+        self.ordered_lookups(kind)
+            .into_iter()
+            .filter(|lk| keep.contains(&lk.name))
+            .collect()
+    }
+
+    /// The lookups a tree's PGNs reference, transitively: a `kind: fieldtype`
+    /// lookup can name a nested lookup per entry, and that nested one has to
+    /// travel with it.
+    ///
+    /// The marine tree additionally keeps every lookup that *no* tree
+    /// references. Those orphans are already published in `docs/canboat.json`,
+    /// so dropping them here would be a silent contract change; they stay put
+    /// until something deliberately retires them.
+    pub fn lookups_used(&self, j1939: bool) -> HashSet<String> {
+        let names = |pgns: &'_ [Pgn]| -> Vec<String> {
+            pgns.iter()
+                .flat_map(|p| p.fields.iter())
+                .filter_map(|f| f.lookup_ref())
+                .map(|(_, n)| n.to_string())
+                .collect()
+        };
+        let pgns = if j1939 { &self.pgns_j1939 } else { &self.pgns };
+        let mut used: HashSet<String> = names(pgns).into_iter().collect();
+
+        if !j1939 {
+            let referenced: HashSet<String> = names(&self.pgns)
+                .into_iter()
+                .chain(names(&self.pgns_j1939))
+                .collect();
+            used.extend(
+                self.lookups
+                    .keys()
+                    .filter(|n| !referenced.contains(*n))
+                    .cloned(),
+            );
+        }
+
+        // Close over nested lookups named by fieldtype-lookup entries.
+        loop {
+            let nested: Vec<String> = used
+                .iter()
+                .filter_map(|n| self.lookups.get(n))
+                .flat_map(|lk| lk.fieldtypes.iter())
+                .filter_map(|e| e.lookup.clone())
+                .filter(|n| !used.contains(n))
+                .collect();
+            if nested.is_empty() {
+                break;
+            }
+            used.extend(nested);
+        }
+        used
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn pgn_with(lookup: &str) -> Pgn {
+        Pgn {
+            fields: vec![Field {
+                lookup: Some(lookup.to_string()),
+                ..Default::default()
+            }],
+            ..Default::default()
+        }
+    }
+
+    fn lookup_named(name: &str) -> Lookup {
+        Lookup {
+            name: name.to_string(),
+            kind: "pair".to_string(),
+            ..Default::default()
+        }
+    }
+
+    /// Two trees, two manufacturer registries: neither may see the other's.
+    #[test]
+    fn each_tree_gets_only_its_own_lookups() {
+        let mut db = Database::default();
+        db.pgns.push(pgn_with("MANUFACTURER_CODE"));
+        db.pgns_j1939.push(pgn_with("J1939_MANUFACTURER_CODE"));
+        for n in ["MANUFACTURER_CODE", "J1939_MANUFACTURER_CODE"] {
+            db.lookups.insert(n.to_string(), lookup_named(n));
+        }
+
+        let marine = db.lookups_used(false);
+        assert!(marine.contains("MANUFACTURER_CODE"));
+        assert!(!marine.contains("J1939_MANUFACTURER_CODE"));
+
+        let j1939 = db.lookups_used(true);
+        assert!(j1939.contains("J1939_MANUFACTURER_CODE"));
+        assert!(!j1939.contains("MANUFACTURER_CODE"));
+    }
+
+    /// A lookup nothing references is already published in canboat.json, so
+    /// it stays with the marine tree rather than vanishing.
+    #[test]
+    fn orphan_lookups_stay_with_the_marine_tree() {
+        let mut db = Database::default();
+        db.pgns_j1939.push(pgn_with("J1939_MANUFACTURER_CODE"));
+        for n in ["ORPHAN", "J1939_MANUFACTURER_CODE"] {
+            db.lookups.insert(n.to_string(), lookup_named(n));
+        }
+        assert!(db.lookups_used(false).contains("ORPHAN"));
+        assert!(!db.lookups_used(true).contains("ORPHAN"));
+    }
+
+    /// A fieldtype lookup names a nested lookup per entry; it has to travel
+    /// with the tree that uses the outer one.
+    #[test]
+    fn nested_fieldtype_lookups_come_along() {
+        let mut db = Database::default();
+        db.pgns.push(pgn_with("OUTER"));
+        let mut outer = lookup_named("OUTER");
+        outer.kind = "fieldtype".to_string();
+        outer.fieldtypes.push(FieldTypeLookupEntry {
+            lookup: Some("NESTED".to_string()),
+            ..Default::default()
+        });
+        db.lookups.insert("OUTER".to_string(), outer);
+        db.lookups
+            .insert("NESTED".to_string(), lookup_named("NESTED"));
+
+        let marine = db.lookups_used(false);
+        assert!(marine.contains("OUTER") && marine.contains("NESTED"));
+        assert!(!db.lookups_used(true).contains("NESTED"));
+    }
+}

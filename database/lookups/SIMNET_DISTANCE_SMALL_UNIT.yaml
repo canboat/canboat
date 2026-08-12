@@ -1,0 +1,7 @@
+name: SIMNET_DISTANCE_SMALL_UNIT
+kind: pair
+bits: 8
+values:
+  0: Feet
+  1: Meters
+  2: Yards

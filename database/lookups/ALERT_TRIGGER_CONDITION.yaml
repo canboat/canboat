@@ -1,0 +1,8 @@
+name: ALERT_TRIGGER_CONDITION
+kind: pair
+bits: 4
+values:
+  0: Manual
+  1: Auto
+  2: Test
+  3: Disabled

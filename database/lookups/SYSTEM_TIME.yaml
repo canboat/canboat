@@ -1,0 +1,10 @@
+name: SYSTEM_TIME
+kind: pair
+bits: 4
+values:
+  0: GPS
+  1: GLONASS
+  2: Radio Station
+  3: Local Cesium clock
+  4: Local Rubidium clock
+  5: Local Crystal clock

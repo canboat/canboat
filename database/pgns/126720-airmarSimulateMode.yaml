@@ -1,0 +1,43 @@
+pgn: 126720
+id: airmarSimulateMode
+description: 'Airmar: Simulate Mode'
+type: Fast
+variantOrder: 37
+interval: irregular
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Simulate Mode
+  match: 35
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: simulateMode
+  name: Simulate Mode
+  type: LOOKUP
+  bits: 2
+  lookup: OFF_ON
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 22

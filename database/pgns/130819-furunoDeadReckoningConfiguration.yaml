@@ -1,0 +1,61 @@
+pgn: 130819
+id: furunoDeadReckoningConfiguration
+description: 'Furuno: Dead Reckoning Configuration'
+type: Fast
+variantOrder: 4
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: f4
+  name: F4
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: f5
+  name: F5
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: f6
+  name: F6
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: f7
+  name: F7
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: f8
+  name: F8
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: deadReckoningTime
+  name: Dead reckoning time
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: 0=5min, 1=4min, 2=3min, 3=2min, 4=1min (code = 5 - minutes)
+- id: f10
+  name: F10
+  type: UNSIGNED_INTEGER
+  bits: 4
+- id: f11
+  name: F11
+  type: UINT8

@@ -1,0 +1,56 @@
+pgn: 130939
+id: lumishoreLightControl
+description: 'Lumishore: Light Control'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Lumishore
+  match: 798
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: zoneIndex
+  name: Zone Index
+  type: UINT8
+  primaryKey: true
+- id: red
+  name: Red
+  type: UINT8
+- id: green
+  name: Green
+  type: UINT8
+- id: blue
+  name: Blue
+  type: UINT8
+- id: coldWhite
+  name: Cold White
+  type: UINT8
+- id: warmWhite
+  name: Warm White
+  type: UINT8
+- id: intensity
+  name: Intensity
+  type: UINT8
+- id: onOff
+  name: On/Off
+  type: UINT8
+- id: status
+  name: Status
+  type: UINT8

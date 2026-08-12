@@ -1,0 +1,322 @@
+name: DEVICE_FUNCTION
+kind: triplet
+bits: 8
+values:
+- - 10
+  - 130
+  - Diagnostic
+- - 10
+  - 140
+  - Bus Traffic Logger
+- - 20
+  - 110
+  - Alarm Enunciator
+- - 20
+  - 130
+  - Emergency Position Indicating Radio Beacon (EPIRB)
+- - 20
+  - 135
+  - Man Overboard
+- - 20
+  - 140
+  - Voyage Data Recorder
+- - 20
+  - 150
+  - Camera
+- - 25
+  - 130
+  - PC Gateway
+- - 25
+  - 131
+  - NMEA 2000 to Analog Gateway
+- - 25
+  - 132
+  - Analog to NMEA 2000 Gateway
+- - 25
+  - 133
+  - NMEA 2000 to Serial Gateway
+- - 25
+  - 135
+  - NMEA 0183 Gateway
+- - 25
+  - 136
+  - NMEA Network Gateway
+- - 25
+  - 137
+  - NMEA 2000 Wireless Gateway
+- - 25
+  - 140
+  - Router
+- - 25
+  - 150
+  - Bridge
+- - 25
+  - 160
+  - Repeater
+- - 30
+  - 130
+  - Binary Event Monitor
+- - 30
+  - 140
+  - Load Controller
+- - 30
+  - 141
+  - AC/DC Input
+- - 30
+  - 150
+  - Function Controller
+- - 35
+  - 140
+  - Engine
+- - 35
+  - 141
+  - DC Generator/Alternator
+- - 35
+  - 142
+  - Solar Panel (Solar Array)
+- - 35
+  - 143
+  - Wind Generator (DC)
+- - 35
+  - 144
+  - Fuel Cell
+- - 35
+  - 145
+  - Network Power Supply
+- - 35
+  - 151
+  - AC Generator
+- - 35
+  - 152
+  - AC Bus
+- - 35
+  - 153
+  - AC Mains (Utility/Shore)
+- - 35
+  - 154
+  - AC Output
+- - 35
+  - 160
+  - Power Converter - Battery Charger
+- - 35
+  - 161
+  - Power Converter - Battery Charger+Inverter
+- - 35
+  - 162
+  - Power Converter - Inverter
+- - 35
+  - 163
+  - Power Converter - DC
+- - 35
+  - 170
+  - Battery
+- - 35
+  - 180
+  - Engine Gateway
+- - 40
+  - 130
+  - Follow-up Controller
+- - 40
+  - 140
+  - Mode Controller
+- - 40
+  - 150
+  - Autopilot
+- - 40
+  - 155
+  - Rudder
+- - 40
+  - 160
+  - Heading Sensors
+- - 40
+  - 170
+  - Trim (Tabs)/Interceptors
+- - 40
+  - 180
+  - Attitude (Pitch, Roll, Yaw) Control
+- - 50
+  - 130
+  - Engineroom Monitoring
+- - 50
+  - 140
+  - Engine
+- - 50
+  - 141
+  - DC Generator/Alternator
+- - 50
+  - 150
+  - Engine Controller
+- - 50
+  - 151
+  - AC Generator
+- - 50
+  - 155
+  - Motor
+- - 50
+  - 160
+  - Engine Gateway
+- - 50
+  - 165
+  - Transmission
+- - 50
+  - 170
+  - Throttle/Shift Control
+- - 50
+  - 180
+  - Actuator
+- - 50
+  - 190
+  - Gauge Interface
+- - 50
+  - 200
+  - Gauge Large
+- - 50
+  - 210
+  - Gauge Small
+- - 60
+  - 130
+  - Bottom Depth
+- - 60
+  - 135
+  - Bottom Depth/Speed
+- - 60
+  - 136
+  - Bottom Depth/Speed/Temperature
+- - 60
+  - 140
+  - Ownship Attitude
+- - 60
+  - 145
+  - Ownship Position (GNSS)
+- - 60
+  - 150
+  - Ownship Position (Loran C)
+- - 60
+  - 155
+  - Speed
+- - 60
+  - 160
+  - Turn Rate Indicator
+- - 60
+  - 170
+  - Integrated Navigation
+- - 60
+  - 175
+  - Integrated Navigation System
+- - 60
+  - 190
+  - Navigation Management
+- - 60
+  - 195
+  - Automatic Identification System (AIS)
+- - 60
+  - 200
+  - Radar
+- - 60
+  - 201
+  - Infrared Imaging
+- - 60
+  - 205
+  - ECDIS
+- - 60
+  - 210
+  - ECS
+- - 60
+  - 220
+  - Direction Finder
+- - 60
+  - 230
+  - Voyage Status
+- - 70
+  - 130
+  - EPIRB
+- - 70
+  - 140
+  - AIS
+- - 70
+  - 150
+  - DSC
+- - 70
+  - 160
+  - Data Receiver/Transceiver
+- - 70
+  - 170
+  - Satellite
+- - 70
+  - 180
+  - Radio-telephone (MF/HF)
+- - 70
+  - 190
+  - Radiotelephone
+- - 75
+  - 130
+  - Temperature
+- - 75
+  - 140
+  - Pressure
+- - 75
+  - 150
+  - Fluid Level
+- - 75
+  - 160
+  - Flow
+- - 75
+  - 170
+  - Humidity
+- - 80
+  - 130
+  - Time/Date Systems
+- - 80
+  - 140
+  - VDR
+- - 80
+  - 150
+  - Integrated Instrumentation
+- - 80
+  - 160
+  - General Purpose Displays
+- - 80
+  - 170
+  - General Sensor Box
+- - 80
+  - 180
+  - Weather Instruments
+- - 80
+  - 190
+  - Transducer/General
+- - 80
+  - 200
+  - NMEA 0183 Converter
+- - 85
+  - 130
+  - Atmospheric
+- - 85
+  - 160
+  - Aquatic
+- - 90
+  - 130
+  - HVAC
+- - 100
+  - 130
+  - Scale (Catch)
+- - 110
+  - 130
+  - Button Interface
+- - 110
+  - 135
+  - Switch Interface
+- - 110
+  - 140
+  - Analog Interface
+- - 120
+  - 130
+  - Display
+- - 120
+  - 140
+  - Alarm Enunciator
+- - 125
+  - 130
+  - Multimedia Player
+- - 125
+  - 140
+  - Multimedia Controller

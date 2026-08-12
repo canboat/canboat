@@ -1,0 +1,6 @@
+name: FUSION_RADIO_SOURCE
+kind: pair
+bits: 8
+values:
+  0: AM
+  1: FM

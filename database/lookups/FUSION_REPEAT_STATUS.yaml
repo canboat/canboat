@@ -1,0 +1,7 @@
+name: FUSION_REPEAT_STATUS
+kind: pair
+bits: 32
+values:
+  0: 'Off'
+  1: One/track
+  2: All/album

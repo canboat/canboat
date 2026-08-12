@@ -1,0 +1,72 @@
+pgn: 65305
+id: simnetDeviceStatus
+description: 'Simnet: Device Status'
+type: Single
+variantOrder: 1
+interval: 1000
+missing:
+- Lookups
+explanation: This PGN is reported by an Autopilot Computer (AC/NAC)
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Status
+  match: 2
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_AP_STATUS
+- id: spare7
+  name: Spare
+  type: SPARE
+  bits: 24
+samples:
+- raw: "2023-01-01-00:00:00.000,1,65305,3,255,8,41,9f,64,02,02,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Status"
+    status: "Manual"
+- raw: "2023-01-01-00:00:00.000,7,65305,2,255,8,41,9f,00,02,10,00,00,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "AC"
+    report: "Status"
+    status: "Automatic"
+- raw: "2023-01-01-00:00:00.000,1,65305,17,255,8,41,9f,64,02,10,01,00,00"  # from triton-engine-setup.all
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Status"
+    status: "Automatic"

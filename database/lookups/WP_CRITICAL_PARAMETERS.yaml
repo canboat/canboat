@@ -1,0 +1,6 @@
+name: WP_CRITICAL_PARAMETERS
+kind: bit
+bits: 8
+values:
+  0: Navigation Method
+  1: XTE Limit

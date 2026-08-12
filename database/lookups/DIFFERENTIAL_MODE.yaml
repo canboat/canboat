@@ -1,0 +1,7 @@
+name: DIFFERENTIAL_MODE
+kind: pair
+bits: 4
+values:
+  0: Manual
+  1: Auto Power
+  2: Auto Range

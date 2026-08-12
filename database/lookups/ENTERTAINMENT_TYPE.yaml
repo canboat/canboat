@@ -1,0 +1,15 @@
+name: ENTERTAINMENT_TYPE
+kind: pair
+bits: 8
+values:
+  0: File
+  1: Playlist Name
+  2: Genre Name
+  3: Album Name
+  4: Artist Name
+  5: Track Name
+  6: Station Name
+  7: Station Number
+  8: Favourite Number
+  9: Play Queue
+  10: Content Info

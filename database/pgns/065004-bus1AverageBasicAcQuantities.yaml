@@ -1,0 +1,24 @@
+pgn: 65004
+id: bus1AverageBasicAcQuantities
+description: 'Bus #1 Average Basic AC Quantities'
+type: Single
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 16

@@ -1,0 +1,6 @@
+name: POSITION_ACCURACY
+kind: pair
+bits: 1
+values:
+  0: Low
+  1: High

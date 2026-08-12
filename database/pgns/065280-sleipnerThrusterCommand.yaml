@@ -1,0 +1,95 @@
+pgn: 65280
+id: sleipnerThrusterCommand
+description: 'Sleipner: Thruster Command'
+type: Single
+variantOrder: 9
+priority: 2
+missing:
+- Fields
+- FieldLengths
+explanation: >-
+  Sent by Sleipner S-Link control panels (PJC-series joystick panels) at ~20 Hz per
+  thruster instance, at priority 2. The instance selects which thruster the command
+  applies to; direction and device action are separate two-bit fields; thrust is a
+  ten-bit per-mille demand. The thrusters answer with PGN 130827, whose signed thrust
+  field takes the sign of the commanded direction. The remaining bits were zero in every
+  observed frame, including at full deflection.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Sleipner Motor
+  match: 306
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: thrusterInstance
+  name: Thruster Instance
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Selects the thruster (pair) the command applies to
+- id: direction
+  name: Direction
+  type: LOOKUP
+  bits: 2
+  lookup: SLEIPNER_THRUSTER_DIRECTION
+- id: deviceAction
+  name: Device Action
+  type: LOOKUP
+  bits: 2
+  lookup: SLEIPNER_THRUSTER_ACTION
+- id: thrust
+  name: Thrust
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+  description: Commanded thrust, 0 to 100%
+- id: reserved10
+  name: Reserved
+  type: BINARY
+  bits: 30
+  description: Zero in every observed frame, including at full deflection
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65280,6,255,8,32,99,81,00,00,00,00,00"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    thrusterInstance: 1
+    direction: "None"
+    deviceAction: "Standby"
+    thrust: 0.0
+- raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,41,00,00,00,00,00"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    thrusterInstance: 1
+    direction: "None"
+    deviceAction: "Active"
+    thrust: 0.0
+- raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,51,e8,03,00,00,00"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    thrusterInstance: 1
+    direction: "Direction 1"
+    deviceAction: "Active"
+    thrust: 100.0
+- raw: "2023-01-01-00:00:00.000,2,65280,3,255,8,32,99,61,e8,03,00,00,00"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    thrusterInstance: 1
+    direction: "Direction 2"
+    deviceAction: "Active"
+    thrust: 100.0

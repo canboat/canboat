@@ -1,0 +1,156 @@
+pgn: 129038
+id: aisClassAPositionReport
+description: AIS Class A Position Report
+type: Fast
+priority: 4
+interval: irregular
+url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+fields:
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 6
+  lookup: AIS_MESSAGE_ID
+- id: repeatIndicator
+  name: Repeat Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: REPEAT_INDICATOR
+- id: userId
+  name: User ID
+  type: MMSI
+  primaryKey: true
+  rangeMin: 2000000.0
+  rangeMax: 999999999.0
+- id: longitude
+  name: Longitude
+  type: GEO_LON_FIX32
+  rangeMin: -180.0
+  rangeMax: 180.0
+- id: latitude
+  name: Latitude
+  type: GEO_LAT_FIX32
+  rangeMin: -90.0
+  rangeMax: 90.0
+- id: positionAccuracy
+  name: Position Accuracy
+  type: LOOKUP
+  bits: 1
+  lookup: POSITION_ACCURACY
+- id: raim
+  name: RAIM
+  type: LOOKUP
+  bits: 1
+  lookup: RAIM_FLAG
+- id: timeStamp
+  name: Time Stamp
+  type: LOOKUP
+  bits: 6
+  description: 0-59 = UTC second when the report was generated
+  lookup: TIME_STAMP
+- id: cog
+  name: COG
+  type: ANGLE_UFIX16
+- id: sog
+  name: SOG
+  type: SPEED_UFIX16_CM
+- id: communicationState
+  name: Communication State
+  type: BINARY
+  bits: 19
+  description: Information used by the TDMA slot allocation algorithm and synchronization information
+- id: aisTransceiverInformation
+  name: AIS Transceiver information
+  type: LOOKUP
+  bits: 5
+  lookup: AIS_TRANSCEIVER
+- id: heading
+  name: Heading
+  type: ANGLE_UFIX16
+  description: True heading
+- id: rateOfTurn
+  name: Rate of Turn
+  type: ROTATION_FIX16
+- id: navStatus
+  name: Nav Status
+  type: LOOKUP
+  bits: 4
+  lookup: NAV_STATUS
+- id: specialManeuverIndicator
+  name: Special Maneuver Indicator
+  type: LOOKUP
+  bits: 2
+  lookup: AIS_SPECIAL_MANEUVER
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: spare18
+  name: Spare
+  type: SPARE
+  bits: 3
+- id: reserved19
+  name: Reserved
+  type: RESERVED
+  bits: 5
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,81,e6,96,0e,eb,4d,3a,03,f7,80,b1,1f,e4,00,00,00,00,e4,10,09,ff,ff,ff,7f,c8,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Scheduled Class A position report"
+    repeatIndicator: "Initial"
+    userId: 244770433
+    longitude: 5.4152683
+    latitude: 53.1726583
+    positionAccuracy: "Low"
+    raim: "not in use"
+    timeStamp: 57
+    cog: 0.0000
+    sog: 0.00
+    communicationState: "0xe41001"
+    aisTransceiverInformation: "Channel B VDL reception"
+    heading: ~
+    rateOfTurn: ~
+    navStatus: "Under way sailing"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,03,d0,dd,ac,0e,fc,bd,06,03,72,a3,c6,1f,f1,96,b8,15,01,e0,41,04,b9,b8,cc,ff,c0,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Interrogated Class A position report"
+    repeatIndicator: "Initial"
+    userId: 246210000
+    longitude: 5.0773500
+    latitude: 53.3111666
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: "Not available"
+    cog: 4.7254
+    sog: 2.77
+    communicationState: "0xe04104"
+    aisTransceiverInformation: "Channel A VDL reception"
+    heading: 4.7289
+    rateOfTurn: -0.00163
+    navStatus: "Under way using engine"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~
+- raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,d1,73,8e,0e,fd,ca,14,03,4d,e9,c0,1f,01,21,0f,c0,02,3a,00,01,5c,10,00,00,c0,f8,ff"  # from merrimac-2022.raw
+  expects:
+    messageId: "Scheduled Class A position report"
+    repeatIndicator: "Initial"
+    userId: 244216785
+    longitude: 5.1694333
+    latitude: 53.2736333
+    positionAccuracy: "High"
+    raim: "not in use"
+    timeStamp: 0
+    cog: 0.3873
+    sog: 7.04
+    communicationState: "0x3a0001"
+    aisTransceiverInformation: "Channel A VDL reception"
+    heading: 0.4188
+    rateOfTurn: 0.00000
+    navStatus: "Under way using engine"
+    specialManeuverIndicator: "Not available"
+    sequenceId: ~

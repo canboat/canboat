@@ -1,0 +1,94 @@
+#
+# (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+#  
+# This file is part of CANboat.
+# 
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+# 
+#     http://www.apache.org/licenses/LICENSE-2.0
+# 
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+# 
+
+PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
+BUILDDIR?=rel/$(PLATFORM)
+TARGETDIR=../$(BUILDDIR)
+ANALYZER=$(TARGETDIR)/analyzer
+ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
+TARGETS=$(ANALYZER) $(ANALYZER_J1939)
+KEEL=../keel/keel
+NMEA_JSONFILE=../sources/nmea_1300.json
+RECONCILE=../tools/nmea-pdf/reconcile.py
+XSL2FILE=../docs/canboat.xsl
+XML2FILE=../docs/canboat.xml
+XSD2FILE=../docs/canboat.xsd
+JSON2FILE=../docs/canboat.json
+HTML2FILE=../docs/canboat.html
+GENERATED_DATA=pgn-generated-data.h physicalquantity-generated-data.h fieldtype-generated-data.h
+HEADERS=analyzer.h pgn.h lookup-generated-data.h fieldtype.h $(GENERATED_DATA)
+HEADERS_J1939=analyzer.h pgn-j1939.h lookup-j1939-generated-data.h fieldtype.h physicalquantity-generated-data.h fieldtype-generated-data.h pgn-j1939-generated-data.h
+COMMONDIR=../common
+COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
+CFLAGS?=-Wall -O2
+LDLIBS=-lm
+
+all: $(TARGETS)
+
+analyzer: $(ANALYZER)
+
+$(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+
+$(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+
+# canboat.xml AND the analyzer's data tables (lookup-generated-data.h, *-data.h) are
+# generated from ../database by keel (see keel/DESIGN.md). The keel shim
+# builds the keel binary with cargo on first use. keel-generate is phony:
+# keel itself is a fast no-op-detector, and the CI gate is a git diff.
+.PHONY: keel-generate
+keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
+	python3 fixup-version.py $(ANALYZER) $(XSD2FILE)
+	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
+	$(KEEL) generate
+	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
+
+$(XML2FILE): keel-generate
+
+# canboat.html/json derive from canboat.xml via xsltproc. They depend on the
+# phony keel-generate (not on canboat.xml) on purpose: keel rewrites the xml
+# in the same pass, and the recipe-less xml target does not reliably
+# propagate that to downstream mtime checks under make 3.81 (the stock macOS
+# make), leaving the html/json stale after a database change. Depending on
+# keel-generate forces them to rebuild from the freshly written xml.
+$(HTML2FILE): keel-generate $(XSL2FILE)
+	xsltproc $(XSL2FILE) $(XML2FILE) | ./fixup-html.sh > $(HTML2FILE)
+
+$(JSON2FILE): keel-generate canboat2json.xslt validate-json.py
+	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
+	python3 validate-json.py --range $(@)
+
+validation: $(JSON2FILE) $(NMEA_JSONFILE) $(RECONCILE)
+	python3 $(RECONCILE) --canboat $(JSON2FILE) --nmea $(NMEA_JSONFILE) --check
+	
+
+generated: validation $(JSON2FILE) $(HTML2FILE) 
+
+clean:
+	-rm -f $(TARGETS) *.elf *.gdb
+
+tests:	$(ANALYZER)
+	(cd tests; make tests)
+
+webserver:
+	cd ../docs; python3 -m http.server --cgi 8080
+
+.PHONY:	generated clean tests webserver analyzer validation

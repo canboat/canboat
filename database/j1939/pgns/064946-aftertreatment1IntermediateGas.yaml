@@ -1,0 +1,39 @@
+pgn: 64946
+id: aftertreatment1IntermediateGas
+description: Aftertreatment 1 Intermediate Gas
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: aftertreatment1ExhaustGasTemperature2
+  name: Aftertreatment 1 Exhaust Gas Temperature 2
+  description: SPN 3249
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1DieselParticulateFilterIntermediateTemperature
+  name: Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature
+  description: SPN 3250
+  type: TEMPERATURE_UFIX16_J1939
+- id: aftertreatment1DieselParticulateFilterDifferentialPressure
+  name: Aftertreatment 1 Diesel Particulate Filter Differential Pressure
+  description: SPN 3251, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: aftertreatment1ExhaustGasTemperature2PreliminaryFmi
+  name: Aftertreatment 1 Exhaust Gas Temperature 2 Preliminary FMI
+  description: SPN 3252
+  type: NUMBER
+  bits: 5
+- id: aftertreatment1DieselParticulateFilterIntermediateTemperaturePreliminaryFmi
+  name: Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature Preliminary FMI
+  description: SPN 3253
+  type: NUMBER
+  bits: 5
+- id: aftertreatment1DieselParticulateFilterDifferentialPressurePreliminaryFmi
+  name: Aftertreatment 1 Diesel Particulate Filter Differential Pressure Preliminary FMI
+  description: SPN 3254
+  type: NUMBER
+  bits: 5
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 1
+notes: 'Aftertreatment 1 Intermediate Gas (AT1IMG) PGN 64946, layout per SAE J1939-71. The Preliminary FMI fields carry a 5 bit J1939 Failure Mode Identifier.'

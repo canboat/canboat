@@ -1,0 +1,73 @@
+pgn: 126208
+id: nmeaRequestGroupFunction
+description: NMEA - Request group function
+type: Fast
+variantOrder: 2
+priority: 3
+interval: irregular
+explanation: This is the Request variation of this group function PGN. The receiver shall respond by sending the requested PGN, at the desired transmission interval.
+url: https://web.archive.org/web/20160408085901/http://www.nmea.org/Assets/20140109%20nmea-2000-corrigendum-tc201401031%20pgn%20126208.pdf
+fields:
+- id: functionCode
+  name: Function Code
+  type: LOOKUP
+  bits: 8
+  description: Request
+  match: 0
+  lookup: GROUP_FUNCTION
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  description: Requested PGN
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: transmissionInterval
+  name: Transmission interval
+  type: DURATION_UFIX32_MS
+  description: '0x0: Turn off transmission; 0xFFFF FFFE = Restore default interval, 0xFFFF FFFF in this field and 0xFFFF in
+    field 4 = Transmit now without changing timing variables'
+- id: transmissionIntervalOffset
+  name: Transmission interval offset
+  type: DURATION_UFIX16_CS
+- id: numberOfParameters
+  name: Number of Parameters
+  type: UINT8
+  description: How many parameter pairs will follow
+- repeat:
+    countField: numberOfParameters
+    fields:
+    - id: parameter
+      name: Parameter
+      type: FIELD_INDEX
+      description: Parameter index
+    - id: value
+      name: Value
+      type: VARIABLE
+      description: Parameter value
+samples:
+- raw: "2023-01-01-00:00:00.000,3,126208,34,255,19,00,01,ff,01,ff,ff,ff,ff,ff,ff,03,01,13,01,03,04,04,cb,d6"  # from merrimac-2022.raw
+  expects:
+    functionCode: "Request"
+    pgn: 130817
+    transmissionInterval: ~
+    transmissionIntervalOffset: ~
+    numberOfParameters: 3
+    parameter: 1
+    value: "0x1301030404cbd6"
+- raw: "2023-01-01-00:00:00.000,3,126208,0,52,11,00,13,f1,01,c8,00,00,00,ff,ff,00"  # from scx20-setting-tool-pgn-127251-200ms.raw
+  expects:
+    functionCode: "Request"
+    pgn: 127251
+    transmissionInterval: 0.200
+    transmissionIntervalOffset: ~
+    numberOfParameters: 0
+- raw: "2023-01-01-00:00:00.000,3,126208,0,52,16,00,1d,ff,01,e8,03,00,00,ff,ff,02,01,3f,07,03,04"  # from scx20-setting-tool-pgn-130578to130846-on.raw
+  expects:
+    functionCode: "Request"
+    pgn: 130845
+    transmissionInterval: 1.000
+    transmissionIntervalOffset: ~
+    numberOfParameters: 2
+    parameter: 1
+    value: "0x3f070304"

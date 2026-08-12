@@ -1,0 +1,22 @@
+pgn: 127498
+id: engineParametersStatic
+description: Engine Parameters, Static
+type: Fast
+priority: 5
+interval: irregular
+fields:
+- id: instance
+  name: Instance
+  type: LOOKUP
+  bits: 8
+  lookup: ENGINE_INSTANCE
+  primaryKey: true
+- id: ratedEngineSpeed
+  name: Rated Engine Speed
+  type: ROTATION_UFIX16_RPM
+- id: vin
+  name: VIN
+  type: STRING_LAU
+- id: softwareId
+  name: Software ID
+  type: STRING_LAU

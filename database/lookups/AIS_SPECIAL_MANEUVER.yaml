@@ -1,0 +1,8 @@
+name: AIS_SPECIAL_MANEUVER
+kind: pair
+bits: 2
+values:
+  0: Not available
+  1: Not engaged in special maneuver
+  2: Engaged in special maneuver
+  3: Reserved

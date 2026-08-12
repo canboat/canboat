@@ -1,0 +1,10 @@
+name: SATELLITE_STATUS
+kind: pair
+bits: 4
+values:
+  0: Not tracked
+  1: Tracked
+  2: Used
+  3: Not tracked+Diff
+  4: Tracked+Diff
+  5: Used+Diff

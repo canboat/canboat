@@ -1,0 +1,6 @@
+name: AIS_COMMUNICATION_STATE
+kind: pair
+bits: 1
+values:
+  0: SOTDMA
+  1: ITDMA

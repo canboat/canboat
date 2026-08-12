@@ -1,0 +1,17 @@
+[package]
+name        = "canboat-cli"
+version     = { workspace = true }
+edition     = { workspace = true }
+license     = { workspace = true }
+authors     = { workspace = true }
+repository  = { workspace = true }
+rust-version = { workspace = true }
+description = "Shared CLI plumbing for canboat-rs binaries."
+
+[dependencies]
+canboat-core = { workspace = true }
+canboat-io   = { workspace = true }
+clap         = { workspace = true }
+anyhow       = { workspace = true }
+env_logger   = { workspace = true }
+log          = { workspace = true }

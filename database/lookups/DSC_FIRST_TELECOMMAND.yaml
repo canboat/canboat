@@ -1,0 +1,18 @@
+name: DSC_FIRST_TELECOMMAND
+kind: pair
+bits: 8
+values:
+  100: F3E/G3E All modes TP
+  101: F3E/G3E duplex TP
+  103: Polling
+  104: Unable to comply
+  105: End of call
+  106: Data
+  109: J3E TP
+  110: Distress acknowledgement
+  112: Distress relay
+  113: F1B/J2B TTY-FEC
+  115: F1B/J2B TTY-ARQ
+  118: Test
+  121: Ship position or location registration updating
+  126: No information

@@ -1,0 +1,9 @@
+name: SIMNET_NIGHT_MODE_COLOR
+kind: pair
+bits: 8
+values:
+  0: Red
+  1: Green
+  2: Blue
+  3: White
+  4: Magenta

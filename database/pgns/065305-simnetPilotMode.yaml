@@ -1,0 +1,72 @@
+pgn: 65305
+id: simnetPilotMode
+description: 'Simnet: Pilot Mode'
+type: Single
+variantOrder: 3
+interval: 1000
+missing:
+- Lookups
+explanation: This PGN is reported by an Autopilot Computer (AC/NAC)
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: model
+  name: Model
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_DEVICE_MODEL
+- id: report
+  name: Report
+  type: LOOKUP
+  bits: 8
+  description: Mode
+  match: 10
+  lookup: SIMNET_DEVICE_REPORT
+  primaryKey: true
+- id: mode
+  name: Mode
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: SIMNET_AP_MODE_BITFIELD
+- id: spare7
+  name: Spare
+  type: SPARE
+  bits: 16
+samples:
+- raw: "2023-01-01-00:00:00.000,1,65305,3,255,8,41,9f,64,0a,08,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Mode"
+    mode: ["Standby"]
+- raw: "2023-01-01-00:00:00.000,7,65305,2,255,8,41,9f,00,0a,0a,00,80,00"  # from merrimac-actisense-serial-2011.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "AC"
+    report: "Mode"
+    mode: ["bit 1", "Standby"]
+- raw: "2023-01-01-00:00:00.000,1,65305,17,255,8,41,9f,64,0a,00,04,00,00"  # from simrad_event_timer2.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    model: "NAC"
+    report: "Mode"
+    mode: ["Wind"]

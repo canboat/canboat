@@ -1,0 +1,124 @@
+name: MERCURY_KEY_VALUE
+kind: fieldtype
+bits: 12
+values:
+- value: 5
+  name: Smart-Contextual state
+  type: UINT8
+- value: 8
+  name: Engine 0 Distance
+  type: LENGTH_UFIX32_M
+- value: 9
+  name: Trip Time
+  type: DURATION_UFIX32
+- value: 10
+  name: Water Distance
+  type: LENGTH_UFIX32_M
+- value: 11
+  name: Trip Speed Avg
+  type: UFIX16_6
+- value: 12
+  name: Trip Speed Max
+  type: UFIX16_6
+- value: 13
+  name: Engine 1 Distance
+  type: LENGTH_UFIX32_M
+- value: 14
+  name: Trip Max Speed RPM
+  type: UINT16
+- value: 17
+  name: Troll and ActiveTrim Active Helm
+  type: UINT8
+- value: 256
+  name: Engine 0 Intake Temp
+  type: TEMPERATURE
+- value: 257
+  name: Engine 1 Intake Temp
+  type: TEMPERATURE
+- value: 272
+  name: Engine 0 Predictive General Maintenance
+  type: UFIX8_2
+- value: 273
+  name: Engine 1 Predictive General Maintenance
+  type: UFIX8_2
+- value: 288
+  name: Engine 0 Throttle
+  type: PERCENTAGE_FIX16_D
+- value: 289
+  name: Engine 1 Throttle
+  type: PERCENTAGE_FIX16_D
+- value: 336
+  name: Engine 0 Trim Status
+  type: UINT8
+- value: 337
+  name: Engine 1 Trim Status
+  type: UINT8
+- value: 352
+  name: Engine 0 Trans Gear
+  type: UINT8
+- value: 368
+  name: Engine 0 Malfunction Indicator Light
+  type: UINT8
+- value: 369
+  name: Engine 1 Malfunction Indicator Light
+  type: UINT8
+- value: 384
+  name: Engine 0 Engine Warning Flags
+  type: UINT32
+- value: 385
+  name: Engine 1 Engine Warning Flags
+  type: UINT32
+- value: 400
+  name: Engine 0 Engine Control Flags
+  type: UINT32
+- value: 401
+  name: Engine 1 Engine Control Flags
+  type: UINT32
+- value: 416
+  name: Engine 0 Idle RPM Setpoint
+  type: UINT16
+- value: 417
+  name: Engine 1 Idle RPM Setpoint
+  type: UINT16
+- value: 432
+  name: Engine 0 Fuel Used
+  type: VOLUME_UFIX32_DML
+- value: 433
+  name: Engine 1 Fuel Used
+  type: VOLUME_UFIX32_DML
+- value: 448
+  name: Engine 0 Fuel Used Trip
+  type: VOLUME_UFIX32_DML
+- value: 449
+  name: Engine 1 Fuel Used Trip
+  type: VOLUME_UFIX32_DML
+- value: 464
+  name: Engine 0 Fuel Used Season
+  type: VOLUME_UFIX32_DML
+- value: 465
+  name: Engine 1 Fuel Used Season
+  type: VOLUME_UFIX32_DML
+- value: 480
+  name: Engine 0 Engine Type
+  type: UINT8
+- value: 481
+  name: Engine 1 Engine Type
+  type: UINT8
+- value: 496
+  name: Engine 0 Four Stroke Engine Oil
+  type: UINT8
+- value: 497
+  name: Engine 1 Four Stroke Engine Oil
+  type: UINT8
+- value: 512
+  name: Engine 0 Exhaust Valve
+  type: UFIX8_2
+- value: 513
+  name: Engine 1 Exhaust Valve
+  type: UFIX8_2
+- value: 528
+  name: Engine 0 Exhaust Status
+  type: UINT16
+- value: 529
+  name: Engine 1 Exhaust Status
+  type: UINT16

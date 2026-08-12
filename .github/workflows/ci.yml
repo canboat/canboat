@@ -1,0 +1,155 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+# push CI runs only on master so every merge to the default branch gets its own
+# full run. Feature branches are covered by their PR's pull_request events, which
+# avoids a duplicate push run racing the PR run and leaving cancelled red checks
+# on the PR. The concurrency group still collapses superseded runs when a newer
+# commit arrives on a branch (e.g. release-please's regenerate job pushing the
+# regenerated docs on top of the version bump); master is excluded from
+# cancellation so its runs always complete.
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: ${{ github.ref_name != 'master' }}
+
+jobs:
+  build-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: make
+        run: make
+
+      # The C regression suite (analyzer, actisense-serial, candump2analyzer)
+      # ran only from release.yaml, so a decode regression stayed invisible
+      # until release day. Gate it on every PR instead.
+      - name: make tests
+        run: make tests
+
+      # keel's rule set - R01..R23 plus R40, which decodes every `samples:`
+      # entry in database/ and compares it against its `expects:` - was only
+      # ever run by hand. `keel generate` does not run it, so a database that
+      # decodes its own samples wrongly still built, tested and generated
+      # cleanly. Gate it before the artifacts are generated from that source.
+      - name: keel check
+        run: keel/keel check
+
+      - name: make generated
+        run: make generated
+
+      - name: verify generated files are up to date
+        run: |
+          if ! git diff --exit-code; then
+            echo "::error::Generated files are out of date. Run 'make generated' locally and commit the result (docs/*, docs/canboat.dbc)."
+            git --no-pager diff --stat
+            exit 1
+          fi
+
+  build-armv7-musl:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+      - name: update & install tools
+        run: sudo apt-get update && sudo apt-get install -y xsltproc libxml2-utils python3-setuptools
+
+      - name: Install QEMU and build tools for ARMv7 musl
+        run: |
+          sudo apt-get install -y qemu-user-static gcc-arm-linux-gnueabihf libc6-dev-armhf-cross binutils-arm-linux-gnueabihf make autoconf
+
+      - name: Setup musl cross compiler
+        run: |
+          export TARGET=armv7l-linux-musleabihf
+          mkdir $HOME/musl && cd $_
+          wget https://keversoft.com/downloads/${TARGET}-cross.tgz
+          tar xvf ${TARGET}-cross.tgz
+
+      - name: Build for ARMv7 musl
+        run: |
+          export TARGET=armv7l-linux-musleabihf
+          export BUILDDIR=rel/$TARGET
+          export PATH=$PATH:$HOME/musl/${TARGET}-cross/bin
+          export CC=$HOME/musl/${TARGET}-cross/bin/${TARGET}-gcc
+          ls -l $CC
+          make
+
+  # Exercise the static-musl keel builds that release.yaml ships for linux, so a
+  # musl-specific breakage (crt-static, the cformat snprintf extern, a std
+  # feature unavailable on musl) surfaces on the PR instead of at tag time.
+  # Each target builds on its matching-arch runner (as release.yaml does), so
+  # linking is native-arch and needs no cross toolchain — the host's ld cannot
+  # link foreign-arch objects (e.g. aarch64 crt on an x86_64 runner).
+  build-keel-musl:
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-unknown-linux-musl
+            runner: ubuntu-latest
+          - target: aarch64-unknown-linux-musl
+            runner: ubuntu-24.04-arm
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+
+      - name: Build keel (static musl)
+        run: |
+          rustup target add "${{ matrix.target }}"
+          cargo build --release --manifest-path keel/Cargo.toml --target "${{ matrix.target }}"
+
+      - name: Verify the binary is statically linked
+        run: |
+          bin="target/${{ matrix.target }}/release/keel"
+          file "$bin"
+          # musl release binaries must not carry a dynamic-linker/interpreter.
+          if file "$bin" | grep -q "dynamically linked"; then
+            echo "::error::$bin is dynamically linked; expected a static musl build"
+            exit 1
+          fi
+
+  keel-deps:
+    name: keel dependency closure
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+
+      # keel is on the path of anyone regenerating the database (it is
+      # cargo-shimmed from analyzer/Makefile), so its dependency closure must
+      # stay tiny — the runtime crates in crates/ must never leak into it.
+      # MERGE-CANBOAT-RS.md §9.
+      - name: keel must not pull in the runtime dependency tree
+        run: tools/check-keel-deps.sh
+
+  build-windows:
+    runs-on: windows-latest
+    defaults:
+        run:
+          shell: C:\tools\cygwin\bin\bash.exe --login --norc -eo pipefail -o igncr '{0}'
+
+    steps:
+      - name: checkout repo
+        uses: actions/checkout@v7
+
+      - name: Set up Cygwin
+        uses: egor-tensin/setup-cygwin@v4
+        with:
+            packages: make gcc-core
+            hardlinks: 1
+
+      # Derived from GITHUB_WORKSPACE (the login shell starts in the Cygwin
+      # home): a hardcoded /cygdrive/d/a/canboat/canboat path only exists
+      # when the repository is literally named "canboat", which breaks
+      # running the workflow from a fork.
+      - name: make
+        run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"

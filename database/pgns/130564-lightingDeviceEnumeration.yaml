@@ -1,0 +1,28 @@
+pgn: 130564
+id: lightingDeviceEnumeration
+description: Lighting Device Enumeration
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: This PGN allows for enumeration of the lighting devices on the controller.
+fields:
+- id: indexOfFirstDevice
+  name: Index of First Device
+  type: UINT16
+- id: totalNumberOfDevices
+  name: Total Number of Devices
+  type: UINT16
+- id: numberOfDevices
+  name: Number of Devices
+  type: UINT16
+- repeat:
+    countField: numberOfDevices
+    fields:
+    - id: deviceId
+      name: Device ID
+      type: UINT32
+    - id: status
+      name: Status
+      type: UINT8

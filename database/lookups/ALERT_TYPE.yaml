@@ -1,0 +1,8 @@
+name: ALERT_TYPE
+kind: pair
+bits: 4
+values:
+  1: Emergency Alarm
+  2: Alarm
+  5: Warning
+  8: Caution

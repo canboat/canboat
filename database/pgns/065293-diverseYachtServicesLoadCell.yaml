@@ -1,0 +1,57 @@
+pgn: 65293
+id: diverseYachtServicesLoadCell
+description: 'Diverse Yacht Services: Load Cell'
+type: Single
+variantOrder: 3
+priority: 2
+missing:
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Diverse Yacht Services
+  match: 641
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: instance
+  name: Instance
+  type: UINT8
+  primaryKey: true
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 8
+- id: loadCell
+  name: Load Cell
+  type: UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,4c,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1612
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,3f,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1599
+- raw: "2023-01-01-00:00:00.000,2,65293,85,255,8,81,9a,0d,ff,91,06,00,00"  # from pgn65293.raw
+  expects:
+    manufacturerCode: "Diverse Yacht Services"
+    industryCode: "Marine Industry"
+    instance: 13
+    loadCell: 1681

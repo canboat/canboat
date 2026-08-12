@@ -1,0 +1,53 @@
+pgn: 130829
+id: mercuryEngineStatus
+description: 'Mercury: Engine Status'
+type: Fast
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Per-engine capability-advertisement beacon sent by the Mercury VesselView-Link gateway (one source address per engine). The last byte is a capability bitmask (bit0 = Beacon enabled, bit1 = Cruise Control capability); when bit1 is set the device also emits the Cruise Control PGN 130824. Byte 3 carries the Helm and Sub Helm station addresses for Mercury multi-helm installations.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Mercury Marine
+  match: 144
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: reserved4
+  name: Reserved
+  type: RESERVED
+  bits: 4
+- id: fieldA
+  name: Field A
+  type: BINARY
+  bits: 4
+  description: Reserved (unused)
+- id: subHelm
+  name: Sub Helm
+  type: BINARY
+  bits: 4
+  description: Helm-station sub-address (Mercury multi-helm); byte 3 low nibble
+- id: helm
+  name: Helm
+  type: BINARY
+  bits: 4
+  description: Helm-station address (Mercury multi-helm); byte 3 high nibble
+- id: capabilities
+  name: Capabilities
+  type: BINARY
+  bits: 8
+  description: 'Capability bitmask: bit0 = Beacon, bit1 = Cruise Control capability'

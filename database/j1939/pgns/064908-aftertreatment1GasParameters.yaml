@@ -1,0 +1,20 @@
+pgn: 64908
+id: aftertreatment1GasParameters
+description: Aftertreatment 1 Gas Parameters
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: aftertreatment1DieselParticulateFilterIntakePressure
+  name: Aftertreatment 1 Diesel Particulate Filter Intake Pressure
+  description: SPN 3609, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: aftertreatment1DieselParticulateFilterOutletPressure
+  name: Aftertreatment 1 Diesel Particulate Filter Outlet Pressure
+  description: SPN 3610, 0.1 kPa per bit
+  type: PRESSURE_UFIX16_HPA
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 32
+notes: 'Aftertreatment 1 Gas Parameters (AT1GP) PGN 64908, layout per SAE J1939-71'

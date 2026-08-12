@@ -1,0 +1,22 @@
+pgn: 65012
+id: utilityPhaseAAcReactivePower
+description: Utility Phase A AC Reactive Power
+type: Single
+fields:
+- id: reactivePower
+  name: Reactive Power
+  type: POWER_FIX32_VAR_OFFSET
+- id: powerFactor
+  name: Power factor
+  type: UINT16
+  resolution: 6.103515625e-05
+  unit: Cos Phi
+- id: powerFactorLagging
+  name: Power Factor Lagging
+  type: LOOKUP
+  bits: 2
+  lookup: POWER_FACTOR
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 14

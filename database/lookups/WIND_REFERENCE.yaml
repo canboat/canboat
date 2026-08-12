@@ -1,0 +1,9 @@
+name: WIND_REFERENCE
+kind: pair
+bits: 3
+values:
+  0: True (ground referenced to North)
+  1: Magnetic (ground referenced to Magnetic North)
+  2: Apparent
+  3: True (boat referenced)
+  4: True (water referenced)

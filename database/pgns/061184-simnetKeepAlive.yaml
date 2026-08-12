@@ -1,0 +1,49 @@
+pgn: 61184
+id: simnetKeepAlive
+description: 'Simnet: Keep Alive'
+type: Single
+variantOrder: 6
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Addressed keep-alive a display sends to a device - for example a wireless masthead wind sensor - to keep it from entering NMEA 2000 sleep while its data is in use. The display renews it periodically and re-sends it when it boots. Usually only the request form is seen (empty Session/Status); the reply carries a status.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: command
+  name: Command
+  type: UNSIGNED_INTEGER
+  bits: 14
+  description: Command selector; 49 keeps the addressed device awake
+- id: reserved5
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: reply
+  name: Reply
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: 0 = request, 1 = reply
+- id: value
+  name: Value
+  type: BINARY
+  bits: 32
+  description: Only meaningful in a reply (carries a status); left unset (0xFF) in a request

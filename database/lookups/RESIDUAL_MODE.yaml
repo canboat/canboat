@@ -1,0 +1,9 @@
+name: RESIDUAL_MODE
+kind: pair
+bits: 4
+values:
+  0: Autonomous
+  1: Differential enhanced
+  2: Estimated
+  3: Simulator
+  4: Manual

@@ -1,0 +1,9 @@
+# format=FAST
+# Maretron ALM100 annunciator (product code 8165, sw 1.0.6, serial 1462536), source 164.
+# PGN List (126464) solicited with an ISO Request (59904), captured via a Maretron IPG100.
+# Decisive result for the annunciator's control path:
+#   TRANSMIT list ends 130818, 130825, 130817, 130824  -- status/config reporting only.
+#   RECEIVE  list ends 130819 (Maretron: Alert Transmission) -- and does NOT include 130824.
+# So 130824 is a status beacon, not a command; an alert is delivered to the ALM100 via 130819.
+2026-08-10T21:34:50.423Z,6,126464,164,128,49,00,00,e8,00,00,ea,00,00,eb,00,00,ec,00,00,ee,00,00,ef,00,02,ff,00,00,ed,01,00,ee,01,00,ef,01,14,f0,01,16,f0,01,02,ff,01,09,ff,01,01,ff,01,08,ff,01
+2026-08-10T21:34:50.423Z,6,126464,164,128,28,01,00,e8,00,00,ea,00,00,eb,00,00,ec,00,00,ee,00,00,ef,00,d8,fe,00,00,ed,01,03,ff,01

@@ -1,0 +1,38 @@
+pgn: 65027
+id: generatorPhaseABasicAcQuantities
+description: Generator Phase A Basic AC Quantities
+type: Single
+priority: 3
+fields:
+- id: lineLineAcRmsVoltage
+  name: Line-Line AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: lineNeutralAcRmsVoltage
+  name: Line-Neutral AC RMS Voltage
+  type: VOLTAGE_UFIX16_V
+- id: acFrequency
+  name: AC Frequency
+  type: FREQUENCY_UFIX16
+  resolution: 0.0078125
+- id: acRmsCurrent
+  name: AC RMS Current
+  type: CURRENT_UFIX16_A
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65027,196,255,8,7e,00,7e,00,02,1e,05,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 126
+    lineNeutralAcRmsVoltage: 126
+    acFrequency: 60.016
+    acRmsCurrent: 5
+- raw: "2023-01-01-00:00:00.000,3,65027,194,255,8,00,00,00,00,ff,ff,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 0
+    lineNeutralAcRmsVoltage: 0
+    acFrequency: ~
+    acRmsCurrent: 0
+- raw: "2023-01-01-00:00:00.000,3,65027,195,255,8,e9,00,e9,00,04,1e,11,00"  # from dirona-actisense-serial.raw
+  expects:
+    lineLineAcRmsVoltage: 233
+    lineNeutralAcRmsVoltage: 233
+    acFrequency: 60.031
+    acRmsCurrent: 17

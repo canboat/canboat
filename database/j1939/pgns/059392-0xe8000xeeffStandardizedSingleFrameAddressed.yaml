@@ -1,0 +1,16 @@
+pgn: 59392
+id: 0xe8000xeeffStandardizedSingleFrameAddressed
+description: '0xE800-0xEEFF: Standardized single-frame addressed'
+type: Single
+fallback: true
+variantOrder: 1
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Standardized PGNs in PDU1 (addressed) single-frame PGN range 0xE800 to 0xEE00 (59392 - 60928). When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 64

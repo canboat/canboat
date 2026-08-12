@@ -1,0 +1,27 @@
+pgn: 64740
+id: engineFuelProperties
+description: Engine Fuel Properties
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: engineFuelDynamicViscosity
+  name: Engine Fuel Dynamic Viscosity
+  description: SPN 5537
+  type: NUMBER
+  bits: 16
+- id: engineFuelDensity
+  name: Engine Fuel Density
+  description: SPN 5538
+  type: NUMBER
+  bits: 16
+- id: engineFuelRelativeDielectricity
+  name: Engine Fuel Relative Dielectricity
+  description: SPN 5539
+  type: NUMBER
+  bits: 16
+- id: engineFuelTemperature2
+  name: Engine Fuel Temperature 2
+  description: SPN 5540
+  type: TEMPERATURE_UFIX16_J1939
+notes: 'Engine Fuel Properties (EFP) PGN 64740, layout per SAE J1939-71'

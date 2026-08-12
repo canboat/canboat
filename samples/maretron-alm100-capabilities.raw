@@ -1,0 +1,14 @@
+# format=FAST
+# Maretron ALM100 annunciator (product code 8165, sw 1.0.6, serial 1462536), source 164.
+# Captured live via Maretron IPG100 (canboat maretron-ipg, tcp port 6543) on Dirk Wahrheit's bus.
+# 130817 Annunciator Capabilities solicited with an ISO Request (59904) for PGN 130817;
+# the device reports annunciator instance 0 and 5 supported tones, numbered 0..4.
+# The 130824 records here are solicited replies, not a rate sample; the device's idle
+# 130824 period was measured separately over a longer passive capture.
+# 126996 Product Information included to tie the captures to the ALM100.
+2026-08-10T21:28:48.657Z,6,60928,164,255,8,08,51,36,11,00,6e,28,c0
+2026-08-10T21:28:48.767Z,6,126996,164,255,134,15,05,e5,1f,41,4c,4d,31,30,30,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,31,2e,30,2e,36,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,31,2e,30,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,31,34,36,32,35,33,36,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,00,02
+2026-08-10T21:28:48.989Z,2,130824,164,255,9,89,98,00,00,ff,ff,ff,ff,ff
+2026-08-10T21:28:48.989Z,6,130817,164,255,14,89,98,00,05,00,00,01,00,02,00,03,00,04,00
+2026-08-10T21:28:50.040Z,6,130817,164,255,14,89,98,00,05,00,00,01,00,02,00,03,00,04,00
+2026-08-10T21:28:50.798Z,2,130824,164,255,9,89,98,00,00,ff,ff,ff,ff,ff

@@ -1,0 +1,17 @@
+pgn: 130576
+id: smallCraftStatus
+description: Small Craft Status
+type: Single
+priority: 2
+interval: 200
+fields:
+- id: portTrimTab
+  name: Port trim tab
+  type: PERCENTAGE_INT8
+- id: starboardTrimTab
+  name: Starboard trim tab
+  type: PERCENTAGE_INT8
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 48

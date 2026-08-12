@@ -1,0 +1,7 @@
+name: SONICHUB_PLAYLIST
+kind: pair
+bits: 8
+values:
+  1: Report
+  4: Next song
+  6: Previous song

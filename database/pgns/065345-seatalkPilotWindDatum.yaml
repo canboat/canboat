@@ -1,0 +1,37 @@
+pgn: 65345
+id: seatalkPilotWindDatum
+description: 'Seatalk: Pilot Wind Datum'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: windDatum
+  name: Wind Datum
+  type: ANGLE_UFIX16
+- id: rollingAverageWindAngle
+  name: Rolling Average Wind Angle
+  type: ANGLE_UFIX16
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 16

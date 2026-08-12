@@ -1,0 +1,6 @@
+name: SIMNET_HOUR_DISPLAY
+kind: pair
+bits: 8
+values:
+  0: 24 hour
+  1: 12 hour

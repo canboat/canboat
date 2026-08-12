@@ -1,0 +1,6 @@
+name: SIMNET_VOLUME_UNIT
+kind: pair
+bits: 8
+values:
+  0: Liters
+  1: Gallons

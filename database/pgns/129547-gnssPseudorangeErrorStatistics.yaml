@@ -1,0 +1,31 @@
+pgn: 129547
+id: gnssPseudorangeErrorStatistics
+description: GNSS Pseudorange Error Statistics
+type: Fast
+priority: 6
+interval: irregular
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: rmsStdDevOfRangeInputs
+  name: RMS Std Dev of Range Inputs
+  type: LENGTH_UFIX16_CM
+- id: stdDevOfMajorErrorEllipse
+  name: Std Dev of Major error ellipse
+  type: LENGTH_UFIX16_CM
+- id: stdDevOfMinorErrorEllipse
+  name: Std Dev of Minor error ellipse
+  type: LENGTH_UFIX16_CM
+- id: orientationOfErrorEllipse
+  name: Orientation of error ellipse
+  type: ANGLE_UFIX16
+- id: stdDevLatError
+  name: Std Dev Lat Error
+  type: LENGTH_UFIX16_CM
+- id: stdDevLonError
+  name: Std Dev Lon Error
+  type: LENGTH_UFIX16_CM
+- id: stdDevAltError
+  name: Std Dev Alt Error
+  type: LENGTH_UFIX16_CM

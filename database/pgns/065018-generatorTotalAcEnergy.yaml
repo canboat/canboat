@@ -1,0 +1,29 @@
+pgn: 65018
+id: generatorTotalAcEnergy
+description: Generator Total AC Energy
+type: Single
+priority: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: totalEnergyExport
+  name: Total Energy Export
+  type: ENERGY_UINT32
+- id: totalEnergyImport
+  name: Total Energy Import
+  type: ENERGY_UINT32
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65018,196,255,8,f6,03,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    totalEnergyExport: 1014
+    totalEnergyImport: 0
+- raw: "2023-01-01-00:00:00.000,3,65018,194,255,8,74,21,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    totalEnergyExport: 8564
+    totalEnergyImport: 0
+- raw: "2023-01-01-00:00:00.000,3,65018,195,255,8,6a,20,00,00,00,00,00,00"  # from dirona-actisense-serial.raw
+  expects:
+    totalEnergyExport: 8298
+    totalEnergyImport: 0

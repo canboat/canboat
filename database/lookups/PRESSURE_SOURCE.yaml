@@ -1,0 +1,13 @@
+name: PRESSURE_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Atmospheric
+  1: Water
+  2: Steam
+  3: Compressed Air
+  4: Hydraulic
+  5: Filter
+  6: AltimeterSetting
+  7: Oil
+  8: Fuel

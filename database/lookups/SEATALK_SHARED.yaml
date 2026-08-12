@@ -1,0 +1,6 @@
+name: SEATALK_SHARED
+kind: pair
+bits: 8
+values:
+  1: Shared
+  2: Not Shared

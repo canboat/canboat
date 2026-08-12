@@ -1,0 +1,7 @@
+name: CONTROLLER_STATE
+kind: pair
+bits: 2
+values:
+  0: Error Active
+  1: Error Passive
+  2: Bus Off

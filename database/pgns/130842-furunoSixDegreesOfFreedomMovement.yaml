@@ -1,0 +1,101 @@
+pgn: 130842
+id: furunoSixDegreesOfFreedomMovement
+description: 'Furuno: Six Degrees Of Freedom Movement'
+type: Fast
+variantOrder: 3
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Furuno
+  match: 1855
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: a
+  name: A
+  type: INT32
+- id: b
+  name: B
+  type: INT32
+- id: c
+  name: C
+  type: INT32
+- id: d
+  name: D
+  type: INT8
+- id: rollRate
+  name: Roll Rate
+  type: ROTATION_FIX32_MDEG_S
+- id: pitchRate
+  name: Pitch Rate
+  type: ROTATION_FIX32_MDEG_S
+- id: yawRate
+  name: Yaw Rate
+  type: ROTATION_FIX32_MDEG_S
+- id: i
+  name: I
+  type: INT16
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,fe,ff,ff,ff,0f,00,00,00,e5,ff,ff,ff,00,a6,00,00,00,36,00,00,00,da,ff,ff,ff,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: -2
+    b: 15
+    c: -27
+    d: 0
+    rollRate: 0.00290
+    pitchRate: 0.00094
+    yawRate: -0.00066
+    i: 0
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,0e,00,00,00,fd,ff,ff,ff,0b,00,00,00,00,f7,ff,ff,ff,a6,ff,ff,ff,3d,00,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: 14
+    b: -3
+    c: 11
+    d: 0
+    rollRate: -0.00016
+    pitchRate: -0.00157
+    yawRate: 0.00106
+    i: 0
+- raw: "2023-01-01-00:00:00.000,7,130842,14,255,29,3f,9f,20,00,00,00,db,ff,ff,ff,d2,ff,ff,ff,00,80,00,00,00,42,00,00,00,0f,00,00,00,00,00"  # from merrimac-2022.raw
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: 32
+    b: -37
+    c: -46
+    d: 0
+    rollRate: 0.00223
+    pitchRate: 0.00115
+    yawRate: 0.00026
+    i: 0
+- raw: "2026-08-03T03:21:24.245Z,7,130842,52,255,29,3f,9f,59,ff,ff,ff,27,00,00,00,3f,00,00,00,00,f8,ff,ff,ff,f7,02,00,00,0e,e1,ff,ff,00,00"  # from furuno-130842.raw, peak of a hard turn
+  expects:
+    manufacturerCode: "Furuno"
+    industryCode: "Marine Industry"
+    a: -167
+    b: 39
+    c: 63
+    d: 0
+    rollRate: -0.00014
+    pitchRate: 0.01325
+    yawRate: -0.13827
+    i: 0

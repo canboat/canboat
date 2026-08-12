@@ -1,0 +1,36 @@
+pgn: 130060
+id: label
+description: Label
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: hardwareChannelId
+  name: Hardware Channel ID
+  type: UINT8
+- id: pgn
+  name: PGN
+  type: PGN
+  bits: 24
+  rangeMin: 0.0
+  rangeMax: 262143.0
+- id: dataSourceInstanceFieldNumber
+  name: Data Source Instance Field Number
+  type: UINT8
+- id: dataSourceInstanceValue
+  name: Data Source Instance Value
+  type: UINT8
+- id: secondaryEnumerationFieldNumber
+  name: Secondary Enumeration Field Number
+  type: UINT8
+- id: secondaryEnumerationFieldValue
+  name: Secondary Enumeration Field Value
+  type: UINT8
+- id: parameterFieldNumber
+  name: Parameter Field Number
+  type: UINT8
+- id: label
+  name: Label
+  type: STRING_LAU

@@ -1,0 +1,6 @@
+name: ALERT_CATEGORY
+kind: pair
+bits: 4
+values:
+  0: Navigational
+  1: Technical

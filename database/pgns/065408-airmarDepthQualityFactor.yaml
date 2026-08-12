@@ -1,0 +1,60 @@
+pgn: 65408
+id: airmarDepthQualityFactor
+description: 'Airmar: Depth Quality Factor'
+type: Single
+priority: 7
+missing:
+- Fields
+- FieldLengths
+- Resolution
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: sid
+  name: SID
+  type: UINT8
+- id: depthQualityFactor
+  name: Depth Quality Factor
+  type: LOOKUP
+  bits: 4
+  lookup: AIRMAR_DEPTH_QUALITY_FACTOR
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 36
+samples:
+- raw: "2023-01-01-00:00:00.000,7,65408,36,255,8,87,98,16,fa,ff,ff,ff,ff"  # from dirona-actisense-serial.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: 22
+    depthQualityFactor: "Quality 100%"
+- raw: "2023-01-01-00:00:00.000,7,65408,35,255,8,87,98,ff,f4,ff,f3,ff,ff"  # from nac3-operations.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    depthQualityFactor: "Quality 40%"
+- raw: "2023-01-01-00:00:00.000,7,65408,35,255,8,87,98,ff,f0,ff,ff,ff,ff"  # from susteranna2020.raw
+  expects:
+    manufacturerCode: "Airmar"
+    industryCode: "Marine Industry"
+    sid: ~
+    depthQualityFactor: "Depth unlocked"

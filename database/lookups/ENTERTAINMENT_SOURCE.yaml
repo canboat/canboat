@@ -1,0 +1,29 @@
+name: ENTERTAINMENT_SOURCE
+kind: pair
+bits: 8
+values:
+  0: Vessel alarm
+  1: AM
+  2: FM
+  3: Weather
+  4: DAB
+  5: Aux
+  6: USB
+  7: CD
+  8: MP3
+  9: Apple iOS
+  10: Android
+  11: Bluetooth
+  12: Sirius XM
+  13: Pandora
+  14: Spotify
+  15: Slacker
+  16: Songza
+  17: Apple Radio
+  18: Last FM
+  19: Ethernet
+  20: Video MP4
+  21: Video DVD
+  22: Video BluRay
+  23: HDMI
+  24: Video

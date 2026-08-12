@@ -1,0 +1,14 @@
+name: AIRMAR_COMMAND
+kind: pair
+bits: 8
+values:
+  32: Attitude Offsets
+  33: Calibrate Compass
+  34: True Wind Options
+  35: Simulate Mode
+  40: Calibrate Depth
+  41: Calibrate Speed
+  42: Calibrate Temperature
+  43: Speed Filter
+  44: Temperature Filter
+  46: NMEA 2000 options

@@ -1,0 +1,6 @@
+name: BROADCAST_INDICATOR
+kind: pair
+bits: 1
+values:
+  0: Broadcast geo area message
+  1: Addressed message

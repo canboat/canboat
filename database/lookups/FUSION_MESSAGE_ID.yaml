@@ -1,0 +1,53 @@
+name: FUSION_MESSAGE_ID
+kind: pair
+bits: 16
+values:
+  1: Request Status
+  2: Set Source
+  3: Media Command
+  5: Tuner Command
+  6: Marine Tuner Command
+  7: Set Marine Tuner Squelch
+  8: Set Marine Tuner Scan Mode
+  9: Menu Action
+  10: Request Menu Count
+  11: Request Menu Item
+  12: Request Menu Lock ID
+  13: Set Aux Gain
+  15: Set Settings
+  16: DAB Updtate Command
+  17: Set Mute
+  18: Set Balance
+  19: Set Low Pass Filer
+  20: Set Sublevel
+  22: Set Equalizer
+  23: Set Volume Limit
+  24: Set Zone Volume
+  25: Set All Volumes
+  27: Set Line Level Control
+  28: Power
+  29: Set Device Name
+  30: Send Sirius Command
+  31: Set Sirius Parental
+  33: Send Factory Reset Command
+  34: Set Zone Name
+  35: Send Dvd Command
+  36: Dvd Press Ir Key
+  39: Send Select Sirius Team
+  40: Send Select Sirius Artist
+  41: Send Sirius Sport Alert User Action
+  45: Send Sirius Artist Song User Action
+  50: Send Multiroom Command
+  51: Get Multiroom Device Record
+  52: Scan Multirooom Devices
+  53: Send File Transfer
+  54: Set Loud
+  56: Fapi Set Source Multiroom Enabled
+  57: Request Head Unit Dsp Settings
+  64: Send Transfer Status
+  65: Fapi Get Server Info
+  69: Fapi Set Source Enabled
+  70: Fapi Set Source Name
+  73: Send External Amp Gain
+  74: Send Internal Amp Gain
+  75: Send Mono

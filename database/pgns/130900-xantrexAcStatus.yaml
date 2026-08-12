@@ -1,0 +1,71 @@
+pgn: 130900
+id: xantrexAcStatus
+description: 'Xantrex: AC Status'
+type: Fast
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Xantrex Technology Inc.
+  match: 168
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: acInstance
+  name: AC Instance
+  type: UINT8
+  primaryKey: true
+- id: numberOfLines
+  name: Number of Lines
+  type: UINT8
+- id: line
+  name: Line
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: acceptability
+  name: Acceptability
+  type: UNSIGNED_INTEGER
+  bits: 2
+- id: waveform
+  name: Waveform
+  type: UNSIGNED_INTEGER
+  bits: 3
+- id: reserved9
+  name: Reserved
+  type: RESERVED
+  bits: 1
+- id: voltage
+  name: Voltage
+  type: VOLTAGE_UFIX16_10MV
+- id: current
+  name: Current
+  type: CURRENT_UFIX16_DA
+- id: frequency
+  name: Frequency
+  type: UINT16
+- id: realPower
+  name: Real Power
+  type: INT32
+  description: W
+- id: reactivePower
+  name: Reactive Power
+  type: INT32
+  description: VAR
+- id: powerFactor
+  name: Power Factor
+  type: PERCENTAGE_INT8

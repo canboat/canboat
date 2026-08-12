@@ -1,0 +1,1707 @@
+/*
+
+Analyzes NMEA 2000 PGNs.
+
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+
+This file is part of CANboat.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+*/
+
+#include <math.h>
+
+#include "analyzer.h"
+#include "common.h"
+#include "utf.h"
+
+extern int g_variableFieldRepeat[2]; // Actual number of repetitions
+bool       g_skip;
+int64_t    g_previousFieldValue;
+
+static bool unhandledStartOffset(const char *fieldName, size_t startBit)
+{
+  logError("Field '%s' cannot start on bit %u\n", fieldName, startBit);
+  return false;
+}
+
+static bool unhandledBitLength(const char *fieldName, size_t length)
+{
+  logError("Field '%s' cannot have size %u\n", fieldName, length);
+  return false;
+}
+
+// The message output buffer uses the shared growable StringBuffer (common.h)
+// rather than a fixed size: a message can be much larger than a single
+// fast-packet payload (223 bytes) once ISO Transport Protocol reassembly is
+// in play (up to 1785 bytes), and the human-readable/-debug rendering of a
+// large repeating field group can need many times that in characters (e.g.
+// GNSS Sats in View with a large satellite list). A fixed buffer would
+// silently truncate instead of erroring.
+static StringBuffer mbuf = {0};
+
+extern void mprintf(const char *format, ...)
+{
+  va_list ap;
+
+  va_start(ap, format);
+  sbAppendFormatV(&mbuf, format, ap);
+  va_end(ap);
+}
+
+extern void mreset(void)
+{
+  sbEmpty(&mbuf);
+}
+
+extern void mset(size_t location)
+{
+  sbTruncate(&mbuf, location);
+}
+
+extern char mchr(size_t location)
+{
+  return mbuf.data[location];
+}
+
+extern void minsert(size_t location, const char *str)
+{
+  size_t len = strlen(str);
+
+  sbEnsureCapacity(&mbuf, mbuf.len + len);
+  memmove(mbuf.data + location + len, mbuf.data + location, mbuf.len - location);
+  memcpy(mbuf.data + location, str, len);
+  mbuf.len += len;
+  mbuf.data[mbuf.len] = '\0';
+}
+
+extern void mwrite(FILE *stream)
+{
+  fwrite(sbGet(&mbuf), sizeof(char), sbGetLength(&mbuf), stream);
+  fflush(stream);
+  mreset();
+}
+
+extern size_t mlocation(void)
+{
+  return sbGetLength(&mbuf);
+}
+
+extern char *getSep(void)
+{
+  char *s = sep;
+
+  if (showJson)
+  {
+    sep = ",";
+    if (strchr(s, '{'))
+    {
+      if (strlen(closingBraces) >= sizeof(closingBraces) - 2)
+      {
+        logError("Too many braces\n");
+        exit(2);
+      }
+      strcat(closingBraces, "}");
+    }
+  }
+  else
+  {
+    sep = ";";
+  }
+
+  return s;
+}
+
+/*
+ * Find a field by Order. This will only work for a field that
+ * is at a predefined bit offset, so no variable fields before
+ * it.
+ *
+ * It is currently only used for LOOKUP_TYPE_TRIPLET.
+ */
+static size_t getFieldOffsetByOrder(const Pgn *pgn, size_t order)
+{
+  uint8_t i;
+  size_t  bitOffset = 0;
+
+  for (i = 0; i < order; i++)
+  {
+    const Field *field = &pgn->fieldList[i];
+
+    if (i + 1 == order)
+    {
+      return bitOffset;
+    }
+    bitOffset += field->size;
+  }
+  return 0;
+}
+
+bool adjustDataLenStart(const uint8_t **data, size_t *dataLen, size_t *startBit)
+{
+  size_t bytes = *startBit >> 3;
+
+  if (bytes < *dataLen)
+  {
+    *data += bytes;
+    *dataLen -= bytes;
+    *startBit = *startBit & 7;
+    return true;
+  }
+
+  return false;
+}
+
+/*
+ *
+ * This is perhaps as good a place as any to explain how CAN messages are layed out by the
+ * NMEA. Basically, it's a mess once the bytes are recomposed into bytes (the on-the-wire
+ * format is fine).
+ *
+ * For fields that are aligned on bytes there isn't much of an issue, they appear in our
+ * buffers in standard Intel 'least endian' format.
+ * For instance the MMSI # 244050447 is, in hex: 0x0E8BEA0F. This will be found in the CAN data as:
+ * byte x+0: 0x0F
+ * byte x+1: 0xEA
+ * byte x+2: 0x8B
+ * byte x+3: 0x0e
+ *
+ * To gather together we loop over the bytes, and keep increasing the magnitude of what we are
+ * adding:
+ *    for (i = 0, magnitude = 0; i < 4; i++)
+ *    {
+ *      value += data[i] << magnitude;
+ *      magnitude += 8;
+ *    }
+ *
+ * However, when there are two bit fields after each other, lets say A of 2 and then B of 6 bits:
+ * then that is layed out MSB first, so the bit mask is 0b11000000 for the first
+ * field and 0b00111111 for the second field.
+ *
+ * This means that if we have a bit field that crosses a byte boundary and does not start on
+ * a byte boundary, the bit masks are like this (for a 16 bit field starting at the 3rd bit):
+ *
+ * 0b00111111 0b11111111 0b11000000
+ *     ------   --------   --
+ *     000000   11110000   11
+ *     543210   32109876   54
+ *
+ * So we are forced to mask bits 0 and 1 of the first byte. Since we need to process the previous
+ * field first, we cannot repeatedly shift bits out of the byte: if we shift left we get the first
+ * field first, but in MSB order. We need bit values in LSB order, as the next byte will be more
+ * significant. But we can't shift right as that will give us bits in LSB order but then we get the
+ * two fields in the wrong order...
+ *
+ * So for that reason we explicitly test, per byte, how many bits we need and how many we have already
+ * used.
+ *
+ */
+
+bool extractNumber(const Field   *field,
+                   const uint8_t *data,
+                   size_t         dataLen,
+                   size_t         startBit,
+                   size_t         bits,
+                   int64_t       *value,
+                   int64_t       *maxValue)
+{
+  const bool  hasSign = field ? field->hasSign : false;
+  const char *name    = field ? field->name : "<bits>";
+
+  size_t   firstBit;
+  size_t   bitsRemaining = bits;
+  size_t   magnitude     = 0;
+  size_t   bitsInThisByte;
+  uint64_t bitMask;
+  uint64_t allOnes;
+  uint64_t valueInThisByte;
+  uint64_t maxv;
+
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  firstBit = startBit;
+  *value   = 0;
+  maxv     = 0;
+
+  while (bitsRemaining > 0 && dataLen > 0)
+  {
+    bitsInThisByte = min(8 - firstBit, bitsRemaining);
+    allOnes        = (uint64_t) ((((uint64_t) 1) << bitsInThisByte) - 1);
+
+    // How are bits ordered in bytes for bit fields? There are two ways, first field at LSB or first
+    // field as MSB.
+    // Experimentation, using the 129026 PGN, has shown that the most likely candidate is LSB.
+    bitMask         = allOnes << firstBit;
+    valueInThisByte = (*data & bitMask) >> firstBit;
+
+    *value |= valueInThisByte << magnitude;
+    maxv |= allOnes << magnitude;
+
+    magnitude += bitsInThisByte;
+    bitsRemaining -= bitsInThisByte;
+    firstBit += bitsInThisByte;
+    if (firstBit >= 8)
+    {
+      firstBit -= 8;
+      data++;
+      dataLen--;
+    }
+  }
+  if (bitsRemaining > 0)
+  {
+    logDebug("Insufficient length in PGN to fill field '%s'\n", name);
+    return false;
+  }
+
+  if (hasSign)
+  {
+    maxv >>= 1;
+
+    if (field && field->offset) /* J1939 Excess-K notation */
+    {
+      *value += field->offset;
+      maxv += field->offset;
+    }
+    else
+    {
+      bool negative = (*value & (((uint64_t) 1) << (bits - 1))) > 0;
+
+      if (negative)
+      {
+        /* Sign extend value for cases where bits < 64 */
+        /* Assume we have bits = 16 and value = -2 then we do: */
+        /* 0000.0000.0000.0000.0111.1111.1111.1101 value    */
+        /* 0000.0000.0000.0000.0111.1111.1111.1111 maxvalue */
+        /* 1111.1111.1111.1111.1000.0000.0000.0000 ~maxvalue */
+        *value |= ~maxv;
+      }
+    }
+  }
+  else
+  {
+    if (field && field->offset) /* J1939 Excess-K notation */
+    {
+      *value += field->offset;
+      maxv += field->offset;
+    }
+  }
+
+  *maxValue = (int64_t) maxv;
+
+  logDebug("extractNumber <%s> startBit=%zu bits=%zu value=%" PRId64 " (%" PRIx64 ") max=%" PRId64 "\n",
+           name,
+           startBit,
+           bits,
+           *value,
+           *value,
+           *maxValue);
+
+  return true;
+}
+
+bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value)
+{
+  const Field *field     = &pgn->fieldList[order - 1];
+  size_t       bitOffset = getFieldOffsetByOrder(pgn, order);
+
+  size_t  startBit;
+  int64_t maxValue;
+
+  startBit = bitOffset & 7;
+  data += bitOffset >> 3;
+  dataLen -= bitOffset >> 3;
+
+  return extractNumber(field, data, dataLen, startBit, field->size, value, &maxValue);
+}
+
+extern void printEmpty(const char *fieldName, int64_t exceptionValue)
+{
+  if (showJson)
+  {
+    if (showJsonEmpty)
+    {
+      mprintf("null");
+    }
+    else
+    {
+      g_skip = true;
+    }
+  }
+  else
+  {
+    switch (exceptionValue)
+    {
+      case DATAFIELD_UNKNOWN:
+        mprintf("Unknown");
+        break;
+      case DATAFIELD_OUT_OF_RANGE:
+        mprintf("Out Of Range");
+        break;
+      case DATAFIELD_RESERVED:
+        mprintf("Reserved");
+        break;
+      case DATAFIELD_RESERVED2:
+        mprintf("Reserved2");
+        break;
+      case DATAFIELD_RESERVED3:
+        mprintf("Reserved3");
+        break;
+      default:
+        mprintf("Unhandled value %ld", exceptionValue);
+    }
+  }
+}
+
+static bool extractNumberNotEmpty(const Field   *field,
+                                  const char    *fieldName,
+                                  const uint8_t *data,
+                                  size_t         dataLen,
+                                  size_t         startBit,
+                                  size_t         bits,
+                                  int64_t       *value,
+                                  int64_t       *maxValue)
+{
+  int64_t reserved;
+
+  if (!extractNumber(field, data, dataLen, startBit, bits, value, maxValue))
+  {
+    return false;
+  }
+
+  /* Number of top-of-range sentinel values (Unknown / OutOfRange / Reserved),
+   * resolved per field from its bit width or an explicit SPECIAL_VALUES() override. */
+  reserved = field->reservedCount;
+
+  if (field->pgn != NULL && field->pgn->repeatingField1 == field->order)
+  {
+    logDebug("The first repeating fieldset repeats %" PRId64 " times\n", *value);
+    g_variableFieldRepeat[0] = *value;
+  }
+
+  if (field->pgn != NULL && field->pgn->repeatingField2 == field->order)
+  {
+    logDebug("The second repeating fieldset repeats %" PRId64 " times\n", *value);
+    g_variableFieldRepeat[1] = *value;
+  }
+
+  g_previousFieldValue = *value;
+
+  /* If the explicit rangeMax converts exactly to the raw bit-size maximum,
+   * every bit pattern is valid (e.g. ISO Address Claim device instance
+   * fields); use it as the threshold to disable sentinel stripping. Require
+   * an exact match so display caps (radians clamped to 360 deg) don't qualify. */
+  int64_t threshold = *maxValue - reserved;
+  if (field != NULL && field->rangeMax > 0 && field->resolution > 0.0)
+  {
+    double range_max_raw = field->rangeMax / field->resolution + 0.5;
+    // Guard the int64_t conversion: casting a double >= 2^63 to int64_t is
+    // undefined, and such a value can never equal *maxValue (<= INT64_MAX).
+    if (range_max_raw < 0x1p63 && (int64_t) range_max_raw == *maxValue)
+    {
+      threshold = *maxValue;
+    }
+  }
+
+  if (*value > threshold)
+  {
+    printEmpty(fieldName, *value - *maxValue);
+    return false;
+  }
+
+  return true;
+}
+
+// This is only a different printer than fieldPrintNumber so the JSON can contain a string value
+extern bool fieldPrintMMSI(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (showJson)
+  {
+    mprintf("\"%09u\"", (uint32_t) value);
+  }
+  else
+  {
+    mprintf("\"%09u\"", (uint32_t) value);
+  }
+
+  return true;
+}
+
+extern bool fieldPrintNumber(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+  double  a;
+
+  const char *unit       = field->unit;
+  double      resolution = field->resolution;
+
+  if (resolution == 0.0)
+  {
+    resolution = 1.0;
+  }
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  logDebug("fieldPrintNumber <%s> value=%" PRIx64 " max=%" PRIx64 " resolution=%g offset=%g unit='%s'\n",
+           fieldName,
+           value,
+           maxValue,
+           resolution,
+           field->unitOffset,
+           (field->unit ? field->unit : "None"));
+  if (resolution == 1.0 && field->unitOffset == 0.0)
+  {
+    logDebug("fieldPrintNumber <%s> print as integer %" PRId64 "\n", fieldName, value);
+    mprintf("%" PRId64, value);
+    if (!showJson && unit != NULL)
+    {
+      mprintf(" %s", unit);
+    }
+  }
+  else
+  {
+    int    precision;
+    double r;
+
+    a = (double) value * field->resolution + field->unitOffset;
+
+    precision = field->precision;
+    if (precision == 0)
+    {
+      for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
+      {
+        precision++;
+      }
+    }
+
+    if (showJson)
+    {
+      mprintf("%.*f", precision, a);
+    }
+    else if (unit != NULL && strcmp(unit, "m") == 0 && a >= 1000.0)
+    {
+      mprintf("%.*f km", precision + 3, a / 1000);
+    }
+    else
+    {
+      mprintf("%.*f", precision, a);
+      if (unit != NULL)
+      {
+        mprintf(" %s", unit);
+      }
+    }
+  }
+
+  return true;
+}
+
+extern bool fieldPrintFloat(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits)
+{
+  union
+  {
+    float    a;
+    uint32_t w;
+    uint8_t  b[4];
+  } f;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  if (*bits != BYTES(sizeof(f)) || startBit != 0)
+  {
+    logError("field '%s' FLOAT value unhandled bits=%zu startBit=%zu\n", fieldName, *bits, startBit);
+    return false;
+  }
+  if (dataLen < sizeof(f))
+  {
+    return false;
+  }
+#ifdef __BIG_ENDIAN__
+  f.b[3] = data[0];
+  f.b[2] = data[1];
+  f.b[1] = data[2];
+  f.b[0] = data[3];
+#else
+  memcpy(&f.w, data, sizeof(f));
+#endif
+
+  mprintf("%g", f.a);
+  if (!showJson && field->unit != NULL)
+  {
+    mprintf(" %s", field->unit);
+  }
+
+  return true;
+}
+extern bool fieldPrintDecimal(const Field   *field,
+                              const char    *fieldName,
+                              const uint8_t *data,
+                              size_t         dataLen,
+                              size_t         startBit,
+                              size_t        *bits)
+{
+  uint8_t  value = 0;
+  uint8_t  bitMask;
+  uint64_t bitMagnitude = 1;
+  size_t   bit;
+  char     buf[128];
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  bitMask = 1 << startBit;
+
+  if (startBit + *bits > dataLen * 8)
+  {
+    *bits = dataLen * 8 - startBit;
+  }
+
+  /*
+   * All bits set is "not available", as it is for every other field type.
+   * Without this the loop below prints nothing at all -- each 0xff byte is
+   * 255, which fails its own `value < 100` test -- and printField's
+   * "print routine did not print anything" guard then throws the whole PGN
+   * away. A DSC call whose MMSI of Ship In Distress is simply absent took
+   * every other field of the record with it.
+   */
+  {
+    size_t byteCount = (*bits + 7) / 8;
+    size_t i;
+    bool   allOnes = (byteCount > 0);
+
+    for (i = 0; i < byteCount && allOnes; i++)
+    {
+      if (data[i] != 0xff)
+      {
+        allOnes = false;
+      }
+    }
+    if (allOnes)
+    {
+      printEmpty(fieldName, DATAFIELD_UNKNOWN);
+      return true;
+    }
+  }
+
+  for (bit = 0; bit < *bits && bit < sizeof(buf) * 8; bit++)
+  {
+    /* Act on the current bit */
+    bool bitIsSet = (*data & bitMask) > 0;
+    if (bitIsSet)
+    {
+      value |= bitMagnitude;
+    }
+
+    /* Find the next bit */
+    if (bitMask == 128)
+    {
+      bitMask = 1;
+      data++;
+    }
+    else
+    {
+      bitMask = bitMask << 1;
+    }
+    bitMagnitude = bitMagnitude << 1;
+
+    if (bit % 8 == 7)
+    {
+      if (value < 100)
+      {
+        mprintf("%02u", value);
+      }
+      value        = 0;
+      bitMagnitude = 1;
+    }
+  }
+  return true;
+}
+
+extern bool fieldPrintLookup(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
+{
+  char        lookfor[20];
+  const char *s = NULL;
+
+  int64_t value;
+  int64_t maxValue;
+
+  // Can't use extractNumberNotEmpty when the lookup key might use the 'error/unknown' values.
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (field->hasMatchValue)
+  {
+    if (value != field->matchValue)
+    {
+      logDebug("Field %s value %" PRId64 " does not match %" PRId64 "\n", fieldName, value, field->matchValue);
+      g_skip = true;
+      return false;
+    }
+    s = field->description;
+    if (s == NULL && field->lookup.type == LOOKUP_TYPE_NONE)
+    {
+      sprintf(lookfor, "%" PRId64, value);
+      s = lookfor;
+    }
+  }
+
+  if (s == NULL && field->lookup.type != LOOKUP_TYPE_NONE && value >= 0)
+  {
+    if (field->lookup.type == LOOKUP_TYPE_PAIR || field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
+    {
+      /* The FIELDTYPE lookup functions (generated by LOOKUP_FIELDTYPE
+       * in lookup.c) set `g_ftf` to a static Field describing the
+       * resolved key's value type. They only update g_ftf when a
+       * case matches — unknown keys leave g_ftf at whatever the
+       * previous lookup put there, so a later DYNAMIC_FIELD_VALUE
+       * would decode an unrelated record's Value with a stale field
+       * type. Reset g_ftf before the call so a miss is observable
+       * downstream (fieldPrintKeyValue's `g_ftf == NULL` branch).
+       *
+       * Plain PAIR lookups don't touch g_ftf, so the reset is
+       * harmless for them. */
+      if (field->lookup.type == LOOKUP_TYPE_FIELDTYPE)
+      {
+        g_ftf = NULL;
+      }
+      s = (*field->lookup.function.pair)((size_t) value);
+    }
+    else if (field->lookup.type == LOOKUP_TYPE_TRIPLET)
+    {
+      int64_t val1;
+
+      logDebug("Triplet extraction for field '%s'\n", field->name);
+
+      if (field->pgn != NULL && extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
+      {
+        s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
+      }
+    }
+    // BIT is handled in fieldPrintBitLookup
+  }
+
+  if (s != NULL)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
+    }
+    else if (showJson)
+    {
+      mprintf("\"%s\"", s);
+    }
+    else
+    {
+      mprintf("%s", s);
+    }
+  }
+  else
+  {
+    if (*bits > 1 && (value >= maxValue - (*bits > 2 ? 2 : 1)))
+    {
+      printEmpty(fieldName, value - maxValue);
+    }
+    else if (showJsonValue)
+    {
+      mprintf("%" PRId64, value);
+      if (showJsonEmpty)
+      {
+        mprintf(",\"name\":null");
+      }
+      mprintf("}");
+    }
+    else if (showJson)
+    {
+      mprintf("%" PRId64, value);
+    }
+    else
+    {
+      mprintf("%" PRId64, value);
+    }
+  }
+
+  return true;
+}
+
+extern bool fieldPrintName(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
+{
+  const Pgn *pgn            = NULL;
+  size_t     variableFields = 0;
+
+  uint64_t value;
+  uint64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, (int64_t *) &value, (int64_t *) &maxValue))
+  {
+    return true;
+  }
+
+  logDebug("printFieldName %zu @ %p = %" PRIx64 "\n", dataLen, data, value);
+
+  pgn = searchForPgn(60928);
+
+  logDebug("printFieldName v=%" PRIu64 " max=%" PRIu64 " high=%d\n", value, maxValue, (bool) (value > maxValue - 2));
+
+  if (value > maxValue - 2)
+  {
+    printEmpty(fieldName, value - maxValue);
+  }
+  else
+  {
+    if (showJson)
+    {
+      mprintf("%" PRIu64, value);
+
+      if (pgn != NULL && showJsonValue)
+      {
+        mprintf(",\"name\":{");
+        sep = "";
+        printFields(pgn, data + ((startBit) >> 3), BYTES(8), showData, showJson, &variableFields);
+        mprintf("}}");
+      }
+    }
+    else
+    {
+      mprintf("0x%" PRIx64, value);
+
+      if (pgn != NULL)
+      {
+        mprintf(" name = [");
+        sep = "";
+        printFields(pgn, data + ((startBit) >> 3), BYTES(8), showData, showJson, &variableFields);
+        mprintf("]");
+      }
+    }
+  }
+
+  return true;
+}
+
+extern bool fieldPrintPGN(const Field   *field,
+                          const char    *fieldName,
+                          const uint8_t *data,
+                          size_t         dataLen,
+                          size_t         startBit,
+                          size_t        *bits)
+{
+  const char *s   = NULL;
+  const Pgn  *pgn = NULL;
+
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  if (!IS_MANUFACTURER_PGN(value))
+  {
+    pgn = searchForPgn(value);
+    if (pgn != NULL)
+    {
+      s = pgn->description;
+    }
+  }
+
+  if (value >= maxValue - 2)
+  {
+    printEmpty(fieldName, value - maxValue);
+  }
+  else if (s != NULL)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":\"%s\"}", value, s);
+    }
+    else if (showJson)
+    {
+      mprintf("%" PRId64, value);
+    }
+    else
+    {
+      mprintf("%" PRId64 " (%s)", value, s);
+    }
+  }
+  else
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64, value);
+      if (showJsonEmpty)
+      {
+        mprintf(",\"name\":null");
+      }
+      mprintf("}");
+    }
+    else
+    {
+      mprintf("%" PRId64, value);
+    }
+  }
+
+  return true;
+}
+
+/*
+ * Only print reserved fields if they are NOT all ones, in that case we have an incorrect
+ * PGN definition.
+ */
+extern bool fieldPrintReserved(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    // A trailing reserved field that runs off the end of a slightly short
+    // message carries no information, so skip it instead of failing the PGN.
+    g_skip = true;
+    return true;
+  }
+  if (value == maxValue)
+  {
+    g_skip = true;
+    return true;
+  }
+
+  return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+}
+
+/*
+ * Only print spare fields if they are NOT all zeroes, in that case we have an incorrect
+ * PGN definition.
+ */
+extern bool fieldPrintSpare(const Field   *field,
+                            const char    *fieldName,
+                            const uint8_t *data,
+                            size_t         dataLen,
+                            size_t         startBit,
+                            size_t        *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    // A trailing spare field that runs off the end of a slightly short
+    // message carries no information, so skip it instead of failing the PGN.
+    g_skip = true;
+    return true;
+  }
+  if (value == 0)
+  {
+    g_skip = true;
+    return true;
+  }
+
+  return fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+}
+
+extern bool fieldPrintBitLookup(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
+{
+  int64_t value;
+  int64_t maxValue;
+  int64_t bitValue;
+  size_t  bit;
+  char   *sep;
+
+  if (!extractNumber(field, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+  if (value == 0)
+  {
+    if (showJson)
+    {
+      printEmpty(fieldName, value - maxValue);
+    }
+    else
+    {
+      mprintf("None");
+    }
+    return true;
+  }
+
+  logDebug("RES_BITFIELD length %u value %" PRIx64 "\n", *bits, value);
+
+  if (showJsonValue)
+  {
+    sep = "[";
+  }
+  else if (showJson)
+  {
+    sep = "[";
+  }
+  else
+  {
+    sep = "";
+  }
+
+  for (bitValue = 1, bit = 0; bit < *bits; (bitValue <<= 1), bit++)
+  {
+    bool isSet = (value & bitValue) != 0;
+    logDebug("RES_BITFIELD is bit %u value %" PRIx64 " set? = %d\n", bit, bitValue, isSet);
+    if (isSet)
+    {
+      const char *s = (*field->lookup.function.pair)(bit);
+
+      if (s != NULL)
+      {
+        if (showJsonValue)
+        {
+          mprintf("%s{\"value\":%" PRId64 ",\"name\":\"%s\"}", sep, bitValue, s);
+        }
+        else if (showJson)
+        {
+          mprintf("%s\"%s\"", sep, s);
+        }
+        else
+        {
+          mprintf("%s%s", sep, s);
+        }
+      }
+      else
+      {
+        if (showJsonValue)
+        {
+          mprintf("%s{\"value\":%" PRIu64 ",\"name\":null}", sep, bitValue);
+        }
+        else
+        {
+          mprintf("%s%" PRIu64, sep, bitValue);
+        }
+      }
+      sep = ",";
+    }
+  }
+  if (showJson)
+  {
+    if (*sep != '[')
+    {
+      mprintf("]");
+    }
+    else
+    {
+      mprintf("[]");
+    }
+  }
+  return true;
+}
+
+extern bool fieldPrintLatLon(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
+{
+  uint64_t absVal;
+  int64_t  value;
+  int64_t  maxValue;
+  bool     isLongitude = (strstr(fieldName, "ongit") != NULL);
+  double   dd;
+  double   degrees;
+  double   remainder;
+  double   minutes;
+  double   seconds;
+
+  logDebug("fieldPrintLatLon for '%s' startbit=%zu bits=%zu\n", fieldName, startBit, *bits);
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  absVal = (value < 0) ? -value : value;
+  dd     = (double) value * field->resolution;
+
+  if (showGeo == GEO_DD)
+  {
+    mprintf("%10.7f", dd);
+  }
+  else
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRId64 ",\"name\":", value);
+    }
+    if (showGeo == GEO_DM)
+    {
+      dd        = (double) absVal * field->resolution;
+      degrees   = floor(dd);
+      remainder = dd - degrees;
+      minutes   = remainder * 60.;
+
+      mprintf((showJson ? "\"%02u&deg; %6.3f %c\"" : "%02ud %6.3f %c"),
+              (uint32_t) degrees,
+              minutes,
+              (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
+    }
+    else
+    {
+      dd        = (double) absVal * field->resolution;
+      degrees   = floor(dd);
+      remainder = dd - degrees;
+      minutes   = floor(remainder * 60.);
+      seconds   = (remainder * 3600.) - 60. * minutes;
+
+      if (seconds >= 59.9995)
+      {
+        minutes += 1.0;
+        seconds = 0.0;
+      }
+      if (minutes >= 60.0)
+      {
+        degrees += 1.0;
+        minutes = 0.0;
+        seconds = 0.0;
+      }
+
+      mprintf((showJson ? "\"%02u&deg;%02u&rsquo;%06.3f&rdquo;%c\"" : "%02ud %02u' %06.3f\"%c"),
+              (int) degrees,
+              (int) minutes,
+              seconds,
+              (isLongitude ? ((value >= 0) ? 'E' : 'W') : ((value >= 0) ? 'N' : 'S')));
+    }
+    if (showJsonValue)
+    {
+      mprintf("}");
+    }
+  }
+  return true;
+}
+
+extern bool fieldPrintTime(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
+{
+  uint64_t unitspersecond;
+  uint32_t hours;
+  uint32_t minutes;
+  uint32_t seconds;
+  uint32_t fraction;
+  int64_t  value;
+  int64_t  maxValue;
+  uint64_t t;
+  int      digits;
+
+  const char *sign = "";
+
+  if (!extractNumberNotEmpty(field, fieldName, data, dataLen, startBit, *bits, &value, &maxValue))
+  {
+    return true;
+  }
+
+  logDebug("fieldPrintTime(<%s>, \"%s\") v=%" PRId64 " res=%g max=0x%" PRIx64 "\n",
+           field->name,
+           fieldName,
+           value,
+           field->resolution,
+           maxValue);
+
+  if (value < 0)
+  {
+    value = -value;
+    sign  = "-";
+  }
+
+  if (field->resolution < 1.0)
+  {
+    unitspersecond = (uint64_t) (1.0 / field->resolution);
+  }
+  else
+  {
+    unitspersecond = 1;
+    value *= (int64_t) field->resolution;
+  }
+
+  t        = (uint64_t) value;
+  seconds  = t / unitspersecond;
+  fraction = t % unitspersecond;
+  minutes  = seconds / 60;
+  seconds  = seconds % 60;
+  hours    = minutes / 60;
+  minutes  = minutes % 60;
+
+  /*
+   * How many decimals to show, and `fraction` expressed in them.
+   *
+   * `fraction` counts resolution units, not decimal places. Printing it as a
+   * decimal is only correct when there are a power of ten of those per second.
+   * DURATION_UFIX8_5MS has 200/s, so 19 units -- 0.095 s -- came out as
+   * "00:00:00.19", and 150 units (0.750 s) as "00:00:00.150", three digits in
+   * a two-digit field. Take the width from the units-per-second instead (the
+   * smallest power of ten that covers it) and scale the fraction into it.
+   *
+   * Done in integer arithmetic on purpose: deriving the width by multiplying
+   * the resolution by ten until it reaches 1.0 would be at the mercy of
+   * binary rounding, and 0.0001 -- 23 fields -- is exactly the sort of value
+   * that lands a hair under and gains a digit.
+   */
+  {
+    uint64_t scale = 1;
+
+    digits = 0;
+    while (scale < unitspersecond && digits < 9)
+    {
+      scale *= 10;
+      digits++;
+    }
+    if (digits > 0 && unitspersecond > 0)
+    {
+      fraction = (uint32_t) (((uint64_t) fraction * scale) / unitspersecond);
+    }
+  }
+
+  if (showJson)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%s%" PRId64 ",\"name\":", sign, value);
+    }
+    if (digits > 0)
+    {
+      mprintf("\"%s%02u:%02u:%02u.%0*u\"", sign, hours, minutes, seconds, digits, fraction);
+    }
+    else
+    {
+      mprintf("\"%s%02u:%02u:%02u\"", sign, hours, minutes, seconds);
+    }
+    if (showJsonValue)
+    {
+      mprintf("}");
+    }
+  }
+  else
+  {
+    if (fraction)
+    {
+      mprintf("%s%02u:%02u:%02u.%0*u", sign, hours, minutes, seconds, digits, fraction);
+    }
+    else
+    {
+      mprintf("%s%02u:%02u:%02u", sign, hours, minutes, seconds);
+    }
+  }
+  return true;
+}
+
+extern bool fieldPrintDate(const Field   *field,
+                           const char    *fieldName,
+                           const uint8_t *data,
+                           size_t         dataLen,
+                           size_t         startBit,
+                           size_t        *bits)
+{
+  char       buf[sizeof("2008.03.10") + 1];
+  time_t     t;
+  struct tm *tm;
+  uint16_t   d;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  if (startBit != 0)
+  {
+    return unhandledStartOffset(fieldName, startBit);
+  }
+  if (*bits != 16)
+  {
+    return unhandledBitLength(fieldName, *bits);
+  }
+  if (dataLen < *bits / 8)
+  {
+    return true;
+  }
+
+  d = data[0] + (data[1] << 8);
+
+  if (d >= 0xfffd)
+  {
+    printEmpty(fieldName, d - INT64_C(0xffff));
+    return true;
+  }
+
+  t  = d * 86400;
+  tm = gmtime(&t);
+  if (!tm)
+  {
+    logAbort("Unable to convert %u to gmtime\n", (unsigned int) t);
+  }
+  strftime(buf, sizeof(buf), "%Y.%m.%d", tm);
+  if (showJson)
+  {
+    if (showJsonValue)
+    {
+      mprintf("%" PRIu16 ",\"name\":\"%s\"}", d, buf);
+    }
+    else
+    {
+      mprintf("\"%s\"", buf);
+    }
+  }
+  else
+  {
+    mprintf("%s", buf);
+  }
+  return true;
+}
+
+static void print_ascii_json_escaped(const uint8_t *data, int len)
+{
+  int c;
+  int k;
+
+  for (k = 0; k < len; k++)
+  {
+    c = data[k];
+    switch (c)
+    {
+      case '\b':
+        mprintf("%s", "\\b");
+        break;
+
+      case '\n':
+        mprintf("%s", "\\n");
+        break;
+
+      case '\r':
+        mprintf("%s", "\\r");
+        break;
+
+      case '\t':
+        mprintf("%s", "\\t");
+        break;
+
+      case '\f':
+        mprintf("%s", "\\f");
+        break;
+
+      case '"':
+        mprintf("%s", "\\\"");
+        break;
+
+      case '\\':
+        mprintf("%s", "\\\\");
+        break;
+
+      case '/':
+        mprintf("%s", "\\/");
+        break;
+
+      case '\377':
+        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
+        // end-of-field, with noise following. Assume this does not break other systems.
+        return;
+
+      default:
+        if (c < 0x20)
+        {
+          /* Every other control character has to be escaped or the result is
+           * not JSON at all -- a bare 0x03 in a string makes a strict parser
+           * reject the whole line. Seen on PGN 262657's Sentence field. The
+           * cases above cover the ones with a short form; these take the
+           * \u00XX one, which is what canboat's Rust output already emits. */
+          mprintf("\\u%04x", c);
+        }
+        else
+        {
+          mprintf("%c", c);
+        }
+    }
+  }
+}
+
+static bool printString(const char *fieldName, const uint8_t *data, size_t len)
+{
+  const uint8_t *p;
+
+  if (len > 0)
+  {
+    // find the first zero byte (Raymarine does this, followed by junk)
+    for (p = data; p < data + len - 1; p++)
+    {
+      if (*p == '\0')
+      {
+        logDebug("printString: shorten len from %zu to %zu (C string seen)\n", len, p - data);
+        len = p - data;
+        p--;
+        break;
+        // still do the next part, maybe they have @ or spaces at the end still?
+      }
+    }
+    // rtrim funny stuff from end, we see all sorts. 0xff is believed to be the correct
+    // content according to NMEA 2000. '@' originates from badly converted NMEA AIS data.
+    // Space is just to avoid funny strings, 0 looks like incorrect C data.
+    while (len > 0 && (*p == 0xff || isspace((unsigned char) *p) || *p == 0 || *p == '@'))
+    {
+      len--;
+      p--;
+    }
+  }
+
+  if (len == 0)
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+    return true;
+  }
+
+  if (showJson)
+  {
+    mprintf("\"");
+    print_ascii_json_escaped(data, len);
+    mprintf("\"");
+  }
+  else
+  {
+    print_ascii_json_escaped(data, len);
+  }
+
+  return true;
+}
+
+/**
+ * Fixed length string where the length is defined by the field definition.
+ */
+extern bool fieldPrintStringFix(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
+{
+  size_t len = field->size / 8;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  logDebug("fieldPrintStringFix('%s',%zu) size=%zu\n", fieldName, dataLen, len);
+
+  len   = CB_MIN(len, dataLen); // Cap length to remaining bytes in message
+  *bits = BYTES(len);
+  return printString(fieldName, data, len);
+}
+
+extern bool fieldPrintStringLZ(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
+{
+  // STRINGLZ format is <len> [ <data> ... ] <zero>
+  size_t len;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  // Cap to dataLen
+  len   = *data++;
+  len   = CB_MIN(len, dataLen - 1);
+  *bits = BYTES(len + 2);
+
+  return printString(fieldName, data, len);
+}
+
+extern bool fieldPrintStringLAU(const Field   *field,
+                                const char    *fieldName,
+                                const uint8_t *data,
+                                size_t         dataLen,
+                                size_t         startBit,
+                                size_t        *bits)
+{
+  // STRINGLAU format is <len> <control> [ <data> ... ]
+  // where <control> == 0 = UTF16
+  //       <control> == 1 = ASCII(?) or maybe UTF8?
+  int     control;
+  size_t  len;
+  size_t  utf8_len;
+  utf8_t *utf8 = NULL;
+  bool    r;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+  logDebug("fieldPrintStringLAU: <%s> data=%p len=%zu startBit=%zu bits=%zu\n", fieldName, data, dataLen, startBit, *bits);
+
+  len     = *data++;
+  control = *data++;
+  if (len < 2 || dataLen < 2)
+  {
+    logError("field '%s': Invalid string length %u in STRING_LAU field\n", fieldName, len);
+    return false;
+  }
+  len = CB_MIN(len, dataLen) - 2;
+
+  *bits = BYTES(len + 2);
+
+  if (control == 0)
+  {
+    utf8_len = utf16_to_utf8((const utf16_t *) data, len / 2, NULL, 0);
+    utf8     = malloc(utf8_len + 1);
+
+    if (utf8 == NULL)
+    {
+      die("Out of memory");
+    }
+    logDebug("fieldprintStringLAU: UTF16 len %zu requires %zu utf8 bytes\n", len / 2, utf8_len);
+    len  = utf16_to_utf8((const utf16_t *) data, len / 2, utf8, utf8_len + 1);
+    data = utf8;
+  }
+  else if (control > 1 && control != 0xff)
+  {
+    logError("Unhandled string type %d in PGN\n", control);
+    return false;
+  }
+  // control == 1 is ASCII. control == 0xff marks an unset field: the length byte is
+  // present but the encoding byte and the content are 0xff filler (seen on the H5000
+  // pilot in PGN 126998, samples/h5000_pilot_126998.raw). printString() trims the
+  // trailing 0xff run to an empty string, so let it fall through rather than aborting
+  // the whole PGN.
+
+  r = printString(fieldName, data, len);
+  if (utf8 != NULL)
+  {
+    free(utf8);
+  }
+  return r;
+}
+
+extern bool fieldPrintBinary(const Field   *field,
+                             const char    *fieldName,
+                             const uint8_t *data,
+                             size_t         dataLen,
+                             size_t         startBit,
+                             size_t        *bits)
+{
+  size_t      i;
+  size_t      remaining_bits;
+  const char *s;
+
+  if (!adjustDataLenStart(&data, &dataLen, &startBit))
+  {
+    return false;
+  }
+
+  if (*bits == 0 && strcmp(field->fieldType, "BINARY") == 0)
+  {
+    // The length is in the previous field. This is heuristically defined right now, it might change.
+    // The only PGNs where this happens are AIS PGNs 129792, 129795 and 129797.
+    *bits = g_previousFieldValue;
+  }
+
+  if (startBit + *bits > dataLen * 8)
+  {
+    *bits = dataLen * 8 - startBit;
+  }
+
+  if (showJson)
+  {
+    mprintf("\"");
+  }
+  remaining_bits = *bits;
+  s              = "";
+  for (i = 0; i < (*bits + 7) >> 3; i++)
+  {
+    uint8_t byte = data[i];
+
+    if (i == 0 && startBit != 0)
+    {
+      byte = byte >> startBit; // Shift off older bits
+      if (remaining_bits + startBit < 8)
+      {
+        byte = byte & ((1 << remaining_bits) - 1);
+      }
+      byte = byte << startBit; // Shift zeros back in
+      remaining_bits -= (8 - startBit);
+    }
+    else
+    {
+      if (remaining_bits < 8)
+      {
+        // only the lower remaining_bits should be used
+        byte = byte & ((1 << remaining_bits) - 1);
+      }
+      remaining_bits -= 8;
+    }
+    mprintf("%s%2.02X", s, byte);
+    s = " ";
+  }
+  if (showJson)
+  {
+    mprintf("\"");
+  }
+  return true;
+}
+
+const Field *g_ftf         = NULL;
+int64_t      g_length      = 0;
+bool         g_lengthValid = false;
+
+extern bool fieldPrintKeyValue(const Field   *field,
+                               const char    *fieldName,
+                               const uint8_t *data,
+                               size_t         dataLen,
+                               size_t         startBit,
+                               size_t        *bits)
+{
+  bool r = false;
+
+  if (g_lengthValid)
+  {
+    *bits = ((size_t) g_length) * 8;
+  }
+  else
+  {
+    *bits = field->size;
+  }
+  logDebug("fieldPrintKeyValue('%s') bits=%zu\n", fieldName, *bits);
+
+  // An explicit length of zero means the value is present but empty (e.g. PGN 130823 directory
+  // entries that only declare a data type). Skip the field cleanly so it is simply omitted rather
+  // than triggering the "print routine did not print anything" guard in text mode.
+  if (g_lengthValid && *bits == 0)
+  {
+    g_skip        = true;
+    g_ftf         = NULL;
+    g_length      = 0;
+    g_lengthValid = false;
+    return true;
+  }
+
+  if (dataLen >= ((startBit + *bits) >> 3))
+  {
+    if (g_ftf != NULL)
+    {
+      const Field *f = g_ftf;
+
+      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field bits=%u\n", fieldName, f->ft->name, f->size);
+
+      if (*bits == 0)
+      {
+        *bits = f->size;
+      }
+      if (*bits == 0 && f->ft && f->ft->name && strcmp(f->ft->name, "LOOKUP") == 0)
+      {
+        *bits = f->lookup.size;
+      }
+
+      r = (f->ft->pf)(f, fieldName, data, dataLen, startBit, bits);
+    }
+    else
+    {
+      // The Key did not resolve to a field type and there is no explicit
+      // DYNAMIC_FIELD_LENGTH. The value occupies the rest of the frame, so
+      // fall back to that length and still print the raw bytes -- the same
+      // outcome as when the length is known (cf. PGN 130846). Without this,
+      // an unknown Key (e.g. PGN 130845) prints an empty Value despite the
+      // bytes being present on the bus.
+      if (*bits == 0 && !g_lengthValid && startBit < dataLen * 8)
+      {
+        *bits = dataLen * 8 - startBit;
+      }
+      r = fieldPrintBinary(field, fieldName, data, dataLen, startBit, bits);
+    }
+  }
+  else
+  {
+    // The declared value runs past the end of the packet: the frame ended mid-record. This is the normal
+    // way a repeating-to-end key/value group terminates -- the device packs as many records as fit and the
+    // trailing one is cut off (e.g. a PGN 130822 Command 6 "Object Dump" whose object list exceeds the
+    // 223-byte fast-packet limit). Most such truncations already stop silently because the field loop runs
+    // out at a record boundary; when the cut instead lands inside a value field, skip that partial value
+    // cleanly and stop rather than aborting the whole PGN. Consume the remaining bytes so the caller's loop
+    // terminates.
+    logDebug("PGN %u key-value: value for field %s runs past end of packet; stopping at the partial record\n",
+             field->pgn ? field->pgn->pgn : 0,
+             fieldName);
+    g_skip = true;
+    *bits  = (dataLen * 8 > startBit) ? (dataLen * 8 - startBit) : 0;
+    r      = true;
+  }
+
+  g_ftf         = NULL;
+  g_length      = 0;
+  g_lengthValid = false;
+
+  return r;
+}

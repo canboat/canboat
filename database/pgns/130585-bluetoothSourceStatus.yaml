@@ -1,0 +1,30 @@
+pgn: 130585
+id: bluetoothSourceStatus
+description: Bluetooth source status
+type: Single
+missing:
+- FieldLengths
+- SampleData
+fields:
+- id: sourceNumber
+  name: Source number
+  type: UINT8
+- id: status
+  name: Status
+  type: LOOKUP
+  bits: 4
+  lookup: BLUETOOTH_SOURCE_STATUS
+- id: forgetDevice
+  name: Forget device
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: discovering
+  name: Discovering
+  type: LOOKUP
+  bits: 2
+  lookup: YES_NO
+- id: bluetoothAddress
+  name: Bluetooth address
+  type: BINARY
+  bits: 48

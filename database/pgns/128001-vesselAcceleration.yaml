@@ -1,0 +1,27 @@
+pgn: 128001
+id: vesselAcceleration
+description: Vessel Acceleration
+type: Single
+missing:
+- FieldLengths
+- Resolution
+- Lookups
+- SampleData
+explanation: The Vessel Acceleration PGN transmits the acceleration of the vessel in all three axes, ahead/astern, port/starboard, and up/down.
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: longitudinalAcceleration
+  name: Longitudinal Acceleration
+  type: INT16
+- id: transverseAcceleration
+  name: Transverse Acceleration
+  type: INT16
+- id: verticalAcceleration
+  name: Vertical Acceleration
+  type: INT16
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8

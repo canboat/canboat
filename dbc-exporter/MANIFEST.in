@@ -1,0 +1,14 @@
+graft docs
+graft src
+graft ci
+graft tests
+
+include .bumpversion.cfg
+include .coveragerc
+include .editorconfig
+include tox.ini
+include .appveyor.yml
+include README.md
+
+
+global-exclude *.py[cod] __pycache__/* *.so *.dylib

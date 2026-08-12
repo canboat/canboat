@@ -1,0 +1,9 @@
+name: ENTERTAINMENT_ZONE
+kind: pair
+bits: 8
+values:
+  0: All zones
+  1: Zone 1
+  2: Zone 2
+  3: Zone 3
+  4: Zone 4

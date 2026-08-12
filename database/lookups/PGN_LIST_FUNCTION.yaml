@@ -1,0 +1,6 @@
+name: PGN_LIST_FUNCTION
+kind: pair
+bits: 8
+values:
+  0: Transmit PGN list
+  1: Receive PGN list

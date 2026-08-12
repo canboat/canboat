@@ -1,0 +1,47 @@
+pgn: 128777
+id: anchorWindlassOperatingStatus
+description: Anchor Windlass Operating Status
+type: Single
+url: https://www.nmea.org/Assets/20190613%20windlass%20amendment,%20128776,%20128777,%20128778.pdf
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: windlassId
+  name: Windlass ID
+  type: UINT8
+- id: windlassDirectionControl
+  name: Windlass Direction Control
+  type: LOOKUP
+  bits: 2
+  lookup: WINDLASS_DIRECTION
+- id: windlassMotionStatus
+  name: Windlass Motion Status
+  type: LOOKUP
+  bits: 2
+  lookup: WINDLASS_MOTION
+- id: rodeTypeStatus
+  name: Rode Type Status
+  type: LOOKUP
+  bits: 2
+  lookup: RODE_TYPE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: rodeCounterValue
+  name: Rode Counter Value
+  type: LENGTH_UFIX16_DM
+- id: windlassLineSpeed
+  name: Windlass Line Speed
+  type: SPEED_UFIX16_CM
+- id: anchorDockingStatus
+  name: Anchor Docking Status
+  type: LOOKUP
+  bits: 2
+  lookup: DOCKING_STATUS
+- id: windlassOperatingEvents
+  name: Windlass Operating Events
+  type: BITLOOKUP
+  bits: 6
+  lookupBits: WINDLASS_OPERATION

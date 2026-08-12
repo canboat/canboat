@@ -1,0 +1,9 @@
+name: INVERTER_MODE
+kind: pair
+bits: 4
+values:
+  0: Standalone
+  1: Series Master
+  2: Series Slave
+  3: Parallel Master
+  4: Parallel Slave

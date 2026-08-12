@@ -1,0 +1,8 @@
+name: ISO_CONTROL
+kind: pair
+bits: 8
+values:
+  0: ACK
+  1: NAK
+  2: Access Denied
+  3: Address Busy

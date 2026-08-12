@@ -1,0 +1,18 @@
+name: NAV_STATUS
+kind: pair
+bits: 4
+values:
+  0: Under way using engine
+  1: At anchor
+  2: Not under command
+  3: Restricted maneuverability
+  4: Constrained by her draught
+  5: Moored
+  6: Aground
+  7: Engaged in Fishing
+  8: Under way sailing
+  9: Hazardous material - High Speed
+  10: Hazardous material - Wing in Ground
+  11: Power-driven vessel towing astern
+  12: Power-driven vessel pushing ahead or towing alongside
+  14: AIS-SART

@@ -1,0 +1,10 @@
+name: SEATALK_PILOT_HULL_TYPE
+kind: pair
+bits: 8
+values:
+  0: Sail
+  1: Sail (slow turn)
+  2: Sail Catamaran
+  3: Power (slow turn)
+  4: Power (fast turn)
+  8: Power

@@ -1,0 +1,109 @@
+pgn: 126720
+id: seatalk1PilotMode
+description: 'Seatalk1: Pilot Mode'
+type: Fast
+variantOrder: 19
+missing:
+- Fields
+- FieldLengths
+- Resolution
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Raymarine
+  match: 1851
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Seatalk 1 Encoded
+  match: 240
+  lookup: SEATALK_MESSAGE_ID
+  primaryKey: true
+- id: command
+  name: command
+  type: LOOKUP
+  bits: 8
+  description: Seatalk1
+  match: 129
+  lookup: SEATALK_COMMAND
+  primaryKey: true
+- id: seatalk1Command
+  name: Seatalk1 Command
+  type: LOOKUP
+  bits: 8
+  description: Compass heading Autopilot course and Rudder position
+  match: 132
+  lookup: SEATALK1_COMMAND
+  primaryKey: true
+- id: unknown1
+  name: Unknown 1
+  type: BINARY
+  bits: 24
+- id: pilotMode
+  name: Pilot Mode
+  type: LOOKUP
+  bits: 8
+  lookup: SEATALK_PILOT_MODE
+- id: subMode
+  name: Sub Mode
+  type: UINT8
+- id: pilotModeData
+  name: Pilot Mode Data
+  type: BINARY
+  bits: 8
+- id: unknown2
+  name: Unknown 2
+  type: BINARY
+  bits: 80
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,56,55,55,40,00,fb,02,05"  # from candumpSample3.txt
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0x565555"
+    pilotMode: "Standby"
+    subMode: 0
+    pilotModeData: "0xfb"
+    unknown2: "0x0205"
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,36,e7,9f,42,00,0e,02,08"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0x36e79f"
+    pilotMode: "Auto"
+    subMode: 0
+    pilotModeData: "0x0e"
+    unknown2: "0x0208"
+- raw: "2023-01-01-00:00:00.000,7,126720,204,255,13,3b,9f,f0,81,84,f6,e6,9b,40,00,00,42,08"  # from raymarine-ev1.raw
+  expects:
+    manufacturerCode: "Raymarine"
+    industryCode: "Marine Industry"
+    proprietaryId: "Seatalk 1 Encoded"
+    command: "Seatalk1"
+    seatalk1Command: "Compass heading Autopilot course and Rudder position"
+    unknown1: "0xf6e69b"
+    pilotMode: "Standby"
+    subMode: 0
+    pilotModeData: "0x00"
+    unknown2: "0x4208"

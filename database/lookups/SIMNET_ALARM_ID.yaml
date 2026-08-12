@@ -1,0 +1,186 @@
+name: SIMNET_ALARM_ID
+kind: pair
+bits: 16
+values:
+  10: Shallow water
+  11: Deep water
+  12: Anchor depth
+  13: True wind shift
+  14: True wind high
+  15: True wind low
+  16: Low boat speed
+  17: High voltage
+  18: Low voltage
+  19: Depth data missing
+  20: Wind data missing
+  21: Nav data missing
+  22: Heading missing
+  23: XTE
+  24: Rudder data missing
+  25: Rudder controller fault
+  26: No rudder response
+  27: Rudder drive overload
+  28: High internal temperature
+  29: AP clutch overload
+  30: AP clutch disengaged
+  31: High drive supply
+  32: Low drive supply
+  33: No active autopilot control unit
+  34: No autopilot computer
+  35: Memory fail
+  36: Water temp missing
+  37: Low water temp
+  38: High water temp
+  39: Water temp rate
+  40: Fish
+  41: No GPS fix
+  42: WAAS/DGPS
+  45: Arrival
+  46: Anchor
+  47: Fuel low
+  48: Fuel high
+  49: Tank low
+  50: Tank high
+  51: BEP
+  52: Waypoint radius
+  53: CPA
+  54: AIS range to vessel
+  55: AIS vessel lost
+  56: Vessel message
+  57: Lightning
+  58: Severe weather
+  59: Storm
+  61: Engine Check
+  62: Engine over temperature
+  63: Engine low oil pressure
+  64: Engine low oil level
+  65: Engine low fuel pressure
+  66: Engine low voltage
+  67: Engine low coolant level
+  68: Engine water flow
+  69: Engine water in fuel
+  70: Engine charge
+  71: Engine preheat
+  72: Engine high boost pressure
+  73: Engine rev limit
+  74: Engine EGR system
+  75: Engine throttle position
+  76: Engine emergency stop
+  77: Engine warning level 1
+  78: Engine warning level 2
+  79: Engine power reduction
+  80: Engine maintenance
+  81: Engine comm error
+  82: Engine throttle
+  83: Engine start protect
+  84: Engine shutting down
+  85: Transmission Check
+  86: Transmission over temperature
+  87: Transmission low oil pressure
+  88: Transmission low oil level
+  89: Sail drive
+  96: Fresh water low
+  97: Fresh water high
+  98: Gray water low
+  99: Gray water high
+  100: Live well low
+  101: Live well high
+  102: Oil low
+  103: Oil high
+  104: Black water low
+  105: Black water high
+  106: Weather data missing
+  107: AP Position data missing
+  108: AP Speed data missing
+  109: AP Depth data missing
+  110: AP Heading data missing
+  111: AP Nav data missing
+  112: AP Off course
+  113: AP Rudder data missing
+  114: AP Wind data missing
+  115: Radar guard zone
+  116: MARPA target lost
+  117: MARPA unavailable
+  118: Dangerous vessel
+  119: Radar error
+  120: CZone critical
+  121: CZone important
+  122: CZone standard
+  123: CZone warning
+  124: True wind shift
+  125: EVC Com Error
+  126: EVC override
+  127: High drive temperature
+  128: Drive inhibit
+  129: CAN bus supply overload
+  130: Drive ref voltage missing
+  131: Rudder limit
+  132: Compass difference
+  133: AP Low boat speed
+  134: Monitor compass missing
+  135: Cross track distance limit
+  137: End of route
+  138: Compass alignment
+  139: R.A.I.M
+  141: Off heading
+  142: Supply voltage
+  143: Low CAN bus voltage
+  144: CAN bus failure
+  145: Drive ready missing
+  146: Drive computer missing
+  147: External mode illegal
+  148: Rudder too slow
+  149: Wheel over
+  150: Thruster inhibited
+  151: Check heading
+  152: True wind speed high
+  153: Override
+  154: Speed through water rationality fault
+  155: No drives available
+  156: Fuel remaining low
+  157: Fuel remaining high
+  158: Generator Check
+  159: Generator over temperature
+  160: Generator low oil pressure
+  161: Generator low oil level
+  162: Generator low fuel pressure
+  163: Generator low voltage
+  164: Generator low coolant level
+  165: Generator water flow
+  166: Generator water in fuel
+  167: Generator charge
+  168: Generator preheat
+  169: Generator high boost pressure
+  170: Generator rev limit
+  171: Generator EGR system
+  172: Generator throttle position
+  173: Generator emergency stop
+  174: Generator warning level 1
+  175: Generator warning level 2
+  176: Generator power reduction
+  177: Generator maintenance
+  178: Generator comm error
+  179: Generator throttle
+  180: Generator start protect
+  181: Generator shutting down
+  182: Shallow aft depth
+  183: Forward range
+  245: Alarm source missing
+  246: External
+  247: EVC Com Error
+  248: Wind sensor battery low
+  266: Gasoline low
+  267: Gasoline high
+  268: Charging System
+  269: Seawater Flow
+  270: Water in Drive Seal
+  272: Turnover
+  273: Helm ECU Detect Failure
+  274: Joystick ECU Detect Failure
+  275: Drive ECU Detect Failure
+  276: Hot Transmission
+  277: Low Gear Oil Pressure
+  278: Low Drive Lub Oil Level
+  285: Check Thermostat
+  287: Track offset active
+  385: Navigation Not Supported

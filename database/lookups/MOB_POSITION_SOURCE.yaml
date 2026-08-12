@@ -1,0 +1,6 @@
+name: MOB_POSITION_SOURCE
+kind: pair
+bits: 3
+values:
+  0: Position estimated by the vessel
+  1: Position reported by MOB emitter

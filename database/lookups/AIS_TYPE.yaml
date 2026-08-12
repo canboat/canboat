@@ -1,0 +1,6 @@
+name: AIS_TYPE
+kind: pair
+bits: 1
+values:
+  0: SOTDMA
+  1: CS

@@ -1,0 +1,33 @@
+pgn: 129542
+id: gnssPseudorangeNoiseStatistics
+description: GNSS Pseudorange Noise Statistics
+type: Fast
+priority: 6
+interval: 1000
+missing:
+- SampleData
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: rmsOfPositionUncertainty
+  name: RMS of Position Uncertainty
+  type: LENGTH_UFIX16_CM
+- id: stdOfMajorAxis
+  name: STD of Major axis
+  type: LENGTH_UFIX16_CM
+- id: stdOfMinorAxis
+  name: STD of Minor axis
+  type: LENGTH_UFIX16_CM
+- id: orientationOfMajorAxis
+  name: Orientation of Major axis
+  type: ANGLE_UFIX16
+- id: stdOfLatError
+  name: STD of Lat Error
+  type: LENGTH_UFIX16_CM
+- id: stdOfLonError
+  name: STD of Lon Error
+  type: LENGTH_UFIX16_CM
+- id: stdOfAltError
+  name: STD of Alt Error
+  type: LENGTH_UFIX16_CM

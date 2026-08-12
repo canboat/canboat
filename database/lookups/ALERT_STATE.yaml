@@ -1,0 +1,10 @@
+name: ALERT_STATE
+kind: pair
+bits: 8
+values:
+  0: Disabled
+  1: Normal
+  2: Active
+  3: Silenced
+  4: Acknowledged
+  5: Awaiting Acknowledge

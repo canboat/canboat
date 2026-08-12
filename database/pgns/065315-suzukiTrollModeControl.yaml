@@ -1,0 +1,32 @@
+pgn: 65315
+id: suzukiTrollModeControl
+description: 'Suzuki: Troll Mode Control'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- SampleData
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Suzuki Motor Corporation
+  match: 586
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48

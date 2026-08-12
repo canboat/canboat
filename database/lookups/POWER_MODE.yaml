@@ -1,0 +1,6 @@
+name: POWER_MODE
+kind: pair
+bits: 1
+values:
+  0: High
+  1: Low

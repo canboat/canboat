@@ -1,0 +1,6 @@
+name: WAVEFORM
+kind: pair
+bits: 3
+values:
+  0: Sine wave
+  1: Modified sine wave

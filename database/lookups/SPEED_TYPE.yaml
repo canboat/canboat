@@ -1,0 +1,7 @@
+name: SPEED_TYPE
+kind: pair
+bits: 2
+values:
+  0: Single speed
+  1: Dual speed
+  2: Proportional speed

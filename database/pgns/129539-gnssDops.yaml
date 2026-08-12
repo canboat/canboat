@@ -1,0 +1,62 @@
+pgn: 129539
+id: gnssDops
+description: GNSS DOPs
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: sid
+  name: SID
+  type: UINT8
+- id: desiredMode
+  name: Desired Mode
+  type: LOOKUP
+  bits: 3
+  lookup: GNSS_MODE
+- id: actualMode
+  name: Actual Mode
+  type: LOOKUP
+  bits: 3
+  lookup: GNSS_MODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: hdop
+  name: HDOP
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Horizontal dilution of precision
+- id: vdop
+  name: VDOP
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Vertical dilution of precision
+- id: tdop
+  name: TDOP
+  type: DILUTION_OF_PRECISION_FIX16
+  description: Time dilution of precision
+notes: https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+samples:
+- raw: "2023-01-01-00:00:00.000,6,129539,14,255,8,ff,d3,32,00,50,00,ff,7f"  # from merrimac-2022.raw
+  expects:
+    sid: ~
+    desiredMode: "Auto"
+    actualMode: "3D"
+    hdop: 0.50
+    vdop: 0.80
+    tdop: ~
+- raw: "2023-01-01-00:00:00.000,6,129539,22,255,8,95,ff,ff,7f,ff,7f,ff,7f"  # from merrimac-2022.raw
+  expects:
+    sid: 149
+    desiredMode: ~
+    actualMode: ~
+    hdop: ~
+    vdop: ~
+    tdop: ~
+- raw: "2023-01-01-00:00:00.000,6,129539,22,255,8,45,d7,62,02,36,01,ff,7f"  # from merrimac-2022.raw
+  expects:
+    sid: 69
+    desiredMode: ~
+    actualMode: "3D"
+    hdop: 6.10
+    vdop: 3.10
+    tdop: ~

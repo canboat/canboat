@@ -1,0 +1,7 @@
+name: AGS_MODE
+kind: pair
+bits: 4
+values:
+  0: 'Off'
+  1: 'On'
+  2: Automatic

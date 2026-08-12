@@ -1,0 +1,74 @@
+pgn: 65304
+id: sleipnerDeviceStatus
+description: 'Sleipner: Device Status'
+type: Single
+variantOrder: 4
+missing:
+- Fields
+- FieldLengths
+explanation: >-
+  Sent by Sleipner S-Link devices once the system is switched on. Carries the same
+  identity and state layout as the fast-packet PGN 130828; the unique number matches the
+  ISO identity number the same device claims in PGN 60928, which is how the field was
+  identified.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Sleipner Motor
+  match: 306
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: deviceType
+  name: Device Type
+  type: UINT8
+  description: Constant per device
+- id: deviceIndex
+  name: Device Index
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Stable per-device index
+- id: a
+  name: A
+  type: UNSIGNED_INTEGER
+  bits: 4
+  description: Varies with system state; the value set is wider than the thruster state
+    reported in PGN 130827 and is not yet understood
+- id: uniqueNumber
+  name: Unique Number
+  type: UNSIGNED_INTEGER
+  bits: 24
+  description: ISO Identity Number, as claimed by this device in PGN 60928
+- id: b
+  name: B
+  type: UINT8
+samples:
+- raw: "2023-01-01-00:00:00.000,6,65304,2,255,8,32,99,05,a2,38,71,00,01"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    deviceType: 5
+    deviceIndex: 2
+    a: 10
+    uniqueNumber: 28984
+    b: 1
+- raw: "2023-01-01-00:00:00.000,6,65304,4,255,8,32,99,05,a4,d7,1c,01,01"  # from sleipner-slink-thruster.raw
+  expects:
+    manufacturerCode: "Sleipner Motor"
+    industryCode: "Marine Industry"
+    deviceType: 5
+    deviceIndex: 4
+    a: 10
+    uniqueNumber: 72919
+    b: 1
