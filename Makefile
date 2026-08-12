@@ -33,7 +33,7 @@ all:	bin compile
 	@echo "Use 'make generated' to recreate generated XML, HTML, JSON and DBC files."
 
 compile: bin
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir; done
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir || exit 1; done
 
 tests:  compile
 	$(MAKE) -C analyzer tests
@@ -145,14 +145,14 @@ man/man1:
 	$(MKDIR) man/man1
 
 clean:
-	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean; done
+	for dir in $(SUBDIRS); do $(MAKE) -C $$dir clean || exit 1; done
 	$(MAKE) -C dbc-exporter clean
 	-rm -R -f man $(BUILDDIR)
 
 install: $(BUILDDIR)/analyzer $(DESTDIR)$(BINDIR) $(DESTDIR)$(MANDIR)/man1
-	for i in $(BUILDDIR)/* util/*; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR); done
+	for i in $(BUILDDIR)/* util/*; do install -m $(EXEC_MOD) -b $$i $(DESTDIR)$(BINDIR) || exit 1; done
 ifeq ($(notdir $(HELP2MAN)),help2man)
-	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1; done
+	for i in man/man1/*; do echo $$i; install -m $(ROOT_MOD) $$i $(DESTDIR)$(MANDIR)/man1 || exit 1; done
 endif
 
 format:

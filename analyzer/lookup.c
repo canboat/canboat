@@ -136,7 +136,7 @@ limitations under the License.
   }
 
 
-#include "lookup-generated-data.h"
+#include LOOKUP_GENERATED_DATA
 
 // Fill the lookup arrays
 
@@ -156,7 +156,7 @@ void fillLookups(void)
 
       if (sscanf(f->unit, "=%d", &id) > 0)
       {
-        f->description = (lookupMANUFACTURER_CODE) (id);
+        f->description = (lookupManufacturerCode) (id);
       }
     }
   }

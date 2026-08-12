@@ -260,9 +260,13 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         self.p("  </MissingEnumerations>\n");
     }
 
-    fn lookup_sections(&mut self) {
+    /// Emits only the enumerations this document's tree references, so the
+    /// marine `docs/canboat.xml` does not publish the J1939 manufacturer
+    /// registry (and vice versa). See `Database::lookups_used`.
+    fn lookup_sections(&mut self, j1939: bool) {
+        let keep = self.db.lookups_used(j1939);
         self.p("  <LookupEnumerations>\n");
-        for lk in self.db.ordered_lookups("pair") {
+        for lk in self.db.ordered_lookups_for("pair", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
                 "    <LookupEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
@@ -279,7 +283,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         self.p("  </LookupEnumerations>\n");
 
         self.p("  <LookupIndirectEnumerations>\n");
-        for lk in self.db.ordered_lookups("triplet") {
+        for lk in self.db.ordered_lookups_for("triplet", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
                 "    <LookupIndirectEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
@@ -296,7 +300,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         self.p("  </LookupIndirectEnumerations>\n");
 
         self.p("  <LookupBitEnumerations>\n");
-        for lk in self.db.ordered_lookups("bit") {
+        for lk in self.db.ordered_lookups_for("bit", &keep) {
             let max_value = lk.bits - 1;
             self.p(&format!(
                 "    <LookupBitEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
@@ -313,7 +317,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         self.p("  </LookupBitEnumerations>\n");
 
         self.p("  <LookupFieldTypeEnumerations>\n");
-        for lk in self.db.ordered_lookups("fieldtype") {
+        for lk in self.db.ordered_lookups_for("fieldtype", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
             self.p(&format!(
                 "    <LookupFieldTypeEnumeration Name=\"{}\" MaxValue=\"{max_value}\">\n",
@@ -645,7 +649,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             self.physical_quantities();
             self.fieldtypes();
             self.missing();
-            self.lookup_sections();
+            self.lookup_sections(which == "j1939");
         }
         self.p("  <PGNs>\n");
         let pgns: Vec<Pgn> = if which == "j1939" {

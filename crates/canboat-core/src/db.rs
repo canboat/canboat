@@ -84,11 +84,12 @@ pub enum Units {
     Metric,
 }
 
-// Version constants and lookup tables always come from the main
-// schema: the J1939 flavor shares them (its YAMLs reference the same
-// enumerations, and SCHEMA_HASH already covers the whole database
-// tree, `database/j1939/` included). Only the PGN table, its index
-// and the generated dispatch/catchall vary per flavor.
+// Version constants always come from the main schema: SCHEMA_HASH
+// already covers the whole database tree, `database/j1939/` included.
+// The PGN table, its index, the generated dispatch/catchall *and* the
+// lookup tables vary per flavor - the two trees draw on different
+// manufacturer registries (MANUFACTURER_CODE vs J1939_MANUFACTURER_CODE),
+// so each module carries only the enumerations its own PGNs reference.
 macro_rules! embedded_db {
     ($flavor:ident, $pgns:ident, $units:expr, $j1939:expr) => {
         PgnDatabase {
@@ -99,10 +100,10 @@ macro_rules! embedded_db {
             j1939: $j1939,
             pgns: crate::$flavor::$pgns,
             pgn_index: crate::$flavor::PGN_INDEX,
-            lookups: schema_data::LOOKUPS,
-            bit_lookups: schema_data::BIT_LOOKUPS,
-            indirect_lookups: schema_data::INDIRECT_LOOKUPS,
-            field_type_lookups: schema_data::FIELD_TYPE_LOOKUPS,
+            lookups: crate::$flavor::LOOKUPS,
+            bit_lookups: crate::$flavor::BIT_LOOKUPS,
+            indirect_lookups: crate::$flavor::INDIRECT_LOOKUPS,
+            field_type_lookups: crate::$flavor::FIELD_TYPE_LOOKUPS,
             dispatch: crate::$flavor::dispatch,
             catchall: crate::$flavor::find_catchall,
         }

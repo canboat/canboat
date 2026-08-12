@@ -29,6 +29,20 @@ jobs:
       - name: make
         run: make
 
+      # The C regression suite (analyzer, actisense-serial, candump2analyzer)
+      # ran only from release.yaml, so a decode regression stayed invisible
+      # until release day. Gate it on every PR instead.
+      - name: make tests
+        run: make tests
+
+      # keel's rule set - R01..R23 plus R40, which decodes every `samples:`
+      # entry in database/ and compares it against its `expects:` - was only
+      # ever run by hand. `keel generate` does not run it, so a database that
+      # decodes its own samples wrongly still built, tested and generated
+      # cleanly. Gate it before the artifacts are generated from that source.
+      - name: keel check
+        run: keel/keel check
+
       - name: make generated
         run: make generated
 

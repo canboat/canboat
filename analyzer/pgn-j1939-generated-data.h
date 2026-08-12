@@ -158,7 +158,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "UNSIGNED_INTEGER", .size = 21, .resolution = 1.0, .description = "ISO Identity Number"},
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance"},
       {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance"},
       {.name = "Device Function", .camelName = "deviceFunction", .fieldType = "INDIRECT_LOOKUP", .size = 8, .resolution = 1.0, .description = "ISO Function", .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupDEVICE_FUNCTION, .lookup.name = "DEVICE_FUNCTION", .lookup.val1Order = 7},
@@ -177,7 +177,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
@@ -191,7 +191,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
@@ -974,7 +974,7 @@ Pgn pgnList[] = {
      PACKET_ISO_TP,
      {
       {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "BINARY", .size = 21, .resolution = 1.0, .description = "ISO Identity Number"},
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "Manufacturer Code", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "Manufacturer Code", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance"},
       {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance"},
       {.name = "Device Function", .camelName = "deviceFunction", .fieldType = "INDIRECT_LOOKUP", .size = 8, .resolution = 1.0, .description = "ISO Function", .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupDEVICE_FUNCTION, .lookup.name = "DEVICE_FUNCTION", .lookup.val1Order = 7},
@@ -1144,7 +1144,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
@@ -1169,7 +1169,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_FAST,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}

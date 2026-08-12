@@ -18,7 +18,7 @@ fields:
   name: Manufacturer Code
   type: LOOKUP
   bits: 11
-  description: BEP Marine 2
+  description: BEP Marine
   match: 295
   lookup: MANUFACTURER_CODE
 - id: reserved
@@ -47,7 +47,7 @@ fields:
 samples:
 - raw: "2023-01-01-00:00:00.000,7,65284,1,255,8,27,99,ff,08,00,00,00,00"  # from susteranna2020.raw
   expects:
-    manufacturerCode: "BEP Marine 2"
+    manufacturerCode: "BEP Marine"
     industryCode: "Marine Industry"
     dipswitch: ~
     type: 8

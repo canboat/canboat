@@ -13,7 +13,7 @@ fields:
   type: LOOKUP
   bits: 11
   unit: Manufacturer Code
-  lookup: MANUFACTURER_CODE
+  lookup: J1939_MANUFACTURER_CODE
 - id: deviceInstanceLower
   name: Device Instance Lower
   type: UNSIGNED_INTEGER
