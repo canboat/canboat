@@ -63,39 +63,11 @@ jobs:
       - name: re-stamp Cargo.lock
         run: cargo update --workspace
 
-      # Fold the regenerated files into release-please's own commit rather than
-      # adding a second one.
-      #
-      # release-please pushes a bumped Cargo.toml with a stale Cargo.lock, so
-      # every `cargo --locked` job starts failing within seconds - well before
-      # this job can push a fix. A measured cycle: release commit at 07:46:06,
-      # Rust CI red at 07:46:48, fix pushed at 07:47:18. The workflows' own
-      # cancel-in-progress cannot help, because the doomed run is already over
-      # by the time the second push arrives.
-      #
-      # Amending moves the branch head, so the PR's checks are those of the
-      # corrected commit and the transient red is no longer attached to it. It
-      # also keeps the release history at one commit instead of trailing a
-      # "chore: regenerate" every time.
-      #
-      # Only ever amends release-please's own commit; anything else gets a
-      # normal commit, so a hand-pushed change to the release branch is never
-      # rewritten.
       - name: commit regenerated files
         run: |
-          if git diff --quiet; then
-            echo "nothing regenerated"
-            exit 0
+          if ! git diff --exit-code; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git commit -am "chore: regenerate docs/*, canboat.dbc and Cargo.lock for release"
+            git push
           fi
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          case "$(git log -1 --format=%s)" in
-            "chore: release "*)
-              git commit -a --amend --no-edit
-              git push --force-with-lease
-              ;;
-            *)
-              git commit -am "chore: regenerate docs/*, canboat.dbc and Cargo.lock for release"
-              git push
-              ;;
-          esac
