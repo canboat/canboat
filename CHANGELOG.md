@@ -6,6 +6,50 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.0.0-beta3](https://github.com/canboat/canboat/compare/v8.0.0-beta2...v8.0.0-beta3) (2026-08-13)
+
+
+### Added
+
+* **127751:** decode DC Voltage/Current as single-frame, not fast packet ([2bce845](https://github.com/canboat/canboat/commit/2bce845f0c874874db9044497c756fab6e5cedf7))
+* **127751:** decode DC Voltage/Current as single-frame, not fast packet ([981883f](https://github.com/canboat/canboat/commit/981883f0707b9a66966ab40b0a3f973529afa8d9)), closes [#829](https://github.com/canboat/canboat/issues/829)
+* **130824:** decode Maretron annunciator status and its 126208 command path ([01cb810](https://github.com/canboat/canboat/commit/01cb810ba557c1b381746ab6f400d43bda758eea))
+* **130824:** decode Maretron annunciator status and its 126208 command path ([73aac89](https://github.com/canboat/canboat/commit/73aac89cd10d58b6f7c46c9502871dd06e9f4616))
+* **database:** 467 Humminbird is a transposition of 476 ([89413b9](https://github.com/canboat/canboat/commit/89413b92a2c7535778f25f89f084463cfce32c2d))
+* **database:** add Sleipner S-Link thruster PGNs ([2e86af7](https://github.com/canboat/canboat/commit/2e86af7d9771f26cc6e3dcae2474b4a4c1ecd795))
+* **database:** add Sleipner S-Link thruster PGNs ([050ed5b](https://github.com/canboat/canboat/commit/050ed5b53c4e4488ee39eba46a577a9a1af1106a))
+* **database:** correct the NMEA 2000 manufacturer names ([8529baa](https://github.com/canboat/canboat/commit/8529baa558187dbf2bb6c1a8e1fce3a2b902c409))
+* **database:** correct the NMEA 2000 manufacturer names ([5d7d1c1](https://github.com/canboat/canboat/commit/5d7d1c10fc7c3b872f492e8a156b4b95df978f19))
+* **database:** give J1939 its own manufacturer-code table ([5db5b34](https://github.com/canboat/canboat/commit/5db5b34a7bf2ac54a7a47b666fd94630e01c7440))
+* **database:** give J1939 its own manufacturer-code table ([db0d58f](https://github.com/canboat/canboat/commit/db0d58fde15eefee23d60632bcee171dc7765266))
+* **database:** import the ISO 11783/J1939 manufacturer registry ([bce0c6d](https://github.com/canboat/canboat/commit/bce0c6d258ac8d532e91bac9d02f31026ccce815))
+* **database:** import the ISO 11783/J1939 manufacturer registry ([88b3f05](https://github.com/canboat/canboat/commit/88b3f05f0d9d69ae659e56d3fa3f368659b93b49)), closes [#837](https://github.com/canboat/canboat/issues/837)
+* **j1939:** add 22 engine, aftertreatment and fluid PGNs ([e1f9556](https://github.com/canboat/canboat/commit/e1f95567ba2ecd6d502236a4d09642e4a233336c))
+* **j1939:** add 25 engine, transmission, aftertreatment and fluid PGNs ([0724548](https://github.com/canboat/canboat/commit/07245480e31a7ce70e67c9821db3fa2c5652e2d9))
+* **j1939:** add transmission, rated power and gear PGNs ([bf6cfe7](https://github.com/canboat/canboat/commit/bf6cfe7adebfd86286fcbc80b7524d5e2b10f3d0))
+* **j1939:** bring the J1939 schema flavor to the Rust tools, with candump input ([bdd469d](https://github.com/canboat/canboat/commit/bdd469d8f7cece4ea5c88d311abe432b4ed74b65))
+* **j1939:** complete the standard engine PGN definitions ([13ebfc5](https://github.com/canboat/canboat/commit/13ebfc5ba61dd744b54fa9c1faba1bc79353edba))
+* **j1939:** complete the standard engine PGN definitions ([253bebd](https://github.com/canboat/canboat/commit/253bebd7d38152532487caa9f1adf651dca8df4e))
+* **j1939:** J1939 schema flavor for the Rust tools, with candump input ([8c2ab99](https://github.com/canboat/canboat/commit/8c2ab99b2510d0e142dcf9b6f19b1ac273369bbb))
+* **sleipner:** correct S-Link thrust command split, add PPC thruster telemetry ([011b296](https://github.com/canboat/canboat/commit/011b29662d618e4e4d25ea2c8291223fb55022da))
+* **sleipner:** correct S-Link thrust command split, add PPC thruster telemetry ([4b1ad62](https://github.com/canboat/canboat/commit/4b1ad62b496a9b66fa4accf3bed18148e0d57e70))
+
+
+### Fixed
+
+* **130819:** correct annunciator control path and capture provenance ([1e1929b](https://github.com/canboat/canboat/commit/1e1929b2083852cb865476e43b18e47bf6678e4f))
+* **decode:** apply the range-derived sentinels to hints-less number fields ([5696fca](https://github.com/canboat/canboat/commit/5696fca1e69d664cb4bae3480ad8431d8fa753e5)), closes [#823](https://github.com/canboat/canboat/issues/823)
+* **docs:** correct arming command count and command fixture labelling ([2855aba](https://github.com/canboat/canboat/commit/2855aba466ebca4897ae21ec47c8060efabedaea))
+* fold the release re-stamp into release-please's own commit ([67a580c](https://github.com/canboat/canboat/commit/67a580ccd4fde032988ed4410ee1d4688b8c3962))
+* **keel:** enforce R01's allowed keys and enum membership in the loader ([85a5249](https://github.com/canboat/canboat/commit/85a52495ad3a1be10eb447b52c25afbc3bbc9a51))
+* **keel:** enforce R01's allowed keys and enum membership in the loader ([8aac808](https://github.com/canboat/canboat/commit/8aac80880934348658d4f6fe0c87397cefb23984))
+* **test:** stop the TCP port race failing CI on loaded runners ([deb14b2](https://github.com/canboat/canboat/commit/deb14b2a927f5e5f874c764a1f0720725c9dd672))
+
+
+### Internal
+
+* release 8.1.0-beta2 as 8.0.0-beta3 ([8c11316](https://github.com/canboat/canboat/commit/8c11316b71f1b13fbc56e1715f92ae31b7da38c3))
+
 ## [8.0.0-beta2](https://github.com/canboat/canboat/compare/v8.0.0-beta1...v8.0.0-beta2) (2026-08-05)
 
 
