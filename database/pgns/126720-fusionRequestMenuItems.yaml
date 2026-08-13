@@ -1,0 +1,55 @@
+pgn: 126720
+id: fusionRequestMenuItems
+description: 'Fusion: Request Menu Items'
+type: Fast
+variantOrder: 56
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Request Menu Item
+  match: 11
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  primaryKey: true
+- id: startIndex
+  name: Start Index
+  type: UINT32
+- id: count
+  name: Count
+  type: UINT32
+- id: lockId
+  name: Lock ID
+  type: UINT8
+samples:
+- raw: "2026-08-09T13:42:56.938926396-07:00,6,126720,7,10,14,a3,99,0b,00,02,00,00,00,00,0e,00,00,00,00"  # from boatkit-fusion-menu.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Request Menu Item"
+    sourceId: 2
+    startIndex: 0
+    count: 14
+    lockId: 0

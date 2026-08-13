@@ -1,0 +1,114 @@
+pgn: 65284
+id: yanmarThrottleControl
+description: 'Yanmar: Throttle Control'
+type: Single
+variantOrder: 4
+priority: 2
+missing:
+- Fields
+- FieldLengths
+explanation: >-
+  Observed from a Yanmar CAN Bus Control Head at approximately 21 Hz per engine
+  instance. The standard engine-instance bit independently identifies port and
+  starboard transmission gear and throttle commands, mirrored by the
+  corresponding engine interfaces in PGN 65280.
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Yanmar Marine
+  match: 172
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: unknownSelectorFlag
+  name: Unknown Selector Flag
+  type: LOOKUP
+  bits: 1
+  description: Observed set for both engine instances.
+  lookup: YES_NO_1BIT
+- id: spareSelectorBits
+  name: Spare Selector Bits
+  type: SPARE
+  bits: 4
+- id: engineInstance
+  name: Engine Instance
+  type: LOOKUP
+  bits: 1
+  description: Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.
+  lookup: ENGINE_INSTANCE
+  allowLookupWidthMismatch: true
+- id: spareSelectorHighBits
+  name: Spare Selector High Bits
+  type: SPARE
+  bits: 2
+- id: transmissionGear
+  name: Transmission Gear
+  type: LOOKUP
+  bits: 2
+  description: Observed as Forward, Neutral, and Reverse for the selected engine channel.
+  lookup: GEAR_STATUS
+- id: unknownControlFlag
+  name: Unknown Control Flag
+  type: UNSIGNED_INTEGER
+  bits: 1
+  description: Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures.
+- id: reservedControlBits
+  name: Reserved Control Bits
+  type: RESERVED
+  bits: 5
+- id: throttlePosition
+  name: Throttle Position
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+  description: Observed control-lever position with 0.1 percent resolution.
+- id: reserved7
+  name: Reserved
+  type: RESERVED
+  bits: 6
+- id: unknownData
+  name: Unknown Data
+  type: BINARY
+  bits: 16
+  description: Observed as 0x64FF.
+samples:
+- raw: "2026-07-26T12:55:52.549432738-07:00,2,65284,2,255,8,ac,98,01,fc,dc,fc,64,ff"  # from boatkit-yanmar-controls.raw
+  expects:
+    manufacturerCode: "Yanmar Marine"
+    industryCode: "Marine Industry"
+    unknownSelectorFlag: "Yes"
+    engineInstance: "Single Engine or Dual Engine Port"
+    transmissionGear: "Forward"
+    throttlePosition: 22.0
+    unknownData: "0x64ff"
+- raw: "2026-07-26T12:55:57.27352913-07:00,2,65284,2,255,8,ac,98,21,fc,b8,fc,64,ff"  # from boatkit-yanmar-controls.raw
+  expects:
+    manufacturerCode: "Yanmar Marine"
+    industryCode: "Marine Industry"
+    unknownSelectorFlag: "Yes"
+    engineInstance: "Dual Engine Starboard"
+    transmissionGear: "Forward"
+    throttlePosition: 18.4
+    unknownData: "0x64ff"
+- raw: "2026-07-26T13:53:43.402494502-07:00,2,65284,2,255,8,ac,98,01,f9,00,fc,64,ff"  # from boatkit-yanmar-controls.raw
+  expects:
+    engineInstance: "Single Engine or Dual Engine Port"
+    transmissionGear: "Neutral"
+    throttlePosition: 0.0
+- raw: "2026-07-26T13:53:52.543671671-07:00,2,65284,2,255,8,ac,98,21,fa,00,fc,64,ff"  # from boatkit-yanmar-controls.raw
+  expects:
+    engineInstance: "Dual Engine Starboard"
+    transmissionGear: "Reverse"
+    throttlePosition: 0.0

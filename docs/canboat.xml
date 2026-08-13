@@ -8880,16 +8880,16 @@ limitations under the License.
       <PGN>65280</PGN>
       <Id>yanmarEngineDataA</Id>
       <Description>Yanmar: Engine Data A</Description>
+      <Priority>6</Priority>
+      <Explanation>Observed on Yanmar i8320P and i8320S engine interfaces. Throttle and transmission gear mirror the control-head command, and engine speed reports whole RPM.</Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
       <Missing>
         <MissingAttribute>Fields</MissingAttribute>
         <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>4</FieldCount>
+      <FieldCount>12</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -8936,10 +8936,123 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>data</Id>
-          <Name>Data</Name>
-          <BitLength>48</BitLength>
+          <Id>unknownSelectorFlag</Id>
+          <Name>Unknown Selector Flag</Name>
+          <Description>Observed set for both engine instances.</Description>
+          <BitLength>1</BitLength>
           <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>spareSelectorBits</Id>
+          <Name>Spare Selector Bits</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>17</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>engineInstance</Id>
+          <Name>Engine Instance</Name>
+          <Description>Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ENGINE_INSTANCE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spareSelectorHighBits</Id>
+          <Name>Spare Selector High Bits</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>throttlePosition</Id>
+          <Name>Throttle Position</Name>
+          <Description>Observed control-lever position with 0.1 percent resolution.</Description>
+          <BitLength>10</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>spare</Id>
+          <Name>Spare</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>34</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>transmissionGear</Id>
+          <Name>Transmission Gear</Name>
+          <Description>Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>38</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>GEAR_STATUS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>engineSpeed</Id>
+          <Name>Engine Speed</Name>
+          <Description>Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution.</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>rpm</Unit>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>unknownData</Id>
+          <Name>Unknown Data</Name>
+          <Description>Observed as 0x64.</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -10431,6 +10544,195 @@ limitations under the License.
           <Description>32-bit bitmap of circuits, LSB-first; bit n set =&gt; circuit at slot n is ON</Description>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65284</PGN>
+      <Id>yanmarThrottleControl</Id>
+      <Description>Yanmar: Throttle Control</Description>
+      <Priority>2</Priority>
+      <Explanation>Observed from a Yanmar CAN Bus Control Head at approximately 21 Hz per engine instance. The standard engine-instance bit independently identifies port and starboard transmission gear and throttle commands, mirrored by the corresponding engine interfaces in PGN 65280.</Explanation>
+      <Type>Single</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>13</FieldCount>
+      <Length>8</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Yanmar Marine</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>172</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>unknownSelectorFlag</Id>
+          <Name>Unknown Selector Flag</Name>
+          <Description>Observed set for both engine instances.</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>spareSelectorBits</Id>
+          <Name>Spare Selector Bits</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>17</BitOffset>
+          <BitStart>1</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>engineInstance</Id>
+          <Name>Engine Instance</Name>
+          <Description>Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>21</BitOffset>
+          <BitStart>5</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>ENGINE_INSTANCE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>spareSelectorHighBits</Id>
+          <Name>Spare Selector High Bits</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>22</BitOffset>
+          <BitStart>6</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>transmissionGear</Id>
+          <Name>Transmission Gear</Name>
+          <Description>Observed as Forward, Neutral, and Reverse for the selected engine channel.</Description>
+          <BitLength>2</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2</RangeMax>
+          <UnknownValue>3</UnknownValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>GEAR_STATUS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>9</Order>
+          <Id>unknownControlFlag</Id>
+          <Name>Unknown Control Flag</Name>
+          <Description>Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures.</Description>
+          <BitLength>1</BitLength>
+          <BitOffset>26</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1</RangeMax>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>reservedControlBits</Id>
+          <Name>Reserved Control Bits</Name>
+          <BitLength>5</BitLength>
+          <BitOffset>27</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>throttlePosition</Id>
+          <Name>Throttle Position</Name>
+          <Description>Observed control-lever position with 0.1 percent resolution.</Description>
+          <BitLength>10</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>102</RangeMax>
+          <UnknownValue>1023</UnknownValue>
+          <OutOfRangeValue>1022</OutOfRangeValue>
+          <ReservedValue>1021</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>12</Order>
+          <Id>reserved7</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>42</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>13</Order>
+          <Id>unknownData</Id>
+          <Name>Unknown Data</Name>
+          <Description>Observed as 0x64FF.</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <FieldType>BINARY</FieldType>
@@ -22367,6 +22669,7 @@ limitations under the License.
       <Id>garminAutopilotModeState</Id>
       <Description>Garmin Autopilot: Mode State</Description>
       <Priority>7</Priority>
+      <Explanation>Observed directed control-head commands and matching autopilot broadcasts use an 11-byte payload with a trailing spare zero byte.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -22375,8 +22678,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>10</Length>
+      <FieldCount>11</FieldCount>
+      <Length>11</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22498,13 +22801,13 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved9</Id>
-          <Name>Reserved</Name>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
+          <FieldType>SPARE</FieldType>
         </Field>
         <Field>
           <Order>10</Order>
@@ -22522,6 +22825,16 @@ limitations under the License.
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>GARMIN_AUTOPILOT_MODE_STATE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>11</Order>
+          <Id>spare11</Id>
+          <Name>Spare</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -22677,6 +22990,7 @@ limitations under the License.
       <Id>garminAutopilotManeuver</Id>
       <Description>Garmin Autopilot: Maneuver</Description>
       <Priority>7</Priority>
+      <Explanation>Observed Garmin helm turn-button commands use a 9-byte payload. Codes 0, 1, 2, and 3 mean -1, -10, +1, and +10 degrees respectively; the final value byte is zero.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -22685,8 +22999,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>10</FieldCount>
-      <Length>10</Length>
+      <FieldCount>9</FieldCount>
+      <Length>9</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -22793,7 +23107,7 @@ limitations under the License.
           <Order>8</Order>
           <Id>maneuverCode</Id>
           <Name>Maneuver Code</Name>
-          <Description>Maneuver button event code (observed 0..9)</Description>
+          <Description>Turn-button event code: 0=-1 degree, 1=-10 degrees, 2=+1 degree, 3=+10 degrees</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -22808,20 +23122,11 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>reserved9</Id>
-          <Name>Reserved</Name>
-          <BitLength>8</BitLength>
-          <BitOffset>64</BitOffset>
-          <BitStart>0</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>RESERVED</FieldType>
-        </Field>
-        <Field>
-          <Order>10</Order>
           <Id>value</Id>
           <Name>Value</Name>
+          <Description>Observed as zero for turn-button commands.</Description>
           <BitLength>8</BitLength>
-          <BitOffset>72</BitOffset>
+          <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -27482,6 +27787,388 @@ limitations under the License.
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>GARMIN_COLOR</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionMenuActionCommand</Id>
+      <Description>Fusion: Menu Action Command</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Menu Action</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>9</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>itemIndex</Id>
+          <Name>Item Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>action</Id>
+          <Name>Action</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionRequestMenuCount</Id>
+      <Description>Fusion: Request Menu Count</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Request Menu Count</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>10</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionRequestMenuItems</Id>
+      <Description>Fusion: Request Menu Items</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>14</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Request Menu Item</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>11</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>startIndex</Id>
+          <Name>Start Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>104</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -38858,6 +39545,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
       <Priority>4</Priority>
+      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 27-byte payload without Sequence ID.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -47426,6 +48114,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
       <Priority>6</Priority>
+      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 25-byte payload ending after the vessel name.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -47535,6 +48224,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
       <Priority>6</Priority>
+      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 33-byte payload without transceiver information or Sequence ID.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -70107,6 +70797,268 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionMenuActionStatus</Id>
+      <Description>Fusion: Menu Action Status</Description>
+      <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>8</FieldCount>
+      <Length>11</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Menu Action</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32783</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>itemIndex</Id>
+          <Name>Item Index</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>action</Id>
+          <Name>Action</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>8</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>80</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionMenuCount</Id>
+      <Description>Fusion: Menu Count</Description>
+      <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>7</FieldCount>
+      <Length>10</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>Menu Count</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32784</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>sourceId</Id>
+          <Name>Source ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>count</Id>
+          <Name>Count</Name>
+          <BitLength>32</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>4294967292</RangeMax>
+          <UnknownValue>4294967295</UnknownValue>
+          <OutOfRangeValue>4294967294</OutOfRangeValue>
+          <ReservedValue>4294967293</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>lockId</Id>
+          <Name>Lock ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

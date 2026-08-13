@@ -728,15 +728,25 @@ Pgn pgnList[] = {
 
     {"Yanmar: Engine Data A",
      65280,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN,
      PACKET_SINGLE,
      {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 172, .description = "Yanmar Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
+      {.name = "Unknown Selector Flag", .camelName = "unknownSelectorFlag", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .description = "Observed set for both engine instances.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Spare Selector Bits", .camelName = "spareSelectorBits", .fieldType = "SPARE", .size = 4, .resolution = 1.0},
+      {.name = "Engine Instance", .camelName = "engineInstance", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .description = "Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupENGINE_INSTANCE, .lookup.name = "ENGINE_INSTANCE"},
+      {.name = "Spare Selector High Bits", .camelName = "spareSelectorHighBits", .fieldType = "SPARE", .size = 2, .resolution = 1.0},
+      {.name = "Throttle Position", .camelName = "throttlePosition", .fieldType = "UNSIGNED_INTEGER", .size = 10, .resolution = 0.1, .unit = "%", .description = "Observed control-lever position with 0.1 percent resolution."},
+      {.name = "Spare", .camelName = "spare", .fieldType = "SPARE", .size = 4, .resolution = 1.0},
+      {.name = "Transmission Gear", .camelName = "transmissionGear", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .description = "Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGEAR_STATUS, .lookup.name = "GEAR_STATUS"},
+      {.name = "Engine Speed", .camelName = "engineSpeed", .fieldType = "UINT16", .resolution = 1.0, .unit = "rpm", .description = "Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution."},
+      {.name = "Unknown Data", .camelName = "unknownData", .fieldType = "BINARY", .size = 8, .resolution = 1.0, .description = "Observed as 0x64."}
      },
-     .camelDescription = "yanmarEngineDataA"},
+     .camelDescription = "yanmarEngineDataA",
+     .priority = 6,
+     .explanation = "Observed on Yanmar i8320P and i8320S engine interfaces. Throttle and transmission gear mirror the control-head command, and engine speed reports whole RPM."},
 
     {"Maretron: Keel Position",
      65280,
@@ -946,6 +956,29 @@ Pgn pgnList[] = {
      .camelDescription = "bepMarineCzoneCircuitStatus",
      .explanation = "Periodic 'which of my circuits are currently on' report from a CZone module. Also serves as the module's heartbeat: the plotter's tLoadGroupMonitorCZone tracks a moving average of inter-arrival deltas (window of last 20 deltas, initial baseline 1000 ms) and removes the module from the CZone panel when an inter-arrival delta exceeds 3x the moving average. A reasonable broadcast cadence is 0.5 to 2 seconds. There is also a query form (third byte = 0xC8) by which a controller asks every module to report; the bitmap bytes are then unused.",
      .url = "https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md"},
+
+    {"Yanmar: Throttle Control",
+     65284,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN,
+     PACKET_SINGLE,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 172, .description = "Yanmar Marine", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Unknown Selector Flag", .camelName = "unknownSelectorFlag", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .description = "Observed set for both engine instances.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
+      {.name = "Spare Selector Bits", .camelName = "spareSelectorBits", .fieldType = "SPARE", .size = 4, .resolution = 1.0},
+      {.name = "Engine Instance", .camelName = "engineInstance", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .description = "Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupENGINE_INSTANCE, .lookup.name = "ENGINE_INSTANCE"},
+      {.name = "Spare Selector High Bits", .camelName = "spareSelectorHighBits", .fieldType = "SPARE", .size = 2, .resolution = 1.0},
+      {.name = "Transmission Gear", .camelName = "transmissionGear", .fieldType = "LOOKUP", .size = 2, .resolution = 1.0, .description = "Observed as Forward, Neutral, and Reverse for the selected engine channel.", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGEAR_STATUS, .lookup.name = "GEAR_STATUS"},
+      {.name = "Unknown Control Flag", .camelName = "unknownControlFlag", .fieldType = "UNSIGNED_INTEGER", .size = 1, .resolution = 1.0, .description = "Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures."},
+      {.name = "Reserved Control Bits", .camelName = "reservedControlBits", .fieldType = "RESERVED", .size = 5, .resolution = 1.0},
+      {.name = "Throttle Position", .camelName = "throttlePosition", .fieldType = "UNSIGNED_INTEGER", .size = 10, .resolution = 0.1, .unit = "%", .description = "Observed control-lever position with 0.1 percent resolution."},
+      {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 6, .resolution = 1.0},
+      {.name = "Unknown Data", .camelName = "unknownData", .fieldType = "BINARY", .size = 16, .resolution = 1.0, .description = "Observed as 0x64FF."}
+     },
+     .camelDescription = "yanmarThrottleControl",
+     .priority = 2,
+     .explanation = "Observed from a Yanmar CAN Bus Control Head at approximately 21 Hz per engine instance. The standard engine-instance bit independently identifies port and starboard transmission gear and throttle commands, mirrored by the corresponding engine interfaces in PGN 65280."},
 
     {"Airmar: Boot State Acknowledgment",
      65285,
@@ -2699,11 +2732,13 @@ Pgn pgnList[] = {
       {.name = "Wrapper Byte 2", .camelName = "wrapperByte2", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4},
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 5},
       {.name = "Field", .camelName = "field", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "Mode State", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_FIELD, .lookup.name = "GARMIN_AUTOPILOT_FIELD", .partOfPrimaryKey = true},
-      {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Mode State", .camelName = "modeState", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_MODE_STATE, .lookup.name = "GARMIN_AUTOPILOT_MODE_STATE"}
+      {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
+      {.name = "Mode State", .camelName = "modeState", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_MODE_STATE, .lookup.name = "GARMIN_AUTOPILOT_MODE_STATE"},
+      {.name = "Spare", .camelName = "spare11", .fieldType = "SPARE", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "garminAutopilotModeState",
-     .priority = 7},
+     .priority = 7,
+     .explanation = "Observed directed control-head commands and matching autopilot broadcasts use an 11-byte payload with a trailing spare zero byte."},
 
     {"Garmin Autopilot: Heartbeat",
      126720,
@@ -2735,12 +2770,12 @@ Pgn pgnList[] = {
       {.name = "Wrapper Byte 1", .camelName = "wrapperByte1", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4},
       {.name = "Wrapper Byte 2", .camelName = "wrapperByte2", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 4},
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 38},
-      {.name = "Maneuver Code", .camelName = "maneuverCode", .fieldType = "UINT8", .resolution = 1.0, .description = "Maneuver button event code (observed 0..9)"},
-      {.name = "Reserved", .camelName = "reserved9", .fieldType = "RESERVED", .size = 8, .resolution = 1.0},
-      {.name = "Value", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Maneuver Code", .camelName = "maneuverCode", .fieldType = "UINT8", .resolution = 1.0, .description = "Turn-button event code: 0=-1 degree, 1=-10 degrees, 2=+1 degree, 3=+10 degrees"},
+      {.name = "Value", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0, .description = "Observed as zero for turn-button commands."}
      },
      .camelDescription = "garminAutopilotManeuver",
-     .priority = 7},
+     .priority = 7,
+     .explanation = "Observed Garmin helm turn-button commands use a 9-byte payload. Codes 0, 1, 2, and 3 mean -1, -10, +1, and +10 degrees respectively; the final value byte is zero."},
 
     {"Seatalk1: Pilot Mode",
      126720,
@@ -3325,6 +3360,52 @@ Pgn pgnList[] = {
       {.name = "Color", .camelName = "color", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_COLOR, .lookup.name = "GARMIN_COLOR"}
      },
      .camelDescription = "garminColorMode"},
+
+    {"Fusion: Menu Action Command",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 9, .description = "Menu Action", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Item Index", .camelName = "itemIndex", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Action", .camelName = "action", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionMenuActionCommand"},
+
+    {"Fusion: Request Menu Count",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 10, .description = "Request Menu Count", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionRequestMenuCount"},
+
+    {"Fusion: Request Menu Items",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 11, .description = "Request Menu Item", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Start Index", .camelName = "startIndex", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Count", .camelName = "count", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionRequestMenuItems"},
 
     {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
      126976,
@@ -4746,6 +4827,7 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassAPositionReport",
      .interval = UINT16_MAX,
      .priority = 4,
+     .explanation = "Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 27-byte payload without Sequence ID.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Class B Position Report",
@@ -5734,6 +5816,7 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassBStaticDataMsg24PartA",
      .interval = UINT16_MAX,
      .priority = 6,
+     .explanation = "Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 25-byte payload ending after the vessel name.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Class B static data (msg 24 Part B)",
@@ -5762,6 +5845,7 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassBStaticDataMsg24PartB",
      .interval = UINT16_MAX,
      .priority = 6,
+     .explanation = "Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 33-byte payload without transceiver information or Sequence ID.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Single Slot Binary Message (Deprecated)",
@@ -8581,6 +8665,39 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved15", .fieldType = "RESERVED", .size = 6, .resolution = 1.0}
      },
      .camelDescription = "maretronAlertResponse",
+     .priority = 7},
+
+    {"Fusion: Menu Action Status",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32783, .description = "Menu Action", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Item Index", .camelName = "itemIndex", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Action", .camelName = "action", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionMenuActionStatus",
+     .priority = 7},
+
+    {"Fusion: Menu Count",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32784, .description = "Menu Count", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
+      {.name = "Count", .camelName = "count", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionMenuCount",
      .priority = 7},
 
     {"Navico: ASCII Data",

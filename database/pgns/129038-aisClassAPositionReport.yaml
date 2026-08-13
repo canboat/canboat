@@ -5,6 +5,9 @@ type: Fast
 priority: 4
 interval: irregular
 url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+explanation: >-
+  Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been
+  observed sending a valid 27-byte payload without Sequence ID.
 fields:
 - id: messageId
   name: Message ID
@@ -97,6 +100,11 @@ fields:
   name: Sequence ID
   type: UINT8
 samples:
+- raw: "2026-08-13T20:04:57.61507606Z,4,129038,43,255,27,03,b4,23,f4,15,00,21,99,b5,00,e1,d8,1d,e1,89,21,ed,01,80,0d,08,fe,1d,19,1a,00,fe"  # from boatkit-garmin-ais-short.raw
+  expects:
+    messageId: "Interrogated Class A position report"
+    repeatIndicator: "Initial"
+    userId: 368321460
 - raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,81,e6,96,0e,eb,4d,3a,03,f7,80,b1,1f,e4,00,00,00,00,e4,10,09,ff,ff,ff,7f,c8,f8,ff"  # from merrimac-2022.raw
   expects:
     messageId: "Scheduled Class A position report"

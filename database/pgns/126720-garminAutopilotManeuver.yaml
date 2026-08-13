@@ -8,6 +8,10 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
+explanation: >-
+  Observed Garmin helm turn-button commands use a 9-byte payload. Codes 0, 1,
+  2, and 3 mean -1, -10, +1, and +10 degrees respectively; the final value byte
+  is zero.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -50,15 +54,32 @@ fields:
 - id: maneuverCode
   name: Maneuver Code
   type: UINT8
-  description: Maneuver button event code (observed 0..9)
-- id: reserved9
-  name: Reserved
-  type: RESERVED
-  bits: 8
+  description: 'Turn-button event code: 0=-1 degree, 1=-10 degrees, 2=+1 degree, 3=+10 degrees'
 - id: value
   name: Value
   type: UINT8
+  description: Observed as zero for turn-button commands.
 samples:
+- raw: "2026-08-09T16:23:28.219778896-07:00,7,126720,6,0,9,e5,98,10,17,04,04,26,00,00"  # from boatkit-garmin-autopilot-controls.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: 0
+    value: 0
+- raw: "2026-08-09T16:23:32.300450058-07:00,7,126720,6,0,9,e5,98,10,17,04,04,26,01,00"  # from boatkit-garmin-autopilot-controls.raw
+  expects:
+    manufacturerCode: "Garmin"
+    industryCode: "Marine Industry"
+    subProtocolId: 5904
+    wrapperByte1: 4
+    wrapperByte2: 4
+    fieldGroup: 38
+    maneuverCode: 1
+    value: 0
 - raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,02,00"  # from garmin-ap-reactor-126720.raw
   expects:
     manufacturerCode: "Garmin"
@@ -68,7 +89,7 @@ samples:
     wrapperByte2: 4
     fieldGroup: 38
     maneuverCode: 2
-    value: ~
+    value: 0
 - raw: "2023-01-01-00:00:00.000,7,126720,1,0,9,e5,98,10,17,04,04,26,03,00"  # from garmin-ap-reactor-126720.raw
   expects:
     manufacturerCode: "Garmin"
@@ -78,4 +99,4 @@ samples:
     wrapperByte2: 4
     fieldGroup: 38
     maneuverCode: 3
-    value: ~
+    value: 0
