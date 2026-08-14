@@ -2768,7 +2768,7 @@ Pgn pgnList[] = {
       {.name = "Field Group", .camelName = "fieldGroup", .fieldType = "UINT8", .resolution = 1.0, .hasMatchValue = true, .matchValue = 38},
       {.name = "Maneuver Code", .camelName = "maneuverCode", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupGARMIN_AUTOPILOT_MANEUVER_CODE, .lookup.name = "GARMIN_AUTOPILOT_MANEUVER_CODE"},
       {.name = "Spare", .camelName = "spare9", .fieldType = "SPARE", .size = 8, .resolution = 1.0},
-      {.name = "Value", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0, .description = "Not present in the observed turn-button commands; semantics for longer command forms are not yet known."}
+      {.name = "Value", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "garminAutopilotManeuver",
      .priority = 7,

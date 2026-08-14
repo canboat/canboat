@@ -23109,7 +23109,6 @@ limitations under the License.
           <Order>10</Order>
           <Id>value</Id>
           <Name>Value</Name>
-          <Description>Not present in the observed turn-button commands; semantics for longer command forms are not yet known.</Description>
           <BitLength>8</BitLength>
           <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>

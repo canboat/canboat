@@ -23641,7 +23641,6 @@
             "Order":10,
             "Id":"value",
             "Name":"Value",
-            "Description":"Not present in the observed turn-button commands; semantics for longer command forms are not yet known.",
             "BitLength":8,
             "BitOffset":72,
             "BitStart":0,

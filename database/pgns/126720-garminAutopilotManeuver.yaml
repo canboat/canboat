@@ -63,7 +63,7 @@ fields:
 - id: value
   name: Value
   type: UINT8
-  description: Not present in the observed turn-button commands; semantics for longer command forms are not yet known.
+  note: Not present in the observed turn-button commands; semantics for longer command forms are not yet known.
 samples:
 - raw: "2026-08-09T16:23:28.219778896-07:00,7,126720,6,0,9,e5,98,10,17,04,04,26,00,00"  # from boatkit-garmin-autopilot-controls.raw
   expects:
