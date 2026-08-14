@@ -1232,6 +1232,11 @@ limitations under the License.
       <EnumPair Value="4" Name="Next" />
       <EnumPair Value="6" Name="Prev" />
     </LookupEnumeration>
+    <LookupEnumeration Name="FUSION_MENU_ACTION" MaxValue="255">
+      <EnumPair Value="1" Name="Open" />
+      <EnumPair Value="2" Name="Select" />
+      <EnumPair Value="4" Name="Close" />
+    </LookupEnumeration>
     <LookupEnumeration Name="FUSION_MESSAGE_ID" MaxValue="65535">
       <EnumPair Value="1" Name="Request Status" />
       <EnumPair Value="2" Name="Set Source" />
@@ -1502,6 +1507,12 @@ limitations under the License.
       <EnumPair Value="239" Name="Engine RPM B" />
       <EnumPair Value="240" Name="Engine RPM A" />
       <EnumPair Value="246" Name="Speed" />
+    </LookupEnumeration>
+    <LookupEnumeration Name="GARMIN_AUTOPILOT_MANEUVER_CODE" MaxValue="255">
+      <EnumPair Value="0" Name="Decrease Heading 1 Degree" />
+      <EnumPair Value="1" Name="Decrease Heading 10 Degrees" />
+      <EnumPair Value="2" Name="Increase Heading 1 Degree" />
+      <EnumPair Value="3" Name="Increase Heading 10 Degrees" />
     </LookupEnumeration>
     <LookupEnumeration Name="GARMIN_AUTOPILOT_MODE_STATE" MaxValue="255">
       <EnumPair Value="2" Name="Standby" />
@@ -8889,7 +8900,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>12</FieldCount>
+      <FieldCount>10</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -8936,56 +8947,38 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>unknownSelectorFlag</Id>
-          <Name>Unknown Selector Flag</Name>
-          <Description>Observed set for both engine instances.</Description>
-          <BitLength>1</BitLength>
+          <Id>unknownSelector</Id>
+          <Name>Unknown Selector</Name>
+          <Description>Observed as 1; the individual bit semantics are not yet known.</Description>
+          <BitLength>5</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+          <RangeMax>29</RangeMax>
+          <UnknownValue>31</UnknownValue>
+          <OutOfRangeValue>30</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>spareSelectorBits</Id>
-          <Name>Spare Selector Bits</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>17</BitOffset>
-          <BitStart>1</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>engineInstance</Id>
           <Name>Engine Instance</Name>
-          <Description>Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.</Description>
-          <BitLength>1</BitLength>
+          <Description>Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.</Description>
+          <BitLength>3</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
+          <RangeMax>6</RangeMax>
+          <UnknownValue>7</UnknownValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ENGINE_INSTANCE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>spareSelectorHighBits</Id>
-          <Name>Spare Selector High Bits</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
+          <Order>6</Order>
           <Id>throttlePosition</Id>
           <Name>Throttle Position</Name>
           <Description>Observed control-lever position with 0.1 percent resolution.</Description>
@@ -9003,7 +8996,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>7</Order>
           <Id>spare</Id>
           <Name>Spare</Name>
           <BitLength>4</BitLength>
@@ -9013,7 +9006,7 @@ limitations under the License.
           <FieldType>SPARE</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>8</Order>
           <Id>transmissionGear</Id>
           <Name>Transmission Gear</Name>
           <Description>Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.</Description>
@@ -9029,7 +9022,7 @@ limitations under the License.
           <LookupEnumeration>GEAR_STATUS</LookupEnumeration>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>9</Order>
           <Id>engineSpeed</Id>
           <Name>Engine Speed</Name>
           <Description>Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution.</Description>
@@ -9047,7 +9040,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
+          <Order>10</Order>
           <Id>unknownData</Id>
           <Name>Unknown Data</Name>
           <Description>Observed as 0x64.</Description>
@@ -10563,7 +10556,7 @@ limitations under the License.
         <MissingAttribute>FieldLengths</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>13</FieldCount>
+      <FieldCount>11</FieldCount>
       <Length>8</Length>
       <Fields>
         <Field>
@@ -10610,56 +10603,38 @@ limitations under the License.
         </Field>
         <Field>
           <Order>4</Order>
-          <Id>unknownSelectorFlag</Id>
-          <Name>Unknown Selector Flag</Name>
-          <Description>Observed set for both engine instances.</Description>
-          <BitLength>1</BitLength>
+          <Id>unknownSelector</Id>
+          <Name>Unknown Selector</Name>
+          <Description>Observed as 1; the individual bit semantics are not yet known.</Description>
+          <BitLength>5</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
-          <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>YES_NO_1BIT</LookupEnumeration>
+          <RangeMax>29</RangeMax>
+          <UnknownValue>31</UnknownValue>
+          <OutOfRangeValue>30</OutOfRangeValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
-          <Id>spareSelectorBits</Id>
-          <Name>Spare Selector Bits</Name>
-          <BitLength>4</BitLength>
-          <BitOffset>17</BitOffset>
-          <BitStart>1</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
-        </Field>
-        <Field>
-          <Order>6</Order>
           <Id>engineInstance</Id>
           <Name>Engine Instance</Name>
-          <Description>Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.</Description>
-          <BitLength>1</BitLength>
+          <Description>Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.</Description>
+          <BitLength>3</BitLength>
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
+          <RangeMax>6</RangeMax>
+          <UnknownValue>7</UnknownValue>
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>ENGINE_INSTANCE</LookupEnumeration>
         </Field>
         <Field>
-          <Order>7</Order>
-          <Id>spareSelectorHighBits</Id>
-          <Name>Spare Selector High Bits</Name>
-          <BitLength>2</BitLength>
-          <BitOffset>22</BitOffset>
-          <BitStart>6</BitStart>
-          <Resolution>1</Resolution>
-          <FieldType>SPARE</FieldType>
-        </Field>
-        <Field>
-          <Order>8</Order>
+          <Order>6</Order>
           <Id>transmissionGear</Id>
           <Name>Transmission Gear</Name>
           <Description>Observed as Forward, Neutral, and Reverse for the selected engine channel.</Description>
@@ -10675,7 +10650,7 @@ limitations under the License.
           <LookupEnumeration>GEAR_STATUS</LookupEnumeration>
         </Field>
         <Field>
-          <Order>9</Order>
+          <Order>7</Order>
           <Id>unknownControlFlag</Id>
           <Name>Unknown Control Flag</Name>
           <Description>Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures.</Description>
@@ -10689,7 +10664,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>10</Order>
+          <Order>8</Order>
           <Id>reservedControlBits</Id>
           <Name>Reserved Control Bits</Name>
           <BitLength>5</BitLength>
@@ -10699,7 +10674,7 @@ limitations under the License.
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>11</Order>
+          <Order>9</Order>
           <Id>throttlePosition</Id>
           <Name>Throttle Position</Name>
           <Description>Observed control-lever position with 0.1 percent resolution.</Description>
@@ -10717,7 +10692,7 @@ limitations under the License.
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
-          <Order>12</Order>
+          <Order>10</Order>
           <Id>reserved7</Id>
           <Name>Reserved</Name>
           <BitLength>6</BitLength>
@@ -10727,7 +10702,7 @@ limitations under the License.
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
-          <Order>13</Order>
+          <Order>11</Order>
           <Id>unknownData</Id>
           <Name>Unknown Data</Name>
           <Description>Observed as 0x64FF.</Description>
@@ -22990,7 +22965,7 @@ limitations under the License.
       <Id>garminAutopilotManeuver</Id>
       <Description>Garmin Autopilot: Maneuver</Description>
       <Priority>7</Priority>
-      <Explanation>Observed Garmin helm turn-button commands use a 9-byte payload. Codes 0, 1, 2, and 3 mean -1, -10, +1, and +10 degrees respectively; the final value byte is zero.</Explanation>
+      <Explanation>Observed Garmin helm turn-button commands 0 through 3 use a 9-byte payload ending after a zero spare byte. Other command forms may include the trailing Value field, whose semantics are not yet known.</Explanation>
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
@@ -22999,8 +22974,8 @@ limitations under the License.
         <MissingAttribute>Resolution</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
-      <FieldCount>9</FieldCount>
-      <Length>9</Length>
+      <FieldCount>10</FieldCount>
+      <Length>10</Length>
       <Fields>
         <Field>
           <Order>1</Order>
@@ -23107,7 +23082,6 @@ limitations under the License.
           <Order>8</Order>
           <Id>maneuverCode</Id>
           <Name>Maneuver Code</Name>
-          <Description>Turn-button event code: 0=-1 degree, 1=-10 degrees, 2=+1 degree, 3=+10 degrees</Description>
           <BitLength>8</BitLength>
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
@@ -23118,15 +23092,26 @@ limitations under the License.
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>GARMIN_AUTOPILOT_MANEUVER_CODE</LookupEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>value</Id>
-          <Name>Value</Name>
-          <Description>Observed as zero for turn-button commands.</Description>
+          <Id>spare9</Id>
+          <Name>Spare</Name>
           <BitLength>8</BitLength>
           <BitOffset>64</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>10</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <Description>Not present in the observed turn-button commands; semantics for longer command forms are not yet known.</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>72</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>false</Signed>
@@ -27865,6 +27850,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
+          <Description>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -27908,7 +27894,8 @@ limitations under the License.
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MENU_ACTION</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -28003,6 +27990,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
+          <Description>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -28109,6 +28097,7 @@ limitations under the License.
           <Order>5</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
+          <Description>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -39545,7 +39534,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassAPositionReport</Id>
       <Description>AIS Class A Position Report</Description>
       <Priority>4</Priority>
-      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 27-byte payload without Sequence ID.</Explanation>
+      <Explanation>NMEA 2000 added the Sequence ID field after version 1.300. Devices using the earlier layout transmit a 27-byte payload without it; a Garmin AIS 800 has been observed doing so.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -48114,7 +48103,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartA</Id>
       <Description>AIS Class B static data (msg 24 Part A)</Description>
       <Priority>6</Priority>
-      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 25-byte payload ending after the vessel name.</Explanation>
+      <Explanation>NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 25-byte payload ending after the vessel name.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -48224,7 +48213,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <Id>aisClassBStaticDataMsg24PartB</Id>
       <Description>AIS Class B static data (msg 24 Part B)</Description>
       <Priority>6</Priority>
-      <Explanation>Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 33-byte payload without transceiver information or Sequence ID.</Explanation>
+      <Explanation>NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 33-byte payload without those fields.</Explanation>
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
@@ -70876,6 +70865,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
+          <Description>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -70919,7 +70909,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MENU_ACTION</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -71015,6 +71006,7 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>5</Order>
           <Id>sourceId</Id>
           <Name>Source ID</Name>
+          <Description>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>

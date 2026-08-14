@@ -1589,6 +1589,15 @@
         ]
       },
       {
+        "Name":"FUSION_MENU_ACTION",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Open", "Value":1},
+          {"Name":"Select", "Value":2},
+          {"Name":"Close", "Value":4}
+        ]
+      },
+      {
         "Name":"FUSION_MESSAGE_ID",
         "MaxValue":65535,
         "EnumValues":[
@@ -1913,6 +1922,16 @@
           {"Name":"Engine RPM B", "Value":239},
           {"Name":"Engine RPM A", "Value":240},
           {"Name":"Speed", "Value":246}
+        ]
+      },
+      {
+        "Name":"GARMIN_AUTOPILOT_MANEUVER_CODE",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Decrease Heading 1 Degree", "Value":0},
+          {"Name":"Decrease Heading 10 Degrees", "Value":1},
+          {"Name":"Increase Heading 1 Degree", "Value":2},
+          {"Name":"Increase Heading 10 Degrees", "Value":3}
         ]
       },
       {
@@ -9859,7 +9878,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Interval"
         ],
-        "FieldCount":12,
+        "FieldCount":10,
         "Length":8,
         "Fields":[
           {
@@ -9906,56 +9925,38 @@
           },
           {
             "Order":4,
-            "Id":"unknownSelectorFlag",
-            "Name":"Unknown Selector Flag",
-            "Description":"Observed set for both engine instances.",
-            "BitLength":1,
+            "Id":"unknownSelector",
+            "Name":"Unknown Selector",
+            "Description":"Observed as 1; the individual bit semantics are not yet known.",
+            "BitLength":5,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"YES_NO_1BIT"
+            "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
-            "Id":"spareSelectorBits",
-            "Name":"Spare Selector Bits",
-            "BitLength":4,
-            "BitOffset":17,
-            "BitStart":1,
-            "Resolution":1,
-            "FieldType":"SPARE"
-          },
-          {
-            "Order":6,
             "Id":"engineInstance",
             "Name":"Engine Instance",
-            "Description":"Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.",
-            "BitLength":1,
+            "Description":"Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.",
+            "BitLength":3,
             "BitOffset":21,
             "BitStart":5,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1,
+            "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE"
           },
           {
-            "Order":7,
-            "Id":"spareSelectorHighBits",
-            "Name":"Spare Selector High Bits",
-            "BitLength":2,
-            "BitOffset":22,
-            "BitStart":6,
-            "Resolution":1,
-            "FieldType":"SPARE"
-          },
-          {
-            "Order":8,
+            "Order":6,
             "Id":"throttlePosition",
             "Name":"Throttle Position",
             "Description":"Observed control-lever position with 0.1 percent resolution.",
@@ -9973,7 +9974,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":9,
+            "Order":7,
             "Id":"spare",
             "Name":"Spare",
             "BitLength":4,
@@ -9983,7 +9984,7 @@
             "FieldType":"SPARE"
           },
           {
-            "Order":10,
+            "Order":8,
             "Id":"transmissionGear",
             "Name":"Transmission Gear",
             "Description":"Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.",
@@ -9999,7 +10000,7 @@
             "LookupEnumeration":"GEAR_STATUS"
           },
           {
-            "Order":11,
+            "Order":9,
             "Id":"engineSpeed",
             "Name":"Engine Speed",
             "Description":"Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution.",
@@ -10017,7 +10018,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":12,
+            "Order":10,
             "Id":"unknownData",
             "Name":"Unknown Data",
             "Description":"Observed as 0x64.",
@@ -11482,7 +11483,7 @@
         "Complete":false,
         "Missing":["Fields","FieldLengths","Interval"
         ],
-        "FieldCount":13,
+        "FieldCount":11,
         "Length":8,
         "Fields":[
           {
@@ -11529,56 +11530,38 @@
           },
           {
             "Order":4,
-            "Id":"unknownSelectorFlag",
-            "Name":"Unknown Selector Flag",
-            "Description":"Observed set for both engine instances.",
-            "BitLength":1,
+            "Id":"unknownSelector",
+            "Name":"Unknown Selector",
+            "Description":"Observed as 1; the individual bit semantics are not yet known.",
+            "BitLength":5,
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1,
-            "FieldType":"LOOKUP",
-            "LookupEnumeration":"YES_NO_1BIT"
+            "RangeMax":29,
+            "UnknownValue":31,
+            "OutOfRangeValue":30,
+            "FieldType":"NUMBER"
           },
           {
             "Order":5,
-            "Id":"spareSelectorBits",
-            "Name":"Spare Selector Bits",
-            "BitLength":4,
-            "BitOffset":17,
-            "BitStart":1,
-            "Resolution":1,
-            "FieldType":"SPARE"
-          },
-          {
-            "Order":6,
             "Id":"engineInstance",
             "Name":"Engine Instance",
-            "Description":"Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.",
-            "BitLength":1,
+            "Description":"Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.",
+            "BitLength":3,
             "BitOffset":21,
             "BitStart":5,
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":1,
+            "RangeMax":6,
+            "UnknownValue":7,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"ENGINE_INSTANCE"
           },
           {
-            "Order":7,
-            "Id":"spareSelectorHighBits",
-            "Name":"Spare Selector High Bits",
-            "BitLength":2,
-            "BitOffset":22,
-            "BitStart":6,
-            "Resolution":1,
-            "FieldType":"SPARE"
-          },
-          {
-            "Order":8,
+            "Order":6,
             "Id":"transmissionGear",
             "Name":"Transmission Gear",
             "Description":"Observed as Forward, Neutral, and Reverse for the selected engine channel.",
@@ -11594,7 +11577,7 @@
             "LookupEnumeration":"GEAR_STATUS"
           },
           {
-            "Order":9,
+            "Order":7,
             "Id":"unknownControlFlag",
             "Name":"Unknown Control Flag",
             "Description":"Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures.",
@@ -11608,7 +11591,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":10,
+            "Order":8,
             "Id":"reservedControlBits",
             "Name":"Reserved Control Bits",
             "BitLength":5,
@@ -11618,7 +11601,7 @@
             "FieldType":"RESERVED"
           },
           {
-            "Order":11,
+            "Order":9,
             "Id":"throttlePosition",
             "Name":"Throttle Position",
             "Description":"Observed control-lever position with 0.1 percent resolution.",
@@ -11636,7 +11619,7 @@
             "FieldType":"NUMBER"
           },
           {
-            "Order":12,
+            "Order":10,
             "Id":"reserved7",
             "Name":"Reserved",
             "BitLength":6,
@@ -11646,7 +11629,7 @@
             "FieldType":"RESERVED"
           },
           {
-            "Order":13,
+            "Order":11,
             "Id":"unknownData",
             "Name":"Unknown Data",
             "Description":"Observed as 0x64FF.",
@@ -23518,13 +23501,13 @@
         "Id":"garminAutopilotManeuver",
         "Description":"Garmin Autopilot: Maneuver",
         "Priority":7,
-        "Explanation":"Observed Garmin helm turn-button commands use a 9-byte payload. Codes 0, 1, 2, and 3 mean -1, -10, +1, and +10 degrees respectively; the final value byte is zero.",
+        "Explanation":"Observed Garmin helm turn-button commands 0 through 3 use a 9-byte payload ending after a zero spare byte. Other command forms may include the trailing Value field, whose semantics are not yet known.",
         "Type":"Fast",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
         ],
-        "FieldCount":9,
-        "Length":9,
+        "FieldCount":10,
+        "Length":10,
         "Fields":[
           {
             "Order":1,
@@ -23631,7 +23614,6 @@
             "Order":8,
             "Id":"maneuverCode",
             "Name":"Maneuver Code",
-            "Description":"Turn-button event code: 0=-1 degree, 1=-10 degrees, 2=+1 degree, 3=+10 degrees",
             "BitLength":8,
             "BitOffset":56,
             "BitStart":0,
@@ -23642,15 +23624,26 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"GARMIN_AUTOPILOT_MANEUVER_CODE"
           },
           {
             "Order":9,
-            "Id":"value",
-            "Name":"Value",
-            "Description":"Observed as zero for turn-button commands.",
+            "Id":"spare9",
+            "Name":"Spare",
             "BitLength":8,
             "BitOffset":64,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":10,
+            "Id":"value",
+            "Name":"Value",
+            "Description":"Not present in the observed turn-button commands; semantics for longer command forms are not yet known.",
+            "BitLength":8,
+            "BitOffset":72,
             "BitStart":0,
             "Resolution":1,
             "Signed":false,
@@ -28316,6 +28309,7 @@
             "Order":5,
             "Id":"sourceId",
             "Name":"Source ID",
+            "Description":"Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -28359,7 +28353,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MENU_ACTION"
           },
           {
             "Order":8,
@@ -28453,6 +28448,7 @@
             "Order":5,
             "Id":"sourceId",
             "Name":"Source ID",
+            "Description":"Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -28558,6 +28554,7 @@
             "Order":5,
             "Id":"sourceId",
             "Name":"Source ID",
+            "Description":"Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -39890,7 +39887,7 @@
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
         "Priority":4,
-        "Explanation":"Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 27-byte payload without Sequence ID.",
+        "Explanation":"NMEA 2000 added the Sequence ID field after version 1.300. Devices using the earlier layout transmit a 27-byte payload without it; a Garmin AIS 800 has been observed doing so.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -48432,7 +48429,7 @@
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
         "Priority":6,
-        "Explanation":"Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 25-byte payload ending after the vessel name.",
+        "Explanation":"NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 25-byte payload ending after the vessel name.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -48542,7 +48539,7 @@
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
         "Priority":6,
-        "Explanation":"Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been observed sending a valid 33-byte payload without transceiver information or Sequence ID.",
+        "Explanation":"NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 33-byte payload without those fields.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
@@ -70839,6 +70836,7 @@
             "Order":5,
             "Id":"sourceId",
             "Name":"Source ID",
+            "Description":"Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,
@@ -70882,7 +70880,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MENU_ACTION"
           },
           {
             "Order":8,
@@ -70977,6 +70976,7 @@
             "Order":5,
             "Id":"sourceId",
             "Name":"Source ID",
+            "Description":"Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.",
             "BitLength":8,
             "BitOffset":32,
             "BitStart":0,

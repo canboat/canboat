@@ -30,27 +30,18 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: unknownSelectorFlag
-  name: Unknown Selector Flag
-  type: LOOKUP
-  bits: 1
-  description: Observed set for both engine instances.
-  lookup: YES_NO_1BIT
-- id: spareSelectorBits
-  name: Spare Selector Bits
-  type: SPARE
-  bits: 4
+- id: unknownSelector
+  name: Unknown Selector
+  type: UNSIGNED_INTEGER
+  bits: 5
+  description: Observed as 1; the individual bit semantics are not yet known.
 - id: engineInstance
   name: Engine Instance
   type: LOOKUP
-  bits: 1
-  description: Uses the standard NMEA 2000 engine-instance values; 0 for a single or port engine and 1 for starboard.
+  bits: 3
+  description: Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.
   lookup: ENGINE_INSTANCE
   allowLookupWidthMismatch: true
-- id: spareSelectorHighBits
-  name: Spare Selector High Bits
-  type: SPARE
-  bits: 2
 - id: throttlePosition
   name: Throttle Position
   type: UNSIGNED_INTEGER
@@ -83,7 +74,7 @@ samples:
   expects:
     manufacturerCode: "Yanmar Marine"
     industryCode: "Marine Industry"
-    unknownSelectorFlag: "Yes"
+    unknownSelector: 1
     engineInstance: "Single Engine or Dual Engine Port"
     throttlePosition: 22.0
     transmissionGear: "Forward"
@@ -93,7 +84,7 @@ samples:
   expects:
     manufacturerCode: "Yanmar Marine"
     industryCode: "Marine Industry"
-    unknownSelectorFlag: "Yes"
+    unknownSelector: 1
     engineInstance: "Dual Engine Starboard"
     throttlePosition: 18.4
     transmissionGear: "Forward"

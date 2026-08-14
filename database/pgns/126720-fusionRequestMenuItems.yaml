@@ -33,6 +33,7 @@ fields:
 - id: sourceId
   name: Source ID
   type: UINT8
+  description: Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.
   primaryKey: true
 - id: startIndex
   name: Start Index

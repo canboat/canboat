@@ -6,8 +6,9 @@ priority: 4
 interval: irregular
 url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
 explanation: >-
-  Some transceivers omit trailing metadata fields. A Garmin AIS 800 has been
-  observed sending a valid 27-byte payload without Sequence ID.
+  NMEA 2000 added the Sequence ID field after version 1.300. Devices using the
+  earlier layout transmit a 27-byte payload without it; a Garmin AIS 800 has
+  been observed doing so.
 fields:
 - id: messageId
   name: Message ID

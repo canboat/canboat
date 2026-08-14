@@ -34,13 +34,16 @@ fields:
 - id: sourceId
   name: Source ID
   type: UINT8
+  description: Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.
   primaryKey: true
 - id: itemIndex
   name: Item Index
   type: UINT32
 - id: action
   name: Action
-  type: UINT8
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_MENU_ACTION
 - id: lockId
   name: Lock ID
   type: UINT8
@@ -52,5 +55,5 @@ samples:
     messageId: "Menu Action"
     sourceId: 2
     itemIndex: 4
-    action: 4
+    action: "Close"
     lockId: 0

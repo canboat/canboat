@@ -1,0 +1,7 @@
+name: FUSION_MENU_ACTION
+kind: pair
+bits: 8
+values:
+  1: Open
+  2: Select
+  4: Close
