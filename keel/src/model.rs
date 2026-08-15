@@ -204,6 +204,12 @@ pub struct Pgn {
     pub repeating1: Option<Repeating>,
     pub repeating2: Option<Repeating>,
     pub variant_order: u32,
+    /// Shortest payload seen on the wire that still decodes as this PGN,
+    /// when that is less than the full `length`. Authored only on
+    /// fixed-length PGNs whose trailing fields were added by a later NMEA
+    /// 2000 version: older devices keep transmitting the earlier, shorter
+    /// layout. Emitted as <MinLength> alongside <Length> (R16).
+    pub min_length: Option<u32>,
     pub fields: Vec<Field>,
     pub samples: Vec<SampleSpec>,
 

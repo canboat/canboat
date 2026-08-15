@@ -175,10 +175,13 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
             let all_fast_over_8 = variants.peek().is_some()
                 && variants.all(|p| {
                     matches!(p.packet_type, PacketType::Fast)
-                        // Smallest complete message: a fixed `length`, else
-                        // `min_length`. Unknown (both None) → assume it may
-                        // be short, so this variant does not justify a warn.
-                        && p.length.or(p.min_length).is_some_and(|n| n > 8)
+                        // Smallest complete message: `min_length` when the
+                        // PGN publishes one (a variable-length PGN always
+                        // does; a fixed one does when a shorter payload is
+                        // known to decode), else the fixed `length`. Unknown
+                        // (both None) → assume it may be short, so this
+                        // variant does not justify a warn.
+                        && p.min_length.or(p.length).is_some_and(|n| n > 8)
                 });
             if all_fast_over_8 {
                 log::warn!(

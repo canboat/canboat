@@ -419,9 +419,17 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         }
 
         self.xml_u(6, "FieldCount", pgn.field_count as u64);
+        // A variable-length PGN publishes only MinLength: its real length
+        // depends on the repeat count. A fixed-length PGN publishes Length,
+        // plus MinLength when a shorter payload is known to decode (R16) --
+        // trailing fields added by a later NMEA 2000 version that older
+        // devices still omit.
         if pgn.is_variable {
             self.xml_u(6, "MinLength", pgn.length as u64);
         } else {
+            if let Some(min) = pgn.min_length {
+                self.xml_u(6, "MinLength", min as u64);
+            }
             self.xml_u(6, "Length", pgn.length as u64);
         }
 

@@ -29575,6 +29575,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
+        "MinLength":132,
         "Length":134,
         "TransmissionIrregular":true,
         "Fields":[
@@ -30737,6 +30738,7 @@
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
+        "MinLength":6,
         "Length":8,
         "TransmissionInterval":1000,
         "Fields":[
@@ -33916,6 +33918,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
+        "MinLength":9,
         "Length":11,
         "TransmissionInterval":1500,
         "Fields":[
@@ -39211,6 +39214,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":20,
+        "MinLength":27,
         "Length":28,
         "TransmissionIrregular":true,
         "Fields":[
@@ -47752,6 +47756,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":7,
+        "MinLength":25,
         "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
@@ -47861,6 +47866,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":17,
+        "MinLength":33,
         "Length":35,
         "TransmissionIrregular":true,
         "Fields":[

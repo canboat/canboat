@@ -4,6 +4,7 @@ description: DC Detailed Status
 type: Fast
 priority: 6
 interval: 1500
+minLength: 9
 fields:
 - id: sid
   name: SID
@@ -34,7 +35,23 @@ fields:
 - id: remainingCapacity
   name: Remaining capacity
   type: ELECTRIC_CHARGE_UFIX16_AH
+notes: |-
+  minLength 9: the payload ends after Ripple Voltage, omitting the trailing
+  Remaining capacity. The NMEA 2000 v1.300 field list
+  (sources/nmea_1300.json) ends there too, so devices built against it
+  transmit 9 bytes; the sample corpus has 9815 such messages from 11 devices
+  against 2269 full-length ones.
 samples:
+- raw: "2023-01-01-00:00:00.000,6,127506,40,255,9,00,0a,00,64,00,7f,05,ff,ff"  # 9-byte form, from dirona-actisense-serial.raw
+  expects:
+    sid: 0
+    instance: 10
+    dcType: "Battery"
+    stateOfCharge: 100
+    stateOfHealth: 0
+    timeRemaining: 84420
+    rippleVoltage: ~
+    remainingCapacity: ~
 - raw: "2023-01-01-00:00:00.000,6,127506,60,255,9,ff,00,ff,58,ff,ff,ff,ff,ff"  # from merrimac-actisense-serial-2011.raw
   expects:
     sid: ~

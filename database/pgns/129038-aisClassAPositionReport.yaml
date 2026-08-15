@@ -5,6 +5,7 @@ type: Fast
 priority: 4
 interval: irregular
 url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+minLength: 27
 fields:
 - id: messageId
   name: Message ID
@@ -96,7 +97,23 @@ fields:
 - id: sequenceId
   name: Sequence ID
   type: UINT8
+notes: |-
+  minLength 27: the payload ends after the Reserved bits of byte 27, omitting
+  only the trailing Sequence ID. The NMEA 2000 v1.300 field list
+  (sources/nmea_1300.json) has no Sequence ID here, so a device built against
+  that layout stops one byte short; a Garmin AIS 800 was reported doing so in
+  https://github.com/canboat/canboat/pull/848.
 samples:
+- raw: "2023-01-01-00:00:00.000,4,129038,0,255,27,03,bd,13,95,0e,3a,02,25,03,44,bc,67,1f,1b,c3,af,00,00,53,2f,00,ff,ff,ff,7f,c0,f8"  # 27-byte form, from susteranna-actisense-serial.raw
+  expects:
+    messageId: "Interrogated Class A position report"
+    repeatIndicator: "Initial"
+    userId: 244650941
+    positionAccuracy: "High"
+    timeStamp: 6
+    aisTransceiverInformation: "Channel A VDL reception"
+    navStatus: "Under way using engine"
+    sequenceId: ~
 - raw: "2023-01-01-00:00:00.000,4,129038,23,255,28,01,81,e6,96,0e,eb,4d,3a,03,f7,80,b1,1f,e4,00,00,00,00,e4,10,09,ff,ff,ff,7f,c8,f8,ff"  # from merrimac-2022.raw
   expects:
     messageId: "Scheduled Class A position report"
