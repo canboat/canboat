@@ -725,8 +725,29 @@ limitations under the License.
         </xs:annotation>
       </xs:element>
       <xs:element type="xs:unsignedShort" name="FieldCount"/>
-      <xs:element type="xs:unsignedShort" name="MinLength" minOccurs="0"/>
-      <xs:element type="xs:unsignedShort" name="Length" minOccurs="0"/>
+      <xs:element type="xs:unsignedShort" name="MinLength" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The length in bytes of the shortest payload that still decodes as this PGN.
+            On a variable-length PGN (one with a repeating field set, or a field whose
+            width is not known in advance) this is the only length published: the actual
+            length depends on how often the set repeats.
+            On a fixed-length PGN it appears next to Length, and then documents that
+            shorter payloads occur on the wire: the trailing fields were added by a later
+            NMEA 2000 version and devices built against the earlier layout still omit
+            them. Such a payload ends on a field boundary, so every field it does contain
+            decodes normally and the fields past MinLength are simply absent.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:unsignedShort" name="Length" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The length in bytes of a complete payload, present only when the PGN has a
+            fixed length. See MinLength for the shortest form that is still accepted.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:byte" name="RepeatingFieldSet1Size" minOccurs="0">
         <xs:annotation>
           <xs:documentation>

@@ -5,6 +5,7 @@ type: Fast
 priority: 6
 interval: irregular
 url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
+minLength: 25
 fields:
 - id: messageId
   name: Message ID
@@ -38,6 +39,12 @@ fields:
 - id: sequenceId
   name: Sequence ID
   type: UINT8
+notes: |-
+  minLength 25: the payload ends after the Name, omitting the trailing AIS
+  Transceiver information / Reserved byte and the Sequence ID. Both are later
+  additions; the third sample below already shows the 26-byte form (no
+  Sequence ID), and a Garmin AIS 800 sending 25 bytes was reported in
+  https://github.com/canboat/canboat/pull/848.
 samples:
 - raw: "2023-01-01-00:00:00.000,6,129809,23,255,27,18,55,81,97,0e,57,49,54,54,45,20,52,41,41,46,00,ff,ff,ff,ff,ff,ff,ff,ff,ff,e1,ff"  # from merrimac-2022.raw
   expects:

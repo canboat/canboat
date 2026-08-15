@@ -59,6 +59,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_match_values(prefix, db, pgn, &mut v); // R13
             check_field_type_overrides(prefix, db, pgn, &mut v); // R14
             check_bit_length_field(prefix, pgn, &mut v); // R15
+            check_min_length(prefix, pgn, &mut v); // R16
         }
         check_variants(prefix, list, &mut v); // R20
         check_unique_ids(prefix, list, &mut v); // R21
@@ -682,6 +683,48 @@ fn check_bit_length_field(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
                 f.id, t.type_
             ));
         }
+    }
+}
+
+// R16: an authored `minLength` names a shorter payload that still decodes.
+fn check_min_length(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
+    let Some(min) = p.min_length else { return };
+    let mut bad = |msg: String| {
+        v.push(Violation {
+            rule: "R16",
+            error: true,
+            location: pgn_loc(prefix, p),
+            message: msg,
+        })
+    };
+    if p.is_variable {
+        bad(format!(
+            "minLength: {min} is authored, but this PGN is variable-length and already \
+             publishes its derived minimum ({} bytes)",
+            p.length
+        ));
+        return;
+    }
+    if min == 0 || min >= p.length {
+        bad(format!(
+            "minLength: {min} must be at least 1 and less than the full length of {}",
+            p.length
+        ));
+        return;
+    }
+    // The short form must drop whole trailing fields: minLength has to land
+    // on a field boundary, otherwise the last field it keeps is truncated
+    // and the payload does not decode after all.
+    let mut bits = 0u32;
+    let lands_on_boundary = p.fields.iter().any(|f| {
+        bits += f.res_bits;
+        bits == min * 8
+    });
+    if !lands_on_boundary {
+        bad(format!(
+            "minLength: {min} does not fall on a field boundary; a shorter payload must \
+             end between two fields, not inside one"
+        ));
     }
 }
 

@@ -230,6 +230,23 @@ pub const RULES: &[Rule] = &[
                  an unscaled integer bit count (no lookup, resolution 1, non-zero width).",
     },
     Rule {
+        id: "R16",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_min_length",
+        title: "An authored minLength names a shorter payload that still decodes.",
+        detail: "A fixed-length PGN whose trailing fields were added by a later NMEA \
+                 2000 version keeps meeting shorter payloads on the wire: devices \
+                 built against the earlier layout simply stop transmitting where it \
+                 ended. `minLength: <bytes>` records that shortest observed form, and \
+                 is published as <MinLength> next to <Length> so a consumer can accept \
+                 the short frames instead of rejecting them as truncated. Only \
+                 authorable on a fixed-length PGN (a variable-length one already \
+                 publishes its derived minimum), it must be at least 1 and less than \
+                 the full length, and it must fall on a field boundary — a shorter \
+                 payload ends between two fields, never inside one.",
+    },
+    Rule {
         id: "R20",
         scope: Scope::CrossFile,
         severity: "error",

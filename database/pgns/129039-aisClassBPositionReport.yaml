@@ -4,6 +4,7 @@ description: AIS Class B Position Report
 type: Fast
 priority: 4
 interval: irregular
+minLength: 26
 url: https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en
 fields:
 - id: messageId
@@ -114,8 +115,40 @@ fields:
 - id: reserved
   name: Reserved
   type: RESERVED
-  bits: 15
+  bits: 7
+- id: sequenceId
+  name: Sequence ID
+  type: UINT8
+notes: |-
+  The trailing Reserved used to be one 15-bit field spanning bytes 26 and 27.
+  It is really 7 reserved bits finishing byte 26, plus a Sequence ID: the
+  sample corpus has 670 27-byte messages and every one of them ends in 0xff,
+  while byte 26 is 0xfe or 0xff (the AIS communication state bit plus seven
+  set reserved bits). The NMEA 2000 v1.300 field list
+  (sources/nmea_1300.json) ends at bit 201, i.e. at byte 26, so the Sequence
+  ID is the same later addition the sibling AIS PGNs carry (see 129038,
+  129809, 129810).
+
+  minLength 26: devices built against the layout without the Sequence ID stop
+  one byte short - 1850 such messages from 4 devices in the corpus. The first
+  sample below is one of them.
 samples:
+- raw: "2023-01-01-00:00:00.000,4,129039,0,255,26,12,05,9d,94,0e,1f,da,3d,03,1a,72,4f,1f,1a,f8,6d,00,00,06,00,06,ff,ff,00,74,ff"  # 26-byte form, from susteranna-actisense-serial.raw
+  expects:
+    messageId: "Standard Class B position report"
+    repeatIndicator: "Initial"
+    userId: 244620549
+    longitude: 5.4385183
+    latitude: 52.5300250
+    positionAccuracy: "Low"
+    raim: "in use"
+    timeStamp: 6
+    cog: 2.8152
+    sog: 0.00
+    aisTransceiverInformation: "Channel A VDL reception"
+    aisMode: "Autonomous"
+    aisCommunicationState: "ITDMA"
+    sequenceId: ~
 - raw: "2023-01-01-00:00:00.000,4,129039,23,255,27,12,68,94,9c,0c,5a,ac,37,03,6f,df,9e,1f,e4,04,6b,05,00,06,00,0e,ff,ff,00,74,ff,ff"  # from merrimac-2022.raw
   expects:
     messageId: "Standard Class B position report"
