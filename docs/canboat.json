@@ -30254,6 +30254,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
+        "MinLength":132,
         "Length":134,
         "TransmissionIrregular":true,
         "Fields":[
@@ -31416,6 +31417,7 @@
         "Type":"Single",
         "Complete":true,
         "FieldCount":6,
+        "MinLength":6,
         "Length":8,
         "TransmissionInterval":1000,
         "Fields":[
@@ -34595,6 +34597,7 @@
         "Type":"Fast",
         "Complete":true,
         "FieldCount":8,
+        "MinLength":9,
         "Length":11,
         "TransmissionInterval":1500,
         "Fields":[
@@ -39886,11 +39889,11 @@
         "Id":"aisClassAPositionReport",
         "Description":"AIS Class A Position Report",
         "Priority":4,
-        "Explanation":"NMEA 2000 added the Sequence ID field after version 1.300. Devices using the earlier layout transmit a 27-byte payload without it; a Garmin AIS 800 has been observed doing so.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":20,
+        "MinLength":27,
         "Length":28,
         "TransmissionIrregular":true,
         "Fields":[
@@ -40202,7 +40205,8 @@
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":23,
+        "FieldCount":24,
+        "MinLength":26,
         "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
@@ -40533,11 +40537,27 @@
             "Order":23,
             "Id":"reserved",
             "Name":"Reserved",
-            "BitLength":15,
+            "BitLength":7,
             "BitOffset":201,
             "BitStart":1,
             "Resolution":1,
             "FieldType":"RESERVED"
+          },
+          {
+            "Order":24,
+            "Id":"sequenceId",
+            "Name":"Sequence ID",
+            "BitLength":8,
+            "BitOffset":208,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -44801,8 +44821,9 @@
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":14,
-        "Length":24,
+        "FieldCount":17,
+        "MinLength":26,
+        "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -45011,6 +45032,42 @@
             "OutOfRangeValue":14,
             "FieldType":"LOOKUP",
             "LookupEnumeration":"POSITION_FIX_DEVICE"
+          },
+          {
+            "Order":15,
+            "Id":"spare15",
+            "Name":"Spare",
+            "BitLength":10,
+            "BitOffset":192,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"SPARE"
+          },
+          {
+            "Order":16,
+            "Id":"reserved16",
+            "Name":"Reserved",
+            "BitLength":6,
+            "BitOffset":202,
+            "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":17,
+            "Id":"sequenceId",
+            "Name":"Sequence ID",
+            "BitLength":8,
+            "BitOffset":208,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -45022,8 +45079,9 @@
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
-        "FieldCount":21,
-        "Length":75,
+        "FieldCount":22,
+        "MinLength":75,
+        "Length":76,
         "TransmissionIrregular":true,
         "Fields":[
           {
@@ -45335,6 +45393,22 @@
             "BitStart":5,
             "Resolution":1,
             "FieldType":"RESERVED"
+          },
+          {
+            "Order":22,
+            "Id":"sequenceId",
+            "Name":"Sequence ID",
+            "BitLength":8,
+            "BitOffset":600,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "UnknownValue":255,
+            "OutOfRangeValue":254,
+            "ReservedValue":253,
+            "FieldType":"NUMBER"
           }
         ]
       },
@@ -48428,11 +48502,11 @@
         "Id":"aisClassBStaticDataMsg24PartA",
         "Description":"AIS Class B static data (msg 24 Part A)",
         "Priority":6,
-        "Explanation":"NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 25-byte payload ending after the vessel name.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":7,
+        "MinLength":25,
         "Length":27,
         "TransmissionIrregular":true,
         "Fields":[
@@ -48538,11 +48612,11 @@
         "Id":"aisClassBStaticDataMsg24PartB",
         "Description":"AIS Class B static data (msg 24 Part B)",
         "Priority":6,
-        "Explanation":"NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 33-byte payload without those fields.",
         "URL":"https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en",
         "Type":"Fast",
         "Complete":true,
         "FieldCount":17,
+        "MinLength":33,
         "Length":35,
         "TransmissionIrregular":true,
         "Fields":[

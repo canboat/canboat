@@ -4824,7 +4824,6 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassAPositionReport",
      .interval = UINT16_MAX,
      .priority = 4,
-     .explanation = "NMEA 2000 added the Sequence ID field after version 1.300. Devices using the earlier layout transmit a 27-byte payload without it; a Garmin AIS 800 has been observed doing so.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Class B Position Report",
@@ -4854,7 +4853,8 @@ Pgn pgnList[] = {
       {.name = "Can handle Msg 22", .camelName = "canHandleMsg22", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
       {.name = "AIS mode", .camelName = "aisMode", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_MODE, .lookup.name = "AIS_MODE"},
       {.name = "AIS communication state", .camelName = "aisCommunicationState", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_COMMUNICATION_STATE, .lookup.name = "AIS_COMMUNICATION_STATE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 15, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 7, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisClassBPositionReport",
      .interval = UINT16_MAX,
@@ -5372,7 +5372,10 @@ Pgn pgnList[] = {
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
       {.name = "Position Date", .camelName = "positionDate", .fieldType = "DATE", .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved13", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
-      {.name = "GNSS type", .camelName = "gnssType", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOSITION_FIX_DEVICE, .lookup.name = "POSITION_FIX_DEVICE"}
+      {.name = "GNSS type", .camelName = "gnssType", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOSITION_FIX_DEVICE, .lookup.name = "POSITION_FIX_DEVICE"},
+      {.name = "Spare", .camelName = "spare15", .fieldType = "SPARE", .size = 10, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved16", .fieldType = "RESERVED", .size = 6, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisUtcAndDateReport",
      .interval = UINT16_MAX,
@@ -5404,7 +5407,8 @@ Pgn pgnList[] = {
       {.name = "DTE", .camelName = "dte", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAVAILABLE, .lookup.name = "AVAILABLE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
-      {.name = "Reserved", .camelName = "reserved21", .fieldType = "RESERVED", .size = 3, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved21", .fieldType = "RESERVED", .size = 3, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisClassAStaticAndVoyageRelatedData",
      .interval = UINT16_MAX,
@@ -5813,7 +5817,6 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassBStaticDataMsg24PartA",
      .interval = UINT16_MAX,
      .priority = 6,
-     .explanation = "NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 25-byte payload ending after the vessel name.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Class B static data (msg 24 Part B)",
@@ -5842,7 +5845,6 @@ Pgn pgnList[] = {
      .camelDescription = "aisClassBStaticDataMsg24PartB",
      .interval = UINT16_MAX,
      .priority = 6,
-     .explanation = "NMEA 2000 added the AIS Transceiver Information and Sequence ID fields in later versions. Many older AIS devices omit them; a Garmin AIS 800 has been observed sending a 33-byte payload without those fields.",
      .url = "https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en"},
 
     {"AIS Single Slot Binary Message (Deprecated)",

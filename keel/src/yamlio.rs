@@ -91,7 +91,7 @@ fn opt_f64(hash: &Yaml, key: &str) -> Option<f64> {
 /// deliberately not carried into the model or any emitted artifact. It is
 /// listed so the rule accepts it - not an oversight to be "fixed" by dropping
 /// it from the files.
-const PGN_KEYS: [&str; 15] = [
+const PGN_KEYS: [&str; 16] = [
     "pgn",
     "id",
     "description",
@@ -103,6 +103,7 @@ const PGN_KEYS: [&str; 15] = [
     "researchDoc",
     "fallback",
     "missing",
+    "minLength",
     "variantOrder",
     "fields",
     "samples",
@@ -566,6 +567,7 @@ fn pgn(y: &Yaml, ctx: &str) -> Result<Pgn> {
         repeating1: repeats.next(),
         repeating2: repeats.next(),
         variant_order: opt_i64(y, "variantOrder").unwrap_or(0) as u32,
+        min_length: opt_i64(y, "minLength").map(|n| n as u32),
         fields,
         samples,
         ..Default::default()

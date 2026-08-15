@@ -4,6 +4,7 @@ description: Magnetic Variation
 type: Single
 priority: 7
 interval: 1000
+minLength: 6
 fields:
 - id: sid
   name: SID
@@ -32,7 +33,19 @@ notes: |-
   NMEA + Simrad AT10
 
   https://web.archive.org/web/20251219120912/www.maretron.com/support/manuals/GPS100UM_1.2.pdf
+
+  minLength 6: the payload ends after Variation, omitting the trailing
+  Reserved bytes. The NMEA 2000 v1.300 field list (sources/nmea_1300.json)
+  ends there too, so devices built against it transmit 6 bytes; the sample
+  corpus has 272 such messages from 6 devices (dirona-actisense-serial.raw,
+  sample-single.raw.txt, sample3_GPSMAP820_*.n2klog.csv).
 samples:
+- raw: "2023-01-01-00:00:00.000,7,127258,7,255,6,ff,f5,11,39,ce,f5"  # 6-byte form, from dirona-actisense-serial.raw
+  expects:
+    sid: ~
+    source: "WMM 2005"
+    ageOfService: 14609
+    variation: -0.2610
 - raw: "2023-01-01-00:00:00.000,6,127258,23,255,8,f8,f8,ff,ff,96,01,ff,ff"  # from merrimac-2022.raw
   expects:
     sid: 248

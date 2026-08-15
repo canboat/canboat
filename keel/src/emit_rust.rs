@@ -1017,8 +1017,14 @@ fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
             // MinLength and no Length -- its real length depends on the
             // repeat count. Emitting Length for those made the runtime treat
             // 43 as fixed and reject a legitimate 47-byte 129029.
+            // A fixed-length PGN publishes Length, and MinLength too when a
+            // shorter payload is authored as decodable (R16).
             length: (!p.is_variable).then_some(p.length),
-            min_length: p.is_variable.then_some(p.length),
+            min_length: if p.is_variable {
+                Some(p.length)
+            } else {
+                p.min_length
+            },
             fields,
             repeating_field_set1_size: r1.map(|r| r.0),
             repeating_field_set1_start_field: r1.map(|r| r.1),

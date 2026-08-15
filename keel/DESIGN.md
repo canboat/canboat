@@ -207,7 +207,18 @@ so a new offset means a new (derived) fieldtype.
 Remaining keys:
 `lookupIndirect: {name: ..., order: N}`, `lookupBits`, `lookupFieldtype`,
 `description`, `condition`. PGN-level: `fallback: true`, `url`,
-`researchDoc`, `notes`.
+`researchDoc`, `minLength`, `notes`.
+
+Lengths are derived, with one exception. A PGN's `Length` (fixed) or
+`MinLength` (variable — it has a repeating set) is computed from its fields
+and never authored. But a fixed-length PGN can still meet *shorter* payloads
+on the wire: NMEA 2000 has repeatedly appended fields to an existing PGN, and
+devices built against the earlier layout keep transmitting the layout they
+know. `minLength: <bytes>` records that shortest observed form, is published
+as `<MinLength>` next to `<Length>`, and tells a consumer to accept the short
+frames rather than reject them as truncated. R16 checks it: fixed-length PGN
+only, below the full length, and landing on a field boundary — a short
+payload ends between two fields, never inside one.
 
 The research commentary currently living as block comments in `pgn.h` is
 ported into `notes:` keys (load-bearing prose survives round-tripping
