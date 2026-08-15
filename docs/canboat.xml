@@ -39177,7 +39177,8 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>23</FieldCount>
+      <FieldCount>24</FieldCount>
+      <MinLength>26</MinLength>
       <Length>27</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
@@ -39508,11 +39509,27 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <Order>23</Order>
           <Id>reserved</Id>
           <Name>Reserved</Name>
-          <BitLength>15</BitLength>
+          <BitLength>7</BitLength>
           <BitOffset>201</BitOffset>
           <BitStart>1</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>24</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -43783,8 +43800,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>14</FieldCount>
-      <Length>24</Length>
+      <FieldCount>17</FieldCount>
+      <MinLength>26</MinLength>
+      <Length>27</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -43994,6 +44012,42 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <FieldType>LOOKUP</FieldType>
           <LookupEnumeration>POSITION_FIX_DEVICE</LookupEnumeration>
         </Field>
+        <Field>
+          <Order>15</Order>
+          <Id>spare15</Id>
+          <Name>Spare</Name>
+          <BitLength>10</BitLength>
+          <BitOffset>192</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>SPARE</FieldType>
+        </Field>
+        <Field>
+          <Order>16</Order>
+          <Id>reserved16</Id>
+          <Name>Reserved</Name>
+          <BitLength>6</BitLength>
+          <BitOffset>202</BitOffset>
+          <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>17</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>208</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
       </Fields>
     </PGNInfo>
     <PGNInfo>
@@ -44004,8 +44058,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
       <URL>https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</URL>
       <Type>Fast</Type>
       <Complete>true</Complete>
-      <FieldCount>21</FieldCount>
-      <Length>75</Length>
+      <FieldCount>22</FieldCount>
+      <MinLength>75</MinLength>
+      <Length>76</Length>
       <TransmissionIrregular>true</TransmissionIrregular>
       <Fields>
         <Field>
@@ -44317,6 +44372,22 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>22</Order>
+          <Id>sequenceId</Id>
+          <Name>Sequence ID</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>600</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
     </PGNInfo>

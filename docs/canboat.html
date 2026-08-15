@@ -9800,8 +9800,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            27
-            bytes long and contains 23 fields.
+            
+              at least 2627
+            bytes long and contains 24 fields.
 
             
               The default priority (as observed in the field) is 4.
@@ -9867,8 +9868,11 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                       <a href="#lookup-AIS_MODE">AIS_MODE</a></td><td/></tr><tr><td>22</td><td>AIS communication state</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
                   
                       lookup
-                      <a href="#lookup-AIS_COMMUNICATION_STATE">AIS_COMMUNICATION_STATE</a></td><td/></tr><tr><td>23</td><td>Reserved</td><td/><td/><td>15 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+                      <a href="#lookup-AIS_COMMUNICATION_STATE">AIS_COMMUNICATION_STATE</a></td><td/></tr><tr><td>23</td><td>Reserved</td><td/><td/><td>7 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>24</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129040">0x1F810:
             PGN 129040
@@ -10927,8 +10931,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            24
-            bytes long and contains 14 fields.
+            
+              at least 2627
+            bytes long and contains 17 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -10968,7 +10973,12 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>14</td><td>GNSS type</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
                   
                       lookup
-                      <a href="#lookup-POSITION_FIX_DEVICE">POSITION_FIX_DEVICE</a></td><td/></tr></table><p>
+                      <a href="#lookup-POSITION_FIX_DEVICE">POSITION_FIX_DEVICE</a></td><td/></tr><tr><td>15</td><td>Spare</td><td/><td/><td>10 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>16</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>17</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129794">0x1FB02:
             PGN 129794
@@ -10978,8 +10988,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
             This
              fast-packet 
             PGN is
-            75
-            bytes long and contains 21 fields.
+            
+              at least 7576
+            bytes long and contains 22 fields.
 
             
               The default priority (as observed in the field) is 6.
@@ -11036,7 +11047,10 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-AIS_TRANSCEIVER">AIS_TRANSCEIVER</a></td><td/></tr><tr><td>21</td><td>Reserved</td><td/><td/><td>3 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>22</td><td>Sequence ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en">https://web.archive.org/web/20251212005646/www.itu.int/rec/R-REC-M.1371-5-201402-I/en</a></p><h3 id="pgn-129795">0x1FB03:
             PGN 129795

@@ -4775,7 +4775,8 @@ Pgn pgnList[] = {
       {.name = "Can handle Msg 22", .camelName = "canHandleMsg22", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupYES_NO_1BIT, .lookup.name = "YES_NO_1BIT"},
       {.name = "AIS mode", .camelName = "aisMode", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_MODE, .lookup.name = "AIS_MODE"},
       {.name = "AIS communication state", .camelName = "aisCommunicationState", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_COMMUNICATION_STATE, .lookup.name = "AIS_COMMUNICATION_STATE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 15, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 7, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisClassBPositionReport",
      .interval = UINT16_MAX,
@@ -5293,7 +5294,10 @@ Pgn pgnList[] = {
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
       {.name = "Position Date", .camelName = "positionDate", .fieldType = "DATE", .resolution = 1.0},
       {.name = "Reserved", .camelName = "reserved13", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
-      {.name = "GNSS type", .camelName = "gnssType", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOSITION_FIX_DEVICE, .lookup.name = "POSITION_FIX_DEVICE"}
+      {.name = "GNSS type", .camelName = "gnssType", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupPOSITION_FIX_DEVICE, .lookup.name = "POSITION_FIX_DEVICE"},
+      {.name = "Spare", .camelName = "spare15", .fieldType = "SPARE", .size = 10, .resolution = 1.0},
+      {.name = "Reserved", .camelName = "reserved16", .fieldType = "RESERVED", .size = 6, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisUtcAndDateReport",
      .interval = UINT16_MAX,
@@ -5325,7 +5329,8 @@ Pgn pgnList[] = {
       {.name = "DTE", .camelName = "dte", .fieldType = "LOOKUP", .size = 1, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAVAILABLE, .lookup.name = "AVAILABLE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
       {.name = "AIS Transceiver information", .camelName = "aisTransceiverInformation", .fieldType = "LOOKUP", .size = 5, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIS_TRANSCEIVER, .lookup.name = "AIS_TRANSCEIVER"},
-      {.name = "Reserved", .camelName = "reserved21", .fieldType = "RESERVED", .size = 3, .resolution = 1.0}
+      {.name = "Reserved", .camelName = "reserved21", .fieldType = "RESERVED", .size = 3, .resolution = 1.0},
+      {.name = "Sequence ID", .camelName = "sequenceId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "aisClassAStaticAndVoyageRelatedData",
      .interval = UINT16_MAX,
