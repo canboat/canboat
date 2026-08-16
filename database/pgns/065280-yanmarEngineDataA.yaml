@@ -3,11 +3,14 @@ id: yanmarEngineDataA
 description: 'Yanmar: Engine Data A'
 type: Single
 variantOrder: 4
+priority: 6
 missing:
 - Fields
 - FieldLengths
-- Resolution
-- SampleData
+explanation: >-
+  Observed on Yanmar i8320P and i8320S engine interfaces. Throttle and
+  transmission gear mirror the control-head command, and engine speed reports
+  whole RPM.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -27,7 +30,63 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: data
-  name: Data
+- id: unknownSelector
+  name: Unknown Selector
+  type: UNSIGNED_INTEGER
+  bits: 5
+  description: Observed as 1; the individual bit semantics are not yet known.
+- id: engineInstance
+  name: Engine Instance
+  type: LOOKUP
+  bits: 3
+  description: Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.
+  lookup: ENGINE_INSTANCE
+  allowLookupWidthMismatch: true
+- id: throttlePosition
+  name: Throttle Position
+  type: UNSIGNED_INTEGER
+  bits: 10
+  resolution: 0.1
+  unit: '%'
+  description: Observed control-lever position with 0.1 percent resolution.
+- id: spare
+  name: Spare
+  type: SPARE
+  bits: 4
+- id: transmissionGear
+  name: Transmission Gear
+  type: LOOKUP
+  bits: 2
+  description: Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.
+  lookup: GEAR_STATUS
+- id: engineSpeed
+  name: Engine Speed
+  type: UINT16
+  unit: rpm
+  description: Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution.
+- id: unknownData
+  name: Unknown Data
   type: BINARY
-  bits: 48
+  bits: 8
+  description: Observed as 0x64.
+samples:
+- raw: "2026-07-26T12:55:52.641420206-07:00,6,65280,131,255,8,ac,98,01,dc,00,03,05,64"  # from boatkit-yanmar-controls.raw
+  expects:
+    manufacturerCode: "Yanmar Marine"
+    industryCode: "Marine Industry"
+    unknownSelector: 1
+    engineInstance: "Single Engine or Dual Engine Port"
+    throttlePosition: 22.0
+    transmissionGear: "Forward"
+    engineSpeed: 1283
+    unknownData: "0x64"
+- raw: "2026-07-26T12:55:57.356168512-07:00,6,65280,132,255,8,ac,98,21,b8,00,ee,04,64"  # from boatkit-yanmar-controls.raw
+  expects:
+    manufacturerCode: "Yanmar Marine"
+    industryCode: "Marine Industry"
+    unknownSelector: 1
+    engineInstance: "Dual Engine Starboard"
+    throttlePosition: 18.4
+    transmissionGear: "Forward"
+    engineSpeed: 1262
+    unknownData: "0x64"

@@ -1,0 +1,58 @@
+pgn: 126720
+id: fusionMenuActionCommand
+description: 'Fusion: Menu Action Command'
+type: Fast
+variantOrder: 54
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Menu Action
+  match: 9
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  description: Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.
+  primaryKey: true
+- id: itemIndex
+  name: Item Index
+  type: UINT32
+- id: action
+  name: Action
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_MENU_ACTION
+- id: lockId
+  name: Lock ID
+  type: UINT8
+samples:
+- raw: "2026-08-09T13:43:00.324829534-07:00,6,126720,7,10,11,a3,99,09,00,02,04,00,00,00,02,00"  # from boatkit-fusion-menu.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Menu Action"
+    sourceId: 2
+    itemIndex: 4
+    action: "Select"
+    lockId: 0

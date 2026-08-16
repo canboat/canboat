@@ -1,0 +1,53 @@
+pgn: 130820
+id: fusionMenuCount
+description: 'Fusion: Menu Count'
+type: Fast
+variantOrder: 51
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Menu Count
+  match: 32784
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: sourceId
+  name: Source ID
+  type: UINT8
+  description: Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.
+  primaryKey: true
+- id: count
+  name: Count
+  type: UINT32
+- id: lockId
+  name: Lock ID
+  type: UINT8
+samples:
+- raw: "2026-08-09T13:42:58.155785489-07:00,7,130820,10,255,10,a3,99,10,80,02,1f,00,00,00,00"  # from boatkit-fusion-menu.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Menu Count"
+    sourceId: 2
+    count: 31
+    lockId: 0

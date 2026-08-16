@@ -8,6 +8,9 @@ missing:
 - Fields
 - FieldLengths
 - Resolution
+explanation: >-
+  Observed directed control-head commands and matching autopilot broadcasts use
+  an 11-byte payload with a trailing spare zero byte.
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -55,15 +58,19 @@ fields:
   match: 10
   lookup: GARMIN_AUTOPILOT_FIELD
   primaryKey: true
-- id: reserved9
-  name: Reserved
-  type: RESERVED
+- id: spare9
+  name: Spare
+  type: SPARE
   bits: 8
 - id: modeState
   name: Mode State
   type: LOOKUP
   bits: 8
   lookup: GARMIN_AUTOPILOT_MODE_STATE
+- id: spare11
+  name: Spare
+  type: SPARE
+  bits: 8
 samples:
 - raw: "2023-01-01-00:00:00.000,7,126720,1,0,11,e5,98,10,17,04,04,05,0a,00,05,00"  # from garmin-ap-reactor-126720.raw
   expects:

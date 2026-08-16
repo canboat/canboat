@@ -1,0 +1,9 @@
+name: GARMIN_AUTOPILOT_MANEUVER_CODE
+kind: pair
+bits: 8
+note: Values 0 through 3 were reverse-engineered from observed Garmin helm turn-button commands; other values are not yet known.
+values:
+  0: Decrease Heading 1 Degree
+  1: Decrease Heading 10 Degrees
+  2: Increase Heading 1 Degree
+  3: Increase Heading 10 Degrees

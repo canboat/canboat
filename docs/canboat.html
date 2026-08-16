@@ -1309,15 +1309,17 @@ limitations under the License.
             PGN 65280
             - Yanmar: Engine Data A</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>172</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>172</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Observed on Yanmar i8320P and i8320S engine interfaces. Throttle and transmission gear mirror the control-head command, and engine speed reports whole RPM.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              single-frame 
             PGN is
             8
-            bytes long and contains 4 fields.
+            bytes long and contains 10 fields.
 
+            
+              The default priority (as observed in the field) is 6.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>172:
                   Yanmar Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
                   
@@ -1327,7 +1329,23 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown Selector</td><td>Observed as 1; the individual bit semantics are not yet known.</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine Instance</td><td>Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-ENGINE_INSTANCE">ENGINE_INSTANCE</a></td><td/></tr><tr><td>6</td><td>Throttle Position</td><td>Observed control-lever position with 0.1 percent resolution.</td><td>0.1 %<div class="xs">0 .. 102</div></td><td>10 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Spare</td><td/><td/><td>4 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>8</td><td>Transmission Gear</td><td>Observed as Forward, Neutral, and Reverse, matching PGN 127493 for the corresponding engine instance.</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-GEAR_STATUS">GEAR_STATUS</a></td><td/></tr><tr><td>9</td><td>Engine Speed</td><td>Observed whole engine RPM; agrees with PGN 127488 after applying that PGN's 0.25 RPM resolution.</td><td>rpm<div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Unknown Data</td><td>Observed as 0x64.</td><td/><td>8 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65280">0xFF00:
             PGN 65280
             - Maretron: Keel Position</h3><p>
@@ -1755,7 +1773,49 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Bitmap</td><td>32-bit bitmap of circuits, LSB-first; bit n set =&gt; circuit at slot n is ON</td><td/><td>32 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><p>
               Source:
-              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md</a></p><h3 id="pgn-65285">0xFF05:
+              <a href="https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md">https://github.com/dirkwa/czone-spec/blob/main/spec/pgn-65284.md</a></p><h3 id="pgn-65284">0xFF04:
+            PGN 65284
+            - Yanmar: Throttle Control</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>172</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p>Observed from a Yanmar CAN Bus Control Head at approximately 21 Hz per engine instance. The standard engine-instance bit independently identifies port and starboard transmission gear and throttle commands, mirrored by the corresponding engine interfaces in PGN 65280.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 11 fields.
+
+            
+              The default priority (as observed in the field) is 2.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>172:
+                  Yanmar Marine</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Unknown Selector</td><td>Observed as 1; the individual bit semantics are not yet known.</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine Instance</td><td>Uses the standard NMEA 2000 engine-instance values; observed as 0 for port and 1 for starboard.</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-ENGINE_INSTANCE">ENGINE_INSTANCE</a></td><td/></tr><tr><td>6</td><td>Transmission Gear</td><td>Observed as Forward, Neutral, and Reverse for the selected engine channel.</td><td><div class="xs">0 .. 2</div></td><td>2 bits
+                  
+                      lookup
+                      <a href="#lookup-GEAR_STATUS">GEAR_STATUS</a></td><td/></tr><tr><td>7</td><td>Unknown Control Flag</td><td>Observed as 0 during the gear-transition capture and 1 in earlier underway throttle captures.</td><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved Control Bits</td><td/><td/><td>5 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Throttle Position</td><td>Observed control-lever position with 0.1 percent resolution.</td><td>0.1 %<div class="xs">0 .. 102</div></td><td>10 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>6 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>Unknown Data</td><td>Observed as 0x64FF.</td><td/><td>16 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65285">0xFF05:
             PGN 65285
             - Airmar: Boot State Acknowledgment</h3><p>
               This PGN description applies when the following field(s) match:
@@ -5363,14 +5423,14 @@ limitations under the License.
             PGN 126720
             - Garmin Autopilot: Mode State</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>5904</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr><tr><td>Field Group</td><td>5</td></tr><tr><td>Field</td><td>10</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>5904</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr><tr><td>Field Group</td><td>5</td></tr><tr><td>Field</td><td>10</td></tr></table></p><p>Observed directed control-head commands and matching autopilot broadcasts use an 11-byte payload with a trailing spare zero byte.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            10
-            bytes long and contains 10 fields.
+            11
+            bytes long and contains 11 fields.
 
             
               The default priority (as observed in the field) is 7.
@@ -5403,11 +5463,12 @@ limitations under the License.
                   Mode State</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD</a></td><td>true</td></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Mode State</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+                      <a href="#lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE</a></td><td/></tr><tr><td>11</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
             PGN 126720
             - Garmin Autopilot: Heartbeat</h3><p>
               This PGN description applies when the following field(s) match:
@@ -5456,7 +5517,7 @@ limitations under the License.
             PGN 126720
             - Garmin Autopilot: Maneuver</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>5904</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr><tr><td>Field Group</td><td>38</td></tr></table></p><p/><p>
+              <table><tr><td>Manufacturer Code</td><td>229</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Sub-protocol ID</td><td>5904</td></tr><tr><td>Wrapper Byte 1</td><td>4</td></tr><tr><td>Wrapper Byte 2</td><td>4</td></tr><tr><td>Field Group</td><td>38</td></tr></table></p><p>Observed Garmin helm turn-button commands 0 through 3 use a 9-byte payload ending after a zero spare byte. Other command forms may include the trailing Value field, whose semantics are not yet known.</p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
             This
@@ -5492,11 +5553,11 @@ limitations under the License.
                   </td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Maneuver Code</td><td>Maneuver button event code (observed 0..9)</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Maneuver Code</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Value</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      lookup
+                      <a href="#lookup-GARMIN_AUTOPILOT_MANEUVER_CODE">GARMIN_AUTOPILOT_MANEUVER_CODE</a></td><td/></tr><tr><td>9</td><td>Spare</td><td/><td/><td>8 bits
+                  <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>10</td><td>Value</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
@@ -6840,7 +6901,115 @@ limitations under the License.
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>11</td><td>Color</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-GARMIN_COLOR">GARMIN_COLOR</a></td><td/></tr></table><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126983">0x1F007:
+                      <a href="#lookup-GARMIN_COLOR">GARMIN_COLOR</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Menu Action Command</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>9</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>9:
+                  Menu Action</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Item Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Action</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MENU_ACTION">FUSION_MENU_ACTION</a></td><td/></tr><tr><td>8</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Request Menu Count</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>10</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            6
+            bytes long and contains 6 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>10:
+                  Request Menu Count</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Request Menu Items</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>11</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            14
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>11:
+                  Request Menu Item</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Start Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Count</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126983">0x1F007:
             PGN 126983
             - Alert</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -18086,7 +18255,84 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
                   
                       lookup
                       <a href="#lookup-ALERT_RESPONSE_COMMAND">ALERT_RESPONSE_COMMAND</a></td><td/></tr><tr><td>15</td><td>Reserved</td><td/><td/><td>6 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Menu Action Status</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32783</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            11
+            bytes long and contains 8 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32783:
+                  Menu Action</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Item Index</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Action</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MENU_ACTION">FUSION_MENU_ACTION</a></td><td/></tr><tr><td>8</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Menu Count</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32784</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            10
+            bytes long and contains 7 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32784:
+                  Menu Count</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Source ID</td><td>Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Count</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -23023,7 +23269,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Flood</td></tr><tr><td>1</td><td>Slack</td></tr><tr><td>2</td><td>Ebb</td></tr></table><h3 id="lookup-FUSION_COMMAND">FUSION_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_MENU_ACTION">FUSION_MENU_ACTION
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Open</td></tr><tr><td>2</td><td>Select</td></tr><tr><td>4</td><td>Close</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Set Source</td></tr><tr><td>3</td><td>Media Command</td></tr><tr><td>5</td><td>Tuner Command</td></tr><tr><td>6</td><td>Marine Tuner Command</td></tr><tr><td>7</td><td>Set Marine Tuner Squelch</td></tr><tr><td>8</td><td>Set Marine Tuner Scan Mode</td></tr><tr><td>9</td><td>Menu Action</td></tr><tr><td>10</td><td>Request Menu Count</td></tr><tr><td>11</td><td>Request Menu Item</td></tr><tr><td>12</td><td>Request Menu Lock ID</td></tr><tr><td>13</td><td>Set Aux Gain</td></tr><tr><td>15</td><td>Set Settings</td></tr><tr><td>16</td><td>DAB Updtate Command</td></tr><tr><td>17</td><td>Set Mute</td></tr><tr><td>18</td><td>Set Balance</td></tr><tr><td>19</td><td>Set Low Pass Filer</td></tr><tr><td>20</td><td>Set Sublevel</td></tr><tr><td>22</td><td>Set Equalizer</td></tr><tr><td>23</td><td>Set Volume Limit</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>27</td><td>Set Line Level Control</td></tr><tr><td>28</td><td>Power</td></tr><tr><td>29</td><td>Set Device Name</td></tr><tr><td>30</td><td>Send Sirius Command</td></tr><tr><td>31</td><td>Set Sirius Parental</td></tr><tr><td>33</td><td>Send Factory Reset Command</td></tr><tr><td>34</td><td>Set Zone Name</td></tr><tr><td>35</td><td>Send Dvd Command</td></tr><tr><td>36</td><td>Dvd Press Ir Key</td></tr><tr><td>39</td><td>Send Select Sirius Team</td></tr><tr><td>40</td><td>Send Select Sirius Artist</td></tr><tr><td>41</td><td>Send Sirius Sport Alert User Action</td></tr><tr><td>45</td><td>Send Sirius Artist Song User Action</td></tr><tr><td>50</td><td>Send Multiroom Command</td></tr><tr><td>51</td><td>Get Multiroom Device Record</td></tr><tr><td>52</td><td>Scan Multirooom Devices</td></tr><tr><td>53</td><td>Send File Transfer</td></tr><tr><td>54</td><td>Set Loud</td></tr><tr><td>56</td><td>Fapi Set Source Multiroom Enabled</td></tr><tr><td>57</td><td>Request Head Unit Dsp Settings</td></tr><tr><td>64</td><td>Send Transfer Status</td></tr><tr><td>65</td><td>Fapi Get Server Info</td></tr><tr><td>69</td><td>Fapi Set Source Enabled</td></tr><tr><td>70</td><td>Fapi Set Source Name</td></tr><tr><td>73</td><td>Send External Amp Gain</td></tr><tr><td>74</td><td>Send Internal Amp Gain</td></tr><tr><td>75</td><td>Send Mono</td></tr></table><h3 id="lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND
         (0 - 255)
@@ -23051,7 +23299,9 @@ The Default update rate of this PGN is autonomous, as it is dependant upon notif
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>40</td><td>Calibration Matrix Present</td></tr><tr><td>52</td><td>Set North State</td></tr><tr><td>65</td><td>Device Flags</td></tr><tr><td>67</td><td>COG Source Valid Flag</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>Heartbeat</td></tr><tr><td>10</td><td>Mode State</td></tr><tr><td>11</td><td>Heading to Steer</td></tr><tr><td>62</td><td>Response Setting</td></tr><tr><td>114</td><td>Rate of Turn</td></tr><tr><td>115</td><td>Rate of Turn Order</td></tr><tr><td>116</td><td>Turn Angle Order</td></tr><tr><td>158</td><td>System Voltage</td></tr><tr><td>161</td><td>Turn Angle Measured</td></tr><tr><td>239</td><td>Engine RPM B</td></tr><tr><td>240</td><td>Engine RPM A</td></tr><tr><td>246</td><td>Speed</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>3</td><td>Heartbeat</td></tr><tr><td>10</td><td>Mode State</td></tr><tr><td>11</td><td>Heading to Steer</td></tr><tr><td>62</td><td>Response Setting</td></tr><tr><td>114</td><td>Rate of Turn</td></tr><tr><td>115</td><td>Rate of Turn Order</td></tr><tr><td>116</td><td>Turn Angle Order</td></tr><tr><td>158</td><td>System Voltage</td></tr><tr><td>161</td><td>Turn Angle Measured</td></tr><tr><td>239</td><td>Engine RPM B</td></tr><tr><td>240</td><td>Engine RPM A</td></tr><tr><td>246</td><td>Speed</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_MANEUVER_CODE">GARMIN_AUTOPILOT_MANEUVER_CODE
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Decrease Heading 1 Degree</td></tr><tr><td>1</td><td>Decrease Heading 10 Degrees</td></tr><tr><td>2</td><td>Increase Heading 1 Degree</td></tr><tr><td>3</td><td>Increase Heading 10 Degrees</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_MODE_STATE">GARMIN_AUTOPILOT_MODE_STATE
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Standby</td></tr><tr><td>3</td><td>Shadow Drive</td></tr><tr><td>5</td><td>Engaged</td></tr></table><h3 id="lookup-GARMIN_BACKLIGHT_LEVEL">GARMIN_BACKLIGHT_LEVEL
         (0 - 255)
