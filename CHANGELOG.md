@@ -6,6 +6,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.1.0-beta3](https://github.com/canboat/canboat/compare/v8.0.0-beta3...v8.1.0-beta3) (2026-08-16)
+
+
+### Added
+
+* **database:** add Yanmar, Fusion, and Garmin packet data ([01d0dc3](https://github.com/canboat/canboat/commit/01d0dc3dd24328c05cbeee384c477d36ea8066f6))
+* **database:** add Yanmar, Fusion, Garmin, and AIS packet data ([135d042](https://github.com/canboat/canboat/commit/135d04224ad56ba20472c8907c815c80867b7df1))
+* **database:** author minLength for PGNs that appear short on the wire ([d15a487](https://github.com/canboat/canboat/commit/d15a487d3a0e16677ec76f5f0fac95835daf9e4b))
+* **database:** author minLength, and give three AIS PGNs their trailing Sequence ID ([cb09435](https://github.com/canboat/canboat/commit/cb09435cb0cba3b1c858457fcb192c16a16c7178))
+* **database:** give 129039/129793/129794 their trailing Sequence ID ([1d92c86](https://github.com/canboat/canboat/commit/1d92c86cf327809fafc68933f64730791e13afc0))
+* **database:** refine Yanmar, Fusion, Garmin, and AIS definitions ([a2908ea](https://github.com/canboat/canboat/commit/a2908eae152a4d35aca9ca532170eacf58abec44))
+
 ## [8.0.0-beta3](https://github.com/canboat/canboat/compare/v8.0.0-beta2...v8.0.0-beta3) (2026-08-13)
 
 
