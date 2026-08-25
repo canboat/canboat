@@ -268,7 +268,7 @@ checksum = "1e748733b7cbc798e1434b6ac524f0c1ff2ab456fe201501e6497c8417a4fc33"
 
 [[package]]
 name = "canboat"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "anyhow",
  "canboat-bridge",
@@ -290,7 +290,7 @@ dependencies = [
 
 [[package]]
 name = "canboat-bridge"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "anyhow",
  "canboat-cli",
@@ -307,7 +307,7 @@ dependencies = [
 
 [[package]]
 name = "canboat-cli"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "anyhow",
  "canboat-core",
@@ -319,7 +319,7 @@ dependencies = [
 
 [[package]]
 name = "canboat-core"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "canboat-schema",
  "indexmap",
@@ -331,7 +331,7 @@ dependencies = [
 
 [[package]]
 name = "canboat-io"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "canboat-core",
  "flate2",
@@ -344,11 +344,11 @@ dependencies = [
 
 [[package]]
 name = "canboat-schema"
-version = "8.0.0-beta3"
+version = "8.0.0"
 
 [[package]]
 name = "canboat-tokio"
-version = "8.0.0-beta3"
+version = "8.0.0"
 dependencies = [
  "anyhow",
  "canboat-core",
