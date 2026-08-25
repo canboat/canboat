@@ -19,3 +19,21 @@ samples/** -text
 # break the golden-file comparison.
 analyzer/tests/mixed-format.in    -text
 analyzer/tests/recombine-frames.in -text
+
+# Generated artifacts. The database is authored as YAML under database/ and
+# these files are produced from it by `keel generate` / `make generated`; they
+# are committed, and CI (build-ubuntu) regenerates and diffs them to enforce
+# lockstep. Marking them linguist-generated keeps GitHub's "Files changed" view
+# from burying the one-line database edit that caused them under megabytes of
+# collapsed regeneration, and keeps them out of the repo's language stats.
+#
+# NOTE: analyzer/pgn.h is NOT generated - it is hand-authored source. Only the
+# *-generated-data.h files below come out of keel.
+docs/canboat.xml                                  linguist-generated=true
+docs/canboat.json                                 linguist-generated=true
+docs/canboat.html                                 linguist-generated=true
+docs/canboat.dbc                                  linguist-generated=true
+analyzer/*-generated-data.h                       linguist-generated=true
+crates/canboat-core/src/schema_generated.rs       linguist-generated=true
+crates/canboat-core/src/schema_generated_j1939.rs linguist-generated=true
+crates/canboat-io/src/fastpacket_generated.rs     linguist-generated=true
