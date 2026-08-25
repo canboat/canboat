@@ -21,7 +21,7 @@ edition = "2024"
 license = "Apache-2.0"
 authors = ["Kees Verruijt <kees@verruijt.net>"]
 repository = "https://github.com/canboat/canboat"
-rust-version = "1.88"
+rust-version = "1.96"
 
 [workspace.dependencies]
 canboat-schema = { path = "crates/canboat-schema", version = "8.0.0-beta3" } # x-release-please-version

@@ -99,8 +99,12 @@ jobs:
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
 
+      # `rustup default` (set by dtolnay/rust-toolchain) loses to the repo's
+      # rust-toolchain.toml, which pins `stable` - so a plain `cargo check`
+      # here silently re-tests stable instead of the MSRV. `rustup run` names
+      # the toolchain explicitly and wins over the file.
       - name: Check
-        run: cargo check --workspace --locked
+        run: rustup run ${{ steps.msrv.outputs.version }} cargo check --workspace --all-targets --locked
 
   clippy:
     name: Rust Clippy
