@@ -7735,7 +7735,7 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>VAR</Unit>
+          <Unit>VA</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
           <Offset>-2000000000</Offset>
@@ -7745,7 +7745,7 @@ limitations under the License.
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
           <FieldType>NUMBER</FieldType>
-          <PhysicalQuantity>ELECTRICAL_REACTIVE_POWER</PhysicalQuantity>
+          <PhysicalQuantity>ELECTRICAL_APPARENT_POWER</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
