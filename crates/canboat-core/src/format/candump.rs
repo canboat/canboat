@@ -179,7 +179,9 @@ fn parse_log(line: &str) -> Result<RawFrame, ParseError> {
             offset: None,
         });
     }
-    for (i, pair) in bytes.chunks_exact(2).enumerate() {
+    // `as_chunks` rather than `chunks_exact`: the length parity was checked
+    // above, so the remainder is always empty (clippy::chunks_exact_to_as_chunks).
+    for (i, pair) in bytes.as_chunks::<2>().0.iter().enumerate() {
         let s = std::str::from_utf8(pair).map_err(|_| ParseError::BadHexByte {
             index: i,
             value: data_part.to_string(),
