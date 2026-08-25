@@ -9,4 +9,4 @@ fields:
   type: POWER_FIX32_OFFSET
 - id: apparentPower
   name: Apparent Power
-  type: POWER_FIX32_VAR_OFFSET
+  type: POWER_FIX32_VA_OFFSET

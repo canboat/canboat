@@ -206,7 +206,7 @@ BO_ 2566781950 PGN_65019_generatorPhaseCAcReact: 8 Vector__XXX
  SG_ reactivePower : 0|32@1- (1,0) [0|0] "VAR" Vector__XXX
 
 BO_ 2566782206 PGN_65020_generatorPhaseCAcPower: 8 Vector__XXX
- SG_ apparentPower : 32|32@1- (1,0) [0|0] "VAR" Vector__XXX
+ SG_ apparentPower : 32|32@1- (1,0) [0|0] "VA" Vector__XXX
  SG_ realPower : 0|32@1- (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2566782462 PGN_65021_generatorPhaseCBasicAc: 8 Vector__XXX

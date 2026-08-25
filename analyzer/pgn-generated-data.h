@@ -536,7 +536,7 @@ Pgn pgnList[] = {
      PACKET_SINGLE,
      {
       {.name = "Real Power", .camelName = "realPower", .fieldType = "POWER_FIX32_OFFSET", .hasSign = true},
-      {.name = "Apparent Power", .camelName = "apparentPower", .fieldType = "POWER_FIX32_VAR_OFFSET", .hasSign = true}
+      {.name = "Apparent Power", .camelName = "apparentPower", .fieldType = "POWER_FIX32_VA_OFFSET", .hasSign = true}
      },
      .camelDescription = "generatorPhaseCAcPower",
      .priority = 3},

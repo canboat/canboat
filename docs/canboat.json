@@ -8740,7 +8740,7 @@
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
-            "Unit":"VAR",
+            "Unit":"VA",
             "Resolution":1,
             "Signed":true,
             "Offset":-2000000000,
@@ -8750,7 +8750,7 @@
             "OutOfRangeValue":4294967294,
             "ReservedValue":4294967293,
             "FieldType":"NUMBER",
-            "PhysicalQuantity":"ELECTRICAL_REACTIVE_POWER"
+            "PhysicalQuantity":"ELECTRICAL_APPARENT_POWER"
           }
         ]
       },
