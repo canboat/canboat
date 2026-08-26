@@ -48,7 +48,7 @@ limitations under the License.
     <xs:sequence>
       <xs:annotation>
         <xs:documentation>
-          Whereever possible we use a straight sequence, which garantuees
+          Wherever possible we use a straight sequence, which guarantees
           that the children elements are always in the same order.
 
           This has as children some basic string elements followed by
@@ -252,7 +252,7 @@ limitations under the License.
       <xs:documentation>
         To explain numeric types more easily the concept of a PhysicalQuantity
         is introduced. Given the few public snippets of the NMEA PGN definitions
-        it looks as if they do not explicity have such a concept, but it seems
+        it looks as if they do not explicitly have such a concept, but it seems
         a nice way of grouping similar fields.
         If a field represents a value with a particular unit, like 'A' for Ampere,
         this refers to the concept of ELECTRICAL_CURRENT -- at least that is how
@@ -323,7 +323,7 @@ limitations under the License.
       <xs:element type="xs:boolean" name="Signed" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
-            Present in the FieldType when all fields have a garuanteed sign.
+            Present in the FieldType when all fields have a guaranteed sign.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

@@ -12,7 +12,7 @@ explanation: |-
   * If no requested fields have been included with the Request Group Function then the response is to return one or more PGNs, just like responding to the ISO Request (PGN 055904) described above.
   * If the Request Group Function (PGN 126208) includes the MOB Emitter ID field or MOB Status field, then the response shall be filtered by these fields contained within this request resulting in one or more PGN (127233) responses.
   If the MOB Emitter ID requested is not considered a valid MOB Emitter ID by the receiving device, then the appropriate response would be the Acknowledge Group Function (PGN 126208), containing the error state for PGN error code (Field 3) of '0x3 = Access denied.' And the requested MOB Emitter ID field parameter error code (Field 6) of '0x3 = Requested or command parameter out-of- range;'.
-  The Default update rate of this PGN is autonomous, as it is dependant upon notification rates of MOB devices.
+  The Default update rate of this PGN is autonomous, as it is dependent upon notification rates of MOB devices.
 fields:
 - id: sid
   name: SID
