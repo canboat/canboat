@@ -961,7 +961,7 @@ Pgn pgnList[] = {
       {.name = "SPN", .camelName = "spn", .fieldType = "BINARY", .size = 19, .resolution = 1.0, .description = "Suspect Parameter Number"},
       {.name = "FMI", .camelName = "fmi", .fieldType = "BINARY", .size = 5, .resolution = 1.0, .description = "Fault Mode Indicator"},
       {.name = "CM", .camelName = "cm", .fieldType = "BINARY", .size = 1, .resolution = 1.0, .description = "SPN Conversion Method"},
-      {.name = "OC", .camelName = "oc", .fieldType = "BINARY", .size = 7, .resolution = 1.0, .description = "Occurance Count"}
+      {.name = "OC", .camelName = "oc", .fieldType = "BINARY", .size = 7, .resolution = 1.0, .description = "Occurrence Count"}
      },
      .camelDescription = "activeTroubleCodes",
      .repeatingCount1 = 4,

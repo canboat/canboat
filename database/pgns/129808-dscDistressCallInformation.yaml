@@ -126,7 +126,7 @@ notes: |-
   This is like the worst PGN ever.
   1. The "Nature of Distress or 1st Telecommand' field meaning depends on the 'DSC Category'.
   2. The "Message address" (the 'to' field) meaning depends on the 'DSC format'.
-  3. Field 12 'MMSI of ship in destress' may have multiple interpretations.
+  3. Field 12 'MMSI of ship in distress' may have multiple interpretations.
   4. Field 22 'DSC expansion field data' depends on field 21 for its meaning.
   5. It contains a variable length field 'Telephone number', which means that bit offsets for subsequent fields
      depend on this field's length.

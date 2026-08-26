@@ -46,7 +46,7 @@ fields:
   name: Seatalk1 Command
   type: LOOKUP
   bits: 8
-  description: Device Indentification
+  description: Device Identification
   match: 144
   lookup: SEATALK1_COMMAND
   primaryKey: true
@@ -68,7 +68,7 @@ samples:
     industryCode: "Marine Industry"
     proprietaryId: "Seatalk 1 Encoded"
     command: "Seatalk1"
-    seatalk1Command: "Device Indentification"
+    seatalk1Command: "Device Identification"
     device: "S100"
 - raw:
   - "2023-01-01-00:00:00.000,7,126720,204,255,8,00,07,3b,9f,f0,81,90,10"  # from candumpSample3.txt
@@ -78,5 +78,5 @@ samples:
     industryCode: "Marine Industry"
     proprietaryId: "Seatalk 1 Encoded"
     command: "Seatalk1"
-    seatalk1Command: "Device Indentification"
+    seatalk1Command: "Device Identification"
     device: "Course Computer"

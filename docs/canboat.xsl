@@ -809,7 +809,7 @@
               <tr><td>30</td><td>ID 2 </td><td>SA 3</td><td>Source Address bit 3</td> </tr>
               <tr><td>31</td><td>ID 1 </td><td>SA 2</td><td>Source Address bit 2</td> </tr>
               <tr><td>32</td><td>ID 0 </td><td>SA 1</td><td>Source Address bit 1</td> </tr>
-              <tr><td>33</td><td>RTR  </td><td>RTR </td><td>Remote Tranmission Request bit</td> </tr>
+              <tr><td>33</td><td>RTR  </td><td>RTR </td><td>Remote Transmission Request bit</td> </tr>
               <tr><td>34</td><td>r 1  </td><td>r 1 </td><td>CAN reserved bit 1</td> </tr>
               <tr><td>35</td><td>r 0  </td><td>r 0 </td><td>CAN reserved bit 0</td> </tr>
               <tr><td>36</td><td>DLC 4</td><td>DLC 4</td><td>Data Length Code bit 4</td> </tr>

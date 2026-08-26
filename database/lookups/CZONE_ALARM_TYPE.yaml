@@ -45,7 +45,7 @@ values:
   45: Inverter Installation Error
   46: Charger Installation Error
   47: Cable Voltage Drop Too High
-  48: Shunt mistmatch
+  48: Shunt mismatch
   49: Cooling Fan Error
   50: Mastershunt Fuse Blown
   51: High Temperature

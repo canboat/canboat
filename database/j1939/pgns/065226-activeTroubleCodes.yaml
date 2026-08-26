@@ -56,7 +56,7 @@ fields:
       name: OC
       type: BINARY
       bits: 7
-      description: Occurance Count
+      description: Occurrence Count
 notes: |-
   J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/
 
