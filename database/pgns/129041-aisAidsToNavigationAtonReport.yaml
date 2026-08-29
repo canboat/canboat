@@ -131,4 +131,4 @@ samples:
     positionFixingDeviceType: "Surveyed"
     atonStatus: "0x00"
     aisTransceiverInformation: "Channel A VDL reception"
-    atonName: "SC                "
+    atonName: "SC"

@@ -345,18 +345,14 @@ fn decode_one(
             let len = byte_at(data, ctx.bit).unwrap_or(0) as usize;
             let v = slice_bytes(data, ctx.bit + 8, len);
             ctx.bit += 8 + (len + 1) * 8; // length byte + chars + terminating zero
-            Value::Str(String::from_utf8_lossy(&v).into_owned())
+            Value::Str(decode_text(trim_padding(&v)))
         }
         "STRING_LAU" => {
             let total = byte_at(data, ctx.bit).unwrap_or(0) as usize;
             let n = total.saturating_sub(2); // count includes length + encoding bytes
             let v = slice_bytes(data, ctx.bit + 16, n);
             ctx.bit += total.max(2) * 8;
-            Value::Str(
-                String::from_utf8_lossy(&v)
-                    .trim_end_matches('\0')
-                    .to_string(),
-            )
+            Value::Str(decode_text(trim_padding(&v)))
         }
         "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
             let v = slice_bits(data, ctx.bit, bits);
@@ -636,7 +632,40 @@ fn trim_string_fix(v: &[u8]) -> String {
         .iter()
         .position(|&b| b == 0xff || b == b'@' || b == 0)
         .unwrap_or(v.len());
-    String::from_utf8_lossy(&v[..end]).trim_end().to_string()
+    decode_text(&v[..end]).trim_end().to_string()
+}
+
+/// Strip the trailing filler run canboat's `printString` strips: 0xff (the
+/// NMEA 2000 "unknown" byte), NUL, '@' (the AIS "unknown" filler, which shows
+/// up at the end of badly converted AIS names) and whitespace. An all-filler
+/// field is an *unset* field: both the C analyzer and canboat-rs report it as
+/// empty, and without this it decodes to a run of U+00FF instead.
+///
+/// The byte set matches `is_string_padding` in canboat-core -- including 0x0b,
+/// which `is_ascii_whitespace` does not cover.
+fn trim_padding(v: &[u8]) -> &[u8] {
+    let end = v
+        .iter()
+        .rposition(|&b| !matches!(b, 0xff | 0x00 | b'@' | 0x0b) && !b.is_ascii_whitespace())
+        .map_or(0, |i| i + 1);
+    &v[..end]
+}
+
+/// Decode a run of 8-bit string bytes into text.
+///
+/// NMEA 2000 leaves the meaning of a byte >= 0x80 undefined in an 8-bit string
+/// field, and devices disagree. On one bus: a Fusion sends UTF-8 (`c5 ab` =
+/// U+016B in samples/fusion-126998-utf8.raw) while a B&G sends Latin-1 (`e6` =
+/// 'ae-ligature' in samples/bandg-129285-latin1.raw) -- in the same field type,
+/// under the same STRING_LAU control byte. So the encoding cannot be read off
+/// the field type or the control byte; it has to come from the bytes. Valid
+/// UTF-8 is taken as UTF-8, anything else as Latin-1, which maps every byte to
+/// a codepoint and so cannot fail. See canboat#864.
+fn decode_text(v: &[u8]) -> String {
+    match std::str::from_utf8(v) {
+        Ok(s) => s.to_string(),
+        Err(_) => v.iter().map(|&b| b as char).collect(),
+    }
 }
 
 fn hex(v: &[u8]) -> String {

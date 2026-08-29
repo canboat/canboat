@@ -1846,7 +1846,7 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
     if len == 0 {
         return FieldValue::NotAvailable;
     }
-    let s = String::from_utf8_lossy(&raw[..len]).into_owned();
+    let s = decode_text(&raw[..len]);
     FieldValue::String(s)
 }
 
@@ -1907,7 +1907,7 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
                 .iter()
                 .rposition(|&b| !is_string_padding(b))
                 .map_or(0, |i| i + 1);
-            String::from_utf8_lossy(&body[..end]).into_owned()
+            decode_text(&body[..end])
         }
     };
     // Canboat's `printString` trims trailing 0xff / NUL / '@' / spaces
@@ -1920,6 +1920,27 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
         return (FieldValue::NotAvailable, bits_consumed);
     }
     (FieldValue::String(trimmed.to_string()), bits_consumed)
+}
+
+/// Decode a run of 8-bit string bytes into text.
+///
+/// NMEA 2000 leaves the meaning of a byte >= 0x80 undefined in an 8-bit string
+/// field, and devices disagree. Captured on one bus: a Fusion sends UTF-8
+/// (`c5 ab` = U+016B in `samples/fusion-126998-utf8.raw`) while a B&G sends
+/// Latin-1 (`e6` = 'æ' in `samples/bandg-129285-latin1.raw`) — in the same
+/// field type, under the same STRING_LAU control byte. So the encoding is a
+/// property of neither the field type nor the control byte and has to be
+/// decided from the bytes: valid UTF-8 is taken as UTF-8, anything else as
+/// Latin-1, which maps every byte to a codepoint and so cannot fail.
+///
+/// Note this never yields U+FFFD, and never loses a byte value: a consumer
+/// that knows better can recover the original bytes from the Latin-1 branch.
+/// See canboat#864.
+fn decode_text(v: &[u8]) -> String {
+    match std::str::from_utf8(v) {
+        Ok(s) => s.to_string(),
+        Err(_) => v.iter().map(|&b| b as char).collect(),
+    }
 }
 
 /// Strip trailing canboat-padding bytes (`\0`, `'@'`, space, `\xff`)
@@ -1972,7 +1993,7 @@ fn decode_string_lz(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue
     let content_start = start + 1;
     let max_avail = region_end.saturating_sub(content_start);
     let content_end = content_start + len_byte.min(max_avail);
-    let raw = String::from_utf8_lossy(&data[content_start..content_end]);
+    let raw = decode_text(&data[content_start..content_end]);
     let trimmed = trim_string_padding(&raw);
     if trimmed.is_empty() {
         FieldValue::NotAvailable

@@ -23,13 +23,13 @@ samples:
     manufacturerInformation: "Airmar 1-603-673-9570 www.airmar.com"
 - raw: "2023-01-01-00:00:00.000,6,126998,3,255,102,22,01,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,22,01,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20,22,01,41,75,74,6f,6e,6e,69,63,20,52,65,73,65,61,72,63,68,20,20,20,20,20,20,20,20,20,20,20,20,20,20,20"  # from strings.raw
   expects:
-    installationDescription1: "                                "
-    installationDescription2: "                                "
-    manufacturerInformation: "Autonnic Research               "
+    installationDescription1: ""
+    installationDescription2: ""
+    manufacturerInformation: "Autonnic Research"
 - raw: "2023-01-01-00:00:00.000,6,126998,13,255,82,28,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,28,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,02,01"  # from h5000_pilot_126998.raw
   expects:
-    installationDescription1: "��������������������������������������"
-    installationDescription2: "��������������������������������������"
+    installationDescription1: ""
+    installationDescription2: ""
     manufacturerInformation: ""
 - raw: "2023-01-01-00:00:00.000,6,126998,51,255,51,0a,01,4d,53,2d,57,42,36,37,30,11,01,4d,61,74,73,c5,ab,72,61,20,46,c3,a6,6b,c3,a9,18,01,46,75,73,69,6f,6e,20,45,6c,65,63,74,72,6f,6e,69,63,73,20,4c,74,64"  # from fusion-126998-utf8.raw
   expects:
