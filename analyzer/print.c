@@ -1387,7 +1387,10 @@ extern bool fieldPrintDate(const Field   *field,
 
   d = correctGpsRollover(field, msg, msgLen, d);
 
-  t  = d * 86400;
+  // Widen before multiplying: d * 86400 overflows a 32-bit int from
+  // 2038-01-19 onwards, and the sentinel check above lets d run to
+  // 0xfffc = 2149-06-03.
+  t  = (time_t) d * 86400;
   tm = gmtime(&t);
   if (!tm)
   {

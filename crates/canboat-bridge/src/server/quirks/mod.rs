@@ -80,9 +80,14 @@ pub struct Quirks {
 impl Quirks {
     pub fn new(kinds: Vec<QuirkKind>) -> Self {
         // Not a frame emitter: it flips a switch in the decoder and
-        // has no state of its own here.
+        // has no state of its own here. The switch is process-wide --
+        // `decode()` takes no options -- so set it both ways, or a
+        // pipeline built without the quirk would inherit it from an
+        // earlier one in the same process.
         if kinds.contains(&QuirkKind::GpsRollover) {
             canboat_core::quirk::enable_gps_rollover();
+        } else {
+            canboat_core::quirk::disable_gps_rollover();
         }
         Self {
             scx20: kinds.contains(&QuirkKind::Scx20).then(scx20::Scx20::new),
@@ -122,13 +127,30 @@ impl Quirks {
 mod tests {
     use super::*;
 
+    /// `Quirks::new` writes the process-wide GPS rollover switch, so the
+    /// tests that call it must not run concurrently with each other.
+    static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     #[test]
     fn enabled_reflects_configured_quirks() {
+        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
         assert!(!Quirks::new(vec![]).is_enabled());
         assert!(Quirks::new(vec![QuirkKind::Scx20]).is_enabled());
         assert!(Quirks::new(vec![QuirkKind::Wmm]).is_enabled());
         let both = Quirks::new(vec![QuirkKind::Scx20, QuirkKind::Wmm]);
         assert!(both.is_enabled());
         assert!(both.scx20.is_some() && both.wmm.is_some());
+    }
+
+    /// The GPS rollover switch lives in the decoder, which is
+    /// process-wide, so a second pipeline that did not ask for it must
+    /// not inherit it from the first.
+    #[test]
+    fn gps_rollover_does_not_leak_into_the_next_pipeline() {
+        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
+        let _first = Quirks::new(vec![QuirkKind::GpsRollover]);
+        assert!(canboat_core::quirk::gps_rollover_reference_day().is_some());
+        let _second = Quirks::new(vec![QuirkKind::Wmm]);
+        assert!(canboat_core::quirk::gps_rollover_reference_day().is_none());
     }
 }
