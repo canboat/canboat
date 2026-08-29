@@ -339,6 +339,29 @@ static size_t encode_utf16(codepoint_t codepoint, utf16_t *utf16, size_t len, si
   return 2;
 }
 
+bool utf8_is_valid(utf8_t const *utf8, size_t utf8_len)
+{
+  for (size_t utf8_index = 0; utf8_index < utf8_len; utf8_index++)
+  {
+    size_t start = utf8_index;
+
+    if (decode_utf8(utf8, utf8_len, &utf8_index) != INVALID_CODEPOINT)
+      continue;
+
+    // decode_utf8() reports a decoding error as the replacement character, but
+    // U+FFFD is also a codepoint a device may legitimately send. Tell the two
+    // apart by looking at the bytes: a real U+FFFD is exactly EF BF BD, and the
+    // decoder consumed all three of them.
+    if (start + 2 >= utf8_len || utf8_index != start + 2 || utf8[start] != 0xef || utf8[start + 1] != 0xbf
+        || utf8[start + 2] != 0xbd)
+    {
+      return false;
+    }
+  }
+
+  return true;
+}
+
 size_t utf8_to_utf16(utf8_t const *utf8, size_t utf8_len, utf16_t *utf16, size_t utf16_len)
 {
   // The next codepoint that will be written in the UTF-16 string

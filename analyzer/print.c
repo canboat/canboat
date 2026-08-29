@@ -1420,6 +1420,17 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
   int c;
   int k;
 
+  /* NMEA 2000 leaves the meaning of a byte >= 0x80 undefined in an 8-bit string
+   * field, and devices disagree. On one bus a Fusion sends UTF-8 (c5 ab = U+016B
+   * in samples/fusion-126998-utf8.raw) while a B&G sends Latin-1 (e6 = 'ae' in
+   * samples/bandg-129285-latin1.raw) -- same field type, same STRING_LAU control
+   * byte. So the encoding is a property of neither, and has to come from the
+   * bytes: a run that is well-formed UTF-8 is passed through untouched, anything
+   * else is read as Latin-1 and re-encoded below. Either way the output is valid
+   * UTF-8 and no byte value is lost, where before this we emitted the raw byte
+   * and produced JSON that no strict parser would accept. See #864. */
+  bool utf8 = utf8_is_valid(data, (size_t) len);
+
   for (k = 0; k < len; k++)
   {
     c = data[k];
@@ -1472,9 +1483,14 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
            * \u00XX one, which is what canboat's Rust output already emits. */
           mprintf("\\u%04x", c);
         }
-        else
+        else if (c < 0x80 || utf8)
         {
           mprintf("%c", c);
+        }
+        else
+        {
+          /* A Latin-1 byte: U+0080..U+00FF all encode as two UTF-8 bytes. */
+          mprintf("%c%c", 0xc0 | (c >> 6), 0x80 | (c & 0x3f));
         }
     }
   }

@@ -22,6 +22,7 @@ limitations under the License.
 #ifndef UTF_H_INCLUDED
 #define UTF_H_INCLUDED
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -79,5 +80,22 @@ size_t utf16_to_utf8(utf16_t const *utf16, size_t utf16_len, utf8_t *utf8, size_
  *
  */
 size_t utf8_to_utf16(utf8_t const *utf8, size_t utf8_len, utf16_t *utf16, size_t utf16_len);
+
+/*
+ * Reports whether a byte run is well-formed UTF-8.
+ *
+ * Strict: overlong encodings, surrogates and codepoints beyond the Unicode
+ * maximum all count as invalid, since decode_utf8() rejects them.
+ *
+ * utf8:
+ *     The byte run to inspect. Not NUL-terminated; utf8_len bytes are read.
+ *
+ * utf8_len:
+ *     The number of bytes to inspect.
+ *
+ * Returns:
+ *     true if every byte is part of a well-formed sequence.
+ */
+bool utf8_is_valid(utf8_t const *utf8, size_t utf8_len);
 
 #endif // UTF8_H_INCLUDED
