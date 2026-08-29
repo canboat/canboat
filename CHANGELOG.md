@@ -11,10 +11,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-* **database:** add Yanmar, Fusion, and Garmin packet data ([01d0dc3](https://github.com/canboat/canboat/commit/01d0dc3dd24328c05cbeee384c477d36ea8066f6))
 * **database:** add Yanmar, Fusion, Garmin, and AIS packet data ([135d042](https://github.com/canboat/canboat/commit/135d04224ad56ba20472c8907c815c80867b7df1))
 * **database:** author minLength for PGNs that appear short on the wire ([d15a487](https://github.com/canboat/canboat/commit/d15a487d3a0e16677ec76f5f0fac95835daf9e4b))
-* **database:** author minLength, and give three AIS PGNs their trailing Sequence ID ([cb09435](https://github.com/canboat/canboat/commit/cb09435cb0cba3b1c858457fcb192c16a16c7178))
 * **database:** give 129039/129793/129794 their trailing Sequence ID ([1d92c86](https://github.com/canboat/canboat/commit/1d92c86cf327809fafc68933f64730791e13afc0))
 * **database:** refine Yanmar, Fusion, Garmin, and AIS definitions ([a2908ea](https://github.com/canboat/canboat/commit/a2908eae152a4d35aca9ca532170eacf58abec44))
 
@@ -22,7 +20,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 ### Fixed
 
 * **65020:** apparent power is in VA, not VAR ([#853](https://github.com/canboat/canboat/issues/853)) ([a4901df](https://github.com/canboat/canboat/commit/a4901df6135444814f4294faec1b14f0231b139e))
-* **rust:** satisfy clippy 1.98's chunks_exact_to_as_chunks ([b165859](https://github.com/canboat/canboat/commit/b165859dd8cb3fabd4ba5de9acac30dda905d3ac))
 * **rust:** satisfy clippy 1.98's chunks_exact_to_as_chunks ([866c509](https://github.com/canboat/canboat/commit/866c509cc23b121445773413a65c1f7b490c8ad3))
 
 
@@ -35,27 +32,17 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 
 ### Added
 
-* **127751:** decode DC Voltage/Current as single-frame, not fast packet ([2bce845](https://github.com/canboat/canboat/commit/2bce845f0c874874db9044497c756fab6e5cedf7))
 * **127751:** decode DC Voltage/Current as single-frame, not fast packet ([981883f](https://github.com/canboat/canboat/commit/981883f0707b9a66966ab40b0a3f973529afa8d9)), closes [#829](https://github.com/canboat/canboat/issues/829)
-* **130824:** decode Maretron annunciator status and its 126208 command path ([01cb810](https://github.com/canboat/canboat/commit/01cb810ba557c1b381746ab6f400d43bda758eea))
 * **130824:** decode Maretron annunciator status and its 126208 command path ([73aac89](https://github.com/canboat/canboat/commit/73aac89cd10d58b6f7c46c9502871dd06e9f4616))
 * **database:** 467 Humminbird is a transposition of 476 ([89413b9](https://github.com/canboat/canboat/commit/89413b92a2c7535778f25f89f084463cfce32c2d))
-* **database:** add Sleipner S-Link thruster PGNs ([2e86af7](https://github.com/canboat/canboat/commit/2e86af7d9771f26cc6e3dcae2474b4a4c1ecd795))
 * **database:** add Sleipner S-Link thruster PGNs ([050ed5b](https://github.com/canboat/canboat/commit/050ed5b53c4e4488ee39eba46a577a9a1af1106a))
-* **database:** correct the NMEA 2000 manufacturer names ([8529baa](https://github.com/canboat/canboat/commit/8529baa558187dbf2bb6c1a8e1fce3a2b902c409))
 * **database:** correct the NMEA 2000 manufacturer names ([5d7d1c1](https://github.com/canboat/canboat/commit/5d7d1c10fc7c3b872f492e8a156b4b95df978f19))
-* **database:** give J1939 its own manufacturer-code table ([5db5b34](https://github.com/canboat/canboat/commit/5db5b34a7bf2ac54a7a47b666fd94630e01c7440))
 * **database:** give J1939 its own manufacturer-code table ([db0d58f](https://github.com/canboat/canboat/commit/db0d58fde15eefee23d60632bcee171dc7765266))
-* **database:** import the ISO 11783/J1939 manufacturer registry ([bce0c6d](https://github.com/canboat/canboat/commit/bce0c6d258ac8d532e91bac9d02f31026ccce815))
 * **database:** import the ISO 11783/J1939 manufacturer registry ([88b3f05](https://github.com/canboat/canboat/commit/88b3f05f0d9d69ae659e56d3fa3f368659b93b49)), closes [#837](https://github.com/canboat/canboat/issues/837)
 * **j1939:** add 22 engine, aftertreatment and fluid PGNs ([e1f9556](https://github.com/canboat/canboat/commit/e1f95567ba2ecd6d502236a4d09642e4a233336c))
-* **j1939:** add 25 engine, transmission, aftertreatment and fluid PGNs ([0724548](https://github.com/canboat/canboat/commit/07245480e31a7ce70e67c9821db3fa2c5652e2d9))
 * **j1939:** add transmission, rated power and gear PGNs ([bf6cfe7](https://github.com/canboat/canboat/commit/bf6cfe7adebfd86286fcbc80b7524d5e2b10f3d0))
-* **j1939:** bring the J1939 schema flavor to the Rust tools, with candump input ([bdd469d](https://github.com/canboat/canboat/commit/bdd469d8f7cece4ea5c88d311abe432b4ed74b65))
-* **j1939:** complete the standard engine PGN definitions ([13ebfc5](https://github.com/canboat/canboat/commit/13ebfc5ba61dd744b54fa9c1faba1bc79353edba))
 * **j1939:** complete the standard engine PGN definitions ([253bebd](https://github.com/canboat/canboat/commit/253bebd7d38152532487caa9f1adf651dca8df4e))
 * **j1939:** J1939 schema flavor for the Rust tools, with candump input ([8c2ab99](https://github.com/canboat/canboat/commit/8c2ab99b2510d0e142dcf9b6f19b1ac273369bbb))
-* **sleipner:** correct S-Link thrust command split, add PPC thruster telemetry ([011b296](https://github.com/canboat/canboat/commit/011b29662d618e4e4d25ea2c8291223fb55022da))
 * **sleipner:** correct S-Link thrust command split, add PPC thruster telemetry ([4b1ad62](https://github.com/canboat/canboat/commit/4b1ad62b496a9b66fa4accf3bed18148e0d57e70))
 
 
@@ -65,7 +52,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **decode:** apply the range-derived sentinels to hints-less number fields ([5696fca](https://github.com/canboat/canboat/commit/5696fca1e69d664cb4bae3480ad8431d8fa753e5)), closes [#823](https://github.com/canboat/canboat/issues/823)
 * **docs:** correct arming command count and command fixture labelling ([2855aba](https://github.com/canboat/canboat/commit/2855aba466ebca4897ae21ec47c8060efabedaea))
 * fold the release re-stamp into release-please's own commit ([67a580c](https://github.com/canboat/canboat/commit/67a580ccd4fde032988ed4410ee1d4688b8c3962))
-* **keel:** enforce R01's allowed keys and enum membership in the loader ([85a5249](https://github.com/canboat/canboat/commit/85a52495ad3a1be10eb447b52c25afbc3bbc9a51))
 * **keel:** enforce R01's allowed keys and enum membership in the loader ([8aac808](https://github.com/canboat/canboat/commit/8aac80880934348658d4f6fe0c87397cefb23984))
 * **test:** stop the TCP port race failing CI on loaded runners ([deb14b2](https://github.com/canboat/canboat/commit/deb14b2a927f5e5f874c764a1f0720725c9dd672))
 
@@ -88,7 +74,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **130850:** model the AP mode commands as the full 12 bytes ([#795](https://github.com/canboat/canboat/issues/795)) ([c9b2fc7](https://github.com/canboat/canboat/commit/c9b2fc7d7589d86a9128ddcbc5e1ba8043fd884a))
 * **130850:** trim the catch-all AP command to the full 12 bytes ([#796](https://github.com/canboat/canboat/issues/796)) ([a1d4b54](https://github.com/canboat/canboat/commit/a1d4b54252b3a5f21e5b38fce29c7b64aa7a14cf))
 * **canboat:** expose the JSON input driver as a library feature ([3130bf1](https://github.com/canboat/canboat/commit/3130bf1e44e6dcd5f3032de2f3c795ca4720e29c))
-* **canboat:** wasm32 support — target fixes and the JSON input driver as a library feature ([1d7450c](https://github.com/canboat/canboat/commit/1d7450c5a3314ac6654998529138bed8f6c3678c))
 * **convert:** re-encode analyzer JSON to wire frames with --from json ([#800](https://github.com/canboat/canboat/issues/800)) ([294520b](https://github.com/canboat/canboat/commit/294520b5ab1715885b5bd2c9782d6cd524bb5d02))
 * **encode:** match the VARIABLE target variant from the parameter pairs ([#811](https://github.com/canboat/canboat/issues/811)) ([c301bd5](https://github.com/canboat/canboat/commit/c301bd5f19ef607f3d9ebc73ad61676601f5efec))
 * **interface:** network line gateways - Yacht Devices RAW and W2K-1 N2K ASCII ([#807](https://github.com/canboat/canboat/issues/807)) ([7664d29](https://github.com/canboat/canboat/commit/7664d29801af2f6fda5c10a9bae830af47cae4ed))
@@ -102,7 +87,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **convert:** keep the human PGN description in camelCase mode ([#810](https://github.com/canboat/canboat/issues/810)) ([b039e00](https://github.com/canboat/canboat/commit/b039e008eb00c55612405e7f24d2532f7d7d609c))
 * **core:** build and run on wasm32 targets ([c981917](https://github.com/canboat/canboat/commit/c981917fd2aa713478896611dda39d0cf2d1b5e7))
 * **encode:** absent repeating-list count encodes as zero ([#816](https://github.com/canboat/canboat/issues/816)) ([d7f47d8](https://github.com/canboat/canboat/commit/d7f47d82f527b3af3c31817862deb97bdf6ebae0))
-* **fieldtypes:** drop the phantom terminating zero from STRING_LAU ([e336627](https://github.com/canboat/canboat/commit/e336627a601cc81e34298b261aab3c7efede59f9))
 * **fieldtypes:** drop the phantom terminating zero from STRING_LAU ([6fa05aa](https://github.com/canboat/canboat/commit/6fa05aa862522001a958cc43b8a9a1a3918519eb)), closes [#760](https://github.com/canboat/canboat/issues/760)
 * **interface:** accept the C maretron-ipg device syntax in the shim ([#801](https://github.com/canboat/canboat/issues/801)) ([9737785](https://github.com/canboat/canboat/commit/973778585b9ba96d49d9cd739df254ff3d8d200f))
 * **json:** always emit string-typed elements as JSON strings ([#793](https://github.com/canboat/canboat/issues/793)) ([d6a1cab](https://github.com/canboat/canboat/commit/d6a1cab1a3133cb55c6be8091889dd7a4939d629))
@@ -157,9 +141,7 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **keel:** editor — one-field modal with per-attribute help + lossless save ([1ca0bd9](https://github.com/canboat/canboat/commit/1ca0bd9d7cbf193bcb20406938c7b2d84c63c558))
 * **keel:** editor round 2 - evidence for existing PGNs, lookup view/edit ([5a786d2](https://github.com/canboat/canboat/commit/5a786d2898189e1c8ccf97df54eec3dbea5764b4))
 * **keel:** editor scratch mode + undo-this-edit ([6fd2cb7](https://github.com/canboat/canboat/commit/6fd2cb774f69910ff0968beac24b526a477b1439))
-* **keel:** emit Resolution at full precision, restore the exact values ([e6ee07d](https://github.com/canboat/canboat/commit/e6ee07d9ad943ae27d911d925f3559d3d7f9092a))
 * **keel:** emit Resolution at full precision, restore the exact values ([8121860](https://github.com/canboat/canboat/commit/81218605b43e99b58bcbe328b6e061a74460c2c2))
-* **keel:** emit the Rust tables so the crates can be published ([04b6756](https://github.com/canboat/canboat/commit/04b67561b89b68ef7d78126a816ad3cdd6a91082))
 * **keel:** emit the Rust tables so the crates can be published ([8ad0d78](https://github.com/canboat/canboat/commit/8ad0d78e8877ec7c0b481d25f32073b879dbca80))
 * **keel:** entered data never matches a fallback PGN ([c67bc49](https://github.com/canboat/canboat/commit/c67bc4933223d900137f197d13269d61250d520c))
 * **keel:** evidence grid - coalesced field spans, exact bit spans from decode ([d28ea4c](https://github.com/canboat/canboat/commit/d28ea4c34b7e54bd0bbdac7cc7d81efeb86cbf99))
@@ -208,10 +190,8 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **analyzer:** key naming decisions on showCamel mode, not camelName presence ([895b0b6](https://github.com/canboat/canboat/commit/895b0b64cce7ee57c0abdb0a16c988a14f1bc5f8))
 * **ci:** drop --offline from the release Cargo.lock re-stamp ([a77a4e5](https://github.com/canboat/canboat/commit/a77a4e54e7e2ddb9e8dab46f7246659a1b4baaa6))
 * **ci:** re-stamp rust/Cargo.lock on the release PR ([49dbf3a](https://github.com/canboat/canboat/commit/49dbf3abb9ede57d9db038e9beda0680d7983f7a))
-* decode parity between canboat convert and the C analyzer ([20c0b26](https://github.com/canboat/canboat/commit/20c0b266ab8bbff8a89b4e2c4d0bd91db70752a2))
 * decode STRING_LAU fields with 0xff encoding byte as empty ([#740](https://github.com/canboat/canboat/issues/740)) ([97881b5](https://github.com/canboat/canboat/commit/97881b53620d22913a66318aee854a1d4f41d892))
 * don't let fast-packet frame 0 complete against stale frames ([#738](https://github.com/canboat/canboat/issues/738)) ([65d5599](https://github.com/canboat/canboat/commit/65d55997e2b4eeb006ded2475456503afbf9baee))
-* escape control characters in JSON, and emit gateway status from the NGT-1 ([5ffa436](https://github.com/canboat/canboat/commit/5ffa43655a1cdb98773ba7f98f0d5ffb1c0c2573))
 * escape control characters in JSON, and emit gateway status from the NGT-1 ([16103b6](https://github.com/canboat/canboat/commit/16103b69665c354174bcf04e805b24dea3e98c7b))
 * **garmin:** drop 126720 key-value editor test data from this branch ([e99034f](https://github.com/canboat/canboat/commit/e99034f1db34b6ccf5d5c2dd10f6286e718e68aa))
 * **keel/bootstrap:** add 'keel convert --xml' so resync prunes orphans ([f1b0dcb](https://github.com/canboat/canboat/commit/f1b0dcb2d7ec7c4e61cea0e2b5c9d0c0c14e7c79))
@@ -235,7 +215,6 @@ Sections can be: Added Changed Deprecated Removed Fixed Security.
 * **rust:** cap STRING_FIX to the message instead of dropping it ([94a8b3d](https://github.com/canboat/canboat/commit/94a8b3d7884e9658dce997ba09d0307b7aec066e))
 * **rust:** decode DECIMAL as decimal pairs, not as an integer ([7c78a70](https://github.com/canboat/canboat/commit/7c78a70aa0f762d3f10c037ef6748e908807d53e))
 * **rust:** detect the unavailable sentinel on 64-bit fields ([f71a5df](https://github.com/canboat/canboat/commit/f71a5dffda52fe4f0a3b35d93859fce7c7961f66))
-* **rust:** don't let install-shims overwrite an installed program ([0d92668](https://github.com/canboat/canboat/commit/0d92668cffaa32cc0acfced8c06fb0d5589ba9c7))
 * **rust:** don't let install-shims overwrite an installed program ([17e6c09](https://github.com/canboat/canboat/commit/17e6c09cd593af50a350bc3f23c54b3f1c91b09d))
 * **rust:** don't strip sentinels from DYNAMIC_FIELD_VALUE fields ([4c05112](https://github.com/canboat/canboat/commit/4c051122282430d40309e3e75b947d79f952bfdb))
 * **rust:** drop Out Of Range and Reserved sentinels from JSON ([a6bfcc8](https://github.com/canboat/canboat/commit/a6bfcc8131b5574865f353e0a711d9dee7c3494e))
