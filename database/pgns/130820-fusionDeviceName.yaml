@@ -41,3 +41,9 @@ samples:
     industryCode: "Marine Industry"
     messageId: "Unit Name"
     name: "Wilhelm"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,21,a3,99,21,80,0f,4d,61,74,73,c5,ab,72,61,20,46,c3,a6,6b,c3,a9,00"  # from fusion-130820-utf8.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Unit Name"
+    name: "Matsūra Fæké"
