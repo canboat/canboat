@@ -221,6 +221,11 @@ pub struct Args {
     #[command(flatten)]
     shape: canboat_cli::ShapeArgs,
 
+    /// Decode-time device quirks, off by default (`--quirk
+    /// gps-rollover`). Not for replaying pre-2019 captures.
+    #[command(flatten)]
+    quirk: canboat_cli::QuirkArgs,
+
     /// Suppress the leading `{"version":…,"units":…}` banner that
     /// `--to json` emits. Use when the output is diffed as a pure
     /// record stream; leave it on when piping into `n2kd`, which reads
@@ -285,6 +290,7 @@ pub fn run(args: Args) -> Result<()> {
     let _ = env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("warn"))
         .try_init();
     args.shape.warn_deprecated();
+    args.quirk.apply();
     let forced = args.from.and_then(FromFormat::to_input_format);
     let ebl = ebl_input(&args);
     let stdout = io::stdout();

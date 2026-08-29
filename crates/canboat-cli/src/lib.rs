@@ -16,8 +16,10 @@
 use std::env;
 use std::ffi::OsString;
 
+pub mod quirk;
 pub mod shape;
 
+pub use quirk::{DecodeQuirk, QuirkArgs};
 pub use shape::{IdStyle, ShapeArgs, UnitSystem};
 
 /// The canboat copyright line and schema version, extracted from

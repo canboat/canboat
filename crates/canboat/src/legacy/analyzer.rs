@@ -67,6 +67,11 @@ struct Cli {
     #[command(flatten)]
     shape: canboat_cli::ShapeArgs,
 
+    /// Decode-time device quirks, off by default (`--quirk
+    /// gps-rollover`). Not for replaying pre-2019 captures.
+    #[command(flatten)]
+    quirk: canboat_cli::QuirkArgs,
+
     /// Use the given string in place of any analyzer-generated
     /// timestamps (matches canboat's `-fixtime`).
     #[arg(long, value_name = "STRING")]
@@ -117,6 +122,7 @@ pub fn run(argv: Vec<OsString>) -> Result<()> {
 
 fn run_cli(cli: Cli) -> Result<()> {
     cli.shape.warn_deprecated();
+    cli.quirk.apply();
     let units = cli.shape.units();
 
     let json_opts = JsonOptions {

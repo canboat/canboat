@@ -56,6 +56,25 @@ The remaining C converters, the helper scripts in `util/` (PHP, perl and ksh)
 and the Python tooling will most likely move to Rust in time; the C `n2kd` and
 `n2kd_monitor` already have, and were removed in v8.
 
+## Device quirks
+
+Some devices misbehave in ways CANboat can cover for. Each workaround is a
+named *quirk*, and every one of them is **off by default** — they all rewrite
+or invent data, so you switch on the ones you need:
+
+| Quirk | What it does | Where |
+| --- | --- | --- |
+| `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
+| `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan`) |
+| `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
+| `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan`) |
+
+`gps-rollover` is the odd one out: it corrects a decoded value rather than
+putting a frame on the bus, which is why it is available when decoding a
+capture file too. Do not use it on a capture made before April 2019 — it
+cannot tell a rolled-over date from a genuinely old one, and will move the
+whole log forward twenty years.
+
 ## The library
 
 The decoder is also a set of Rust crates, so you can embed NMEA 2000 handling
