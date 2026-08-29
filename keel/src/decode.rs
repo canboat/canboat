@@ -359,10 +359,8 @@ fn decode_one(
             // raw bytes would lose the character. Matches decode_string_lau in
             // canboat-core and fieldPrintStringLAU in analyzer/print.c.
             if control == 0 {
-                let units: Vec<u16> = v
-                    .chunks_exact(2)
-                    .map(|c| u16::from_le_bytes([c[0], c[1]]))
-                    .collect();
+                let (pairs, _) = v.as_chunks::<2>();
+                let units: Vec<u16> = pairs.iter().copied().map(u16::from_le_bytes).collect();
                 let text = String::from_utf16_lossy(&units);
                 Value::Str(trim_padding_str(&text).to_string())
             } else {
