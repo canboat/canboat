@@ -36,3 +36,6 @@ samples:
     installationDescription1: "MS-WB670"
     installationDescription2: "Matsūra Fæké"
     manufacturerInformation: "Fusion Electronics Ltd"
+- raw: "2023-01-01-00:00:00.000,6,126998,60,255,10,06,00,a9,03,6b,00,02,01,02,01"  # synthetic: STRING_LAU control byte 0 (UTF-16LE)
+  expects:
+    installationDescription1: "Ωk"

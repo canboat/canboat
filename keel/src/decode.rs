@@ -349,10 +349,25 @@ fn decode_one(
         }
         "STRING_LAU" => {
             let total = byte_at(data, ctx.bit).unwrap_or(0) as usize;
+            let control = byte_at(data, ctx.bit + 8).unwrap_or(1);
             let n = total.saturating_sub(2); // count includes length + encoding bytes
             let v = slice_bytes(data, ctx.bit + 16, n);
             ctx.bit += total.max(2) * 8;
-            Value::Str(decode_text(trim_padding(&v)))
+            // Control byte 0 is UTF-16LE, anything else 8-bit text. The filler
+            // trim only applies to the 8-bit branch: a trailing 00 in UTF-16LE
+            // is the high half of an ASCII glyph, not padding, so trimming the
+            // raw bytes would lose the character. Matches decode_string_lau in
+            // canboat-core and fieldPrintStringLAU in analyzer/print.c.
+            if control == 0 {
+                let units: Vec<u16> = v
+                    .chunks_exact(2)
+                    .map(|c| u16::from_le_bytes([c[0], c[1]]))
+                    .collect();
+                let text = String::from_utf16_lossy(&units);
+                Value::Str(trim_padding_str(&text).to_string())
+            } else {
+                Value::Str(decode_text(trim_padding(&v)))
+            }
         }
         "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
             let v = slice_bits(data, ctx.bit, bits);
@@ -649,6 +664,15 @@ fn trim_padding(v: &[u8]) -> &[u8] {
         .rposition(|&b| !matches!(b, 0xff | 0x00 | b'@' | 0x0b) && !b.is_ascii_whitespace())
         .map_or(0, |i| i + 1);
     &v[..end]
+}
+
+/// The str-level counterpart of [`trim_padding`], for text that came out of a
+/// UTF-16LE field: the filler is trimmed after conversion rather than before,
+/// since the raw bytes interleave NULs that are part of the encoding.
+fn trim_padding_str(s: &str) -> &str {
+    s.trim_end_matches(|c: char| {
+        matches!(c, '\u{0}' | '\u{ff}' | '@' | '\u{b}') || c.is_whitespace()
+    })
 }
 
 /// Decode a run of 8-bit string bytes into text.
