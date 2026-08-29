@@ -1,0 +1,26 @@
+# Fusion (src 51) PGN 126998 Configuration Information — STRING_LAU with UTF-8.
+# Captured 2026-08-29 in response to an ISO Request. Evidence for canboat#864.
+#
+# Installation Description #2:
+#   11 01 4d 61 74 73 c5 ab 72 61 20 46 c3 a6 6b c3 a9
+#   len 0x11 = 17 = 2 header + 15 payload bytes, control byte 1, NO trailing NUL
+#   c5 ab = U+016B "ū" — a character with no Latin-1 representation at all.
+#
+# This is the same field type and the same control byte as the B&G route name in
+# samples/bandg-129285-latin1.raw, which is Latin-1 (e6 = "æ") and DOES carry a
+# trailing NUL counted in the length. So STRING_LAU control 1 is not one encoding:
+# it is whatever the sending device felt like, and the length convention varies too.
+#
+# The Airmar DST810 frame is included as a plain-ASCII control.
+2026-08-29T12:47:52.809Z,6,126998,51,255,51,0a,01,4d,53,2d,57,42,36,37,30,11,01,4d,61,74,73,c5,ab,72,61,20,46,c3,a6,6b,c3,a9,18,01,46,75,73,69,6f,6e,20,45,6c,65,63,74,72,6f,6e,69,63,73,20,4c,74,64
+2026-08-29T12:47:52.825Z,6,126998,35,255,59,02,01,13,01,46,45,3a,45,46,3a,32,38,3a,34,30,3a,36,42,3a,43,38,26,01,41,69,72,6d,61,72,20,31,2d,36,30,33,2d,36,37,33,2d,39,35,37,30,20,77,77,77,2e,61,69,72,6d,61,72,2e,63,6f,6d
+2026-08-29T12:47:52.831Z,6,126998,49,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.832Z,6,126998,39,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.832Z,6,126998,21,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.834Z,6,126998,25,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.834Z,6,126998,28,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.835Z,6,126998,7,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.838Z,6,126998,20,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.845Z,6,126998,48,255,6,02,01,02,01,02,01
+2026-08-29T12:47:52.846Z,6,126998,27,255,6,02,00,02,00,02,00
+2026-08-29T12:47:52.848Z,6,126998,50,255,6,02,01,02,01,02,01

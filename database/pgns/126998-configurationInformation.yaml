@@ -31,3 +31,8 @@ samples:
     installationDescription1: "��������������������������������������"
     installationDescription2: "��������������������������������������"
     manufacturerInformation: ""
+- raw: "2023-01-01-00:00:00.000,6,126998,51,255,51,0a,01,4d,53,2d,57,42,36,37,30,11,01,4d,61,74,73,c5,ab,72,61,20,46,c3,a6,6b,c3,a9,18,01,46,75,73,69,6f,6e,20,45,6c,65,63,74,72,6f,6e,69,63,73,20,4c,74,64"  # from fusion-126998-utf8.raw
+  expects:
+    installationDescription1: "MS-WB670"
+    installationDescription2: "Matsūra Fæké"
+    manufacturerInformation: "Fusion Electronics Ltd"
