@@ -190,7 +190,9 @@ pub struct Args {
     ///
     /// `scx20` and `motion` impersonate/claim a device and need
     /// `--socketcan`; `wmm` emits canboat's own PGN and works with any
-    /// writable backend (socketcan / NGT-1 / iKonvert).
+    /// writable backend (socketcan / NGT-1 / iKonvert);
+    /// `gps-rollover` only rewrites decoded dates and needs no backend
+    /// at all.
     #[arg(long, value_enum, value_name = "NAME")]
     quirk: Vec<quirks::QuirkKind>,
 

@@ -106,6 +106,7 @@ extern GeoFormats   showGeo;
 extern char        *sep;
 extern char         closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
 extern bool         g_skip;
+extern bool         g_quirkGpsRollover; // -quirk gps-rollover: correct dates from a pre-2019 GPS receiver
 extern const Field *g_ftf;
 extern int64_t      g_length;
 extern bool         g_lengthValid; // true once a DYNAMIC_FIELD_LENGTH set g_length (so a length of 0 means "empty", not "unknown")

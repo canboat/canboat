@@ -29,6 +29,7 @@ limitations under the License.
 extern int g_variableFieldRepeat[2]; // Actual number of repetitions
 bool       g_skip;
 int64_t    g_previousFieldValue;
+bool       g_quirkGpsRollover; // -quirk gps-rollover; see correctGpsRollover()
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
 {
@@ -1258,6 +1259,92 @@ extern bool fieldPrintTime(const Field   *field,
   return true;
 }
 
+/*
+ * One GPS rollover epoch: the week number is 10 bits counted from
+ * 1980-01-06, so it wraps every 1024 weeks = 7168 days (1999-08-22,
+ * 2019-04-07, next 2038-11-21). A receiver resolves the wrap with a
+ * base week from its firmware build date; one that was never updated
+ * keeps a base that is one -- or, if it also missed 1999, two -- epochs
+ * stale and reports dates that far in the past. Only the week number
+ * wraps, so the time of day is right and the fix is a whole number of
+ * epochs.
+ */
+#define GPS_ROLLOVER_DAYS (7168u)
+/* Largest day count that is a date rather than a sentinel: 2149-06-03. */
+#define MAX_DATE_DAY (0xfffcu)
+/*
+ * Floor for "today": a boat computer without an RTC comes up believing
+ * it is 1970 and gets its clock *from* the GPS we are correcting, so
+ * the system clock alone is not a usable reference. 2026-01-01.
+ */
+#define MIN_REFERENCE_DAY (20454u)
+
+/*
+ * Snap a rolled-over date to the epoch nearest today -- which is what
+ * the receiver's own base-week logic does, so it handles a doubly stale
+ * receiver and the 2038 rollover without a code change.
+ *
+ * Only dates from a GNSS receiver on our own bus are touched: 129029,
+ * 129033, and 126992 when its source is GPS. The AIS reports carry
+ * another station's clock and the remaining DATE fields (Maretron
+ * counters, route database entries, station data) are not receiver
+ * clocks at all. `msg`/`msgLen` are the whole message, before
+ * adjustDataLenStart() moved the caller's pointer to the field.
+ */
+static uint16_t correctGpsRollover(const Field *field, const uint8_t *msg, size_t msgLen, uint16_t d)
+{
+  int64_t  source;
+  uint64_t today;
+  uint32_t reference;
+  uint32_t behind;
+  uint32_t epochs;
+  uint32_t corrected;
+
+  if (!g_quirkGpsRollover || field->pgn == NULL)
+  {
+    return d;
+  }
+
+  switch (field->pgn->pgn)
+  {
+    case 129029: // GNSS Position Data
+    case 129033: // Time & Date
+      break;
+
+    case 126992: // System Time, but only when Source (field 2) is GPS.
+      // GLONASS counts weeks from its own epoch; radio station and the
+      // local cesium/rubidium/crystal clocks do not roll over at all.
+      if (!extractNumberByOrder(field->pgn, 2, msg, msgLen, &source) || source != 0)
+      {
+        return d;
+      }
+      break;
+
+    default:
+      return d;
+  }
+
+  today     = (uint64_t) time(NULL) / 86400;
+  reference = (today > UINT16_MAX) ? UINT16_MAX : (uint32_t) today;
+  if (reference < MIN_REFERENCE_DAY)
+  {
+    reference = MIN_REFERENCE_DAY;
+  }
+
+  behind = (reference > d) ? reference - d : 0;
+  epochs = (behind + GPS_ROLLOVER_DAYS / 2) / GPS_ROLLOVER_DAYS;
+  if (epochs == 0)
+  {
+    return d;
+  }
+  corrected = d + epochs * GPS_ROLLOVER_DAYS;
+  if (corrected > MAX_DATE_DAY)
+  {
+    return d;
+  }
+  return (uint16_t) corrected;
+}
+
 extern bool fieldPrintDate(const Field   *field,
                            const char    *fieldName,
                            const uint8_t *data,
@@ -1265,10 +1352,12 @@ extern bool fieldPrintDate(const Field   *field,
                            size_t         startBit,
                            size_t        *bits)
 {
-  char       buf[sizeof("2008.03.10") + 1];
-  time_t     t;
-  struct tm *tm;
-  uint16_t   d;
+  char           buf[sizeof("2008.03.10") + 1];
+  time_t         t;
+  struct tm     *tm;
+  uint16_t       d;
+  const uint8_t *msg    = data;
+  size_t         msgLen = dataLen;
 
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
@@ -1295,6 +1384,8 @@ extern bool fieldPrintDate(const Field   *field,
     printEmpty(fieldName, d - INT64_C(0xffff));
     return true;
   }
+
+  d = correctGpsRollover(field, msg, msgLen, d);
 
   t  = d * 86400;
   tm = gmtime(&t);

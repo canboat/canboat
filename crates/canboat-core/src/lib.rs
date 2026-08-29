@@ -19,6 +19,7 @@ pub mod frame;
 pub mod from_json;
 pub mod os;
 pub mod output;
+pub mod quirk;
 pub mod reassembly;
 mod schema_data;
 mod schema_data_j1939;

@@ -562,7 +562,10 @@ impl PgnDatabase {
             .pick_variant(frame)
             .ok_or(DecodeError::UnknownPgn { pgn: frame.pgn })?;
 
-        let (fields, has_repeating_set) = decode_fields(info, &frame.data, self)?;
+        let (mut fields, has_repeating_set) = decode_fields(info, &frame.data, self)?;
+        // Opt-in device-quirk corrections (GPS week rollover); a no-op
+        // — one relaxed atomic load — unless a quirk was switched on.
+        crate::quirk::apply(frame.pgn, &mut fields);
         let index_by_order = build_index_by_order(&fields);
 
         Ok(DecodedPgn {

@@ -161,6 +161,7 @@ static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
   printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
+         "[-quirk gps-rollover] "
          "-format <fmt> "
          "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -178,6 +179,10 @@ static void usage(char **argv, char **av)
   printf("     -geo dd           Print geographic format in dd.dddddd format\n");
   printf("     -geo dm           Print geographic format in dd.mm.mmm format\n");
   printf("     -geo dms          Print geographic format in dd.mm.sss format\n");
+  printf("     -quirk gps-rollover\n");
+  printf("                       Correct GNSS dates from a receiver that never handled the GPS week rollover\n");
+  printf("                       and reports one or two 1024-week epochs in the past. Off by default; do not\n");
+  printf("                       use it when replaying a capture made before April 2019.\n");
 #ifndef SKIP_SETSYSTEMCLOCK
   printf("     -clocksrc         Set the systemclock from time info from this NMEA source address\n");
 #endif
@@ -261,6 +266,19 @@ int main(int argc, char **argv)
       else if (strcasecmp(av[2], "dms") == 0)
       {
         showGeo = GEO_DMS;
+      }
+      else
+      {
+        usage(argv, av + 1);
+      }
+      ac--;
+      av++;
+    }
+    else if (ac > 2 && strcasecmp(av[1], "-quirk") == 0)
+    {
+      if (strcasecmp(av[2], "gps-rollover") == 0)
+      {
+        g_quirkGpsRollover = true;
       }
       else
       {

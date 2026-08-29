@@ -124,7 +124,7 @@ impl Bridge {
                 let name = match kind {
                     quirks::QuirkKind::Scx20 => "scx20",
                     quirks::QuirkKind::Motion => "motion",
-                    quirks::QuirkKind::Wmm => unreachable!(),
+                    quirks::QuirkKind::Wmm | quirks::QuirkKind::GpsRollover => unreachable!(),
                 };
                 anyhow::bail!(
                     "--quirk {name} only works with --socketcan; it claims/impersonates \

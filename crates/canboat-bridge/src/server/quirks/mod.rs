@@ -25,6 +25,12 @@
 //!   own PGN 127258, plus ask older-WMM sources to stop. It emits
 //!   canboat's *own* node (no impersonation), so it works with any
 //!   writable backend. Lives in [`wmm`].
+//!
+//! A third kind is not a frame emitter at all: `GpsRollover` corrects a
+//! decoded date in place, and lives in [`canboat_core::quirk`] so that
+//! a plain `canboat convert` over a capture gets it too. [`Quirks::new`]
+//! just switches it on there; [`Quirks::process_decoded`] never sees
+//! it.
 
 pub mod motion;
 pub mod scx20;
@@ -52,6 +58,12 @@ pub enum QuirkKind {
     /// present, so a Navico Hercules accepts it. Needs to claim a new
     /// device, so needs socketcan.
     Motion,
+    /// Correct GNSS dates from a receiver that never learned about the
+    /// GPS 1024-week rollover and reports one or two epochs in the
+    /// past. Rewrites the decoded value (see
+    /// [`canboat_core::quirk`]); nothing is written to the bus, and no
+    /// particular backend is needed.
+    GpsRollover,
 }
 
 /// Stateful side of the quirk machinery. Owned by the pipeline; lives
@@ -67,6 +79,11 @@ pub struct Quirks {
 
 impl Quirks {
     pub fn new(kinds: Vec<QuirkKind>) -> Self {
+        // Not a frame emitter: it flips a switch in the decoder and
+        // has no state of its own here.
+        if kinds.contains(&QuirkKind::GpsRollover) {
+            canboat_core::quirk::enable_gps_rollover();
+        }
         Self {
             scx20: kinds.contains(&QuirkKind::Scx20).then(scx20::Scx20::new),
             wmm: kinds.contains(&QuirkKind::Wmm).then(wmm::WmmQuirk::new),
