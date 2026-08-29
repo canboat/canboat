@@ -66,3 +66,11 @@ samples:
     sourceId: 11
     index: 0
     album: "American Public Media • Nov 28, 2016"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,61,a3,99,07,80,0a,00,00,00,00,32,53,c3,a5,20,73,6f,6d,20,69,20,48,69,6d,6d,65,6c,65,6e,20,28,4d,75,73,69,6b,61,6c,65,6e,20,2d,20,4f,72,69,67,69,6e,61,6c,65,6e,73,65,6d,62,6c,65,6e,29,00"  # from fusion-130820-utf8.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Album"
+    sourceId: 10
+    index: 0
+    album: "Så som i Himmelen (Musikalen - Originalensemblen)"
