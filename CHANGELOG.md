@@ -6,6 +6,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.1.0](https://github.com/canboat/canboat/compare/v8.0.0...v8.1.0) (2026-08-30)
+
+
+### Added
+
+* **database:** correct misspelled labels and descriptions ([#858](https://github.com/canboat/canboat/issues/858)) ([ada516c](https://github.com/canboat/canboat/commit/ada516c5bd0cff53b353304863fdd9c0f4e815ef))
+* **quirk:** correct dates from a GPS that missed the week rollover ([#863](https://github.com/canboat/canboat/issues/863)) ([8fcfd48](https://github.com/canboat/canboat/commit/8fcfd4818e95775e607d1157fda0c3a01ff9d404))
+
+
+### Fixed
+
+* **analyzer:** decode 8-bit string fields as UTF-8 with a Latin-1 fallback ([#866](https://github.com/canboat/canboat/issues/866)) ([15807ce](https://github.com/canboat/canboat/commit/15807ce529627db407e0d9ba68bd34d022579afa))
+
 ## [8.0.0](https://github.com/canboat/canboat/compare/v8.0.0-beta3...v8.0.0) (2026-08-25)
 
 
