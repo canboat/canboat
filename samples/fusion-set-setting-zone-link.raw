@@ -1,0 +1,16 @@
+# Fusion MS-WB670 (FUSION-LINK-1.0, sw 6.50.121) at address 51, captured on a
+# Simrad/B&G NMEA 2000 backbone.
+#
+# This is an experiment, not passive observation: the two PGN 126720 commands
+# come from address 200, which is our own canboat pipeline injecting them onto
+# the bus -- no Fusion display originated them. Proprietary ID 15 ("Set
+# Settings") writing FUSION_SETTING id 2 ("Zone 2 Linked"), first to 1 then
+# back to 0. That the unit answers and obeys is what pins the layout.
+# Each command is answered ~20 ms later by an unsolicited PGN 130820
+# "Fusion: Setting" broadcast echoing the same id and value. The setting also
+# takes effect: with Zone 2 Linked = 1 a fusionSetZoneVolume on zone 0 moves
+# both zones, with 0 it moves only zone 0.
+2026-08-29-13:12:37.934,7,126720,200,51,12,a3,99,0f,00,02,00,00,00,01,00,00,00
+2026-08-29-13:12:37.955,7,130820,51,255,12,a3,99,14,80,02,00,00,00,01,00,00,00
+2026-08-29-13:12:45.951,7,126720,200,51,12,a3,99,0f,00,02,00,00,00,00,00,00,00
+2026-08-29-13:12:45.959,7,130820,51,255,12,a3,99,14,80,02,00,00,00,00,00,00,00
