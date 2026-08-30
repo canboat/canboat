@@ -49,5 +49,22 @@ notes: |-
   the unit to read ID 0 (Alpha Search Threshold); it instead changed setting
   2, which only fits the layout above.
 
-  Evidence: samples/fusion-set-setting-zone-link.raw — a Fusion MS-WB670
-  applying two writes and echoing each back as a 130820 status message.
+  Evidence: samples/fusion-set-setting-zone-link.raw — two writes injected onto
+  the bus from canboat at address 200, each answered ~20 ms later by a Fusion
+  MS-WB670 echoing the same id and value as a 130820 status message, and each
+  taking effect on the unit.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,200,51,12,a3,99,0f,00,02,00,00,00,01,00,00,00"  # from fusion-set-setting-zone-link.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "Zone 2 Linked"
+    value: 1
+- raw: "2023-01-01-00:00:00.000,7,126720,200,51,12,a3,99,0f,00,02,00,00,00,00,00,00,00"  # from fusion-set-setting-zone-link.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "Zone 2 Linked"
+    value: 0
