@@ -16,7 +16,7 @@ members = [
 ]
 
 [workspace.package]
-version = "8.1.0" # x-release-please-version
+version = "8.2.0" # x-release-please-version
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Kees Verruijt <kees@verruijt.net>"]
@@ -24,11 +24,11 @@ repository = "https://github.com/canboat/canboat"
 rust-version = "1.96"
 
 [workspace.dependencies]
-canboat-schema = { path = "crates/canboat-schema", version = "8.1.0" } # x-release-please-version
-canboat-core   = { path = "crates/canboat-core",   version = "8.1.0" } # x-release-please-version
-canboat-io     = { path = "crates/canboat-io",     version = "8.1.0" } # x-release-please-version
-canboat-cli    = { path = "crates/canboat-cli",    version = "8.1.0" } # x-release-please-version
-canboat-bridge = { path = "crates/canboat-bridge", version = "8.1.0" } # x-release-please-version
+canboat-schema = { path = "crates/canboat-schema", version = "8.2.0" } # x-release-please-version
+canboat-core   = { path = "crates/canboat-core",   version = "8.2.0" } # x-release-please-version
+canboat-io     = { path = "crates/canboat-io",     version = "8.2.0" } # x-release-please-version
+canboat-cli    = { path = "crates/canboat-cli",    version = "8.2.0" } # x-release-please-version
+canboat-bridge = { path = "crates/canboat-bridge", version = "8.2.0" } # x-release-please-version
 
 serde      = { version = "1", features = ["derive"] }
 serde_json = "1"
