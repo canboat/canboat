@@ -1,0 +1,53 @@
+pgn: 126720
+id: fusionSetSetting
+description: 'Fusion: Set Setting'
+type: Fast
+variantOrder: 57
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Settings
+  match: 15
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: id
+  name: ID
+  type: LOOKUP
+  bits: 32
+  lookup: FUSION_SETTING
+- id: value
+  name: Value
+  type: UINT32
+notes: |-
+  The write counterpart to the Fusion: Setting / Fusion: Settings status
+  messages on PGN 130820: same (ID, Value) pair, same FUSION_SETTING
+  enumeration. FUSION_MESSAGE_ID has carried 15 = Set Settings all along
+  with no variant behind it.
+
+  Despite the plural name the payload carries exactly one pair and has no
+  Count field. A leading Count would have consumed the first word, leaving
+  the unit to read ID 0 (Alpha Search Threshold); it instead changed setting
+  2, which only fits the layout above.
+
+  Evidence: samples/fusion-set-setting-zone-link.raw — a Fusion MS-WB670
+  applying two writes and echoing each back as a 130820 status message.
