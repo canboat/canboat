@@ -66,3 +66,19 @@ samples:
     sourceId: 11
     index: 0
     track: "A Pulitzer-Winning Journalist's Advice And Why He Does A Monthly Night Shift"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,22,a3,99,05,80,0a,00,00,00,00,0b,46,72,c3,a5,67,61,20,41,72,6e,65,00"  # from fusion-130820-utf8.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Title"
+    sourceId: 10
+    index: 0
+    track: "Fråga Arne"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,27,a3,99,05,80,0a,00,00,00,00,10,47,61,62,72,69,65,6c,6c,61,73,20,73,c3,a5,6e,67,00"  # from fusion-130820-utf8.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Track Title"
+    sourceId: 10
+    index: 0
+    track: "Gabriellas sång"

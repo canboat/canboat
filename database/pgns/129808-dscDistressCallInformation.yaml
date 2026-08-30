@@ -142,7 +142,7 @@ samples:
     subsequentCommunicationModeOr2ndTelecommand: "No reason given"
     proposedRxFrequencyChannel: ""
     proposedTxFrequencyChannel: ""
-    telephoneNumber: "����������������"
+    telephoneNumber: ""
     latitudeOfVesselReported: -41.1014800
     longitudeOfVesselReported: 174.8676983
     timeOfPosition: 7980.0000

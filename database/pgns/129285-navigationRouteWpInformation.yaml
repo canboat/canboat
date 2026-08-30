@@ -109,3 +109,20 @@ samples:
     wpName.2: "Rpt214"
     wpLatitude.2: 53.2249342
     wpLongitude.2: 5.2502717
+- raw: "2023-01-01-00:00:00.000,7,129285,28,255,69,01,00,02,00,ff,ff,ff,ff,e0,0d,01,46,e6,6b,65,20,72,6f,75,74,e9,00,ff,00,00,0d,01,55,72,61,74,61,20,79,61,72,64,00,37,96,e4,13,37,aa,66,4d,01,00,0d,01,4d,61,74,73,3f,72,61,20,53,65,00,b7,1a,f2,13,6c,26,7e,4d"  # from bandg-129285-latin1.raw
+  expects:
+    startRps: 1
+    nitems: 2
+    databaseId: ~
+    routeId: ~
+    navigationDirectionInRoute: "Forward"
+    supplementaryRouteWpDataAvailable: "Off"
+    routeName: "Fæke routé"
+    wpId: 0
+    wpName: "Urata yard"
+    wpLatitude: 33.3747767
+    wpLongitude: 129.8573879
+    wpId.2: 1
+    wpName.2: "Mats?ra Se"
+    wpLatitude.2: 33.4633655
+    wpLongitude.2: 130.0113004

@@ -345,18 +345,27 @@ fn decode_one(
             let len = byte_at(data, ctx.bit).unwrap_or(0) as usize;
             let v = slice_bytes(data, ctx.bit + 8, len);
             ctx.bit += 8 + (len + 1) * 8; // length byte + chars + terminating zero
-            Value::Str(String::from_utf8_lossy(&v).into_owned())
+            Value::Str(decode_text(trim_padding(&v)))
         }
         "STRING_LAU" => {
             let total = byte_at(data, ctx.bit).unwrap_or(0) as usize;
+            let control = byte_at(data, ctx.bit + 8).unwrap_or(1);
             let n = total.saturating_sub(2); // count includes length + encoding bytes
             let v = slice_bytes(data, ctx.bit + 16, n);
             ctx.bit += total.max(2) * 8;
-            Value::Str(
-                String::from_utf8_lossy(&v)
-                    .trim_end_matches('\0')
-                    .to_string(),
-            )
+            // Control byte 0 is UTF-16LE, anything else 8-bit text. The filler
+            // trim only applies to the 8-bit branch: a trailing 00 in UTF-16LE
+            // is the high half of an ASCII glyph, not padding, so trimming the
+            // raw bytes would lose the character. Matches decode_string_lau in
+            // canboat-core and fieldPrintStringLAU in analyzer/print.c.
+            if control == 0 {
+                let (pairs, _) = v.as_chunks::<2>();
+                let units: Vec<u16> = pairs.iter().copied().map(u16::from_le_bytes).collect();
+                let text = String::from_utf16_lossy(&units);
+                Value::Str(trim_padding_str(&text).to_string())
+            } else {
+                Value::Str(decode_text(trim_padding(&v)))
+            }
         }
         "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
             let v = slice_bits(data, ctx.bit, bits);
@@ -636,7 +645,49 @@ fn trim_string_fix(v: &[u8]) -> String {
         .iter()
         .position(|&b| b == 0xff || b == b'@' || b == 0)
         .unwrap_or(v.len());
-    String::from_utf8_lossy(&v[..end]).trim_end().to_string()
+    decode_text(&v[..end]).trim_end().to_string()
+}
+
+/// Strip the trailing filler run canboat's `printString` strips: 0xff (the
+/// NMEA 2000 "unknown" byte), NUL, '@' (the AIS "unknown" filler, which shows
+/// up at the end of badly converted AIS names) and whitespace. An all-filler
+/// field is an *unset* field: both the C analyzer and canboat-rs report it as
+/// empty, and without this it decodes to a run of U+00FF instead.
+///
+/// The byte set matches `is_string_padding` in canboat-core -- including 0x0b,
+/// which `is_ascii_whitespace` does not cover.
+fn trim_padding(v: &[u8]) -> &[u8] {
+    let end = v
+        .iter()
+        .rposition(|&b| !matches!(b, 0xff | 0x00 | b'@' | 0x0b) && !b.is_ascii_whitespace())
+        .map_or(0, |i| i + 1);
+    &v[..end]
+}
+
+/// The str-level counterpart of [`trim_padding`], for text that came out of a
+/// UTF-16LE field: the filler is trimmed after conversion rather than before,
+/// since the raw bytes interleave NULs that are part of the encoding.
+fn trim_padding_str(s: &str) -> &str {
+    s.trim_end_matches(|c: char| {
+        matches!(c, '\u{0}' | '\u{ff}' | '@' | '\u{b}') || c.is_whitespace()
+    })
+}
+
+/// Decode a run of 8-bit string bytes into text.
+///
+/// NMEA 2000 leaves the meaning of a byte >= 0x80 undefined in an 8-bit string
+/// field, and devices disagree. On one bus: a Fusion sends UTF-8 (`c5 ab` =
+/// U+016B in samples/fusion-126998-utf8.raw) while a B&G sends Latin-1 (`e6` =
+/// 'ae-ligature' in samples/bandg-129285-latin1.raw) -- in the same field type,
+/// under the same STRING_LAU control byte. So the encoding cannot be read off
+/// the field type or the control byte; it has to come from the bytes. Valid
+/// UTF-8 is taken as UTF-8, anything else as Latin-1, which maps every byte to
+/// a codepoint and so cannot fail. See canboat#864.
+fn decode_text(v: &[u8]) -> String {
+    match std::str::from_utf8(v) {
+        Ok(s) => s.to_string(),
+        Err(_) => v.iter().map(|&b| b as char).collect(),
+    }
 }
 
 fn hex(v: &[u8]) -> String {

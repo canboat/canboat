@@ -36,7 +36,7 @@ samples:
   expects:
     manufacturerCode: "Navico"
     industryCode: "Marine Industry"
-    identifier: "107473373\n"
+    identifier: "107473373"
 - raw: "2023-01-01-00:00:00.000,7,130847,15,255,19,13,99,10,30,66,31,33,32,30,30,65,38,32,38,64,63,61,35,66"  # from merrimac-2022.raw
   expects:
     manufacturerCode: "Navico"

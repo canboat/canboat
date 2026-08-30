@@ -60,3 +60,10 @@ samples:
     messageId: "Zone Name"
     number: 2
     name: "Zone 3"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,13,a3,99,2d,80,01,06,53,61,6c,c5,8d,6e,00"  # from fusion-130820-utf8.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Zone Name"
+    number: 1
+    name: "Salōn"
