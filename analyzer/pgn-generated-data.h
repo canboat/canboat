@@ -1884,7 +1884,7 @@ Pgn pgnList[] = {
       {.name = "Key", .camelName = "key", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_ZC_KEY, .lookup.name = "SIMNET_ZC_KEY"}
      },
      .camelDescription = "simnetZcKey",
-     .explanation = "Manufacturer-proprietary single frame used by B&G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on the same PRN. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).\n"},
+     .explanation = "Manufacturer-proprietary single frame used by B&G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on PGN 65332. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).\n"},
 
     {"Simnet: ZC1/OP40 Knob",
      65332,
@@ -1894,14 +1894,14 @@ Pgn pgnList[] = {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1857, .description = "Simrad", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Address", .camelName = "address", .fieldType = "UINT8", .resolution = 1.0, .description = "0xFE on observed encoder frames; not a target MFD address", .reservedOverride = 1},
+      {.name = "Address", .camelName = "address", .fieldType = "UINT8", .resolution = 1.0, .description = "0xFE on observed encoder frames; not a target MFD address"},
       {.name = "Function", .camelName = "function", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 133, .description = "Knob", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupSIMNET_ZC_FUNCTION, .lookup.name = "SIMNET_ZC_FUNCTION", .partOfPrimaryKey = true},
       {.name = "Parameter", .camelName = "parameter", .fieldType = "UINT16", .resolution = 1.0, .description = "0 on observed encoder frames; meaning unknown"},
       {.name = "Ticks", .camelName = "ticks", .fieldType = "INT8", .resolution = 1.0, .hasSign = true, .description = "Encoder step; +1 left / -1 right on the ZC1/OP40"},
       {.name = "Unknown", .camelName = "unknown", .fieldType = "UINT8", .resolution = 1.0, .description = "0x08 on every observed encoder frame"}
      },
      .camelDescription = "simnetZcKnob",
-     .explanation = "Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n"},
+     .explanation = "Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n"},
 
     {"Yanmar: Engine Data C",
      65332,

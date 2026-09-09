@@ -3617,7 +3617,7 @@ limitations under the License.
             PGN 65332
             - Simnet: ZC1/OP40 Key</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>132</td></tr></table></p><p>Manufacturer-proprietary single frame used by B&amp;G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on the same PRN. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>132</td></tr></table></p><p>Manufacturer-proprietary single frame used by B&amp;G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on PGN 65332. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).
 </p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
@@ -3656,7 +3656,7 @@ limitations under the License.
             PGN 65332
             - Simnet: ZC1/OP40 Knob</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>133</td></tr></table></p><p>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>133</td></tr></table></p><p>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 </p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
@@ -3675,7 +3675,7 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>0xFE on observed encoder frames; not a target MFD address</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>0xFE on observed encoder frames; not a target MFD address</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Function</td><td>133:

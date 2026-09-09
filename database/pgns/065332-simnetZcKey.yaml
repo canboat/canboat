@@ -10,7 +10,7 @@ explanation: >
   Manufacturer-proprietary single frame used by B&G ZC1 / Simrad OP40 style
   remotes (and software that emulates them) to send a key to an MFD.
   Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C
-  on the same PRN. Function 0x84 is a keypad key; 0x85 is the rotary encoder
+  on PGN 65332. Function 0x84 is a keypad key; 0x85 is the rotary encoder
   (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning
   unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27,
   arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico

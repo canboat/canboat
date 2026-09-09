@@ -16753,7 +16753,7 @@ limitations under the License.
       <PGN>65332</PGN>
       <Id>simnetZcKey</Id>
       <Description>Simnet: ZC1/OP40 Key</Description>
-      <Explanation>Manufacturer-proprietary single frame used by B&amp;G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on the same PRN. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).
+      <Explanation>Manufacturer-proprietary single frame used by B&amp;G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on PGN 65332. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).
 </Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -16899,7 +16899,7 @@ limitations under the License.
       <PGN>65332</PGN>
       <Id>simnetZcKnob</Id>
       <Description>Simnet: ZC1/OP40 Knob</Description>
-      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 </Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -16965,7 +16965,10 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>255</RangeMax>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
