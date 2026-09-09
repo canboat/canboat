@@ -101,9 +101,13 @@ impl FromStr for Device {
             return Err("empty device".to_string());
         }
         if let Some(hex) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X")) {
-            return u64::from_str_radix(hex, 16)
-                .map(Device::Name)
-                .map_err(|_| format!("'{s}' is not a hexadecimal ISO NAME"));
+            return match u64::from_str_radix(hex, 16) {
+                // Zero is what the decoder stores for "no claim seen yet",
+                // and no real device claims it.
+                Ok(0) => Err(format!("'{s}' is not a device's ISO NAME")),
+                Ok(name) => Ok(Device::Name(name)),
+                Err(_) => Err(format!("'{s}' is not a hexadecimal ISO NAME")),
+            };
         }
         if let Some((m, u)) = s.split_once(':') {
             let manufacturer: u16 = m
@@ -480,6 +484,8 @@ mod tests {
             "vhf",
             "0x",
             "0xnope",
+            "0x0",
+            "0x0000000000000000",
             "1851",
             "2048:1",
             "1851:2097152",

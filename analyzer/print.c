@@ -1354,7 +1354,9 @@ bool parseGpsRolloverDevices(const char *list)
       size_t digits = strspn(item + 2, "0123456789abcdefABCDEF");
 
       value = strtoull(item + 2, &end, 16);
-      if (digits == 0 || digits > 16 || item[2 + digits] != '\0'
+      // Zero is what g_isoName[] holds for "no claim seen yet", and no
+      // real device claims it, so it is not a NAME either.
+      if (digits == 0 || digits > 16 || item[2 + digits] != '\0' || value == 0
           || g_quirkGpsRollover.nameCount >= GPS_ROLLOVER_MAX_DEVICES)
       {
         logError("-quirk gps-rollover: '%s' is not a hexadecimal ISO NAME\n", item);
