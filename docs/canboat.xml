@@ -16899,7 +16899,7 @@ limitations under the License.
       <PGN>65332</PGN>
       <Id>simnetZcKnob</Id>
       <Description>Simnet: ZC1/OP40 Knob</Description>
-      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 </Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -16965,10 +16965,7 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
+          <RangeMax>255</RangeMax>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>

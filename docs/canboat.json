@@ -17617,7 +17617,7 @@
         "PGN":65332,
         "Id":"simnetZcKnob",
         "Description":"Simnet: ZC1/OP40 Knob",
-        "Explanation":"Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n",
+        "Explanation":"Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -17678,10 +17678,7 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
+            "RangeMax":255,
             "FieldType":"NUMBER"
           },
           {

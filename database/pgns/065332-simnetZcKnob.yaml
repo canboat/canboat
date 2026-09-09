@@ -8,9 +8,8 @@ missing:
 - Resolution
 explanation: >
   Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is
-  0xFE on observed frames (not a bus address); UINT8 reports that as OutOfRange.
-  Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed
-  encoder frame; meaning unknown.
+  0xFE on observed frames (not a bus address). Ticks are a signed step (+1 /
+  -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 notes: samples/simnet-zc-key.raw (from signalk-bandg-zc-plugin TX used on a B&G Zeus network; not a capture of a physical ZC1)
 fields:
 - id: manufacturerCode
@@ -34,6 +33,7 @@ fields:
 - id: address
   name: Address
   type: UINT8
+  specialValues: 0
   description: 0xFE on observed encoder frames; not a target MFD address
 - id: function
   name: Function
@@ -60,7 +60,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: OutOfRange
+    address: 254
     function: "Knob"
     parameter: 0
     ticks: 1
@@ -69,7 +69,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: OutOfRange
+    address: 254
     function: "Knob"
     parameter: 0
     ticks: -1
