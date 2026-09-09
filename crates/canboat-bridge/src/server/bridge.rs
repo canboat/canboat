@@ -121,11 +121,7 @@ impl Bridge {
         // — that check happens below once one is known.
         for kind in [quirks::QuirkKind::Scx20, quirks::QuirkKind::Motion] {
             if config.quirk.contains(&kind) && config.socketcan.is_none() {
-                let name = match kind {
-                    quirks::QuirkKind::Scx20 => "scx20",
-                    quirks::QuirkKind::Motion => "motion",
-                    quirks::QuirkKind::Wmm | quirks::QuirkKind::GpsRollover => unreachable!(),
-                };
+                let name = kind.name();
                 anyhow::bail!(
                     "--quirk {name} only works with --socketcan; it claims/impersonates \
                      a device, and other backends rewrite src on outbound writes so the \

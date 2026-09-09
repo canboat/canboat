@@ -192,8 +192,12 @@ pub struct Args {
     /// `--socketcan`; `wmm` emits canboat's own PGN and works with any
     /// writable backend (socketcan / NGT-1 / iKonvert);
     /// `gps-rollover` only rewrites decoded dates and needs no backend
-    /// at all.
-    #[arg(long, value_enum, value_name = "NAME")]
+    /// at all. `gps-rollover=<device>[,<device>...]` also corrects every
+    /// date the listed devices stamp from the broken clock; a device is
+    /// a source address (`4`), manufacturer code and unique number
+    /// (`1851:491603`), or a hex ISO NAME (`0x…`); `gps-rollover=all`
+    /// corrects every date on the bus.
+    #[arg(long, value_name = "NAME")]
     quirk: Vec<quirks::QuirkKind>,
 
     /// Bind address for all TCP listeners. Defaults to `0.0.0.0` so

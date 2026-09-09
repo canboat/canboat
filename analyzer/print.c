@@ -26,10 +26,12 @@ limitations under the License.
 #include "common.h"
 #include "utf.h"
 
-extern int g_variableFieldRepeat[2]; // Actual number of repetitions
-bool       g_skip;
-int64_t    g_previousFieldValue;
-bool       g_quirkGpsRollover; // -quirk gps-rollover; see correctGpsRollover()
+extern int       g_variableFieldRepeat[2]; // Actual number of repetitions
+bool             g_skip;
+int64_t          g_previousFieldValue;
+GpsRolloverQuirk g_quirkGpsRollover; // -quirk gps-rollover[=devices]; see correctGpsRollover()
+uint64_t         g_isoName[256];     // ISO NAME per source address, learned from PGN 60928 (0 = not seen)
+uint8_t          g_msgSrc;           // Source address of the message being printed
 
 static bool unhandledStartOffset(const char *fieldName, size_t startBit)
 {
@@ -1280,16 +1282,166 @@ extern bool fieldPrintTime(const Field   *field,
 #define MIN_REFERENCE_DAY (20454u)
 
 /*
+ * Parse the device list of -quirk gps-rollover=<device>[,<device>...]:
+ * a source address (4), manufacturer code and unique number
+ * (1851:491603), an ISO NAME in hex (0x...), or the single word 'all'.
+ */
+bool parseGpsRolloverDevices(const char *list)
+{
+  char *copy = strdup(list);
+  char *save = NULL;
+  char *item;
+  bool  ok = true;
+
+  if (copy == NULL)
+  {
+    return false;
+  }
+  if (strcasecmp(list, "all") == 0)
+  {
+    g_quirkGpsRollover.all = true;
+    free(copy);
+    return true;
+  }
+  if (*list == '\0')
+  {
+    logError("-quirk gps-rollover= needs a device list, or 'all'\n");
+    free(copy);
+    return false;
+  }
+
+  for (item = strtok_r(copy, ",", &save); item != NULL && ok; item = strtok_r(NULL, ",", &save))
+  {
+    char              *end;
+    unsigned long long value;
+
+    while (isspace((unsigned char) *item))
+    {
+      item++;
+    }
+    if (strcasecmp(item, "all") == 0)
+    {
+      logError("-quirk gps-rollover: 'all' cannot be combined with a device list\n");
+      ok = false;
+    }
+    else if (strncasecmp(item, "0x", 2) == 0)
+    {
+      value = strtoull(item + 2, &end, 16);
+      if (end == item + 2 || *end != '\0' || g_quirkGpsRollover.nameCount >= GPS_ROLLOVER_MAX_DEVICES)
+      {
+        logError("-quirk gps-rollover: '%s' is not a hexadecimal ISO NAME\n", item);
+        ok = false;
+      }
+      else
+      {
+        g_quirkGpsRollover.name[g_quirkGpsRollover.nameCount++] = value;
+      }
+    }
+    else if (strchr(item, ':') != NULL)
+    {
+      unsigned long long unique;
+
+      value = strtoull(item, &end, 10);
+      if (end == item || *end != ':' || value >= (1u << 11))
+      {
+        logError("-quirk gps-rollover: '%s' is not <manufacturer code>:<unique number>\n", item);
+        ok = false;
+      }
+      else
+      {
+        char *ustart = end + 1;
+
+        unique = strtoull(ustart, &end, 10);
+        if (end == ustart || *end != '\0' || unique >= (1u << 21) || g_quirkGpsRollover.productCount >= GPS_ROLLOVER_MAX_DEVICES)
+        {
+          logError("-quirk gps-rollover: '%s' is not <manufacturer code>:<unique number>\n", item);
+          ok = false;
+        }
+        else
+        {
+          g_quirkGpsRollover.product[g_quirkGpsRollover.productCount++] = (uint32_t) ((value << 21) | unique);
+        }
+      }
+    }
+    else
+    {
+      value = strtoull(item, &end, 10);
+      if (end == item || *end != '\0')
+      {
+        logError("-quirk gps-rollover: '%s' is not a device: use a source address, "
+                 "<manufacturer code>:<unique number>, 0x<hex NAME>, or all\n",
+                 item);
+        ok = false;
+      }
+      else if (value > 251)
+      {
+        logError("-quirk gps-rollover: '%s' is not a source address (0-251); to name a device by its NAME "
+                 "use <manufacturer code>:<unique number> or 0x<hex NAME>\n",
+                 item);
+        ok = false;
+      }
+      else
+      {
+        g_quirkGpsRollover.address[value] = true;
+      }
+    }
+  }
+  free(copy);
+  return ok;
+}
+
+/*
+ * Is the device sending from `src` one the user listed? By address
+ * directly; by NAME or manufacturer:unique only once its PGN 60928
+ * Address Claim has gone by, so the entry follows the device if it
+ * moves to another address and stops matching whoever takes the old one.
+ */
+static bool gpsRolloverDeviceListed(uint8_t src)
+{
+  uint64_t name;
+  size_t   i;
+
+  if (g_quirkGpsRollover.all || g_quirkGpsRollover.address[src])
+  {
+    return true;
+  }
+  name = g_isoName[src];
+  if (name == 0)
+  {
+    return false;
+  }
+  for (i = 0; i < g_quirkGpsRollover.nameCount; i++)
+  {
+    if (g_quirkGpsRollover.name[i] == name)
+    {
+      return true;
+    }
+  }
+  for (i = 0; i < g_quirkGpsRollover.productCount; i++)
+  {
+    if (g_quirkGpsRollover.product[i] == (uint32_t) name)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
+/*
  * Snap a rolled-over date to the epoch nearest today -- which is what
  * the receiver's own base-week logic does, so it handles a doubly stale
  * receiver and the 2038 rollover without a code change.
  *
- * Only dates from a GNSS receiver on our own bus are touched: 129029,
- * 129033, and 126992 when its source is GPS. The AIS reports carry
- * another station's clock and the remaining DATE fields (Maretron
- * counters, route database entries, station data) are not receiver
- * clocks at all. `msg`/`msgLen` are the whole message, before
- * adjustDataLenStart() moved the caller's pointer to the field.
+ * Which dates: with no device list, only those a GNSS receiver on our
+ * own bus produced -- 129029, 129033, and 126992 when its source is GPS
+ * -- because those are the only DATE fields whose origin the PGN itself
+ * tells us. A device the user listed (-quirk gps-rollover=...) takes its
+ * clock from that receiver, so every date it stamps is wrong too:
+ * correct all of them, except the ones it merely relays -- the AIS
+ * reports 129793/129794 carry another station's clock, and 127258 Age
+ * of Service is the date of the variation model. `msg`/`msgLen` are the
+ * whole message, before adjustDataLenStart() moved the caller's pointer
+ * to the field.
  */
 static uint16_t correctGpsRollover(const Field *field, const uint8_t *msg, size_t msgLen, uint16_t d)
 {
@@ -1300,28 +1452,44 @@ static uint16_t correctGpsRollover(const Field *field, const uint8_t *msg, size_
   uint32_t epochs;
   uint32_t corrected;
 
-  if (!g_quirkGpsRollover || field->pgn == NULL)
+  if (!g_quirkGpsRollover.enabled || field->pgn == NULL)
   {
     return d;
   }
 
-  switch (field->pgn->pgn)
+  if (gpsRolloverDeviceListed(g_msgSrc))
   {
-    case 129029: // GNSS Position Data
-    case 129033: // Time & Date
-      break;
-
-    case 126992: // System Time, but only when Source (field 2) is GPS.
-      // GLONASS counts weeks from its own epoch; radio station and the
-      // local cesium/rubidium/crystal clocks do not roll over at all.
-      if (!extractNumberByOrder(field->pgn, 2, msg, msgLen, &source) || source != 0)
-      {
+    switch (field->pgn->pgn)
+    {
+      case 129793: // AIS UTC and Date Report: another station's clock
+      case 129794: // AIS Class A Static and Voyage Related Data: another station's ETA
+      case 127258: // Magnetic Variation: age of the WMM model, not a clock
         return d;
-      }
-      break;
 
-    default:
-      return d;
+      default:
+        break;
+    }
+  }
+  else
+  {
+    switch (field->pgn->pgn)
+    {
+      case 129029: // GNSS Position Data
+      case 129033: // Time & Date
+        break;
+
+      case 126992: // System Time, but only when Source (field 2) is GPS.
+        // GLONASS counts weeks from its own epoch; radio station and the
+        // local cesium/rubidium/crystal clocks do not roll over at all.
+        if (!extractNumberByOrder(field->pgn, 2, msg, msgLen, &source) || source != 0)
+        {
+          return d;
+        }
+        break;
+
+      default:
+        return d;
+    }
   }
 
   today     = (uint64_t) time(NULL) / 86400;
