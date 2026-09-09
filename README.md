@@ -66,6 +66,7 @@ or invent data, so you switch on the ones you need:
 | --- | --- | --- |
 | `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
 | `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
+| `gps-relay` | Re-sends everything the devices listed in `gps-rollover=…` broadcast, from canboat's own address with the dates corrected, so other devices on the bus can select canboat as their GPS and time source instead of the rolled-over one. The original keeps transmitting; you pick the source in each display | `canboat server --quirk gps-rollover=<device> --quirk gps-relay` (needs a writable backend) |
 | `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
 | `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan`) |
@@ -85,6 +86,16 @@ Address Claim to have gone by — `canboat server` asks for those at startup,
 a capture has to contain one. The AIS reports (129793, 129794) relay another
 station's clock and 127258 carries the variation model's date, so those are
 never corrected.
+
+None of that helps a display that reads the broken GPS directly. `gps-relay`
+is the nearest thing to a fix short of replacing the receiver: `canboat
+server` re-sends every broadcast PGN from the listed devices — position,
+COG/SOG, satellites, not just the dated ones, or no display would accept it
+as a GPS — from its own address, byte for byte except for the corrected
+dates. The other devices then see a second GPS source, canboat, and you
+select it in each of them. That needs devices with real source selection,
+which not every brand gets right, and it leaves the old receiver on the bus,
+since it is where the data comes from.
 
 ## The library
 

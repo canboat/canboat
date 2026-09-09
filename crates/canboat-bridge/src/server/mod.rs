@@ -196,7 +196,10 @@ pub struct Args {
     /// date the listed devices stamp from the broken clock; a device is
     /// a source address (`4`), manufacturer code and unique number
     /// (`1851:491603`), or a hex ISO NAME (`0x…`); `gps-rollover=all`
-    /// corrects every date on the bus.
+    /// corrects every date on the bus. `gps-relay` then re-sends
+    /// everything those listed devices broadcast from canboat's own
+    /// address, dates corrected, so other devices can select canboat as
+    /// their GPS / time source; needs a writable backend.
     #[arg(long, value_name = "NAME")]
     quirk: Vec<quirks::QuirkKind>,
 
