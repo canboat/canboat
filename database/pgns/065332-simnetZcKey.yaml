@@ -1,0 +1,91 @@
+pgn: 65332
+id: simnetZcKey
+description: 'Simnet: ZC1/OP40 Key'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: >
+  Manufacturer-proprietary single frame used by B&G ZC1 / Simrad OP40 style
+  remotes (and software that emulates them) to send a key to an MFD.
+  Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C
+  on the same PRN. Function 0x84 is a keypad key; 0x85 is the rotary encoder
+  (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning
+  unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27,
+  arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico
+  specific. Radar uses the same key code as Chart (0x1A).
+notes: samples/simnet-zc-key.raw (from signalk-bandg-zc-plugin TX used on a B&G Zeus network; not a capture of a physical ZC1)
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  description: NMEA 2000 address of the target MFD
+- id: function
+  name: Function
+  type: LOOKUP
+  bits: 8
+  description: Key
+  match: 132
+  lookup: SIMNET_ZC_FUNCTION
+  primaryKey: true
+- id: parameter
+  name: Parameter
+  type: UINT16
+  description: Constant 0x320E on observed key frames; meaning unknown
+- id: keyEvent
+  name: Key Event
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_ZC_KEY_EVENT
+- id: key
+  name: Key
+  type: LOOKUP
+  bits: 8
+  lookup: SIMNET_ZC_KEY
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65332,30,255,8,41,9f,1d,84,0e,32,b3,1e"  # from samples/simnet-zc-key.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 29
+    function: "Key"
+    parameter: 12814
+    keyEvent: "Press"
+    key: "1"
+- raw: "2023-01-01-00:00:00.000,3,65332,30,255,8,41,9f,1d,84,0e,32,33,1e"  # from samples/simnet-zc-key.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 29
+    function: "Key"
+    parameter: 12814
+    keyEvent: "Release"
+    key: "1"
+- raw: "2023-01-01-00:00:00.000,3,65332,30,255,8,41,9f,0a,84,0e,32,80,1d"  # from samples/simnet-zc-key.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 10
+    function: "Key"
+    parameter: 12814
+    keyEvent: "Long press"
+    key: "MOB"

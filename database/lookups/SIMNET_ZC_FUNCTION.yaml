@@ -1,0 +1,6 @@
+name: SIMNET_ZC_FUNCTION
+kind: pair
+bits: 8
+values:
+  132: Key
+  133: Knob

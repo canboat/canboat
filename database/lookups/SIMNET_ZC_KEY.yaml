@@ -1,0 +1,36 @@
+name: SIMNET_ZC_KEY
+kind: pair
+bits: 8
+values:
+  4: Standby Auto
+  6: Win
+  7: Display
+  10: Goto
+  13: Pages
+  16: Menu
+  20: Power
+  21: Echo
+  23: Nav
+  26: Chart
+  27: Plot
+  28: Info
+  29: MOB
+  30: '1'
+  31: '2'
+  32: '3'
+  33: '4'
+  34: '5'
+  35: '6'
+  36: '7'
+  37: '8'
+  38: '9'
+  39: '0'
+  40: Check
+  41: Cancel
+  79: Right
+  80: Left
+  81: Down
+  82: Up
+  86: Zoom out
+  87: Zoom in
+  88: Knob push

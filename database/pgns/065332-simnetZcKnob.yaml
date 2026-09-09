@@ -1,0 +1,76 @@
+pgn: 65332
+id: simnetZcKnob
+description: 'Simnet: ZC1/OP40 Knob'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: >
+  Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is
+  0xFE on observed frames (not a bus address). Ticks are a signed step (+1 /
+  -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+notes: samples/simnet-zc-key.raw (from signalk-bandg-zc-plugin TX used on a B&G Zeus network; not a capture of a physical ZC1)
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Simrad
+  match: 1857
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: address
+  name: Address
+  type: UINT8
+  specialValues: 0
+  description: 0xFE on observed encoder frames; not a target MFD address
+- id: function
+  name: Function
+  type: LOOKUP
+  bits: 8
+  description: Knob
+  match: 133
+  lookup: SIMNET_ZC_FUNCTION
+  primaryKey: true
+- id: parameter
+  name: Parameter
+  type: UINT16
+  description: 0 on observed encoder frames; meaning unknown
+- id: ticks
+  name: Ticks
+  type: INT8
+  description: Encoder step; +1 left / -1 right on the ZC1/OP40
+- id: unknown
+  name: Unknown
+  type: UINT8
+  description: 0x08 on every observed encoder frame
+samples:
+- raw: "2023-01-01-00:00:00.000,3,65332,30,255,8,41,9f,fe,85,00,00,01,08"  # from samples/simnet-zc-key.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 254
+    function: "Knob"
+    parameter: 0
+    ticks: 1
+    unknown: 8
+- raw: "2023-01-01-00:00:00.000,3,65332,30,255,8,41,9f,fe,85,00,00,ff,08"  # from samples/simnet-zc-key.raw
+  expects:
+    manufacturerCode: "Simrad"
+    industryCode: "Marine Industry"
+    address: 254
+    function: "Knob"
+    parameter: 0
+    ticks: -1
+    unknown: 8
