@@ -529,6 +529,11 @@ mod tests {
 
     // --- decoding --------------------------------------------------------
 
+    /// `PgnDatabase::decode` reads the process-wide switch, so a test
+    /// that flips it must not run alongside one that decodes and
+    /// expects the raw date back.
+    static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
     /// Decode `frame`, apply the quirk with everything explicit, and
     /// hand back the first DATE field as a raw day count.
     fn date_after(
@@ -537,6 +542,7 @@ mod tests {
         target: &Target,
         reference_day: u16,
     ) -> Option<u16> {
+        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
         let mut decoded = crate::PgnDatabase::embedded(crate::Units::Si)
             .decode(frame)
             .expect("decodes");
@@ -691,8 +697,9 @@ mod tests {
 
     #[test]
     fn the_decoder_learns_names_from_address_claims() {
-        // Serialised with the bridge's own quirk tests through the
-        // process-wide switch; keep every step inside one test.
+        // The only test here that flips the process-wide switch, so it
+        // holds the lock for the whole sequence.
+        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
         let reference = day(2026, 8, 27);
         enable_gps_rollover_at(Target::parse(Some("1851:491603")).unwrap(), reference);
         let db = crate::PgnDatabase::embedded(crate::Units::Si);

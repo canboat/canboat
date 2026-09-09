@@ -1286,39 +1286,62 @@ extern bool fieldPrintTime(const Field   *field,
  * a source address (4), manufacturer code and unique number
  * (1851:491603), an ISO NAME in hex (0x...), or the single word 'all'.
  */
+/* Strip leading and trailing whitespace in place; returns the new start. */
+static char *trimWhitespace(char *s)
+{
+  size_t len;
+
+  while (isspace((unsigned char) *s))
+  {
+    s++;
+  }
+  len = strlen(s);
+  while (len > 0 && isspace((unsigned char) s[len - 1]))
+  {
+    s[--len] = '\0';
+  }
+  return s;
+}
+
 bool parseGpsRolloverDevices(const char *list)
 {
   char *copy = strdup(list);
   char *save = NULL;
   char *item;
+  char *trimmed;
   bool  ok = true;
 
   if (copy == NULL)
   {
     return false;
   }
-  if (strcasecmp(list, "all") == 0)
+  trimmed = trimWhitespace(copy);
+  if (strcasecmp(trimmed, "all") == 0)
   {
     g_quirkGpsRollover.all = true;
     free(copy);
     return true;
   }
-  if (*list == '\0')
+  if (*trimmed == '\0')
   {
     logError("-quirk gps-rollover= needs a device list, or 'all'\n");
     free(copy);
     return false;
   }
+  // strtok_r() would silently skip an empty item; reject it like the Rust side does.
+  if (*trimmed == ',' || trimmed[strlen(trimmed) - 1] == ',' || strstr(trimmed, ",,") != NULL)
+  {
+    logError("-quirk gps-rollover: empty device in '%s'\n", list);
+    free(copy);
+    return false;
+  }
 
-  for (item = strtok_r(copy, ",", &save); item != NULL && ok; item = strtok_r(NULL, ",", &save))
+  for (item = strtok_r(trimmed, ",", &save); item != NULL && ok; item = strtok_r(NULL, ",", &save))
   {
     char              *end;
     unsigned long long value;
 
-    while (isspace((unsigned char) *item))
-    {
-      item++;
-    }
+    item = trimWhitespace(item);
     if (strcasecmp(item, "all") == 0)
     {
       logError("-quirk gps-rollover: 'all' cannot be combined with a device list\n");
