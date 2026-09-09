@@ -1349,8 +1349,13 @@ bool parseGpsRolloverDevices(const char *list)
     }
     else if (strncasecmp(item, "0x", 2) == 0)
     {
+      // Hex digits only: strtoull() would also take a sign or embedded
+      // whitespace, and 16 digits is exactly a 64-bit NAME, so no overflow.
+      size_t digits = strspn(item + 2, "0123456789abcdefABCDEF");
+
       value = strtoull(item + 2, &end, 16);
-      if (end == item + 2 || *end != '\0' || g_quirkGpsRollover.nameCount >= GPS_ROLLOVER_MAX_DEVICES)
+      if (digits == 0 || digits > 16 || item[2 + digits] != '\0'
+          || g_quirkGpsRollover.nameCount >= GPS_ROLLOVER_MAX_DEVICES)
       {
         logError("-quirk gps-rollover: '%s' is not a hexadecimal ISO NAME\n", item);
         ok = false;
