@@ -30,8 +30,12 @@
 //! decoded date in place, and lives in [`canboat_core::quirk`] so that
 //! a plain `canboat convert` over a capture gets it too. [`Quirks::new`]
 //! just switches it on there; [`Quirks::process_decoded`] never sees
-//! it.
+//! it. Its bus-side companion `GpsRelay` re-sends a listed device's
+//! broadcasts from canboat's own address with the dates corrected, so
+//! other devices can pick canboat as their source. Lives in
+//! [`gps_relay`].
 
+pub mod gps_relay;
 pub mod motion;
 pub mod scx20;
 pub mod wmm;
@@ -66,6 +70,12 @@ pub enum QuirkKind {
     /// nothing is written to the bus, and no particular backend is
     /// needed.
     GpsRollover(Target),
+    /// Re-send every broadcast PGN from the devices listed in
+    /// `gps-rollover=…` from canboat's own address, dates corrected, so
+    /// other devices on the bus can select canboat as their GPS / time
+    /// source instead of the rolled-over one. Needs a writable backend
+    /// and a `gps-rollover` device list.
+    GpsRelay,
 }
 
 impl QuirkKind {
@@ -76,7 +86,24 @@ impl QuirkKind {
             QuirkKind::Wmm => "wmm",
             QuirkKind::Motion => "motion",
             QuirkKind::GpsRollover(_) => "gps-rollover",
+            QuirkKind::GpsRelay => "gps-relay",
         }
+    }
+
+    /// The `gps-rollover` target this list switches on — the first one
+    /// given, which is what [`Quirks::new`] applies.
+    pub fn gps_rollover_target(kinds: &[QuirkKind]) -> Option<&Target> {
+        kinds.iter().find_map(|k| match k {
+            QuirkKind::GpsRollover(target) => Some(target),
+            _ => None,
+        })
+    }
+
+    /// Does this list of quirks give `gps-relay` something to relay —
+    /// a `gps-rollover` with named devices? `all` is refused: relaying
+    /// every device on the bus as canboat's own is nobody's intent.
+    pub fn gps_relay_has_devices(kinds: &[QuirkKind]) -> bool {
+        matches!(Self::gps_rollover_target(kinds), Some(Target::Devices(d)) if !d.is_empty())
     }
 }
 
@@ -97,8 +124,9 @@ impl FromStr for QuirkKind {
             "wmm" => no_args(QuirkKind::Wmm),
             "motion" => no_args(QuirkKind::Motion),
             "gps-rollover" => Target::parse(args).map(QuirkKind::GpsRollover),
+            "gps-relay" => no_args(QuirkKind::GpsRelay),
             _ => Err(format!(
-                "unknown quirk '{name}'; the quirks are: scx20, wmm, motion, gps-rollover"
+                "unknown quirk '{name}'; the quirks are: scx20, wmm, motion, gps-rollover, gps-relay"
             )),
         }
     }
@@ -113,6 +141,8 @@ pub struct Quirks {
     wmm: Option<wmm::WmmQuirk>,
     /// Present iff `--quirk motion`. Owns the Motion-Sensor impersonation.
     motion: Option<motion::Motion>,
+    /// Present iff `--quirk gps-relay`. Re-sends a listed device's data.
+    gps_relay: Option<gps_relay::GpsRelay>,
 }
 
 impl Quirks {
@@ -122,33 +152,37 @@ impl Quirks {
         // `decode()` takes no options -- so set it both ways, or a
         // pipeline built without the quirk would inherit it from an
         // earlier one in the same process.
-        let gps_rollover = kinds.iter().find_map(|k| match k {
-            QuirkKind::GpsRollover(target) => Some(target.clone()),
-            _ => None,
-        });
-        match gps_rollover {
-            Some(target) => canboat_core::quirk::enable_gps_rollover(target),
+        match QuirkKind::gps_rollover_target(&kinds) {
+            Some(target) => canboat_core::quirk::enable_gps_rollover(target.clone()),
             None => canboat_core::quirk::disable_gps_rollover(),
         }
         Self {
             scx20: kinds.contains(&QuirkKind::Scx20).then(scx20::Scx20::new),
             wmm: kinds.contains(&QuirkKind::Wmm).then(wmm::WmmQuirk::new),
             motion: kinds.contains(&QuirkKind::Motion).then(motion::Motion::new),
+            gps_relay: kinds
+                .contains(&QuirkKind::GpsRelay)
+                .then(gps_relay::GpsRelay::new),
         }
     }
 
     /// `true` iff at least one quirk is enabled — lets the pipeline skip
     /// the per-frame call entirely on the common path.
     pub fn is_enabled(&self) -> bool {
-        self.scx20.is_some() || self.wmm.is_some() || self.motion.is_some()
+        self.scx20.is_some()
+            || self.wmm.is_some()
+            || self.motion.is_some()
+            || self.gps_relay.is_some()
     }
 
     /// Inspect one decoded bus PGN and produce zero or more synthetic
     /// responses. The pipeline pushes each returned `RawFrame` to the
     /// device writer (so it lands on the wire with the intended `src`)
     /// and back through its own processing path (so the local n2kd /
-    /// snapshot / JSON / NMEA 0183 view reflects it too).
-    pub fn process_decoded(&mut self, decoded: &DecodedPgn) -> Vec<RawFrame> {
+    /// snapshot / JSON / NMEA 0183 view reflects it too). `own_addr` is
+    /// canboat's claimed address when it holds one, so a quirk can
+    /// recognise its own emissions coming back round.
+    pub fn process_decoded(&mut self, decoded: &DecodedPgn, own_addr: Option<u8>) -> Vec<RawFrame> {
         let now = Instant::now();
         let mut out = Vec::new();
         if let Some(scx20) = self.scx20.as_mut() {
@@ -160,17 +194,58 @@ impl Quirks {
         if let Some(motion) = self.motion.as_mut() {
             out.extend(motion.process(decoded, now));
         }
+        if let Some(relay) = self.gps_relay.as_mut() {
+            out.extend(relay.process(decoded, own_addr));
+        }
         out
     }
 }
 
 #[cfg(test)]
-mod tests {
+pub(super) mod tests {
     use super::*;
 
     /// `Quirks::new` writes the process-wide GPS rollover switch, so the
-    /// tests that call it must not run concurrently with each other.
-    static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    /// tests that call it — here and in `gps_relay` — must not run
+    /// concurrently with each other.
+    pub(super) static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+    #[test]
+    fn parses_every_name() {
+        assert_eq!("gps-relay".parse::<QuirkKind>(), Ok(QuirkKind::GpsRelay));
+        assert!("gps-relay=4".parse::<QuirkKind>().is_err());
+        assert_eq!(
+            "gps-rollover=4".parse::<QuirkKind>(),
+            Ok(QuirkKind::GpsRollover(Target::Devices(vec![
+                canboat_core::quirk::Device::Address(4)
+            ])))
+        );
+        assert!("gps-rollover=lots".parse::<QuirkKind>().is_err());
+        assert!("nope".parse::<QuirkKind>().is_err());
+    }
+
+    #[test]
+    fn relay_needs_a_device_list() {
+        let devices = "gps-rollover=4".parse::<QuirkKind>().unwrap();
+        assert!(QuirkKind::gps_relay_has_devices(&[
+            QuirkKind::GpsRelay,
+            devices.clone()
+        ]));
+        for kinds in [
+            vec![QuirkKind::GpsRelay],
+            vec![QuirkKind::GpsRelay, QuirkKind::GpsRollover(Target::Gnss)],
+            vec![QuirkKind::GpsRelay, QuirkKind::GpsRollover(Target::All)],
+            // Only the first gps-rollover counts, since that is the one
+            // Quirks::new switches on.
+            vec![
+                QuirkKind::GpsRelay,
+                QuirkKind::GpsRollover(Target::Gnss),
+                devices.clone(),
+            ],
+        ] {
+            assert!(!QuirkKind::gps_relay_has_devices(&kinds), "{kinds:?}");
+        }
+    }
 
     #[test]
     fn enabled_reflects_configured_quirks() {

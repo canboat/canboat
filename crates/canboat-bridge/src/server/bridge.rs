@@ -183,6 +183,24 @@ impl Bridge {
         } = super::open_source(&config)?;
         let device_sender = supervisor.as_ref().map(|s| s.frame_sender());
 
+        // gps-relay re-sends a listed device's broadcasts, so it needs both
+        // a device list to relay and a bus to write to.
+        if config.quirk.contains(&quirks::QuirkKind::GpsRelay) {
+            if !quirks::QuirkKind::gps_relay_has_devices(&config.quirk) {
+                anyhow::bail!(
+                    "--quirk gps-relay needs --quirk gps-rollover=<device>[,<device>...] naming \
+                     the device(s) whose data to relay (not `all`)"
+                );
+            }
+            if device_sender.is_none() {
+                anyhow::bail!(
+                    "--quirk gps-relay needs a writable device backend (e.g. --socketcan or an \
+                     NGT-1/iKonvert gateway) to re-send frames; there is no bus to write to \
+                     in stdin/log-only mode"
+                );
+            }
+        }
+
         // The wmm quirk emits PGN 127258 onto the bus, so it needs a
         // writable device backend (any of socketcan / NGT-1 / iKonvert).
         // Refuse it in stdin- or log-only mode where there is no bus.

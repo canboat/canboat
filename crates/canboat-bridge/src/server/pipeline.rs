@@ -248,8 +248,10 @@ pub fn run(
     // an inbound bus frame. We re-feed them through this same loop so
     // they pass through reassembly, decode and broadcast just like a
     // real bus frame would. A synthetic frame can't re-trigger a
-    // quirk (its PGN is always a *response*, never the trigger PGN),
-    // so there's no risk of an infinite synthesis loop.
+    // quirk — its PGN is a *response*, never the trigger PGN, or (for
+    // gps-relay, which re-sends the trigger PGN itself) it carries
+    // canboat's own source, which the relay skips — so there's no risk
+    // of an infinite synthesis loop.
     let mut pending_synth: VecDeque<RawFrame> = VecDeque::new();
 
     let mut raw_batch = OutputBatcher::new(hubs.raw.clone());
@@ -377,7 +379,7 @@ pub fn run(
                 .as_ref()
                 .map(|a| a.load(Ordering::Relaxed))
                 .filter(|&a| a != canboat_core::ADDR_GLOBAL && a != canboat_core::ADDR_NULL);
-            for mut synth in hubs.quirks.process_decoded(&decoded) {
+            for mut synth in hubs.quirks.process_decoded(&decoded, own_addr) {
                 // A quirk that emits from src 0 / ADDR_GLOBAL ("send as my
                 // own node", e.g. the WMM quirk) gets canboat's real
                 // claimed address stamped here — the one place that knows

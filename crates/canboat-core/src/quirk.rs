@@ -307,8 +307,53 @@ pub(crate) fn note_address_claim(src: u8, payload: &[u8]) {
         .unwrap_or_else(|e| e.into_inner())
         .as_mut()
     {
+        // A NAME lives at one address. If this device just moved, its
+        // old slot must not keep matching whoever sends from there next
+        // before that device's own claim goes by.
+        for slot in q.names.iter_mut() {
+            if *slot == name {
+                *slot = 0;
+            }
+        }
         q.names[usize::from(src)] = name;
     }
+}
+
+impl GpsRollover {
+    /// The NAME claimed from `src`, if a claim has been seen.
+    fn name_of(&self, src: u8) -> Option<u64> {
+        match self.names[usize::from(src)] {
+            0 => None,
+            n => Some(n),
+        }
+    }
+}
+
+impl Target {
+    /// Is the device sending from `src`, whose claimed NAME (if any) is
+    /// `name`, one this target covers in full?
+    fn lists(&self, src: u8, name: Option<u64>) -> bool {
+        match self {
+            Target::Gnss => false,
+            Target::All => true,
+            Target::Devices(devices) => devices.iter().any(|d| d.matches(src, name)),
+        }
+    }
+}
+
+/// Is `src` a device the GPS rollover quirk was told to correct in
+/// full — listed by address, or by a NAME whose claim has been seen, or
+/// covered by `all`? `false` when the quirk is off or has no device
+/// list. This is what the bridge's `gps-relay` quirk keys on.
+pub fn gps_rollover_device_listed(src: u8) -> bool {
+    if !GPS_ROLLOVER_ON.load(Ordering::Relaxed) {
+        return false;
+    }
+    GPS_ROLLOVER
+        .read()
+        .unwrap_or_else(|e| e.into_inner())
+        .as_ref()
+        .is_some_and(|q| q.target.lists(src, q.name_of(src)))
 }
 
 /// Rewrite the date fields of a decoded PGN in place when the GPS
@@ -319,11 +364,7 @@ pub(crate) fn apply(pgn: u32, src: u8, fields: &mut [DecodedField]) {
     }
     let guard = GPS_ROLLOVER.read().unwrap_or_else(|e| e.into_inner());
     if let Some(q) = guard.as_ref() {
-        let name = match q.names[usize::from(src)] {
-            0 => None,
-            n => Some(n),
-        };
-        apply_at(pgn, src, name, fields, &q.target, q.reference_day);
+        apply_at(pgn, src, q.name_of(src), fields, &q.target, q.reference_day);
     }
 }
 
@@ -337,12 +378,7 @@ fn apply_at(
     target: &Target,
     reference_day: u16,
 ) {
-    let device_is_listed = match target {
-        Target::Gnss => false,
-        Target::All => true,
-        Target::Devices(devices) => devices.iter().any(|d| d.matches(src, name)),
-    };
-    let correct = if device_is_listed {
+    let correct = if target.lists(src, name) {
         // Everything this device stamps from its own clock — which is
         // every date except the ones it merely relays.
         !matches!(pgn, 129793 | 129794 | 127258)
@@ -723,12 +759,12 @@ mod tests {
         let claim = crate::RawFrame::new(None, 6, 60928, 4, 255, VHF_NAME.to_le_bytes());
         db.decode(&claim).unwrap();
         assert_eq!(date_of(db.decode(&dsc_call()).unwrap()), Some(reference));
-        // The VHF moves to address 9: the old address stops matching,
-        // the new one starts.
+        // The VHF moves to address 9: the old address stops matching
+        // at once — before whoever takes address 4 has claimed it —
+        // and the new one starts.
         let claim = crate::RawFrame::new(None, 6, 60928, 9, 255, VHF_NAME.to_le_bytes());
         db.decode(&claim).unwrap();
-        let other = crate::RawFrame::new(None, 6, 60928, 4, 255, (VHF_NAME ^ 1).to_le_bytes());
-        db.decode(&other).unwrap();
+        assert!(!gps_rollover_device_listed(4));
         assert_eq!(
             date_of(db.decode(&dsc_call()).unwrap()),
             Some(day(2007, 1, 11))
@@ -736,7 +772,11 @@ mod tests {
         let mut moved = dsc_call();
         moved.src = 9;
         assert_eq!(date_of(db.decode(&moved).unwrap()), Some(reference));
+        // The listing itself is what the bridge's relay asks about.
+        assert!(gps_rollover_device_listed(9));
+        assert!(!gps_rollover_device_listed(4));
         disable_gps_rollover();
         assert_eq!(gps_rollover_reference_day(), None);
+        assert!(!gps_rollover_device_listed(9));
     }
 }
