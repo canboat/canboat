@@ -196,6 +196,33 @@ fn pgn_60928_json_nv() {
     );
 }
 
+/// `--quirk gps-rollover` in its three shapes over one fixture: the
+/// GNSS rule alone, a device named by manufacturer:unique (so the NAME
+/// has to be learned from the PGN 60928 claim that precedes its 129808),
+/// and `all`. See test27 in analyzer/tests/Makefile for what each line
+/// is and why the expectations hold until ~2032.
+#[test]
+fn pgn_gps_rollover_quirk() {
+    for (mode, quirk) in [
+        ("gnss", "gps-rollover"),
+        ("product", "gps-rollover=1851:491603"),
+        ("all", "gps-rollover=all"),
+    ] {
+        run_case(
+            "pgn-gps-rollover.in",
+            &format!("pgn-gps-rollover-{mode}.out"),
+            &[
+                "--json",
+                "--nv",
+                "--fixtime",
+                "pgn-gps-rollover",
+                "--quirk",
+                quirk,
+            ],
+        );
+    }
+}
+
 #[test]
 fn pgn_126983_json_nv() {
     // Exercises ISO_NAME recursive decode, Reserved-as-hex, and

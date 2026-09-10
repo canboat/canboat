@@ -65,6 +65,7 @@ or invent data, so you switch on the ones you need:
 | Quirk | What it does | Where |
 | --- | --- | --- |
 | `gps-rollover` | Corrects GNSS dates from a receiver that never learned about the GPS 1024-week rollover and reports one or two epochs in the past (PGN 129029, 129033, and 126992 when its source is GPS) | `analyzer -quirk gps-rollover`, `canboat convert --quirk gps-rollover`, `canboat server --quirk gps-rollover` |
+| `gps-rollover=<device>,…` | The same, plus every date the listed devices stamp from that clock — a DSC radio's Date of Receipt on PGN 129808, a converter's System Time, and so on. A device is a source address (`4`), its manufacturer code and unique number (`1851:491603`), or its ISO NAME in hex (`0x…`); `all` means every device on the bus | same three commands |
 | `scx20` | Answers a PGN 59904 request for a Furuno SCX-20's Product Information on its behalf, so the Furuno Setting Tool can find it | `canboat server --quirk scx20` (needs `--socketcan`) |
 | `wmm` | Computes magnetic variation locally with WMM 2025 and emits its own PGN 127258, asking older-WMM sources to stop | `canboat server --quirk wmm` |
 | `motion` | Impersonates a B&G H5000 Motion Sensor so a Navico Hercules accepts an SCX-20 | `canboat server --quirk motion` (needs `--socketcan`) |
@@ -74,6 +75,16 @@ putting a frame on the bus, which is why it is available when decoding a
 capture file too. Do not use it on a capture made before April 2019 — it
 cannot tell a rolled-over date from a genuinely old one, and will move the
 whole log forward twenty years.
+
+Without a device list it only touches the dates a GNSS receiver produced,
+because those are the only ones whose origin the PGN itself tells us. Any
+other device that takes its clock from the bus repeats the wrong date, and
+nothing in its PGNs says so; that is what the device list is for. Naming a
+device by manufacturer and unique number, or by NAME, needs its PGN 60928
+Address Claim to have gone by — `canboat server` asks for those at startup,
+a capture has to contain one. The AIS reports (129793, 129794) relay another
+station's clock and 127258 carries the variation model's date, so those are
+never corrected.
 
 ## The library
 

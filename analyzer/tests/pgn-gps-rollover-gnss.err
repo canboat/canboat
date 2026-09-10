@@ -1,0 +1,2 @@
+INFO pgn-gps-rollover [analyzer] Timestamp fixed
+INFO pgn-gps-rollover [analyzer] Assuming PLAIN_OR_FAST format with one line per frame or one line per message

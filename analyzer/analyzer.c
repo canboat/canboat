@@ -161,7 +161,7 @@ static void usage(char **argv, char **av)
 {
   printf("Unknown or invalid argument %s\n", av[0]);
   printf("Usage: %s [[-raw] [-json [-empty] [-nv] [-camel]] [-data] [-debug] [-d] [-q] [-si] [-geo {dd|dm|dms}] "
-         "[-quirk gps-rollover] "
+         "[-quirk gps-rollover[=<device>,...|=all]] "
          "-format <fmt> "
          "[-src <src> | -dst <dst> | <pgn>]] ["
 #ifndef SKIP_SETSYSTEMCLOCK
@@ -180,9 +180,16 @@ static void usage(char **argv, char **av)
   printf("     -geo dm           Print geographic format in dd.mm.mmm format\n");
   printf("     -geo dms          Print geographic format in dd.mm.sss format\n");
   printf("     -quirk gps-rollover\n");
-  printf("                       Correct GNSS dates from a receiver that never handled the GPS week rollover\n");
-  printf("                       and reports one or two 1024-week epochs in the past. Off by default; do not\n");
-  printf("                       use it when replaying a capture made before April 2019.\n");
+  printf("                       Correct GNSS dates (PGN 129029, 129033, and 126992 from a GPS source) from a\n");
+  printf("                       receiver that never handled the GPS week rollover and reports one or two\n");
+  printf("                       1024-week epochs in the past. Off by default; do not use it when replaying\n");
+  printf("                       a capture made before April 2019.\n");
+  printf("     -quirk gps-rollover=<device>[,<device>...]\n");
+  printf("                       As above, and also correct every date the listed devices stamp from that\n");
+  printf("                       clock, e.g. a DSC radio's Date of Receipt. A device is a source address (4),\n");
+  printf("                       its manufacturer code and unique number (1851:491603), or its ISO NAME in\n");
+  printf("                       hex (0x...). The latter two need the device's PGN 60928 Address Claim to\n");
+  printf("                       have been seen. 'all' corrects every date on the bus.\n");
 #ifndef SKIP_SETSYSTEMCLOCK
   printf("     -clocksrc         Set the systemclock from time info from this NMEA source address\n");
 #endif
@@ -276,9 +283,13 @@ int main(int argc, char **argv)
     }
     else if (ac > 2 && strcasecmp(av[1], "-quirk") == 0)
     {
-      if (strcasecmp(av[2], "gps-rollover") == 0)
+      if (strncasecmp(av[2], "gps-rollover", 12) == 0 && (av[2][12] == '\0' || av[2][12] == '='))
       {
-        g_quirkGpsRollover = true;
+        g_quirkGpsRollover.enabled = true;
+        if (av[2][12] == '=' && !parseGpsRolloverDevices(av[2] + 13))
+        {
+          usage(argv, av + 1);
+        }
       }
       else
       {
@@ -1470,6 +1481,18 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   if (msg == NULL)
   {
     return false;
+  }
+  g_msgSrc = msg->src;
+  if (msg->pgn == 60928 && length >= 8)
+  {
+    // The Address Claim payload is the device's 64-bit ISO NAME, little
+    // endian; remembering it per source address lets -quirk name a device
+    // by its NAME rather than by an address that may change tomorrow.
+    g_isoName[msg->src] = 0;
+    for (i = 0; i < 8; i++)
+    {
+      g_isoName[msg->src] |= ((uint64_t) data[i]) << (8 * i);
+    }
   }
   normalizeTimestamp(msg->timestamp, ts, sizeof(ts));
   pgn = getMatchingPgn(msg->pgn, data, length);

@@ -88,6 +88,23 @@ limitations under the License.
 #define DATAFIELD_RESERVED2 (-3)
 #define DATAFIELD_RESERVED3 (-4)
 
+/*
+ * -quirk gps-rollover[=<device>,...]: which devices' dates to correct
+ * beyond the GNSS PGNs. See correctGpsRollover() in print.c.
+ */
+#define GPS_ROLLOVER_MAX_DEVICES (32)
+
+typedef struct
+{
+  bool     enabled;                           // -quirk gps-rollover was given at all
+  bool     all;                               // =all
+  bool     address[256];                      // =<source address>
+  size_t   nameCount;                         // =0x<NAME>
+  uint64_t name[GPS_ROLLOVER_MAX_DEVICES];    //
+  size_t   productCount;                      // =<manufacturer>:<unique number>, stored as the
+  uint32_t product[GPS_ROLLOVER_MAX_DEVICES]; //   low 32 bits of the NAME: (manufacturer << 21) | unique
+} GpsRolloverQuirk;
+
 typedef enum GeoFormats
 {
   GEO_DD,
@@ -95,21 +112,23 @@ typedef enum GeoFormats
   GEO_DMS
 } GeoFormats;
 
-extern bool         showRaw;
-extern bool         showData;
-extern bool         showJson;
-extern bool         showJsonEmpty;
-extern bool         showJsonValue;
-extern bool         showBytes;
-extern bool         showSI;
-extern GeoFormats   showGeo;
-extern char        *sep;
-extern char         closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
-extern bool         g_skip;
-extern bool         g_quirkGpsRollover; // -quirk gps-rollover: correct dates from a pre-2019 GPS receiver
-extern const Field *g_ftf;
-extern int64_t      g_length;
-extern bool         g_lengthValid; // true once a DYNAMIC_FIELD_LENGTH set g_length (so a length of 0 means "empty", not "unknown")
+extern bool             showRaw;
+extern bool             showData;
+extern bool             showJson;
+extern bool             showJsonEmpty;
+extern bool             showJsonValue;
+extern bool             showBytes;
+extern bool             showSI;
+extern GeoFormats       showGeo;
+extern char            *sep;
+extern char             closingBraces[16]; // } and ] chars to close sentence in JSON mode, otherwise empty string
+extern bool             g_skip;
+extern GpsRolloverQuirk g_quirkGpsRollover; // -quirk gps-rollover[=devices]; see correctGpsRollover()
+extern uint64_t         g_isoName[256];     // ISO NAME per source address, learned from PGN 60928 (0 = not seen)
+extern uint8_t          g_msgSrc;           // Source address of the message being printed
+extern const Field     *g_ftf;
+extern int64_t          g_length;
+extern bool             g_lengthValid; // true once a DYNAMIC_FIELD_LENGTH set g_length (so a length of 0 means "empty", not "unknown")
 
 /* analyzer.c */
 
@@ -127,3 +146,4 @@ extern char   mchr(size_t location);
 extern void   minsert(size_t location, const char *str);
 extern void   printEmpty(const char *name, int64_t exceptionValue);
 extern bool   adjustDataLenStart(const uint8_t **data, size_t *dataLen, size_t *startBit);
+extern bool   parseGpsRolloverDevices(const char *list);

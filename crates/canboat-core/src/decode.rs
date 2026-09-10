@@ -563,9 +563,14 @@ impl PgnDatabase {
             .ok_or(DecodeError::UnknownPgn { pgn: frame.pgn })?;
 
         let (mut fields, has_repeating_set) = decode_fields(info, &frame.data, self)?;
-        // Opt-in device-quirk corrections (GPS week rollover); a no-op
-        // — one relaxed atomic load — unless a quirk was switched on.
-        crate::quirk::apply(frame.pgn, &mut fields);
+        // Opt-in device-quirk corrections (GPS week rollover); each a
+        // no-op — one relaxed atomic load — unless a quirk was switched
+        // on. The quirk keys devices by ISO NAME, which is the whole
+        // PGN 60928 payload, so it learns those here as they go by.
+        if frame.pgn == 60928 {
+            crate::quirk::note_address_claim(frame.src, &frame.data);
+        }
+        crate::quirk::apply(frame.pgn, frame.src, &mut fields);
         let index_by_order = build_index_by_order(&fields);
 
         Ok(DecodedPgn {

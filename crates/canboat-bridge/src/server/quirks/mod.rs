@@ -36,15 +36,16 @@ pub mod motion;
 pub mod scx20;
 pub mod wmm;
 
+use std::str::FromStr;
 use std::time::Instant;
 
+use canboat_core::quirk::Target;
 use canboat_core::{DecodedPgn, RawFrame};
 
-/// Under the `cli` feature clap derives `ValueEnum` so the user types e.g.
-/// `--quirk scx20`; the enum itself is always available for `BridgeConfig`.
-#[derive(Clone, Copy, Debug, PartialEq, Eq)]
-#[cfg_attr(feature = "cli", derive(clap::ValueEnum))]
-#[cfg_attr(feature = "cli", clap(rename_all = "kebab-case"))]
+/// One `--quirk` value. Parsed from its name — `scx20`, `wmm`, `motion`,
+/// `gps-rollover` — plus, for `gps-rollover`, an optional `=<devices>`
+/// argument; see [`Target::parse`].
+#[derive(Clone, Debug, PartialEq, Eq)]
 pub enum QuirkKind {
     /// Furuno SCX-20: fabricate its PGN 126996 Product Information when
     /// the bus asks (its firmware sometimes "forgets" to answer, breaking
@@ -60,10 +61,47 @@ pub enum QuirkKind {
     Motion,
     /// Correct GNSS dates from a receiver that never learned about the
     /// GPS 1024-week rollover and reports one or two epochs in the
-    /// past. Rewrites the decoded value (see
-    /// [`canboat_core::quirk`]); nothing is written to the bus, and no
-    /// particular backend is needed.
-    GpsRollover,
+    /// past — and every date the listed devices stamp from that clock.
+    /// Rewrites the decoded value (see [`canboat_core::quirk`]);
+    /// nothing is written to the bus, and no particular backend is
+    /// needed.
+    GpsRollover(Target),
+}
+
+impl QuirkKind {
+    /// The name this quirk is switched on by, without any `=argument`.
+    pub fn name(&self) -> &'static str {
+        match self {
+            QuirkKind::Scx20 => "scx20",
+            QuirkKind::Wmm => "wmm",
+            QuirkKind::Motion => "motion",
+            QuirkKind::GpsRollover(_) => "gps-rollover",
+        }
+    }
+}
+
+impl FromStr for QuirkKind {
+    type Err = String;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let (name, args) = match s.split_once('=') {
+            Some((n, a)) => (n.trim(), Some(a)),
+            None => (s.trim(), None),
+        };
+        let no_args = |kind: QuirkKind| match args {
+            None => Ok(kind),
+            Some(_) => Err(format!("--quirk {name} takes no argument")),
+        };
+        match name {
+            "scx20" => no_args(QuirkKind::Scx20),
+            "wmm" => no_args(QuirkKind::Wmm),
+            "motion" => no_args(QuirkKind::Motion),
+            "gps-rollover" => Target::parse(args).map(QuirkKind::GpsRollover),
+            _ => Err(format!(
+                "unknown quirk '{name}'; the quirks are: scx20, wmm, motion, gps-rollover"
+            )),
+        }
+    }
 }
 
 /// Stateful side of the quirk machinery. Owned by the pipeline; lives
@@ -84,10 +122,13 @@ impl Quirks {
         // `decode()` takes no options -- so set it both ways, or a
         // pipeline built without the quirk would inherit it from an
         // earlier one in the same process.
-        if kinds.contains(&QuirkKind::GpsRollover) {
-            canboat_core::quirk::enable_gps_rollover();
-        } else {
-            canboat_core::quirk::disable_gps_rollover();
+        let gps_rollover = kinds.iter().find_map(|k| match k {
+            QuirkKind::GpsRollover(target) => Some(target.clone()),
+            _ => None,
+        });
+        match gps_rollover {
+            Some(target) => canboat_core::quirk::enable_gps_rollover(target),
+            None => canboat_core::quirk::disable_gps_rollover(),
         }
         Self {
             scx20: kinds.contains(&QuirkKind::Scx20).then(scx20::Scx20::new),
@@ -148,7 +189,7 @@ mod tests {
     #[test]
     fn gps_rollover_does_not_leak_into_the_next_pipeline() {
         let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
-        let _first = Quirks::new(vec![QuirkKind::GpsRollover]);
+        let _first = Quirks::new(vec![QuirkKind::GpsRollover(Target::Gnss)]);
         assert!(canboat_core::quirk::gps_rollover_reference_day().is_some());
         let _second = Quirks::new(vec![QuirkKind::Wmm]);
         assert!(canboat_core::quirk::gps_rollover_reference_day().is_none());
