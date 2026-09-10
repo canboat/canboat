@@ -50,6 +50,7 @@ const NETWORK_MANAGEMENT: &[u32] = &[
     65240,  // ISO Commanded Address
     126208, // NMEA Request/Command/Acknowledge Group Function
     126464, // PGN List
+    126993, // Heartbeat
     126996, // Product Information
     126998, // Configuration Information
 ];
@@ -253,9 +254,13 @@ mod tests {
                     .process(&dec(&system_time(30, 255)), Some(30))
                     .is_none()
             );
-            // The device's address claim: its identity, not its data.
+            // The device's address claim and heartbeat: its identity,
+            // not its data.
             let claim = RawFrame::new(None, 6, 60928, 4, 255, bytes("53,80,67,e7,00,be,8c,c0"));
             assert!(relay.process(&dec(&claim), None).is_none());
+            let heartbeat =
+                RawFrame::new(None, 7, 126993, 4, 255, bytes("60,ea,03,ff,ff,ff,ff,ff"));
+            assert!(relay.process(&dec(&heartbeat), None).is_none());
         });
     }
 

@@ -307,6 +307,14 @@ pub(crate) fn note_address_claim(src: u8, payload: &[u8]) {
         .unwrap_or_else(|e| e.into_inner())
         .as_mut()
     {
+        // A NAME lives at one address. If this device just moved, its
+        // old slot must not keep matching whoever sends from there next
+        // before that device's own claim goes by.
+        for slot in q.names.iter_mut() {
+            if *slot == name {
+                *slot = 0;
+            }
+        }
         q.names[usize::from(src)] = name;
     }
 }
@@ -751,12 +759,12 @@ mod tests {
         let claim = crate::RawFrame::new(None, 6, 60928, 4, 255, VHF_NAME.to_le_bytes());
         db.decode(&claim).unwrap();
         assert_eq!(date_of(db.decode(&dsc_call()).unwrap()), Some(reference));
-        // The VHF moves to address 9: the old address stops matching,
-        // the new one starts.
+        // The VHF moves to address 9: the old address stops matching
+        // at once — before whoever takes address 4 has claimed it —
+        // and the new one starts.
         let claim = crate::RawFrame::new(None, 6, 60928, 9, 255, VHF_NAME.to_le_bytes());
         db.decode(&claim).unwrap();
-        let other = crate::RawFrame::new(None, 6, 60928, 4, 255, (VHF_NAME ^ 1).to_le_bytes());
-        db.decode(&other).unwrap();
+        assert!(!gps_rollover_device_listed(4));
         assert_eq!(
             date_of(db.decode(&dsc_call()).unwrap()),
             Some(day(2007, 1, 11))

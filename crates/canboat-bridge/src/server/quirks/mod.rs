@@ -90,13 +90,20 @@ impl QuirkKind {
         }
     }
 
+    /// The `gps-rollover` target this list switches on — the first one
+    /// given, which is what [`Quirks::new`] applies.
+    pub fn gps_rollover_target(kinds: &[QuirkKind]) -> Option<&Target> {
+        kinds.iter().find_map(|k| match k {
+            QuirkKind::GpsRollover(target) => Some(target),
+            _ => None,
+        })
+    }
+
     /// Does this list of quirks give `gps-relay` something to relay —
     /// a `gps-rollover` with named devices? `all` is refused: relaying
     /// every device on the bus as canboat's own is nobody's intent.
     pub fn gps_relay_has_devices(kinds: &[QuirkKind]) -> bool {
-        kinds
-            .iter()
-            .any(|k| matches!(k, QuirkKind::GpsRollover(Target::Devices(d)) if !d.is_empty()))
+        matches!(Self::gps_rollover_target(kinds), Some(Target::Devices(d)) if !d.is_empty())
     }
 }
 
@@ -145,12 +152,8 @@ impl Quirks {
         // `decode()` takes no options -- so set it both ways, or a
         // pipeline built without the quirk would inherit it from an
         // earlier one in the same process.
-        let gps_rollover = kinds.iter().find_map(|k| match k {
-            QuirkKind::GpsRollover(target) => Some(target.clone()),
-            _ => None,
-        });
-        match gps_rollover {
-            Some(target) => canboat_core::quirk::enable_gps_rollover(target),
+        match QuirkKind::gps_rollover_target(&kinds) {
+            Some(target) => canboat_core::quirk::enable_gps_rollover(target.clone()),
             None => canboat_core::quirk::disable_gps_rollover(),
         }
         Self {
@@ -226,12 +229,19 @@ pub(super) mod tests {
         let devices = "gps-rollover=4".parse::<QuirkKind>().unwrap();
         assert!(QuirkKind::gps_relay_has_devices(&[
             QuirkKind::GpsRelay,
-            devices
+            devices.clone()
         ]));
         for kinds in [
             vec![QuirkKind::GpsRelay],
             vec![QuirkKind::GpsRelay, QuirkKind::GpsRollover(Target::Gnss)],
             vec![QuirkKind::GpsRelay, QuirkKind::GpsRollover(Target::All)],
+            // Only the first gps-rollover counts, since that is the one
+            // Quirks::new switches on.
+            vec![
+                QuirkKind::GpsRelay,
+                QuirkKind::GpsRollover(Target::Gnss),
+                devices.clone(),
+            ],
         ] {
             assert!(!QuirkKind::gps_relay_has_devices(&kinds), "{kinds:?}");
         }
