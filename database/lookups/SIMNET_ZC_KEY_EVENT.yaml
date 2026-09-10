@@ -1,0 +1,7 @@
+name: SIMNET_ZC_KEY_EVENT
+kind: pair
+bits: 8
+values:
+  51: Release
+  128: Long press
+  179: Press

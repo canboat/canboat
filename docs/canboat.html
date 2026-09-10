@@ -3615,6 +3615,84 @@ limitations under the License.
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Data</td><td/><td/><td>48 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65332">0xFF34:
             PGN 65332
+            - Simnet: ZC1/OP40 Key</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>132</td></tr></table></p><p>Manufacturer-proprietary single frame used by B&amp;G ZC1 / Simrad OP40 style remotes (and software that emulates them) to send a key to an MFD. Manufacturer Code 1857 (Simrad) distinguishes this from Yanmar Engine Data C on PGN 65332. Function 0x84 is a keypad key; 0x85 is the rotary encoder (see simnetZcKnob). Parameter is 0x320E on every observed key frame; meaning unknown. Several key codes match USB HID keyboard usages (digits 0x1E-0x27, arrows 0x4F-0x52, Enter/Escape 0x28/0x29) but MOB/Display/etc. are Navico specific. Radar uses the same key code as Chart (0x1A).
+</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the target MFD</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Function</td><td>132:
+                  Key</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_ZC_FUNCTION">SIMNET_ZC_FUNCTION</a></td><td>true</td></tr><tr><td>6</td><td>Parameter</td><td>Constant 0x320E on observed key frames; meaning unknown</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Key Event</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_ZC_KEY_EVENT">SIMNET_ZC_KEY_EVENT</a></td><td/></tr><tr><td>8</td><td>Key</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_ZC_KEY">SIMNET_ZC_KEY</a></td><td/></tr></table><h3 id="pgn-65332">0xFF34:
+            PGN 65332
+            - Simnet: ZC1/OP40 Knob</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>133</td></tr></table></p><p>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>1857:
+                  Simrad</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>0xFE on observed encoder frames; not a target MFD address</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Function</td><td>133:
+                  Knob</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-SIMNET_ZC_FUNCTION">SIMNET_ZC_FUNCTION</a></td><td>true</td></tr><tr><td>6</td><td>Parameter</td><td>0 on observed encoder frames; meaning unknown</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Ticks</td><td>Encoder step; +1 left / -1 right on the ZC1/OP40</td><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Unknown</td><td>0x08 on every observed encoder frame</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65332">0xFF34:
+            PGN 65332
             - Yanmar: Engine Data C</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>172</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
@@ -23541,7 +23619,13 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Liters</td></tr><tr><td>1</td><td>Gallons</td></tr></table><h3 id="lookup-SIMNET_WIND_SPEED_UNIT">SIMNET_WIND_SPEED_UNIT
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Meters per second</td></tr><tr><td>2</td><td>Miles per hour</td></tr><tr><td>3</td><td>Kilometers per hour</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_ACTION">SLEIPNER_THRUSTER_ACTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Knots</td></tr><tr><td>1</td><td>Meters per second</td></tr><tr><td>2</td><td>Miles per hour</td></tr><tr><td>3</td><td>Kilometers per hour</td></tr></table><h3 id="lookup-SIMNET_ZC_FUNCTION">SIMNET_ZC_FUNCTION
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>132</td><td>Key</td></tr><tr><td>133</td><td>Knob</td></tr></table><h3 id="lookup-SIMNET_ZC_KEY">SIMNET_ZC_KEY
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>4</td><td>Standby Auto</td></tr><tr><td>6</td><td>Win</td></tr><tr><td>7</td><td>Display</td></tr><tr><td>10</td><td>Goto</td></tr><tr><td>13</td><td>Pages</td></tr><tr><td>16</td><td>Menu</td></tr><tr><td>20</td><td>Power</td></tr><tr><td>21</td><td>Echo</td></tr><tr><td>23</td><td>Nav</td></tr><tr><td>26</td><td>Chart</td></tr><tr><td>27</td><td>Plot</td></tr><tr><td>28</td><td>Info</td></tr><tr><td>29</td><td>MOB</td></tr><tr><td>30</td><td>1</td></tr><tr><td>31</td><td>2</td></tr><tr><td>32</td><td>3</td></tr><tr><td>33</td><td>4</td></tr><tr><td>34</td><td>5</td></tr><tr><td>35</td><td>6</td></tr><tr><td>36</td><td>7</td></tr><tr><td>37</td><td>8</td></tr><tr><td>38</td><td>9</td></tr><tr><td>39</td><td>0</td></tr><tr><td>40</td><td>Check</td></tr><tr><td>41</td><td>Cancel</td></tr><tr><td>79</td><td>Right</td></tr><tr><td>80</td><td>Left</td></tr><tr><td>81</td><td>Down</td></tr><tr><td>82</td><td>Up</td></tr><tr><td>86</td><td>Zoom out</td></tr><tr><td>87</td><td>Zoom in</td></tr><tr><td>88</td><td>Knob push</td></tr></table><h3 id="lookup-SIMNET_ZC_KEY_EVENT">SIMNET_ZC_KEY_EVENT
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>51</td><td>Release</td></tr><tr><td>128</td><td>Long press</td></tr><tr><td>179</td><td>Press</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_ACTION">SLEIPNER_THRUSTER_ACTION
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Active</td></tr><tr><td>2</td><td>Standby</td></tr></table><h3 id="lookup-SLEIPNER_THRUSTER_DIRECTION">SLEIPNER_THRUSTER_DIRECTION
         (0 - 3)
