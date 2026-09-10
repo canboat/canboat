@@ -6,6 +6,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.2.0](https://github.com/canboat/canboat/compare/v8.1.0...v8.2.0) (2026-09-10)
+
+
+### Added
+
+* **126720:** add Fusion "Set Setting" (Proprietary ID 15) ([#867](https://github.com/canboat/canboat/issues/867)) ([1765550](https://github.com/canboat/canboat/commit/1765550d6d69679e057bf9c5b6eaab448f3be7b9))
+* **navico:** decode Simnet ZC1/OP40 key PGN 65332 ([#874](https://github.com/canboat/canboat/issues/874)) ([e714ad4](https://github.com/canboat/canboat/commit/e714ad43ba9b4d3782d13afa488b84246a8b8c60))
+* **quirk:** add gps-relay, re-sending a rolled-over device's data with the dates fixed ([#876](https://github.com/canboat/canboat/issues/876)) ([7a7a99e](https://github.com/canboat/canboat/commit/7a7a99e098c7849ecc91cf4c9c8ff3204081baed))
+* **quirk:** let gps-rollover name the devices whose every date is wrong ([#873](https://github.com/canboat/canboat/issues/873)) ([e6a6d72](https://github.com/canboat/canboat/commit/e6a6d7245c768f319863d6c20278f38794e185e5))
+
 ## [8.1.0](https://github.com/canboat/canboat/compare/v8.0.0...v8.1.0) (2026-08-30)
 
 
