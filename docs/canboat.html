@@ -7119,6 +7119,41 @@ limitations under the License.
                       <a href="#lookup-FUSION_SETTING">FUSION_SETTING</a></td><td/></tr><tr><td>6</td><td>Value</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
                   
                         unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Tuner Command</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>5</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            10
+            bytes long and contains 7 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>5:
+                  Tuner Command</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Tuner Source</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_RADIO_SOURCE">FUSION_RADIO_SOURCE</a></td><td/></tr><tr><td>6</td><td>Command</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_TUNER_COMMAND">FUSION_TUNER_COMMAND</a></td><td/></tr><tr><td>7</td><td>Frequency</td><td/><td><a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126983">0x1F007:
             PGN 126983
             - Alert</h3><p/><p>
@@ -23405,7 +23440,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>Ipod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
         (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Track Info</td></tr><tr><td>32773</td><td>Track Title</td></tr><tr><td>32774</td><td>Track Artist</td></tr><tr><td>32775</td><td>Track Album</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Progress</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>Tone</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volume</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32800</td><td>Power</td></tr><tr><td>32801</td><td>Unit Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>SiriusXM Preset Event</td></tr><tr><td>32804</td><td>SiriusXM Channel</td></tr><tr><td>32805</td><td>SiriusXM Title</td></tr><tr><td>32806</td><td>SiriusXM Artist</td></tr><tr><td>32807</td><td>SiriusXM Genre</td></tr><tr><td>32808</td><td>SiriusXM Category</td></tr><tr><td>32809</td><td>SiriusXm Signal</td></tr><tr><td>32810</td><td>SiriusXM Parental Request</td></tr><tr><td>32811</td><td>SiriusXM Diagnostics</td></tr><tr><td>32812</td><td>SiriusXM Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr><tr><td>32819</td><td>IP Setting</td></tr><tr><td>32824</td><td>Multiroom</td></tr><tr><td>32825</td><td>Multiroom Status</td></tr><tr><td>32829</td><td>System Capabilities</td></tr><tr><td>32830</td><td>Part Number</td></tr><tr><td>32832</td><td>Processing Bypass</td></tr><tr><td>32846</td><td>Server Info</td></tr><tr><td>32850</td><td>RDS Data</td></tr><tr><td>32859</td><td>Ignition Switch State</td></tr><tr><td>32862</td><td>Mono</td></tr><tr><td>32863</td><td>Speed Volume Current Speed</td></tr><tr><td>32865</td><td>Zone Capabilities Extended</td></tr></table><h3 id="lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Track Info</td></tr><tr><td>32773</td><td>Track Title</td></tr><tr><td>32774</td><td>Track Artist</td></tr><tr><td>32775</td><td>Track Album</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Progress</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>Tone</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volume</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32800</td><td>Power</td></tr><tr><td>32801</td><td>Unit Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>SiriusXM Preset Event</td></tr><tr><td>32804</td><td>SiriusXM Channel</td></tr><tr><td>32805</td><td>SiriusXM Title</td></tr><tr><td>32806</td><td>SiriusXM Artist</td></tr><tr><td>32807</td><td>SiriusXM Genre</td></tr><tr><td>32808</td><td>SiriusXM Category</td></tr><tr><td>32809</td><td>SiriusXm Signal</td></tr><tr><td>32810</td><td>SiriusXM Parental Request</td></tr><tr><td>32811</td><td>SiriusXM Diagnostics</td></tr><tr><td>32812</td><td>SiriusXM Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr><tr><td>32819</td><td>IP Setting</td></tr><tr><td>32824</td><td>Multiroom</td></tr><tr><td>32825</td><td>Multiroom Status</td></tr><tr><td>32829</td><td>System Capabilities</td></tr><tr><td>32830</td><td>Part Number</td></tr><tr><td>32832</td><td>Processing Bypass</td></tr><tr><td>32846</td><td>Server Info</td></tr><tr><td>32850</td><td>RDS Data</td></tr><tr><td>32859</td><td>Ignition Switch State</td></tr><tr><td>32862</td><td>Mono</td></tr><tr><td>32863</td><td>Speed Volume Current Speed</td></tr><tr><td>32865</td><td>Zone Capabilities Extended</td></tr></table><h3 id="lookup-FUSION_TUNER_COMMAND">FUSION_TUNER_COMMAND
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Seek Up</td></tr><tr><td>2</td><td>Tune Up</td></tr><tr><td>3</td><td>Seek Down</td></tr><tr><td>4</td><td>Tune Down</td></tr><tr><td>5</td><td>Tune Direct</td></tr></table><h3 id="lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID
         (0 - 65535)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>40</td><td>Calibration Matrix Present</td></tr><tr><td>52</td><td>Set North State</td></tr><tr><td>65</td><td>Device Flags</td></tr><tr><td>67</td><td>COG Source Valid Flag</td></tr></table><h3 id="lookup-GARMIN_AUTOPILOT_FIELD">GARMIN_AUTOPILOT_FIELD
         (0 - 255)

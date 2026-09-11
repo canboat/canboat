@@ -1,0 +1,67 @@
+pgn: 126720
+id: fusionTunerCommand
+description: 'Fusion: Tuner Command'
+type: Fast
+variantOrder: 58
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Tuner Command
+  match: 5
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: tunerSource
+  name: Tuner Source
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_RADIO_SOURCE
+- id: command
+  name: Command
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_TUNER_COMMAND
+- id: frequency
+  name: Frequency
+  type: RADIO_FREQUENCY_UFIX32
+notes: |-
+  Reverse engineered from NMEA 2000 traffic between a Fusion MS-NRX300
+  remote and an MS-RA70N stereo.
+
+  Tuner source 0 was observed for AM and 1 for FM.
+
+  Commands Seek Up, Tune Up, Seek Down and Tune Down were observed from
+  the MS-NRX300. The Frequency field contains the tuner's current
+  frequency in Hz. FM manual tuning was observed in 50 kHz steps and AM
+  manual tuning in 9 kHz steps.
+
+  Active tests against the MS-RA70N showed that the four-byte Frequency
+  field must be present for the relative seek/tune commands, but its
+  value is ignored.
+
+  Tune Direct uses the Frequency field as the requested target frequency.
+  Tune Direct commands were injected from NMEA 2000 source address 101
+  for 100.0 MHz and 101.7 MHz. The MS-RA70N changed frequency accordingly
+  and subsequently reported the requested frequency in its Fusion Tuner
+  status messages.
+
+  Evidence: samples/fusion-tuner-command.raw.
