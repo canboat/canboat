@@ -1,9 +1,8 @@
-pgn: 130820
-id: fusionAuxGain
-description: 'Fusion: Aux Gain'
+pgn: 126720
+id: fusionSetAuxGain
+description: 'Fusion: Set Aux Gain'
 type: Fast
-variantOrder: 27
-priority: 7
+variantOrder: 58
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -23,13 +22,13 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: messageId
-  name: Message ID
+- id: proprietaryId
+  name: Proprietary ID
   type: LOOKUP
   bits: 16
-  description: Aux Gain
-  match: 32787
-  lookup: FUSION_STATUS_MESSAGE_ID
+  description: Set Aux Gain
+  match: 13
+  lookup: FUSION_MESSAGE_ID
   primaryKey: true
 - id: sourceId
   name: Source ID
@@ -42,3 +41,4 @@ notes: |-
   Gain is a signed value in dB.
 
   On an MS-RA70N/MS-NRX300, values from -9 through +9 dB were observed.
+  Attempts to set -10 or +10 dB were reported back as -9 or +9 dB respectively.
