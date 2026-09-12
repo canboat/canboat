@@ -37,4 +37,13 @@ fields:
   primaryKey: true
 - id: filter
   name: Filter
-  type: UINT8
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_LOW_PASS_FILTER
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  The MS-RA70N has two zones and exposes subwoofer low-pass filter control
+  only for Zone 1. The protocol message contains an explicit zone number, so
+  this device limitation should not be interpreted as a protocol-wide
+  restriction. Other Fusion models may expose this control on additional
+  zones. Evidence: samples/fusion-ms-ra70n-zone-controls.raw.

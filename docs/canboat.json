@@ -1590,6 +1590,16 @@
         ]
       },
       {
+        "Name":"FUSION_LOW_PASS_FILTER",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"55 Hz", "Value":1},
+          {"Name":"85 Hz", "Value":2},
+          {"Name":"120 Hz", "Value":3},
+          {"Name":"160 Hz", "Value":4}
+        ]
+      },
+      {
         "Name":"FUSION_MENU_ACTION",
         "MaxValue":255,
         "EnumValues":[
@@ -69075,12 +69085,12 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
+            "Signed":true,
+            "RangeMin":-127,
+            "RangeMax":124,
+            "UnknownValue":127,
+            "OutOfRangeValue":126,
+            "ReservedValue":125,
             "FieldType":"NUMBER"
           }
         ]
@@ -69187,7 +69197,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_LOW_PASS_FILTER"
           }
         ]
       },
