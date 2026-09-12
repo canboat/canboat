@@ -1233,6 +1233,12 @@ limitations under the License.
       <EnumPair Value="4" Name="Next" />
       <EnumPair Value="6" Name="Prev" />
     </LookupEnumeration>
+    <LookupEnumeration Name="FUSION_LOW_PASS_FILTER" MaxValue="255">
+      <EnumPair Value="1" Name="55 Hz" />
+      <EnumPair Value="2" Name="85 Hz" />
+      <EnumPair Value="3" Name="120 Hz" />
+      <EnumPair Value="4" Name="160 Hz" />
+    </LookupEnumeration>
     <LookupEnumeration Name="FUSION_MENU_ACTION" MaxValue="255">
       <EnumPair Value="1" Name="Open" />
       <EnumPair Value="2" Name="Select" />
@@ -69082,12 +69088,12 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
       </Fields>
@@ -69195,7 +69201,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_LOW_PASS_FILTER</LookupEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
