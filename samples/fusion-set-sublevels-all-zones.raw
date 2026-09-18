@@ -1,0 +1,13 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, commanded by a B&G Zeus SRX at source 39.
+#
+# 126720 proprietary id 21 -- a value ABSENT from FUSION_MESSAGE_ID, which
+# jumps from 20 "Set Sublevel" to 22 "Set Equalizer". It writes all four zone
+# sublevels at once, mirroring the 130820 Sublevels status exactly, in the same
+# way that 25 "Set All Volumes" is the all-zones form of 24 "Set Zone Volume".
+#
+# The operator raised the first zone's sublevel from 12 to 14; the command
+# carries the whole array 0e,0c,0c,00 and the status echoes it 19 ms later.
+#
+2026-09-18T14:28:35.205Z,3,126720,39,51,8,a3,99,15,00,0e,0c,0c,00
+2026-09-18T14:28:35.224Z,7,130820,51,255,8,a3,99,1a,80,0e,0c,0c,00

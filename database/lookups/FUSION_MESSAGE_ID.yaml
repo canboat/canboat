@@ -20,6 +20,7 @@ values:
   18: Set Balance
   19: Set Low Pass Filter
   20: Set Sublevel
+  21: Set All Sublevels
   22: Set Equalizer
   23: Set Volume Limit
   24: Set Zone Volume

@@ -1,0 +1,22 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, captured 2026-09-18 on a live bus.
+#
+# 130820 message id 32865 (0x8061) "Zone Capabilities Extended" -- named in
+# FUSION_STATUS_MESSAGE_ID but never decoded. 40 payload bytes = five 8-byte
+# records, one per zone slot plus a global slot, in the same order as the
+# existing 32798 "Capabilities" message.
+#
+# The first two bytes of each record are EXACTLY the corresponding 16-bit word
+# of 32798, which the unit sent in the same window -- so the layout is
+# confirmed against a PGN canboat already decodes, with no guesswork:
+#
+#   Capabilities (32798)   Zone 1 0xFDFF  Zone 2 0xBDFF  Zone 3 0xB7FF  Zone 4 0  Global 0
+#   Extended     (32865)   record 0xFDFF  record 0xBDFF  record 0xB7FF  0000       0000
+#
+# The remaining six bytes of each populated record read 02,00,00,00,00,00 and
+# are zero for the unpopulated slots; their meaning is not yet established, so
+# this capture is evidence for the record framing, not for those six bytes.
+#
+2026-09-18T13:45:28.835Z,7,130820,51,255,14,a3,99,1e,80,ff,fd,ff,bd,ff,b7,00,00,00,00
+2026-09-18T13:45:28.839Z,7,130820,51,255,44,a3,99,61,80,ff,fd,02,00,00,00,00,00,ff,bd,02,00,00,00,00,00,ff,b7,02,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00
+2026-09-18T13:45:29.074Z,7,130820,51,255,44,a3,99,61,80,ff,fd,02,00,00,00,00,00,ff,bd,02,00,00,00,00,00,ff,b7,02,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00

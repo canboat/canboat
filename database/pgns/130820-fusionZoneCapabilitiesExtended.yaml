@@ -1,0 +1,105 @@
+pgn: 130820
+id: fusionZoneCapabilitiesExtended
+description: 'Fusion: Zone Capabilities Extended'
+type: Fast
+variantOrder: 68
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Zone Capabilities Extended
+  match: 32865
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone1Capabilities
+  name: Zone 1 Capabilities
+  type: UINT16
+- id: zone1Extra
+  name: Zone 1 Extra
+  type: BINARY
+  bits: 48
+- id: zone2Capabilities
+  name: Zone 2 Capabilities
+  type: UINT16
+- id: zone2Extra
+  name: Zone 2 Extra
+  type: BINARY
+  bits: 48
+- id: zone3Capabilities
+  name: Zone 3 Capabilities
+  type: UINT16
+- id: zone3Extra
+  name: Zone 3 Extra
+  type: BINARY
+  bits: 48
+- id: zone4Capabilities
+  name: Zone 4 Capabilities
+  type: UINT16
+- id: zone4Extra
+  name: Zone 4 Extra
+  type: BINARY
+  bits: 48
+- id: globalCapabilities
+  name: Global Capabilities
+  type: UINT16
+- id: globalExtra
+  name: Global Extra
+  type: BINARY
+  bits: 48
+notes: |-
+  Five 8-byte records -- four zone slots and a global slot, in the same order
+  as the PGN 130820 "Capabilities" status (message id 32798).
+
+  The layout is confirmed against a message canboat already decodes rather than
+  guessed: the leading 16 bits of each record are EXACTLY the corresponding
+  word of 32798, which the same unit sent in the same window.
+
+    Capabilities (32798)  Zone 1 0xFDFF  Zone 2 0xBDFF  Zone 3 0xB7FF  Zone 4 0  Global 0
+    Extended     (32865)  record 0xFDFF  record 0xBDFF  record 0xB7FF  0000      0000
+
+  The remaining six bytes of each populated record read 02,00,00,00,00,00 and
+  are zero for the unpopulated slots. Their meaning is NOT established, so they
+  are left as BINARY rather than being given speculative names.
+
+  32798 "Capabilities" was separately shown to be static: it is unchanged by
+  the "Internal Amps On" setting, verified by requesting a fresh copy with the
+  amplifier switched off. It is broadcast on a 5-minute cycle and also answered
+  on demand via FUSION_MESSAGE_ID 1 "Request Status".
+
+  Evidence: samples/fusion-zone-capabilities-extended.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,44,a3,99,61,80,ff,fd,02,00,00,00,00,00,ff,bd,02,00,00,00,00,00,ff,b7,02,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00"  # from fusion-zone-capabilities-extended.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Zone Capabilities Extended"
+    zone1Capabilities: 65023
+    zone1Extra: "0x020000000000"
+    zone2Capabilities: 48639
+    zone2Extra: "0x020000000000"
+    zone3Capabilities: 47103
+    zone3Extra: "0x020000000000"
+    zone4Capabilities: 0
+    zone4Extra: "0x000000000000"
+    globalCapabilities: 0
+    globalExtra: "0x000000000000"

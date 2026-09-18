@@ -1,0 +1,37 @@
+# format=FAST
+# Fusion MS-WB670 (SW 6.50, build 121) at source 51, controlled from a B&G Zeus
+# SRX at source 39 over NMEA 2000, captured 2026-09-18 on a live bus.
+#
+# Shows that the zone field in the Fusion PGNs is ZERO-BASED, while the fixed
+# four-slot status messages and the factory default names are one-based:
+#
+#   Zone Name index 0 = "Doghouse"   (the zone the UI calls Zone 1)
+#   Zone Name index 1 = "Saloon"     (the zone the UI calls Zone 2)
+#   Zone Name index 2 = "Zone 3"     (still on its factory default name)
+#
+# The operator then set the balance of "Saloon" to left 7 from the Zeus. The
+# 126720 Set Balance command carries zone=1, and the 130820 Balance status
+# answers with zone=1 value=-7 (negative = left).
+#
+# The nine 126720 Set Balance frames decode only once #884 lands; until then
+# they fall through to the 0x1EF00 fallback. The 130820 Balance status frames
+# and the Zone Name frames decode today.
+#
+2026-09-18T14:25:30.347Z,7,130820,51,255,15,a3,99,2d,80,00,08,44,6f,67,68,6f,75,73,65,00
+2026-09-18T14:25:30.348Z,7,130820,51,255,13,a3,99,2d,80,01,06,53,61,6c,6f,6f,6e,00
+2026-09-18T14:25:30.350Z,7,130820,51,255,13,a3,99,2d,80,02,06,5a,6f,6e,65,20,33,00
+2026-09-18T14:31:10.060Z,3,126720,39,51,6,a3,99,12,00,01,ff
+2026-09-18T14:31:10.101Z,3,126720,39,51,6,a3,99,12,00,01,ff
+2026-09-18T14:31:10.150Z,3,126720,39,51,6,a3,99,12,00,01,fc
+2026-09-18T14:31:10.200Z,3,126720,39,51,6,a3,99,12,00,01,fb
+2026-09-18T14:31:10.253Z,3,126720,39,51,6,a3,99,12,00,01,f9
+2026-09-18T14:31:10.359Z,3,126720,39,51,6,a3,99,12,00,01,fa
+2026-09-18T14:31:10.399Z,3,126720,39,51,6,a3,99,12,00,01,fa
+2026-09-18T14:31:10.499Z,3,126720,39,51,6,a3,99,12,00,01,f9
+2026-09-18T14:31:10.549Z,3,126720,39,51,6,a3,99,12,00,01,f9
+2026-09-18T14:31:10.082Z,7,130820,51,255,6,a3,99,18,80,01,ff
+2026-09-18T14:31:10.159Z,7,130820,51,255,6,a3,99,18,80,01,fc
+2026-09-18T14:31:10.225Z,7,130820,51,255,6,a3,99,18,80,01,fb
+2026-09-18T14:31:10.264Z,7,130820,51,255,6,a3,99,18,80,01,f9
+2026-09-18T14:31:10.376Z,7,130820,51,255,6,a3,99,18,80,01,fa
+2026-09-18T14:31:10.522Z,7,130820,51,255,6,a3,99,18,80,01,f9
