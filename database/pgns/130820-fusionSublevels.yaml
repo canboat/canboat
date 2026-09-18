@@ -43,4 +43,13 @@ fields:
 - id: zone4
   name: Zone 4
   type: UINT8
-notes: 'Range: 0 to +24'
+notes: |-
+  Range: 0 to +24.
+
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  The MS-RA70N has two zones and exposes subwoofer level control only for
+  Zone 1. This status message nevertheless contains four zone slots. The
+  number of slots in the message should therefore not be interpreted as the
+  number of zones supported by a particular Fusion model. Other models may
+  expose additional zones and subwoofer controls.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.

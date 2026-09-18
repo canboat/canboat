@@ -1,0 +1,9 @@
+name: FUSION_TUNER_COMMAND
+kind: pair
+bits: 8
+values:
+  1: Seek Up
+  2: Tune Up
+  3: Seek Down
+  4: Tune Down
+  5: Tune Direct

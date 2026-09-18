@@ -2,7 +2,7 @@ pgn: 126720
 id: fusionSetAuxGain
 description: 'Fusion: Set Aux Gain'
 type: Fast
-variantOrder: 58
+variantOrder: 59
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
