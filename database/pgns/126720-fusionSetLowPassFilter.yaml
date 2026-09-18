@@ -1,0 +1,73 @@
+pgn: 126720
+id: fusionSetLowPassFilter
+description: 'Fusion: Set Low Pass Filter'
+type: Fast
+variantOrder: 61
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Low Pass Filter
+  match: 19
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: filter
+  name: Filter
+  type: LOOKUP
+  bits: 8
+  lookup: FUSION_LOW_PASS_FILTER
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,13,00,00,01"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Low Pass Filter"
+    zone: 0
+    filter: "55 Hz"
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,13,00,00,02"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Low Pass Filter"
+    zone: 0
+    filter: "85 Hz"
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,13,00,00,03"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Low Pass Filter"
+    zone: 0
+    filter: "120 Hz"
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,13,00,00,04"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Low Pass Filter"
+    zone: 0
+    filter: "160 Hz"

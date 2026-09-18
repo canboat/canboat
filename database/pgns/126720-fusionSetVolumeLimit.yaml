@@ -1,0 +1,57 @@
+pgn: 126720
+id: fusionSetVolumeLimit
+description: 'Fusion: Set Volume Limit'
+type: Fast
+variantOrder: 63
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Volume Limit
+  match: 23
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: limit
+  name: Limit
+  type: UINT8
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,17,00,00,17"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Volume Limit"
+    zone: 0
+    limit: 23
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,17,00,01,17"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Volume Limit"
+    zone: 1
+    limit: 23

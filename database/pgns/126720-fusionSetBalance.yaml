@@ -1,0 +1,66 @@
+pgn: 126720
+id: fusionSetBalance
+description: 'Fusion: Set Balance'
+type: Fast
+variantOrder: 60
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Balance
+  match: 18
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: value
+  name: Value
+  type: INT8
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  Negative values shift balance to the left; positive values shift it to the
+  right; zero is centered.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,f9"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Balance"
+    zone: 0
+    value: -7
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,00"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Balance"
+    zone: 0
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,07"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Balance"
+    zone: 0
+    value: 7

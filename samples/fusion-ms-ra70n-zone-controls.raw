@@ -6,6 +6,7 @@
 # - subwoofer low-pass filter changes 55 Hz -> 85 Hz -> 120 Hz -> 160 Hz -> 55 Hz
 # - subwoofer level changes on Zone 1
 # - volume-limit changes on both zones
+# - Zone 1 renamed to "COCKPIT"
 #
 # The MS-RA70N exposes two zones. Fixed four-slot status messages below must
 # not be interpreted as evidence that every Fusion device implements four zones.
@@ -38,3 +39,5 @@
 2026-09-12T10:49:12.713451Z,7,130820,12,255,6,a3,99,18,80,00,07
 2026-09-12T10:49:22.221231Z,7,126720,33,12,6,a3,99,12,00,00,00
 2026-09-12T10:49:22.223499Z,7,130820,12,255,6,a3,99,18,80,00,00
+2026-09-12T11:15:42.627498Z,7,126720,33,12,14,a3,99,22,00,00,07,43,4f,43,4b,50,49,54,00
+2026-09-12T11:15:42.631883Z,7,130820,12,255,14,a3,99,2d,80,00,07,43,4f,43,4b,50,49,54,00
