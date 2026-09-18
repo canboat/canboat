@@ -3481,6 +3481,76 @@ Pgn pgnList[] = {
      },
      .camelDescription = "fusionSetAuxGain"},
 
+    {"Fusion: Set Balance",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 18, .description = "Set Balance", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Value", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
+     },
+     .camelDescription = "fusionSetBalance"},
+
+    {"Fusion: Set Low Pass Filter",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 19, .description = "Set Low Pass Filter", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Filter", .camelName = "filter", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_LOW_PASS_FILTER, .lookup.name = "FUSION_LOW_PASS_FILTER"}
+     },
+     .camelDescription = "fusionSetLowPassFilter"},
+
+    {"Fusion: Set Sublevel",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 20, .description = "Set Sublevel", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Level", .camelName = "level", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionSetSublevel"},
+
+    {"Fusion: Set Volume Limit",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 23, .description = "Set Volume Limit", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Limit", .camelName = "limit", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "fusionSetVolumeLimit"},
+
+    {"Fusion: Set Zone Name",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 34, .description = "Set Zone Name", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Name", .camelName = "name", .fieldType = "STRING_LZ"}
+     },
+     .camelDescription = "fusionSetZoneName"},
+
     {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
      126976,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -8064,7 +8134,7 @@ Pgn pgnList[] = {
       {.name = "Track #", .camelName = "track", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Track Count", .camelName = "trackCount", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Length", .camelName = "length", .fieldType = "DURATION_UFIX32_MS"},
-      {.name = "Position in track", .camelName = "positionInTrack", .fieldType = "DURATION_UFIX32_MS"}
+      {.name = "Position in Track", .camelName = "positionInTrack", .fieldType = "DURATION_UFIX32_MS"}
      },
      .camelDescription = "fusionMedia",
      .priority = 7},
@@ -8176,7 +8246,7 @@ Pgn pgnList[] = {
      .camelDescription = "fusionIgnitionSwitchState",
      .priority = 7},
 
-    {"Fusion: Menu Lock Id",
+    {"Fusion: Menu Lock ID",
      130820,
      PACKET_COMPLETE,
      PACKET_FAST,
@@ -8185,7 +8255,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32786, .description = "Menu Lock ID", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
-      {.name = "Lock Id", .camelName = "lockId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Flags", .camelName = "flags", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "fusionMenuLockId",
@@ -8302,7 +8372,7 @@ Pgn pgnList[] = {
      .camelDescription = "fusionTuner",
      .priority = 7},
 
-    {"Fusion: MARINE_TUNER",
+    {"Fusion: Marine Tuner",
      130820,
      PACKET_COMPLETE,
      PACKET_FAST,
@@ -8455,7 +8525,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32792, .description = "Balance", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "VALUE", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
+      {.name = "Value", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "fusionBalance",
      .priority = 7},

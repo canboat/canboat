@@ -1,6 +1,6 @@
 pgn: 130820
 id: fusionMenuLockId
-description: 'Fusion: Menu Lock Id'
+description: 'Fusion: Menu Lock ID'
 type: Fast
 variantOrder: 15
 priority: 7
@@ -32,7 +32,7 @@ fields:
   lookup: FUSION_STATUS_MESSAGE_ID
   primaryKey: true
 - id: lockId
-  name: Lock Id
+  name: Lock ID
   type: UINT32
 - id: flags
   name: Flags

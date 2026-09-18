@@ -1258,10 +1258,10 @@ limitations under the License.
       <EnumPair Value="12" Name="Request Menu Lock ID" />
       <EnumPair Value="13" Name="Set Aux Gain" />
       <EnumPair Value="15" Name="Set Settings" />
-      <EnumPair Value="16" Name="DAB Updtate Command" />
+      <EnumPair Value="16" Name="DAB Update Command" />
       <EnumPair Value="17" Name="Set Mute" />
       <EnumPair Value="18" Name="Set Balance" />
-      <EnumPair Value="19" Name="Set Low Pass Filer" />
+      <EnumPair Value="19" Name="Set Low Pass Filter" />
       <EnumPair Value="20" Name="Set Sublevel" />
       <EnumPair Value="22" Name="Set Equalizer" />
       <EnumPair Value="23" Name="Set Volume Limit" />
@@ -1274,23 +1274,23 @@ limitations under the License.
       <EnumPair Value="31" Name="Set Sirius Parental" />
       <EnumPair Value="33" Name="Send Factory Reset Command" />
       <EnumPair Value="34" Name="Set Zone Name" />
-      <EnumPair Value="35" Name="Send Dvd Command" />
-      <EnumPair Value="36" Name="Dvd Press Ir Key" />
+      <EnumPair Value="35" Name="Send DVD Command" />
+      <EnumPair Value="36" Name="DVD Press IR Key" />
       <EnumPair Value="39" Name="Send Select Sirius Team" />
       <EnumPair Value="40" Name="Send Select Sirius Artist" />
       <EnumPair Value="41" Name="Send Sirius Sport Alert User Action" />
       <EnumPair Value="45" Name="Send Sirius Artist Song User Action" />
       <EnumPair Value="50" Name="Send Multiroom Command" />
       <EnumPair Value="51" Name="Get Multiroom Device Record" />
-      <EnumPair Value="52" Name="Scan Multirooom Devices" />
+      <EnumPair Value="52" Name="Scan Multiroom Devices" />
       <EnumPair Value="53" Name="Send File Transfer" />
       <EnumPair Value="54" Name="Set Loud" />
-      <EnumPair Value="56" Name="Fapi Set Source Multiroom Enabled" />
-      <EnumPair Value="57" Name="Request Head Unit Dsp Settings" />
+      <EnumPair Value="56" Name="Set Source Multiroom Enabled" />
+      <EnumPair Value="57" Name="Request Head Unit DSP Settings" />
       <EnumPair Value="64" Name="Send Transfer Status" />
-      <EnumPair Value="65" Name="Fapi Get Server Info" />
-      <EnumPair Value="69" Name="Fapi Set Source Enabled" />
-      <EnumPair Value="70" Name="Fapi Set Source Name" />
+      <EnumPair Value="65" Name="Get Server Info" />
+      <EnumPair Value="69" Name="Set Source Enabled" />
+      <EnumPair Value="70" Name="Set Source Name" />
       <EnumPair Value="73" Name="Send External Amp Gain" />
       <EnumPair Value="74" Name="Send Internal Amp Gain" />
       <EnumPair Value="75" Name="Send Mono" />
@@ -1317,8 +1317,8 @@ limitations under the License.
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_REPEAT_STATUS" MaxValue="4294967295">
       <EnumPair Value="0" Name="Off" />
-      <EnumPair Value="1" Name="One/track" />
-      <EnumPair Value="2" Name="All/album" />
+      <EnumPair Value="1" Name="One/Track" />
+      <EnumPair Value="2" Name="All/Album" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_SETTING" MaxValue="4294967295">
       <EnumPair Value="0" Name="Alpha Search Threshold" />
@@ -1330,11 +1330,11 @@ limitations under the License.
       <EnumPair Value="6" Name="Telemute" />
       <EnumPair Value="7" Name="Tuner Region" />
       <EnumPair Value="8" Name="Marine Zone" />
-      <EnumPair Value="9" Name="USB repeat" />
-      <EnumPair Value="10" Name="USB shuffle" />
+      <EnumPair Value="9" Name="USB Repeat" />
+      <EnumPair Value="10" Name="USB Shuffle" />
       <EnumPair Value="11" Name="iPod Album Artwork" />
-      <EnumPair Value="12" Name="iPod repeat" />
-      <EnumPair Value="13" Name="iPod shuffle" />
+      <EnumPair Value="12" Name="iPod Repeat" />
+      <EnumPair Value="13" Name="iPod Shuffle" />
       <EnumPair Value="14" Name="AM Preset 0" />
       <EnumPair Value="15" Name="AM Preset 1" />
       <EnumPair Value="16" Name="AM Preset 2" />
@@ -1391,10 +1391,10 @@ limitations under the License.
       <EnumPair Value="67" Name="Internal Amps On" />
       <EnumPair Value="68" Name="MTP Repeat" />
       <EnumPair Value="69" Name="MTP Shuffle" />
-      <EnumPair Value="70" Name="Id Accessory Source" />
+      <EnumPair Value="70" Name="ID Accessory Source" />
       <EnumPair Value="71" Name="NMEA Power" />
       <EnumPair Value="72" Name="Low Power Mode" />
-      <EnumPair Value="73" Name="DVD region" />
+      <EnumPair Value="73" Name="DVD Region" />
       <EnumPair Value="74" Name="Volume Zone Sync" />
       <EnumPair Value="75" Name="Max Volume Start" />
       <EnumPair Value="76" Name="BT Auto Connect" />
@@ -1420,7 +1420,7 @@ limitations under the License.
       <EnumPair Value="1" Name="FM" />
       <EnumPair Value="2" Name="Aux" />
       <EnumPair Value="3" Name="Sirius" />
-      <EnumPair Value="4" Name="Ipod" />
+      <EnumPair Value="4" Name="iPod" />
       <EnumPair Value="5" Name="USB" />
       <EnumPair Value="6" Name="DVD" />
       <EnumPair Value="7" Name="VHF" />
@@ -1477,7 +1477,7 @@ limitations under the License.
       <EnumPair Value="32806" Name="SiriusXM Artist" />
       <EnumPair Value="32807" Name="SiriusXM Genre" />
       <EnumPair Value="32808" Name="SiriusXM Category" />
-      <EnumPair Value="32809" Name="SiriusXm Signal" />
+      <EnumPair Value="32809" Name="SiriusXM Signal" />
       <EnumPair Value="32810" Name="SiriusXM Parental Request" />
       <EnumPair Value="32811" Name="SiriusXM Diagnostics" />
       <EnumPair Value="32812" Name="SiriusXM Presets" />
@@ -28840,6 +28840,525 @@ limitations under the License.
           <OutOfRangeValue>126</OutOfRangeValue>
           <ReservedValue>125</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetBalance</Id>
+      <Description>Fusion: Set Balance</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Balance</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>18</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>value</Id>
+          <Name>Value</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>true</Signed>
+          <RangeMin>-127</RangeMin>
+          <RangeMax>124</RangeMax>
+          <UnknownValue>127</UnknownValue>
+          <OutOfRangeValue>126</OutOfRangeValue>
+          <ReservedValue>125</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetLowPassFilter</Id>
+      <Description>Fusion: Set Low Pass Filter</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Low Pass Filter</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>19</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>filter</Id>
+          <Name>Filter</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_LOW_PASS_FILTER</LookupEnumeration>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetSublevel</Id>
+      <Description>Fusion: Set Sublevel</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Sublevel</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>20</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>level</Id>
+          <Name>Level</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetVolumeLimit</Id>
+      <Description>Fusion: Set Volume Limit</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Volume Limit</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>23</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>limit</Id>
+          <Name>Limit</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>fusionSetZoneName</Id>
+      <Description>Fusion: Set Zone Name</Description>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <MinLength>5</MinLength>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Set Zone Name</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>34</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>zone</Id>
+          <Name>Zone</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>name</Id>
+          <Name>Name</Name>
+          <BitLengthVariable>true</BitLengthVariable>
+          <BitOffset>40</BitOffset>
+          <BitStart>0</BitStart>
+          <FieldType>STRING_LZ</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -66493,7 +67012,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <Field>
           <Order>10</Order>
           <Id>positionInTrack</Id>
-          <Name>Position in track</Name>
+          <Name>Position in Track</Name>
           <BitLength>32</BitLength>
           <BitOffset>152</BitOffset>
           <BitStart>0</BitStart>
@@ -67257,7 +67776,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
     <PGNInfo>
       <PGN>130820</PGN>
       <Id>fusionMenuLockId</Id>
-      <Description>Fusion: Menu Lock Id</Description>
+      <Description>Fusion: Menu Lock ID</Description>
       <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -67329,7 +67848,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <Field>
           <Order>5</Order>
           <Id>lockId</Id>
-          <Name>Lock Id</Name>
+          <Name>Lock ID</Name>
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
@@ -68199,7 +68718,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
     <PGNInfo>
       <PGN>130820</PGN>
       <Id>fusionMarineTuner</Id>
-      <Description>Fusion: MARINE_TUNER</Description>
+      <Description>Fusion: Marine Tuner</Description>
       <Priority>7</Priority>
       <Type>Fast</Type>
       <Complete>false</Complete>
@@ -69321,7 +69840,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         <Field>
           <Order>6</Order>
           <Id>value</Id>
-          <Name>VALUE</Name>
+          <Name>Value</Name>
           <BitLength>8</BitLength>
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>

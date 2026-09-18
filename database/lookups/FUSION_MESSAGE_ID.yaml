@@ -15,10 +15,10 @@ values:
   12: Request Menu Lock ID
   13: Set Aux Gain
   15: Set Settings
-  16: DAB Updtate Command
+  16: DAB Update Command
   17: Set Mute
   18: Set Balance
-  19: Set Low Pass Filer
+  19: Set Low Pass Filter
   20: Set Sublevel
   22: Set Equalizer
   23: Set Volume Limit
@@ -31,23 +31,23 @@ values:
   31: Set Sirius Parental
   33: Send Factory Reset Command
   34: Set Zone Name
-  35: Send Dvd Command
-  36: Dvd Press Ir Key
+  35: Send DVD Command
+  36: DVD Press IR Key
   39: Send Select Sirius Team
   40: Send Select Sirius Artist
   41: Send Sirius Sport Alert User Action
   45: Send Sirius Artist Song User Action
   50: Send Multiroom Command
   51: Get Multiroom Device Record
-  52: Scan Multirooom Devices
+  52: Scan Multiroom Devices
   53: Send File Transfer
   54: Set Loud
-  56: Fapi Set Source Multiroom Enabled
-  57: Request Head Unit Dsp Settings
+  56: Set Source Multiroom Enabled
+  57: Request Head Unit DSP Settings
   64: Send Transfer Status
-  65: Fapi Get Server Info
-  69: Fapi Set Source Enabled
-  70: Fapi Set Source Name
+  65: Get Server Info
+  69: Set Source Enabled
+  70: Set Source Name
   73: Send External Amp Gain
   74: Send Internal Amp Gain
   75: Send Mono

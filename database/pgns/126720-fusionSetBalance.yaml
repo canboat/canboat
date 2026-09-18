@@ -1,9 +1,8 @@
-pgn: 130820
-id: fusionBalance
-description: 'Fusion: Balance'
+pgn: 126720
+id: fusionSetBalance
+description: 'Fusion: Set Balance'
 type: Fast
-variantOrder: 32
-priority: 7
+variantOrder: 60
 fields:
 - id: manufacturerCode
   name: Manufacturer Code
@@ -23,46 +22,45 @@ fields:
   description: Marine Industry
   match: 4
   lookup: INDUSTRY_CODE
-- id: messageId
-  name: Message ID
+- id: proprietaryId
+  name: Proprietary ID
   type: LOOKUP
   bits: 16
-  description: Balance
-  match: 32792
-  lookup: FUSION_STATUS_MESSAGE_ID
+  description: Set Balance
+  match: 18
+  lookup: FUSION_MESSAGE_ID
   primaryKey: true
 - id: zone
   name: Zone
   type: UINT8
-  primaryKey: true
 - id: value
   name: Value
   type: INT8
 notes: |-
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
-  The balance value is signed and encoded as an 8-bit two's-complement value.
   Negative values shift balance to the left; positive values shift it to the
   right; zero is centered.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
 samples:
-- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,f9"  # from fusion-ms-ra70n-zone-controls.raw
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,f9"  # from fusion-ms-ra70n-zone-controls.raw
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
-    messageId: "Balance"
+    proprietaryId: "Set Balance"
     zone: 0
     value: -7
-- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,00"  # from fusion-ms-ra70n-zone-controls.raw
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,00"  # from fusion-ms-ra70n-zone-controls.raw
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
-    messageId: "Balance"
+    proprietaryId: "Set Balance"
     zone: 0
     value: 0
-- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,07"  # from fusion-ms-ra70n-zone-controls.raw
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,12,00,00,07"  # from fusion-ms-ra70n-zone-controls.raw
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
-    messageId: "Balance"
+    proprietaryId: "Set Balance"
     zone: 0
     value: 7

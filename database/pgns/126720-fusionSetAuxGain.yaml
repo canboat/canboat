@@ -42,3 +42,34 @@ notes: |-
 
   On an MS-RA70N/MS-NRX300, values from -9 through +9 dB were observed.
   Attempts to set -10 or +10 dB were reported back as -9 or +9 dB respectively.
+
+  Evidence: samples/fusion-aux-gain.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,0d,00,02,09"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Aux Gain"
+    sourceId: 2
+    gain: 9
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,0d,00,02,00"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Aux Gain"
+    sourceId: 2
+    gain: 0
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,0d,00,02,f7"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Aux Gain"
+    sourceId: 2
+    gain: -9
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,0d,00,02,f6"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Aux Gain"
+    sourceId: 2
+    gain: -10

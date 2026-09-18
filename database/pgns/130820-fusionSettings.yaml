@@ -141,15 +141,15 @@ samples:
     value.12: 0
     id.13: "Alpha Search Threshold"
     value.13: 1
-    id.14: "iPod repeat"
+    id.14: "iPod Repeat"
     value.14: 2
-    id.15: "iPod shuffle"
+    id.15: "iPod Shuffle"
     value.15: 1
     id.16: "iPod Album Artwork"
     value.16: 1
-    id.17: "USB repeat"
+    id.17: "USB Repeat"
     value.17: 1
-    id.18: "USB shuffle"
+    id.18: "USB Shuffle"
     value.18: 0
     id.19: "MTP Repeat"
     value.19: 1

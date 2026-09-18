@@ -65,3 +65,44 @@ notes: |-
   status messages.
 
   Evidence: samples/fusion-tuner-command.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,10,a3,99,05,00,01,01,a0,3b,28,06"  # from fusion-tuner-command.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Tuner Command"
+    tunerSource: "FM"
+    command: "Seek Up"
+    frequency: 103300000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,10,a3,99,05,00,01,02,a0,3b,28,06"  # from fusion-tuner-command.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Tuner Command"
+    tunerSource: "FM"
+    command: "Tune Up"
+    frequency: 103300000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,10,a3,99,05,00,00,03,00,2f,0d,00"  # from fusion-tuner-command.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Tuner Command"
+    tunerSource: "AM"
+    command: "Seek Down"
+    frequency: 864000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,10,a3,99,05,00,00,04,48,11,10,00"  # from fusion-tuner-command.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Tuner Command"
+    tunerSource: "AM"
+    command: "Tune Down"
+    frequency: 1053000
+- raw: "2023-01-01-00:00:00.000,7,126720,101,12,10,a3,99,05,00,01,05,a0,d1,0f,06"  # from fusion-tuner-command.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Tuner Command"
+    tunerSource: "FM"
+    command: "Tune Direct"
+    frequency: 101700000
