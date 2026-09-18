@@ -1258,10 +1258,10 @@ limitations under the License.
       <EnumPair Value="12" Name="Request Menu Lock ID" />
       <EnumPair Value="13" Name="Set Aux Gain" />
       <EnumPair Value="15" Name="Set Settings" />
-      <EnumPair Value="16" Name="DAB Updtate Command" />
+      <EnumPair Value="16" Name="DAB Update Command" />
       <EnumPair Value="17" Name="Set Mute" />
       <EnumPair Value="18" Name="Set Balance" />
-      <EnumPair Value="19" Name="Set Low Pass Filer" />
+      <EnumPair Value="19" Name="Set Low Pass Filter" />
       <EnumPair Value="20" Name="Set Sublevel" />
       <EnumPair Value="22" Name="Set Equalizer" />
       <EnumPair Value="23" Name="Set Volume Limit" />
@@ -1282,7 +1282,7 @@ limitations under the License.
       <EnumPair Value="45" Name="Send Sirius Artist Song User Action" />
       <EnumPair Value="50" Name="Send Multiroom Command" />
       <EnumPair Value="51" Name="Get Multiroom Device Record" />
-      <EnumPair Value="52" Name="Scan Multirooom Devices" />
+      <EnumPair Value="52" Name="Scan Multiroom Devices" />
       <EnumPair Value="53" Name="Send File Transfer" />
       <EnumPair Value="54" Name="Set Loud" />
       <EnumPair Value="56" Name="Fapi Set Source Multiroom Enabled" />

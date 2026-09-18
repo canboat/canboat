@@ -15,10 +15,10 @@ values:
   12: Request Menu Lock ID
   13: Set Aux Gain
   15: Set Settings
-  16: DAB Updtate Command
+  16: DAB Update Command
   17: Set Mute
   18: Set Balance
-  19: Set Low Pass Filer
+  19: Set Low Pass Filter
   20: Set Sublevel
   22: Set Equalizer
   23: Set Volume Limit
@@ -39,7 +39,7 @@ values:
   45: Send Sirius Artist Song User Action
   50: Send Multiroom Command
   51: Get Multiroom Device Record
-  52: Scan Multirooom Devices
+  52: Scan Multiroom Devices
   53: Send File Transfer
   54: Set Loud
   56: Fapi Set Source Multiroom Enabled
