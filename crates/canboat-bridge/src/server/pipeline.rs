@@ -532,13 +532,21 @@ mod tests {
     /// Build a `Hubs` with all broadcast hubs idle and the given decoded
     /// tap — the minimal shape for driving the pipeline in a test.
     fn tapped_hubs(decoded_tx: mpsc::Sender<Arc<canboat_core::DecodedPgn>>) -> Hubs {
+        // `Quirks::new` clears the process-wide GPS rollover switch, so it
+        // has to wait for any `gps_relay` test that is currently relying on
+        // it. Nothing here reads the switch back, so the guard only needs to
+        // cover the construction itself.
+        let quirks = {
+            let _guard = crate::server::quirks::tests::switch_guard();
+            crate::server::quirks::Quirks::new(Vec::new())
+        };
         Hubs {
             raw: Arc::new(Hub::new()),
             nmea: Arc::new(Hub::new()),
             analyzer: Arc::new(Hub::new()),
             snapshot: None,
             engine: Arc::new(RequestEngine::new()),
-            quirks: crate::server::quirks::Quirks::new(Vec::new()),
+            quirks,
             device_sender: None,
             claim_addr: None,
             overrides: None,

@@ -202,13 +202,27 @@ impl Quirks {
 }
 
 #[cfg(test)]
-pub(super) mod tests {
+pub(crate) mod tests {
     use super::*;
 
-    /// `Quirks::new` writes the process-wide GPS rollover switch, so the
-    /// tests that call it — here and in `gps_relay` — must not run
-    /// concurrently with each other.
-    pub(super) static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+    /// `Quirks::new` writes the process-wide GPS rollover switch, so every
+    /// test that constructs a `Quirks` — here, in `gps_relay` and in
+    /// `pipeline` — must hold this while it does, or it will flip the
+    /// switch out from under a `gps_relay` test running in parallel.
+    ///
+    /// Take it through [`switch_guard`] rather than locking it directly.
+    static SWITCH: std::sync::Mutex<()> = std::sync::Mutex::new(());
+
+    /// Serialises access to the process-wide GPS rollover switch. Hold the
+    /// returned guard across both the `Quirks::new` call and any later
+    /// assertion that reads the switch back.
+    ///
+    /// The lock is deliberately not taken inside `Quirks::new` itself: the
+    /// tests below hold it *across* a `Quirks::new` call, and a plain
+    /// `Mutex` is not reentrant.
+    pub(crate) fn switch_guard() -> std::sync::MutexGuard<'static, ()> {
+        SWITCH.lock().unwrap_or_else(|e| e.into_inner())
+    }
 
     #[test]
     fn parses_every_name() {
@@ -249,7 +263,7 @@ pub(super) mod tests {
 
     #[test]
     fn enabled_reflects_configured_quirks() {
-        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
+        let _guard = switch_guard();
         assert!(!Quirks::new(vec![]).is_enabled());
         assert!(Quirks::new(vec![QuirkKind::Scx20]).is_enabled());
         assert!(Quirks::new(vec![QuirkKind::Wmm]).is_enabled());
@@ -263,7 +277,7 @@ pub(super) mod tests {
     /// not inherit it from the first.
     #[test]
     fn gps_rollover_does_not_leak_into_the_next_pipeline() {
-        let _guard = SWITCH.lock().unwrap_or_else(|e| e.into_inner());
+        let _guard = switch_guard();
         let _first = Quirks::new(vec![QuirkKind::GpsRollover(Target::Gnss)]);
         assert!(canboat_core::quirk::gps_rollover_reference_day().is_some());
         let _second = Quirks::new(vec![QuirkKind::Wmm]);
