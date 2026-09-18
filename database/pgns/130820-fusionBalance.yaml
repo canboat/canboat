@@ -37,4 +37,10 @@ fields:
   primaryKey: true
 - id: value
   name: VALUE
-  type: UINT8
+  type: INT8
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  The balance value is signed and encoded as an 8-bit two's-complement value.
+  Negative values shift balance to the left; positive values shift it to the
+  right; zero is centered.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.

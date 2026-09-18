@@ -49,10 +49,19 @@ notes: |-
   the unit to read ID 0 (Alpha Search Threshold); it instead changed setting
   2, which only fits the layout above.
 
-  Evidence: samples/fusion-set-setting-zone-link.raw — two writes injected onto
-  the bus from canboat at address 200, each answered ~20 ms later by a Fusion
-  MS-WB670 echoing the same id and value as a 130820 status message, and each
-  taking effect on the unit.
+  AM preset IDs 14 through 28 and FM preset IDs 29 through 43 use value as
+  the preset frequency in Hz. Setting value to zero clears the preset.
+
+  On an MS-RA70N/MS-NRX300, "Delete All" was observed as one Set Setting
+  message per preset in the selected AM or FM bank, with value set to zero.
+
+  Evidence: samples/fusion-set-setting-zone-link.raw contains two generic setting
+  writes injected onto the bus from canboat at address 200, each answered
+  ~20 ms later by a Fusion MS-WB670 echoing the same id and value as a 130820
+  status message, with both changes taking effect on the unit.
+
+  samples/fusion-tuner-presets.raw contains the AM/FM preset set and clear
+  operations observed on an MS-RA70N/MS-NRX300.
 samples:
 - raw: "2023-01-01-00:00:00.000,7,126720,200,51,12,a3,99,0f,00,02,00,00,00,01,00,00,00"  # from fusion-set-setting-zone-link.raw
   expects:
@@ -68,3 +77,46 @@ samples:
     proprietaryId: "Set Settings"
     id: "Zone 2 Linked"
     value: 0
+
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,0e,00,00,00,10,f7,07,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "AM Preset 0"
+    value: 522000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,0e,00,00,00,00,00,00,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "AM Preset 0"
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,1d,00,00,00,00,e1,f5,05"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "FM Preset 0"
+    value: 100000000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,24,00,00,00,60,8f,00,06"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "FM Preset 7"
+    value: 100700000
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,24,00,00,00,00,00,00,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "FM Preset 7"
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,12,a3,99,0f,00,24,00,00,00,60,c4,0c,06"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Settings"
+    id: "FM Preset 7"
+    value: 101500000

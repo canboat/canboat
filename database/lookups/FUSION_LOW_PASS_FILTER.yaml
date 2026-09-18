@@ -1,0 +1,8 @@
+name: FUSION_LOW_PASS_FILTER
+kind: pair
+bits: 8
+values:
+  1: 55 Hz
+  2: 85 Hz
+  3: 120 Hz
+  4: 160 Hz
