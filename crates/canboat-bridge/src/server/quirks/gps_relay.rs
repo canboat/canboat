@@ -188,9 +188,7 @@ mod tests {
     /// nothing else. The switch is process-wide, so this serialises
     /// with the other tests that touch it.
     fn with_device_4(body: impl FnOnce()) {
-        let _guard = super::super::tests::SWITCH
-            .lock()
-            .unwrap_or_else(|e| e.into_inner());
+        let _guard = super::super::tests::switch_guard();
         enable_gps_rollover_at(Target::Devices(vec![Device::Address(4)]), REFERENCE);
         body();
         disable_gps_rollover();
@@ -266,9 +264,7 @@ mod tests {
 
     #[test]
     fn nothing_is_relayed_when_the_quirk_is_off() {
-        let _guard = super::super::tests::SWITCH
-            .lock()
-            .unwrap_or_else(|e| e.into_inner());
+        let _guard = super::super::tests::switch_guard();
         disable_gps_rollover();
         assert!(
             GpsRelay::new()
