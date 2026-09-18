@@ -8134,7 +8134,7 @@ Pgn pgnList[] = {
       {.name = "Track #", .camelName = "track", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Track Count", .camelName = "trackCount", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Length", .camelName = "length", .fieldType = "DURATION_UFIX32_MS"},
-      {.name = "Position in track", .camelName = "positionInTrack", .fieldType = "DURATION_UFIX32_MS"}
+      {.name = "Position in Track", .camelName = "positionInTrack", .fieldType = "DURATION_UFIX32_MS"}
      },
      .camelDescription = "fusionMedia",
      .priority = 7},
@@ -8246,7 +8246,7 @@ Pgn pgnList[] = {
      .camelDescription = "fusionIgnitionSwitchState",
      .priority = 7},
 
-    {"Fusion: Menu Lock Id",
+    {"Fusion: Menu Lock ID",
      130820,
      PACKET_COMPLETE,
      PACKET_FAST,
@@ -8255,7 +8255,7 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32786, .description = "Menu Lock ID", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
-      {.name = "Lock Id", .camelName = "lockId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "Flags", .camelName = "flags", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "fusionMenuLockId",
@@ -8372,7 +8372,7 @@ Pgn pgnList[] = {
      .camelDescription = "fusionTuner",
      .priority = 7},
 
-    {"Fusion: MARINE_TUNER",
+    {"Fusion: Marine Tuner",
      130820,
      PACKET_COMPLETE,
      PACKET_FAST,
@@ -8525,7 +8525,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32792, .description = "Balance", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "VALUE", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
+      {.name = "Value", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "fusionBalance",
      .priority = 7},

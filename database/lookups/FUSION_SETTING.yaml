@@ -11,11 +11,11 @@ values:
   6: Telemute
   7: Tuner Region
   8: Marine Zone
-  9: USB repeat
-  10: USB shuffle
+  9: USB Repeat
+  10: USB Shuffle
   11: iPod Album Artwork
-  12: iPod repeat
-  13: iPod shuffle
+  12: iPod Repeat
+  13: iPod Shuffle
   14: AM Preset 0
   15: AM Preset 1
   16: AM Preset 2
@@ -72,10 +72,10 @@ values:
   67: Internal Amps On
   68: MTP Repeat
   69: MTP Shuffle
-  70: Id Accessory Source
+  70: ID Accessory Source
   71: NMEA Power
   72: Low Power Mode
-  73: DVD region
+  73: DVD Region
   74: Volume Zone Sync
   75: Max Volume Start
   76: BT Auto Connect

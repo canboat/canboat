@@ -47,3 +47,32 @@ notes: |-
   this device limitation should not be interpreted as a protocol-wide
   restriction. Other Fusion models may expose this control on additional
   zones. Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,01"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Low Pass Filter"
+    zone: 0
+    filter: "55 Hz"
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,02"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Low Pass Filter"
+    zone: 0
+    filter: "85 Hz"
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,03"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Low Pass Filter"
+    zone: 0
+    filter: "120 Hz"
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,04"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Low Pass Filter"
+    zone: 0
+    filter: "160 Hz"

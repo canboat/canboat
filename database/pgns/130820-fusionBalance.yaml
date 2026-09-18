@@ -36,7 +36,7 @@ fields:
   type: UINT8
   primaryKey: true
 - id: value
-  name: VALUE
+  name: Value
   type: INT8
 notes: |-
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
@@ -44,3 +44,25 @@ notes: |-
   Negative values shift balance to the left; positive values shift it to the
   right; zero is centered.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,f9"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Balance"
+    zone: 0
+    value: -7
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,00"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Balance"
+    zone: 0
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,18,80,00,07"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Balance"
+    zone: 0
+    value: 7
