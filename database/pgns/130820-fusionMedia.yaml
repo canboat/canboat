@@ -50,7 +50,7 @@ fields:
   name: Length
   type: DURATION_UFIX32_MS
 - id: positionInTrack
-  name: Position in track
+  name: Position in Track
   type: DURATION_UFIX32_MS
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,10,255,23,a3,99,04,80,0b,02,00,06,00,00,00,07,00,00,00,58,00,2a,00,f5,e6,13,00"  # from fusion-130820.log

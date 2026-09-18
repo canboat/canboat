@@ -42,3 +42,25 @@ notes: |-
   Gain is a signed value in dB.
 
   On an MS-RA70N/MS-NRX300, values from -9 through +9 dB were observed.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,13,80,02,09"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Aux Gain"
+    sourceId: 2
+    gain: 9
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,13,80,02,00"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Aux Gain"
+    sourceId: 2
+    gain: 0
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,13,80,02,f7"  # from fusion-aux-gain.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Aux Gain"
+    sourceId: 2
+    gain: -9
