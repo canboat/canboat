@@ -39,3 +39,56 @@ fields:
 - id: value
   name: Value
   type: UINT32
+notes: |-
+  AM preset IDs 14 through 28 and FM preset IDs 29 through 43 use value as
+  the stored preset frequency in Hz. A value of zero indicates an empty
+  preset.
+
+  This message is observed as the immediate status update after changing
+  or clearing a tuner preset with Fusion: Set Setting on PGN 126720.
+
+  Evidence: samples/fusion-tuner-presets.raw.
+
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,0e,00,00,00,10,f7,07,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "AM Preset 0"
+    value: 522000
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,0e,00,00,00,00,00,00,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "AM Preset 0"
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,1d,00,00,00,00,e1,f5,05"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "FM Preset 0"
+    value: 100000000
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,24,00,00,00,60,8f,00,06"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "FM Preset 7"
+    value: 100700000
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,24,00,00,00,00,00,00,00"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "FM Preset 7"
+    value: 0
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,12,a3,99,14,80,24,00,00,00,60,c4,0c,06"  # from fusion-tuner-presets.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Setting"
+    id: "FM Preset 7"
+    value: 101500000
