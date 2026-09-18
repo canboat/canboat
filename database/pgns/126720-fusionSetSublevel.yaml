@@ -1,0 +1,59 @@
+pgn: 126720
+id: fusionSetSublevel
+description: 'Fusion: Set Sublevel'
+type: Fast
+variantOrder: 62
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Sublevel
+  match: 20
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: level
+  name: Level
+  type: UINT8
+notes: |-
+  Range: 0 to +24.
+
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,14,00,00,0d"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Sublevel"
+    zone: 0
+    level: 13
+- raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,14,00,00,08"  # from fusion-ms-ra70n-zone-controls.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Sublevel"
+    zone: 0
+    level: 8
