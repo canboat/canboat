@@ -39,6 +39,7 @@ fields:
 notes: |-
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
   The zone name is encoded using STRING_LZ.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
 samples:
 - raw: "2023-01-01-00:00:00.000,7,126720,33,12,14,a3,99,22,00,00,07,43,4f,43,4b,50,49,54,00"  # from fusion-ms-ra70n-zone-controls.raw

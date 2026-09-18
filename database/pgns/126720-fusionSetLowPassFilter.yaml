@@ -40,6 +40,7 @@ fields:
   lookup: FUSION_LOW_PASS_FILTER
 notes: |-
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  Zone is zero-based: 0 = Zone 1, 1 = Zone 2, and so on.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
 samples:
 - raw: "2023-01-01-00:00:00.000,7,126720,33,12,8,00,06,a3,99,13,00,00,01"  # from fusion-ms-ra70n-zone-controls.raw
