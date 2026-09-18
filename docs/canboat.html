@@ -17701,9 +17701,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>VALUE</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>VALUE</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: Low Pass Filter</h3><p>
@@ -17737,8 +17737,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Filter</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
-                        unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+                      lookup
+                      <a href="#lookup-FUSION_LOW_PASS_FILTER">FUSION_LOW_PASS_FILTER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
             PGN 130820
             - Fusion: Sublevels</h3><p>
               This PGN description applies when the following field(s) match:
@@ -23379,7 +23379,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 7)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Flood</td></tr><tr><td>1</td><td>Slack</td></tr><tr><td>2</td><td>Ebb</td></tr></table><h3 id="lookup-FUSION_COMMAND">FUSION_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_MENU_ACTION">FUSION_MENU_ACTION
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Play</td></tr><tr><td>2</td><td>Pause</td></tr><tr><td>4</td><td>Next</td></tr><tr><td>6</td><td>Prev</td></tr></table><h3 id="lookup-FUSION_LOW_PASS_FILTER">FUSION_LOW_PASS_FILTER
+        (0 - 255)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>55 Hz</td></tr><tr><td>2</td><td>85 Hz</td></tr><tr><td>3</td><td>120 Hz</td></tr><tr><td>4</td><td>160 Hz</td></tr></table><h3 id="lookup-FUSION_MENU_ACTION">FUSION_MENU_ACTION
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Open</td></tr><tr><td>2</td><td>Select</td></tr><tr><td>4</td><td>Close</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 65535)

@@ -8426,7 +8426,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32792, .description = "Balance", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "VALUE", .camelName = "value", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "VALUE", .camelName = "value", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "fusionBalance",
      .priority = 7},
@@ -8441,7 +8441,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32793, .description = "Low Pass Filter", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Zone", .camelName = "zone", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
-      {.name = "Filter", .camelName = "filter", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Filter", .camelName = "filter", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_LOW_PASS_FILTER, .lookup.name = "FUSION_LOW_PASS_FILTER"}
      },
      .camelDescription = "fusionLowPassFilter",
      .priority = 7},

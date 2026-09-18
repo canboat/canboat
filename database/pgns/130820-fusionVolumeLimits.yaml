@@ -43,3 +43,8 @@ fields:
 - id: zone4VolumeLimit
   name: Zone 4 Volume Limit
   type: UINT8
+notes: |-
+  Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
+  The MS-RA70N has two zones, while this status message contains four zone
+  slots. Other Fusion models may expose more zones.
+  Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
