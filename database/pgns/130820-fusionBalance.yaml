@@ -36,7 +36,7 @@ fields:
   type: UINT8
   primaryKey: true
 - id: value
-  name: VALUE
+  name: Value
   type: INT8
 notes: |-
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.

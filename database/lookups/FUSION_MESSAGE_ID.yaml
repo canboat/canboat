@@ -31,8 +31,8 @@ values:
   31: Set Sirius Parental
   33: Send Factory Reset Command
   34: Set Zone Name
-  35: Send Dvd Command
-  36: Dvd Press Ir Key
+  35: Send DVD Command
+  36: DVD Press IR Key
   39: Send Select Sirius Team
   40: Send Select Sirius Artist
   41: Send Sirius Sport Alert User Action
@@ -42,12 +42,12 @@ values:
   52: Scan Multiroom Devices
   53: Send File Transfer
   54: Set Loud
-  56: Fapi Set Source Multiroom Enabled
-  57: Request Head Unit Dsp Settings
+  56: Set Source Multiroom Enabled
+  57: Request Head Unit DSP Settings
   64: Send Transfer Status
-  65: Fapi Get Server Info
-  69: Fapi Set Source Enabled
-  70: Fapi Set Source Name
+  65: Get Server Info
+  69: Set Source Enabled
+  70: Set Source Name
   73: Send External Amp Gain
   74: Send Internal Amp Gain
   75: Send Mono
