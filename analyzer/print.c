@@ -318,6 +318,33 @@ bool extractNumber(const Field   *field,
   return true;
 }
 
+/*
+ * Is field `order` inside the same repeating set as field `selfOrder`?
+ *
+ * Both sets are checked. A field is "in" a set when its order falls in
+ * [start, start + count). Orders are 1-based; a start of 0 means no set.
+ */
+static bool inSameRepeatingSet(const Pgn *pgn, size_t selfOrder, size_t order)
+{
+  uint8_t start[2] = {pgn->repeatingStart1, pgn->repeatingStart2};
+  uint8_t count[2] = {pgn->repeatingCount1, pgn->repeatingCount2};
+
+  for (int i = 0; i < 2; i++)
+  {
+    if (start[i] == 0 || count[i] == 0)
+    {
+      continue;
+    }
+    bool selfIn = selfOrder >= start[i] && selfOrder < (size_t) start[i] + count[i];
+    bool keyIn  = order >= start[i] && order < (size_t) start[i] + count[i];
+    if (selfIn && keyIn)
+    {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, size_t dataLen, int64_t *value)
 {
   const Field *field     = &pgn->fieldList[order - 1];
@@ -331,6 +358,58 @@ bool extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *data, siz
   dataLen -= bitOffset >> 3;
 
   return extractNumber(field, data, dataLen, startBit, field->size, value, &maxValue);
+}
+
+/*
+ * Extract the key field of an INDIRECT_LOOKUP, given where the *value* field
+ * actually sits (`selfBit`).
+ *
+ * getFieldOffsetByOrder() sums field sizes from the start of the message, so
+ * it only locates a field's FIRST occurrence. That is right when the key lives
+ * outside the value's repeating set - including the forward reference in PGN
+ * 60928, where deviceFunction (order 5) is keyed on deviceClass (order 7) -
+ * because such a key occurs exactly once.
+ *
+ * When key and value share a repeating set it is wrong: every record would be
+ * resolved against the first record's key. There the distance between the two
+ * is fixed, so the key is found relative to where the value actually is.
+ */
+static bool extractIndirectKey(const Field *field, size_t selfBit, const uint8_t *data, size_t dataLen, int64_t *value)
+{
+  const Pgn *pgn      = field->pgn;
+  size_t     keyOrder = field->lookup.val1Order;
+
+  if (pgn == NULL || keyOrder == 0 || keyOrder > pgn->fieldCount)
+  {
+    return false;
+  }
+  if (!inSameRepeatingSet(pgn, field->order, keyOrder))
+  {
+    return extractNumberByOrder(pgn, keyOrder, data, dataLen, value);
+  }
+
+  {
+    const Field *keyField  = &pgn->fieldList[keyOrder - 1];
+    size_t       staticSelf = getFieldOffsetByOrder(pgn, field->order);
+    size_t       staticKey  = getFieldOffsetByOrder(pgn, keyOrder);
+    size_t       bitOffset;
+    size_t       startBit;
+    int64_t      maxValue;
+
+    if (staticKey > staticSelf || selfBit < staticSelf - staticKey)
+    {
+      return false;
+    }
+    bitOffset = selfBit - (staticSelf - staticKey);
+    startBit  = bitOffset & 7;
+    if ((bitOffset >> 3) > dataLen)
+    {
+      return false;
+    }
+    data += bitOffset >> 3;
+    dataLen -= bitOffset >> 3;
+    return extractNumber(keyField, data, dataLen, startBit, keyField->size, value, &maxValue);
+  }
 }
 
 extern void printEmpty(const char *fieldName, int64_t exceptionValue)
@@ -728,7 +807,7 @@ extern bool fieldPrintLookup(const Field   *field,
 
       logDebug("Triplet extraction for field '%s'\n", field->name);
 
-      if (field->pgn != NULL && extractNumberByOrder(field->pgn, field->lookup.val1Order, data, dataLen, &val1))
+      if (extractIndirectKey(field, startBit, data, dataLen, &val1))
       {
         s = (*field->lookup.function.triplet)((size_t) val1, (size_t) value);
       }

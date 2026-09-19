@@ -69939,7 +69939,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <UnknownValue>4294967295</UnknownValue>
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>INDIRECT_LOOKUP</FieldType>
+          <LookupIndirectEnumeration>FUSION_SETTING_VALUE</LookupIndirectEnumeration>
+          <LookupIndirectEnumerationFieldOrder>6</LookupIndirectEnumerationFieldOrder>
         </Field>
       </Fields>
     </PGNInfo>

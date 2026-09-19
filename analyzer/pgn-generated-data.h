@@ -8525,7 +8525,7 @@ Pgn pgnList[] = {
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32789, .description = "Settings", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Count", .camelName = "count", .fieldType = "UINT32", .resolution = 1.0},
       {.name = "ID", .camelName = "id", .fieldType = "LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_SETTING, .lookup.name = "FUSION_SETTING"},
-      {.name = "Value", .camelName = "value", .fieldType = "UINT32", .resolution = 1.0}
+      {.name = "Value", .camelName = "value", .fieldType = "INDIRECT_LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupFUSION_SETTING_VALUE, .lookup.name = "FUSION_SETTING_VALUE", .lookup.val1Order = 6}
      },
      .camelDescription = "fusionSettings",
      .priority = 7,

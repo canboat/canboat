@@ -170,15 +170,46 @@ struct Ctx {
     /// DYNAMIC_FIELD_KEY, applied to the next DYNAMIC_FIELD_VALUE - the
     /// key-value idiom where the key names the value's type and length.
     pending_value: Option<(String, Option<u32>, Option<String>)>,
+    /// Static bit offset and width of each field order, i.e. where its FIRST
+    /// occurrence sits. Used to resolve an INDIRECT_LOOKUP's key by position.
+    static_off: std::collections::HashMap<u32, (usize, usize)>,
+    /// (start, size) of each repeating set, 1-based field orders.
+    rep_sets: Vec<(u32, u32)>,
+}
+
+/// Are two field orders inside the same repeating set?
+fn in_same_repeating_set(rep_sets: &[(u32, u32)], a: u32, b: u32) -> bool {
+    rep_sets
+        .iter()
+        .any(|(s, n)| (*s..*s + *n).contains(&a) && (*s..*s + *n).contains(&b))
 }
 
 pub fn decode(db: &Database, pgn: &Pgn, data: &[u8]) -> Result<Vec<DecodedField>> {
     let mut out = Vec::new();
+    let mut static_off = std::collections::HashMap::new();
+    {
+        let mut at = 0usize;
+        for f in &pgn.fields {
+            static_off.insert(f.order, (at, f.res_bits as usize));
+            at += f.res_bits as usize;
+        }
+    }
+    let mut rep_sets = Vec::new();
+    for r in [pgn.repeating1.as_ref(), pgn.repeating2.as_ref()]
+        .into_iter()
+        .flatten()
+    {
+        if r.count > 0 {
+            rep_sets.push((r.start, r.count));
+        }
+    }
     let mut ctx = Ctx {
         bit: 0,
         by_order: Default::default(),
         dyn_len: None,
         pending_value: None,
+        static_off,
+        rep_sets,
     };
 
     let (rep_start, rep_count) = pgn
@@ -382,7 +413,7 @@ fn decode_one(
                     match sentinel(f, ft.has_sign, e.raw, bits) {
                         Some(s) => s,
                         None => {
-                            let name = lookup_name(db, f, e.raw, &ctx.by_order);
+                            let name = lookup_name(db, f, e.raw, ctx, data, start_bit);
                             // Only pair enumerations can be extended in place;
                             // triplet/fieldtype/indirect need more context.
                             if let Some(("pair", n)) = f.lookup_ref() {
@@ -576,7 +607,9 @@ fn lookup_name(
     db: &Database,
     f: &Field,
     raw: u64,
-    by_order: &std::collections::HashMap<u32, i64>,
+    ctx: &Ctx,
+    data: &[u8],
+    self_bit: usize,
 ) -> Option<String> {
     let (kind, name) = f.lookup_ref()?;
     let lk = db.lookups.get(name)?;
@@ -592,11 +625,25 @@ fn lookup_name(
             .find(|e| e.value == raw)
             .map(|e| e.name.clone()),
         "triplet" => {
-            let v1 = f
-                .lookup_indirect_order
-                .and_then(|o| by_order.get(&o))
-                .copied()
-                .unwrap_or(-1);
+            // Resolve the key by POSITION, not by decode order. A static
+            // offset locates only a field's first occurrence, which is right
+            // when the key lives outside the value's repeating set - including
+            // the forward reference in PGN 60928, where deviceFunction
+            // (order 5) is keyed on deviceClass (order 7). When key and value
+            // share a repeating set the distance between them is fixed, so the
+            // key is found relative to where the value actually is.
+            let v1 = (|| -> Option<i64> {
+                let key_order = f.lookup_indirect_order?;
+                let (key_static, key_bits) = *ctx.static_off.get(&key_order)?;
+                let at = if in_same_repeating_set(&ctx.rep_sets, f.order, key_order) {
+                    let (self_static, _) = *ctx.static_off.get(&f.order)?;
+                    self_bit.checked_sub(self_static.checked_sub(key_static)?)?
+                } else {
+                    key_static
+                };
+                crate::bits::extract_bits(data, at, key_bits, false, 0).map(|e| e.value)
+            })()
+            .unwrap_or(-1);
             lk.triplets
                 .iter()
                 .find(|(a, b, _)| *a == v1.max(0) as u64 && *b == raw)
