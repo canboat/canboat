@@ -48,16 +48,42 @@ values:
   32811: SiriusXM Diagnostics
   32812: SiriusXM Presets
   32813: Zone Name
+  32814: DVD State
+  32815: DVD Track
+  32816: DVD Track Position
+  32817: DVD Track Name
+  32818: DVD Artist Name
   32819: IP Setting
+  32820: Media Loading Progress
+  32821: Media User Notification
+  32822: System Alert
   32824: Multiroom
   32825: Multiroom Status
+  32826: Multiroom Device Count
+  32827: Multiroom Device Record
   32829: System Capabilities
   32830: Part Number
   32831: Loudness
   32832: Processing Bypass
+  32833: Received File Count
+  32834: Received File Transfer
+  32835: SiriusXM Replay Indicator
+  32837: SiriusXM Team Info
+  32838: SiriusXM Team Event
+  32839: SiriusXM Artist Song Info
+  32840: SiriusXM Artist Song Event
+  32841: SiriusXM Sport Alert
+  32842: SiriusXM Artist Song Alert
+  32843: SiriusXM Tunemix Changed
+  32844: SiriusXM Tunemix
   32846: Server Info
   32850: RDS Data
+  32854: Source Name
+  32855: Remote Upgrade Status
+  32856: BT Pairing Popup
+  32858: File Transfer Configuration
   32859: Ignition Switch State
   32862: Mono
   32863: Speed Volume Current Speed
   32865: Zone Capabilities Extended
+  32877: BT Pairing Request Done
