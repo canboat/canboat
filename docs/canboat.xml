@@ -1491,21 +1491,47 @@ limitations under the License.
       <EnumPair Value="32811" Name="SiriusXM Diagnostics" />
       <EnumPair Value="32812" Name="SiriusXM Presets" />
       <EnumPair Value="32813" Name="Zone Name" />
+      <EnumPair Value="32814" Name="DVD State" />
+      <EnumPair Value="32815" Name="DVD Track" />
+      <EnumPair Value="32816" Name="DVD Track Position" />
+      <EnumPair Value="32817" Name="DVD Track Name" />
+      <EnumPair Value="32818" Name="DVD Artist Name" />
       <EnumPair Value="32819" Name="IP Setting" />
+      <EnumPair Value="32820" Name="Media Loading Progress" />
+      <EnumPair Value="32821" Name="Media User Notification" />
+      <EnumPair Value="32822" Name="System Alert" />
       <EnumPair Value="32824" Name="Multiroom" />
       <EnumPair Value="32825" Name="Multiroom Status" />
+      <EnumPair Value="32826" Name="Multiroom Device Count" />
+      <EnumPair Value="32827" Name="Multiroom Device Record" />
       <EnumPair Value="32829" Name="System Capabilities" />
       <EnumPair Value="32830" Name="Part Number" />
       <EnumPair Value="32831" Name="Loudness" />
       <EnumPair Value="32832" Name="Processing Bypass" />
+      <EnumPair Value="32833" Name="Received File Count" />
+      <EnumPair Value="32834" Name="Received File Transfer" />
+      <EnumPair Value="32835" Name="SiriusXM Replay Indicator" />
+      <EnumPair Value="32837" Name="SiriusXM Team Info" />
+      <EnumPair Value="32838" Name="SiriusXM Team Event" />
+      <EnumPair Value="32839" Name="SiriusXM Artist Song Info" />
+      <EnumPair Value="32840" Name="SiriusXM Artist Song Event" />
+      <EnumPair Value="32841" Name="SiriusXM Sport Alert" />
+      <EnumPair Value="32842" Name="SiriusXM Artist Song Alert" />
+      <EnumPair Value="32843" Name="SiriusXM Tunemix Changed" />
+      <EnumPair Value="32844" Name="SiriusXM Tunemix" />
       <EnumPair Value="32846" Name="Server Info" />
       <EnumPair Value="32850" Name="RDS Data" />
+      <EnumPair Value="32854" Name="Source Name" />
+      <EnumPair Value="32855" Name="Remote Upgrade Status" />
+      <EnumPair Value="32856" Name="BT Pairing Popup" />
+      <EnumPair Value="32858" Name="File Transfer Configuration" />
       <EnumPair Value="32859" Name="Ignition Switch State" />
       <EnumPair Value="32860" Name="External Amp Gain" />
       <EnumPair Value="32861" Name="Internal Amp Gain" />
       <EnumPair Value="32862" Name="Mono" />
       <EnumPair Value="32863" Name="Speed Volume Current Speed" />
       <EnumPair Value="32865" Name="Zone Capabilities Extended" />
+      <EnumPair Value="32877" Name="BT Pairing Request Done" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_TUNER_COMMAND" MaxValue="255">
       <EnumPair Value="1" Name="Seek Up" />
