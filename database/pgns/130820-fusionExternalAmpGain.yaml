@@ -1,0 +1,84 @@
+pgn: 130820
+id: fusionExternalAmpGain
+description: 'Fusion: External Amp Gain'
+type: Fast
+variantOrder: 69
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: External Amp Gain
+  match: 32860
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+  primaryKey: true
+- id: gain
+  name: Gain
+  type: INT8
+notes: |-
+  Per-zone gain for an externally amplified zone. Zone is zero-based and the
+  gain is signed.
+
+  Message id 32860 was absent from FUSION_STATUS_MESSAGE_ID, which jumped from
+  32859 to 32862.
+
+  Field layout is from the Fusion Audio Android app (fusion.link.remote
+  13.0.0), whose decoder reads zone as UInt8 and gain as Int8 -- the same
+  signed-gain shape as PGN 130820 Aux Gain:
+
+      zone = getUInt8(buffer, 2)
+      gain = getInt8 (buffer, 3)
+
+  Observed on a Fusion MS-WB670 for all three of its zone slots, always with
+  gain 0, so the signedness rests on the app rather than on a captured
+  non-zero value.
+
+  Evidence: samples/fusion-amp-gain.raw.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,5c,80,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "External Amp Gain"
+    zone: 0
+    gain: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,5c,80,01,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "External Amp Gain"
+    zone: 1
+    gain: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,5c,80,02,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "External Amp Gain"
+    zone: 2
+    gain: 0

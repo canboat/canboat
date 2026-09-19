@@ -1,0 +1,73 @@
+pgn: 130820
+id: fusionInternalAmpGain
+description: 'Fusion: Internal Amp Gain'
+type: Fast
+variantOrder: 70
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Internal Amp Gain
+  match: 32861
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+  primaryKey: true
+- id: gain
+  name: Gain
+  type: INT8
+notes: |-
+  Per-zone gain for an internally amplified zone. Zone is zero-based and the
+  gain is signed.
+
+  Message id 32861 was absent from FUSION_STATUS_MESSAGE_ID.
+
+  This message is reported only for zones that HAVE an internal amplifier. On
+  an MS-WB670 whose third zone is a line-level pre-out, 32860 (external) was
+  broadcast for all three zone slots while 32861 was broadcast only for the
+  first two. That asymmetry is what identifies the pair.
+
+  Field layout is from the Fusion Audio Android app, whose decoder reads zone
+  as UInt8 and gain as Int8. Observed gain was always 0, so the signedness
+  rests on the app rather than on a captured non-zero value.
+
+  Evidence: samples/fusion-amp-gain.raw.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,5d,80,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Internal Amp Gain"
+    zone: 0
+    gain: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,5d,80,01,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Internal Amp Gain"
+    zone: 1
+    gain: 0
