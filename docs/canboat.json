@@ -1593,8 +1593,8 @@
         "Name":"FUSION_LOW_PASS_FILTER",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"55 Hz", "Value":1},
-          {"Name":"85 Hz", "Value":2},
+          {"Name":"50 Hz", "Value":1},
+          {"Name":"80 Hz", "Value":2},
           {"Name":"120 Hz", "Value":3},
           {"Name":"160 Hz", "Value":4}
         ]
@@ -1788,9 +1788,17 @@
           {"Name":"Low Power Mode", "Value":72},
           {"Name":"DVD Region", "Value":73},
           {"Name":"Volume Zone Sync", "Value":74},
-          {"Name":"Max Volume Start", "Value":75},
-          {"Name":"BT Auto Connect", "Value":76},
-          {"Name":"Null Setting", "Value":77}
+          {"Name":"Max Volume Start", "Value":76},
+          {"Name":"BT Auto Connect", "Value":77},
+          {"Name":"Tuner Antennas Power Status", "Value":79},
+          {"Name":"FM Antenna Index", "Value":80},
+          {"Name":"DAB Antenna Index", "Value":81},
+          {"Name":"DAB Service Following", "Value":82},
+          {"Name":"FM Frequency Following", "Value":83},
+          {"Name":"DAB FM Service Following", "Value":115},
+          {"Name":"HDMI Volume Zone Sync", "Value":125},
+          {"Name":"ARC Input Audio Delay", "Value":126},
+          {"Name":"Null Setting", "Value":1000}
         ]
       },
       {

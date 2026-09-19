@@ -41,6 +41,15 @@ fields:
   bits: 8
   lookup: FUSION_LOW_PASS_FILTER
 notes: |-
+  The cutoff frequencies are Garmin's own: the Fusion Audio app's filter
+  enumeration is LowPass50Hz(1), LowPass80Hz(2), LowPass120Hz(3),
+  LowPass160Hz(4).
+
+  Values 1 and 2 were originally documented as 55 Hz and 85 Hz, read off an
+  MS-RA70N's user interface. An MS-WB670 displays 50 Hz and 80 Hz for the same
+  wire values, and the app agrees with the latter. The frequencies are NOT
+  model-dependent; the original labels were simply misread.
+
   Observed on a Fusion MS-RA70N controlled from an MS-NRX300 remote.
   The MS-RA70N has two zones and exposes subwoofer low-pass filter control
   only for Zone 1. The protocol message contains an explicit zone number, so
@@ -54,14 +63,14 @@ samples:
     industryCode: "Marine Industry"
     messageId: "Low Pass Filter"
     zone: 0
-    filter: "55 Hz"
+    filter: "50 Hz"
 - raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,02"  # from fusion-ms-ra70n-zone-controls.raw
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Low Pass Filter"
     zone: 0
-    filter: "85 Hz"
+    filter: "80 Hz"
 - raw: "2023-01-01-00:00:00.000,7,130820,12,255,8,00,06,a3,99,19,80,00,03"  # from fusion-ms-ra70n-zone-controls.raw
   expects:
     manufacturerCode: "Fusion Electronics"

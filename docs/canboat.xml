@@ -1234,8 +1234,8 @@ limitations under the License.
       <EnumPair Value="6" Name="Prev" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_LOW_PASS_FILTER" MaxValue="255">
-      <EnumPair Value="1" Name="55 Hz" />
-      <EnumPair Value="2" Name="85 Hz" />
+      <EnumPair Value="1" Name="50 Hz" />
+      <EnumPair Value="2" Name="80 Hz" />
       <EnumPair Value="3" Name="120 Hz" />
       <EnumPair Value="4" Name="160 Hz" />
     </LookupEnumeration>
@@ -1397,9 +1397,17 @@ limitations under the License.
       <EnumPair Value="72" Name="Low Power Mode" />
       <EnumPair Value="73" Name="DVD Region" />
       <EnumPair Value="74" Name="Volume Zone Sync" />
-      <EnumPair Value="75" Name="Max Volume Start" />
-      <EnumPair Value="76" Name="BT Auto Connect" />
-      <EnumPair Value="77" Name="Null Setting" />
+      <EnumPair Value="76" Name="Max Volume Start" />
+      <EnumPair Value="77" Name="BT Auto Connect" />
+      <EnumPair Value="79" Name="Tuner Antennas Power Status" />
+      <EnumPair Value="80" Name="FM Antenna Index" />
+      <EnumPair Value="81" Name="DAB Antenna Index" />
+      <EnumPair Value="82" Name="DAB Service Following" />
+      <EnumPair Value="83" Name="FM Frequency Following" />
+      <EnumPair Value="115" Name="DAB FM Service Following" />
+      <EnumPair Value="125" Name="HDMI Volume Zone Sync" />
+      <EnumPair Value="126" Name="ARC Input Audio Delay" />
+      <EnumPair Value="1000" Name="Null Setting" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_SIRIUS_COMMAND" MaxValue="255">
       <EnumPair Value="1" Name="Next" />
