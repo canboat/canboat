@@ -1438,6 +1438,52 @@ fn decode_lookup(
 /// INDIRECT_LOOKUP: resolve `(value1, value2)` where `value1` is
 /// pulled from another field within the same PGN, identified by
 /// `LookupIndirectEnumerationFieldOrder`.
+/// Are two field orders inside the same repeating set?
+fn in_same_repeating_set(info: &PgnInfo, a: u32, b: u32) -> bool {
+    [
+        (
+            info.repeating_field_set1_start_field,
+            info.repeating_field_set1_size,
+        ),
+        (
+            info.repeating_field_set2_start_field,
+            info.repeating_field_set2_size,
+        ),
+    ]
+    .iter()
+    .any(|(start, size)| match (start, size) {
+        (Some(s), Some(n)) if *n > 0 => (*s..*s + *n).contains(&a) && (*s..*s + *n).contains(&b),
+        _ => false,
+    })
+}
+
+/// Bit offset of an `INDIRECT_LOOKUP`'s key field, given where the *value*
+/// field actually sits (`self_bit`).
+///
+/// `FieldInfo::bit_offset` is a static offset from the start of the message,
+/// so it only locates a field's FIRST occurrence. That is right when the key
+/// lives outside the value's repeating set - including the forward reference
+/// in PGN 60928, where `deviceFunction` (order 5) is keyed on `deviceClass`
+/// (order 7) - because such a key occurs exactly once.
+///
+/// When key and value share a repeating set it is wrong: every record would
+/// resolve against the first record's key. There the distance between the two
+/// is fixed, so the key is located relative to where the value actually is.
+fn indirect_key_offset(
+    value_field: &FieldInfo,
+    key_field: &FieldInfo,
+    info: &PgnInfo,
+    self_bit: u32,
+) -> Option<usize> {
+    let key_static = key_field.bit_offset?;
+    if !in_same_repeating_set(info, value_field.order as u32, key_field.order as u32) {
+        return Some(key_static as usize);
+    }
+    let value_static = value_field.bit_offset?;
+    let delta = value_static.checked_sub(key_static)?;
+    Some(self_bit.checked_sub(delta)? as usize)
+}
+
 fn decode_indirect_lookup(
     f: &FieldInfo,
     info: &PgnInfo,
@@ -1454,9 +1500,9 @@ fn decode_indirect_lookup(
         let table_name = f.lookup_indirect_enumeration?;
         let val1_order = f.lookup_indirect_enumeration_field_order?;
         let val1_field = info.fields.iter().find(|x| x.order == val1_order)?;
-        let val1_off = val1_field.bit_offset?;
         let val1_len = val1_field.bit_length?;
-        let val1 = extract_bits(data, val1_off as usize, val1_len as usize, false, 0)?;
+        let val1_off = indirect_key_offset(f, val1_field, info, bit_offset)?;
+        let val1 = extract_bits(data, val1_off, val1_len as usize, false, 0)?;
         db.indirect_lookup(table_name, val1.raw, raw)
     })();
     if name.is_some() {

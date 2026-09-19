@@ -69937,7 +69937,9 @@
             "UnknownValue":4294967295,
             "OutOfRangeValue":4294967294,
             "ReservedValue":4294967293,
-            "FieldType":"NUMBER"
+            "FieldType":"INDIRECT_LOOKUP",
+            "LookupIndirectEnumeration":"FUSION_SETTING_VALUE",
+            "LookupIndirectEnumerationFieldOrder":6
           }
         ]
       },
