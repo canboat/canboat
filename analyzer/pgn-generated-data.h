@@ -3448,7 +3448,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 15, .description = "Set Settings", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "ID", .camelName = "id", .fieldType = "LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_SETTING, .lookup.name = "FUSION_SETTING"},
-      {.name = "Value", .camelName = "value", .fieldType = "UINT32", .resolution = 1.0}
+      {.name = "Value", .camelName = "value", .fieldType = "INDIRECT_LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupFUSION_SETTING_VALUE, .lookup.name = "FUSION_SETTING_VALUE", .lookup.val1Order = 5}
      },
      .camelDescription = "fusionSetSetting"},
 
@@ -8509,7 +8509,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32788, .description = "Setting", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "ID", .camelName = "id", .fieldType = "LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_SETTING, .lookup.name = "FUSION_SETTING"},
-      {.name = "Value", .camelName = "value", .fieldType = "UINT32", .resolution = 1.0}
+      {.name = "Value", .camelName = "value", .fieldType = "INDIRECT_LOOKUP", .size = 32, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupFUSION_SETTING_VALUE, .lookup.name = "FUSION_SETTING_VALUE", .lookup.val1Order = 5}
      },
      .camelDescription = "fusionSetting",
      .priority = 7},

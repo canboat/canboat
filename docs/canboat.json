@@ -5189,6 +5189,16 @@
           {"Name":"Multimedia Player", "Value1":125, "Value2":130},
           {"Name":"Multimedia Controller", "Value1":125, "Value2":140}
         ]
+      },
+      {
+        "Name":"FUSION_SETTING_VALUE",
+        "MaxValue":4294967295,
+        "EnumValues":[
+          {"Name":"USA", "Value1":7, "Value2":0},
+          {"Name":"Europe", "Value1":7, "Value2":1},
+          {"Name":"Japan", "Value1":7, "Value2":2},
+          {"Name":"Australasia", "Value1":7, "Value2":3}
+        ]
       }
     ],
     "LookupBitEnumerations":[
@@ -29076,7 +29086,9 @@
             "UnknownValue":4294967295,
             "OutOfRangeValue":4294967294,
             "ReservedValue":4294967293,
-            "FieldType":"NUMBER"
+            "FieldType":"INDIRECT_LOOKUP",
+            "LookupIndirectEnumeration":"FUSION_SETTING_VALUE",
+            "LookupIndirectEnumerationFieldOrder":5
           }
         ]
       },
@@ -69798,7 +69810,9 @@
             "UnknownValue":4294967295,
             "OutOfRangeValue":4294967294,
             "ReservedValue":4294967293,
-            "FieldType":"NUMBER"
+            "FieldType":"INDIRECT_LOOKUP",
+            "LookupIndirectEnumeration":"FUSION_SETTING_VALUE",
+            "LookupIndirectEnumerationFieldOrder":5
           }
         ]
       },

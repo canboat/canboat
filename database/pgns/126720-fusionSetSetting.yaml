@@ -37,7 +37,11 @@ fields:
   lookup: FUSION_SETTING
 - id: value
   name: Value
-  type: UINT32
+  type: INDIRECT_LOOKUP
+  bits: 32
+  lookupIndirect:
+    name: FUSION_SETTING_VALUE
+    order: 5
 notes: |-
   The write counterpart to the Fusion: Setting / Fusion: Settings status
   messages on PGN 130820: same (ID, Value) pair, same FUSION_SETTING
