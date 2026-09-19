@@ -68721,6 +68721,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -72707,6 +72708,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -73018,6 +73020,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>
@@ -73124,6 +73127,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
         </Field>
         <Field>
           <Order>6</Order>

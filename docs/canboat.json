@@ -68728,7 +68728,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -72679,7 +72680,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -72988,7 +72990,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
@@ -73093,7 +73096,8 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "FieldType":"NUMBER",
+            "PartOfPrimaryKey":true
           },
           {
             "Order":6,
