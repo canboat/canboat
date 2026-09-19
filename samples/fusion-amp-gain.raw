@@ -1,0 +1,17 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, live bus, 2026-09-19.
+#
+# 130820 message ids 32860 External Amp Gain and 32861 Internal Amp Gain,
+# neither of which was in FUSION_STATUS_MESSAGE_ID. Both are {zone, gain}.
+#
+# The unit has three zone slots; the third is a line-level pre-out with no
+# internal amplifier. 32860 is broadcast for all three, 32861 only for the
+# two that have one -- which is what identifies the pair.
+#
+# Gain is 0 on every frame here; the signedness comes from the Fusion Audio
+# app's decoder (getInt8), not from these captures.
+2026-09-19T02:53:17.363Z,7,130820,51,255,6,a3,99,5c,80,00,00
+2026-09-19T02:53:17.364Z,7,130820,51,255,6,a3,99,5d,80,00,00
+2026-09-19T02:53:17.364Z,7,130820,51,255,6,a3,99,5c,80,01,00
+2026-09-19T02:53:17.365Z,7,130820,51,255,6,a3,99,5d,80,01,00
+2026-09-19T02:53:17.366Z,7,130820,51,255,6,a3,99,5c,80,02,00
