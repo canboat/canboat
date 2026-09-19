@@ -55,10 +55,37 @@ notes: |-
   documented as -15 to +15 on the status side.
 
   Evidence: samples/fusion-set-equalizer.raw.
-
-  NOTE: no `samples:` block. The payload is exactly 8 bytes, which cannot be
-  expressed in a single `raw:` line. Keel reads a raw of 8 bytes or fewer as one
-  CAN frame -- so it wants the fast-packet header, pushing the line to 10 bytes
-  -- and reads anything longer as a coalesced message, so that header is then
-  decoded as the manufacturer word and the wrong variant is selected. The same
-  limitation leaves 130820 Sublevels and Volume Limits unsampled (see #883).
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,3,126720,39,51,8,00,08,a3,99,16,00,00,08"
+  - "2023-01-01-00:00:00.000,3,126720,39,51,3,01,03,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Equalizer"
+    zone: 0
+    bass: 8
+    mid: 3
+    treble: 0
+- raw:
+  - "2023-01-01-00:00:00.000,3,126720,39,51,8,00,08,a3,99,16,00,00,00"
+  - "2023-01-01-00:00:00.000,3,126720,39,51,3,01,03,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Equalizer"
+    zone: 0
+    bass: 0
+    mid: 3
+    treble: 0
+- raw:
+  - "2023-01-01-00:00:00.000,3,126720,39,51,8,00,08,a3,99,16,00,00,00"
+  - "2023-01-01-00:00:00.000,3,126720,39,51,3,01,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Equalizer"
+    zone: 0
+    bass: 0
+    mid: 0
+    treble: 0

@@ -48,3 +48,26 @@ notes: |-
   The MS-RA70N has two zones, while this status message contains four zone
   slots. Other Fusion models may expose more zones.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1c,80,17,18"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Volume Limits"
+    zone1VolumeLimit: 23
+    zone2VolumeLimit: 24
+    zone3VolumeLimit: 0
+    zone4VolumeLimit: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1c,80,18,17"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Volume Limits"
+    zone1VolumeLimit: 24
+    zone2VolumeLimit: 23
+    zone3VolumeLimit: 0
+    zone4VolumeLimit: 0

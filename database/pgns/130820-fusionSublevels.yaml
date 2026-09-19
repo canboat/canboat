@@ -53,3 +53,26 @@ notes: |-
   number of zones supported by a particular Fusion model. Other models may
   expose additional zones and subwoofer controls.
   Evidence: samples/fusion-ms-ra70n-zone-controls.raw.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1a,80,0d,0c"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Sublevels"
+    zone1: 13
+    zone2: 12
+    zone3: 0
+    zone4: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1a,80,08,0c"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,00,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Sublevels"
+    zone1: 8
+    zone2: 12
+    zone3: 0
+    zone4: 0

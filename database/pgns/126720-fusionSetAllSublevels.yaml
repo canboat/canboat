@@ -59,10 +59,15 @@ notes: |-
   0e,0c,0c,00 and the status echoed it 19 ms later.
 
   Evidence: samples/fusion-set-sublevels-all-zones.raw.
-
-  NOTE: no `samples:` block. The payload is exactly 8 bytes, which cannot be
-  expressed in a single `raw:` line. Keel reads a raw of 8 bytes or fewer as one
-  CAN frame -- so it wants the fast-packet header, pushing the line to 10 bytes
-  -- and reads anything longer as a coalesced message, so that header is then
-  decoded as the manufacturer word and the wrong variant is selected. The same
-  limitation leaves 130820 Sublevels and Volume Limits unsampled (see #883).
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,3,126720,39,51,8,00,08,a3,99,15,00,0e,0c"
+  - "2023-01-01-00:00:00.000,3,126720,39,51,3,01,0c,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set All Sublevels"
+    zone1: 14
+    zone2: 12
+    zone3: 12
+    zone4: 0
