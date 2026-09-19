@@ -1,0 +1,16 @@
+name: FUSION_SETTING_VALUE
+kind: triplet
+bits: 32
+values:
+- - 7
+  - 0
+  - USA
+- - 7
+  - 1
+  - Europe
+- - 7
+  - 2
+  - Japan
+- - 7
+  - 3
+  - Australasia

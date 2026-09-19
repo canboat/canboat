@@ -46,6 +46,14 @@ fields:
       name: Value
       type: UINT32
 notes: |-
+  The `value` field is deliberately NOT an INDIRECT_LOOKUP here, unlike the
+  single-setting forms (130820 fusionSetting, 126720 fusionSetSetting). The
+  indirect key is resolved by `extractNumberByOrder`, which computes a fixed
+  bit offset from the start of the message, so inside a repeating set it reads
+  the FIRST record's id for every record. That is not merely ineffective: if
+  the first record's setting happened to be enumerated, every later record
+  would be labelled with that setting's value names.
+
   For AM preset IDs 14 through 28 and FM preset IDs 29 through 43, value is
   the stored preset frequency in Hz. A value of zero indicates an empty
   preset.

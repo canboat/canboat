@@ -38,8 +38,23 @@ fields:
   lookup: FUSION_SETTING
 - id: value
   name: Value
-  type: UINT32
+  type: INDIRECT_LOOKUP
+  bits: 32
+  lookupIndirect:
+    name: FUSION_SETTING_VALUE
+    order: 5
 notes: |-
+  `value` is an INDIRECT_LOOKUP keyed on the `id` field, so a setting whose
+  values form a closed set decodes to a name. Only FUSION_SETTING 7 "Tuner
+  Region" is enumerated so far; every other setting's value decodes as the
+  plain number it always did, which is what the preset frequencies and the
+  volume levels need.
+
+  Not every setting belongs in the enumeration. Id 74 "Volume Zone Sync" is
+  deliberately left out: its value is a zero-based ZONE INDEX with a sentinel
+  (observed 0 and 1 selecting a zone, 4 meaning All), so the meaningful values
+  depend on how many zones the unit has rather than forming a fixed list.
+
   AM preset IDs 14 through 28 and FM preset IDs 29 through 43 use value as
   the stored preset frequency in Hz. A value of zero indicates an empty
   preset.

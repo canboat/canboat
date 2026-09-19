@@ -4170,6 +4170,12 @@ limitations under the License.
       <EnumTriplet Value1="125" Value2="130" Name="Multimedia Player" />
       <EnumTriplet Value1="125" Value2="140" Name="Multimedia Controller" />
     </LookupIndirectEnumeration>
+    <LookupIndirectEnumeration Name="FUSION_SETTING_VALUE" MaxValue="4294967295">
+      <EnumTriplet Value1="7" Value2="0" Name="USA" />
+      <EnumTriplet Value1="7" Value2="1" Name="Europe" />
+      <EnumTriplet Value1="7" Value2="2" Name="Japan" />
+      <EnumTriplet Value1="7" Value2="3" Name="Australasia" />
+    </LookupIndirectEnumeration>
   </LookupIndirectEnumerations>
   <LookupBitEnumerations>
     <LookupBitEnumeration Name="DISABLED_SATELLITES" MaxValue="39">
@@ -28610,7 +28616,9 @@ limitations under the License.
           <UnknownValue>4294967295</UnknownValue>
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>INDIRECT_LOOKUP</FieldType>
+          <LookupIndirectEnumeration>FUSION_SETTING_VALUE</LookupIndirectEnumeration>
+          <LookupIndirectEnumerationFieldOrder>5</LookupIndirectEnumerationFieldOrder>
         </Field>
       </Fields>
     </PGNInfo>
@@ -69803,7 +69811,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <UnknownValue>4294967295</UnknownValue>
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>INDIRECT_LOOKUP</FieldType>
+          <LookupIndirectEnumeration>FUSION_SETTING_VALUE</LookupIndirectEnumeration>
+          <LookupIndirectEnumerationFieldOrder>5</LookupIndirectEnumerationFieldOrder>
         </Field>
       </Fields>
     </PGNInfo>
