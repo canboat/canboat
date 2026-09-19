@@ -1,0 +1,18 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, captured 2026-09-18 on a live bus.
+#
+# FUSION_SETTING id 74 "Volume Zone Sync" value semantics, named by the
+# operator at the screen:
+#
+#   value 0 -> "Doghouse", which is zone index 0
+#   value 1 -> "Saloon",   which is zone index 1
+#   value 4 -> "All"       (the starting state)
+#
+# So the value is a zero-based zone index with a sentinel for "all zones", not
+# a bitmask: a four-zone bitmask would be 0x0F = 15, not 4. What 4 derives from
+# is NOT established -- this unit populates three zone slots, so it is not
+# simply the zone count, and one device cannot distinguish the possibilities.
+#
+2026-09-18T14:59:50.431Z,7,130820,51,255,12,a3,99,14,80,4a,00,00,00,00,00,00,00
+2026-09-18T15:06:30.798Z,7,130820,51,255,12,a3,99,14,80,4a,00,00,00,01,00,00,00
+2026-09-18T15:07:35.454Z,7,130820,51,255,12,a3,99,14,80,4a,00,00,00,04,00,00,00

@@ -1,0 +1,68 @@
+pgn: 126720
+id: fusionSetAllSublevels
+description: 'Fusion: Set All Sublevels'
+type: Fast
+variantOrder: 66
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set All Sublevels
+  match: 21
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone1
+  name: Zone 1
+  type: UINT8
+- id: zone2
+  name: Zone 2
+  type: UINT8
+- id: zone3
+  name: Zone 3
+  type: UINT8
+- id: zone4
+  name: Zone 4
+  type: UINT8
+notes: |-
+  Writes all four zone subwoofer levels in one message, mirroring the PGN
+  130820 "Sublevels" status (message id 32794) exactly, in the same way that
+  25 "Set All Volumes" is the all-zones form of 24 "Set Zone Volume".
+
+  Proprietary id 21 was absent from FUSION_MESSAGE_ID, which jumped from
+  20 "Set Sublevel" to 22 "Set Equalizer"; this PR adds it.
+
+  Both forms are real and are sent by different controllers: a B&G Zeus SRX
+  sends 21 for a sublevel change, while a Fusion MS-NRX300 wired remote sends
+  20 for a single zone (see the capture cited by fusionSetSublevel).
+
+  Observed on a Fusion MS-WB670 commanded by a Zeus SRX: the operator raised
+  the first zone's sublevel from 12 to 14, the command carried the whole array
+  0e,0c,0c,00 and the status echoed it 19 ms later.
+
+  Evidence: samples/fusion-set-sublevels-all-zones.raw.
+
+  NOTE: no `samples:` block. The payload is exactly 8 bytes, which cannot be
+  expressed in a single `raw:` line. Keel reads a raw of 8 bytes or fewer as one
+  CAN frame -- so it wants the fast-packet header, pushing the line to 10 bytes
+  -- and reads anything longer as a coalesced message, so that header is then
+  decoded as the manufacturer word and the wrong variant is selected. The same
+  limitation leaves 130820 Sublevels and Volume Limits unsampled (see #883).

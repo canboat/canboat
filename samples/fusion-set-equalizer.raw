@@ -1,0 +1,25 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, commanded by a B&G Zeus SRX at source 39.
+#
+# 126720 proprietary id 22 "Set Equalizer", previously undecoded. The payload
+# is the same shape as the 130820 Tone status: zone, bass, mid, treble, each a
+# signed byte. Every command carries the full triple rather than a delta.
+#
+# Operator actions, each echoed by the unit ~20 ms later:
+#   bass 4 -> 8   (mid already at 3)
+#   bass 8 -> 0
+#   mid  3 -> 0
+#
+# The MS-WB670 exposes a single master tone control, so the zone byte was only
+# ever observed as 0; the field is nevertheless present on the wire.
+#
+2026-09-18T14:24:38.768Z,3,126720,39,51,8,a3,99,16,00,00,08,03,00
+2026-09-18T14:24:38.797Z,7,130820,51,255,8,a3,99,1b,80,00,08,03,00
+2026-09-18T14:24:38.814Z,3,126720,39,51,8,a3,99,16,00,00,08,03,00
+2026-09-18T14:25:27.912Z,3,126720,39,51,8,a3,99,16,00,00,00,03,00
+2026-09-18T14:25:27.921Z,7,130820,51,255,8,a3,99,1b,80,00,00,03,00
+2026-09-18T14:25:30.186Z,3,126720,39,51,8,a3,99,16,00,00,00,00,00
+2026-09-18T14:25:30.202Z,7,130820,51,255,8,a3,99,1b,80,00,00,00,00
+2026-09-18T14:25:30.335Z,7,130820,51,255,8,a3,99,1b,80,00,00,00,00
+2026-09-18T14:25:30.336Z,7,130820,51,255,8,a3,99,1b,80,01,00,00,00
+2026-09-18T14:25:30.338Z,7,130820,51,255,8,a3,99,1b,80,02,00,00,00

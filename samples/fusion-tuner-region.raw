@@ -1,0 +1,26 @@
+# format=FAST
+# Fusion MS-WB670 at source 51. Live bus, 2026-09-18.
+#
+# FUSION_SETTING id 7 "Tuner Region" value semantics. The operator read each
+# region name off the Fusion iOS app while changing it, so every value below is
+# observed against a name rather than inferred:
+#
+#   0 = USA        1 = Europe        2 = Japan        3 = Australasia
+#
+# First frame: a full 130820 "Settings" list carrying id 7 = 1, captured while
+# the app displayed "Europe". Remaining frames: single 130820 "Setting"
+# updates, one per change the operator made (Japan, Australasia, USA,
+# Australasia).
+#
+# Each region change also emits 30 further "Setting" messages, one per AM and
+# FM preset, all with value 0 -- the region change resets the preset bank
+# unconditionally, including when the presets are already empty (three of the
+# four changes here had nothing left to clear). That is the same per-preset
+# clear mechanism documented for "Delete All" in #879, reached by an unrelated
+# trigger, which rules out its being an artifact of that menu action.
+#
+2026-09-18T13:45:29.045Z,7,130820,51,255,216,a3,99,15,80,1a,00,00,00,06,00,00,00,00,00,00,00,02,00,00,00,00,00,00,00,03,00,00,00,01,00,00,00,04,00,00,00,00,00,00,00,05,00,00,00,00,00,00,00,42,00,00,00,00,00,00,00,43,00,00,00,01,00,00,00,4a,00,00,00,04,00,00,00,4c,00,00,00,0c,00,00,00,07,00,00,00,01,00,00,00,0e,00,00,00,00,00,00,00,0f,00,00,00,00,00,00,00,10,00,00,00,00,00,00,00,11,00,00,00,00,00,00,00,12,00,00,00,00,00,00,00,13,00,00,00,00,00,00,00,14,00,00,00,00,00,00,00,15,00,00,00,00,00,00,00,16,00,00,00,00,00,00,00,17,00,00,00,00,00,00,00,18,00,00,00,00,00,00,00,19,00,00,00,00,00,00,00,1a,00,00,00,00,00,00,00,1b,00,00,00,00,00,00,00,1c,00,00,00,00,00,00,00,1d,00,00,00,a0,06,1c,06
+2026-09-18T14:52:19.475Z,7,130820,51,255,12,a3,99,14,80,07,00,00,00,02,00,00,00
+2026-09-18T14:54:23.044Z,7,130820,51,255,12,a3,99,14,80,07,00,00,00,03,00,00,00
+2026-09-18T14:54:26.773Z,7,130820,51,255,12,a3,99,14,80,07,00,00,00,00,00,00,00
+2026-09-18T14:54:30.191Z,7,130820,51,255,12,a3,99,14,80,07,00,00,00,03,00,00,00

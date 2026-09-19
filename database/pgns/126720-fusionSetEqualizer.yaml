@@ -1,0 +1,64 @@
+pgn: 126720
+id: fusionSetEqualizer
+description: 'Fusion: Set Equalizer'
+type: Fast
+variantOrder: 65
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Equalizer
+  match: 22
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: bass
+  name: Bass
+  type: INT8
+- id: mid
+  name: Mid
+  type: INT8
+- id: treble
+  name: Treble
+  type: INT8
+notes: |-
+  The command form of the PGN 130820 "Tone" status (message id 32795): the
+  payload is the same shape, and every command carries the full bass/mid/treble
+  triple rather than only the axis that moved.
+
+  Zone is zero-based, as elsewhere in the Fusion PGNs.
+
+  Observed on a Fusion MS-WB670 commanded by a B&G Zeus SRX over NMEA 2000.
+  The MS-WB670 exposes a single master tone control, so zone was only ever
+  observed as 0; the field is nevertheless present on the wire. Range is
+  documented as -15 to +15 on the status side.
+
+  Evidence: samples/fusion-set-equalizer.raw.
+
+  NOTE: no `samples:` block. The payload is exactly 8 bytes, which cannot be
+  expressed in a single `raw:` line. Keel reads a raw of 8 bytes or fewer as one
+  CAN frame -- so it wants the fast-packet header, pushing the line to 10 bytes
+  -- and reads anything longer as a coalesced message, so that header is then
+  decoded as the manufacturer word and the wrong variant is selected. The same
+  limitation leaves 130820 Sublevels and Volume Limits unsampled (see #883).

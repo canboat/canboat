@@ -1,0 +1,98 @@
+pgn: 130820
+id: fusionLoudness
+description: 'Fusion: Loudness'
+type: Fast
+variantOrder: 67
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: Loudness
+  match: 32831
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: zone
+  name: Zone
+  type: UINT8
+- id: enabled
+  name: Enabled
+  type: LOOKUP
+  bits: 8
+  lookup: YES_NO
+  allowLookupWidthMismatch: true
+notes: |-
+  Per-zone loudness (bass boost at low volume). Zone is zero-based.
+
+  Message id 32831 was absent from FUSION_STATUS_MESSAGE_ID, which jumped from
+  32830 to 32832; this PR adds it.
+
+  Identified by flipping the named control and watching the bus. Two flips on
+  two different zones in two separate sessions on a Fusion MS-WB670:
+
+    zone 1 ("Saloon")   1 -> 0
+    zone 0 ("Doghouse") 1 -> 0
+
+  Each flip emitted a single unsolicited frame for that zone alone; the
+  periodic sweep (all three zones) then reported it unchanged.
+
+  The command side, FUSION_MESSAGE_ID 54 "Set Loud", was NOT observed and is
+  not added here: neither the Zeus SRX nor the Fusion iOS app exposes loudness
+  over NMEA 2000.
+
+  Evidence: samples/fusion-loudness.raw.
+samples:
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,3f,80,00,01"  # from fusion-loudness.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Loudness"
+    zone: 0
+    enabled: "Yes"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,3f,80,01,01"  # from fusion-loudness.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Loudness"
+    zone: 1
+    enabled: "Yes"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,3f,80,02,01"  # from fusion-loudness.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Loudness"
+    zone: 2
+    enabled: "Yes"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,3f,80,01,00"  # from fusion-loudness.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Loudness"
+    zone: 1
+    enabled: "No"
+- raw: "2023-01-01-00:00:00.000,7,130820,51,255,8,00,06,a3,99,3f,80,00,00"  # from fusion-loudness.raw
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Loudness"
+    zone: 0
+    enabled: "No"

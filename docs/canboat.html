@@ -7346,7 +7346,83 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Name</td><td/><td> </td><td>
                     Variable length
-                  <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126983">0x1F007:
+                  <a href="#ft-STRING_LZ">STRING_LZ</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Set Equalizer</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>22</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            8
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>22:
+                  Set Equalizer</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Bass</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Mid</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Treble</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
+                  
+                        signed
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Fusion: Set All Sublevels</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>21</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            8
+            bytes long and contains 8 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>21:
+                  Set All Sublevels</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 2</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Zone 3</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 4</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-126983">0x1F007:
             PGN 126983
             - Alert</h3><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
@@ -17206,7 +17282,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Zone Name</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                       lookup
-                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Number</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Name</td><td/><td> </td><td>
@@ -18669,7 +18745,89 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Lock ID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Loudness</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32831</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            6
+            bytes long and contains 6 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32831:
+                  Loudness</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Enabled</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: Zone Capabilities Extended</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32865</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            44
+            bytes long and contains 14 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32865:
+                  Zone Capabilities Extended</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Zone 1 Capabilities</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Zone 1 Extra</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>7</td><td>Zone 2 Capabilities</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Zone 2 Extra</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>9</td><td>Zone 3 Capabilities</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Zone 3 Extra</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>11</td><td>Zone 4 Capabilities</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Zone 4 Extra</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>13</td><td>Global Capabilities</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>14</td><td>Global Extra</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -23612,7 +23770,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Open</td></tr><tr><td>2</td><td>Select</td></tr><tr><td>4</td><td>Close</td></tr></table><h3 id="lookup-FUSION_MESSAGE_ID">FUSION_MESSAGE_ID
         (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Set Source</td></tr><tr><td>3</td><td>Media Command</td></tr><tr><td>5</td><td>Tuner Command</td></tr><tr><td>6</td><td>Marine Tuner Command</td></tr><tr><td>7</td><td>Set Marine Tuner Squelch</td></tr><tr><td>8</td><td>Set Marine Tuner Scan Mode</td></tr><tr><td>9</td><td>Menu Action</td></tr><tr><td>10</td><td>Request Menu Count</td></tr><tr><td>11</td><td>Request Menu Item</td></tr><tr><td>12</td><td>Request Menu Lock ID</td></tr><tr><td>13</td><td>Set Aux Gain</td></tr><tr><td>15</td><td>Set Settings</td></tr><tr><td>16</td><td>DAB Update Command</td></tr><tr><td>17</td><td>Set Mute</td></tr><tr><td>18</td><td>Set Balance</td></tr><tr><td>19</td><td>Set Low Pass Filter</td></tr><tr><td>20</td><td>Set Sublevel</td></tr><tr><td>22</td><td>Set Equalizer</td></tr><tr><td>23</td><td>Set Volume Limit</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>27</td><td>Set Line Level Control</td></tr><tr><td>28</td><td>Power</td></tr><tr><td>29</td><td>Set Device Name</td></tr><tr><td>30</td><td>Send Sirius Command</td></tr><tr><td>31</td><td>Set Sirius Parental</td></tr><tr><td>33</td><td>Send Factory Reset Command</td></tr><tr><td>34</td><td>Set Zone Name</td></tr><tr><td>35</td><td>Send DVD Command</td></tr><tr><td>36</td><td>DVD Press IR Key</td></tr><tr><td>39</td><td>Send Select Sirius Team</td></tr><tr><td>40</td><td>Send Select Sirius Artist</td></tr><tr><td>41</td><td>Send Sirius Sport Alert User Action</td></tr><tr><td>45</td><td>Send Sirius Artist Song User Action</td></tr><tr><td>50</td><td>Send Multiroom Command</td></tr><tr><td>51</td><td>Get Multiroom Device Record</td></tr><tr><td>52</td><td>Scan Multiroom Devices</td></tr><tr><td>53</td><td>Send File Transfer</td></tr><tr><td>54</td><td>Set Loud</td></tr><tr><td>56</td><td>Set Source Multiroom Enabled</td></tr><tr><td>57</td><td>Request Head Unit DSP Settings</td></tr><tr><td>64</td><td>Send Transfer Status</td></tr><tr><td>65</td><td>Get Server Info</td></tr><tr><td>69</td><td>Set Source Enabled</td></tr><tr><td>70</td><td>Set Source Name</td></tr><tr><td>73</td><td>Send External Amp Gain</td></tr><tr><td>74</td><td>Send Internal Amp Gain</td></tr><tr><td>75</td><td>Send Mono</td></tr></table><h3 id="lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Request Status</td></tr><tr><td>2</td><td>Set Source</td></tr><tr><td>3</td><td>Media Command</td></tr><tr><td>5</td><td>Tuner Command</td></tr><tr><td>6</td><td>Marine Tuner Command</td></tr><tr><td>7</td><td>Set Marine Tuner Squelch</td></tr><tr><td>8</td><td>Set Marine Tuner Scan Mode</td></tr><tr><td>9</td><td>Menu Action</td></tr><tr><td>10</td><td>Request Menu Count</td></tr><tr><td>11</td><td>Request Menu Item</td></tr><tr><td>12</td><td>Request Menu Lock ID</td></tr><tr><td>13</td><td>Set Aux Gain</td></tr><tr><td>15</td><td>Set Settings</td></tr><tr><td>16</td><td>DAB Update Command</td></tr><tr><td>17</td><td>Set Mute</td></tr><tr><td>18</td><td>Set Balance</td></tr><tr><td>19</td><td>Set Low Pass Filter</td></tr><tr><td>20</td><td>Set Sublevel</td></tr><tr><td>21</td><td>Set All Sublevels</td></tr><tr><td>22</td><td>Set Equalizer</td></tr><tr><td>23</td><td>Set Volume Limit</td></tr><tr><td>24</td><td>Set Zone Volume</td></tr><tr><td>25</td><td>Set All Volumes</td></tr><tr><td>27</td><td>Set Line Level Control</td></tr><tr><td>28</td><td>Power</td></tr><tr><td>29</td><td>Set Device Name</td></tr><tr><td>30</td><td>Send Sirius Command</td></tr><tr><td>31</td><td>Set Sirius Parental</td></tr><tr><td>33</td><td>Send Factory Reset Command</td></tr><tr><td>34</td><td>Set Zone Name</td></tr><tr><td>35</td><td>Send DVD Command</td></tr><tr><td>36</td><td>DVD Press IR Key</td></tr><tr><td>39</td><td>Send Select Sirius Team</td></tr><tr><td>40</td><td>Send Select Sirius Artist</td></tr><tr><td>41</td><td>Send Sirius Sport Alert User Action</td></tr><tr><td>45</td><td>Send Sirius Artist Song User Action</td></tr><tr><td>50</td><td>Send Multiroom Command</td></tr><tr><td>51</td><td>Get Multiroom Device Record</td></tr><tr><td>52</td><td>Scan Multiroom Devices</td></tr><tr><td>53</td><td>Send File Transfer</td></tr><tr><td>54</td><td>Set Loud</td></tr><tr><td>56</td><td>Set Source Multiroom Enabled</td></tr><tr><td>57</td><td>Request Head Unit DSP Settings</td></tr><tr><td>64</td><td>Send Transfer Status</td></tr><tr><td>65</td><td>Get Server Info</td></tr><tr><td>69</td><td>Set Source Enabled</td></tr><tr><td>70</td><td>Set Source Name</td></tr><tr><td>73</td><td>Send External Amp Gain</td></tr><tr><td>74</td><td>Send Internal Amp Gain</td></tr><tr><td>75</td><td>Send Mono</td></tr></table><h3 id="lookup-FUSION_MUTE_COMMAND">FUSION_MUTE_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Mute On</td></tr><tr><td>2</td><td>Mute Off</td></tr></table><h3 id="lookup-FUSION_PLAY_STATUS">FUSION_PLAY_STATUS
         (0 - 65535)
@@ -23634,7 +23792,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>AM</td></tr><tr><td>1</td><td>FM</td></tr><tr><td>2</td><td>Aux</td></tr><tr><td>3</td><td>Sirius</td></tr><tr><td>4</td><td>iPod</td></tr><tr><td>5</td><td>USB</td></tr><tr><td>6</td><td>DVD</td></tr><tr><td>7</td><td>VHF</td></tr><tr><td>8</td><td>Invalid</td></tr><tr><td>9</td><td>MTP</td></tr><tr><td>10</td><td>Bluetooth</td></tr><tr><td>11</td><td>ARC</td></tr><tr><td>12</td><td>Android</td></tr><tr><td>13</td><td>Pandora</td></tr><tr><td>14</td><td>DAB</td></tr><tr><td>15</td><td>AirPlay</td></tr><tr><td>16</td><td>UPNP</td></tr><tr><td>17</td><td>Unknown</td></tr></table><h3 id="lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID
         (0 - 65535)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Track Info</td></tr><tr><td>32773</td><td>Track Title</td></tr><tr><td>32774</td><td>Track Artist</td></tr><tr><td>32775</td><td>Track Album</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Progress</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>Tone</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volume</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32800</td><td>Power</td></tr><tr><td>32801</td><td>Unit Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>SiriusXM Preset Event</td></tr><tr><td>32804</td><td>SiriusXM Channel</td></tr><tr><td>32805</td><td>SiriusXM Title</td></tr><tr><td>32806</td><td>SiriusXM Artist</td></tr><tr><td>32807</td><td>SiriusXM Genre</td></tr><tr><td>32808</td><td>SiriusXM Category</td></tr><tr><td>32809</td><td>SiriusXM Signal</td></tr><tr><td>32810</td><td>SiriusXM Parental Request</td></tr><tr><td>32811</td><td>SiriusXM Diagnostics</td></tr><tr><td>32812</td><td>SiriusXM Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr><tr><td>32819</td><td>IP Setting</td></tr><tr><td>32824</td><td>Multiroom</td></tr><tr><td>32825</td><td>Multiroom Status</td></tr><tr><td>32829</td><td>System Capabilities</td></tr><tr><td>32830</td><td>Part Number</td></tr><tr><td>32832</td><td>Processing Bypass</td></tr><tr><td>32846</td><td>Server Info</td></tr><tr><td>32850</td><td>RDS Data</td></tr><tr><td>32859</td><td>Ignition Switch State</td></tr><tr><td>32862</td><td>Mono</td></tr><tr><td>32863</td><td>Speed Volume Current Speed</td></tr><tr><td>32865</td><td>Zone Capabilities Extended</td></tr></table><h3 id="lookup-FUSION_TUNER_COMMAND">FUSION_TUNER_COMMAND
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Unknown</td></tr><tr><td>32769</td><td>API Version</td></tr><tr><td>32770</td><td>Source</td></tr><tr><td>32771</td><td>Source Count</td></tr><tr><td>32772</td><td>Track Info</td></tr><tr><td>32773</td><td>Track Title</td></tr><tr><td>32774</td><td>Track Artist</td></tr><tr><td>32775</td><td>Track Album</td></tr><tr><td>32776</td><td>Cover Art</td></tr><tr><td>32777</td><td>Track Progress</td></tr><tr><td>32778</td><td>Tuner Align</td></tr><tr><td>32779</td><td>Tuner</td></tr><tr><td>32780</td><td>Marine Tuner</td></tr><tr><td>32781</td><td>Marine Squelch</td></tr><tr><td>32782</td><td>Marine Scan Mode</td></tr><tr><td>32783</td><td>Menu Action</td></tr><tr><td>32784</td><td>Menu Count</td></tr><tr><td>32785</td><td>Menu Item</td></tr><tr><td>32786</td><td>Menu Lock ID</td></tr><tr><td>32787</td><td>Aux Gain</td></tr><tr><td>32788</td><td>Setting</td></tr><tr><td>32789</td><td>Settings</td></tr><tr><td>32790</td><td>Update Firmware Result</td></tr><tr><td>32791</td><td>Mute</td></tr><tr><td>32792</td><td>Balance</td></tr><tr><td>32793</td><td>Low Pass Filter</td></tr><tr><td>32794</td><td>Sublevels</td></tr><tr><td>32795</td><td>Tone</td></tr><tr><td>32796</td><td>Volume Limits</td></tr><tr><td>32797</td><td>Volume</td></tr><tr><td>32798</td><td>Capabilities</td></tr><tr><td>32799</td><td>Line Level Control</td></tr><tr><td>32800</td><td>Power</td></tr><tr><td>32801</td><td>Unit Name</td></tr><tr><td>32802</td><td>Sirius</td></tr><tr><td>32803</td><td>SiriusXM Preset Event</td></tr><tr><td>32804</td><td>SiriusXM Channel</td></tr><tr><td>32805</td><td>SiriusXM Title</td></tr><tr><td>32806</td><td>SiriusXM Artist</td></tr><tr><td>32807</td><td>SiriusXM Genre</td></tr><tr><td>32808</td><td>SiriusXM Category</td></tr><tr><td>32809</td><td>SiriusXM Signal</td></tr><tr><td>32810</td><td>SiriusXM Parental Request</td></tr><tr><td>32811</td><td>SiriusXM Diagnostics</td></tr><tr><td>32812</td><td>SiriusXM Presets</td></tr><tr><td>32813</td><td>Zone Name</td></tr><tr><td>32819</td><td>IP Setting</td></tr><tr><td>32824</td><td>Multiroom</td></tr><tr><td>32825</td><td>Multiroom Status</td></tr><tr><td>32829</td><td>System Capabilities</td></tr><tr><td>32830</td><td>Part Number</td></tr><tr><td>32831</td><td>Loudness</td></tr><tr><td>32832</td><td>Processing Bypass</td></tr><tr><td>32846</td><td>Server Info</td></tr><tr><td>32850</td><td>RDS Data</td></tr><tr><td>32859</td><td>Ignition Switch State</td></tr><tr><td>32862</td><td>Mono</td></tr><tr><td>32863</td><td>Speed Volume Current Speed</td></tr><tr><td>32865</td><td>Zone Capabilities Extended</td></tr></table><h3 id="lookup-FUSION_TUNER_COMMAND">FUSION_TUNER_COMMAND
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Seek Up</td></tr><tr><td>2</td><td>Tune Up</td></tr><tr><td>3</td><td>Seek Down</td></tr><tr><td>4</td><td>Tune Down</td></tr><tr><td>5</td><td>Tune Direct</td></tr></table><h3 id="lookup-GARMIN_ATT_MESSAGE_ID">GARMIN_ATT_MESSAGE_ID
         (0 - 65535)

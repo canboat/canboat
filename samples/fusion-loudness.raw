@@ -1,0 +1,36 @@
+# format=FAST
+# Fusion MS-WB670 at source 51, captured 2026-09-18 on a live bus.
+#
+# 130820 message id 32831 (0x803F) carries a per-zone LOUDNESS flag:
+# zone (zero-based) then 0 = off, 1 = on. The id is absent from
+# FUSION_STATUS_MESSAGE_ID, which jumps from 32830 to 32832.
+#
+# Identified by flipping the control and watching the bus. Two flips, two
+# different zones, in two separate sessions:
+#
+#   13:59:57  zone 1 ("Saloon")   1 -> 0
+#   14:15:34  zone 0 ("Doghouse") 1 -> 0
+#
+# Each flip emitted a single unsolicited frame for that zone alone; the
+# periodic sweep (all three zones, ~50 s apart) then reported it unchanged.
+# The sweeps below bracket each flip. The operator named the control while
+# flipping it, so the identification does not rest on inference.
+#
+# The command side, FUSION_MESSAGE_ID 54 "Set Loud", was NOT observed: neither
+# the Zeus SRX nor the Fusion iOS app exposes loudness, and both drive the head
+# unit over Ethernet in their default configuration.
+#
+2026-09-18T13:59:33.334Z,7,130820,51,255,6,a3,99,3f,80,00,01
+2026-09-18T13:59:33.334Z,7,130820,51,255,6,a3,99,3f,80,01,01
+2026-09-18T13:59:33.335Z,7,130820,51,255,6,a3,99,3f,80,02,01
+2026-09-18T13:59:34.579Z,7,130820,51,255,6,a3,99,3f,80,00,01
+2026-09-18T13:59:34.579Z,7,130820,51,255,6,a3,99,3f,80,01,01
+2026-09-18T13:59:34.580Z,7,130820,51,255,6,a3,99,3f,80,02,01
+2026-09-18T13:59:57.567Z,7,130820,51,255,6,a3,99,3f,80,01,00
+2026-09-18T14:00:27.302Z,7,130820,51,255,6,a3,99,3f,80,00,01
+2026-09-18T14:00:27.303Z,7,130820,51,255,6,a3,99,3f,80,01,00
+2026-09-18T14:00:27.303Z,7,130820,51,255,6,a3,99,3f,80,02,01
+2026-09-18T14:15:29.321Z,7,130820,51,255,6,a3,99,3f,80,00,01
+2026-09-18T14:15:29.321Z,7,130820,51,255,6,a3,99,3f,80,01,00
+2026-09-18T14:15:29.322Z,7,130820,51,255,6,a3,99,3f,80,02,01
+2026-09-18T14:15:34.974Z,7,130820,51,255,6,a3,99,3f,80,00,00
