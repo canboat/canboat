@@ -6,6 +6,35 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.2.0](https://github.com/canboat/canboat/compare/v8.1.0...v8.2.0) (2026-09-19)
+
+
+### Added
+
+* **126720:** add Fusion "Set Setting" (Proprietary ID 15) ([#867](https://github.com/canboat/canboat/issues/867)) ([1765550](https://github.com/canboat/canboat/commit/1765550d6d69679e057bf9c5b6eaab448f3be7b9))
+* **decode:** resolve an INDIRECT_LOOKUP key by position, fixing repeating sets ([#892](https://github.com/canboat/canboat/issues/892)) ([0f6e0e1](https://github.com/canboat/canboat/commit/0f6e0e1db14511f346900b14bfca82cf8a5731fa))
+* **fusion:** add aux gain command and signed gain ([#880](https://github.com/canboat/canboat/issues/880)) ([dbceaca](https://github.com/canboat/canboat/commit/dbceaca63d1e86e5fc15c876369e32026dced10f))
+* **fusion:** add samples, fix spellings and normalise label casing ([#883](https://github.com/canboat/canboat/issues/883)) ([92d2116](https://github.com/canboat/canboat/commit/92d21169ad78907732c16785ff920d5ba715bed1))
+* **fusion:** add tuner command ([#878](https://github.com/canboat/canboat/issues/878)) ([a56954f](https://github.com/canboat/canboat/commit/a56954f9b373976ee40ac740d9620428e17f2301))
+* **fusion:** add zone control commands ([#884](https://github.com/canboat/canboat/issues/884)) ([b31c4ce](https://github.com/canboat/canboat/commit/b31c4cea0d034fd0622a2d283e4e6514fd92f5b3))
+* **fusion:** correct the low pass filter cutoffs to 50 Hz and 80 Hz ([#894](https://github.com/canboat/canboat/issues/894)) ([c50311f](https://github.com/canboat/canboat/commit/c50311fa51a75affdd6322bae5334b93a3ee6cd9))
+* **fusion:** correct the setting id table against Garmin's own enumeration ([#893](https://github.com/canboat/canboat/issues/893)) ([5c21f6f](https://github.com/canboat/canboat/commit/5c21f6f68d144d4d41c2767d119daf57c78259c3))
+* **fusion:** correct zone control status definitions ([#881](https://github.com/canboat/canboat/issues/881)) ([06e6792](https://github.com/canboat/canboat/commit/06e67920283798cab5e518edcbea250167669459))
+* **fusion:** decode External and Internal Amp Gain (130820 message ids 32860/32861) ([#895](https://github.com/canboat/canboat/issues/895)) ([aebe02c](https://github.com/canboat/canboat/commit/aebe02ce92774b348c3fd3dd63e821dc2965350b))
+* **fusion:** decode Set Equalizer, Set All Sublevels, Loudness and Zone Capabilities Extended ([#887](https://github.com/canboat/canboat/issues/887)) ([2e78e57](https://github.com/canboat/canboat/commit/2e78e57a141443ef741717fc38716afca184a0c7))
+* **fusion:** decode setting values via an indirect lookup, starting with Tuner Region ([#890](https://github.com/canboat/canboat/issues/890)) ([62564f5](https://github.com/canboat/canboat/commit/62564f5a5375ff47aff46c0878a7036204897b1c))
+* **fusion:** name 26 more 130820 status messages from Garmin's enumeration ([#896](https://github.com/canboat/canboat/issues/896)) ([4f934a1](https://github.com/canboat/canboat/commit/4f934a1addaaa25199bffa320e51c3877ed16ad4))
+* **navico:** decode Simnet ZC1/OP40 key PGN 65332 ([#874](https://github.com/canboat/canboat/issues/874)) ([e714ad4](https://github.com/canboat/canboat/commit/e714ad43ba9b4d3782d13afa488b84246a8b8c60))
+* **quirk:** add gps-relay, re-sending a rolled-over device's data with the dates fixed ([#876](https://github.com/canboat/canboat/issues/876)) ([7a7a99e](https://github.com/canboat/canboat/commit/7a7a99e098c7849ecc91cf4c9c8ff3204081baed))
+* **quirk:** let gps-rollover name the devices whose every date is wrong ([#873](https://github.com/canboat/canboat/issues/873)) ([e6a6d72](https://github.com/canboat/canboat/commit/e6a6d7245c768f319863d6c20278f38794e185e5))
+
+
+### Fixed
+
+* **bridge:** serialise the test-only GPS rollover switch in pipeline tests ([#885](https://github.com/canboat/canboat/issues/885)) ([5d443c2](https://github.com/canboat/canboat/commit/5d443c26d46a4ab438a63589531a8b1af80bf487))
+* **fusion:** define tuner preset value semantics ([#879](https://github.com/canboat/canboat/issues/879)) ([bdbd8ee](https://github.com/canboat/canboat/commit/bdbd8eeb346e2e13dc039d7d86c3e8fdd1b34629))
+* **fusion:** sample the four PGNs that were wrongly believed unsampleable ([#889](https://github.com/canboat/canboat/issues/889)) ([8fd3f14](https://github.com/canboat/canboat/commit/8fd3f14b4fa7b53d155bb1111bdbcb923d72443f))
+
 ## [8.1.0](https://github.com/canboat/canboat/compare/v8.0.0...v8.1.0) (2026-08-30)
 
 
