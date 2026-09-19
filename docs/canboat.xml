@@ -1234,8 +1234,8 @@ limitations under the License.
       <EnumPair Value="6" Name="Prev" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_LOW_PASS_FILTER" MaxValue="255">
-      <EnumPair Value="1" Name="55 Hz" />
-      <EnumPair Value="2" Name="85 Hz" />
+      <EnumPair Value="1" Name="50 Hz" />
+      <EnumPair Value="2" Name="80 Hz" />
       <EnumPair Value="3" Name="120 Hz" />
       <EnumPair Value="4" Name="160 Hz" />
     </LookupEnumeration>
