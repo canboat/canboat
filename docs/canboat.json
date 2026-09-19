@@ -1593,8 +1593,8 @@
         "Name":"FUSION_LOW_PASS_FILTER",
         "MaxValue":255,
         "EnumValues":[
-          {"Name":"55 Hz", "Value":1},
-          {"Name":"85 Hz", "Value":2},
+          {"Name":"50 Hz", "Value":1},
+          {"Name":"80 Hz", "Value":2},
           {"Name":"120 Hz", "Value":3},
           {"Name":"160 Hz", "Value":4}
         ]
