@@ -77,6 +77,14 @@ values:
   72: Low Power Mode
   73: DVD Region
   74: Volume Zone Sync
-  75: Max Volume Start
-  76: BT Auto Connect
-  77: Null Setting
+  76: Max Volume Start
+  77: BT Auto Connect
+  79: Tuner Antennas Power Status
+  80: FM Antenna Index
+  81: DAB Antenna Index
+  82: DAB Service Following
+  83: FM Frequency Following
+  115: DAB FM Service Following
+  125: HDMI Volume Zone Sync
+  126: ARC Input Audio Delay
+  1000: Null Setting
