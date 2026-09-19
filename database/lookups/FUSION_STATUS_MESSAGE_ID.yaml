@@ -58,6 +58,8 @@ values:
   32846: Server Info
   32850: RDS Data
   32859: Ignition Switch State
+  32860: External Amp Gain
+  32861: Internal Amp Gain
   32862: Mono
   32863: Speed Volume Current Speed
   32865: Zone Capabilities Extended
