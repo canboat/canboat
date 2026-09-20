@@ -74,7 +74,17 @@ fn the_database_is_populated() {
 /// emitters produce. This is `keel generate --check` as a cargo test: the
 /// C tables, canboat.xml and the Rust schema all go stale silently
 /// otherwise, and the runtime compiles the committed copy.
+///
+/// Not on Windows: the runner checks the tree out with CRLF, so every
+/// committed artifact differs from the emitters' LF output in a way that
+/// says nothing about whether it is stale. `rust-ci.yml` skips the golden
+/// fixtures for the same reason. The bytes this guards are the ones in
+/// the repository, which is what the other platforms see.
 #[test]
+#[cfg_attr(
+    windows,
+    ignore = "the Windows runner checks out CRLF; the byte-exact diff is meaningless there"
+)]
 fn generated_artifacts_are_up_to_date() {
     let (root, db, authored_fieldtypes) = load();
     let artifacts: Vec<(&str, String)> = vec![
