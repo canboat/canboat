@@ -1,0 +1,57 @@
+pgn: 126720
+id: fusionSetDeviceName
+description: 'Fusion: Set Device Name'
+type: Fast
+variantOrder: 67
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Set Device Name
+  match: 29
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: name
+  name: Name
+  type: STRING_LZ
+notes: |-
+  Sets the head unit's own name. The command counterpart of the PGN 130820
+  "Unit Name" status (message id 32801), which carries the same STRING_LZ and
+  is likewise not per-zone -- unlike 34 "Set Zone Name", which takes a zone.
+
+  Captured from a Fusion NMEA 2000 remote at source address 33 renaming the
+  unit to "ABCDE", contributed by @TwoCanPlugIn in #886:
+
+      a3 99 1d 00 05 41 42 43 44 45 00
+                    |  +- "ABCDE" then the STRING_LZ terminating zero
+                    +- length 5
+
+  Evidence: samples/fusion-set-device-name.raw.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,126720,33,15,8,00,0b,a3,99,1d,00,05,41"
+  - "2023-01-01-00:00:00.000,7,126720,33,15,6,01,42,43,44,45,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Set Device Name"
+    name: "ABCDE"
