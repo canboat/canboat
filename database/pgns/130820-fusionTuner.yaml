@@ -61,6 +61,7 @@ notes: |-
   42 6f 68 75 73 6c 91 6e: 0x91 is U+00E4 in RDS G0; UTF-8 would use c3 a4.
   This observation does not establish the encoding used by other Fusion
   models or by other text fields.
+  Character set reference: https://en.wikipedia.org/wiki/EBU_Latin
   Evidence: samples/fusion-ms-ra70n-rds-encoding.log (original candump frames).
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,49,255,20,a3,99,0b,80,01,02,00,c6,3e,05,c7,08,41,56,52,4f,54,52,4f,53"  # from strings.raw
