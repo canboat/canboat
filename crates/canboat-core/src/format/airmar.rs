@@ -107,6 +107,103 @@ mod tests {
         );
     }
 
+    /// The `pgn` column is redundant — the CAN id is authoritative, so
+    /// a disagreeing text column does not change the decode.
+    #[test]
+    fn the_can_id_wins_over_the_pgn_column() {
+        let f = parse_line("20:11:00 - 999999 09FD020D FF 8B").unwrap();
+        assert_eq!(f.pgn, 130306);
+    }
+
+    /// Single-digit hex bytes appear in Airmar captures and parse as
+    /// written.
+    #[test]
+    fn single_digit_hex_bytes_parse() {
+        let f = parse_line("00:00:00 - 0 09FD020D 1 F 0A").unwrap();
+        assert_eq!(f.data.as_slice(), &[0x01, 0x0f, 0x0a]);
+    }
+
+    /// Captures mix both separators on one line.
+    #[test]
+    fn mixed_space_and_comma_separators_parse() {
+        let f = parse_line("00:00:00 - 0 09FD020D FF,8B 72,FF").unwrap();
+        assert_eq!(f.data.as_slice(), &[0xff, 0x8b, 0x72, 0xff]);
+    }
+
+    /// Trailing and repeated commas produce no phantom zero bytes.
+    #[test]
+    fn empty_tokens_are_skipped() {
+        let f = parse_line("00:00:00 - 0 09FD020D FF,,8B,").unwrap();
+        assert_eq!(f.data.as_slice(), &[0xff, 0x8b]);
+    }
+
+    /// The timestamp is free-form: everything before the first " - ".
+    #[test]
+    fn the_timestamp_is_taken_verbatim() {
+        let f = parse_line("2015-06-21 20:11:00.123 - 0 09FD020D FF").unwrap();
+        assert_eq!(f.timestamp.as_deref(), Some("2015-06-21 20:11:00.123"));
+    }
+
+    /// A line with no payload tokens is a valid zero-length frame.
+    #[test]
+    fn a_line_with_no_data_bytes_parses() {
+        let f = parse_line("00:00:00 - 0 09FD020D").unwrap();
+        assert!(f.data.is_empty());
+        assert_eq!(f.pgn, 130306);
+    }
+
+    /// The " - " marker is what separates timestamp from payload; a
+    /// line without it can't be split.
+    #[test]
+    fn missing_separator_is_rejected() {
+        assert!(matches!(
+            parse_line("20:11:00 130306 09FD020D FF"),
+            Err(ParseError::BadHeader { .. })
+        ));
+    }
+
+    /// A non-hex CAN id is an error naming the field.
+    #[test]
+    fn non_hex_can_id_is_rejected() {
+        assert!(matches!(
+            parse_line("00:00:00 - 0 ZZZZZZZZ FF"),
+            Err(ParseError::BadInteger { field: "canid", .. })
+        ));
+    }
+
+    /// A non-hex payload token is an error rather than a zero byte.
+    #[test]
+    fn non_hex_data_token_is_rejected() {
+        assert!(matches!(
+            parse_line("00:00:00 - 0 09FD020D FF ZZ"),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// The payload stops at the fast-packet ceiling.
+    #[test]
+    fn data_is_clamped_to_the_fast_packet_ceiling() {
+        let bytes = vec!["AB"; FASTPACKET_MAX_SIZE + 5].join(" ");
+        let f = parse_line(&format!("00:00:00 - 0 09FD020D {bytes}")).unwrap();
+        assert_eq!(f.data.len(), FASTPACKET_MAX_SIZE);
+    }
+
+    /// A line missing the CAN id column is rejected before any parse.
+    #[test]
+    fn short_line_is_rejected() {
+        assert!(matches!(
+            parse_line("00:00:00 - 130306"),
+            Err(ParseError::BadHeader { .. })
+        ));
+    }
+
+    /// Blank lines are `Empty`, which callers skip.
+    #[test]
+    fn empty_line_is_empty() {
+        assert!(matches!(parse_line(""), Err(ParseError::Empty)));
+        assert!(matches!(parse_line("\r\n"), Err(ParseError::Empty)));
+    }
+
     #[test]
     fn accepts_comma_separated_data() {
         let line = "00:00:00 - 0 18EEFF00 8E,F2,DD,E8,00,96,64,40";

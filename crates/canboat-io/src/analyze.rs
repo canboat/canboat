@@ -252,3 +252,308 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Four PLAIN lines from three sources, two PGNs, so every filter
+    /// has something to keep and something to drop.
+    const MIXED: &str = "\
+2026-05-29T19:16:04.826Z,2,127251,14,255,8,ff,5e,7d,00,00,ff,ff,ff
+2026-05-29T19:16:04.926Z,2,127250,35,255,8,ff,5e,7d,00,00,ff,ff,ff
+2026-05-29T19:16:05.026Z,2,127251,35,255,8,ff,60,7d,00,00,ff,ff,ff
+2026-05-29T19:16:05.126Z,3,127245,14,12,8,ff,f8,ff,7f,ff,7f,ff,ff
+";
+
+    /// Collect `(pgn, src, dst)` for everything the pipeline emits.
+    fn run(input: &str, cfg: &Config<'_>) -> Vec<(u32, u8, u8)> {
+        let mut out = Vec::new();
+        decode_stream(input.as_bytes(), cfg, |d| out.push((d.pgn, d.src, d.dst)))
+            .expect("stream decodes");
+        out
+    }
+
+    #[test]
+    fn no_filters_decodes_every_line() {
+        let got = run(MIXED, &Config::default());
+        assert_eq!(
+            got,
+            vec![
+                (127251, 14, 255),
+                (127250, 35, 255),
+                (127251, 35, 255),
+                (127245, 14, 12),
+            ]
+        );
+    }
+
+    #[test]
+    fn pgn_filter_keeps_only_that_pgn() {
+        let cfg = Config {
+            pgn_filter: Some(127251),
+            ..Default::default()
+        };
+        let got = run(MIXED, &cfg);
+        assert_eq!(got, vec![(127251, 14, 255), (127251, 35, 255)]);
+    }
+
+    #[test]
+    fn src_filter_keeps_only_that_source() {
+        let cfg = Config {
+            src_filter: Some(35),
+            ..Default::default()
+        };
+        let got = run(MIXED, &cfg);
+        assert_eq!(got, vec![(127250, 35, 255), (127251, 35, 255)]);
+    }
+
+    #[test]
+    fn dst_filter_keeps_only_that_destination() {
+        let cfg = Config {
+            dst_filter: Some(12),
+            ..Default::default()
+        };
+        let got = run(MIXED, &cfg);
+        assert_eq!(got, vec![(127245, 14, 12)]);
+    }
+
+    /// The filters are independent predicates, so combining them
+    /// intersects rather than replacing one another.
+    #[test]
+    fn filters_combine() {
+        let cfg = Config {
+            pgn_filter: Some(127251),
+            src_filter: Some(35),
+            ..Default::default()
+        };
+        let got = run(MIXED, &cfg);
+        assert_eq!(got, vec![(127251, 35, 255)]);
+    }
+
+    /// A filter that matches nothing yields no records rather than
+    /// falling back to pass-through.
+    #[test]
+    fn filter_matching_nothing_yields_nothing() {
+        let cfg = Config {
+            src_filter: Some(200),
+            ..Default::default()
+        };
+        assert!(run(MIXED, &cfg).is_empty());
+    }
+
+    /// Render a frame as a PLAIN line, so a synthetic record built by
+    /// the library can be fed back through the text pipeline.
+    fn plain_line(f: &canboat_core::RawFrame) -> String {
+        let hex: Vec<String> = f.data.iter().map(|b| format!("{b:02x}")).collect();
+        format!(
+            "{},{},{},{},{},{},{}\n",
+            f.timestamp.as_deref().unwrap_or(""),
+            f.prio,
+            f.pgn,
+            f.src,
+            f.dst,
+            f.data.len(),
+            hex.join(",")
+        )
+    }
+
+    /// `suppress_startup_record` drops the producer's CANBOAT_BEM
+    /// record so a `--fixtime` run doesn't leak the build version.
+    #[test]
+    fn startup_record_is_suppressed_on_request() {
+        let rec = canboat_core::startup::startup_record_at(
+            "8.1.0",
+            "canboat-test",
+            "/dev/null",
+            "2026-05-29T19:16:04.800Z".to_string(),
+        );
+        let input = format!("{}{MIXED}", plain_line(&rec));
+
+        let kept = run(&input, &Config::default());
+        assert_eq!(
+            kept.iter().filter(|(p, ..)| *p == CANBOAT_BEM).count(),
+            1,
+            "kept by default"
+        );
+
+        let cfg = Config {
+            suppress_startup_record: true,
+            ..Default::default()
+        };
+        let dropped = run(&input, &cfg);
+        assert!(
+            !dropped.iter().any(|(p, ..)| *p == CANBOAT_BEM),
+            "suppressed on request"
+        );
+        assert_eq!(dropped.len(), kept.len() - 1, "only that record goes");
+    }
+
+    /// candump's pretty shape carries no time, so the pipeline stamps
+    /// one. `fixed_time` makes that deterministic.
+    #[test]
+    fn timeless_input_gets_the_fixed_stamp() {
+        let cfg = Config {
+            fixed_time: Some("2026-01-01T00:00:00.000Z"),
+            ..Default::default()
+        };
+        let mut stamps = Vec::new();
+        decode_stream(
+            b"  can0  09F80115   [8]  FF 5E 7D 00 00 FF FF FF\n".as_slice(),
+            &cfg,
+            |d| stamps.push(d.timestamp.clone()),
+        )
+        .expect("stream decodes");
+        assert_eq!(stamps, vec![Some("2026-01-01T00:00:00.000Z".to_string())]);
+    }
+
+    /// A frame that arrives with its own timestamp keeps it — the
+    /// fixed stamp is a fallback, not an override.
+    #[test]
+    fn fixed_stamp_does_not_override_a_real_one() {
+        let cfg = Config {
+            fixed_time: Some("2026-01-01T00:00:00.000Z"),
+            ..Default::default()
+        };
+        let mut stamps = Vec::new();
+        decode_stream(MIXED.as_bytes(), &cfg, |d| stamps.push(d.timestamp.clone())).expect("ok");
+        assert_eq!(stamps[0].as_deref(), Some("2026-05-29T19:16:04.826Z"));
+    }
+
+    /// Without a fixed stamp the host clock fills in, in the analyzer's
+    /// ISO shape.
+    #[test]
+    fn timeless_input_falls_back_to_the_host_clock() {
+        let mut stamps = Vec::new();
+        decode_stream(
+            b"  can0  09F80115   [8]  FF 5E 7D 00 00 FF FF FF\n".as_slice(),
+            &Config::default(),
+            |d| stamps.push(d.timestamp.clone()),
+        )
+        .expect("stream decodes");
+        let ts = stamps[0].clone().expect("stamped");
+        assert_eq!(ts.len(), 24, "YYYY-MM-DDTHH:MM:SS.mmmZ, got {ts}");
+        assert!(ts.ends_with('Z'));
+    }
+
+    /// Single frames of a fast-packet PGN reassemble into one record
+    /// rather than decoding per fragment.
+    #[test]
+    fn fast_packet_fragments_reassemble_into_one_record() {
+        // PGN 129029 (GNSS Position Data), 43 bytes over 7 frames.
+        let input = "\
+2026-05-29T19:16:04.000Z,3,129029,14,255,8,40,2b,f9,5b,f4,4c,90,42
+2026-05-29T19:16:04.010Z,3,129029,14,255,8,41,32,00,00,00,00,00,00
+2026-05-29T19:16:04.020Z,3,129029,14,255,8,42,00,00,00,00,00,00,00
+2026-05-29T19:16:04.030Z,3,129029,14,255,8,43,00,00,00,00,00,00,00
+2026-05-29T19:16:04.040Z,3,129029,14,255,8,44,00,00,00,00,00,00,00
+2026-05-29T19:16:04.050Z,3,129029,14,255,8,45,00,00,00,00,00,00,00
+2026-05-29T19:16:04.060Z,3,129029,14,255,8,46,00,00,ff,ff,ff,ff,ff
+";
+        let mut lens = Vec::new();
+        decode_stream(input.as_bytes(), &Config::default(), |d| {
+            lens.push(d.data.len())
+        })
+        .expect("stream decodes");
+        assert_eq!(lens.len(), 1, "seven fragments make one record");
+        assert_eq!(lens[0], 43, "the whole fast-packet payload");
+    }
+
+    /// An incomplete fast-packet sequence emits nothing: the
+    /// reassembler holds the partial message rather than decoding a
+    /// fragment as if it were whole.
+    #[test]
+    fn truncated_fast_packet_emits_nothing() {
+        let input = "\
+2026-05-29T19:16:04.000Z,3,129029,14,255,8,40,2b,f9,5b,f4,4c,90,42
+2026-05-29T19:16:04.010Z,3,129029,14,255,8,41,32,00,00,00,00,00,00
+";
+        assert!(run(input, &Config::default()).is_empty());
+    }
+
+    /// Once a line carries more than 8 payload bytes the stream is
+    /// treated as pre-coalesced, so the payload decodes as one record
+    /// without going through the reassembler.
+    #[test]
+    fn oversized_line_switches_to_coalesced_mode() {
+        let input = "2026-05-29T19:16:04.000Z,3,129029,14,255,43,2b,f9,5b,f4,4c,90,42,32,\
+00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,00,\
+00,00,00,ff,ff\n";
+        let mut lens = Vec::new();
+        decode_stream(input.as_bytes(), &Config::default(), |d| {
+            lens.push(d.data.len())
+        })
+        .expect("stream decodes");
+        assert_eq!(lens, vec![43]);
+    }
+
+    /// `forced_format` skips auto-detection. Forcing the wrong format
+    /// on PLAIN input yields no records — proof the flag is honoured
+    /// rather than quietly re-detected.
+    #[test]
+    fn forced_format_overrides_detection() {
+        let cfg = Config {
+            forced_format: Some(InputFormat::Ydwg02),
+            ..Default::default()
+        };
+        assert!(
+            run(MIXED, &cfg).is_empty(),
+            "PLAIN lines are not valid YDWG-02"
+        );
+    }
+
+    /// The J1939 flag selects the other schema table, so the same
+    /// frame decodes under a different description.
+    #[test]
+    fn j1939_flag_selects_the_other_table() {
+        let line = "2026-05-29T19:16:04.826Z,3,127251,14,255,8,ff,5e,7d,00,00,ff,ff,ff\n";
+        let mut n2k = None;
+        decode_stream(line.as_bytes(), &Config::default(), |d| {
+            n2k = Some(d.description)
+        })
+        .expect("ok");
+
+        let cfg = Config {
+            j1939: true,
+            ..Default::default()
+        };
+        let mut j1939 = None;
+        decode_stream(line.as_bytes(), &cfg, |d| j1939 = Some(d.description)).expect("ok");
+
+        assert_eq!(n2k, Some("Rate of Turn"));
+        assert_ne!(n2k, j1939, "the J1939 table is a different schema");
+    }
+
+    /// A malformed line is logged and skipped; the frames around it
+    /// still decode.
+    #[test]
+    fn a_bad_line_does_not_stop_the_stream() {
+        let input = "\
+2026-05-29T19:16:04.826Z,2,127251,14,255,8,ff,5e,7d,00,00,ff,ff,ff
+this is not a canboat line at all
+2026-05-29T19:16:05.026Z,2,127251,35,255,8,ff,60,7d,00,00,ff,ff,ff
+";
+        let got = run(input, &Config::default());
+        assert_eq!(got, vec![(127251, 14, 255), (127251, 35, 255)]);
+    }
+
+    /// An empty stream is not an error.
+    #[test]
+    fn empty_input_is_clean() {
+        assert!(run("", &Config::default()).is_empty());
+    }
+
+    /// `decode_file` reports the offending path, preserving the kind so
+    /// callers can still match on `NotFound`.
+    #[test]
+    fn missing_file_error_names_the_path() {
+        let err = decode_file(
+            Path::new("/nonexistent/nope.log"),
+            &Config::default(),
+            |_| {},
+        )
+        .expect_err("must fail");
+        assert_eq!(err.kind(), io::ErrorKind::NotFound);
+        assert!(err.to_string().contains("nope.log"), "got {err}");
+    }
+}
