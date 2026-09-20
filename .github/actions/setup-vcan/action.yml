@@ -1,0 +1,34 @@
+# Bring up a virtual SocketCAN interface so canboat-io's SocketCAN device
+# tests can drive a real socket.
+#
+# GitHub-hosted Linux runners are full VMs rather than containers, so they
+# can load kernel modules; `vcan` ships in the stock Ubuntu image's module
+# set. A self-hosted or containerised runner may not allow this, which is
+# why the interface is verified rather than assumed.
+#
+# This deliberately FAILS when vcan is unavailable. The tests that use it
+# no-op when the interface is missing (a developer box has none), so a
+# silent failure here would quietly drop that coverage with every job still
+# green.
+name: Set up vcan
+description: Load the vcan module and bring up a virtual CAN interface.
+
+inputs:
+  interface:
+    description: Name of the virtual CAN interface to create.
+    required: false
+    default: vcan0
+
+runs:
+  using: composite
+  steps:
+    - name: Create ${{ inputs.interface }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        sudo modprobe vcan
+        sudo ip link add dev "${{ inputs.interface }}" type vcan
+        sudo ip link set up "${{ inputs.interface }}"
+        # Prove it is actually usable before any test relies on it.
+        ip -br link show "${{ inputs.interface }}"
+        echo "CANBOAT_VCAN=${{ inputs.interface }}" >> "$GITHUB_ENV"
