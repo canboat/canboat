@@ -199,7 +199,9 @@ jobs:
         uses: taiki-e/install-action@cargo-llvm-cov
 
       # Without this the SocketCAN worker thread, its poll loop and the
-      # TX ring are never entered, and the measured figure drops.
+      # TX ring are never entered, and the measured figure drops by about
+      # a point. The action warns rather than fails when the runner kernel
+      # has no vcan module, so the floor below is set to survive that.
       - name: Set up vcan
         uses: ./.github/actions/setup-vcan
 
