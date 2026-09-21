@@ -714,9 +714,18 @@ mod imp {
     /// each read is a handful of bytes; called once per emission
     /// interval (default 5 s).
     fn read_sysfs_counter(iface: &str, name: &str) -> Option<u32> {
+        read_sysfs_counter_u64(iface, name).map(|v| v as u32)
+    }
+
+    /// The same counter at its native width. The kernel's `netdev`
+    /// statistics are monotonic `u64` and sysfs prints them in full, so
+    /// the load sampler reads them here rather than through the `u32`
+    /// wrapper above: truncating first would manufacture a wrap every
+    /// 4 GiB that no later subtraction can undo.
+    fn read_sysfs_counter_u64(iface: &str, name: &str) -> Option<u64> {
         let path = format!("/sys/class/net/{iface}/statistics/{name}");
         let raw = std::fs::read_to_string(path).ok()?;
-        raw.trim().parse::<u64>().ok().map(|v| v as u32)
+        raw.trim().parse::<u64>().ok()
     }
 
     /// Read the CAN bus bitrate (bits/s) from
@@ -743,10 +752,10 @@ mod imp {
     /// `load_pct = None` and the canboat sentinel survives.
     fn read_load_sample(iface: &str, now_ms: u64) -> Option<LoadSample> {
         Some(LoadSample {
-            rx_bytes: read_sysfs_counter(iface, "rx_bytes")? as u64,
-            tx_bytes: read_sysfs_counter(iface, "tx_bytes")? as u64,
-            rx_packets: read_sysfs_counter(iface, "rx_packets")? as u64,
-            tx_packets: read_sysfs_counter(iface, "tx_packets")? as u64,
+            rx_bytes: read_sysfs_counter_u64(iface, "rx_bytes")?,
+            tx_bytes: read_sysfs_counter_u64(iface, "tx_bytes")?,
+            rx_packets: read_sysfs_counter_u64(iface, "rx_packets")?,
+            tx_packets: read_sysfs_counter_u64(iface, "tx_packets")?,
             at_ms: now_ms,
         })
     }
@@ -759,18 +768,26 @@ mod imp {
         if dt_ms == 0 || bitrate_bps == 0 {
             return None;
         }
-        // Kernel counters are monotonic u64 internally — even though
-        // sysfs widens to u32 here, wrapping_sub keeps a wrap from
-        // showing up as 4 GiB of phantom traffic on a long-running
-        // gateway.
-        let d_bytes = curr
-            .rx_bytes
-            .wrapping_sub(prev.rx_bytes)
-            .saturating_add(curr.tx_bytes.wrapping_sub(prev.tx_bytes));
-        let d_packets = curr
-            .rx_packets
-            .wrapping_sub(prev.rx_packets)
-            .saturating_add(curr.tx_packets.wrapping_sub(prev.tx_packets));
+        // The counters are the kernel's monotonic u64, read at full width
+        // by `read_sysfs_counter_u64`, so they only ever go backwards if
+        // the interface was reset under us (an `ip link set down/up`).
+        // There is no meaningful load for that interval — the traffic
+        // since the last sample is simply unknown — so say so rather than
+        // subtract across the reset. Reporting a number here would mean
+        // reporting a wrong one: the deltas would come out near u64::MAX
+        // and saturate to a flat 100%.
+        //
+        // The caller stores `curr` as the next baseline whether or not
+        // this returns a figure, so one interval is lost, not the series.
+        if curr.rx_bytes < prev.rx_bytes
+            || curr.tx_bytes < prev.tx_bytes
+            || curr.rx_packets < prev.rx_packets
+            || curr.tx_packets < prev.tx_packets
+        {
+            return None;
+        }
+        let d_bytes = (curr.rx_bytes - prev.rx_bytes) + (curr.tx_bytes - prev.tx_bytes);
+        let d_packets = (curr.rx_packets - prev.rx_packets) + (curr.tx_packets - prev.tx_packets);
         // bits_raw = data bytes * 8 + packets * (SOF + arb + ctrl +
         // CRC + ACK + EOF + IFS). bits_on_wire scales by the
         // stuffing factor, then load_pct = bits / (bitrate * Δt).
@@ -1355,6 +1372,7 @@ mod imp {
     #[cfg(test)]
     mod tests {
         use super::*;
+        use crate::device::socketcan::CLAIM_UNCLAIMED;
 
         /// Run one `send_pgn` against a fresh (or provided) TX ring and
         /// return every queued CAN payload, so the tests pin the exact
@@ -1373,6 +1391,391 @@ mod imp {
                 .skip(before)
                 .map(|f| f.data().to_vec())
                 .collect()
+        }
+
+        /// The virtual CAN interface to drive the live-socket tests
+        /// against, if one exists. CI creates `vcan0`; a developer box
+        /// usually has none, so those tests no-op there rather than
+        /// failing. Override with `CANBOAT_VCAN`.
+        ///
+        /// Never point this at a real bus: the gateway claims an
+        /// address and transmits.
+        fn vcan_iface() -> Option<String> {
+            let iface = std::env::var("CANBOAT_VCAN").unwrap_or_else(|_| "vcan0".into());
+            std::path::Path::new(&format!("/sys/class/net/{iface}"))
+                .exists()
+                .then_some(iface)
+        }
+
+        /// Gateway config for the vcan tests: claim an address so the
+        /// handshake runs, but never touch the link (that needs root,
+        /// and CI has already brought the interface up).
+        ///
+        /// Cargo runs these tests in parallel on one shared interface,
+        /// so each gateway needs its own `unique` and preferred
+        /// address: two identical NAMEs would contend for an address
+        /// and make the claim flaky. Each test also uses a PGN of its
+        /// own, so one test's peer socket never sees another's frames.
+        fn vcan_config(unique: u32, address: u8) -> Config {
+            Config {
+                unique,
+                address,
+                heartbeat_ms: 0,
+                configure_link: false,
+                ..Default::default()
+            }
+        }
+
+        /// A raw socket on the same bus, standing in for another node.
+        /// vcan echoes every frame to the *other* sockets on the
+        /// interface, which is what makes this a real round trip.
+        fn bus_peer(iface: &str) -> CanSocket {
+            let sock = CanSocket::open(iface).expect("open vcan peer");
+            sock.set_read_timeout(std::time::Duration::from_secs(2))
+                .expect("set read timeout");
+            sock
+        }
+
+        /// A frame another node puts on the bus reaches the gateway's
+        /// upstream channel, decomposed into its N2K header. Drives the
+        /// whole worker path: poll, `recv_batch`, `handle_frame`,
+        /// reassembly, `frames_tx`.
+        #[test]
+        fn a_frame_on_the_bus_reaches_the_upstream_channel() {
+            let Some(iface) = vcan_iface() else {
+                eprintln!("no vcan interface; skipping");
+                return;
+            };
+            let peer = bus_peer(&iface);
+            let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+            let handle = run(&iface, vcan_config(0x1111, 10), claim).expect("gateway starts");
+
+            // PGN 127245 (Rudder), prio 3, src 0x17 — a single-frame
+            // PDU2 message, so it needs no reassembly.
+            let canid = iso11783_compose(3, 127245, 0x17, ADDR_GLOBAL);
+            let frame = socketcan::CanFrame::new(
+                ExtendedId::new(canid & CAN_EFF_MASK).expect("29-bit id"),
+                &[0xff, 0xf8, 0xff, 0x7f, 0xff, 0x7f, 0xff, 0xff],
+            )
+            .expect("build frame");
+
+            // The gateway may still be mid-claim, so re-send until it
+            // shows up rather than racing a single write.
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+            let got = loop {
+                peer.write_frame(&frame).expect("peer writes");
+                match handle
+                    .frames_rx
+                    .recv_timeout(std::time::Duration::from_millis(250))
+                {
+                    Ok(f) if f.pgn == 127245 => break Some(f),
+                    Ok(_) => continue, // network-status or claim traffic
+                    Err(_) if std::time::Instant::now() < deadline => continue,
+                    Err(_) => break None,
+                }
+            };
+
+            let got = got.expect("the gateway never reported the frame");
+            assert_eq!(got.prio, 3);
+            assert_eq!(got.src, 0x17);
+            assert_eq!(got.dst, ADDR_GLOBAL);
+            assert_eq!(
+                &got.data[..],
+                &[0xff, 0xf8, 0xff, 0x7f, 0xff, 0x7f, 0xff, 0xff]
+            );
+        }
+
+        /// A frame handed to `send_frame` reaches the wire, and `src 0`
+        /// is rewritten to the address the gateway claimed. Drives
+        /// `dispatch_cmd`, the TX ring and `tx_drain_one`.
+        #[test]
+        fn a_sent_frame_reaches_the_bus_with_the_claimed_source() {
+            let Some(iface) = vcan_iface() else {
+                eprintln!("no vcan interface; skipping");
+                return;
+            };
+            let peer = bus_peer(&iface);
+            let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+            let handle =
+                run(&iface, vcan_config(0x2222, 20), Arc::clone(&claim)).expect("gateway starts");
+
+            // Wait out the ISO 11783-5 claim window; nothing contests
+            // us on a virtual bus, so this settles quickly.
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+            while claim.load(Ordering::Relaxed) == CLAIM_UNCLAIMED
+                && std::time::Instant::now() < deadline
+            {
+                std::thread::yield_now();
+            }
+            let claimed = claim.load(Ordering::Relaxed);
+            assert_ne!(claimed, CLAIM_UNCLAIMED, "gateway never claimed an address");
+
+            // src 0 means "use my claim address". PGN 127251 (Rate of
+            // Turn) is this test's alone; the receive test uses 127245.
+            handle
+                .send_frame(RawFrame::new(
+                    None,
+                    3,
+                    127251,
+                    0,
+                    ADDR_GLOBAL,
+                    [0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08],
+                ))
+                .expect("writer accepts the frame");
+
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+            loop {
+                assert!(
+                    std::time::Instant::now() < deadline,
+                    "the frame never reached the bus"
+                );
+                let Ok(f) = peer.read_frame() else { continue };
+                let socketcan::CanFrame::Data(d) = f else {
+                    continue;
+                };
+                let raw_id = match d.id() {
+                    socketcan::Id::Extended(e) => e.as_raw(),
+                    socketcan::Id::Standard(_) => continue,
+                };
+                let (prio, pgn, src, dst) = iso11783_decompose(raw_id);
+                if pgn != 127251 {
+                    continue; // claim traffic, or the other test's frames
+                }
+                assert_eq!(prio, 3);
+                assert_eq!(src, claimed, "src 0 must become the claimed address");
+                assert_eq!(dst, ADDR_GLOBAL);
+                assert_eq!(d.data(), &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]);
+                break;
+            }
+        }
+
+        /// Opening a nonexistent interface is an error, not a panic or a
+        /// hang — the supervisor relies on this to retry.
+        #[test]
+        fn opening_a_missing_interface_fails_cleanly() {
+            let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+            assert!(run("definitely-not-an-iface", vcan_config(0x3333, 30), claim).is_err());
+        }
+
+        /// Build a load sample; only the fields a test varies matter.
+        fn sample(at_ms: u64, rx_bytes: u64, rx_packets: u64) -> LoadSample {
+            LoadSample {
+                rx_bytes,
+                tx_bytes: 0,
+                rx_packets,
+                tx_packets: 0,
+                at_ms,
+            }
+        }
+
+        /// A quiet bus reads as 0%, not as `None`: two samples a second
+        /// apart with no traffic between them is a real measurement.
+        #[test]
+        fn an_idle_bus_reads_zero_percent() {
+            let pct = compute_load_pct(sample(0, 0, 0), sample(1000, 0, 0), 250_000);
+            assert_eq!(pct, Some(0));
+        }
+
+        /// Load counts data bits plus per-frame CAN overhead, inflated
+        /// 20% for bit stuffing. 100 frames of 8 bytes in one second at
+        /// 250 kbit/s: (100*8*8 + 100*67) * 1.2 = 15_720 bits -> 6%.
+        #[test]
+        fn load_includes_frame_overhead_and_stuffing() {
+            let pct = compute_load_pct(sample(0, 0, 0), sample(1000, 800, 100), 250_000);
+            assert_eq!(pct, Some(6));
+        }
+
+        /// Both directions count toward bus load — the wire carries TX
+        /// and RX alike.
+        #[test]
+        fn tx_and_rx_both_count() {
+            let prev = sample(0, 0, 0);
+            let mut curr = sample(1000, 800, 100);
+            curr.tx_bytes = 800;
+            curr.tx_packets = 100;
+            let both = compute_load_pct(prev, curr, 250_000).unwrap();
+            let rx_only = compute_load_pct(prev, sample(1000, 800, 100), 250_000).unwrap();
+            assert_eq!(both, rx_only * 2);
+        }
+
+        /// A bus busier than the bitrate allows still reports a valid
+        /// percentage rather than overflowing the byte.
+        #[test]
+        fn load_saturates_at_one_hundred() {
+            let pct = compute_load_pct(sample(0, 0, 0), sample(1000, 10_000_000, 1), 250_000);
+            assert_eq!(pct, Some(100));
+        }
+
+        /// The counters are read at the kernel's full u64 width, so a
+        /// byte total past 4 GiB is ordinary traffic, not a wrap: the
+        /// delta across that boundary reads as the 800 bytes it is.
+        /// (Truncating to u32 first would make this 100%.)
+        #[test]
+        fn a_counter_past_four_gigabytes_is_not_a_wrap() {
+            let prev = sample(0, u32::MAX as u64 - 399, 50);
+            let curr = sample(1000, u32::MAX as u64 + 401, 150);
+            assert_eq!(compute_load_pct(prev, curr, 250_000), Some(6));
+        }
+
+        /// An `ip link set down/up` resets the interface counters, so the
+        /// traffic over that interval is unknown. Report nothing — the
+        /// canboat sentinel rides through — rather than a figure that
+        /// would be a flat, wrong 100%.
+        #[test]
+        fn a_counter_reset_reports_no_load() {
+            let prev = sample(0, 5_000_000, 100_000);
+            let curr = sample(1000, 0, 0);
+            assert_eq!(compute_load_pct(prev, curr, 250_000), None);
+        }
+
+        /// A reset costs one interval, not the series: the next pair of
+        /// samples measures normally against the new baseline.
+        #[test]
+        fn the_interval_after_a_reset_measures_normally() {
+            let after_reset = sample(1000, 0, 0);
+            let next = sample(2000, 800, 100);
+            assert_eq!(compute_load_pct(after_reset, next, 250_000), Some(6));
+        }
+
+        /// Two samples at the same instant give no interval to divide
+        /// by, so there is no measurement to report.
+        #[test]
+        fn a_zero_interval_has_no_load() {
+            assert_eq!(
+                compute_load_pct(sample(5, 0, 0), sample(5, 800, 100), 250_000),
+                None
+            );
+        }
+
+        /// A zero bitrate would divide by zero; report nothing instead.
+        #[test]
+        fn a_zero_bitrate_has_no_load() {
+            assert_eq!(
+                compute_load_pct(sample(0, 0, 0), sample(1000, 800, 100), 0),
+                None
+            );
+        }
+
+        /// The same traffic is a heavier load on a slower bus.
+        #[test]
+        fn a_slower_bus_reads_a_higher_load() {
+            let prev = sample(0, 0, 0);
+            let curr = sample(1000, 800, 100);
+            let slow = compute_load_pct(prev, curr, 125_000).unwrap();
+            let fast = compute_load_pct(prev, curr, 250_000).unwrap();
+            assert!(slow > fast, "{slow} should exceed {fast}");
+        }
+
+        /// An interface with no `can_bittiming/bitrate` falls back to
+        /// the NMEA 2000 rate rather than reporting 0 (which would
+        /// suppress the load reading entirely).
+        #[test]
+        fn a_missing_bitrate_file_falls_back() {
+            assert_eq!(
+                read_bitrate_bps("definitely-not-an-iface"),
+                FALLBACK_BITRATE_BPS
+            );
+        }
+
+        /// Unreadable counters mean no sample, so the emitter keeps
+        /// canboat's "unknown" sentinel.
+        #[test]
+        fn a_missing_interface_yields_no_load_sample() {
+            assert!(read_load_sample("definitely-not-an-iface", 1000).is_none());
+        }
+
+        /// The timestamp matches canboat C's `fmtTimestamp`, including
+        /// the day rollover and the Zulu suffix.
+        #[test]
+        fn iso_timestamps_match_canboat_c() {
+            assert_eq!(format_iso(0), "1970-01-01T00:00:00.000Z");
+            assert_eq!(format_iso(90_061_500), "1970-01-02T01:01:01.500Z");
+            assert_eq!(format_iso(1_764_500_000_123), "2025-11-30T10:53:20.123Z");
+        }
+
+        /// The gateway announces itself as a PC Gateway (130) in the
+        /// Inter-Intranetwork Device class (25), with the configured
+        /// manufacturer and unique id packed into the ISO NAME.
+        #[test]
+        fn the_iso_name_carries_function_class_and_unique() {
+            let config = Config {
+                unique: 0x12345,
+                manufacturer: 717,
+                system_instance: 3,
+                ..Default::default()
+            };
+            let name = build_name(&config);
+            assert_eq!((name & 0x1F_FFFF) as u32, 0x12345, "unique id");
+            assert_eq!(((name >> 21) & 0x7FF) as u16, 717, "manufacturer");
+            assert_eq!(((name >> 40) & 0xFF) as u8, 130, "device function");
+            assert_eq!(((name >> 49) & 0x7F) as u8, 25, "device class");
+            assert_eq!(((name >> 56) & 0x0F) as u8, 3, "system instance");
+            assert_eq!(((name >> 60) & 0x07) as u8, 4, "marine industry group");
+            assert_eq!(name >> 63, 1, "arbitrary-address-capable");
+        }
+
+        /// `unique == 0` means "derive one", so two default configs on
+        /// one host agree — and neither claims unique id 0.
+        #[test]
+        fn a_zero_unique_is_derived_from_the_machine() {
+            let a = build_name(&Config::default());
+            let b = build_name(&Config::default());
+            assert_eq!(a, b, "stable across calls on one host");
+            assert_ne!(a & 0x1F_FFFF, 0, "a derived id is not zero");
+        }
+
+        /// An explicit `unique` overrides the derived one, which is how
+        /// two gateways on one host avoid colliding.
+        #[test]
+        fn an_explicit_unique_overrides_the_derived_one() {
+            let derived = build_name(&Config::default());
+            let explicit = build_name(&Config {
+                unique: 7,
+                ..Default::default()
+            });
+            assert_eq!(explicit & 0x1F_FFFF, 7);
+            assert_ne!(derived, explicit);
+        }
+
+        /// A payload at the fast-packet ceiling chunks into 32 frames:
+        /// 6 bytes in the first, 7 in each of the other 31.
+        #[test]
+        fn a_maximum_fast_packet_payload_chunks_completely() {
+            let data: Vec<u8> = (0..=255u8).cycle().take(223).collect();
+            let frames = send(&mut TxBuffer::new(), 126996, &data);
+            assert_eq!(frames.len(), 32);
+            let carried: Vec<u8> = frames
+                .iter()
+                .enumerate()
+                .flat_map(|(i, f)| if i == 0 { &f[2..] } else { &f[1..] }.to_vec())
+                .take(223)
+                .collect();
+            assert_eq!(carried, data);
+        }
+
+        /// The 3-bit sequence counter wraps after eight sends rather
+        /// than bleeding into the frame-index nibble.
+        #[test]
+        fn the_fast_packet_sequence_wraps_after_eight() {
+            let mut tx_buf = TxBuffer::new();
+            let seqs: Vec<u8> = (0..9)
+                .map(|_| send(&mut tx_buf, 126996, &[0xaa; 10])[0][0])
+                .collect();
+            assert_eq!(
+                seqs,
+                vec![0x00, 0x20, 0x40, 0x60, 0x80, 0xa0, 0xc0, 0xe0, 0x00]
+            );
+        }
+
+        /// Sequence counters are per (PGN, src), so interleaved sends of
+        /// different PGNs don't advance each other's.
+        #[test]
+        fn sequence_counters_are_per_pgn() {
+            let mut tx_buf = TxBuffer::new();
+            send(&mut tx_buf, 126996, &[0xaa; 10]);
+            send(&mut tx_buf, 126998, &[0xbb; 10]);
+            let second_126996 = send(&mut tx_buf, 126996, &[0xaa; 10]);
+            assert_eq!(second_126996[0][0], 0x20, "126998 must not advance 126996");
         }
 
         /// PGN 127508 (Battery Status) is single-frame even at exactly

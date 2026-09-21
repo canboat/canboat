@@ -379,6 +379,94 @@ fn wrap(text: &str, width: usize, indent: &str) -> String {
 mod tests {
     use super::*;
 
+    /// `keel rules` prints every rule, grouped under its scope heading.
+    #[test]
+    fn the_text_rendering_covers_every_rule() {
+        let out = render_text();
+        for r in RULES {
+            assert!(out.contains(r.id), "{} missing from text output", r.id);
+            assert!(out.contains(r.title), "{} title missing", r.id);
+        }
+        for scope in Scope::ORDER {
+            if RULES.iter().any(|r| r.scope == scope) {
+                assert!(
+                    out.contains(scope.title()),
+                    "{} heading missing",
+                    scope.title()
+                );
+            }
+        }
+    }
+
+    /// `keel rules md` is the same inventory as Markdown, one bullet per
+    /// rule under an `##` scope heading.
+    #[test]
+    fn the_markdown_rendering_covers_every_rule() {
+        let out = render_md();
+        assert!(out.starts_with("# keel rules"));
+        for r in RULES {
+            assert!(
+                out.contains(&format!("- **{}**", r.id)),
+                "{} missing from markdown output",
+                r.id
+            );
+        }
+        assert_eq!(
+            out.matches("\n- **R").count(),
+            RULES.len(),
+            "one bullet per rule"
+        );
+    }
+
+    /// Scopes are emitted in `Scope::ORDER`, not in whatever order the
+    /// rules happen to be declared.
+    #[test]
+    fn scopes_render_in_order() {
+        let out = render_text();
+        let mut last = 0;
+        for scope in Scope::ORDER {
+            if !RULES.iter().any(|r| r.scope == scope) {
+                continue;
+            }
+            let at = out.find(scope.title()).expect("heading present");
+            assert!(at > last, "{} is out of order", scope.title());
+            last = at;
+        }
+    }
+
+    /// The wrapper breaks on word boundaries, keeps lines within the
+    /// width, and indents continuations.
+    #[test]
+    fn wrap_breaks_on_words_and_indents() {
+        let text = "the quick brown fox jumps over the lazy dog";
+        let out = wrap(text, 20, "    ");
+        for line in out.lines() {
+            assert!(line.len() <= 24, "line too long: {line:?}");
+        }
+        for line in out.lines().skip(1) {
+            assert!(
+                line.starts_with("    "),
+                "continuation not indented: {line:?}"
+            );
+        }
+        let flat: Vec<&str> = out.split_whitespace().collect();
+        assert_eq!(flat.join(" "), text, "no words lost or reordered");
+    }
+
+    /// A word longer than the width still gets emitted rather than
+    /// being dropped or looping.
+    #[test]
+    fn wrap_passes_through_an_overlong_word() {
+        let long = "a".repeat(40);
+        assert_eq!(wrap(&long, 10, "  "), long);
+    }
+
+    /// Empty input wraps to empty output.
+    #[test]
+    fn wrap_handles_empty_input() {
+        assert_eq!(wrap("", 20, "  "), "");
+    }
+
     #[test]
     fn ids_unique_sorted_and_populated() {
         let mut prev = "";

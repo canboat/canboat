@@ -291,6 +291,161 @@ mod tests {
         assert_eq!(f.timestamp.as_deref(), Some("2015-06-21T16:11:14,648"));
     }
 
+    /// Every column before the field block may itself hold commas
+    /// (Garmin writes `"Unknown\nManufacturer"`), so the parser skips a
+    /// fixed count of columns rather than splitting the whole line.
+    #[test]
+    fn commas_inside_the_name_column_do_not_shift_the_fields() {
+        let line = "0,486942,127508,Battery, Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF";
+        // With the extra comma the field block shifts by one, so the
+        // parser reads the wrong columns and must reject rather than
+        // silently mis-assign src/dst.
+        assert!(parse_line(line, Variant::Relative).is_err());
+    }
+
+    /// `size` caps how many bytes are taken, so a packet column longer
+    /// than the declared size is truncated, not over-read.
+    #[test]
+    fn packet_longer_than_size_is_truncated() {
+        let line = "0,0,127508,Battery Status,Garmin,6,255,2,1,4,0x017505FF7FFFFFFF";
+        let f = match parse_line(line, Variant::Relative).unwrap() {
+            GarminCsvLine::Frame(f) => f,
+            _ => panic!("expected frame"),
+        };
+        assert_eq!(f.data.as_slice(), &[0x01, 0x75, 0x05, 0xff]);
+    }
+
+    /// A `size` past the fast-packet ceiling clamps to it rather than
+    /// trying to collect an unbounded payload.
+    #[test]
+    fn size_is_clamped_to_the_fast_packet_ceiling() {
+        let hex = "ab".repeat(FASTPACKET_MAX_SIZE + 10);
+        let line = format!("0,0,126996,Product Info,Garmin,6,255,6,0,300,0x{hex}");
+        let f = match parse_line(&line, Variant::Relative).unwrap() {
+            GarminCsvLine::Frame(f) => f,
+            _ => panic!("expected frame"),
+        };
+        assert_eq!(f.data.len(), FASTPACKET_MAX_SIZE);
+    }
+
+    /// The `0x` prefix is optional and case-insensitive.
+    #[test]
+    fn packet_prefix_is_optional_and_case_insensitive() {
+        for packet in ["0x0175", "0X0175", "0175"] {
+            let line = format!("0,0,127508,Battery Status,Garmin,6,255,2,1,2,{packet}");
+            let f = match parse_line(&line, Variant::Relative).unwrap() {
+                GarminCsvLine::Frame(f) => f,
+                _ => panic!("expected frame"),
+            };
+            assert_eq!(f.data.as_slice(), &[0x01, 0x75], "for {packet}");
+        }
+    }
+
+    /// An odd number of hex digits can't be split into bytes.
+    #[test]
+    fn odd_length_packet_is_rejected() {
+        let line = "0,0,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FFF";
+        assert!(matches!(
+            parse_line(line, Variant::Relative),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// A non-hex digit inside the packet column is an error, not a
+    /// silently-zero byte.
+    #[test]
+    fn non_hex_packet_digit_is_rejected() {
+        let line = "0,0,127508,Battery Status,Garmin,6,255,2,1,2,0xZZ01";
+        assert!(matches!(
+            parse_line(line, Variant::Relative),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// Each numeric column is validated; naming the field makes the
+    /// error actionable.
+    #[test]
+    fn each_numeric_column_reports_its_own_name() {
+        let cases = [
+            ("x,0,127508,N,M,6,255,2,1,2,0x0175", "seq"),
+            ("0,0,xxx,N,M,6,255,2,1,2,0x0175", "pgn"),
+            ("0,0,127508,N,M,x,255,2,1,2,0x0175", "src"),
+            ("0,0,127508,N,M,6,x,2,1,2,0x0175", "dst"),
+            ("0,0,127508,N,M,6,255,x,1,2,0x0175", "prio"),
+            ("0,0,127508,N,M,6,255,2,1,x,0x0175", "size"),
+            ("0,x,127508,N,M,6,255,2,1,2,0x0175", "tstamp"),
+        ];
+        for (line, want) in cases {
+            match parse_line(line, Variant::Relative) {
+                Err(ParseError::BadInteger { field, .. }) => {
+                    assert_eq!(field, want, "for {line}")
+                }
+                other => panic!("expected BadInteger({want}) for {line}, got {other:?}"),
+            }
+        }
+    }
+
+    /// A line that runs out of columns is a header error naming how far
+    /// it got, not a panic.
+    #[test]
+    fn short_line_is_rejected() {
+        for line in ["0", "0,0", "0,0,127508", "0,0,127508,N,M,6,255,2,1,2"] {
+            assert!(
+                matches!(
+                    parse_line(line, Variant::Relative),
+                    Err(ParseError::BadHeader { .. })
+                ),
+                "expected BadHeader for {line}"
+            );
+        }
+    }
+
+    /// Blank and whitespace-only lines are `Empty`, which callers skip.
+    #[test]
+    fn empty_line_is_empty() {
+        assert!(matches!(
+            parse_line("", Variant::Relative),
+            Err(ParseError::Empty)
+        ));
+        assert!(matches!(
+            parse_line("\r\n", Variant::Relative),
+            Err(ParseError::Empty)
+        ));
+    }
+
+    /// CSV2 carries an extra `Processed PGN` column. Parsing a CSV2
+    /// line as CSV1 shifts the block, so the variant is not optional.
+    #[test]
+    fn the_variant_picks_the_column_layout() {
+        let csv2 = "0,6_21_2015_16_11_14_24931648,127508,Processed,Battery Status,Unknown,6,255,2,1,8,0x017505FF7FFFFFFF";
+        assert!(
+            parse_line(csv2, Variant::Relative).is_err(),
+            "CSV2 read as CSV1 must not decode"
+        );
+    }
+
+    /// The absolute timestamp needs all seven underscore-separated
+    /// parts.
+    #[test]
+    fn truncated_absolute_timestamp_is_rejected() {
+        let line = "0,6_21_2015,127508,Processed,Battery Status,Unknown,6,255,2,1,2,0x0175";
+        assert!(matches!(
+            parse_line(line, Variant::Absolute),
+            Err(ParseError::BadInteger {
+                field: "tstamp",
+                ..
+            })
+        ));
+    }
+
+    /// Relative timestamps roll past a day boundary correctly.
+    #[test]
+    fn relative_timestamp_rolls_over_days() {
+        // 90 061 500 ms = 1d 1h 1m 1.5s.
+        assert_eq!(format_unix_ms(90_061_500), "1970-01-02T01:01:01,500");
+        assert_eq!(format_unix_ms(0), "1970-01-01T00:00:00,000");
+    }
+
     #[test]
     fn header_lines_are_skipped() {
         assert!(matches!(

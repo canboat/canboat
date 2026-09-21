@@ -189,6 +189,153 @@ mod tests {
         assert_eq!(&f.data[..], &[1, 2, 3, 4, 5, 6, 7, 8]);
     }
 
+    /// Actisense packs the payload as one contiguous hex run; the
+    /// parser also accepts it split across tokens, so both shapes of
+    /// the same message decode alike.
+    #[test]
+    fn packed_and_split_payloads_agree() {
+        let packed = parse_line("A173321.107 23FF7 1F119 0102030405060708").unwrap();
+        let split = parse_line("A173321.107 23FF7 1F119 01 02 03 04 05 06 07 08").unwrap();
+        let mixed = parse_line("A173321.107 23FF7 1F119 01020304 05060708").unwrap();
+        assert_eq!(packed.data, split.data);
+        assert_eq!(packed.data, mixed.data);
+    }
+
+    /// SDP packs src, dst and prio into one hex word.
+    #[test]
+    fn sdp_unpacks_into_src_dst_prio() {
+        // src 0x0B, dst 0x1C, prio 6 -> (0x0B << 12) | (0x1C << 4) | 6.
+        let f = parse_line("A000000.000 B1C6 1F119").unwrap();
+        assert_eq!((f.src, f.dst, f.prio), (0x0b, 0x1c, 6));
+    }
+
+    /// The millisecond fraction is optional; without it the stamp
+    /// reads `,000`.
+    #[test]
+    fn timestamp_fraction_is_optional() {
+        let f = parse_line("A173321 23FF7 1F119").unwrap();
+        assert_eq!(f.timestamp.as_deref(), Some("17:33:21,000"));
+    }
+
+    /// A fraction of more than three digits wraps at a thousand, as
+    /// canboat's `%03u` of `ms % 1000` does.
+    #[test]
+    fn oversized_fraction_wraps_at_a_thousand() {
+        let f = parse_line("A173321.1234 23FF7 1F119").unwrap();
+        assert_eq!(f.timestamp.as_deref(), Some("17:33:21,234"));
+    }
+
+    /// A time token too short to hold HHMMSS is rejected rather than
+    /// sliced out of bounds.
+    #[test]
+    fn short_timestamp_is_rejected() {
+        for line in ["A1733 23FF7 1F119", "A17332 23FF7 1F119", "A 23FF7 1F119"] {
+            assert!(parse_line(line).is_err(), "expected error for {line}");
+        }
+    }
+
+    /// Non-numeric HH/MM/SS digits are rejected — the time is decimal
+    /// even though the rest of the line is hex.
+    #[test]
+    fn non_numeric_time_is_rejected() {
+        assert!(matches!(
+            parse_line("A1A3321.107 23FF7 1F119"),
+            Err(ParseError::BadInteger {
+                field: "timestamp",
+                ..
+            })
+        ));
+    }
+
+    /// A non-numeric fraction is rejected too.
+    #[test]
+    fn non_numeric_fraction_is_rejected() {
+        assert!(matches!(
+            parse_line("A173321.abc 23FF7 1F119"),
+            Err(ParseError::BadInteger {
+                field: "timestamp",
+                ..
+            })
+        ));
+    }
+
+    /// SDP and PGN are hex; a bad token names the field it came from.
+    #[test]
+    fn bad_sdp_or_pgn_names_its_field() {
+        assert!(matches!(
+            parse_line("A173321.107 ZZZZ 1F119"),
+            Err(ParseError::BadInteger { field: "sdp", .. })
+        ));
+        assert!(matches!(
+            parse_line("A173321.107 23FF7 ZZZZZ"),
+            Err(ParseError::BadInteger { field: "pgn", .. })
+        ));
+    }
+
+    /// A line that stops before SDP or PGN is a header error.
+    #[test]
+    fn short_line_is_rejected() {
+        assert!(matches!(
+            parse_line("A173321.107"),
+            Err(ParseError::BadHeader { found: 1, .. })
+        ));
+        assert!(matches!(
+            parse_line("A173321.107 23FF7"),
+            Err(ParseError::BadHeader { found: 2, .. })
+        ));
+    }
+
+    /// An odd-length payload token can't be split into bytes.
+    #[test]
+    fn odd_length_payload_token_is_rejected() {
+        assert!(matches!(
+            parse_line("A173321.107 23FF7 1F119 010203040"),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// A non-hex payload digit is an error rather than a zero byte.
+    #[test]
+    fn non_hex_payload_is_rejected() {
+        assert!(matches!(
+            parse_line("A173321.107 23FF7 1F119 01ZZ"),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// A header-only line is a valid zero-length frame.
+    #[test]
+    fn a_line_with_no_payload_parses() {
+        let f = parse_line("A173321.107 23FF7 1F119").unwrap();
+        assert!(f.data.is_empty());
+        assert_eq!(f.pgn, 0x1f119);
+    }
+
+    /// Blank lines are `Empty`, which callers skip.
+    #[test]
+    fn empty_line_is_empty() {
+        assert!(matches!(parse_line(""), Err(ParseError::Empty)));
+        assert!(matches!(parse_line("\r\n"), Err(ParseError::Empty)));
+    }
+
+    /// A fast-packet-sized payload survives the writer and comes back
+    /// byte-identical, so long frames aren't silently clipped.
+    #[test]
+    fn long_payload_round_trips() {
+        let data: SmallVec<[u8; 8]> = (0..=255u8).cycle().take(223).collect();
+        let frame = RawFrame {
+            timestamp: Some("2026-01-01T00:00:00.000Z".into()),
+            prio: 3,
+            pgn: 126996,
+            src: 1,
+            dst: 255,
+            data: data.clone(),
+        };
+        let mut line = String::new();
+        write_line(&mut line, &frame).unwrap();
+        assert_eq!(parse_line(&line).unwrap().data, data);
+    }
+
     #[test]
     fn rejects_missing_timestamp_prefix() {
         let line = "173321.107 23FF7 1F119";

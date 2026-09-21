@@ -527,7 +527,7 @@ fn longitude(d: &DecodedPgn, f: FieldRef) -> i64 {
     let Some(v) = num_field(d, f) else {
         return 0x6791AC0;
     };
-    let n = (v * 600_000.0).round() as i64;
+    let n = (v * 600_000.0_f64).round() as i64;
     if (-108_000_000..=108_000_000).contains(&n) {
         n
     } else {
@@ -539,7 +539,7 @@ fn latitude(d: &DecodedPgn, f: FieldRef) -> i64 {
     let Some(v) = num_field(d, f) else {
         return 0x3412140;
     };
-    let n = (v * 600_000.0).round() as i64;
+    let n = (v * 600_000.0_f64).round() as i64;
     if (-54_000_000..=54_000_000).contains(&n) {
         n
     } else {
@@ -726,6 +726,368 @@ mod tests {
     fn decode(line: &str) -> DecodedPgn {
         json_to_decoded(line, PgnDatabase::embedded(canboat_core::Units::Metric))
             .expect("known PGN")
+    }
+
+    /// Encode one analyzer record and return the sentences produced.
+    fn convert_one(json: &str) -> String {
+        let mut out = String::new();
+        let mut seq = 0u8;
+        convert(&mut out, &decode(json), &mut seq);
+        out
+    }
+
+    /// The AIVDM payload of the first sentence, unarmoured back into
+    /// bits. Encoding then reading the bits back is the only way to
+    /// assert what the encoders actually put on the wire.
+    struct Bits(Vec<u8>);
+
+    impl Bits {
+        /// Unarmour a `!AIVDM` sentence's payload field (the 6-bit ASCII
+        /// run) into a bit buffer.
+        fn from_sentence(line: &str) -> Self {
+            let payload = line.split(',').nth(5).expect("payload field");
+            let mut bits = Vec::new();
+            for c in payload.bytes() {
+                let mut v = c - 48;
+                if v > 40 {
+                    v -= 8;
+                }
+                for i in (0..6).rev() {
+                    bits.push((v >> i) & 1);
+                }
+            }
+            Bits(bits)
+        }
+
+        /// Unsigned field of `len` bits starting at `start`.
+        fn u(&self, start: usize, len: usize) -> u64 {
+            (0..len).fold(0u64, |a, i| (a << 1) | self.0[start + i] as u64)
+        }
+
+        /// Two's-complement field of `len` bits starting at `start`.
+        fn i(&self, start: usize, len: usize) -> i64 {
+            let raw = self.u(start, len);
+            if raw >> (len - 1) & 1 == 1 {
+                raw as i64 - (1i64 << len)
+            } else {
+                raw as i64
+            }
+        }
+
+        /// 6-bit-ASCII text field, trailing `@` padding stripped.
+        fn text(&self, start: usize, len: usize) -> String {
+            (0..len / 6)
+                .map(|i| {
+                    let v = self.u(start + i * 6, 6) as u8;
+                    (if v < 32 { v + 64 } else { v }) as char
+                })
+                .collect::<String>()
+                .trim_end_matches('@')
+                .trim_end()
+                .to_string()
+        }
+    }
+
+    /// The first (or only) sentence, with its NMEA checksum verified.
+    fn sentence(out: &str) -> String {
+        let line = out
+            .lines()
+            .next()
+            .unwrap_or_else(|| panic!("no sentence in {out:?}"));
+        let body = line
+            .strip_prefix('!')
+            .and_then(|s| s.split('*').next())
+            .expect("well-formed sentence");
+        let want = line.split('*').nth(1).expect("checksum");
+        let got = body.bytes().fold(0u8, |a, b| a ^ b);
+        assert_eq!(format!("{got:02X}"), want, "bad checksum in {line}");
+        line.to_string()
+    }
+
+    /// Class A position: message type 1, with MMSI, position, course and
+    /// speed at their ITU-R M.1371 bit offsets.
+    #[test]
+    fn class_a_position_encodes_as_type_1() {
+        let out = convert_one(
+            r#"{"pgn":129038,"src":1,"fields":{"Message ID":{"value":1,"name":"Scheduled Class A position report"},"User ID":244660000,"Longitude":5.4230000,"Latitude":53.1745000,"SOG":5.0,"COG":90.0,"Heading":95.0,"Time Stamp":42}}"#,
+        );
+        let line = sentence(&out);
+        assert!(line.starts_with("!AIVDM,1,1,,A,"), "got {line}");
+
+        let b = Bits::from_sentence(&line);
+        assert_eq!(b.u(0, 6), 1, "message type");
+        assert_eq!(b.u(8, 30), 244_660_000, "MMSI");
+        // SOG is tenths of a knot: 5 m/s = 9.7 kn.
+        assert_eq!(b.u(50, 10), 97, "SOG");
+        // Position is 1/10000 arc-minutes.
+        assert_eq!(
+            b.i(61, 28),
+            (5.423 * 600_000.0_f64).round() as i64,
+            "longitude"
+        );
+        assert_eq!(
+            b.i(89, 27),
+            (53.1745 * 600_000.0_f64).round() as i64,
+            "latitude"
+        );
+        assert_eq!(b.u(116, 12), 900, "COG in tenths of a degree");
+        assert_eq!(b.u(128, 9), 95, "true heading in degrees");
+        assert_eq!(b.u(137, 6), 42, "time stamp");
+    }
+
+    /// Class B position is type 18 and carries the same position block.
+    #[test]
+    fn class_b_position_encodes_as_type_18() {
+        let out = convert_one(
+            r#"{"pgn":129039,"src":1,"fields":{"Message ID":{"value":18,"name":"Standard Class B position report"},"User ID":244660001,"Longitude":5.0,"Latitude":53.0,"SOG":2.5,"COG":180.0}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 18, "message type");
+        assert_eq!(b.u(8, 30), 244_660_001, "MMSI");
+        assert_eq!(b.i(57, 28), 3_000_000, "longitude");
+        assert_eq!(b.i(85, 27), 31_800_000, "latitude");
+        assert_eq!(b.u(112, 12), 1800, "COG");
+    }
+
+    /// The UTC/date report (type 4) carries a broken-out date and time
+    /// rather than a position timestamp.
+    #[test]
+    fn utc_date_report_encodes_as_type_4() {
+        let out = convert_one(
+            r#"{"pgn":129793,"src":1,"fields":{"Message ID":{"value":4,"name":"AIS UTC and Date Report"},"User ID":2445000,"Longitude":5.0,"Latitude":53.0,"Position Date":{"value":19245,"name":"2022.09.10"},"Position Time":{"value":436180000,"name":"12:06:58"}}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 4, "message type");
+        assert_eq!(b.u(38, 14), 2022, "year");
+        assert_eq!(b.u(52, 4), 9, "month");
+        assert_eq!(b.u(56, 5), 10, "day");
+        assert_eq!(b.u(61, 5), 12, "hour");
+        assert_eq!(b.u(66, 6), 6, "minute");
+        assert_eq!(b.u(72, 6), 58, "second");
+    }
+
+    /// Class A static data (type 5) is 424 bits, so it splits into two
+    /// fragments sharing a sequence id.
+    #[test]
+    fn class_a_static_splits_into_two_fragments() {
+        let out = convert_one(
+            r#"{"pgn":129794,"src":1,"fields":{"Message ID":{"value":5,"name":"Static and Voyage Related Data"},"User ID":244660000,"IMO number":9074729,"Callsign":"PBDF","Name":"ROTTERDAM","Destination":"HARLINGEN","Length":120.0,"Beam":20.0,"Draft":5.5}}"#,
+        );
+        let lines: Vec<&str> = out.lines().filter(|l| !l.is_empty()).collect();
+        assert_eq!(lines.len(), 2, "424 bits needs two fragments: {out}");
+        assert!(lines[0].starts_with("!AIVDM,2,1,"), "got {}", lines[0]);
+        assert!(lines[1].starts_with("!AIVDM,2,2,"), "got {}", lines[1]);
+        // Both fragments carry the same sequence id.
+        let seq0 = lines[0].split(',').nth(3).unwrap();
+        let seq1 = lines[1].split(',').nth(3).unwrap();
+        assert_eq!(seq0, seq1, "fragments must share a sequence id");
+        assert!(!seq0.is_empty(), "a multi-fragment message needs one");
+
+        let b = Bits::from_sentence(lines[0]);
+        assert_eq!(b.u(0, 6), 5, "message type");
+        assert_eq!(b.u(8, 30), 244_660_000, "MMSI");
+        assert_eq!(b.u(40, 30), 9_074_729, "IMO number");
+        assert_eq!(b.text(70, 42), "PBDF", "callsign");
+        assert_eq!(b.text(112, 120), "ROTTERDAM", "vessel name");
+    }
+
+    /// Consecutive multi-fragment messages advance the sequence id, so a
+    /// receiver can tell one split message from the next.
+    #[test]
+    fn the_sequence_id_advances_between_multi_fragment_messages() {
+        let json = r#"{"pgn":129794,"src":1,"fields":{"Message ID":{"value":5,"name":"Static and Voyage Related Data"},"User ID":244660000,"Name":"A"}}"#;
+        let d = decode(json);
+        let mut seq = 0u8;
+        let seqs: Vec<String> = (0..3)
+            .map(|_| {
+                let mut out = String::new();
+                convert(&mut out, &d, &mut seq);
+                out.lines()
+                    .next()
+                    .unwrap()
+                    .split(',')
+                    .nth(3)
+                    .unwrap()
+                    .to_string()
+            })
+            .collect();
+        assert_eq!(seqs, vec!["1", "2", "3"]);
+    }
+
+    /// A single-fragment message leaves the sequence field empty — it has
+    /// nothing to correlate.
+    #[test]
+    fn a_single_fragment_message_has_no_sequence_id() {
+        let out = convert_one(
+            r#"{"pgn":129039,"src":1,"fields":{"Message ID":{"value":18,"name":"Standard Class B position report"},"User ID":1}}"#,
+        );
+        let line = sentence(&out);
+        assert!(line.starts_with("!AIVDM,1,1,,"), "got {line}");
+    }
+
+    /// The SAR aircraft report (type 9) carries altitude where a vessel
+    /// report carries navigational status.
+    #[test]
+    fn sar_aircraft_encodes_as_type_9() {
+        let out = convert_one(
+            r#"{"pgn":129798,"src":1,"fields":{"Message ID":{"value":9,"name":"Standard SAR Aircraft Position Report"},"User ID":111000001,"Longitude":5.0,"Latitude":53.0,"Altitude":300.0,"SOG":50.0}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 9, "message type");
+        assert_eq!(b.u(8, 30), 111_000_001, "MMSI");
+        assert_eq!(b.u(38, 12), 300, "altitude in metres");
+    }
+
+    /// Safety-related messages carry their text as 6-bit ASCII.
+    #[test]
+    fn broadcast_safety_message_encodes_as_type_14() {
+        let out = convert_one(
+            r#"{"pgn":129802,"src":1,"fields":{"Message ID":{"value":14,"name":"Safety related broadcast message"},"Source ID":244660000,"Safety Related Text":"TEST"}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 14, "message type");
+        assert_eq!(b.u(8, 30), 244_660_000, "source MMSI");
+        assert_eq!(b.text(40, 24), "TEST", "safety text");
+    }
+
+    #[test]
+    fn addressed_safety_message_encodes_as_type_12() {
+        let out = convert_one(
+            r#"{"pgn":129801,"src":1,"fields":{"Message ID":{"value":12,"name":"Addressed safety related message"},"Source ID":244660000,"Destination ID":244660001,"Safety Related Text":"HI"}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 12, "message type");
+        assert_eq!(b.u(8, 30), 244_660_000, "source MMSI");
+        assert_eq!(b.u(40, 30), 244_660_001, "destination MMSI");
+    }
+
+    /// The extended Class B report (type 19) adds the ship's name and
+    /// dimensions to the position block.
+    #[test]
+    fn class_b_extended_encodes_as_type_19() {
+        let out = convert_one(
+            r#"{"pgn":129040,"src":1,"fields":{"Message ID":{"value":19,"name":"Extended Class B position report"},"User ID":244660002,"Longitude":5.0,"Latitude":53.0,"Name":"TENDER"}}"#,
+        );
+        let line = sentence(&out);
+        let b = Bits::from_sentence(&line);
+        assert_eq!(b.u(0, 6), 19, "message type");
+        assert_eq!(b.u(8, 30), 244_660_002, "MMSI");
+        assert_eq!(b.text(143, 120), "TENDER", "vessel name");
+    }
+
+    /// The AtoN report (type 21) carries the aid's name and type.
+    #[test]
+    fn aton_encodes_as_type_21() {
+        let out = convert_one(
+            r#"{"pgn":129041,"src":1,"fields":{"Message ID":{"value":21,"name":"ATON report"},"User ID":992441000,"Longitude":5.0,"Latitude":53.0,"AtoN Name":"BUOY 12"}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 21, "message type");
+        assert_eq!(b.u(8, 30), 992_441_000, "MMSI");
+        assert_eq!(b.text(43, 120), "BUOY 12", "aid name");
+    }
+
+    /// Class B static part A (type 24) carries the vessel name.
+    #[test]
+    fn class_b_static_part_a_encodes_as_type_24() {
+        let out = convert_one(
+            r#"{"pgn":129809,"src":1,"fields":{"Message ID":{"value":24,"name":"Static data report"},"User ID":244660003,"Name":"SEAHORSE"}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 24, "message type");
+        assert_eq!(b.u(8, 30), 244_660_003, "MMSI");
+        assert_eq!(b.u(38, 2), 0, "part number A");
+        assert_eq!(b.text(40, 120), "SEAHORSE", "vessel name");
+    }
+
+    /// Part B carries the callsign and dimensions instead.
+    #[test]
+    fn class_b_static_part_b_encodes_as_type_24() {
+        let out = convert_one(
+            r#"{"pgn":129810,"src":1,"fields":{"Message ID":{"value":24,"name":"Static data report"},"User ID":244660003,"Callsign":"PXYZ","Vendor ID":"ACME"}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(0, 6), 24, "message type");
+        assert_eq!(b.u(38, 2), 1, "part number B");
+        assert_eq!(b.text(90, 42), "PXYZ", "callsign");
+    }
+
+    /// The transceiver-information header picks the radio channel: the
+    /// ITU B channel values render as `B`, everything else as `A`.
+    #[test]
+    fn the_transceiver_field_picks_the_channel() {
+        for (value, want) in [(0, 'A'), (1, 'B'), (2, 'A'), (3, 'B'), (5, 'A')] {
+            let out = convert_one(&format!(
+                r#"{{"pgn":129039,"src":1,"fields":{{"Message ID":{{"value":18,"name":"Standard Class B position report"}},"User ID":1,"AIS Transceiver information":{{"value":{value},"name":"x"}}}}}}"#
+            ));
+            let got = sentence(&out)
+                .split(',')
+                .nth(4)
+                .unwrap()
+                .chars()
+                .next()
+                .unwrap();
+            assert_eq!(got, want, "for transceiver info {value}");
+        }
+    }
+
+    /// Own-vessel reports are `VDO`; everything received off the air is
+    /// `VDM`.
+    #[test]
+    fn the_transceiver_field_picks_the_talker() {
+        for (value, want) in [
+            (0, "!AIVDM"),
+            (1, "!AIVDM"),
+            (2, "!AIVDO"),
+            (3, "!AIVDO"),
+            (4, "!AIVDO"),
+            (5, "!AIVDM"),
+        ] {
+            let out = convert_one(&format!(
+                r#"{{"pgn":129039,"src":1,"fields":{{"Message ID":{{"value":18,"name":"Standard Class B position report"}},"User ID":1,"AIS Transceiver information":{{"value":{value},"name":"x"}}}}}}"#
+            ));
+            assert!(
+                out.starts_with(want),
+                "for transceiver info {value}, got {out}"
+            );
+        }
+    }
+
+    /// A non-AIS PGN produces nothing — `convert` is only reached via
+    /// `is_ais_pgn`, but the guard must hold on its own.
+    #[test]
+    fn a_non_ais_pgn_yields_nothing() {
+        let mut out = String::new();
+        let mut seq = 0u8;
+        let d = decode(r#"{"pgn":127508,"src":1,"fields":{"Voltage":12.6}}"#);
+        assert_eq!(convert(&mut out, &d, &mut seq), 0);
+        assert!(out.is_empty());
+    }
+
+    /// A missing position encodes the ITU "not available" sentinels
+    /// rather than dropping the report or claiming a null island fix.
+    #[test]
+    fn a_missing_position_uses_the_itu_sentinels() {
+        let out = convert_one(
+            r#"{"pgn":129039,"src":1,"fields":{"Message ID":{"value":18,"name":"Standard Class B position report"},"User ID":1}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert_eq!(b.u(57, 28), 0x6791AC0, "longitude not available");
+        assert_eq!(b.u(85, 27), 0x3412140, "latitude not available");
+    }
+
+    /// A southern, western position is two's-complement negative in both
+    /// coordinate fields.
+    #[test]
+    fn a_southwestern_position_encodes_as_negative() {
+        let out = convert_one(
+            r#"{"pgn":129039,"src":1,"fields":{"Message ID":{"value":18,"name":"Standard Class B position report"},"User ID":1,"Longitude":-70.6693000,"Latitude":-33.8688000}}"#,
+        );
+        let b = Bits::from_sentence(&sentence(&out));
+        assert!(b.i(57, 28) < 0, "longitude should be negative");
+        assert!(b.i(85, 27) < 0, "latitude should be negative");
+        assert_eq!(b.i(57, 28), (-70.6693 * 600_000.0_f64).round() as i64);
+        assert_eq!(b.i(85, 27), (-33.8688 * 600_000.0_f64).round() as i64);
     }
 
     #[test]
