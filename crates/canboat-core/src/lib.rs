@@ -11,6 +11,7 @@
 
 pub mod analyzer_json;
 pub mod bits;
+mod charset_generated;
 pub mod db;
 pub mod decode;
 pub mod encode;
@@ -21,6 +22,7 @@ pub mod os;
 pub mod output;
 pub mod quirk;
 pub mod reassembly;
+pub(crate) use charset_generated::rds_g0_char;
 mod schema_data;
 mod schema_data_j1939;
 pub mod snapshot;

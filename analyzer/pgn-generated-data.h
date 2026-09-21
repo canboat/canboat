@@ -8399,7 +8399,7 @@ Pgn pgnList[] = {
       {.name = "Scanning", .camelName = "scanning", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Frequency", .camelName = "frequency", .fieldType = "RADIO_FREQUENCY_UFIX32", .resolution = 1.0},
       {.name = "Signal Strength", .camelName = "signalStrength", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Track", .camelName = "track", .fieldType = "STRING_LZ"}
+      {.name = "Track", .camelName = "track", .fieldType = "STRING_LZ", .encoding = "RDS_G0"}
      },
      .camelDescription = "fusionTuner",
      .priority = 7},

@@ -17,6 +17,7 @@
 
 pub mod bits;
 pub mod cformat;
+pub mod charset;
 pub mod check;
 pub mod decode;
 pub mod derive;

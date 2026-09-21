@@ -361,6 +361,10 @@ fn emit_field(db: &Database, f: &Field) -> String {
     if let Some(bits) = f.bits {
         parts.push(format!(".size = {bits}"));
     }
+    // Charset for bytes that are not well-formed UTF-8; absent means Latin-1.
+    if let Some(enc) = &f.encoding {
+        parts.push(format!(".encoding = {}", c_str(enc)));
+    }
     // resolution: what the pgn.h macro would have set - authored, or the
     // per-root default when the fieldtype carries no resolution of its own
     // (fillFieldType inherits the fieldtype's when we emit nothing).
