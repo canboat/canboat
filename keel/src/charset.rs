@@ -268,6 +268,41 @@ mod tests {
         assert_eq!(rds_g0_char(0xa4), 'Ğ'); // not Ǧ
     }
 
+    /// Every charset keel accepts is named in the published schema, and the
+    /// schema names no charset keel would reject.
+    ///
+    /// docs/canboat.xsd is the contract third-party readers implement against,
+    /// and it is hand-maintained, so it is exactly where a rename goes stale
+    /// unnoticed. It did: this file was switched from an `EBU_LATIN` spelling
+    /// to `RDS_G0` and the schema kept documenting the old name — and with it
+    /// the DAB table, which is the one mapping this whole mechanism exists to
+    /// avoid. Same idea as `ids_referenced_by_check_are_documented` in rules.rs.
+    #[test]
+    fn the_schema_documents_exactly_these_encodings() {
+        let xsd = include_str!("../../docs/canboat.xsd");
+        let doc = xsd
+            .split_once(r#"name="Encoding""#)
+            .expect("the schema declares an Encoding element")
+            .1
+            .split_once("</xs:element>")
+            .expect("the element is closed")
+            .0;
+        for name in ENCODINGS {
+            // LATIN1 is the absent-value default; the prose says "Latin-1".
+            if name == "LATIN1" {
+                continue;
+            }
+            assert!(
+                doc.contains(name),
+                "docs/canboat.xsd does not document the {name} encoding"
+            );
+        }
+        assert!(
+            !doc.contains("EBU_LATIN"),
+            "docs/canboat.xsd names EBU_LATIN, which keel does not accept"
+        );
+    }
+
     /// Letters and digits are themselves, so an all-ASCII name decodes the
     /// same whichever branch it takes.
     #[test]
