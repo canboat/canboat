@@ -66,6 +66,7 @@ struct RawField {
     description: Option<String>,
     bit_length: Option<u32>,
     bit_length_field: Option<String>,
+    encoding: Option<String>,
     bit_length_variable: Option<bool>,
     bit_offset: Option<u32>,
     bit_start: Option<u32>,
@@ -455,7 +456,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
     write!(
         out,
         "FieldInfo{{order:{order},id:{id},name:{name},description:{description},\
-         bit_length:{bit_length},bit_length_field:{blf},bit_length_variable:{blv},\
+         bit_length:{bit_length},bit_length_field:{blf},encoding:{enc},bit_length_variable:{blv},\
          bit_offset:{bit_offset},bit_start:{bit_start},resolution:{resolution},\
          signed:{signed},offset:{offset},range_min:{range_min},range_max:{range_max},\
          unknown_value:{uv},out_of_range_value:{orv},reserved_value:{rv},\
@@ -471,6 +472,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         description = opt_str(&f.description),
         bit_length = opt_int(&f.bit_length),
         blf = opt_str(&f.bit_length_field),
+        enc = opt_str(&f.encoding),
         blv = opt_bool(&f.bit_length_variable),
         bit_offset = opt_int(&f.bit_offset),
         bit_start = opt_int(&f.bit_start),
@@ -910,6 +912,7 @@ fn raw_field(
         description: f.description.clone(),
         bit_length: (f.res_bits != 0).then_some(f.res_bits),
         bit_length_field: f.bit_length_field_order.map(|o| o.to_string()),
+        encoding: f.encoding.clone(),
         bit_length_variable: (f.res_bits == 0).then_some(true),
         bit_offset: show_offset.then_some(bit_offset),
         bit_start: show_offset.then_some(bit_offset % 8),

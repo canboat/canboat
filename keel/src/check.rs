@@ -59,6 +59,7 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_match_values(prefix, db, pgn, &mut v); // R13
             check_field_type_overrides(prefix, db, pgn, &mut v); // R14
             check_bit_length_field(prefix, pgn, &mut v); // R15
+            check_encoding(prefix, pgn, &mut v); // R41
             check_min_length(prefix, pgn, &mut v); // R16
         }
         check_variants(prefix, list, &mut v); // R20
@@ -596,6 +597,45 @@ fn check_match_values(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violatio
 // chain-resolved values, so a nonzero one means the type fixes that attribute.
 // A custom width/scale belongs on a base type (NUMBER/INTEGER/UNSIGNED_INTEGER)
 // that fixes neither. Sign is not field-authorable, so there is nothing to check.
+/// R41: `encoding:` names a charset keel knows, and sits only on a field
+/// whose bytes are 8-bit text. Declaring it on a number would silently do
+/// nothing, and a typo'd charset name would fall back to Latin-1 just as
+/// silently — both surface months later as mojibake rather than as an error.
+fn check_encoding(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
+    // STRING_LAU control byte 0 is UTF-16, which carries its own encoding;
+    // a declaration only governs that type's 8-bit branch.
+    const TEXT_TYPES: [&str; 3] = ["STRING_FIX", "STRING_LZ", "STRING_LAU"];
+    for f in &p.fields {
+        let Some(enc) = &f.encoding else { continue };
+        if !crate::charset::ENCODINGS.contains(&enc.as_str()) {
+            v.push(Violation {
+                rule: "R41",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "field '{}': unknown encoding '{}' — expected one of {}",
+                    f.id,
+                    enc,
+                    crate::charset::ENCODINGS.join(", ")
+                ),
+            });
+        }
+        if !TEXT_TYPES.contains(&f.type_.as_str()) {
+            v.push(Violation {
+                rule: "R41",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "field '{}': encoding is only meaningful on 8-bit text ({}), not {}",
+                    f.id,
+                    TEXT_TYPES.join("/"),
+                    f.type_
+                ),
+            });
+        }
+    }
+}
+
 fn check_field_type_overrides(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
     for f in &p.fields {
         let ft = &db.fieldtypes[f.ft];

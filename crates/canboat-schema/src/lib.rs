@@ -58,6 +58,9 @@ pub struct FieldInfo {
     pub description: Option<&'static str>,
     pub bit_length: Option<u32>,
     pub bit_length_field: Option<&'static str>,
+    /// Character set to read this field's bytes as when they are not
+    /// well-formed UTF-8. `None` means Latin-1. See `keel/src/charset.rs`.
+    pub encoding: Option<&'static str>,
     pub bit_length_variable: Option<bool>,
     pub bit_offset: Option<u32>,
     pub bit_start: Option<u32>,

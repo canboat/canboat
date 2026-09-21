@@ -307,6 +307,23 @@ pub const RULES: &[Rule] = &[
                  lookup, or a fieldtype that alters any expected decode fails \
                  here with a value-level diff.",
     },
+    Rule {
+        id: "R41",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_encoding",
+        title: "A field's encoding: names a known charset, on a text field.",
+        detail: "NMEA 2000 leaves a byte >= 0x80 in an 8-bit string undefined, so \
+                 canboat reads a string as UTF-8 and falls back to Latin-1 when \
+                 that is not well-formed. A field whose device puts some other \
+                 8-bit charset on the wire says so with encoding:, which replaces \
+                 only that fallback -- the UTF-8 attempt still runs first, so a \
+                 device that later ships UTF-8 keeps decoding. The value must name \
+                 a charset keel implements, and the field must be STRING_FIX, \
+                 STRING_LZ or STRING_LAU: an unknown name or a declaration on a \
+                 number would otherwise do nothing at all, and surface much later \
+                 as mojibake rather than as an error here.",
+    },
 ];
 
 /// Human-readable inventory, grouped by scope.

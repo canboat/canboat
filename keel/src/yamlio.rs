@@ -112,7 +112,7 @@ const PGN_KEYS: [&str; 16] = [
 
 /// One entry of a PGN's `fields:` list. `repeat` is handled a level up, in
 /// `fields_and_repeats`, so it is deliberately absent.
-const FIELD_KEYS: [&str; 23] = [
+const FIELD_KEYS: [&str; 24] = [
     "id",
     "name",
     "type",
@@ -129,6 +129,7 @@ const FIELD_KEYS: [&str; 23] = [
     "lookupFieldtype",
     "primaryKey",
     "proprietary",
+    "encoding",
     "allowLookupWidthMismatch",
     "specialValues",
     "bitLengthField",
@@ -389,6 +390,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         lookup_fieldtype: opt_str(y, "lookupFieldtype"),
         primary_key: opt_bool(y, "primaryKey").unwrap_or(false),
         proprietary: opt_bool(y, "proprietary").unwrap_or(false),
+        encoding: opt_str(y, "encoding"),
         allow_lookup_width_mismatch: opt_bool(y, "allowLookupWidthMismatch").unwrap_or(false),
         special_values: opt_i64(y, "specialValues").map(|s| s as u32),
         bit_length_field: opt_str(y, "bitLengthField"),

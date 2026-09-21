@@ -1,4 +1,4 @@
-<xs:schema version="2.5.0"
+<xs:schema version="2.6.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -583,6 +583,25 @@ limitations under the License.
         <xs:annotation>
           <xs:documentation>
             Fields always contain a field type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Encoding" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Character set to read this field's bytes as when they are not
+            well-formed UTF-8. Only present on 8-bit string fields whose
+            device is known to put some other charset on the wire; absent
+            means Latin-1, which is what every string field uses by default.
+
+            A reader should still try UTF-8 first and consult this only when
+            that fails. RDS2 carries text as UTF-8, so a device that gains it
+            will start sending valid UTF-8 in the same field and must keep
+            decoding without a database change.
+
+            EBU_LATIN is the "Complete EBU Latin based repertoire" of
+            ETSI TS 101 756 V1.8.1 (2015-12) annex C, which is not the older
+            RDS G0 set that many third-party tables still carry.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
