@@ -1,0 +1,17 @@
+# Radio Bohuslan (U+00E4 in place of a): MS-RA70N with MS-NRX300, 2026-09-19.
+# Excerpt from fusion-nrx300-status.log; original timestamps and CAN frames.
+# PGN 130820, Fusion Tuner (0x800b), source 12, FM.
+# First fast-packet payload (21 bytes):
+# a3 99 0b 80 01 02 e0 51 68 06 c7 08 42 6f 68 75 73 6c 91 6e 00
+# Track bytes 42 6f 68 75 73 6c 91 6e spell Bohuslan in RDS G0 (EBU Latin):
+# 0x91 = U+00E4; it has not been converted to UTF-8 c3 a4.
+# The operator reports the same incorrect character on the radio display.
+# Second fast-packet carries the alternating eight-character name " Radio  ".
+(1789798675.030984) can0 1DFF040C#6015A3990B800102
+(1789798675.031530) can0 1DFF040C#61E0516806C70842
+(1789798675.032067) can0 1DFF040C#626F6875736C916E
+(1789798675.032653) can0 1DFF040C#6300FFFFFFFFFFFF
+(1789798677.902413) can0 1DFF040C#C015A3990B800102
+(1789798677.902993) can0 1DFF040C#C1E0516806C70820
+(1789798677.903529) can0 1DFF040C#C2526164696F2020
+(1789798677.904119) can0 1DFF040C#C300FFFFFFFFFFFF

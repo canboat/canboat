@@ -24,6 +24,7 @@ limitations under the License.
 
 #include "analyzer.h"
 #include "common.h"
+#include "charset-generated-data.h"
 #include "utf.h"
 
 extern int       g_variableFieldRepeat[2]; // Actual number of repetitions
@@ -1692,10 +1693,35 @@ extern bool fieldPrintDate(const Field   *field,
   return true;
 }
 
-static void print_ascii_json_escaped(const uint8_t *data, int len)
+/* Emit one Unicode codepoint as UTF-8. The RDS G0 table reaches U+2551, so
+ * three-byte forms occur (the arrows, the box-drawing bar, the euro sign). */
+static void print_utf8_codepoint(uint32_t cp)
+{
+  if (cp < 0x80)
+  {
+    mprintf("%c", (int) cp);
+  }
+  else if (cp < 0x800)
+  {
+    mprintf("%c%c", 0xc0 | (cp >> 6), 0x80 | (cp & 0x3f));
+  }
+  else
+  {
+    mprintf("%c%c%c", 0xe0 | (cp >> 12), 0x80 | ((cp >> 6) & 0x3f), 0x80 | (cp & 0x3f));
+  }
+}
+
+static void print_ascii_json_escaped(const uint8_t *data, int len, const char *encoding)
 {
   int c;
   int k;
+
+  /* A field may declare the charset its bytes are in when they are not UTF-8;
+   * NULL (the usual case) means Latin-1. Fusion forwards FM radio text with its
+   * RDS bytes unconverted, and there 0x91 is 'a with diaeresis' where Latin-1
+   * has a C1 control character. The UTF-8 test below still wins, so a device
+   * that starts sending UTF-8 -- which RDS2 does -- keeps decoding. */
+  bool rds_g0 = encoding != NULL && strcmp(encoding, "RDS_G0") == 0;
 
   /* NMEA 2000 leaves the meaning of a byte >= 0x80 undefined in an 8-bit string
    * field, and devices disagree. On one bus a Fusion sends UTF-8 (c5 ab = U+016B
@@ -1760,6 +1786,16 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
            * \u00XX one, which is what canboat's Rust output already emits. */
           mprintf("\\u%04x", c);
         }
+        else if (rds_g0 && !utf8)
+        {
+          /* The field declared Basic RDS and the bytes are not UTF-8, so read
+           * the whole run through that table -- including below 0x80, where
+           * RDS differs from ASCII at 0x24, 0x5E, 0x60 and 0x7E. A code the
+           * standard leaves undefined maps to 0 and keeps its byte value. */
+          uint16_t cp = RDS_G0_TO_UNICODE[c - 0x20];
+
+          print_utf8_codepoint(cp != 0 ? cp : (uint32_t) c);
+        }
         else if (c < 0x80 || utf8)
         {
           mprintf("%c", c);
@@ -1773,7 +1809,7 @@ static void print_ascii_json_escaped(const uint8_t *data, int len)
   }
 }
 
-static bool printString(const char *fieldName, const uint8_t *data, size_t len)
+static bool printString(const char *fieldName, const uint8_t *data, size_t len, const char *encoding)
 {
   const uint8_t *p;
 
@@ -1810,12 +1846,12 @@ static bool printString(const char *fieldName, const uint8_t *data, size_t len)
   if (showJson)
   {
     mprintf("\"");
-    print_ascii_json_escaped(data, len);
+    print_ascii_json_escaped(data, len, encoding);
     mprintf("\"");
   }
   else
   {
-    print_ascii_json_escaped(data, len);
+    print_ascii_json_escaped(data, len, encoding);
   }
 
   return true;
@@ -1842,7 +1878,7 @@ extern bool fieldPrintStringFix(const Field   *field,
 
   len   = CB_MIN(len, dataLen); // Cap length to remaining bytes in message
   *bits = BYTES(len);
-  return printString(fieldName, data, len);
+  return printString(fieldName, data, len, field->encoding);
 }
 
 extern bool fieldPrintStringLZ(const Field   *field,
@@ -1865,7 +1901,7 @@ extern bool fieldPrintStringLZ(const Field   *field,
   len   = CB_MIN(len, dataLen - 1);
   *bits = BYTES(len + 2);
 
-  return printString(fieldName, data, len);
+  return printString(fieldName, data, len, field->encoding);
 }
 
 extern bool fieldPrintStringLAU(const Field   *field,
@@ -1925,7 +1961,7 @@ extern bool fieldPrintStringLAU(const Field   *field,
   // trailing 0xff run to an empty string, so let it fall through rather than aborting
   // the whole PGN.
 
-  r = printString(fieldName, data, len);
+  r = printString(fieldName, data, len, field->encoding);
   if (utf8 != NULL)
   {
     free(utf8);

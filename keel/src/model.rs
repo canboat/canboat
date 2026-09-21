@@ -107,6 +107,12 @@ pub struct Field {
     pub lookup_fieldtype: Option<String>,
     pub primary_key: bool,
     pub proprietary: bool,
+    /// Character set to read this field's bytes as when they are not valid
+    /// UTF-8. `None` means Latin-1, which is the default for every string
+    /// field (#864/#866). Authored only where a device is known to put a
+    /// different 8-bit charset on the wire -- Fusion's RDS-sourced Tuner
+    /// text is EBU Latin, where 0x91 is `a-diaeresis`, not a C1 control.
+    pub encoding: Option<String>,
     /// Explicit opt-in for a field width that differs from its lookup's
     /// declared width (R08): shared enumerations (DISABLED_SATELLITES over
     /// 32/24-bit constellations) and flag idioms (YES_NO in 1 bit).

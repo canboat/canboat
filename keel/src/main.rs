@@ -5,7 +5,8 @@
 //! and serves the editor.
 
 use keel::{
-    check, decode, derive, edit, emit_c, emit_text, emit_xml, harvest, rules, samples, yamlio,
+    charset, check, decode, derive, edit, emit_c, emit_text, emit_xml, harvest, rules, samples,
+    yamlio,
 };
 use keel::{emit_rust, find_repo_root, read_versions};
 
@@ -193,6 +194,17 @@ fn run() -> Result<i32, String> {
                 (
                     root.join("crates/canboat-io/src/fastpacket_generated.rs"),
                     emit_rust::emit_fastpacket(&db),
+                ),
+                // The Basic RDS character set, for fields that declare
+                // `encoding: RDS_G0`. Emitted from keel/src/charset.rs so the C and
+                // Rust decoders cannot drift from keel's own.
+                (
+                    root.join("analyzer/charset-generated-data.h"),
+                    charset::emit_charset_h(),
+                ),
+                (
+                    root.join("crates/canboat-core/src/charset_generated.rs"),
+                    charset::emit_charset_rs(),
                 ),
             ];
             let mut stale = 0;

@@ -1,4 +1,4 @@
-<xs:schema version="2.5.0"
+<xs:schema version="2.6.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -583,6 +583,32 @@ limitations under the License.
         <xs:annotation>
           <xs:documentation>
             Fields always contain a field type.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element type="xs:string" name="Encoding" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            Character set to read this field's bytes as when they are not
+            well-formed UTF-8. Only present on 8-bit string fields whose
+            device is known to put some other charset on the wire; absent
+            means Latin-1, which is what every string field uses by default.
+
+            A reader should still try UTF-8 first and consult this only when
+            that fails. RDS2 carries text as UTF-8, so a device that gains it
+            will start sending valid UTF-8 in the same field and must keep
+            decoding without a database change.
+
+            RDS_G0 is the Basic RDS character set: IEC 62106 table E.1,
+            published identically as the "Complete EBU Latin based
+            repertoire" in ETSI TS 101 756 V1.6.1 (2014-05) annex C.
+
+            Take it from V1.6.1, not from the V1.8.1 (2015-12) revision of
+            that annex, and not from a third-party copy. V1.8.1 reassigns 36
+            of the 224 positions - the whole 0xA0..0xBF block, 0x24, and
+            backslash, brace and bar - as a DAB-only extension that never
+            reached RDS. The two agree on every accented letter common in a
+            station name, so the mistake does not show up in casual testing.
           </xs:documentation>
         </xs:annotation>
       </xs:element>

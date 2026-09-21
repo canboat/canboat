@@ -370,13 +370,13 @@ fn decode_one(
         "STRING_FIX" => {
             let v = slice_bytes(data, ctx.bit, bits / 8);
             ctx.bit += bits;
-            Value::Str(trim_string_fix(&v))
+            Value::Str(trim_string_fix(f, &v))
         }
         "STRING_LZ" => {
             let len = byte_at(data, ctx.bit).unwrap_or(0) as usize;
             let v = slice_bytes(data, ctx.bit + 8, len);
             ctx.bit += 8 + (len + 1) * 8; // length byte + chars + terminating zero
-            Value::Str(decode_text(trim_padding(&v)))
+            Value::Str(decode_text(f, trim_padding(&v)))
         }
         "STRING_LAU" => {
             let total = byte_at(data, ctx.bit).unwrap_or(0) as usize;
@@ -395,7 +395,7 @@ fn decode_one(
                 let text = String::from_utf16_lossy(&units);
                 Value::Str(trim_padding_str(&text).to_string())
             } else {
-                Value::Str(decode_text(trim_padding(&v)))
+                Value::Str(decode_text(f, trim_padding(&v)))
             }
         }
         "BINARY" | "RESERVED" | "SPARE" | "VARIABLE" | "ISO_NAME" => {
@@ -687,12 +687,12 @@ fn slice_bytes(data: &[u8], bit: usize, nbytes: usize) -> Vec<u8> {
     data[start..end].to_vec()
 }
 
-fn trim_string_fix(v: &[u8]) -> String {
+fn trim_string_fix(f: &Field, v: &[u8]) -> String {
     let end = v
         .iter()
         .position(|&b| b == 0xff || b == b'@' || b == 0)
         .unwrap_or(v.len());
-    decode_text(&v[..end]).trim_end().to_string()
+    decode_text(f, &v[..end]).trim_end().to_string()
 }
 
 /// Strip the trailing filler run canboat's `printString` strips: 0xff (the
@@ -730,10 +730,14 @@ fn trim_padding_str(s: &str) -> &str {
 /// the field type or the control byte; it has to come from the bytes. Valid
 /// UTF-8 is taken as UTF-8, anything else as Latin-1, which maps every byte to
 /// a codepoint and so cannot fail. See canboat#864.
-fn decode_text(v: &[u8]) -> String {
+/// Read an 8-bit string field. UTF-8 wins when the bytes are well-formed;
+/// otherwise they are read in the field's declared `encoding:` (Latin-1 when
+/// it declares none). See `crate::charset` for why the fallback is a per-field
+/// choice, and `decode_text` in canboat-core for the runtime's copy of this.
+fn decode_text(f: &Field, v: &[u8]) -> String {
     match std::str::from_utf8(v) {
         Ok(s) => s.to_string(),
-        Err(_) => v.iter().map(|&b| b as char).collect(),
+        Err(_) => crate::charset::decode(f.encoding.as_deref(), v),
     }
 }
 

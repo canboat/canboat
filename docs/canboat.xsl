@@ -261,6 +261,11 @@
                   </xsl:if>
                 </td>
                 <td>
+                  <xsl:if test="Encoding">
+                    <div class='xs'>
+                      non-UTF-8 bytes are <xsl:value-of select="Encoding"/>
+                    </div>
+                  </xsl:if>
                   <xsl:if test="BitLengthField">
                     Field <xsl:value-of select="BitLengthField"/> defines the 
                   </xsl:if>
