@@ -605,6 +605,12 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         }
 
         self.xml(10, "FieldType", Some(&ft.root_name.clone()));
+        // Only emitted where a device puts a charset other than the Latin-1
+        // default on the wire; absent everywhere else, so the artifact does
+        // not grow an element per string field.
+        if let Some(enc) = f.encoding.clone() {
+            self.xml(10, "Encoding", Some(&enc));
+        }
         if let Some(phys) = ft.physical.clone() {
             self.xml(10, "PhysicalQuantity", Some(&phys));
         }

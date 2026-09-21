@@ -4,7 +4,7 @@
 use std::path::{Path, PathBuf};
 
 use crate::model::{Database, FieldType};
-use crate::{emit_c, emit_xml};
+use crate::{charset, emit_c, emit_xml};
 
 /// Emit every generated artifact for the given (filled) database.
 /// `authored_fieldtypes` is the pre-percolation state fieldtype-generated-data.h is
@@ -42,6 +42,17 @@ pub fn emit_artifacts(
         (
             root.join("analyzer/pgn-j1939-generated-data.h"),
             emit_c::emit_pgn_data_h(db, true),
+        ),
+        // The Basic RDS character set, for fields that declare
+        // `encoding: RDS_G0`. Emitted from keel/src/charset.rs so the C and
+        // Rust decoders cannot drift from keel's own.
+        (
+            root.join("analyzer/charset-generated-data.h"),
+            charset::emit_charset_h(),
+        ),
+        (
+            root.join("crates/canboat-core/src/charset_generated.rs"),
+            charset::emit_charset_rs(),
         ),
     ]
 }

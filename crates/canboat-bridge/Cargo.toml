@@ -25,7 +25,7 @@ serde        = { workspace = true }
 serde_json   = { workspace = true, features = ["preserve_order"] }
 log          = { workspace = true }
 # The WMM quirk computes magnetic variation locally.
-world_magnetic_model = "0.4.0"
+world_magnetic_model = "1.2025.0"
 
 # CLI layer — optional, enabled only by the `cli` feature.
 canboat-cli  = { workspace = true, optional = true }

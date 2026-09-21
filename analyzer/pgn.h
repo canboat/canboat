@@ -86,6 +86,11 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
+  const char *encoding;  /* Character set to read this field's bytes as when they are not well-formed UTF-8.
+                          *    NULL means Latin-1, which is what every string field uses by default. Only set on
+                          *    8-bit string fields whose device puts some other charset on the wire -- currently
+                          *    "RDS_G0" on Fusion's FM tuner text. See keel/src/charset.rs. */
+
   bool    hasMatchValue; /* This field discriminates between variants of the PGN: the definition only applies when the
                           *    wire value equals matchValue. Used to be encoded by writing the value into 'unit' as the
                           *    string "=<number>" (see keel/QUIRKS.md Q19). */

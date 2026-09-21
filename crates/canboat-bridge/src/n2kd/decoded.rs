@@ -593,3 +593,311 @@ fn create(out: &mut String, src: u8, body: &str) {
 fn _keep_import_alive(v: &FieldValue) -> bool {
     v.is_not_available()
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::n2kd::nmea0183::RateLimiter;
+    use canboat_core::{PgnDatabase, Units};
+
+    /// Convert one analyzer JSON record through the struct path and
+    /// return the sentences it produced. The rate limiter is fresh, so
+    /// nothing is gated.
+    fn convert(json: &str) -> String {
+        convert_with(json, &mut RateLimiter::new(false))
+    }
+
+    /// As [`convert`], but against a caller-supplied limiter so a test
+    /// can drive the gate or prime the SOG/COG cache.
+    fn convert_with(json: &str, rl: &mut RateLimiter) -> String {
+        let decoded = canboat_core::json_to_decoded(json, PgnDatabase::embedded(Units::Metric))
+            .expect("fixture decodes");
+        let mut out = String::new();
+        convert_nmea0183(&mut out, &decoded, rl, &Handles::new());
+        out
+    }
+
+    /// The NMEA checksum is the XOR of everything between `$` and `*`.
+    /// Verifying it on every emitted sentence proves `create` wraps the
+    /// body correctly, not just that the body looks right.
+    fn assert_checksums_valid(out: &str) {
+        for line in out.lines().filter(|l| !l.is_empty()) {
+            let body = line
+                .strip_prefix('$')
+                .and_then(|s| s.split('*').next())
+                .unwrap_or_else(|| panic!("not a sentence: {line:?}"));
+            let want = line.split('*').nth(1).expect("checksum present");
+            let got = body.bytes().fold(0u8, |a, b| a ^ b);
+            assert_eq!(format!("{got:02X}"), want, "bad checksum in {line:?}");
+        }
+    }
+
+    #[test]
+    fn rudder_becomes_rsa_with_the_sign_flipped() {
+        // N2K rudder is starboard-positive; RSA is port-positive.
+        let out = convert(r#"{"pgn":127245,"src":7,"fields":{"Position":12.5}}"#);
+        assert!(out.contains("RSA,-12.5,A,,F"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn water_speed_becomes_vhw_in_knots_and_kmh() {
+        // 5 m/s = 9.7 kn = 18.0 km/h.
+        let out = convert(r#"{"pgn":128259,"src":7,"fields":{"Speed Water Referenced":5.0}}"#);
+        assert!(out.contains("VHW,,T,,M,9.7,N,18.0,K"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn water_depth_becomes_dpt_with_its_offset() {
+        let out = convert(r#"{"pgn":128267,"src":7,"fields":{"Depth":12.34,"Offset":-0.5}}"#);
+        assert!(out.contains("DPT,12.3,-0.5"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    /// Offset is optional; without it the field is empty rather than 0.0,
+    /// which would claim a transducer at the waterline.
+    #[test]
+    fn water_depth_without_an_offset_leaves_the_field_blank() {
+        let out = convert(r#"{"pgn":128267,"src":7,"fields":{"Depth":12.34}}"#);
+        assert!(out.contains("DPT,12.3,*"), "got {out}");
+    }
+
+    #[test]
+    fn distance_log_becomes_vlw_in_nautical_miles() {
+        // 18 520 m = 10 NM; 1852 m = 1 NM.
+        let out = convert(r#"{"pgn":128275,"src":7,"fields":{"Log":18520,"Trip Log":1852}}"#);
+        assert!(out.contains("VLW,10.0,N,1.0,N"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    /// VLW carries both totals, so a record with only one of them emits
+    /// nothing rather than a half-filled sentence.
+    #[test]
+    fn distance_log_needs_both_totals() {
+        assert!(convert(r#"{"pgn":128275,"src":7,"fields":{"Log":18520}}"#).is_empty());
+    }
+
+    #[test]
+    fn water_temperature_becomes_mtw() {
+        let out = convert(
+            r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":0,"name":"Sea Temperature"},"Temperature":21.5}}"#,
+        );
+        assert!(out.contains("MTW,21.5,C"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    /// MTW is a *water* temperature sentence — an air or cabin reading on
+    /// the same PGN must not be published as one.
+    #[test]
+    fn a_non_water_temperature_emits_nothing() {
+        let out = convert(
+            r#"{"pgn":130311,"src":7,"fields":{"Temperature Source":{"value":1,"name":"Outside Temperature"},"Temperature":21.5}}"#,
+        );
+        assert!(out.is_empty(), "got {out}");
+    }
+
+    #[test]
+    fn gnss_dops_become_gsa() {
+        let out = convert(
+            r#"{"pgn":129539,"src":7,"fields":{"Actual Mode":{"value":3,"name":"3D"},"HDOP":0.83,"VDOP":1.25}}"#,
+        );
+        assert!(out.contains("GSA,M,3,,,,,,,,,,,,,,0.83,1.25"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn a_position_emits_gll_and_rmc() {
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.1745000,"Longitude":5.4230000,"Date":{"value":19245,"name":"2022.09.10"},"Time":{"value":436180000,"name":"12:06:58"}}}"#,
+        );
+        let lines: Vec<&str> = out.lines().filter(|l| !l.is_empty()).collect();
+        assert_eq!(lines.len(), 2, "GLL then RMC, got {out}");
+        assert!(
+            lines[0].contains("GLL,5310.4700,N,525.3800,E,120658,A"),
+            "got {}",
+            lines[0]
+        );
+        assert!(
+            lines[1].contains("RMC,120658,A,5310.4700,N,525.3800,E,"),
+            "got {}",
+            lines[1]
+        );
+        assert!(
+            lines[1].contains(",100922,,,A"),
+            "date is DDMMYY: {}",
+            lines[1]
+        );
+        assert_checksums_valid(&out);
+    }
+
+    /// Southern and western positions carry the other hemisphere letters.
+    #[test]
+    fn southern_and_western_positions_flip_the_hemispheres() {
+        let out = convert(
+            r#"{"pgn":129029,"src":7,"fields":{"Latitude":-33.8688000,"Longitude":-70.6693000}}"#,
+        );
+        assert!(out.contains(",S,"), "got {out}");
+        assert!(out.contains(",W,"), "got {out}");
+    }
+
+    /// RMC's speed and course come from the cached PGN 129026 slot; with
+    /// no recent fix those fields stay blank rather than reading zero.
+    #[test]
+    fn rmc_speed_and_course_are_blank_without_a_recent_fix() {
+        let out = convert(r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#);
+        let rmc = out
+            .lines()
+            .find(|l| l.contains("RMC"))
+            .expect("RMC emitted");
+        assert!(rmc.contains(",E,,,"), "sog/cog should be empty: {rmc}");
+    }
+
+    /// A SOG/COG record caches into the limiter, and the next position
+    /// fills RMC's speed and course from it.
+    #[test]
+    fn a_recent_sog_cog_fills_in_rmc() {
+        let mut rl = RateLimiter::new(false);
+        let vtg = convert_with(
+            r#"{"pgn":129026,"src":7,"fields":{"SOG":5.0,"COG":90.0}}"#,
+            &mut rl,
+        );
+        assert!(vtg.contains("VTG,"), "got {vtg}");
+        assert_checksums_valid(&vtg);
+
+        let out = convert_with(
+            r#"{"pgn":129029,"src":7,"fields":{"Latitude":53.0,"Longitude":5.0}}"#,
+            &mut rl,
+        );
+        let rmc = out
+            .lines()
+            .find(|l| l.contains("RMC"))
+            .expect("RMC emitted");
+        // 5 m/s = 9.72 kn.
+        assert!(rmc.contains(",9.72,90.0,"), "got {rmc}");
+    }
+
+    #[test]
+    fn heading_becomes_hdg() {
+        let out = convert(
+            r#"{"pgn":127250,"src":7,"fields":{"Heading":90.0,"Reference":{"value":1,"name":"Magnetic"},"Deviation":2.0,"Variation":-3.0}}"#,
+        );
+        assert!(out.contains("HDG,90.0,2.0,E,3.0,W"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    #[test]
+    fn wind_becomes_mwv() {
+        let out = convert(
+            r#"{"pgn":130306,"src":7,"fields":{"Wind Speed":5.0,"Wind Angle":90.0,"Reference":{"value":2,"name":"Apparent"}}}"#,
+        );
+        assert!(out.contains("MWV,90.0,R,18.0,K,A"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    /// A PGN with no 0183 equivalent yields nothing — the dispatcher's
+    /// trailing `else`.
+    #[test]
+    fn an_unmapped_pgn_yields_nothing() {
+        assert!(convert(r#"{"pgn":127508,"src":7,"fields":{"Voltage":12.6}}"#).is_empty());
+    }
+
+    /// A record missing the field a sentence needs emits nothing rather
+    /// than a sentence full of zeroes.
+    #[test]
+    fn a_record_missing_its_field_yields_nothing() {
+        assert!(convert(r#"{"pgn":127245,"src":7,"fields":{}}"#).is_empty());
+        assert!(convert(r#"{"pgn":128259,"src":7,"fields":{}}"#).is_empty());
+        assert!(convert(r#"{"pgn":128267,"src":7,"fields":{}}"#).is_empty());
+    }
+
+    /// The talker id encodes the source address as two letters, skipping
+    /// `P` (reserved for proprietary sentences).
+    #[test]
+    fn the_talker_id_encodes_the_source_address() {
+        let mut out = String::new();
+        create(&mut out, 0x00, "XXX,1");
+        assert!(out.starts_with("$AA"), "got {out}");
+
+        out.clear();
+        create(&mut out, 0x7f, "XXX,1");
+        assert!(out.starts_with("$HP"), "src 0x7f -> H,P: got {out}");
+
+        // High nibble 0xF would land on 'P', which is reserved, so it
+        // steps to 'Q'.
+        out.clear();
+        create(&mut out, 0xf0, "XXX,1");
+        assert!(out.starts_with("$QA"), "got {out}");
+        assert_checksums_valid(&out);
+    }
+
+    /// `cleanup_time` strips the colons and the trailing fractional
+    /// zeroes canboat's formatter leaves behind.
+    #[test]
+    fn cleanup_time_matches_canboat() {
+        assert_eq!(cleanup_time("12:06:58.0000".into()), "120658");
+        assert_eq!(cleanup_time("12:06:58.5000".into()), "120658.5");
+        assert_eq!(cleanup_time("00:00:00.0000".into()), "000000");
+        assert_eq!(cleanup_time("".into()), "");
+    }
+
+    /// NMEA dates are DDMMYY, not the ISO order the analyzer prints.
+    #[test]
+    fn nmea_date_string_reorders_to_ddmmyy() {
+        assert_eq!(nmea_date_string("2022.09.10"), "100922");
+        assert_eq!(nmea_date_string("2001.01.01"), "010101");
+        assert_eq!(nmea_date_string("1999.12.31"), "311299");
+    }
+
+    /// A malformed or absent date yields an empty field, not a panic.
+    #[test]
+    fn a_malformed_date_yields_an_empty_field() {
+        assert_eq!(nmea_date_string(""), "");
+        assert_eq!(nmea_date_string("2022"), "");
+        assert_eq!(nmea_date_string("2022.09"), "");
+    }
+
+    /// NMEA positions are degrees + decimal minutes, not decimal degrees.
+    #[test]
+    fn latlon_converts_to_degrees_and_decimal_minutes() {
+        assert_eq!(
+            latlon_to_nmea(53.1745, true),
+            ("5310.4700".to_string(), 'N')
+        );
+        assert_eq!(
+            latlon_to_nmea(-53.1745, true),
+            ("5310.4700".to_string(), 'S')
+        );
+        assert_eq!(latlon_to_nmea(5.423, false), ("525.3800".to_string(), 'E'));
+        assert_eq!(latlon_to_nmea(-5.423, false), ("525.3800".to_string(), 'W'));
+    }
+
+    /// Zero is the equator / prime meridian; the hemisphere letter is the
+    /// positive one rather than being omitted.
+    #[test]
+    fn a_zero_coordinate_takes_the_positive_hemisphere() {
+        assert_eq!(latlon_to_nmea(0.0, true), ("0.0000".to_string(), 'N'));
+        assert_eq!(latlon_to_nmea(0.0, false), ("0.0000".to_string(), 'E'));
+    }
+
+    /// The rate-limit slots are distinct, so one sentence class throttling
+    /// can never silence another.
+    #[test]
+    fn every_rate_has_its_own_slot() {
+        let rates = [
+            Rate::VesselHeading,
+            Rate::WindData,
+            Rate::WaterDepth,
+            Rate::WaterSpeed,
+            Rate::Rudder,
+            Rate::GpsSpeed,
+            Rate::GpsDop,
+            Rate::GpsPosition,
+            Rate::Environmental,
+            Rate::DistanceLog,
+        ];
+        let mut seen: Vec<usize> = rates.iter().map(|r| rate_index(*r)).collect();
+        seen.sort_unstable();
+        assert_eq!(seen, (0..rates.len()).collect::<Vec<_>>());
+    }
+}

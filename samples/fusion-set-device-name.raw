@@ -1,0 +1,15 @@
+# Fusion NMEA 2000 remote at source address 33 renaming the head unit to
+# "ABCDE", contributed by @TwoCanPlugIn in canboat issue #886.
+#
+# PGN 126720 proprietary id 29 "Set Device Name" -- the command counterpart of
+# the 130820 "Unit Name" status (message id 32801). Not per-zone, unlike
+# 34 "Set Zone Name".
+#
+#   a3 99 1d 00 05 41 42 43 44 45 00
+#                 |  +- "ABCDE" followed by the STRING_LZ terminating zero
+#                 +- length 5
+#
+# Reformatted from the contributed candump text output into the candump form
+# canboat's tools parse; the frames are byte-for-byte unchanged.
+(1789200000.000000) can0 1DEF0F21#800BA3991D000541
+(1789200000.001000) can0 1DEF0F21#814243444500FFFF

@@ -86,6 +86,10 @@ typedef struct
   const char *unit; /* String containing the 'Dimension' (e.g. s, h, m/s, etc.) */
   const char *description;
 
+  const char *encoding;  /* Character set to read this field's bytes as when they are not well-formed UTF-8.
+                          *    NULL means Latin-1. Mirrors the member in pgn.h; no J1939 field sets it today,
+                          *    but print.c is shared between the two builds. See keel/src/charset.rs. */
+
   bool    hasMatchValue; /* Variant discriminator: the definition only applies when the wire value equals matchValue.
                           *    Used to be encoded into 'unit' as "=<number>" (see keel/QUIRKS.md Q19). */
   int64_t matchValue;

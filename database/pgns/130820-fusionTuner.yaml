@@ -49,6 +49,37 @@ fields:
 - id: track
   name: Track
   type: STRING_LZ
+  encoding: RDS_G0
+notes: |-
+  Track carries the RDS station name on FM, and the MS-RA70N forwards the
+  RDS bytes without converting them. They are therefore Basic RDS (G0), not
+  UTF-8 and not Latin-1, so the field declares `encoding: RDS_G0` and canboat
+  reads any byte that is not well-formed UTF-8 through that table.
+
+  Observed on a Fusion MS-RA70N: the station name of Radio Bohuslän arrives
+  as 42 6f 68 75 73 6c 91 6e, where 0x91 is `ä` in RDS G0. Read as Latin-1 --
+  what canboat did before this -- 0x91 is U+0091, a C1 control character that
+  displays as nothing, so the name came out as `Bohuslan`. The operator
+  reports the same wrong character on the radio's own display, so the unit is
+  not converting it internally either.
+
+  The charset is a property of this field, not of the device: UTF-8 is still
+  tried first. RDS2 carries text as UTF-8 in its new groups while keeping the
+  old character set for the legacy 0A/2A groups that carry the station name
+  today, so a future head unit that speaks RDS2 will start sending valid
+  UTF-8 here and will decode correctly with no change to this file.
+
+  Character set: IEC 62106 table E.1, published identically as the "Complete
+  EBU Latin based repertoire" in ETSI TS 101 756 V1.6.1 (2014-05) annex C.
+  Deliberately not the V1.8.1 (2015-12) repertoire, which reassigns 36 of
+  those positions: that was a DAB-only extension and never reached RDS.
+  https://www.etsi.org/deliver/etsi_ts/101700_101799/101756/01.06.01_60/ts_101756v010601p.pdf#page=42
+
+  Only FM has been observed. DAB does signal its character set on air and can
+  legitimately be UTF-8; if a DAB capture ever shows this field carrying it,
+  the UTF-8-first rule already handles it.
+
+  Evidence: samples/fusion-ms-ra70n-rds-encoding.log (original candump frames).
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,49,255,20,a3,99,0b,80,01,02,00,c6,3e,05,c7,08,41,56,52,4f,54,52,4f,53"  # from strings.raw
   expects:
@@ -80,3 +111,16 @@ samples:
     frequency: 88000000
     signalStrength: 205
     track: "RADIO 2"
+- raw: "2023-01-01-00:00:00.000,7,130820,12,255,21,a3,99,0b,80,01,02,e0,51,68,06,c7,08,42,6f,68,75,73,6c,91,6e,00"  # from fusion-ms-ra70n-rds-encoding.log
+  # 0x91 is `a with diaeresis` in Basic RDS (G0). Latin-1, which is what a
+  # string field falls back to without `encoding:`, puts U+0091 there -- a C1
+  # control character, so the name used to come out as "Bohuslan".
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tuner"
+    sourceId: "FM"
+    scanning: 2
+    frequency: 107500000
+    signalStrength: 199
+    track: "Bohuslän"

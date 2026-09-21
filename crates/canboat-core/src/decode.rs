@@ -931,7 +931,7 @@ fn decode_one_field_at(
 
     // STRING_LAU figures out its own length from the data byte.
     if matches!(f.field_type, Some(FieldType::StringLau)) {
-        let (value, bits_consumed) = decode_string_lau(data, bit_offset);
+        let (value, bits_consumed) = decode_string_lau(data, bit_offset, f.encoding);
         return Some((
             DecodedField {
                 info: f,
@@ -1000,7 +1000,7 @@ fn decode_one_field_at(
         let avail = payload_bits.saturating_sub(bit_offset);
         let avail = avail - (avail & 7); // round down to whole bytes
         let value = match f.field_type {
-            Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, avail),
+            Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, avail, f.encoding),
             // A BINARY field with no width of its own takes one, in
             // *bits*, from the value of the field before it — canboat's
             // `*bits = g_previousFieldValue` (fieldPrintBinary, print.c),
@@ -1050,8 +1050,8 @@ fn decode_one_field_at(
         Some(FieldType::Time) | Some(FieldType::Duration) => {
             decode_time(f, data, bit_offset, bit_length, signed)
         }
-        Some(FieldType::StringFix) => decode_string_fix(data, bit_offset, bit_length),
-        Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, bit_length),
+        Some(FieldType::StringFix) => decode_string_fix(data, bit_offset, bit_length, f.encoding),
+        Some(FieldType::StringLz) => decode_string_lz(data, bit_offset, bit_length, f.encoding),
         Some(FieldType::StringLau) => unreachable!("STRING_LAU handled above"),
         Some(FieldType::Variable) => unreachable!("VARIABLE handled above"),
         Some(FieldType::IsoName) => decode_iso_name(data, bit_offset, bit_length, db),
@@ -1865,7 +1865,12 @@ fn decode_time(
     }
 }
 
-fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_string_fix(
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+    encoding: Option<&str>,
+) -> FieldValue {
     let bo = bit_offset as usize;
     let bl = bit_length as usize;
     if bo & 7 != 0 || bl & 7 != 0 {
@@ -1897,7 +1902,7 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
     if len == 0 {
         return FieldValue::NotAvailable;
     }
-    let s = decode_text(&raw[..len]);
+    let s = decode_text(&raw[..len], encoding);
     FieldValue::String(s)
 }
 
@@ -1908,7 +1913,7 @@ fn decode_string_fix(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValu
 ///
 /// Returns the decoded value plus the number of bits this field
 /// consumed — variable, so callers must use this to advance the cursor.
-fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
+fn decode_string_lau(data: &[u8], bit_offset: u32, charset: Option<&str>) -> (FieldValue, u32) {
     let bo = bit_offset as usize;
     if bo & 7 != 0 {
         return (
@@ -1958,7 +1963,7 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
                 .iter()
                 .rposition(|&b| !is_string_padding(b))
                 .map_or(0, |i| i + 1);
-            decode_text(&body[..end])
+            decode_text(&body[..end], charset)
         }
     };
     // Canboat's `printString` trims trailing 0xff / NUL / '@' / spaces
@@ -1987,10 +1992,24 @@ fn decode_string_lau(data: &[u8], bit_offset: u32) -> (FieldValue, u32) {
 /// Note this never yields U+FFFD, and never loses a byte value: a consumer
 /// that knows better can recover the original bytes from the Latin-1 branch.
 /// See canboat#864.
-fn decode_text(v: &[u8]) -> String {
+/// Read an 8-bit string field.
+///
+/// UTF-8 wins when the bytes are well-formed; otherwise they are read in the
+/// field's declared `encoding:`, defaulting to Latin-1 (#864 / #866). The
+/// UTF-8 attempt runs first even for a field that declares a charset, so a
+/// device that starts sending UTF-8 — RDS2 does — keeps decoding correctly
+/// with no database change.
+///
+/// Mirrors `decode_text` in keel/src/decode.rs; the EBU Latin table below is
+/// generated from keel/src/charset.rs, which cites its source.
+fn decode_text(v: &[u8], encoding: Option<&str>) -> String {
     match std::str::from_utf8(v) {
         Ok(s) => s.to_string(),
-        Err(_) => v.iter().map(|&b| b as char).collect(),
+        Err(_) => match encoding {
+            Some("RDS_G0") => v.iter().map(|&b| crate::rds_g0_char(b)).collect(),
+            // `b as char` IS Latin-1 in Rust: U+0000..U+00FF map one to one.
+            _ => v.iter().map(|&b| b as char).collect(),
+        },
     }
 }
 
@@ -2018,7 +2037,12 @@ fn trim_string_padding(s: &str) -> &str {
     })
 }
 
-fn decode_string_lz(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_string_lz(
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+    encoding: Option<&str>,
+) -> FieldValue {
     let bo = bit_offset as usize;
     let bl = bit_length as usize;
     if bo & 7 != 0 {
@@ -2044,7 +2068,7 @@ fn decode_string_lz(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue
     let content_start = start + 1;
     let max_avail = region_end.saturating_sub(content_start);
     let content_end = content_start + len_byte.min(max_avail);
-    let raw = decode_text(&data[content_start..content_end]);
+    let raw = decode_text(&data[content_start..content_end], encoding);
     let trimmed = trim_string_padding(&raw);
     if trimmed.is_empty() {
         FieldValue::NotAvailable
@@ -2310,7 +2334,7 @@ mod tests {
         // "Unhandled string type 255"; here it must decode as an empty
         // (NotAvailable) field, not a run of U+FFFD replacement chars.
         let data = [0x05u8, 0xff, 0xff, 0xff, 0xff]; // len=5, enc=0xff, body=3×0xff
-        let (value, bits) = decode_string_lau(&data, 0);
+        let (value, bits) = decode_string_lau(&data, 0, None);
         assert!(matches!(value, FieldValue::NotAvailable), "{value:?}");
         assert_eq!(bits, 40);
     }
@@ -2319,7 +2343,7 @@ mod tests {
     fn string_lau_ascii_still_decodes() {
         // 1 = ASCII, "Hi" with a trailing 0xff pad byte → "Hi".
         let data = [0x05u8, 0x01, b'H', b'i', 0xff];
-        let (value, bits) = decode_string_lau(&data, 0);
+        let (value, bits) = decode_string_lau(&data, 0, None);
         assert!(
             matches!(value, FieldValue::String(ref s) if s == "Hi"),
             "{value:?}"

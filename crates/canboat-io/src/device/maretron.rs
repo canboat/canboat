@@ -159,3 +159,235 @@ fn now_iso_ms() -> String {
     let (y, mo, d) = days_to_ymd(days);
     format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{ms:03}")
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use canboat_core::format::maretron_ipg::{F1_SYNC_BIT, FRAME_SYNC};
+
+    /// Drive a decoder through the handshake so the session is in
+    /// binary-streaming state, and return it ready for frame bytes.
+    fn streaming_decoder() -> Decoder {
+        let mut d = Decoder::new(Some("2026-05-29T19:16:04.826Z".to_string()));
+        let mut events = Vec::new();
+        d.decode(b"CONNECTED\t1234567\0", &mut events);
+        d
+    }
+
+    /// One `A5` binary frame: prio 6, msg_type 1, PF 0xF1, PS 0x01
+    /// (PDU2, so PS folds in: PGN 0xF101 = 61697), SA 0x17.
+    fn binary_frame(payload: &[u8]) -> Vec<u8> {
+        let mut v = vec![
+            FRAME_SYNC,
+            F1_SYNC_BIT | (6 << 4) | (1 << 1),
+            0xF1,
+            0x01,
+            0x17,
+            payload.len() as u8,
+        ];
+        v.extend_from_slice(payload);
+        v
+    }
+
+    /// `CONNECTED` is the reception-driven half of the handshake: the
+    /// decoder answers with `SET_MODE BINARY` for the writer thread.
+    #[test]
+    fn connected_reply_asks_the_writer_for_binary_mode() {
+        let mut d = Decoder::new(None);
+        let mut events = Vec::new();
+        d.decode(b"CONNECTED\t1234567\0", &mut events);
+        assert_eq!(events.len(), 1);
+        match &events[0] {
+            DeviceEvent::SendBytes(b) => assert_eq!(b, &build_set_mode_binary()),
+            other => panic!("expected SendBytes, got {other:?}"),
+        }
+        assert_eq!(d.state, SessionState::Streaming);
+    }
+
+    /// Until `CONNECTED` arrives the session stays in text mode, so a
+    /// byte sequence that would be a binary frame is read as text.
+    #[test]
+    fn handshake_state_holds_until_connected() {
+        let mut d = Decoder::new(None);
+        let mut events = Vec::new();
+        d.decode(b"SERVER_VERSION\t2.1.4\0", &mut events);
+        assert!(events.is_empty(), "version banner is informational");
+        assert_eq!(d.state, SessionState::AwaitHandshake);
+    }
+
+    /// A rejected password surfaces as an error event rather than a
+    /// silent stall on a session that will never stream.
+    #[test]
+    fn rejected_login_reports_an_error() {
+        let mut d = Decoder::new(None);
+        let mut events = Vec::new();
+        d.decode(b"NO\tbad password\0", &mut events);
+        assert_eq!(events.len(), 1);
+        match &events[0] {
+            DeviceEvent::Error(m) => assert!(m.contains("authentication")),
+            other => panic!("expected Error, got {other:?}"),
+        }
+        assert_eq!(
+            d.state,
+            SessionState::AwaitHandshake,
+            "a rejected login must not flip to binary"
+        );
+    }
+
+    /// After the handshake, `A5` frames decode to `RawFrame`s. PF
+    /// >= 0xF0 is PDU2, so PS folds into the PGN and dst is global.
+    #[test]
+    fn binary_frame_decodes_as_pdu2_broadcast() {
+        let mut d = streaming_decoder();
+        let mut events = Vec::new();
+        d.decode(&binary_frame(&[1, 2, 3, 4, 5, 6, 7, 8]), &mut events);
+        assert_eq!(events.len(), 1);
+        match &events[0] {
+            DeviceEvent::Frame(f) => {
+                assert_eq!(f.pgn, 0xF101);
+                assert_eq!(f.prio, 6);
+                assert_eq!(f.src, 0x17);
+                assert_eq!(f.dst, 0xFF);
+                assert_eq!(&f.data[..], &[1, 2, 3, 4, 5, 6, 7, 8]);
+            }
+            other => panic!("expected Frame, got {other:?}"),
+        }
+    }
+
+    /// The accumulator holds a partial frame across reads instead of
+    /// emitting a truncated one.
+    #[test]
+    fn partial_frame_waits_for_the_rest() {
+        let mut d = streaming_decoder();
+        let bytes = binary_frame(&[0xaa; 8]);
+        let (head, tail) = bytes.split_at(4);
+        let mut events = Vec::new();
+        d.decode(head, &mut events);
+        assert!(events.is_empty(), "half a frame must not emit");
+        d.decode(tail, &mut events);
+        assert_eq!(events.len(), 1);
+    }
+
+    /// Several frames arriving in one read all come out, in order.
+    #[test]
+    fn back_to_back_frames_all_emit() {
+        let mut d = streaming_decoder();
+        let mut bytes = binary_frame(&[1]);
+        bytes.extend(binary_frame(&[2]));
+        bytes.extend(binary_frame(&[3]));
+        let mut events = Vec::new();
+        d.decode(&bytes, &mut events);
+        let payloads: Vec<u8> = events
+            .iter()
+            .map(|e| match e {
+                DeviceEvent::Frame(f) => f.data[0],
+                other => panic!("expected Frame, got {other:?}"),
+            })
+            .collect();
+        assert_eq!(payloads, vec![1, 2, 3]);
+    }
+
+    /// IPG video and ASCII records share the stream; they are dropped
+    /// without disturbing the frames around them.
+    #[test]
+    fn video_records_are_dropped_between_frames() {
+        let mut d = streaming_decoder();
+        let mut bytes = b"3some video record\0".to_vec();
+        bytes.extend(binary_frame(&[9]));
+        let mut events = Vec::new();
+        d.decode(&bytes, &mut events);
+        assert_eq!(events.len(), 1, "only the frame survives: {events:?}");
+    }
+
+    /// `fixtime` replaces the host clock so output is reproducible.
+    #[test]
+    fn fixtime_stamps_every_frame() {
+        let mut d = streaming_decoder();
+        let mut events = Vec::new();
+        d.decode(&binary_frame(&[7]), &mut events);
+        match &events[0] {
+            DeviceEvent::Frame(f) => {
+                assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z"))
+            }
+            other => panic!("expected Frame, got {other:?}"),
+        }
+    }
+
+    /// Without `fixtime` the host clock supplies an ISO-8601 stamp.
+    #[test]
+    fn host_clock_stamp_is_iso_8601() {
+        let ts = now_iso_ms();
+        assert_eq!(ts.len(), 23, "YYYY-MM-DDTHH:MM:SS.mmm, got {ts}");
+        assert_eq!(&ts[4..5], "-");
+        assert_eq!(&ts[10..11], "T");
+        assert_eq!(&ts[19..20], ".");
+        assert!(ts[..4].parse::<u32>().unwrap() >= 2026);
+    }
+
+    /// The writer opens the session with CONNECT carrying the password.
+    #[test]
+    fn init_bytes_carry_the_password() {
+        let e = Encoder {
+            password: "hunter2".to_string(),
+        };
+        let init = e.init_bytes();
+        assert_eq!(init, build_connect("hunter2"));
+        assert!(init.ends_with(&[0]), "CONNECT is NUL-terminated");
+        assert!(String::from_utf8_lossy(&init).contains("\"hunter2\""));
+    }
+
+    /// Synthetic PGNs are canboat-internal and must never reach the bus.
+    #[test]
+    fn synthetic_pgns_are_not_encoded() {
+        let e = Encoder {
+            password: String::new(),
+        };
+        let frame = RawFrame::new(None, 6, MARETRON_SYNTHETIC_PGN, 17, 255, [0u8; 8]);
+        assert!(e.encode_frame(&frame).is_none());
+    }
+
+    /// A payload past the fast-packet ceiling can't be framed, so the
+    /// encoder declines rather than truncating it.
+    #[test]
+    fn oversized_payload_is_declined() {
+        let e = Encoder {
+            password: String::new(),
+        };
+        let mut frame = RawFrame::new(None, 6, 126996, 17, 255, [0u8; 8]);
+        frame.data = std::iter::repeat_n(0xabu8, 224).collect();
+        assert!(e.encode_frame(&frame).is_none());
+    }
+
+    /// What the encoder writes, the decoder reads back — PGN, priority
+    /// and payload survive the round trip. SA is the IPG's to assign,
+    /// so it goes out as 0xFF.
+    #[test]
+    fn encoder_round_trips_through_decoder() {
+        let e = Encoder {
+            password: String::new(),
+        };
+        let original = RawFrame::new(
+            None,
+            3,
+            127508,
+            17,
+            255,
+            [0xff, 0x5e, 0x7d, 0x00, 0x00, 0xff, 0xff, 0xff],
+        );
+        let bytes = e.encode_frame(&original).expect("encodes");
+
+        let mut d = streaming_decoder();
+        let mut events = Vec::new();
+        d.decode(&bytes, &mut events);
+        assert_eq!(events.len(), 1);
+        match &events[0] {
+            DeviceEvent::Frame(f) => {
+                assert_eq!(f.pgn, original.pgn);
+                assert_eq!(f.prio, original.prio);
+                assert_eq!(f.data, original.data);
+                assert_eq!(f.src, 0xFF, "the IPG substitutes its own source");
+            }
+            other => panic!("expected Frame, got {other:?}"),
+        }
+    }
+}

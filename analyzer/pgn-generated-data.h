@@ -3583,6 +3583,19 @@ Pgn pgnList[] = {
      },
      .camelDescription = "fusionSetAllSublevels"},
 
+    {"Fusion: Set Device Name",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 29, .description = "Set Device Name", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Name", .camelName = "name", .fieldType = "STRING_LZ"}
+     },
+     .camelDescription = "fusionSetDeviceName"},
+
     {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
      126976,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -8399,7 +8412,7 @@ Pgn pgnList[] = {
       {.name = "Scanning", .camelName = "scanning", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Frequency", .camelName = "frequency", .fieldType = "RADIO_FREQUENCY_UFIX32", .resolution = 1.0},
       {.name = "Signal Strength", .camelName = "signalStrength", .fieldType = "UINT8", .resolution = 1.0},
-      {.name = "Track", .camelName = "track", .fieldType = "STRING_LZ"}
+      {.name = "Track", .camelName = "track", .fieldType = "STRING_LZ", .encoding = "RDS_G0"}
      },
      .camelDescription = "fusionTuner",
      .priority = 7},
