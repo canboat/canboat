@@ -768,20 +768,26 @@ mod imp {
         if dt_ms == 0 || bitrate_bps == 0 {
             return None;
         }
-        // The counters are the kernel's monotonic u64, read at full
-        // width by `read_sysfs_counter_u64`, so these deltas are plain
-        // subtractions. `wrapping_sub` is belt-and-braces for the one
-        // case that could still go backwards: the interface counters
-        // being reset under us (an `ip link set down/up`), which would
-        // otherwise panic in debug.
-        let d_bytes = curr
-            .rx_bytes
-            .wrapping_sub(prev.rx_bytes)
-            .saturating_add(curr.tx_bytes.wrapping_sub(prev.tx_bytes));
-        let d_packets = curr
-            .rx_packets
-            .wrapping_sub(prev.rx_packets)
-            .saturating_add(curr.tx_packets.wrapping_sub(prev.tx_packets));
+        // The counters are the kernel's monotonic u64, read at full width
+        // by `read_sysfs_counter_u64`, so they only ever go backwards if
+        // the interface was reset under us (an `ip link set down/up`).
+        // There is no meaningful load for that interval — the traffic
+        // since the last sample is simply unknown — so say so rather than
+        // subtract across the reset. Reporting a number here would mean
+        // reporting a wrong one: the deltas would come out near u64::MAX
+        // and saturate to a flat 100%.
+        //
+        // The caller stores `curr` as the next baseline whether or not
+        // this returns a figure, so one interval is lost, not the series.
+        if curr.rx_bytes < prev.rx_bytes
+            || curr.tx_bytes < prev.tx_bytes
+            || curr.rx_packets < prev.rx_packets
+            || curr.tx_packets < prev.tx_packets
+        {
+            return None;
+        }
+        let d_bytes = (curr.rx_bytes - prev.rx_bytes) + (curr.tx_bytes - prev.tx_bytes);
+        let d_packets = (curr.rx_packets - prev.rx_packets) + (curr.tx_packets - prev.tx_packets);
         // bits_raw = data bytes * 8 + packets * (SOF + arb + ctrl +
         // CRC + ACK + EOF + IFS). bits_on_wire scales by the
         // stuffing factor, then load_pct = bits / (bitrate * Δt).
@@ -1611,15 +1617,24 @@ mod imp {
             assert_eq!(compute_load_pct(prev, curr, 250_000), Some(6));
         }
 
-        /// An `ip link set down/up` resets the interface counters. The
-        /// delta goes backwards; report a bogus figure rather than
-        /// panicking on overflow in a debug build.
+        /// An `ip link set down/up` resets the interface counters, so the
+        /// traffic over that interval is unknown. Report nothing — the
+        /// canboat sentinel rides through — rather than a figure that
+        /// would be a flat, wrong 100%.
         #[test]
-        fn a_counter_reset_does_not_panic() {
+        fn a_counter_reset_reports_no_load() {
             let prev = sample(0, 5_000_000, 100_000);
             let curr = sample(1000, 0, 0);
-            let pct = compute_load_pct(prev, curr, 250_000);
-            assert!(pct.is_some(), "a reset must not kill the emitter");
+            assert_eq!(compute_load_pct(prev, curr, 250_000), None);
+        }
+
+        /// A reset costs one interval, not the series: the next pair of
+        /// samples measures normally against the new baseline.
+        #[test]
+        fn the_interval_after_a_reset_measures_normally() {
+            let after_reset = sample(1000, 0, 0);
+            let next = sample(2000, 800, 100);
+            assert_eq!(compute_load_pct(after_reset, next, 250_000), Some(6));
         }
 
         /// Two samples at the same instant give no interval to divide

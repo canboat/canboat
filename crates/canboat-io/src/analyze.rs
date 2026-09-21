@@ -521,6 +521,9 @@ mod tests {
         decode_stream(line.as_bytes(), &cfg, |d| j1939 = Some(d.description)).expect("ok");
 
         assert_eq!(n2k, Some("Rate of Turn"));
+        // Without this, the comparison below would also pass if the J1939
+        // table stopped decoding the frame at all.
+        assert!(j1939.is_some(), "the J1939 table must decode the frame");
         assert_ne!(n2k, j1939, "the J1939 table is a different schema");
     }
 
