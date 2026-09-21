@@ -16,11 +16,14 @@
 # fixtures come from this checkout for the same reason.
 #
 # Jobs:
-#   - test:       build + full test suite on Linux / macOS / Windows.
+#   - test:       build + full test suite on Linux / macOS / Windows. The Linux
+#                 leg also brings up a vcan interface so the SocketCAN device
+#                 tests exercise a real socket.
 #   - msrv:       cargo check at the workspace's declared rust-version.
 #   - clippy:     -D warnings, all targets.
 #   - fmt:        rustfmt check.
 #   - docs:       facade rustdoc per library feature set with -D warnings.
+#   - coverage:   llvm-source-based line coverage, with a regression floor.
 name: Rust CI
 
 on:
@@ -35,6 +38,7 @@ on:
       - "database/**"
       - "docs/canboat.json"
       - ".github/workflows/rust-ci.yml"
+      - ".github/actions/setup-vcan/action.yml"
   pull_request:
     paths: *rust_paths
 
@@ -65,6 +69,13 @@ jobs:
 
       - name: Cache cargo & target
         uses: Swatinem/rust-cache@v2
+
+      # canboat-io's SocketCAN tests drive a real socket when one is
+      # there, and no-op when it is not. Linux only: the module — and
+      # the code under test — exist nowhere else.
+      - name: Set up vcan
+        if: runner.os == 'Linux'
+        uses: ./.github/actions/setup-vcan
 
       - name: Build
         run: cargo build --workspace --locked
@@ -168,3 +179,61 @@ jobs:
             cargo doc --no-deps -p canboat --no-default-features --features "$set" --locked
             echo "::endgroup::"
           done
+
+  coverage:
+    name: Rust Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Rust stable with llvm-tools
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: llvm-tools-preview
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-llvm-cov
+        uses: taiki-e/install-action@cargo-llvm-cov
+
+      # Without this the SocketCAN worker thread, its poll loop and the
+      # TX ring are never entered, and the measured figure drops by about
+      # a point. The action warns rather than fails when the runner kernel
+      # has no vcan module, so the floor below is set to survive that.
+      - name: Set up vcan
+        uses: ./.github/actions/setup-vcan
+
+      # Linux on purpose, and not only because it is the cheap runner:
+      # canboat-io's SocketCAN device lives behind
+      # `#[cfg(target_os = "linux")]`, so its module — and the tests inside
+      # it — do not exist on a macOS or Windows run. Measuring anywhere else
+      # would silently report that file as a 23-line unsupported stub.
+      #
+      # --fail-under-lines is a regression floor, not a target. It sits below
+      # the current figure so ordinary work has headroom; raise it when the
+      # number moves up for real. The uncovered remainder is concentrated in
+      # code that needs a live socket or a terminal (the SocketCAN worker
+      # thread, the bridge's TCP servers, the TUI's rendering), so do not
+      # expect this to approach 100.
+      - name: Coverage
+        run: >
+          cargo llvm-cov --workspace --all-features --locked
+          --summary-only --fail-under-lines 65
+        env:
+          CANBOAT_DIR: ${{ github.workspace }}
+          CANBOAT_GOLDEN: required
+
+      # Same run, rendered into the job summary so a reviewer can see which
+      # files moved without opening the log.
+      - name: Publish the per-file table
+        if: always()
+        run: |
+          {
+            echo '## Rust coverage'
+            echo
+            echo '```'
+            cargo llvm-cov report --summary-only
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"

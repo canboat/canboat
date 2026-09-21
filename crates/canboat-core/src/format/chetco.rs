@@ -165,6 +165,112 @@ mod tests {
         assert_eq!(f.timestamp.as_deref(), Some("1970-01-04T01:07:47,141"));
     }
 
+    /// The checksum suffix is not payload — data stops at `*`.
+    #[test]
+    fn checksum_suffix_is_not_payload() {
+        let with = parse_line("$PCDIN,01F801,0,07,A0B1*55").unwrap();
+        let without = parse_line("$PCDIN,01F801,0,07,A0B1").unwrap();
+        assert_eq!(with.data.as_slice(), &[0xa0, 0xb1]);
+        assert_eq!(with.data, without.data);
+    }
+
+    /// canboat's `sscanf %x` stops at the first non-hex byte, so a
+    /// trailing marker on the timestamp is tolerated.
+    #[test]
+    fn trailing_marker_on_the_timestamp_is_tolerated() {
+        let plain = parse_line("$PCDIN,01F801,089C77D,07,A0*55").unwrap();
+        let marked = parse_line("$PCDIN,01F801,089C77D!,07,A0*55").unwrap();
+        assert_eq!(plain.timestamp, marked.timestamp);
+    }
+
+    /// A timestamp with no leading hex run at all has nothing to parse.
+    #[test]
+    fn timestamp_without_hex_is_rejected() {
+        assert!(matches!(
+            parse_line("$PCDIN,01F801,!!!,07,A0*55"),
+            Err(ParseError::BadInteger {
+                field: "tstamp",
+                ..
+            })
+        ));
+    }
+
+    /// PGN and src are hex, not decimal — a non-hex token is an error.
+    #[test]
+    fn non_hex_pgn_or_src_is_rejected() {
+        assert!(matches!(
+            parse_line("$PCDIN,ZZZZZZ,0,07,A0*55"),
+            Err(ParseError::BadInteger { field: "pgn", .. })
+        ));
+        assert!(matches!(
+            parse_line("$PCDIN,01F801,0,ZZ,A0*55"),
+            Err(ParseError::BadInteger { field: "src", .. })
+        ));
+    }
+
+    /// An odd number of hex digits can't be split into bytes.
+    #[test]
+    fn odd_length_data_is_rejected() {
+        assert!(matches!(
+            parse_line("$PCDIN,01F801,0,07,A0B*55"),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// A non-hex digit in the data block is an error rather than a
+    /// zero byte.
+    #[test]
+    fn non_hex_data_digit_is_rejected() {
+        assert!(matches!(
+            parse_line("$PCDIN,01F801,0,07,A0ZZ*55"),
+            Err(ParseError::BadHexByte { .. })
+        ));
+    }
+
+    /// Chetco lines are pre-coalesced, but never longer than the
+    /// fast-packet ceiling.
+    #[test]
+    fn data_is_clamped_to_the_fast_packet_ceiling() {
+        let hex = "ab".repeat(FASTPACKET_MAX_SIZE + 5);
+        let f = parse_line(&format!("$PCDIN,01F801,0,07,{hex}*55")).unwrap();
+        assert_eq!(f.data.len(), FASTPACKET_MAX_SIZE);
+    }
+
+    /// An empty data block is a valid zero-length frame.
+    #[test]
+    fn empty_data_block_parses() {
+        let f = parse_line("$PCDIN,01F801,0,07,*55").unwrap();
+        assert!(f.data.is_empty());
+    }
+
+    /// A line with too few comma-separated fields is rejected.
+    #[test]
+    fn short_sentence_is_rejected() {
+        for line in ["$PCDIN,01F801", "$PCDIN,01F801,0", "$PCDIN,01F801,0,07"] {
+            assert!(
+                matches!(parse_line(line), Err(ParseError::BadHeader { .. })),
+                "expected BadHeader for {line}"
+            );
+        }
+    }
+
+    /// Blank lines are `Empty`, which callers skip.
+    #[test]
+    fn empty_line_is_empty() {
+        assert!(matches!(parse_line(""), Err(ParseError::Empty)));
+        assert!(matches!(parse_line("\r\n"), Err(ParseError::Empty)));
+    }
+
+    /// The ms component survives a day rollover.
+    #[test]
+    fn timestamp_rolls_over_days() {
+        assert_eq!(format_chetco_timestamp(0), "1970-01-01T00:00:00,000");
+        assert_eq!(
+            format_chetco_timestamp(90_061_500),
+            "1970-01-02T01:01:01,500"
+        );
+    }
+
     #[test]
     fn rejects_missing_prefix() {
         assert!(parse_line("BOGUS,01,02").is_err());
