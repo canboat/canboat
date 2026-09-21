@@ -1771,10 +1771,20 @@ static void print_ascii_json_escaped(const uint8_t *data, int len, const char *e
         mprintf("%s", "\\/");
         break;
 
-      case '\377':
-        // 0xff has been seen on recent Simrad VHF systems, and it seems to indicate
-        // end-of-field, with noise following. Assume this does not break other systems.
-        return;
+      /* There is deliberately no 0xff case here. One used to return early,
+       * on the grounds that Simrad VHF systems use 0xff as end-of-field with
+       * noise following (00a19d09, 2022). It was written as `case '\377':`,
+       * which is a *char* constant: -1 where char is signed, so it only ever
+       * matched on ARM Linux and musl and was dead code on x86-64 and macOS.
+       * The analyzer therefore decoded strings differently depending on the
+       * platform for four years and 51 releases -- see #902 -- and the
+       * truncation never once ran on the platforms most people use, which is
+       * the evidence that it was not load-bearing.
+       *
+       * Removing it settles that split toward what the Rust decoders already
+       * do, which is to map the byte and keep going. A trailing 0xff run is
+       * not affected either way: printString trims it before this function is
+       * ever called, so only an interior 0xff reaches here. */
 
       default:
         if (c < 0x20)
