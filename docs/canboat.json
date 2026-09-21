@@ -30144,6 +30144,87 @@
         ]
       },
       {
+        "PGN":126720,
+        "Id":"fusionSetDeviceName",
+        "Description":"Fusion: Set Device Name",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":5,
+        "MinLength":4,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"Set Device Name",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":29,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"name",
+            "Name":"Name",
+            "BitLengthVariable":true,
+            "BitOffset":32,
+            "BitStart":0,
+            "FieldType":"STRING_LZ"
+          }
+        ]
+      },
+      {
         "PGN":126976,
         "Id":"0x1f0000x1feffStandardizedMixedSingleFastPacketNonAddressed",
         "Description":"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
