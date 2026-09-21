@@ -1,0 +1,64 @@
+# Bring up a virtual SocketCAN interface so canboat-io's SocketCAN device
+# tests can drive a real socket instead of no-opping.
+#
+# GitHub-hosted Linux runners are full VMs, so they can load kernel modules
+# — but the Azure kernel image ships without `vcan`:
+#
+#   modprobe: FATAL: Module vcan not found in directory /lib/modules/6.17.0-1022-azure
+#
+# It lives in linux-modules-extra-<uname -r>, which has to be installed
+# first. That package occasionally lags a freshly-rolled runner kernel, so
+# this step degrades instead of breaking CI on an Ubuntu archive timing
+# problem it cannot control.
+#
+# Degrading is not silent. The tests that want this interface skip when it
+# is missing, so a quiet fallback would drop that coverage with every job
+# still green; on the fallback path the step emits a ::warning:: that shows
+# up as an annotation on the run. `available` is published as an output so a
+# caller can be strict if it wants to be.
+#
+# The SocketCAN file is ~920 lines of the workspace's ~33k, so the coverage
+# floor holds either way — losing it costs about a point, not the job.
+name: Set up vcan
+description: Load the vcan module and bring up a virtual CAN interface.
+
+inputs:
+  interface:
+    description: Name of the virtual CAN interface to create.
+    required: false
+    default: vcan0
+
+outputs:
+  available:
+    description: '"true" when the interface came up, "false" otherwise.'
+    value: ${{ steps.vcan.outputs.available }}
+
+runs:
+  using: composite
+  steps:
+    - name: Create ${{ inputs.interface }}
+      id: vcan
+      shell: bash
+      run: |
+        set -uo pipefail
+        iface='${{ inputs.interface }}'
+
+        if ! modinfo vcan >/dev/null 2>&1; then
+          echo "vcan is not in this kernel's module set; installing it"
+          sudo apt-get update -qq || true
+          sudo apt-get install -y -qq "linux-modules-extra-$(uname -r)" || true
+        fi
+
+        if sudo modprobe vcan 2>&1 \
+          && sudo ip link add dev "$iface" type vcan 2>&1 \
+          && sudo ip link set up "$iface" 2>&1; then
+          ip -br link show "$iface"
+          echo "CANBOAT_VCAN=$iface" >> "$GITHUB_ENV"
+          echo "available=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "::warning title=vcan unavailable::Could not bring up $iface \
+        (no linux-modules-extra-$(uname -r) for this runner kernel). The \
+        SocketCAN device tests will skip, and coverage for \
+        crates/canboat-io/src/device/socketcan.rs drops from ~76% to ~33%."
+          echo "available=false" >> "$GITHUB_OUTPUT"
+        fi
