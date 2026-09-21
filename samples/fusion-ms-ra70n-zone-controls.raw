@@ -7,6 +7,7 @@
 # - subwoofer level changes on Zone 1
 # - volume-limit changes on both zones
 # - Zone 1 renamed to "COCKPIT"
+# - Zone 2 renamed to "CABIN", followed immediately by matching status
 #
 # The MS-RA70N exposes two zones. Fixed four-slot status messages below must
 # not be interpreted as evidence that every Fusion device implements four zones.
@@ -41,3 +42,5 @@
 2026-09-12T10:49:22.223499Z,7,130820,12,255,6,a3,99,18,80,00,00
 2026-09-12T11:15:42.627498Z,7,126720,33,12,14,a3,99,22,00,00,07,43,4f,43,4b,50,49,54,00
 2026-09-12T11:15:42.631883Z,7,130820,12,255,14,a3,99,2d,80,00,07,43,4f,43,4b,50,49,54,00
+2026-09-19T06:25:40.446029Z,7,126720,33,12,12,a3,99,22,00,01,05,43,41,42,49,4e,00
+2026-09-19T06:25:40.449693Z,7,130820,12,255,12,a3,99,2d,80,01,05,43,41,42,49,4e,00
