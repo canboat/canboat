@@ -1364,4 +1364,12 @@ FieldType fieldTypeList[] = {
      .sentinels = SENTINEL_TOP_OF_RANGE,
      .pf = fieldPrintNumber},
 
+    {.name = "ADDRESS",
+     .description = "NMEA 2000 / J1939 network address",
+     .encodingDescription = "One byte holding the bus address of a device. Every value is meaningful, so there are no top-of-range sentinels -- 0..253 are claimable device addresses, 254 is the null address (a device that has not claimed, or cannot claim, an address) and 255 is the global address, meaning broadcast / all devices.",
+     .url = "https://en.wikipedia.org/wiki/SAE_J1939",
+     .size = 8,
+     .hasSign = False,
+     .pf = fieldPrintNumber},
+
 };

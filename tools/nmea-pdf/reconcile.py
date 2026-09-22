@@ -53,7 +53,7 @@ ROOT = os.path.abspath(os.path.join(HERE, "..", ".."))
 # produces, so the two sides are comparable.
 CANBOAT_COARSE = {
     "NUMBER": "NUMBER", "DURATION": "NUMBER", "TIME": "NUMBER", "DATE": "NUMBER",
-    "PGN": "NUMBER", "MMSI": "NUMBER", "FIELD_INDEX": "NUMBER", "FLOAT": "NUMBER",
+    "PGN": "NUMBER", "MMSI": "NUMBER", "FIELD_INDEX": "NUMBER", "ADDRESS": "NUMBER", "FLOAT": "NUMBER",
     "DECIMAL": "NUMBER", "DYNAMIC_FIELD_LENGTH": "NUMBER",
     "LOOKUP": "LOOKUP", "BITLOOKUP": "LOOKUP", "INDIRECT_LOOKUP": "LOOKUP",
     "DYNAMIC_FIELD_KEY": "LOOKUP",

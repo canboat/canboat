@@ -11,8 +11,7 @@ fields:
   description: 0=Report (pipeline->tui), 1=Set (tui->pipeline)
 - id: source
   name: Source
-  type: NUMBER
-  bits: 8
+  type: ADDRESS
   description: N2K source address this record refers to
 - id: sentence
   name: Sentence

@@ -178,7 +178,8 @@ pub fn fill_fieldtypes(db: &mut Database) -> Result<(), String> {
                 has_sign,
                 ft.offset,
                 None,
-                reserved_count_for_size(ft.size),
+                ft.special_values
+                    .unwrap_or_else(|| reserved_count_for_size(ft.size)),
             );
         } else {
             ft.range_min = f64::NAN;
@@ -289,7 +290,8 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             }
 
             let by_size = reserved_count_for_size(f.res_bits);
-            let count = f.special_values.unwrap_or(by_size);
+            f.res_special_values = f.special_values.or(ft.special_values);
+            let count = f.res_special_values.unwrap_or(by_size);
 
             let pair_lookup = f.lookup.as_ref().and_then(|n| db.lookups.get(n));
             let ft_has_sign = ft.has_sign;
@@ -311,7 +313,7 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             }
 
             // reservedCount (fieldtype.c lines 448-462)
-            if f.special_values.is_some() {
+            if f.res_special_values.is_some() {
                 f.reserved_count = count;
             } else if f.res_bits != 0
                 && f.res_bits < 64

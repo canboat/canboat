@@ -139,7 +139,7 @@ fn field_value_from_json(
         // Plain numerics: an unscaled integer (resolution 1, no unit) is
         // an `Integer` — matching the decoder — so `as_i64` stays exact;
         // everything else is a scaled `Number`.
-        Some(Number | Decimal) | None => {
+        Some(Number | Decimal | Address) | None => {
             if is_integer_field(fi) {
                 Some(FieldValue::Integer(json::int(line, name)?))
             } else {

@@ -32,7 +32,7 @@ fields:
   lookup: INDUSTRY_CODE
 - id: address
   name: Address
-  type: UINT8
+  type: ADDRESS
   description: NMEA 2000 address of commanded device
 - id: reserved5
   name: Reserved
@@ -82,7 +82,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: ~
+    address: 255
     networkGroup: ~
 - raw: "2023-01-01-00:00:00.000,2,130850,21,255,12,41,9f,0d,ff,ff,1a,03,00,ff,ff,ff,ff"  # from ac42-commissioning.raw
   expects:

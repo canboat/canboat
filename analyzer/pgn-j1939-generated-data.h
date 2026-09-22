@@ -983,7 +983,7 @@ Pgn pgnList[] = {
       {.name = "System Instance", .camelName = "systemInstance", .fieldType = "UNSIGNED_INTEGER", .size = 4, .resolution = 1.0, .description = "ISO Device Class Instance"},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Reserved", .camelName = "reserved10", .fieldType = "RESERVED", .size = 1, .resolution = 1.0},
-      {.name = "New Source Address", .camelName = "newSourceAddress", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "New Source Address", .camelName = "newSourceAddress", .fieldType = "ADDRESS", .resolution = 1.0, .reservedOverride = 1}
      },
      .camelDescription = "isoCommandedAddress"},
 

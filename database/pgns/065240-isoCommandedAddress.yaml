@@ -61,4 +61,4 @@ fields:
   bits: 1
 - id: newSourceAddress
   name: New Source Address
-  type: UINT8
+  type: ADDRESS

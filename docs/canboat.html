@@ -1251,10 +1251,10 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>New Source Address</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>New Source Address</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-65280">0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed</h2><p>Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-65280">0xFF00:
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr></table><h2 id="pgn-65280">0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed</h2><p>Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h3 id="pgn-65280">0xFF00:
             PGN 65280
             - Furuno: Heave</h3><p>
               This PGN description applies when the following field(s) match:
@@ -3636,10 +3636,10 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the target MFD</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the target MFD</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Function</td><td>132:
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Function</td><td>132:
                   Key</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -3656,7 +3656,7 @@ limitations under the License.
             PGN 65332
             - Simnet: ZC1/OP40 Knob</h3><p>
               This PGN description applies when the following field(s) match:
-              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>133</td></tr></table></p><p>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+              <table><tr><td>Manufacturer Code</td><td>1857</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Function</td><td>133</td></tr></table></p><p>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE, the null address, on observed frames: a knob turn is not aimed at one MFD. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 </p><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
                 <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
@@ -3675,10 +3675,10 @@ limitations under the License.
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>0xFE on observed encoder frames; not a target MFD address</td><td><div class="xs">0 .. 255</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>254 (null address) on observed encoder frames; not a target MFD address</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Function</td><td>133:
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Function</td><td>133:
                   Knob</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -21259,10 +21259,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#lookup-SIMNET_DATA_SOURCE">SIMNET_DATA_SOURCE</a></td><td/></tr><tr><td>6</td><td>Source Class</td><td>Class of source for this Data Type, constant per Data Type: observed as 1 for direct sensor/navigation sources and 100 for autopilot-provided sources</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Source Address</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Source Address</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Change Counter</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
@@ -21753,10 +21753,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -21802,10 +21802,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Instance</td><td>Instance index when a Key has multiple sources/instances; 0xFF when not applicable. Caller-supplied and echoed back in replies.</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td>This can be either the Display Group, Units Group, Damping Group or Alarms Group, depending on which key is being set</td><td><div class="xs">0 .. 252</div></td><td>8 bits
@@ -22028,10 +22028,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22071,10 +22071,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22114,10 +22114,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22157,10 +22157,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22200,10 +22200,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22243,10 +22243,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22291,10 +22291,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22334,10 +22334,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22383,10 +22383,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device, used for autopilot events</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device, used for autopilot events</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22434,10 +22434,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22486,10 +22486,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22533,10 +22533,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of commanded device</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22573,10 +22573,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -22622,10 +22622,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Address</td><td>NMEA 2000 address of the autopilot that ran the command</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                      <a href="#ft-ADDRESS">ADDRESS</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Network Group</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
@@ -23700,7 +23700,21 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               below it mean "out of range" and "reserved". Each individual field lists its
               actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
               value that the enumeration names explicitly is a real value and is not reserved.
-            </p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-ACCEPTABILITY">ACCEPTABILITY
+            </p><h3 id="ft-ADDRESS">ADDRESS - NMEA 2000 / J1939 network address</h3><p/><p>8 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            One byte holding the bus address of a device. Every value is meaningful, so there are no top-of-range sentinels -- 0..253 are claimable device addresses, 254 is the null address (a device that has not claimed, or cannot claim, an address) and 255 is the global address, meaning broadcast / all devices.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/SAE_J1939">https://en.wikipedia.org/wiki/SAE_J1939</a></p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-ACCEPTABILITY">ACCEPTABILITY
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Bad level</td></tr><tr><td>1</td><td>Bad frequency</td></tr><tr><td>2</td><td>Being qualified</td></tr><tr><td>3</td><td>Good</td></tr></table><h3 id="lookup-ACCESS_LEVEL">ACCESS_LEVEL
         (0 - 7)

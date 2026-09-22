@@ -56,6 +56,10 @@ pub struct FieldType {
     #[allow(dead_code)]
     pub range_min_authored: Option<f64>,
     pub range_max_authored: Option<f64>,
+    /// Top-of-range sentinel count every field of this type inherits unless
+    /// it authors its own `specialValues`. ADDRESS sets 0: all 256 values are
+    /// addresses. Absent = derived from the bit width.
+    pub special_values: Option<u32>,
 
     // --- filled by derive::fill_fieldtypes ---
     pub range_min: f64,
@@ -128,6 +132,8 @@ pub struct Field {
 
     // --- filled by derive::fill ---
     pub ft: usize, // index into Database::fieldtypes
+    /// `special_values`, else the field type's.
+    pub res_special_values: Option<u32>,
     pub res_bits: u32,
     pub res_resolution: f64,
     pub res_unit: Option<String>,

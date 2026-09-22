@@ -33,7 +33,7 @@ fields:
   lookup: INDUSTRY_CODE
 - id: address
   name: Address
-  type: UINT8
+  type: ADDRESS
   description: NMEA 2000 address of commanded device, used for autopilot events
 - id: reserved5
   name: Reserved
@@ -79,7 +79,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: ~
+    address: 255
     networkGroup: "None"
     eventType: "Timer"
     event: 74
@@ -90,7 +90,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: ~
+    address: 255
     networkGroup: "Default"
     eventType: "Timer"
     event: 73
@@ -101,7 +101,7 @@ samples:
   expects:
     manufacturerCode: "Simrad"
     industryCode: "Marine Industry"
-    address: ~
+    address: 255
     networkGroup: "Default"
     eventType: "Timer"
     event: 74

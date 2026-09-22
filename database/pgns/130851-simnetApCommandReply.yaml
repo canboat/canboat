@@ -33,7 +33,7 @@ fields:
   lookup: INDUSTRY_CODE
 - id: address
   name: Address
-  type: UINT8
+  type: ADDRESS
   description: NMEA 2000 address of the autopilot that ran the command
 - id: reserved5
   name: Reserved

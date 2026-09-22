@@ -149,7 +149,7 @@ const LOOKUP_KEYS: [&str; 6] = ["name", "kind", "bits", "values", "note", "value
 const FIELDTYPE_VALUE_KEYS: [&str; 6] = ["value", "name", "type", "bits", "lookup", "lookupKind"];
 
 /// `database/fieldtypes.yaml` entries.
-const FIELDTYPE_KEYS: [&str; 17] = [
+const FIELDTYPE_KEYS: [&str; 18] = [
     "name",
     "base",
     "description",
@@ -167,6 +167,7 @@ const FIELDTYPE_KEYS: [&str; 17] = [
     "print",
     "rangeMin",
     "rangeMax",
+    "specialValues",
 ];
 
 /// `database/physicalquantities.yaml` entries.
@@ -287,6 +288,7 @@ fn fieldtype(y: &Yaml, ctx: &str) -> Result<FieldType> {
         print_function: opt_str(y, "print"),
         range_min_authored: opt_f64(y, "rangeMin"),
         range_max_authored: opt_f64(y, "rangeMax"),
+        special_values: opt_i64(y, "specialValues").map(|s| s as u32),
         ..Default::default()
     })
 }
