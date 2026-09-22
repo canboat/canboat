@@ -47,6 +47,7 @@ pub enum FieldType {
     DynamicFieldLength,
     DynamicFieldValue,
     FieldIndex,
+    Address,
 }
 
 /// A single field within a PGN definition.

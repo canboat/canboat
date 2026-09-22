@@ -376,6 +376,11 @@ Essential facts before editing:
   is the single source of truth for which fields emit top-of-range markers — the
   per-field emission keys off `.sentinels == TopOfRange`, so don't add a separate
   exclusion list.
+- **A field holding a bus address is `type: ADDRESS`**, not `UINT8`. Every value
+  is an address -- 0..253 claimable, 254 the null address, 255 global/broadcast
+  -- so the type reserves no sentinels (a fieldtype-level `specialValues: 0`)
+  and 255 decodes as `255`, never as *Unknown*. Use it only for a real NMEA 2000
+  / J1939 address, not for a vendor's own "source" or "device id" byte.
 - **`id` is the frozen contract; `name` is the display label.** Each field
   carries an explicit `id:` (the camelCase key downstream decoders use as the
   property name) and a `name:` (the human label). Because the `id` is authored

@@ -421,7 +421,7 @@ fn emit_field(db: &Database, f: &Field) -> String {
     if f.primary_key {
         parts.push(".partOfPrimaryKey = true".into());
     }
-    if let Some(sv) = f.special_values {
+    if let Some(sv) = f.res_special_values {
         parts.push(format!(".reservedOverride = {}", sv + 1));
     }
     if f.dynamic_field_length {

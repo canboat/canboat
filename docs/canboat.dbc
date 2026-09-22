@@ -2344,7 +2344,7 @@ CM_ SG_ 2566862078 m133_ticks "Encoder step; +1 left / -1 right on the ZC1/OP40"
 CM_ SG_ 2566862078 m133_parameter_1 "0 on observed encoder frames; meaning unknown";
 CM_ SG_ 2566862078 m132_parameter "Constant 0x320E on observed key frames; meaning unknown";
 CM_ SG_ 2566862078 m40769_function "Key";
-CM_ SG_ 2566862078 m133_address_1 "0xFE on observed encoder frames; not a target MFD address";
+CM_ SG_ 2566862078 m133_address_1 "254 (null address) on observed encoder frames; not a target MFD address";
 CM_ SG_ 2566862078 m132_address "NMEA 2000 address of the target MFD";
 CM_ BO_ 2566864126 "Simnet: Autopilot Mode State";
 CM_ SG_ 2566864126 industryCode "Marine Industry";

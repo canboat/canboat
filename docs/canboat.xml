@@ -419,6 +419,14 @@ limitations under the License.
       <Signed>false</Signed>
       <Sentinels>TopOfRange</Sentinels>
     </FieldType>
+    <FieldType Name="ADDRESS">
+      <Description>NMEA 2000 / J1939 network address</Description>
+      <EncodingDescription>One byte holding the bus address of a device. Every value is meaningful, so there are no top-of-range sentinels -- 0..253 are claimable device addresses, 254 is the null address (a device that has not claimed, or cannot claim, an address) and 255 is the global address, meaning broadcast / all devices.</EncodingDescription>
+      <URL>https://en.wikipedia.org/wiki/SAE_J1939</URL>
+      <Bits>8</Bits>
+      <Signed>false</Signed>
+      <Sentinels>None</Sentinels>
+    </FieldType>
   </FieldTypes>
   <MissingEnumerations>
     <MissingAttribute Name="Fields">The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</MissingAttribute>
@@ -8751,11 +8759,8 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
       </Fields>
     </PGNInfo>
@@ -16876,11 +16881,8 @@ limitations under the License.
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -16956,7 +16958,7 @@ limitations under the License.
       <PGN>65332</PGN>
       <Id>simnetZcKnob</Id>
       <Description>Simnet: ZC1/OP40 Knob</Description>
-      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
+      <Explanation>Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE, the null address, on observed frames: a knob turn is not aimed at one MFD. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.
 </Explanation>
       <Type>Single</Type>
       <Complete>false</Complete>
@@ -17015,7 +17017,7 @@ limitations under the License.
           <Order>4</Order>
           <Id>address</Id>
           <Name>Address</Name>
-          <Description>0xFE on observed encoder frames; not a target MFD address</Description>
+          <Description>254 (null address) on observed encoder frames; not a target MFD address</Description>
           <BitLength>8</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
@@ -17023,7 +17025,7 @@ limitations under the License.
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
           <RangeMax>255</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -81598,11 +81600,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>8</Order>
@@ -83447,11 +83446,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -83623,11 +83619,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -84391,11 +84384,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -84549,11 +84539,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -84707,11 +84694,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -84865,11 +84849,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85023,11 +85004,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85181,11 +85159,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85361,11 +85336,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85519,11 +85491,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85714,11 +85683,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -85905,11 +85871,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -86104,11 +86067,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -86294,11 +86254,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -86470,11 +86427,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>
@@ -86665,11 +86619,8 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Resolution>1</Resolution>
           <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
-          <UnknownValue>255</UnknownValue>
-          <OutOfRangeValue>254</OutOfRangeValue>
-          <ReservedValue>253</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>255</RangeMax>
+          <FieldType>ADDRESS</FieldType>
         </Field>
         <Field>
           <Order>5</Order>

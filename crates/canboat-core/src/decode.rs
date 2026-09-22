@@ -1063,6 +1063,9 @@ fn decode_one_field_at(
         }
         Some(FieldType::DynamicFieldValue) => unreachable!("DYNAMIC_FIELD_VALUE handled above"),
         Some(FieldType::FieldIndex) => decode_number(f, data, bit_offset, bit_length, signed, 0),
+        // A bus address: every value is an address (254 null, 255 global),
+        // so the type declares no sentinels and this reads as a plain number.
+        Some(FieldType::Address) => decode_number(f, data, bit_offset, bit_length, signed, 0),
         None => FieldValue::Unsupported {
             field_type: "<no field type>",
         },

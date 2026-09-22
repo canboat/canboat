@@ -405,6 +405,15 @@
       "Bits":8,
       "Signed":false,
       "Sentinels":"TopOfRange"
+      },
+    {
+        "Name":"ADDRESS",
+      "Description":"NMEA 2000 / J1939 network address",
+      "EncodingDescription":"One byte holding the bus address of a device. Every value is meaningful, so there are no top-of-range sentinels -- 0..253 are claimable device addresses, 254 is the null address (a device that has not claimed, or cannot claim, an address) and 255 is the global address, meaning broadcast / all devices.",
+      "URL":"https://en.wikipedia.org/wiki/SAE_J1939",
+      "Bits":8,
+      "Signed":false,
+      "Sentinels":"None"
       }
     ],
     "MissingEnumerations":[
@@ -9769,11 +9778,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           }
         ]
       },
@@ -17606,11 +17612,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -17686,7 +17689,7 @@
         "PGN":65332,
         "Id":"simnetZcKnob",
         "Description":"Simnet: ZC1/OP40 Knob",
-        "Explanation":"Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE on observed frames (not a bus address). Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n",
+        "Explanation":"Rotary encoder half of Simnet ZC1/OP40 PGN 65332 (Function 0x85). Address is 0xFE, the null address, on observed frames: a knob turn is not aimed at one MFD. Ticks are a signed step (+1 / -1). The last byte is 0x08 on every observed encoder frame; meaning unknown.\n",
         "Type":"Single",
         "Complete":false,
         "Missing":["Fields","FieldLengths","Resolution","Interval"
@@ -17740,7 +17743,7 @@
             "Order":4,
             "Id":"address",
             "Name":"Address",
-            "Description":"0xFE on observed encoder frames; not a target MFD address",
+            "Description":"254 (null address) on observed encoder frames; not a target MFD address",
             "BitLength":8,
             "BitOffset":16,
             "BitStart":0,
@@ -17748,7 +17751,7 @@
             "Signed":false,
             "RangeMin":0,
             "RangeMax":255,
-            "FieldType":"NUMBER"
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -81326,11 +81329,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":8,
@@ -83126,11 +83126,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -83299,11 +83296,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84037,11 +84031,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84191,11 +84182,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84345,11 +84333,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84499,11 +84484,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84653,11 +84635,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84807,11 +84786,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -84983,11 +84959,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -85137,11 +85110,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -85328,11 +85298,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -85516,11 +85483,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -85712,11 +85676,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -85899,11 +85860,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -86071,11 +86029,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,
@@ -86262,11 +86217,8 @@
             "Resolution":1,
             "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"ADDRESS"
           },
           {
             "Order":5,

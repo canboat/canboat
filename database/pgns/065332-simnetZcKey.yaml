@@ -37,7 +37,7 @@ fields:
   lookup: INDUSTRY_CODE
 - id: address
   name: Address
-  type: UINT8
+  type: ADDRESS
   description: NMEA 2000 address of the target MFD
 - id: function
   name: Function

@@ -46,7 +46,7 @@ fields:
     and 100 for autopilot-provided sources'
 - id: sourceAddress
   name: Source Address
-  type: UINT8
+  type: ADDRESS
 - id: reserved8
   name: Reserved
   type: RESERVED
@@ -77,7 +77,7 @@ samples:
     industryCode: "Marine Industry"
     dataType: "Autopilot Function Backup"
     sourceClass: 100
-    sourceAddress: "OutOfRange"
+    sourceAddress: 254
     changeCounter: ~
     source: "0xffffffffffffffff"
 - raw: "2023-01-01-00:00:00.000,3,130840,3,255,17,41,9f,ff,36,64,03,ff,00,fb,1b,7d,22,00,96,50,c0,ff"  # from merrimac-2022.raw

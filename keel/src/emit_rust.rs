@@ -429,6 +429,7 @@ fn field_type(t: &str) -> &'static str {
         "DYNAMIC_FIELD_LENGTH" => "FieldType::DynamicFieldLength",
         "DYNAMIC_FIELD_VALUE" => "FieldType::DynamicFieldValue",
         "FIELD_INDEX" => "FieldType::FieldIndex",
+        "ADDRESS" => "FieldType::Address",
         other => panic!("unknown FieldType in canboat.json: {other:?}"),
     }
 }

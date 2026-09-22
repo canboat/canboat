@@ -201,6 +201,10 @@ Other field-level keys, replacing today's macro zoo: `signed`, `precision`,
 present in proprietary range), `specialValues: N` (the `SPECIAL_VALUES`
 sentinel override), `allowLookupWidthMismatch: true` (R08 opt-in for
 shared/narrowed lookups), `dynamicFieldLength: {overhead: N}`.
+`specialValues` may also sit on a *fieldtype*, as the default every field of
+that type inherits: `ADDRESS` sets 0, because all 256 values of a bus address
+are addresses. keel resolves the inheritance and emits the per-field
+`.reservedOverride`, so the C runtime needs no fieldtype-level knowledge.
 Excess-K offsets live on the *fieldtype*, never on a field: the C runtime
 aborts on any field-level offset differing from its type (fieldtype.c:384),
 so a new offset means a new (derived) fieldtype.

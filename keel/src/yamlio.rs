@@ -57,6 +57,18 @@ fn opt_i64(hash: &Yaml, key: &str) -> Option<i64> {
     get(hash, key).and_then(|y| y.as_i64())
 }
 
+/// `specialValues` is a sentinel count, so it can only be 0..=3. Reject
+/// anything else here, before the `u32` cast: a `-1` would otherwise
+/// become `u32::MAX` and overflow the emitted `.reservedOverride`. R09
+/// still checks a field's count against its bit width.
+fn opt_special_values(hash: &Yaml, ctx: &str) -> Result<Option<u32>> {
+    match opt_i64(hash, "specialValues") {
+        None => Ok(None),
+        Some(sv @ 0..=3) => Ok(Some(sv as u32)),
+        Some(sv) => Err(format!("{ctx}: specialValues {sv} out of range (0-3)")),
+    }
+}
+
 /// Floats may appear as YAML integers, reals, or the PyYAML spellings
 /// `.nan` / `.inf` / `-.inf` that Rust's f64 parser does not accept.
 fn yaml_f64(y: &Yaml) -> Option<f64> {
@@ -149,7 +161,7 @@ const LOOKUP_KEYS: [&str; 6] = ["name", "kind", "bits", "values", "note", "value
 const FIELDTYPE_VALUE_KEYS: [&str; 6] = ["value", "name", "type", "bits", "lookup", "lookupKind"];
 
 /// `database/fieldtypes.yaml` entries.
-const FIELDTYPE_KEYS: [&str; 17] = [
+const FIELDTYPE_KEYS: [&str; 18] = [
     "name",
     "base",
     "description",
@@ -167,6 +179,7 @@ const FIELDTYPE_KEYS: [&str; 17] = [
     "print",
     "rangeMin",
     "rangeMax",
+    "specialValues",
 ];
 
 /// `database/physicalquantities.yaml` entries.
@@ -287,6 +300,7 @@ fn fieldtype(y: &Yaml, ctx: &str) -> Result<FieldType> {
         print_function: opt_str(y, "print"),
         range_min_authored: opt_f64(y, "rangeMin"),
         range_max_authored: opt_f64(y, "rangeMax"),
+        special_values: opt_special_values(y, ctx)?,
         ..Default::default()
     })
 }
@@ -392,7 +406,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         proprietary: opt_bool(y, "proprietary").unwrap_or(false),
         encoding: opt_str(y, "encoding"),
         allow_lookup_width_mismatch: opt_bool(y, "allowLookupWidthMismatch").unwrap_or(false),
-        special_values: opt_i64(y, "specialValues").map(|s| s as u32),
+        special_values: opt_special_values(y, ctx)?,
         bit_length_field: opt_str(y, "bitLengthField"),
         dynamic_field_length: opt_bool(y, "dynamicFieldLength").unwrap_or(false) || overhead != 0,
         dynamic_field_length_overhead: overhead,
@@ -693,6 +707,26 @@ fields:
         let err = parse(&PGN_YAML.replace("type: Single", "type: Plain")).unwrap_err();
         assert!(err.contains("packet type 'Plain'"), "{err}");
         assert!(err.contains("Single, Fast, ISO, Mixed"), "{err}");
+    }
+
+    // A negative count used to be cast straight to u32 and overflow the
+    // emitted `.reservedOverride`; the same loader serves fieldtypes.
+    #[test]
+    fn rejects_a_special_values_count_outside_the_sentinel_model() {
+        for bad in ["-1", "4", "4294967296"] {
+            let text = PGN_YAML.replace(
+                "  type: UINT8\n",
+                &format!("  type: UINT8\n  specialValues: {bad}\n"),
+            );
+            let err = parse(&text).unwrap_err();
+            assert!(
+                err.contains(&format!("specialValues {bad} out of range")),
+                "{bad}: {err}"
+            );
+        }
+        let ok = parse(&PGN_YAML.replace("  type: UINT8\n", "  type: UINT8\n  specialValues: 0\n"))
+            .unwrap();
+        assert_eq!(ok.fields[0].special_values, Some(0));
     }
 
     #[test]
