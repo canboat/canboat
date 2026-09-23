@@ -300,11 +300,15 @@ jobs:
   # version gate above has passed. Idempotent: re-running the workflow for a
   # tag whose version is already on crates.io skips instead of failing, so an
   # asset-upload retry never trips over a publish that already happened.
-  # Needs the CARGO_REGISTRY_TOKEN repository secret: a crates.io API token
-  # with the publish-new / publish-update scopes for this crate.
+  # Needs a CARGO_REGISTRY_TOKEN secret in the `crates-io` environment: a
+  # crates.io API token with the publish-new / publish-update scopes.
   crates-io:
     needs: docs
     runs-on: ubuntu-latest
+    # The CARGO_REGISTRY_TOKEN lives in this environment (Settings →
+    # Environments), not in the repository secrets, so only this job can
+    # read it; restrict the environment to the v* tag pattern there.
+    environment: crates-io
     steps:
       - name: Checkout
         uses: actions/checkout@v7
