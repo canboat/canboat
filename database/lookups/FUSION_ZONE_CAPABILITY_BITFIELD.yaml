@@ -1,0 +1,12 @@
+name: FUSION_ZONE_CAPABILITY_BITFIELD
+kind: bit
+bits: 16
+values:
+  1: Volume Limit
+  2: Balance
+  3: Subwoofer Level
+  4: Subwoofer Low-pass Filter
+  6: Bass
+  7: Midrange
+  8: Treble
+  9: Variable/Fixed Line Output
