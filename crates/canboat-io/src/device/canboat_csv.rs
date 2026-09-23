@@ -1,15 +1,18 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
 //! "Canboat Raw CSV" (PLAIN/FAST) codec — talks to another
-//! `canboat-pipeline` instance over its bidirectional CSV TCP port
-//! (default 2603).
+//! `canboat server` instance over its raw TCP ports.
 //!
-//! This driver lets one `canboat-pipeline` chain into another: the
+//! This driver lets one `canboat server` chain into another: the
 //! upstream instance owns the physical N2K gateway (NGT-1 / iKonvert
-//! / Maretron) and exposes its CSV R/W port; the downstream instance
-//! consumes that port as if it were a device of its own. Symmetric
-//! traffic — outbound `RawFrame`s get serialised back as canboat
-//! PLAIN/FAST and travel the same socket.
+//! / Maretron / SocketCAN) and serves the bus on its read-only raw
+//! output port (default 2603) and accepts injection on its write-only
+//! input port (default 2600); the downstream instance consumes those
+//! as if they were a device of its own. The codec itself is
+//! direction-agnostic — it is handed a `Read` and a `Write` and does
+//! not care whether they are two halves of one socket or two separate
+//! connections. Outbound `RawFrame`s are serialised back as canboat
+//! PLAIN/FAST.
 //!
 //! Wire format (both directions):
 //!
@@ -17,8 +20,8 @@
 //!
 //! On open the codec writes a `# format=FAST\r\n` header so the
 //! receiver knows the stream is pre-coalesced (matches canboat's
-//! convention; the canboat-pipeline CSV port emits the same header
-//! on its end too).
+//! convention; the `canboat server` raw output port emits the same
+//! header on its end too).
 //!
 //! Comment lines and stray iKonvert sentences (`$PDGY,…`, `!PDGY,…`)
 //! that might leak through some upstream are silently dropped on

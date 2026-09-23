@@ -128,15 +128,17 @@ pub struct Args {
     )]
     socketcan_address: u8,
 
-    /// Chain into another `canboat-pipeline` instance over its
-    /// bidirectional Raw CSV port (default 2603). Accepts
-    /// `host:port` or `tcp://host[:port]`. Wire format is
-    /// canboat PLAIN/FAST CSV in both directions, so all frames
-    /// and any client writes flow end-to-end.
+    /// Chain into another `canboat server` instance over its raw
+    /// output port (`--raw-port`, default 2603). Accepts `host:port`
+    /// or `tcp://host[:port]`. The stream is canboat PLAIN/FAST CSV.
     ///
-    /// When `--canboat-csv-write` is also given, this URL is used
-    /// only as a read source (e.g. an iptee'd raw stream), and
-    /// outbound writes are diverted to the write URL instead.
+    /// The raw output port is read-only, so on its own this only
+    /// receives frames; anything this instance wants to send is
+    /// written to the same socket and rejected by the peer. To also
+    /// inject onto the upstream bus, give `--canboat-csv-write` the
+    /// peer's write-only input port (`--input-port`, default 2600).
+    /// The read URL can equally be a one-way feed such as an
+    /// iptee'd raw stream.
     #[arg(
         long,
         value_name = "URL",
@@ -144,12 +146,11 @@ pub struct Args {
     )]
     canboat_csv: Option<String>,
 
-    /// Optional separate sink for outbound PLAIN/FAST frames when
-    /// chaining via `--canboat-csv`. Use this when the read source
-    /// is a one-way feed (e.g. iptee on actisense-serial output)
-    /// and writes need to go to a different endpoint (e.g. n2kd's
-    /// input-stream port). Without this flag, reads and writes
-    /// share the single `--canboat-csv` socket.
+    /// Separate sink for outbound PLAIN/FAST frames when chaining
+    /// via `--canboat-csv`: the peer's write-only input port
+    /// (`--input-port`, default 2600, the same slot as n2kd's
+    /// `port+3`). Without this flag, writes go to the `--canboat-csv`
+    /// socket, which a `canboat server` raw port does not accept.
     #[arg(long, value_name = "URL", requires = "canboat_csv")]
     canboat_csv_write: Option<String>,
 
@@ -725,16 +726,17 @@ fn open_canboat_csv_pair(url: &str) -> io::Result<(Box<dyn Read + Send>, Box<dyn
 /// references remain alive via the other half, but we never
 /// touch them).
 ///
-/// Use case: chaining into a pipeline whose read source is a
-/// one-way feed (e.g. `iptee` mirroring the raw output of
-/// `actisense-serial`) while the write sink is a separate
-/// endpoint (e.g. `n2kd`'s input-stream port on `port + 3`).
+/// This is the normal way to chain into another `canboat server`:
+/// its raw output port (2603) is read-only and its input port
+/// (2600) is write-only, so the two directions live on different
+/// sockets. The read URL can also be a one-way feed such as
+/// `iptee` mirroring the raw output of `actisense-serial`.
 fn open_canboat_csv_split(
     read_url: &str,
     write_url: &str,
 ) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
     let (read_half, _unused_write) = open_tcp_pair(read_url, 2603, "canboat-csv read")?;
-    let (_unused_read, write_half) = open_tcp_pair(write_url, 2603, "canboat-csv write")?;
+    let (_unused_read, write_half) = open_tcp_pair(write_url, 2600, "canboat-csv write")?;
     Ok((read_half, write_half))
 }
 
