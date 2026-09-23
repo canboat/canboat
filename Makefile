@@ -77,11 +77,24 @@ rust-tests: keel-generate
 rust-clippy:
 	$(CARGO) clippy --workspace --all-targets -- -D warnings
 
+# The library feature sets a consumer can pick without the CLI, each of which
+# must build warning-free on its own. The default (cli) build enables
+# everything, so it cannot catch a `#[cfg(feature = …)]` gate that leaves
+# a smaller set with a dangling `use` or an unreachable helper — only
+# building the smaller sets does. Kept in step with scripts/check-public-api.sh.
+RUST_LIB_FEATURESETS = decode io node bridge json-input nmea0183,ais decode,io,node,bridge,nmea0183,ais,json-input
+
+rust-features:
+	@for set in $(RUST_LIB_FEATURESETS); do \
+	  echo "==> canboat --no-default-features --features $$set"; \
+	  $(CARGO) clippy -p canboat --no-default-features --features $$set -- -D warnings || exit 1; \
+	done
+
 rust-fmt:
 	$(CARGO) fmt --all
 
 # Everything worth having green before opening a PR that touches Rust.
-rust-precommit: rust-fmt rust-clippy rust-tests
+rust-precommit: rust-fmt rust-clippy rust-features rust-tests
 
 rust-clean:
 	$(CARGO) clean
@@ -173,7 +186,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-fmt rust-precommit rust-clean keel-generate
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-features rust-fmt rust-precommit rust-clean keel-generate
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

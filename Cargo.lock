@@ -282,93 +282,27 @@ name = "canboat"
 version = "8.2.0"
 dependencies = [
  "anyhow",
- "canboat-bridge",
- "canboat-cli",
- "canboat-core",
- "canboat-io",
  "chrono",
  "clap",
  "crossterm",
  "env_logger",
+ "flate2",
  "futures",
  "indexmap",
+ "itoa",
+ "libc",
  "log",
  "ratatui",
  "serde",
  "serde_json",
- "tokio",
-]
-
-[[package]]
-name = "canboat-bridge"
-version = "8.2.0"
-dependencies = [
- "anyhow",
- "canboat-cli",
- "canboat-core",
- "canboat-io",
- "clap",
- "env_logger",
- "log",
- "serde",
- "serde_json",
- "vergen-gitcl",
- "world_magnetic_model",
-]
-
-[[package]]
-name = "canboat-cli"
-version = "8.2.0"
-dependencies = [
- "anyhow",
- "canboat-core",
- "canboat-io",
- "clap",
- "env_logger",
- "log",
-]
-
-[[package]]
-name = "canboat-core"
-version = "8.2.0"
-dependencies = [
- "canboat-schema",
- "indexmap",
- "itoa",
- "log",
- "smallvec",
- "thiserror 2.0.20",
-]
-
-[[package]]
-name = "canboat-io"
-version = "8.2.0"
-dependencies = [
- "canboat-core",
- "flate2",
- "libc",
- "log",
  "serialport",
+ "smallvec",
  "socketcan",
  "tar",
-]
-
-[[package]]
-name = "canboat-schema"
-version = "8.2.0"
-
-[[package]]
-name = "canboat-tokio"
-version = "8.2.0"
-dependencies = [
- "anyhow",
- "canboat-core",
- "clap",
- "env_logger",
- "futures",
- "log",
+ "thiserror 2.0.20",
  "tokio",
- "tokio-serial",
+ "vergen-gitcl",
+ "world_magnetic_model",
 ]
 
 [[package]]
@@ -1329,19 +1263,6 @@ dependencies = [
  "log",
  "wasi",
  "windows-sys 0.61.2",
-]
-
-[[package]]
-name = "mio-serial"
-version = "5.0.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "029e1f407e261176a983a6599c084efd322d9301028055c87174beac71397ba3"
-dependencies = [
- "log",
- "mio",
- "nix 0.29.0",
- "serialport",
- "winapi",
 ]
 
 [[package]]
@@ -2323,21 +2244,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.117",
-]
-
-[[package]]
-name = "tokio-serial"
-version = "5.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dd00f5f8b1e01c3e5afccd9e42ed80c2ad2df6d007877f29f8592c62e69cd116"
-dependencies = [
- "cfg-if",
- "futures-core",
- "futures-sink",
- "log",
- "mio-serial",
- "serialport",
- "tokio",
 ]
 
 [[package]]

@@ -1,4 +1,4 @@
-# Bring up a virtual SocketCAN interface so canboat-io's SocketCAN device
+# Bring up a virtual SocketCAN interface so canboat's SocketCAN device
 # tests can drive a real socket instead of no-opping.
 #
 # GitHub-hosted Linux runners are full VMs, so they can load kernel modules
@@ -59,6 +59,6 @@ runs:
           echo "::warning title=vcan unavailable::Could not bring up $iface \
         (no linux-modules-extra-$(uname -r) for this runner kernel). The \
         SocketCAN device tests will skip, and coverage for \
-        crates/canboat-io/src/device/socketcan.rs drops from ~76% to ~33%."
+        crates/canboat/src/io/device/socketcan.rs drops from ~76% to ~33%."
           echo "available=false" >> "$GITHUB_OUTPUT"
         fi

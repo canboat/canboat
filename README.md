@@ -99,19 +99,47 @@ since it is where the data comes from.
 
 ## The library
 
-The decoder is also a set of Rust crates, so you can embed NMEA 2000 handling
-instead of parsing another program's output:
+The decoder is also a Rust crate, `canboat`, so you can embed NMEA 2000
+handling instead of parsing another program's output. One crate, a small
+public API, and features that gate the weight you pay for:
 
-| | |
+| feature | |
 | --- | --- |
-| `canboat-core` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No `std::io`, no threads. The database is compiled in — nothing to load at runtime |
-| `canboat-io` | sync `std::io` adapters (stdin, serial, `std::net`) |
-| `canboat-tokio` | async tokio adapters |
-| `canboat-bridge` | the n2kd/server pipeline as a library |
-| `canboat-schema` | the schema types the others share |
+| `decode` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No threads, no sockets. The database is compiled in — nothing to load at runtime |
+| `io` | readers for captures and `bus::open_*` for a live NGT-1 / iKonvert / SocketCAN link |
+| `node` | be a compliant NMEA 2000 node: ISO NAME, address claim, the standard responses |
+| `bridge` | the whole `canboat server` pipeline as a library: device → decode → quirks → TCP serving |
+| `cli` | the `canboat` binary itself (the default; library users turn it off) |
 
-See [`crates/doc/README.md`](./crates/doc/README.md) for the design and
-[`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md) for the API.
+The crate's own [README](./crates/canboat/README.md) has the quick start and
+is what [crates.io](https://crates.io/crates/canboat) shows; the API reference
+is on [docs.rs](https://docs.rs/canboat) and its design in
+[`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md).
+
+## Performance
+
+Same decode work — `-json -nv` over 1.26 M PGN frames (canboat's
+`dirona-actisense-serial.raw` × 50) on an M4 Pro, release build:
+
+| Implementation         | Wall time | vs canboat  |
+|------------------------|----------:|--------------:|
+| canboatjs (Node 25)    |  27.8 s   |   **8.1 ×**   |
+| canboat C              |   9.1 s   |   **2.6 ×**   |
+| canboat `convert`      |   3.4 s   |       1.0 ×   |
+
+`canboat server` goes one step further and collapses the
+`canboat convert | canboat n2kd` pipeline into a single process with no
+JSON text serialisation between stages:
+
+| Pipeline                                          | Wall time | Throughput          |
+|---------------------------------------------------|----------:|---------------------|
+| `canboat convert` alone (PGN decode only)         |   3.3 s   | 380 k frames / s    |
+| `canboat convert \| canboat n2kd` (piped, 2 proc) |   6.5 s   | 194 k sentences / s |
+| `canboat server` (single proc)                    |   3.5 s   | 360 k sentences / s |
+
+That's 46 % less wall time than the piped setup while doing strictly more
+work (it's a long-running service with TCP fan-out); on CPU time the ratio
+is closer to 3.4 ×.
 
 ## File formats
 
@@ -157,7 +185,7 @@ the [`samples/`](./samples) directory.
 ## Building, Development and Testing
 
 `make` builds the C tools into `rel/<platform>/`; `make rust` builds `canboat`
-and the crates into `target/release/`. Neither needs the other — you can build
+and `keel` into `target/release/`. Neither needs the other — you can build
 just the side you care about.
 
 Use `make rust` rather than a bare `cargo build` if you have edited

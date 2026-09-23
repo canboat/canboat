@@ -20,7 +20,9 @@
 #                 leg also brings up a vcan interface so the SocketCAN device
 #                 tests exercise a real socket.
 #   - msrv:       cargo check at the workspace's declared rust-version.
-#   - clippy:     -D warnings, all targets.
+#   - clippy:     -D warnings, all targets; then each library feature set
+#                 on its own (no cli) so a bad feature gate cannot hide
+#                 behind the default build.
 #   - fmt:        rustfmt check.
 #   - docs:       facade rustdoc per library feature set with -D warnings.
 #   - coverage:   llvm-source-based line coverage, with a regression floor.
@@ -134,6 +136,19 @@ jobs:
 
       - name: Clippy
         run: cargo clippy --workspace --all-targets --locked -- -D warnings
+
+      # Each library feature set on its own, without the CLI: the default
+      # build enables everything, so only this catches a feature gate that
+      # leaves a smaller set with a dangling import or unreachable helper.
+      # Same list as `make rust-features`.
+      - name: Clippy per library feature set
+        run: |
+          for set in decode io node bridge json-input nmea0183,ais \
+                     decode,io,node,bridge,nmea0183,ais,json-input; do
+            echo "::group::--features $set"
+            cargo clippy -p canboat --no-default-features --features "$set" --locked -- -D warnings
+            echo "::endgroup::"
+          done
 
   fmt:
     name: Rust Rustfmt

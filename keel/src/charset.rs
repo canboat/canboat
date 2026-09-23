@@ -61,7 +61,7 @@
 //!
 //! keel owns the table because keel already generates both consumers' tables
 //! and may not depend on either (MERGE-CANBOAT-RS.md §9). `keel generate`
-//! emits `crates/canboat-core/src/charset_generated.rs` and
+//! emits `crates/canboat/src/engine/charset_generated.rs` and
 //! `analyzer/charset-generated-data.h` from it, so the three decoders cannot
 //! drift.
 
@@ -169,7 +169,7 @@ pub fn emit_charset_h() -> String {
     out
 }
 
-/// `crates/canboat-core/src/charset_generated.rs` — the same table for the
+/// `crates/canboat/src/engine/charset_generated.rs` — the same table for the
 /// Rust runtime's `decode_text`.
 pub fn emit_charset_rs() -> String {
     let mut out = banner("//");

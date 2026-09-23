@@ -115,14 +115,71 @@
 //! not part of this library's public contract. Library consumers select
 //! `default-features = false` plus the features they need.
 #![cfg_attr(feature = "decode", deny(missing_docs))]
+// The public items are re-exported from private modules whose docs
+// naturally cross-reference their private neighbours; rustdoc renders such
+// links as plain code, which is the right thing for the facade's readers.
+// Genuinely broken links stay fatal (`rustdoc::broken_intra_doc_links`).
+#![allow(rustdoc::private_intra_doc_links)]
+
+// ───────────────────────── implementation (private) ─────────────────────────
+// Everything below the facade lives in private modules: the compiler, not
+// convention, keeps it off the public surface. Two lints are relaxed for
+// them:
+//
+// * `missing_docs` applies at the definition site, so it would otherwise
+//   fire on every field and method of a re-exported type.
+// * `dead_code` / `unused_imports` are only meaningful under the full
+//   feature set: a `decode`-only build legitimately leaves the format
+//   parsers, text formatter and snapshot cache unreachable, since only the
+//   `io` / `bridge` / `cli` layers call them. The default (`cli`) build,
+//   which CI's clippy job checks, still enforces both.
+
+/// Build-time version + git commit for the analyzer JSON banner.
+#[cfg(feature = "bridge")]
+#[allow(missing_docs)]
+#[cfg_attr(not(feature = "cli"), allow(dead_code, unused_imports))]
+mod build_info;
+/// The `canboat` command-line tool (subcommands and their plumbing).
+#[cfg(feature = "cli")]
+#[allow(missing_docs)]
+mod cli;
+/// The sans-I/O engine: schema tables, decode, encode, formatters.
+#[cfg(feature = "decode")]
+#[allow(missing_docs)]
+#[cfg_attr(not(feature = "cli"), allow(dead_code, unused_imports))]
+mod engine;
+/// Sync I/O adapters and device drivers (`io`), plus the transport-free
+/// node pieces (`node`).
+#[cfg(any(feature = "io", feature = "node"))]
+#[allow(missing_docs)]
+#[cfg_attr(not(feature = "cli"), allow(dead_code, unused_imports))]
+mod io;
+/// The n2kd daemon: TCP serving, NMEA 0183 / AIS conversion, request engine.
+#[cfg(feature = "bridge")]
+#[allow(missing_docs)]
+#[cfg_attr(not(feature = "cli"), allow(dead_code, unused_imports))]
+mod n2kd;
+/// The live-bus pipeline: device → decode → quirks → serving.
+#[cfg(feature = "bridge")]
+#[allow(missing_docs)]
+#[cfg_attr(not(feature = "cli"), allow(dead_code, unused_imports))]
+mod server;
+
+/// Entry point of the `canboat` binary; `src/main.rs` is a one-line call
+/// to this. Not part of the library contract.
+#[cfg(feature = "cli")]
+#[doc(hidden)]
+pub fn cli_main() -> std::process::ExitCode {
+    cli::app::main()
+}
 
 // ─────────────────────────── decode (baseline) ───────────────────────────
-// Core types, re-exported at the crate root under their locked public names.
-// The internal canboat-core names (PgnDatabase, RawFrame, FieldRef) are mapped
-// to the public names here; FieldHandle was collapsed into FieldId in Phase 1.
+// Engine types, re-exported at the crate root under their locked public names.
+// The internal engine names (PgnDatabase, RawFrame, FieldRef) are mapped to
+// the public names here; FieldHandle was collapsed into FieldId in Phase 1.
 
 #[cfg(feature = "decode")]
-pub use canboat_core::{
+pub use crate::engine::{
     ADDR_GLOBAL,
     ADDR_NULL,
     CANBOAT_JSON_VERSION as CANBOAT_VERSION,
@@ -157,7 +214,9 @@ pub use canboat_core::{
 /// for consumers that treat the database as metadata (codegen, UI forms).
 #[cfg(feature = "decode")]
 pub mod schema {
-    pub use canboat_core::{
+    pub use crate::engine::db::PgnVariants;
+    pub use crate::engine::types::LookupFieldTypeValue;
+    pub use crate::engine::{
         BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable,
         IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
     };
@@ -167,14 +226,14 @@ pub mod schema {
 /// `ids::field::wind_data::WIND_ANGLE`. Resolve a field once, at build time.
 #[cfg(feature = "decode")]
 pub mod ids {
-    pub use canboat_core::{field, pgn};
+    pub use crate::engine::{field, pgn};
 }
 
 /// Turn a [`DecodedPgn`] back into bytes/text. `write_nmea0183` / `write_ais`
 /// land here when the `nmea0183` / `ais` features are wired.
 #[cfg(feature = "decode")]
 pub mod output {
-    pub use canboat_core::output::{CamelCase, JsonOptions, write_json};
+    pub use crate::engine::output::{CamelCase, JsonOptions, write_json};
 }
 
 /// Inbound: turn a byte source into a stream of [`DecodedPgn`].
@@ -187,17 +246,20 @@ pub mod output {
 /// already-decoded analyzer-JSON line.
 #[cfg(feature = "decode")]
 pub mod read {
-    pub use canboat_core::json_to_decoded as from_analyzer_json;
-    pub use canboat_core::{Decoder, FrameSource};
+    /// The ASCII line formats `PlainReader` (feature `io`) understands; pass
+    /// one to `PlainReader::with_format` to skip autodetection.
+    pub use crate::engine::format::InputFormat;
+    pub use crate::engine::json_to_decoded as from_analyzer_json;
+    pub use crate::engine::{Decoder, FrameSource};
 
     /// A [`FrameSource`] over an Actisense `.ebl` binary log.
     #[cfg(feature = "io")]
-    pub use canboat_io::EblReader;
+    pub use crate::io::EblReader;
     /// A [`FrameSource`] over any canboat ASCII line format (PLAIN / FAST /
     /// Actisense / YDWG-02 / iKonvert): honours `# format=` headers, otherwise
     /// autodetects. Wrap a file, a stdin lock, or [`open_capture`].
     #[cfg(feature = "io")]
-    pub use canboat_io::LineFrameReader as PlainReader;
+    pub use crate::io::LineFrameReader as PlainReader;
 
     /// Open a capture as a [`PlainReader`] ready for a [`Decoder`]: a plain
     /// PLAIN/FAST text log, or a `.pcap` / `.pcap.gz` / `.nif` container
@@ -206,8 +268,8 @@ pub mod read {
     pub fn open_capture(
         path: &std::path::Path,
     ) -> std::io::Result<PlainReader<Box<dyn std::io::BufRead>>> {
-        let br: Box<dyn std::io::BufRead> = if canboat_io::container::is_container(path) {
-            canboat_io::container::plain_reader(path, canboat_io::container::Options::default())?
+        let br: Box<dyn std::io::BufRead> = if crate::io::container::is_container(path) {
+            crate::io::container::plain_reader(path, crate::io::container::Options::default())?
         } else {
             Box::new(std::io::BufReader::new(std::fs::File::open(path)?))
         };
@@ -264,21 +326,21 @@ pub mod read {
 pub mod bus {
     use std::io;
 
-    pub use canboat_io::device::{DeviceHandle, DeviceWriterGone, FrameSender};
+    pub use crate::io::device::{DeviceHandle, DeviceWriterGone, FrameSender};
 
     /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically
     /// `115_200` baud), speaking the Actisense binary protocol.
     pub fn open_ngt1(path: &str, baud: u32) -> io::Result<DeviceHandle> {
-        let (reader, writer) = canboat_io::open_serial_rw(path, baud)?;
-        Ok(canboat_io::device::ngt1::run(reader, writer))
+        let (reader, writer) = crate::io::open_serial_rw(path, baud)?;
+        Ok(crate::io::device::ngt1::run(reader, writer))
     }
 
     /// Open a Digital Yacht iKonvert on a serial port (typically `230_400`
     /// baud). Runs the iKonvert init handshake in all-PGN receive mode.
     pub fn open_ikonvert(path: &str, baud: u32) -> io::Result<DeviceHandle> {
-        let (reader, writer) = canboat_io::open_serial_rw(path, baud)?;
-        let config = canboat_io::device::ikonvert::Config::default();
-        Ok(canboat_io::device::ikonvert::run(reader, writer, config))
+        let (reader, writer) = crate::io::open_serial_rw(path, baud)?;
+        let config = crate::io::device::ikonvert::Config::default();
+        Ok(crate::io::device::ikonvert::run(reader, writer, config))
     }
 
     /// Open a Linux SocketCAN interface (e.g. `"can0"`), claiming ISO source
@@ -288,11 +350,11 @@ pub mod bus {
     pub fn open_socketcan(iface: &str, address: u8) -> io::Result<DeviceHandle> {
         use std::sync::Arc;
         use std::sync::atomic::AtomicU8;
-        let config = canboat_io::device::socketcan::Config {
+        let config = crate::io::device::socketcan::Config {
             address,
             ..Default::default()
         };
-        canboat_io::device::socketcan::run(iface, config, Arc::new(AtomicU8::new(address)))
+        crate::io::device::socketcan::run(iface, config, Arc::new(AtomicU8::new(address)))
     }
 }
 
@@ -311,9 +373,9 @@ pub mod bus {
 /// socketcan gateway and the motion quirk both do).
 #[cfg(feature = "node")]
 pub mod device {
-    pub use canboat_io::address_claim::{AddressClaim as Claimer, ClaimState};
-    pub use canboat_io::name::Name;
-    pub use canboat_io::nmea_responder::{
+    pub use crate::io::address_claim::{AddressClaim as Claimer, ClaimState};
+    pub use crate::io::name::Name;
+    pub use crate::io::nmea_responder::{
         ProductInfo, heartbeat_frame, iso_ack_frame, pgn_list_frames,
     };
 }
@@ -379,7 +441,10 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
-    pub use canboat_bridge::server::{Bridge, BridgeConfig, QuirkKind as Quirk, Transmitter};
+    /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
+    /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
+    pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
+    pub use crate::server::{Bridge, BridgeConfig, QuirkKind as Quirk, Transmitter};
 }
 
 // ───────────────────────────── json input ────────────────────────────────

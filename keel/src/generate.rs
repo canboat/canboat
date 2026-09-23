@@ -51,7 +51,7 @@ pub fn emit_artifacts(
             charset::emit_charset_h(),
         ),
         (
-            root.join("crates/canboat-core/src/charset_generated.rs"),
+            root.join("crates/canboat/src/engine/charset_generated.rs"),
             charset::emit_charset_rs(),
         ),
     ]

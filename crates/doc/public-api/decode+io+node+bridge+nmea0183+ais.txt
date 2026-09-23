@@ -1,76 +1,960 @@
 pub mod canboat
-pub use canboat::ADDR_GLOBAL
-pub use canboat::ADDR_NULL
-pub use canboat::CANBOAT_VERSION
-pub use canboat::Database
-pub use canboat::DecodeError
-pub use canboat::DecodedField
-pub use canboat::DecodedPgn
-pub use canboat::EncodeError
-pub use canboat::EncodeValue
-pub use canboat::FASTPACKET_MAX_SIZE
-pub use canboat::FRAME_MAX_SIZE
-pub use canboat::FieldId
-pub use canboat::FieldValue
-pub use canboat::Frame
-pub use canboat::FramePacketType
-pub use canboat::PgnBuilder
-pub use canboat::Reassembled
-pub use canboat::Reassembler
-pub use canboat::ReassemblyError
-pub use canboat::SCHEMA_HASH
-pub use canboat::Units
 pub mod canboat::bridge
-pub use canboat::bridge::Bridge
-pub use canboat::bridge::BridgeConfig
-pub use canboat::bridge::Quirk
-pub use canboat::bridge::Transmitter
+pub enum canboat::bridge::GpsRolloverDevice
+pub canboat::bridge::GpsRolloverDevice::Address(u8)
+pub canboat::bridge::GpsRolloverDevice::Name(u64)
+pub canboat::bridge::GpsRolloverDevice::Product
+pub canboat::bridge::GpsRolloverDevice::Product::manufacturer: u16
+pub canboat::bridge::GpsRolloverDevice::Product::unique: u32
+impl core::clone::Clone for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::clone(&self) -> canboat::bridge::GpsRolloverDevice
+impl core::cmp::Eq for canboat::bridge::GpsRolloverDevice
+impl core::cmp::PartialEq for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::eq(&self, &canboat::bridge::GpsRolloverDevice) -> bool
+impl core::fmt::Debug for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bridge::GpsRolloverDevice
+impl core::marker::StructuralPartialEq for canboat::bridge::GpsRolloverDevice
+impl core::str::traits::FromStr for canboat::bridge::GpsRolloverDevice
+pub type canboat::bridge::GpsRolloverDevice::Err = alloc::string::String
+pub fn canboat::bridge::GpsRolloverDevice::from_str(&str) -> core::result::Result<Self, Self::Err>
+pub enum canboat::bridge::GpsRolloverTarget
+pub canboat::bridge::GpsRolloverTarget::All
+pub canboat::bridge::GpsRolloverTarget::Devices(alloc::vec::Vec<canboat::bridge::GpsRolloverDevice>)
+pub canboat::bridge::GpsRolloverTarget::Gnss
+impl canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::parse(core::option::Option<&str>) -> core::result::Result<canboat::bridge::GpsRolloverTarget, alloc::string::String>
+impl core::clone::Clone for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::clone(&self) -> canboat::bridge::GpsRolloverTarget
+impl core::cmp::Eq for canboat::bridge::GpsRolloverTarget
+impl core::cmp::PartialEq for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::eq(&self, &canboat::bridge::GpsRolloverTarget) -> bool
+impl core::default::Default for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::default() -> canboat::bridge::GpsRolloverTarget
+impl core::fmt::Debug for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bridge::GpsRolloverTarget
+pub enum canboat::bridge::Quirk
+pub canboat::bridge::Quirk::GpsRelay
+pub canboat::bridge::Quirk::GpsRollover(canboat::bridge::GpsRolloverTarget)
+pub canboat::bridge::Quirk::Motion
+pub canboat::bridge::Quirk::Scx20
+pub canboat::bridge::Quirk::Wmm
+impl canboat::bridge::Quirk
+pub fn canboat::bridge::Quirk::gps_relay_has_devices(&[canboat::bridge::Quirk]) -> bool
+pub fn canboat::bridge::Quirk::gps_rollover_target(&[canboat::bridge::Quirk]) -> core::option::Option<&canboat::bridge::GpsRolloverTarget>
+pub fn canboat::bridge::Quirk::name(&self) -> &'static str
+impl core::clone::Clone for canboat::bridge::Quirk
+pub fn canboat::bridge::Quirk::clone(&self) -> canboat::bridge::Quirk
+impl core::cmp::Eq for canboat::bridge::Quirk
+impl core::cmp::PartialEq for canboat::bridge::Quirk
+pub fn canboat::bridge::Quirk::eq(&self, &canboat::bridge::Quirk) -> bool
+impl core::fmt::Debug for canboat::bridge::Quirk
+pub fn canboat::bridge::Quirk::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bridge::Quirk
+impl core::str::traits::FromStr for canboat::bridge::Quirk
+pub type canboat::bridge::Quirk::Err = alloc::string::String
+pub fn canboat::bridge::Quirk::from_str(&str) -> core::result::Result<Self, Self::Err>
+pub struct canboat::bridge::Bridge
+impl canboat::bridge::Bridge
+pub fn canboat::bridge::Bridge::claimed_address(&self) -> core::option::Option<u8>
+pub fn canboat::bridge::Bridge::database(&self) -> &'static canboat::Database
+pub fn canboat::bridge::Bridge::decoded(&mut self) -> std::sync::mpsc::Receiver<alloc::sync::Arc<canboat::DecodedPgn>>
+pub fn canboat::bridge::Bridge::encode(&self, u32) -> anyhow::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::bridge::Bridge::frame_sender(&self) -> core::option::Option<canboat::bus::FrameSender>
+pub fn canboat::bridge::Bridge::new(canboat::bridge::BridgeConfig) -> anyhow::Result<Self>
+pub fn canboat::bridge::Bridge::run(self) -> anyhow::Result<()>
+pub fn canboat::bridge::Bridge::serve(&mut self) -> anyhow::Result<()>
+pub fn canboat::bridge::Bridge::shutdown(&mut self)
+pub fn canboat::bridge::Bridge::spawn(&mut self) -> anyhow::Result<()>
+pub fn canboat::bridge::Bridge::transmit(&self, canboat::Frame) -> anyhow::Result<()>
+pub fn canboat::bridge::Bridge::transmitter(&self) -> core::option::Option<canboat::bridge::Transmitter>
+pub fn canboat::bridge::Bridge::wait(&mut self)
+impl core::ops::drop::Drop for canboat::bridge::Bridge
+pub fn canboat::bridge::Bridge::drop(&mut self)
+pub struct canboat::bridge::BridgeConfig
+pub canboat::bridge::BridgeConfig::actisense: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::ais_port: u16
+pub canboat::bridge::BridgeConfig::analyzer_port: u16
+pub canboat::bridge::BridgeConfig::baud: core::option::Option<u32>
+pub canboat::bridge::BridgeConfig::bind: core::net::ip_addr::Ipv4Addr
+pub canboat::bridge::BridgeConfig::camel_case: canboat::output::CamelCase
+pub canboat::bridge::BridgeConfig::canboat_csv: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::config_dir: core::option::Option<std::path::PathBuf>
+pub canboat::bridge::BridgeConfig::ikonvert: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::ikonvert_rate_limit_off: bool
+pub canboat::bridge::BridgeConfig::ikonvert_rx: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::ikonvert_tx: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::input_port: u16
+pub canboat::bridge::BridgeConfig::maretron: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::maretron_password: alloc::string::String
+pub canboat::bridge::BridgeConfig::nmea0183_filter: core::option::Option<std::path::PathBuf>
+pub canboat::bridge::BridgeConfig::nmea0183_filter_port: u16
+pub canboat::bridge::BridgeConfig::nmea0183_port: u16
+pub canboat::bridge::BridgeConfig::nmea0183_stdout: bool
+pub canboat::bridge::BridgeConfig::no_nmea0183_rate_limit: bool
+pub canboat::bridge::BridgeConfig::no_request_claims: bool
+pub canboat::bridge::BridgeConfig::overrides_port: u16
+pub canboat::bridge::BridgeConfig::quiet: bool
+pub canboat::bridge::BridgeConfig::quirk: alloc::vec::Vec<canboat::bridge::Quirk>
+pub canboat::bridge::BridgeConfig::raw_port: u16
+pub canboat::bridge::BridgeConfig::snapshot_port: u16
+pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
+pub canboat::bridge::BridgeConfig::socketcan_address: u8
+pub canboat::bridge::BridgeConfig::socketcan_configure_link: bool
+pub canboat::bridge::BridgeConfig::units: canboat::Units
+pub canboat::bridge::BridgeConfig::verbose: bool
+pub canboat::bridge::BridgeConfig::wrap: bool
+impl core::clone::Clone for canboat::bridge::BridgeConfig
+pub fn canboat::bridge::BridgeConfig::clone(&self) -> canboat::bridge::BridgeConfig
+impl core::default::Default for canboat::bridge::BridgeConfig
+pub fn canboat::bridge::BridgeConfig::default() -> Self
+impl core::fmt::Debug for canboat::bridge::BridgeConfig
+pub fn canboat::bridge::BridgeConfig::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::bridge::Transmitter
+impl canboat::bridge::Transmitter
+pub fn canboat::bridge::Transmitter::claimed_address(&self) -> core::option::Option<u8>
+pub fn canboat::bridge::Transmitter::transmit(&self, canboat::Frame) -> anyhow::Result<()>
+impl core::clone::Clone for canboat::bridge::Transmitter
+pub fn canboat::bridge::Transmitter::clone(&self) -> canboat::bridge::Transmitter
 pub mod canboat::bus
-pub use canboat::bus::DeviceHandle
-pub use canboat::bus::DeviceWriterGone
-pub use canboat::bus::FrameSender
-pub fn canboat::bus::open_ikonvert(&str, u32) -> core::io::error::Result<canboat_io::device::DeviceHandle>
-pub fn canboat::bus::open_ngt1(&str, u32) -> core::io::error::Result<canboat_io::device::DeviceHandle>
-pub fn canboat::bus::open_socketcan(&str, u8) -> core::io::error::Result<canboat_io::device::DeviceHandle>
+pub struct canboat::bus::DeviceHandle
+pub canboat::bus::DeviceHandle::frames_rx: std::sync::mpsc::Receiver<canboat::Frame>
+impl canboat::bus::DeviceHandle
+pub fn canboat::bus::DeviceHandle::frame_sender(&self) -> canboat::bus::FrameSender
+pub fn canboat::bus::DeviceHandle::join(self)
+pub fn canboat::bus::DeviceHandle::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
+pub struct canboat::bus::DeviceWriterGone
+impl core::clone::Clone for canboat::bus::DeviceWriterGone
+pub fn canboat::bus::DeviceWriterGone::clone(&self) -> canboat::bus::DeviceWriterGone
+impl core::cmp::Eq for canboat::bus::DeviceWriterGone
+impl core::cmp::PartialEq for canboat::bus::DeviceWriterGone
+pub fn canboat::bus::DeviceWriterGone::eq(&self, &canboat::bus::DeviceWriterGone) -> bool
+impl core::error::Error for canboat::bus::DeviceWriterGone
+impl core::fmt::Debug for canboat::bus::DeviceWriterGone
+pub fn canboat::bus::DeviceWriterGone::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::bus::DeviceWriterGone
+pub fn canboat::bus::DeviceWriterGone::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bus::DeviceWriterGone
+impl core::marker::StructuralPartialEq for canboat::bus::DeviceWriterGone
+pub struct canboat::bus::FrameSender
+impl canboat::bus::FrameSender
+pub fn canboat::bus::FrameSender::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
+impl core::clone::Clone for canboat::bus::FrameSender
+pub fn canboat::bus::FrameSender::clone(&self) -> canboat::bus::FrameSender
+pub fn canboat::bus::open_ikonvert(&str, u32) -> core::io::error::Result<canboat::bus::DeviceHandle>
+pub fn canboat::bus::open_ngt1(&str, u32) -> core::io::error::Result<canboat::bus::DeviceHandle>
+pub fn canboat::bus::open_socketcan(&str, u8) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub mod canboat::device
-pub use canboat::device::ClaimState
-pub use canboat::device::Claimer
-pub use canboat::device::Name
-pub use canboat::device::ProductInfo
-pub use canboat::device::heartbeat_frame
-pub use canboat::device::iso_ack_frame
-pub use canboat::device::pgn_list_frames
+pub enum canboat::device::ClaimState
+pub canboat::device::ClaimState::Claimed
+pub canboat::device::ClaimState::Disabled
+pub canboat::device::ClaimState::Failed
+pub canboat::device::ClaimState::Pending
+pub canboat::device::ClaimState::Scanning
+impl core::clone::Clone for canboat::device::ClaimState
+pub fn canboat::device::ClaimState::clone(&self) -> canboat::device::ClaimState
+impl core::cmp::Eq for canboat::device::ClaimState
+impl core::cmp::PartialEq for canboat::device::ClaimState
+pub fn canboat::device::ClaimState::eq(&self, &canboat::device::ClaimState) -> bool
+impl core::fmt::Debug for canboat::device::ClaimState
+pub fn canboat::device::ClaimState::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::device::ClaimState
+impl core::marker::StructuralPartialEq for canboat::device::ClaimState
+pub struct canboat::device::Claimer
+impl canboat::device::Claimer
+pub fn canboat::device::Claimer::address(&self) -> core::option::Option<u8>
+pub fn canboat::device::Claimer::deadline(&self) -> u64
+pub fn canboat::device::Claimer::disabled(u64) -> Self
+pub fn canboat::device::Claimer::for_name(&canboat::device::Name, u8) -> Self
+pub fn canboat::device::Claimer::is_claimed(&self) -> bool
+pub fn canboat::device::Claimer::is_timing(&self) -> bool
+pub fn canboat::device::Claimer::name(&self) -> u64
+pub fn canboat::device::Claimer::new(u64, u8, bool) -> Self
+pub fn canboat::device::Claimer::on_address_claim(&mut self, u64, u8, u64) -> alloc::vec::Vec<canboat::Frame>
+pub fn canboat::device::Claimer::respond_to_claim_request(&self) -> core::option::Option<canboat::Frame>
+pub fn canboat::device::Claimer::start(&mut self, u64) -> alloc::vec::Vec<canboat::Frame>
+pub fn canboat::device::Claimer::state(&self) -> canboat::device::ClaimState
+pub fn canboat::device::Claimer::tick(&mut self, u64) -> alloc::vec::Vec<canboat::Frame>
+pub struct canboat::device::Name
+impl canboat::device::Name
+pub fn canboat::device::Name::arbitrary_address_capable(self, bool) -> Self
+pub fn canboat::device::Name::device_class(self, u8) -> Self
+pub fn canboat::device::Name::device_function(self, u8) -> Self
+pub fn canboat::device::Name::device_instance(self, u8) -> Self
+pub fn canboat::device::Name::industry_group(self, u8) -> Self
+pub fn canboat::device::Name::is_arbitrary_address_capable(&self) -> bool
+pub fn canboat::device::Name::new(u16, u32) -> Self
+pub fn canboat::device::Name::system_instance(self, u8) -> Self
+pub fn canboat::device::Name::to_u64(self) -> u64
+impl core::clone::Clone for canboat::device::Name
+pub fn canboat::device::Name::clone(&self) -> canboat::device::Name
+impl core::cmp::Eq for canboat::device::Name
+impl core::cmp::PartialEq for canboat::device::Name
+pub fn canboat::device::Name::eq(&self, &canboat::device::Name) -> bool
+impl core::fmt::Debug for canboat::device::Name
+pub fn canboat::device::Name::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::device::Name
+impl core::marker::StructuralPartialEq for canboat::device::Name
+pub struct canboat::device::ProductInfo<'a>
+pub canboat::device::ProductInfo::certification_level: i64
+pub canboat::device::ProductInfo::db_version: i64
+pub canboat::device::ProductInfo::load_equivalency: i64
+pub canboat::device::ProductInfo::model_id: &'a str
+pub canboat::device::ProductInfo::model_serial: &'a str
+pub canboat::device::ProductInfo::model_version: &'a str
+pub canboat::device::ProductInfo::product_code: i64
+pub canboat::device::ProductInfo::software_version: &'a str
+impl canboat::device::ProductInfo<'_>
+pub fn canboat::device::ProductInfo<'_>::frame(&self, u8) -> core::option::Option<canboat::Frame>
+pub fn canboat::device::heartbeat_frame(u8, u8, u64) -> canboat::Frame
+pub fn canboat::device::iso_ack_frame(u8, u8, u8, u32) -> canboat::Frame
+pub fn canboat::device::pgn_list_frames(u8, u8, &[u32], &[u32]) -> alloc::vec::Vec<canboat::Frame>
 pub mod canboat::ids
-pub use canboat::ids::field
-pub use canboat::ids::pgn
 pub mod canboat::output
-pub use canboat::output::CamelCase
-pub use canboat::output::JsonOptions
-pub use canboat::output::write_json
+pub enum canboat::output::CamelCase
+pub canboat::output::CamelCase::Lower
+pub canboat::output::CamelCase::Off
+pub canboat::output::CamelCase::Upper
+impl core::clone::Clone for canboat::output::CamelCase
+pub fn canboat::output::CamelCase::clone(&self) -> canboat::output::CamelCase
+impl core::cmp::Eq for canboat::output::CamelCase
+impl core::cmp::PartialEq for canboat::output::CamelCase
+pub fn canboat::output::CamelCase::eq(&self, &canboat::output::CamelCase) -> bool
+impl core::default::Default for canboat::output::CamelCase
+pub fn canboat::output::CamelCase::default() -> canboat::output::CamelCase
+impl core::fmt::Debug for canboat::output::CamelCase
+pub fn canboat::output::CamelCase::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::output::CamelCase
+impl core::marker::StructuralPartialEq for canboat::output::CamelCase
+pub struct canboat::output::JsonOptions
+pub canboat::output::JsonOptions::camel_case: canboat::output::CamelCase
+pub canboat::output::JsonOptions::debug: bool
+pub canboat::output::JsonOptions::include_empty: bool
+pub canboat::output::JsonOptions::name_value: bool
+pub canboat::output::JsonOptions::wrap: bool
+impl core::clone::Clone for canboat::output::JsonOptions
+pub fn canboat::output::JsonOptions::clone(&self) -> canboat::output::JsonOptions
+impl core::default::Default for canboat::output::JsonOptions
+pub fn canboat::output::JsonOptions::default() -> canboat::output::JsonOptions
+impl core::fmt::Debug for canboat::output::JsonOptions
+pub fn canboat::output::JsonOptions::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub fn canboat::output::write_json<W: core::fmt::Write>(&mut W, &canboat::DecodedPgn, &canboat::output::JsonOptions) -> core::fmt::Result
 pub mod canboat::prelude
-pub use canboat::prelude::Database
-pub use canboat::prelude::DecodeError
-pub use canboat::prelude::DecodedField
-pub use canboat::prelude::DecodedPgn
-pub use canboat::prelude::FieldId
-pub use canboat::prelude::FieldValue
-pub use canboat::prelude::Frame
-pub use canboat::prelude::Units
+pub enum canboat::prelude::DecodeError
+pub canboat::prelude::DecodeError::ShortPayload
+pub canboat::prelude::DecodeError::ShortPayload::field: alloc::string::String
+pub canboat::prelude::DecodeError::ShortPayload::pgn: u32
+pub canboat::prelude::DecodeError::UnknownPgn
+pub canboat::prelude::DecodeError::UnknownPgn::pgn: u32
+impl core::error::Error for canboat::DecodeError
+impl core::fmt::Debug for canboat::DecodeError
+pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::DecodeError
+pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub enum canboat::prelude::FieldValue
+pub canboat::prelude::FieldValue::Binary(alloc::vec::Vec<u8>)
+pub canboat::prelude::FieldValue::BitField
+pub canboat::prelude::FieldValue::BitField::bits: alloc::vec::Vec<(u64, core::option::Option<&'static str>)>
+pub canboat::prelude::FieldValue::BitField::value: u64
+pub canboat::prelude::FieldValue::Date(u16)
+pub canboat::prelude::FieldValue::Decimal(alloc::string::String)
+pub canboat::prelude::FieldValue::Float(f64)
+pub canboat::prelude::FieldValue::Integer(i64)
+pub canboat::prelude::FieldValue::IsoName
+pub canboat::prelude::FieldValue::IsoName::subfields: alloc::vec::Vec<canboat::DecodedField>
+pub canboat::prelude::FieldValue::IsoName::value: u64
+pub canboat::prelude::FieldValue::Lookup
+pub canboat::prelude::FieldValue::Lookup::name: core::option::Option<&'static str>
+pub canboat::prelude::FieldValue::Lookup::value: u64
+pub canboat::prelude::FieldValue::Mmsi(u32)
+pub canboat::prelude::FieldValue::NotAvailable
+pub canboat::prelude::FieldValue::Number(f64)
+pub canboat::prelude::FieldValue::OutOfRange
+pub canboat::prelude::FieldValue::OutOfRange::value: u64
+pub canboat::prelude::FieldValue::Pgn
+pub canboat::prelude::FieldValue::Pgn::description: core::option::Option<&'static str>
+pub canboat::prelude::FieldValue::Pgn::value: u32
+pub canboat::prelude::FieldValue::Reserved
+pub canboat::prelude::FieldValue::Reserved::bit_length: u32
+pub canboat::prelude::FieldValue::Reserved::bytes: alloc::vec::Vec<u8>
+pub canboat::prelude::FieldValue::Reserved::value: u64
+pub canboat::prelude::FieldValue::ReservedValue
+pub canboat::prelude::FieldValue::ReservedValue::value: u64
+pub canboat::prelude::FieldValue::Spare
+pub canboat::prelude::FieldValue::Spare::bit_length: u32
+pub canboat::prelude::FieldValue::Spare::bytes: alloc::vec::Vec<u8>
+pub canboat::prelude::FieldValue::Spare::value: u64
+pub canboat::prelude::FieldValue::String(alloc::string::String)
+pub canboat::prelude::FieldValue::Time
+pub canboat::prelude::FieldValue::Time::raw: i64
+pub canboat::prelude::FieldValue::Time::seconds: f64
+pub canboat::prelude::FieldValue::Unsupported
+pub canboat::prelude::FieldValue::Unsupported::field_type: &'static str
+impl canboat::FieldValue
+pub fn canboat::FieldValue::as_f64(&self) -> core::option::Option<f64>
+pub fn canboat::FieldValue::as_i64(&self) -> core::option::Option<i64>
+pub fn canboat::FieldValue::as_str(&self) -> core::option::Option<&str>
+pub fn canboat::FieldValue::is_not_available(&self) -> bool
+pub fn canboat::FieldValue::is_sentinel(&self) -> bool
+pub fn canboat::FieldValue::lookup_value(&self) -> core::option::Option<u64>
+impl core::clone::Clone for canboat::FieldValue
+pub fn canboat::FieldValue::clone(&self) -> canboat::FieldValue
+impl core::fmt::Debug for canboat::FieldValue
+pub fn canboat::FieldValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+#[non_exhaustive] pub enum canboat::prelude::Units
+pub canboat::prelude::Units::Metric
+pub canboat::prelude::Units::Si
+impl core::clone::Clone for canboat::Units
+pub fn canboat::Units::clone(&self) -> canboat::Units
+impl core::cmp::Eq for canboat::Units
+impl core::cmp::PartialEq for canboat::Units
+pub fn canboat::Units::eq(&self, &canboat::Units) -> bool
+impl core::default::Default for canboat::Units
+pub fn canboat::Units::default() -> canboat::Units
+impl core::fmt::Debug for canboat::Units
+pub fn canboat::Units::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::Units
+impl core::marker::StructuralPartialEq for canboat::Units
+pub struct canboat::prelude::Database
+pub canboat::prelude::Database::schema_hash: u64
+pub canboat::prelude::Database::schema_version: &'static str
+pub canboat::prelude::Database::version: &'static str
+impl canboat::Database
+pub fn canboat::Database::bit_lookup(&self, &str) -> core::option::Option<&'static canboat::schema::BitLookupTable>
+pub fn canboat::Database::embedded(canboat::Units) -> &'static Self
+pub fn canboat::Database::embedded_j1939(canboat::Units) -> &'static Self
+pub fn canboat::Database::encode(&'static self, &str) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder
+pub fn canboat::Database::fallback_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::field(&self, &str, &str) -> core::option::Option<canboat::FieldId>
+pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::first_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::indirect_lookup(&self, &str, u64, u64) -> core::option::Option<&'static str>
+pub fn canboat::Database::is_j1939(&self) -> bool
+pub fn canboat::Database::lookup(&self, &str) -> core::option::Option<&'static canboat::schema::LookupTable>
+pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::pgn_count(&self) -> usize
+pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
+pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
+pub fn canboat::Database::units(&self) -> canboat::Units
+impl canboat::Database
+pub fn canboat::Database::decode(&self, &canboat::Frame) -> core::result::Result<canboat::DecodedPgn, canboat::DecodeError>
+pub fn canboat::Database::pick_variant(&self, &canboat::Frame) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub struct canboat::prelude::DecodedField
+pub canboat::prelude::DecodedField::bit_length: core::option::Option<u32>
+pub canboat::prelude::DecodedField::bit_offset: core::option::Option<u32>
+pub canboat::prelude::DecodedField::info: &'static canboat::schema::FieldInfo
+pub canboat::prelude::DecodedField::repeat_index: core::option::Option<u32>
+pub canboat::prelude::DecodedField::repeat_set: u8
+pub canboat::prelude::DecodedField::value: canboat::FieldValue
+impl canboat::DecodedField
+pub fn canboat::DecodedField::as_f64_in(&self, &str) -> core::option::Option<f64>
+pub fn canboat::DecodedField::id(&self) -> &'static str
+pub fn canboat::DecodedField::name(&self) -> &'static str
+pub fn canboat::DecodedField::order(&self) -> u8
+pub fn canboat::DecodedField::part_of_primary_key(&self) -> bool
+pub fn canboat::DecodedField::precision(&self) -> u8
+pub fn canboat::DecodedField::resolution(&self) -> core::option::Option<f64>
+pub fn canboat::DecodedField::unit(&self) -> core::option::Option<&'static str>
+impl core::clone::Clone for canboat::DecodedField
+pub fn canboat::DecodedField::clone(&self) -> canboat::DecodedField
+impl core::fmt::Debug for canboat::DecodedField
+pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::prelude::DecodedPgn
+pub canboat::prelude::DecodedPgn::data: alloc::vec::Vec<u8>
+pub canboat::prelude::DecodedPgn::description: &'static str
+pub canboat::prelude::DecodedPgn::dst: u8
+pub canboat::prelude::DecodedPgn::fields: alloc::vec::Vec<canboat::DecodedField>
+pub canboat::prelude::DecodedPgn::has_repeating_set: [bool; 2]
+pub canboat::prelude::DecodedPgn::id: &'static str
+pub canboat::prelude::DecodedPgn::id_is_pinned: bool
+pub canboat::prelude::DecodedPgn::index_by_order: [i8; 32]
+pub canboat::prelude::DecodedPgn::pgn: u32
+pub canboat::prelude::DecodedPgn::prio: u8
+pub canboat::prelude::DecodedPgn::src: u8
+pub canboat::prelude::DecodedPgn::timestamp: core::option::Option<alloc::string::String>
+impl canboat::DecodedPgn
+pub fn canboat::DecodedPgn::field(&self, canboat::FieldId) -> core::option::Option<&canboat::DecodedField>
+pub fn canboat::DecodedPgn::field_by_name(&self, &str) -> core::option::Option<&canboat::DecodedField>
+pub fn canboat::DecodedPgn::iso_name(&self) -> core::option::Option<u64>
+impl core::clone::Clone for canboat::DecodedPgn
+pub fn canboat::DecodedPgn::clone(&self) -> canboat::DecodedPgn
+impl core::fmt::Debug for canboat::DecodedPgn
+pub fn canboat::DecodedPgn::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::prelude::FieldId
+pub canboat::prelude::FieldId::field: &'static canboat::schema::FieldInfo
+pub canboat::prelude::FieldId::pgn: &'static canboat::schema::PgnInfo
+impl core::clone::Clone for canboat::FieldId
+pub fn canboat::FieldId::clone(&self) -> canboat::FieldId
+impl core::fmt::Debug for canboat::FieldId
+pub fn canboat::FieldId::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::FieldId
+pub struct canboat::prelude::Frame
+pub canboat::prelude::Frame::data: smallvec::SmallVec<[u8; 8]>
+pub canboat::prelude::Frame::dst: u8
+pub canboat::prelude::Frame::pgn: u32
+pub canboat::prelude::Frame::prio: u8
+pub canboat::prelude::Frame::src: u8
+pub canboat::prelude::Frame::timestamp: core::option::Option<alloc::string::String>
+impl canboat::Frame
+pub fn canboat::Frame::new(core::option::Option<alloc::string::String>, u8, u32, u8, u8, impl core::iter::traits::collect::IntoIterator<Item = u8>) -> Self
+impl core::clone::Clone for canboat::Frame
+pub fn canboat::Frame::clone(&self) -> canboat::Frame
+impl core::cmp::Eq for canboat::Frame
+impl core::cmp::PartialEq for canboat::Frame
+pub fn canboat::Frame::eq(&self, &canboat::Frame) -> bool
+impl core::fmt::Debug for canboat::Frame
+pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::Frame
 pub mod canboat::read
-pub use canboat::read::Decoder
-pub use canboat::read::EblReader
-pub use canboat::read::FrameSource
-pub use canboat::read::PlainReader
-pub use canboat::read::from_analyzer_json
-pub fn canboat::read::open_capture(&std::path::Path) -> core::io::error::Result<canboat_io::stream::LineFrameReader<alloc::boxed::Box<dyn std::io::BufRead>>>
+pub enum canboat::read::InputFormat
+pub canboat::read::InputFormat::ActisenseAscii
+pub canboat::read::InputFormat::Airmar
+pub canboat::read::InputFormat::Candump
+pub canboat::read::InputFormat::Chetco
+pub canboat::read::InputFormat::GarminCsv
+pub canboat::read::InputFormat::GarminCsv2
+pub canboat::read::InputFormat::Ikonvert
+pub canboat::read::InputFormat::Plain
+pub canboat::read::InputFormat::PlainMixFast
+pub canboat::read::InputFormat::Ydwg02
+impl core::clone::Clone for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::clone(&self) -> canboat::read::InputFormat
+impl core::cmp::Eq for canboat::read::InputFormat
+impl core::cmp::PartialEq for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::eq(&self, &canboat::read::InputFormat) -> bool
+impl core::fmt::Debug for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::InputFormat
+impl core::marker::StructuralPartialEq for canboat::read::InputFormat
+pub struct canboat::read::Decoder<S>
+impl<S: canboat::read::FrameSource> canboat::read::Decoder<S>
+pub fn canboat::read::Decoder<S>::new(S, &'static canboat::Database) -> Self
+pub fn canboat::read::Decoder<S>::units(&self) -> canboat::Units
+impl<S: canboat::read::FrameSource> core::iter::traits::iterator::Iterator for canboat::read::Decoder<S>
+pub type canboat::read::Decoder<S>::Item = core::result::Result<canboat::DecodedPgn, core::io::error::Error>
+pub fn canboat::read::Decoder<S>::next(&mut self) -> core::option::Option<Self::Item>
+pub struct canboat::read::EblReader<R: alloc::io::read::Read>
+impl<R: alloc::io::read::Read> canboat::read::EblReader<R>
+pub fn canboat::read::EblReader<R>::new(R) -> Self
+impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::EblReader<R>
+pub fn canboat::read::EblReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+pub struct canboat::read::PlainReader<R: alloc::io::buf_read::BufRead>
+impl<R: alloc::io::buf_read::BufRead> canboat::read::PlainReader<R>
+pub fn canboat::read::PlainReader<R>::active_format(&self) -> core::option::Option<canboat::read::InputFormat>
+pub fn canboat::read::PlainReader<R>::header_coalesced(&self) -> bool
+pub fn canboat::read::PlainReader<R>::new(R) -> Self
+pub fn canboat::read::PlainReader<R>::with_format(R, canboat::read::InputFormat) -> Self
+impl<R: alloc::io::buf_read::BufRead> canboat::read::FrameSource for canboat::read::PlainReader<R>
+pub fn canboat::read::PlainReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+pub trait canboat::read::FrameSource
+pub fn canboat::read::FrameSource::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+impl canboat::read::FrameSource for std::sync::mpsc::Receiver<canboat::Frame>
+pub fn std::sync::mpsc::Receiver<canboat::Frame>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+impl<R: alloc::io::buf_read::BufRead> canboat::read::FrameSource for canboat::read::PlainReader<R>
+pub fn canboat::read::PlainReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+impl<R: alloc::io::read::Read> canboat::read::FrameSource for canboat::read::EblReader<R>
+pub fn canboat::read::EblReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
+pub fn canboat::read::from_analyzer_json(&str, &canboat::Database) -> core::option::Option<canboat::DecodedPgn>
+pub fn canboat::read::open_capture(&std::path::Path) -> core::io::error::Result<canboat::read::PlainReader<alloc::boxed::Box<dyn alloc::io::buf_read::BufRead>>>
 pub mod canboat::schema
-pub use canboat::schema::BitLookupTable
-pub use canboat::schema::BitLookupValue
-pub use canboat::schema::FieldInfo
-pub use canboat::schema::FieldType
-pub use canboat::schema::IndirectLookupTable
-pub use canboat::schema::IndirectLookupValue
-pub use canboat::schema::LookupTable
-pub use canboat::schema::LookupValue
-pub use canboat::schema::PacketType
-pub use canboat::schema::PgnInfo
+pub enum canboat::schema::FieldType
+pub canboat::schema::FieldType::Address
+pub canboat::schema::FieldType::Binary
+pub canboat::schema::FieldType::BitLookup
+pub canboat::schema::FieldType::Date
+pub canboat::schema::FieldType::Decimal
+pub canboat::schema::FieldType::Duration
+pub canboat::schema::FieldType::DynamicFieldKey
+pub canboat::schema::FieldType::DynamicFieldLength
+pub canboat::schema::FieldType::DynamicFieldValue
+pub canboat::schema::FieldType::FieldIndex
+pub canboat::schema::FieldType::Float
+pub canboat::schema::FieldType::IndirectLookup
+pub canboat::schema::FieldType::IsoName
+pub canboat::schema::FieldType::Lookup
+pub canboat::schema::FieldType::Mmsi
+pub canboat::schema::FieldType::Number
+pub canboat::schema::FieldType::Pgn
+pub canboat::schema::FieldType::Reserved
+pub canboat::schema::FieldType::Spare
+pub canboat::schema::FieldType::StringFix
+pub canboat::schema::FieldType::StringLau
+pub canboat::schema::FieldType::StringLz
+pub canboat::schema::FieldType::Time
+pub canboat::schema::FieldType::Variable
+impl core::clone::Clone for canboat::schema::FieldType
+pub fn canboat::schema::FieldType::clone(&self) -> canboat::schema::FieldType
+impl core::cmp::Eq for canboat::schema::FieldType
+impl core::cmp::PartialEq for canboat::schema::FieldType
+pub fn canboat::schema::FieldType::eq(&self, &canboat::schema::FieldType) -> bool
+impl core::fmt::Debug for canboat::schema::FieldType
+pub fn canboat::schema::FieldType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::FieldType
+impl core::marker::StructuralPartialEq for canboat::schema::FieldType
+pub enum canboat::schema::PacketType
+pub canboat::schema::PacketType::Fast
+pub canboat::schema::PacketType::Iso
+pub canboat::schema::PacketType::Mixed
+pub canboat::schema::PacketType::Single
+impl core::clone::Clone for canboat::schema::PacketType
+pub fn canboat::schema::PacketType::clone(&self) -> canboat::schema::PacketType
+impl core::cmp::Eq for canboat::schema::PacketType
+impl core::cmp::PartialEq for canboat::schema::PacketType
+pub fn canboat::schema::PacketType::eq(&self, &canboat::schema::PacketType) -> bool
+impl core::fmt::Debug for canboat::schema::PacketType
+pub fn canboat::schema::PacketType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::PacketType
+impl core::marker::StructuralPartialEq for canboat::schema::PacketType
+pub struct canboat::schema::BitLookupTable
+pub canboat::schema::BitLookupTable::by_bit: &'static [(u8, u32)]
+pub canboat::schema::BitLookupTable::max_value: core::option::Option<u64>
+pub canboat::schema::BitLookupTable::name: &'static str
+pub canboat::schema::BitLookupTable::values: &'static [canboat::schema::BitLookupValue]
+impl canboat::schema::BitLookupTable
+pub fn canboat::schema::BitLookupTable::get(&self, u8) -> core::option::Option<&'static canboat::schema::BitLookupValue>
+pub struct canboat::schema::BitLookupValue
+pub canboat::schema::BitLookupValue::bit: u8
+pub canboat::schema::BitLookupValue::id: core::option::Option<&'static str>
+pub canboat::schema::BitLookupValue::name: &'static str
+impl core::clone::Clone for canboat::schema::BitLookupValue
+pub fn canboat::schema::BitLookupValue::clone(&self) -> canboat::schema::BitLookupValue
+impl core::fmt::Debug for canboat::schema::BitLookupValue
+pub fn canboat::schema::BitLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::BitLookupValue
+pub struct canboat::schema::FieldInfo
+pub canboat::schema::FieldInfo::bit_length: core::option::Option<u32>
+pub canboat::schema::FieldInfo::bit_length_field: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::bit_length_variable: core::option::Option<bool>
+pub canboat::schema::FieldInfo::bit_offset: core::option::Option<u32>
+pub canboat::schema::FieldInfo::bit_start: core::option::Option<u32>
+pub canboat::schema::FieldInfo::condition: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::description: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::dynamic_field_length_overhead: u32
+pub canboat::schema::FieldInfo::encoding: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::field_type: core::option::Option<canboat::schema::FieldType>
+pub canboat::schema::FieldInfo::id: &'static str
+pub canboat::schema::FieldInfo::is_dynamic_length_marker: bool
+pub canboat::schema::FieldInfo::lookup_bit_enumeration: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::lookup_enumeration: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::lookup_field_type_enumeration: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::lookup_indirect_enumeration: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::lookup_indirect_enumeration_field_order: core::option::Option<u8>
+pub canboat::schema::FieldInfo::match_value: core::option::Option<i64>
+pub canboat::schema::FieldInfo::name: &'static str
+pub canboat::schema::FieldInfo::offset: core::option::Option<i64>
+pub canboat::schema::FieldInfo::order: u8
+pub canboat::schema::FieldInfo::out_of_range_value: core::option::Option<u64>
+pub canboat::schema::FieldInfo::part_of_primary_key: core::option::Option<bool>
+pub canboat::schema::FieldInfo::physical_quantity: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::precision: u8
+pub canboat::schema::FieldInfo::range_max: core::option::Option<f64>
+pub canboat::schema::FieldInfo::range_min: core::option::Option<f64>
+pub canboat::schema::FieldInfo::reserved_value: core::option::Option<u64>
+pub canboat::schema::FieldInfo::resolution: core::option::Option<f64>
+pub canboat::schema::FieldInfo::signed: core::option::Option<bool>
+pub canboat::schema::FieldInfo::unit: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::unit_offset: f64
+pub canboat::schema::FieldInfo::unknown_value: core::option::Option<u64>
+impl core::clone::Clone for canboat::schema::FieldInfo
+pub fn canboat::schema::FieldInfo::clone(&self) -> canboat::schema::FieldInfo
+impl core::fmt::Debug for canboat::schema::FieldInfo
+pub fn canboat::schema::FieldInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::FieldInfo
+pub struct canboat::schema::IndirectLookupTable
+pub canboat::schema::IndirectLookupTable::by_pair: &'static [((u64, u64), u32)]
+pub canboat::schema::IndirectLookupTable::max_value: core::option::Option<u64>
+pub canboat::schema::IndirectLookupTable::name: &'static str
+pub canboat::schema::IndirectLookupTable::values: &'static [canboat::schema::IndirectLookupValue]
+impl canboat::schema::IndirectLookupTable
+pub fn canboat::schema::IndirectLookupTable::get(&self, u64, u64) -> core::option::Option<&'static canboat::schema::IndirectLookupValue>
+pub struct canboat::schema::IndirectLookupValue
+pub canboat::schema::IndirectLookupValue::id: core::option::Option<&'static str>
+pub canboat::schema::IndirectLookupValue::name: &'static str
+pub canboat::schema::IndirectLookupValue::value1: u64
+pub canboat::schema::IndirectLookupValue::value2: u64
+impl core::clone::Clone for canboat::schema::IndirectLookupValue
+pub fn canboat::schema::IndirectLookupValue::clone(&self) -> canboat::schema::IndirectLookupValue
+impl core::fmt::Debug for canboat::schema::IndirectLookupValue
+pub fn canboat::schema::IndirectLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::IndirectLookupValue
+pub struct canboat::schema::LookupFieldTypeValue
+pub canboat::schema::LookupFieldTypeValue::bits: core::option::Option<u32>
+pub canboat::schema::LookupFieldTypeValue::field_type: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::lookup_bit_enumeration: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::lookup_enumeration: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::name: &'static str
+pub canboat::schema::LookupFieldTypeValue::precision: u8
+pub canboat::schema::LookupFieldTypeValue::resolution: core::option::Option<f64>
+pub canboat::schema::LookupFieldTypeValue::signed: bool
+pub canboat::schema::LookupFieldTypeValue::unit: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::value: u64
+impl canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::bit_length(&self) -> core::option::Option<u32>
+impl core::clone::Clone for canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::clone(&self) -> canboat::schema::LookupFieldTypeValue
+impl core::fmt::Debug for canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::LookupFieldTypeValue
+pub struct canboat::schema::LookupTable
+pub canboat::schema::LookupTable::by_value: &'static [(u64, u32)]
+pub canboat::schema::LookupTable::max_value: core::option::Option<u64>
+pub canboat::schema::LookupTable::name: &'static str
+pub canboat::schema::LookupTable::values: &'static [canboat::schema::LookupValue]
+impl canboat::schema::LookupTable
+pub fn canboat::schema::LookupTable::get(&self, u64) -> core::option::Option<&'static canboat::schema::LookupValue>
+pub struct canboat::schema::LookupValue
+pub canboat::schema::LookupValue::id: core::option::Option<&'static str>
+pub canboat::schema::LookupValue::name: &'static str
+pub canboat::schema::LookupValue::value: u64
+impl core::clone::Clone for canboat::schema::LookupValue
+pub fn canboat::schema::LookupValue::clone(&self) -> canboat::schema::LookupValue
+impl core::fmt::Debug for canboat::schema::LookupValue
+pub fn canboat::schema::LookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::LookupValue
+pub struct canboat::schema::PgnInfo
+pub canboat::schema::PgnInfo::complete: core::option::Option<bool>
+pub canboat::schema::PgnInfo::description: &'static str
+pub canboat::schema::PgnInfo::explanation: core::option::Option<&'static str>
+pub canboat::schema::PgnInfo::fallback: core::option::Option<bool>
+pub canboat::schema::PgnInfo::field_count: u32
+pub canboat::schema::PgnInfo::fields: &'static [canboat::schema::FieldInfo]
+pub canboat::schema::PgnInfo::id: &'static str
+pub canboat::schema::PgnInfo::id_is_pinned: bool
+pub canboat::schema::PgnInfo::length: core::option::Option<u32>
+pub canboat::schema::PgnInfo::min_length: core::option::Option<u32>
+pub canboat::schema::PgnInfo::missing: &'static [&'static str]
+pub canboat::schema::PgnInfo::packet_type: canboat::schema::PacketType
+pub canboat::schema::PgnInfo::pgn: u32
+pub canboat::schema::PgnInfo::priority: core::option::Option<u8>
+pub canboat::schema::PgnInfo::repeating_field_set1_count_field: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set1_size: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set1_start_field: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set2_count_field: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set2_size: core::option::Option<u32>
+pub canboat::schema::PgnInfo::repeating_field_set2_start_field: core::option::Option<u32>
+pub canboat::schema::PgnInfo::transmission_interval: core::option::Option<u32>
+pub canboat::schema::PgnInfo::transmission_irregular: core::option::Option<bool>
+pub canboat::schema::PgnInfo::url: core::option::Option<&'static str>
+impl core::clone::Clone for canboat::schema::PgnInfo
+pub fn canboat::schema::PgnInfo::clone(&self) -> canboat::schema::PgnInfo
+impl core::fmt::Debug for canboat::schema::PgnInfo
+pub fn canboat::schema::PgnInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::PgnInfo
+pub struct canboat::schema::PgnVariants
+impl core::iter::traits::exact_size::ExactSizeIterator for canboat::schema::PgnVariants
+impl core::iter::traits::iterator::Iterator for canboat::schema::PgnVariants
+pub type canboat::schema::PgnVariants::Item = &'static canboat::schema::PgnInfo
+pub fn canboat::schema::PgnVariants::next(&mut self) -> core::option::Option<Self::Item>
+pub fn canboat::schema::PgnVariants::size_hint(&self) -> (usize, core::option::Option<usize>)
+pub enum canboat::DecodeError
+pub canboat::DecodeError::ShortPayload
+pub canboat::DecodeError::ShortPayload::field: alloc::string::String
+pub canboat::DecodeError::ShortPayload::pgn: u32
+pub canboat::DecodeError::UnknownPgn
+pub canboat::DecodeError::UnknownPgn::pgn: u32
+impl core::error::Error for canboat::DecodeError
+impl core::fmt::Debug for canboat::DecodeError
+pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::DecodeError
+pub fn canboat::DecodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub enum canboat::EncodeError
+pub canboat::EncodeError::AmbiguousPgn
+pub canboat::EncodeError::AmbiguousPgn::pgn: u32
+pub canboat::EncodeError::AmbiguousPgn::variants: usize
+pub canboat::EncodeError::LengthMismatch
+pub canboat::EncodeError::LengthMismatch::expected: u32
+pub canboat::EncodeError::LengthMismatch::got: usize
+pub canboat::EncodeError::LengthMismatch::pgn: u32
+pub canboat::EncodeError::NoRepeatingSet
+pub canboat::EncodeError::NoRepeatingSet::pgn_id: &'static str
+pub canboat::EncodeError::NoRepeatingSet::set: usize
+pub canboat::EncodeError::NoSuchField
+pub canboat::EncodeError::NoSuchField::field: alloc::string::String
+pub canboat::EncodeError::NoSuchField::pgn_id: &'static str
+pub canboat::EncodeError::NoSuchInstance
+pub canboat::EncodeError::NoSuchInstance::instance: usize
+pub canboat::EncodeError::NoSuchInstance::pgn_id: &'static str
+pub canboat::EncodeError::NoSuchInstance::set: usize
+pub canboat::EncodeError::NoSuchPgn(u32)
+pub canboat::EncodeError::NoSuchPgnId(alloc::string::String)
+pub canboat::EncodeError::NotFixedLength(&'static str)
+pub canboat::EncodeError::TypeMismatch
+pub canboat::EncodeError::TypeMismatch::expected: &'static str
+pub canboat::EncodeError::TypeMismatch::field: &'static str
+pub canboat::EncodeError::UnknownLookupLabel
+pub canboat::EncodeError::UnknownLookupLabel::field: &'static str
+pub canboat::EncodeError::UnknownLookupLabel::label: alloc::string::String
+pub canboat::EncodeError::ValueOutOfRange
+pub canboat::EncodeError::ValueOutOfRange::field: &'static str
+pub canboat::EncodeError::ValueOutOfRange::value: f64
+pub canboat::EncodeError::VariableUnresolved
+pub canboat::EncodeError::VariableUnresolved::field: &'static str
+pub canboat::EncodeError::VariableUnresolved::reason: &'static str
+impl core::clone::Clone for canboat::EncodeError
+pub fn canboat::EncodeError::clone(&self) -> canboat::EncodeError
+impl core::cmp::PartialEq for canboat::EncodeError
+pub fn canboat::EncodeError::eq(&self, &canboat::EncodeError) -> bool
+impl core::error::Error for canboat::EncodeError
+impl core::fmt::Debug for canboat::EncodeError
+pub fn canboat::EncodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::EncodeError
+pub fn canboat::EncodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::EncodeError
+pub enum canboat::EncodeValue
+pub canboat::EncodeValue::Bytes(alloc::vec::Vec<u8>)
+pub canboat::EncodeValue::Int(i64)
+pub canboat::EncodeValue::Lookup(alloc::string::String)
+pub canboat::EncodeValue::NotAvailable
+pub canboat::EncodeValue::Number(f64)
+pub canboat::EncodeValue::Pgn(u32)
+pub canboat::EncodeValue::Text(alloc::string::String)
+impl core::clone::Clone for canboat::EncodeValue
+pub fn canboat::EncodeValue::clone(&self) -> canboat::EncodeValue
+impl core::cmp::PartialEq for canboat::EncodeValue
+pub fn canboat::EncodeValue::eq(&self, &canboat::EncodeValue) -> bool
+impl core::convert::From<&[u8]> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(&[u8]) -> Self
+impl core::convert::From<&str> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(&str) -> Self
+impl core::convert::From<alloc::string::String> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(alloc::string::String) -> Self
+impl core::convert::From<alloc::vec::Vec<u8>> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(alloc::vec::Vec<u8>) -> Self
+impl core::convert::From<f64> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(f64) -> Self
+impl core::convert::From<i32> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(i32) -> Self
+impl core::convert::From<i64> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(i64) -> Self
+impl core::convert::From<u32> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(u32) -> Self
+impl core::convert::From<u64> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(u64) -> Self
+impl core::fmt::Debug for canboat::EncodeValue
+pub fn canboat::EncodeValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::EncodeValue
+pub enum canboat::FieldValue
+pub canboat::FieldValue::Binary(alloc::vec::Vec<u8>)
+pub canboat::FieldValue::BitField
+pub canboat::FieldValue::BitField::bits: alloc::vec::Vec<(u64, core::option::Option<&'static str>)>
+pub canboat::FieldValue::BitField::value: u64
+pub canboat::FieldValue::Date(u16)
+pub canboat::FieldValue::Decimal(alloc::string::String)
+pub canboat::FieldValue::Float(f64)
+pub canboat::FieldValue::Integer(i64)
+pub canboat::FieldValue::IsoName
+pub canboat::FieldValue::IsoName::subfields: alloc::vec::Vec<canboat::DecodedField>
+pub canboat::FieldValue::IsoName::value: u64
+pub canboat::FieldValue::Lookup
+pub canboat::FieldValue::Lookup::name: core::option::Option<&'static str>
+pub canboat::FieldValue::Lookup::value: u64
+pub canboat::FieldValue::Mmsi(u32)
+pub canboat::FieldValue::NotAvailable
+pub canboat::FieldValue::Number(f64)
+pub canboat::FieldValue::OutOfRange
+pub canboat::FieldValue::OutOfRange::value: u64
+pub canboat::FieldValue::Pgn
+pub canboat::FieldValue::Pgn::description: core::option::Option<&'static str>
+pub canboat::FieldValue::Pgn::value: u32
+pub canboat::FieldValue::Reserved
+pub canboat::FieldValue::Reserved::bit_length: u32
+pub canboat::FieldValue::Reserved::bytes: alloc::vec::Vec<u8>
+pub canboat::FieldValue::Reserved::value: u64
+pub canboat::FieldValue::ReservedValue
+pub canboat::FieldValue::ReservedValue::value: u64
+pub canboat::FieldValue::Spare
+pub canboat::FieldValue::Spare::bit_length: u32
+pub canboat::FieldValue::Spare::bytes: alloc::vec::Vec<u8>
+pub canboat::FieldValue::Spare::value: u64
+pub canboat::FieldValue::String(alloc::string::String)
+pub canboat::FieldValue::Time
+pub canboat::FieldValue::Time::raw: i64
+pub canboat::FieldValue::Time::seconds: f64
+pub canboat::FieldValue::Unsupported
+pub canboat::FieldValue::Unsupported::field_type: &'static str
+impl canboat::FieldValue
+pub fn canboat::FieldValue::as_f64(&self) -> core::option::Option<f64>
+pub fn canboat::FieldValue::as_i64(&self) -> core::option::Option<i64>
+pub fn canboat::FieldValue::as_str(&self) -> core::option::Option<&str>
+pub fn canboat::FieldValue::is_not_available(&self) -> bool
+pub fn canboat::FieldValue::is_sentinel(&self) -> bool
+pub fn canboat::FieldValue::lookup_value(&self) -> core::option::Option<u64>
+impl core::clone::Clone for canboat::FieldValue
+pub fn canboat::FieldValue::clone(&self) -> canboat::FieldValue
+impl core::fmt::Debug for canboat::FieldValue
+pub fn canboat::FieldValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub enum canboat::FramePacketType
+pub canboat::FramePacketType::Fast
+pub canboat::FramePacketType::Other
+pub canboat::FramePacketType::Single
+impl core::clone::Clone for canboat::FramePacketType
+pub fn canboat::FramePacketType::clone(&self) -> canboat::FramePacketType
+impl core::cmp::Eq for canboat::FramePacketType
+impl core::cmp::PartialEq for canboat::FramePacketType
+pub fn canboat::FramePacketType::eq(&self, &canboat::FramePacketType) -> bool
+impl core::fmt::Debug for canboat::FramePacketType
+pub fn canboat::FramePacketType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::FramePacketType
+impl core::marker::StructuralPartialEq for canboat::FramePacketType
+pub enum canboat::Reassembled
+pub canboat::Reassembled::Complete(canboat::Frame)
+pub canboat::Reassembled::Error(canboat::ReassemblyError)
+pub canboat::Reassembled::Partial
+pub canboat::Reassembled::PassThrough(canboat::Frame)
+impl core::cmp::Eq for canboat::Reassembled
+impl core::cmp::PartialEq for canboat::Reassembled
+pub fn canboat::Reassembled::eq(&self, &canboat::Reassembled) -> bool
+impl core::fmt::Debug for canboat::Reassembled
+pub fn canboat::Reassembled::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::Reassembled
+pub enum canboat::ReassemblyError
+pub canboat::ReassemblyError::EmptyData
+pub canboat::ReassemblyError::OutOfSlots
+pub canboat::ReassemblyError::OutOfSlots::pgn: u32
+pub canboat::ReassemblyError::OutOfSlots::src: u8
+impl core::cmp::Eq for canboat::ReassemblyError
+impl core::cmp::PartialEq for canboat::ReassemblyError
+pub fn canboat::ReassemblyError::eq(&self, &canboat::ReassemblyError) -> bool
+impl core::error::Error for canboat::ReassemblyError
+impl core::fmt::Debug for canboat::ReassemblyError
+pub fn canboat::ReassemblyError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::ReassemblyError
+pub fn canboat::ReassemblyError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::ReassemblyError
+#[non_exhaustive] pub enum canboat::Units
+pub canboat::Units::Metric
+pub canboat::Units::Si
+impl core::clone::Clone for canboat::Units
+pub fn canboat::Units::clone(&self) -> canboat::Units
+impl core::cmp::Eq for canboat::Units
+impl core::cmp::PartialEq for canboat::Units
+pub fn canboat::Units::eq(&self, &canboat::Units) -> bool
+impl core::default::Default for canboat::Units
+pub fn canboat::Units::default() -> canboat::Units
+impl core::fmt::Debug for canboat::Units
+pub fn canboat::Units::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::Units
+impl core::marker::StructuralPartialEq for canboat::Units
+pub struct canboat::Database
+pub canboat::Database::schema_hash: u64
+pub canboat::Database::schema_version: &'static str
+pub canboat::Database::version: &'static str
+impl canboat::Database
+pub fn canboat::Database::bit_lookup(&self, &str) -> core::option::Option<&'static canboat::schema::BitLookupTable>
+pub fn canboat::Database::embedded(canboat::Units) -> &'static Self
+pub fn canboat::Database::embedded_j1939(canboat::Units) -> &'static Self
+pub fn canboat::Database::encode(&'static self, &str) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
+pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder
+pub fn canboat::Database::fallback_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::field(&self, &str, &str) -> core::option::Option<canboat::FieldId>
+pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::first_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::indirect_lookup(&self, &str, u64, u64) -> core::option::Option<&'static str>
+pub fn canboat::Database::is_j1939(&self) -> bool
+pub fn canboat::Database::lookup(&self, &str) -> core::option::Option<&'static canboat::schema::LookupTable>
+pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub fn canboat::Database::pgn_count(&self) -> usize
+pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
+pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
+pub fn canboat::Database::units(&self) -> canboat::Units
+impl canboat::Database
+pub fn canboat::Database::decode(&self, &canboat::Frame) -> core::result::Result<canboat::DecodedPgn, canboat::DecodeError>
+pub fn canboat::Database::pick_variant(&self, &canboat::Frame) -> core::option::Option<&'static canboat::schema::PgnInfo>
+pub struct canboat::DecodedField
+pub canboat::DecodedField::bit_length: core::option::Option<u32>
+pub canboat::DecodedField::bit_offset: core::option::Option<u32>
+pub canboat::DecodedField::info: &'static canboat::schema::FieldInfo
+pub canboat::DecodedField::repeat_index: core::option::Option<u32>
+pub canboat::DecodedField::repeat_set: u8
+pub canboat::DecodedField::value: canboat::FieldValue
+impl canboat::DecodedField
+pub fn canboat::DecodedField::as_f64_in(&self, &str) -> core::option::Option<f64>
+pub fn canboat::DecodedField::id(&self) -> &'static str
+pub fn canboat::DecodedField::name(&self) -> &'static str
+pub fn canboat::DecodedField::order(&self) -> u8
+pub fn canboat::DecodedField::part_of_primary_key(&self) -> bool
+pub fn canboat::DecodedField::precision(&self) -> u8
+pub fn canboat::DecodedField::resolution(&self) -> core::option::Option<f64>
+pub fn canboat::DecodedField::unit(&self) -> core::option::Option<&'static str>
+impl core::clone::Clone for canboat::DecodedField
+pub fn canboat::DecodedField::clone(&self) -> canboat::DecodedField
+impl core::fmt::Debug for canboat::DecodedField
+pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::DecodedPgn
+pub canboat::DecodedPgn::data: alloc::vec::Vec<u8>
+pub canboat::DecodedPgn::description: &'static str
+pub canboat::DecodedPgn::dst: u8
+pub canboat::DecodedPgn::fields: alloc::vec::Vec<canboat::DecodedField>
+pub canboat::DecodedPgn::has_repeating_set: [bool; 2]
+pub canboat::DecodedPgn::id: &'static str
+pub canboat::DecodedPgn::id_is_pinned: bool
+pub canboat::DecodedPgn::index_by_order: [i8; 32]
+pub canboat::DecodedPgn::pgn: u32
+pub canboat::DecodedPgn::prio: u8
+pub canboat::DecodedPgn::src: u8
+pub canboat::DecodedPgn::timestamp: core::option::Option<alloc::string::String>
+impl canboat::DecodedPgn
+pub fn canboat::DecodedPgn::field(&self, canboat::FieldId) -> core::option::Option<&canboat::DecodedField>
+pub fn canboat::DecodedPgn::field_by_name(&self, &str) -> core::option::Option<&canboat::DecodedField>
+pub fn canboat::DecodedPgn::iso_name(&self) -> core::option::Option<u64>
+impl core::clone::Clone for canboat::DecodedPgn
+pub fn canboat::DecodedPgn::clone(&self) -> canboat::DecodedPgn
+impl core::fmt::Debug for canboat::DecodedPgn
+pub fn canboat::DecodedPgn::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::FieldId
+pub canboat::FieldId::field: &'static canboat::schema::FieldInfo
+pub canboat::FieldId::pgn: &'static canboat::schema::PgnInfo
+impl core::clone::Clone for canboat::FieldId
+pub fn canboat::FieldId::clone(&self) -> canboat::FieldId
+impl core::fmt::Debug for canboat::FieldId
+pub fn canboat::FieldId::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::FieldId
+pub struct canboat::Frame
+pub canboat::Frame::data: smallvec::SmallVec<[u8; 8]>
+pub canboat::Frame::dst: u8
+pub canboat::Frame::pgn: u32
+pub canboat::Frame::prio: u8
+pub canboat::Frame::src: u8
+pub canboat::Frame::timestamp: core::option::Option<alloc::string::String>
+impl canboat::Frame
+pub fn canboat::Frame::new(core::option::Option<alloc::string::String>, u8, u32, u8, u8, impl core::iter::traits::collect::IntoIterator<Item = u8>) -> Self
+impl core::clone::Clone for canboat::Frame
+pub fn canboat::Frame::clone(&self) -> canboat::Frame
+impl core::cmp::Eq for canboat::Frame
+impl core::cmp::PartialEq for canboat::Frame
+pub fn canboat::Frame::eq(&self, &canboat::Frame) -> bool
+impl core::fmt::Debug for canboat::Frame
+pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::Frame
+pub struct canboat::PgnBuilder
+impl canboat::PgnBuilder
+pub fn canboat::PgnBuilder::add_set_instance(&mut self, usize) -> core::result::Result<usize, canboat::EncodeError>
+pub fn canboat::PgnBuilder::build(&self) -> core::result::Result<canboat::Frame, canboat::EncodeError>
+pub fn canboat::PgnBuilder::destination(self, u8) -> Self
+pub fn canboat::PgnBuilder::pgn_info(&self) -> &'static canboat::schema::PgnInfo
+pub fn canboat::PgnBuilder::priority(self, u8) -> Self
+pub fn canboat::PgnBuilder::push(&mut self, canboat::FieldId, impl core::convert::Into<canboat::EncodeValue>) -> core::result::Result<&mut Self, canboat::EncodeError>
+pub fn canboat::PgnBuilder::push_arg(&mut self, &str, &str) -> core::result::Result<&mut Self, canboat::EncodeError>
+pub fn canboat::PgnBuilder::push_by_name(&mut self, &str, impl core::convert::Into<canboat::EncodeValue>) -> core::result::Result<&mut Self, canboat::EncodeError>
+pub fn canboat::PgnBuilder::push_in_set(&mut self, usize, usize, &str, impl core::convert::Into<canboat::EncodeValue>) -> core::result::Result<&mut Self, canboat::EncodeError>
+pub fn canboat::PgnBuilder::source(self, u8) -> Self
+pub fn canboat::PgnBuilder::timestamp(self, impl core::convert::Into<alloc::string::String>) -> Self
+pub struct canboat::Reassembler
+impl canboat::Reassembler
+pub fn canboat::Reassembler::new() -> Self
+pub fn canboat::Reassembler::push(&mut self, canboat::Frame, canboat::FramePacketType) -> canboat::Reassembled
+impl core::default::Default for canboat::Reassembler
+pub fn canboat::Reassembler::default() -> Self
+pub const canboat::ADDR_GLOBAL: u8
+pub const canboat::ADDR_NULL: u8
+pub const canboat::CANBOAT_VERSION: &str
+pub const canboat::FASTPACKET_MAX_SIZE: usize
+pub const canboat::FRAME_MAX_SIZE: usize
+pub const canboat::SCHEMA_HASH: u64

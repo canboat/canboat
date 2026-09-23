@@ -8,11 +8,22 @@ license     = { workspace = true }
 authors     = { workspace = true }
 repository  = { workspace = true }
 rust-version = { workspace = true }
-description = "The canboat NMEA 2000 toolkit: a decode/encode library and a CLI (convert / interface / server / tui)."
+description = "NMEA 2000 decoding, encoding and live-bus access: the CANboat PGN database as a library, plus the canboat CLI (convert / interface / server / tui)."
+homepage    = "https://canboat.github.io/canboat"
+readme      = "README.md"
+keywords    = ["nmea2000", "nmea", "canbus", "marine", "j1939"]
+categories  = ["parser-implementations", "encoding", "hardware-support", "command-line-utilities"]
+# The parity harness needs a full canboat checkout; it is not part of the crate.
+exclude     = ["parity/"]
 
-# The facade library — the ONLY crate external consumers depend on. Its
-# public surface is curated (see docs/library-api-plan.md) and gated behind
-# the `decode` / `io` / `wire` / `node` / `bridge` features.
+# docs.rs documents the whole library surface and none of the CLI.
+[package.metadata.docs.rs]
+no-default-features = true
+features = ["decode", "io", "node", "bridge", "nmea0183", "ais", "json-input"]
+
+# The one crate. The library's public surface is curated (see
+# crates/doc/library-api-plan.md) and gated behind the `decode` / `io` /
+# `node` / `bridge` features; everything else in src/ is a private module.
 [lib]
 name = "canboat"
 path = "src/lib.rs"
@@ -31,49 +42,75 @@ required-features = ["cli"]
 default = ["cli"]
 
 # ── library features (what external consumers pick) ──
-decode   = ["dep:canboat-core"]            # sans-I/O core: schema, decode, encode, formatters
-io       = ["decode", "dep:canboat-io"]    # byte-source readers (read::*Reader)
-node     = ["decode", "dep:canboat-io"]    # device::{Name, Claimer, Responder}
-bridge   = ["io", "node", "dep:canboat-bridge"]  # live-bus: Bridge + BridgeConfig + serving
+# sans-I/O engine: schema, decode, encode, formatters
+decode   = ["dep:thiserror", "dep:smallvec", "dep:indexmap", "dep:itoa"]
+# byte-source readers (read::*Reader) and the bus::open_* gateway drivers
+io       = ["decode", "dep:serialport", "dep:flate2", "dep:tar", "dep:socketcan", "dep:libc"]
+# device::{Name, Claimer, Responder} — be a node without owning a transport
+node     = ["decode"]
+# live-bus: Bridge + BridgeConfig + serving
+bridge   = ["io", "node", "dep:anyhow", "dep:serde", "dep:serde_json", "dep:world_magnetic_model"]
 nmea0183 = ["decode"]                      # output::write_nmea0183
 ais      = ["decode"]                      # output::write_ais
 
-# ── the CLI (not part of the public library surface) ──
-# `canboat-bridge` hosts the server/n2kd subcommand implementations (lifted out
-# of this crate); the CLI dispatches into it.
 # JSON record -> wire frame driver (`convert --from json`, gateway stdin
 # TX, and the wasm bindings). A real JSON parser is warranted here, so it
 # pulls serde_json — kept out of the default library surface.
 json-input = ["decode", "dep:serde_json", "dep:anyhow", "dep:chrono"]
 
+# ── the CLI (not part of the public library surface) ──
 cli = [
-    "decode", "io", "bridge", "nmea0183", "ais", "json-input",
-    "canboat-bridge/cli",
-    "dep:canboat-cli", "dep:clap", "dep:env_logger", "dep:anyhow",
+    "decode", "io", "node", "bridge", "nmea0183", "ais", "json-input",
+    "dep:clap", "dep:env_logger", "dep:anyhow",
     "dep:serde", "dep:serde_json", "dep:tokio", "dep:crossterm",
     "dep:ratatui", "dep:futures", "dep:chrono", "dep:indexmap",
 ]
 
 [dependencies]
-# Library layer — optional, pulled in by the features above.
-canboat-core = { workspace = true, optional = true }
-canboat-io   = { workspace = true, optional = true }
 # `log` is a zero-cost facade; kept non-optional so any layer can log.
-log          = { workspace = true }
+log        = { workspace = true }
 
-# CLI layer — optional, enabled only by the `cli` feature.
-canboat-bridge = { workspace = true, optional = true }
-canboat-cli  = { workspace = true, optional = true }
-anyhow       = { workspace = true, optional = true }
-clap         = { workspace = true, optional = true }
-serde        = { workspace = true, optional = true }
-serde_json   = { workspace = true, optional = true, features = ["preserve_order"] }
-env_logger   = { workspace = true, optional = true }
+# decode
+thiserror  = { workspace = true, optional = true }
+smallvec   = { workspace = true, optional = true }
+indexmap   = { workspace = true, optional = true }
+# `itoa` for fast u64 → ASCII in the fixed-precision float formatter.
+# core::fmt::Display::<u64>::fmt was a measurable share of
+# output/json.rs's CPU on the merrimac-2022 workload; itoa is several
+# x faster and writes into a stack buffer.
+itoa       = { version = "1", optional = true }
+
+# io
+serialport = { workspace = true, optional = true }
+# Container captures: `.nif` is gzip(tar); `.pcap.gz` / inner captures
+# are gzip(pcap). flate2's default miniz_oxide backend stays pure-Rust
+# for the static musl release builds.
+flate2     = { workspace = true, optional = true }
+tar        = { workspace = true, optional = true }
+
+# bridge
+anyhow     = { workspace = true, optional = true }
+serde      = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true, features = ["preserve_order"] }
+# The WMM quirk computes magnetic variation locally.
+world_magnetic_model = { version = "1.2025.0", optional = true }
+
+# cli
+clap       = { workspace = true, optional = true }
+env_logger = { workspace = true, optional = true }
 # Async runtime + terminal UI, used only by the `tui` subcommand.
-tokio        = { workspace = true, optional = true, features = ["net", "time", "fs"] }
-crossterm    = { version = "0.29", optional = true, features = ["event-stream"] }
-ratatui      = { version = "0.30", optional = true }
-indexmap     = { workspace = true, optional = true }
-futures      = { workspace = true, optional = true }
-# Local-time formatting for the tui file browser (cross-platform).
-chrono       = { version = "0.4", optional = true, default-features = false, features = ["clock"] }
+tokio      = { workspace = true, optional = true, features = ["net", "time", "fs"] }
+crossterm  = { version = "0.29", optional = true, features = ["event-stream"] }
+ratatui    = { version = "0.30", optional = true }
+futures    = { workspace = true, optional = true }
+# Local-time formatting for the tui file browser (cross-platform), and
+# json-input's timestamp parsing.
+chrono     = { version = "0.4", optional = true, default-features = false, features = ["clock"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+socketcan = { version = "4", optional = true }
+libc      = { version = "0.2", optional = true }
+
+[build-dependencies]
+# Capture the git short SHA (+ dirty flag) for the analyzer version banner.
+vergen-gitcl = { version = "10", default-features = false }

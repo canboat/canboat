@@ -37,6 +37,14 @@ Principles (in priority order):
 
 ## 1. Crate topology
 
+> **Superseded (2026-09):** ahead of the first crates.io release the workspace
+> crates below were folded into the single `canboat` crate as private modules
+> (`src/engine/` ← canboat-core + canboat-schema, `src/io/` ← canboat-io,
+> `src/server/` + `src/n2kd/` ← canboat-bridge, `src/cli/` ← canboat-cli + the
+> binary; canboat-tokio deleted). The feature names and the facade are unchanged;
+> only the facade is public, now enforced by module privacy rather than
+> convention. The rest of this section is kept as the historical design.
+
 Keep the focused workspace crates (the sans-I/O core is worth keeping separate for
 compile time and discipline), but front them with a single facade:
 
