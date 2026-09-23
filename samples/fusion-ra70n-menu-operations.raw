@@ -1,0 +1,36 @@
+# format=FAST
+# Fusion MS-RA70N at source 12, commanded from an MS-NRX300 at source 33.
+#
+# Selected Bluetooth-menu traffic showing the one-byte lockId used by Menu
+# Action, Menu Count and Menu Item operations. The lockId is allocated by the
+# 0x000c/0x8012 handshake, whose separate four-byte requestToken correlates
+# the request and response.
+#
+# Menu Action: source 6, item 0, Select, lockId 1; status echoes lockId 1.
+2026-09-19T09:21:43.186Z,3,126720,33,12,11,a3,99,09,00,06,00,00,00,00,01,01
+2026-09-19T09:21:43.188Z,7,130820,12,255,11,a3,99,0f,80,06,00,00,00,00,01,01
+#
+# Request Menu Count: source 6, lockId 1; response count 3, lockId 1.
+2026-09-19T09:21:43.486Z,3,126720,33,12,6,a3,99,0a,00,06,01
+2026-09-19T09:21:43.487Z,7,130820,12,255,10,a3,99,10,80,06,03,00,00,00,01
+#
+# Request three Menu Items from index 0, lockId 1.
+2026-09-19T09:21:43.786Z,3,126720,33,12,14,a3,99,0b,00,06,00,00,00,00,03,00,00,00,01
+#
+# Later Menu Action operations in the same capture use different lockId values.
+# item 2, Select, lockId 1
+2026-09-19T09:21:45.069Z,3,126720,33,12,11,a3,99,09,00,06,02,00,00,00,01,01
+# item 4, Select, lockId 1
+2026-09-19T09:21:45.294Z,3,126720,33,12,11,a3,99,09,00,06,04,00,00,00,01,01
+# item 2, Select, lockId 2
+2026-09-19T09:22:15.284Z,3,126720,33,12,11,a3,99,09,00,06,02,00,00,00,02,01
+# item 3, Select, lockId 1
+2026-09-19T09:22:20.983Z,3,126720,33,12,11,a3,99,09,00,06,03,00,00,00,01,01
+#
+# Menu Item responses to the request above, all with lockId 1.
+# item 0, flags 0x83, "LMs Pixel 9 Pro "
+2026-09-19T09:21:43.789Z,7,130820,12,255,29,a3,99,11,80,06,00,00,00,00,83,01,10,4c,4d,73,20,50,69,78,65,6c,20,39,20,50,72,6f,20,00
+# item 1, flags 0x89, "Discoverable"
+2026-09-19T09:21:43.792Z,7,130820,12,255,25,a3,99,11,80,06,01,00,00,00,89,01,0c,44,69,73,63,6f,76,65,72,61,62,6c,65,00
+# item 2, flags 0x49, "Remove Device"
+2026-09-19T09:21:43.794Z,7,130820,12,255,26,a3,99,11,80,06,02,00,00,00,49,01,0d,52,65,6d,6f,76,65,20,44,65,76,69,63,65,00

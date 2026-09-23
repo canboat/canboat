@@ -1,0 +1,5 @@
+name: FUSION_MENU_ITEM_FLAGS
+kind: bit
+bits: 8
+values:
+  1: Selected

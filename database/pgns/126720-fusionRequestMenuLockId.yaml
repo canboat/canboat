@@ -1,0 +1,58 @@
+pgn: 126720
+id: fusionRequestMenuLockId
+description: 'Fusion: Request Menu Lock ID'
+type: Fast
+variantOrder: 57
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 16
+  description: Request Menu Lock ID
+  match: 12
+  lookup: FUSION_MESSAGE_ID
+  primaryKey: true
+- id: requestToken
+  name: Request Token
+  type: UINT32
+notes: |-
+  Requests allocation of a one-byte menu lock ID. The four-byte requestToken is
+  chosen by the controller and echoed unchanged by PGN 130820 message id 32786
+  "Menu Lock ID", allowing the controller to correlate the asynchronous reply.
+
+  Capture evidence shows that requestToken is echoed unchanged in the allocation
+  response while the returned one-byte lockId is subsequently used by Menu
+  Action, Menu Count and Menu Item operations.
+
+  requestToken is represented as UINT32 because the existing wire encoding is
+  little-endian and all four bytes belong to the echoed token; no arithmetic
+  meaning is implied.
+
+  Evidence: samples/fusion-ra70n-menu-lock.raw.
+samples:
+- raw:
+  - "2026-09-19T08:46:38.140Z,3,126720,33,12,8,00,08,a3,99,0c,00,cd,81"
+  - "2026-09-19T08:46:38.141Z,3,126720,33,12,8,01,00,00,ff,ff,ff,ff,ff"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    proprietaryId: "Request Menu Lock ID"
+    requestToken: 33229

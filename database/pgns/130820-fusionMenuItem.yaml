@@ -40,10 +40,59 @@ fields:
   type: UINT32
 - id: flags
   name: Flags
-  type: UINT8
+  type: BITLOOKUP
+  bits: 8
+  lookupBits: FUSION_MENU_ITEM_FLAGS
 - id: lockId
   name: Lock ID
   type: UINT8
 - id: text
   name: Text
   type: STRING_LZ
+notes: |-
+  Menu Item flag bit 1 (0x02) is observed as Selected. In Bluetooth menu
+  captures it is set for the selected device and while Discoverable is enabled;
+  the meaning of the remaining flag bits is not yet established.
+
+  lockId is the one-byte menu lock ID allocated by PGN 130820 message id 32786
+  "Menu Lock ID". It is then carried by Menu Action, Menu Count and Menu Item
+  operations.
+
+  It is distinct from the four-byte requestToken used to correlate the PGN
+  126720 proprietary id 12 request with the allocation response. Capture
+  evidence shows the returned lockId being reused by subsequent menu operations.
+
+  Evidence: samples/fusion-ra70n-menu-operations.raw,
+  samples/fusion-ms-ra70n-bluetooth-menu.raw and the existing
+  samples/boatkit-fusion-menu.raw.
+samples:
+- raw: "2026-09-19T09:21:43.789Z,7,130820,12,255,29,a3,99,11,80,06,00,00,00,00,83,01,10,4c,4d,73,20,50,69,78,65,6c,20,39,20,50,72,6f,20,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Menu Item"
+    sourceId: 6
+    itemIndex: 0
+    flags: ["bit 0", "Selected", "bit 7"]
+    lockId: 1
+    text: "LMs Pixel 9 Pro"
+- raw: "2026-09-19T09:21:43.792Z,7,130820,12,255,25,a3,99,11,80,06,01,00,00,00,89,01,0c,44,69,73,63,6f,76,65,72,61,62,6c,65,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Menu Item"
+    sourceId: 6
+    itemIndex: 1
+    flags: ["bit 0", "bit 3", "bit 7"]
+    lockId: 1
+    text: "Discoverable"
+- raw: "2026-09-19T06:43:06.941235Z,7,130820,12,255,25,a3,99,11,80,06,00,00,00,00,8b,01,0c,44,69,73,63,6f,76,65,72,61,62,6c,65,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Menu Item"
+    sourceId: 6
+    itemIndex: 0
+    flags: ["bit 0", "Selected", "bit 3", "bit 7"]
+    lockId: 1
+    text: "Discoverable"

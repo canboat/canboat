@@ -46,6 +46,17 @@ fields:
 - id: lockId
   name: Lock ID
   type: UINT8
+notes: |-
+  lockId is the one-byte menu lock ID allocated by PGN 130820 message id 32786
+  "Menu Lock ID". It is then carried by Menu Action, Menu Count and Menu Item
+  operations.
+
+  It is distinct from the four-byte requestToken used to correlate the PGN
+  126720 proprietary id 12 request with the allocation response. Capture
+  evidence shows the returned lockId being reused by subsequent menu operations.
+
+  Evidence: samples/fusion-ra70n-menu-operations.raw and the existing
+  samples/boatkit-fusion-menu.raw.
 samples:
 - raw: "2026-08-09T13:43:00.324829534-07:00,6,126720,7,10,11,a3,99,09,00,02,04,00,00,00,02,00"  # from boatkit-fusion-menu.raw
   expects:
