@@ -246,8 +246,8 @@ pub mod output {
 /// already-decoded analyzer-JSON line.
 #[cfg(feature = "decode")]
 pub mod read {
-    /// The ASCII line formats [`PlainReader`] understands; pass one to
-    /// [`PlainReader::with_format`] to skip autodetection.
+    /// The ASCII line formats `PlainReader` (feature `io`) understands; pass
+    /// one to `PlainReader::with_format` to skip autodetection.
     pub use crate::engine::format::InputFormat;
     pub use crate::engine::json_to_decoded as from_analyzer_json;
     pub use crate::engine::{Decoder, FrameSource};
