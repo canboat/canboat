@@ -49,12 +49,21 @@ notes: |-
 
   Zone is zero-based, as elsewhere in the Fusion PGNs.
 
-  Observed on a Fusion MS-WB670 commanded by a B&G Zeus SRX over NMEA 2000.
-  The MS-WB670 exposes a single master tone control, so zone was only ever
-  observed as 0; the field is nevertheless present on the wire. Range is
-  documented as -15 to +15 on the status side.
+  Observed on both a Fusion MS-WB670 and an MS-RA70N. The MS-WB670 capture
+  was commanded by a B&G Zeus SRX over NMEA 2000; the MS-RA70N capture was
+  made while changing Tone from an NRX300 remote. Both stereos expose a single
+  master tone control, and both use zone 0 for Set Equalizer; the zone field is
+  nevertheless present on the wire and should not be interpreted as proof of
+  per-zone EQ support.
 
-  Evidence: samples/fusion-set-equalizer.raw.
+  The MS-RA70N capture contains a sweep of the signed tone values. Set Equalizer
+  commands are followed by PGN 130820 message id 32795 "Tone" status carrying
+  the same values, including the documented endpoints +15 (0x0f) and -15
+  (0xf1). This confirms both the signed INT8 representation and the -15 to +15
+  range on the command/status pair.
+
+  Evidence: samples/fusion-set-equalizer.raw for the MS-WB670, and
+  samples/fusion-ra70n-tone.raw for the MS-RA70N.
 samples:
 - raw:
   - "2023-01-01-00:00:00.000,3,126720,39,51,8,00,08,a3,99,16,00,00,08"

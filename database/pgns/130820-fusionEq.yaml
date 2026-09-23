@@ -44,4 +44,67 @@ fields:
 - id: treble
   name: Treble
   type: INT8
-notes: 'Range: -15 to +15'
+notes: |-
+  Tone status contains a zero-based zone byte followed by signed Bass, Mid and
+  Treble values. The corresponding command is PGN 126720 proprietary id 22
+  "Set Equalizer", which carries the same zone/bass/mid/treble payload.
+
+  Despite the zone byte, Tone/EQ is not necessarily a per-zone control. On the
+  MS-RA70N the user-facing Bass, Mid and Treble controls are stereo-wide: changing
+  them produces Set Equalizer commands with zone 0 and Tone status responses with
+  zone 0. The MS-WB670 has independently been observed using the same zone-0
+  master-tone semantics. The zone field should therefore be preserved as wire
+  data rather than interpreted as proof that a particular model supports
+  per-zone EQ.
+
+  The MS-RA70N capture also exercises signed values across the full documented
+  -15 to +15 range. Command and status frames track each other while an axis is
+  adjusted, confirming INT8 rather than an unsigned or biased representation.
+
+  Evidence: samples/fusion-ra70n-tone.raw, and samples/fusion-set-equalizer.raw
+  for the MS-WB670 command side.
+samples:
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1b,80,00,00"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,fc,05"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 0
+    bass: 0
+    mid: -4
+    treble: 5
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,0f"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 0
+    bass: 7
+    mid: -3
+    treble: 15
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,00"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 0
+    bass: 7
+    mid: -3
+    treble: 0
+- raw:
+  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
+  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,f1"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 0
+    bass: 7
+    mid: -3
+    treble: -15
