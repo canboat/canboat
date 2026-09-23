@@ -6,17 +6,19 @@
 //! The git SHA is captured by this crate's `build.rs` (vergen) into
 //! `VERGEN_GIT_SHA` / `VERGEN_GIT_DIRTY`; those env vars only resolve
 //! inside this crate, so the banner is built here rather than in
-//! canboat-core or canboat-cli.
+//! canboat-core or canboat-cli. They are read with `option_env!`
+//! because a build outside a git worktree — a crates.io tarball, or
+//! `cargo package`'s verification build — has neither.
 
 /// The canboat-rs release version (the human version).
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
 /// Short git SHA of the build, `"-dirty"`-suffixed when the working
-/// tree had uncommitted tracked changes. `"unknown"` for tarball builds
-/// with no `.git` (see `build.rs`).
+/// tree had uncommitted tracked changes. `"unknown"` for a build with
+/// no `.git` to ask (a crates.io or source tarball).
 pub fn commit() -> String {
-    let sha = env!("VERGEN_GIT_SHA");
-    if env!("VERGEN_GIT_DIRTY") == "true" {
+    let sha = option_env!("VERGEN_GIT_SHA").unwrap_or("unknown");
+    if option_env!("VERGEN_GIT_DIRTY") == Some("true") {
         format!("{sha}-dirty")
     } else {
         sha.to_string()
