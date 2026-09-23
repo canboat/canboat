@@ -295,3 +295,28 @@ jobs:
         with:
           prerelease: ${{ contains(github.ref_name, '-') }}
           files: keel-windows-x86_64.exe
+
+  # Publish the `canboat` crate to crates.io on every release tag, once the
+  # version gate above has passed. Idempotent: re-running the workflow for a
+  # tag whose version is already on crates.io skips instead of failing, so an
+  # asset-upload retry never trips over a publish that already happened.
+  # Needs the CARGO_REGISTRY_TOKEN repository secret: a crates.io API token
+  # with the publish-new / publish-update scopes for this crate.
+  crates-io:
+    needs: docs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Publish canboat to crates.io
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          version="${GITHUB_REF_NAME#v}"
+          if curl -sSf -A "canboat-release (github.com/canboat/canboat)" -o /dev/null \
+               "https://crates.io/api/v1/crates/canboat/${version}"; then
+            echo "canboat ${version} is already on crates.io; nothing to do"
+            exit 0
+          fi
+          cargo publish -p canboat --locked
