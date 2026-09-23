@@ -36,7 +36,7 @@ pub enum InputFormat {
     /// Once any line is wider than 8 payload bytes the parser locks
     /// into coalesced mode; matches canboat's RAWFORMAT_PLAIN_OR_FAST.
     Plain,
-    /// Like [`Plain`] but with no global lock-in — every frame is
+    /// Like [`Plain`](Self::Plain) but with no global lock-in — every frame is
     /// dispatched on its own width. Matches canboat's
     /// RAWFORMAT_PLAIN_MIX_FAST, where a single capture interleaves
     /// pre-coalesced (>8 byte) FAST records with raw 8-byte

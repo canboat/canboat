@@ -318,6 +318,15 @@ jobs:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
         run: |
           version="${GITHUB_REF_NAME#v}"
+          # The docs job checked the tag against common/version.h; the crate
+          # takes its version from [workspace.package], so check that too
+          # rather than publish a crate whose version is not the tag's.
+          manifest=$(cargo metadata --no-deps --format-version 1 \
+                     | jq -r '.packages[] | select(.name == "canboat") | .version')
+          if [ "$manifest" != "$version" ]; then
+            echo "tag is v${version} but crates/canboat is at ${manifest}" >&2
+            exit 1
+          fi
           if curl -sSf -A "canboat-release (github.com/canboat/canboat)" -o /dev/null \
                "https://crates.io/api/v1/crates/canboat/${version}"; then
             echo "canboat ${version} is already on crates.io; nothing to do"

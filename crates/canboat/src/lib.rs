@@ -214,6 +214,8 @@ pub use crate::engine::{
 /// for consumers that treat the database as metadata (codegen, UI forms).
 #[cfg(feature = "decode")]
 pub mod schema {
+    pub use crate::engine::db::PgnVariants;
+    pub use crate::engine::types::LookupFieldTypeValue;
     pub use crate::engine::{
         BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable,
         IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
@@ -244,6 +246,9 @@ pub mod output {
 /// already-decoded analyzer-JSON line.
 #[cfg(feature = "decode")]
 pub mod read {
+    /// The ASCII line formats [`PlainReader`] understands; pass one to
+    /// [`PlainReader::with_format`] to skip autodetection.
+    pub use crate::engine::format::InputFormat;
     pub use crate::engine::json_to_decoded as from_analyzer_json;
     pub use crate::engine::{Decoder, FrameSource};
 

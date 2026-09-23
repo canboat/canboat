@@ -154,8 +154,9 @@ pub struct DecodedField {
     /// under JSON `"list"`, 2 → under `"list2"`. `0` for non-repeating.
     pub repeat_set: u8,
     /// VARIABLE / DYNAMIC_FIELD_VALUE override metadata. `None` for
-    /// the common path.
-    pub overrides: Option<Box<FieldOverrides>>,
+    /// the common path. Internal: the `unit()` / `resolution()` /
+    /// `precision()` accessors are how a consumer sees its effect.
+    pub(crate) overrides: Option<Box<FieldOverrides>>,
 }
 
 /// Resolved-at-decode-time metadata override carried by VARIABLE and

@@ -118,15 +118,15 @@ pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Res
 pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder
 pub fn canboat::Database::fallback_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::field(&self, &str, &str) -> core::option::Option<canboat::FieldId>
-pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::engine::types::LookupFieldTypeValue>
-pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::engine::types::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
 pub fn canboat::Database::first_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::indirect_lookup(&self, &str, u64, u64) -> core::option::Option<&'static str>
 pub fn canboat::Database::is_j1939(&self) -> bool
 pub fn canboat::Database::lookup(&self, &str) -> core::option::Option<&'static canboat::schema::LookupTable>
 pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::pgn_count(&self) -> usize
-pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::engine::db::PgnVariants
+pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
 pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
 pub fn canboat::Database::units(&self) -> canboat::Units
 impl canboat::Database
@@ -136,7 +136,6 @@ pub struct canboat::prelude::DecodedField
 pub canboat::prelude::DecodedField::bit_length: core::option::Option<u32>
 pub canboat::prelude::DecodedField::bit_offset: core::option::Option<u32>
 pub canboat::prelude::DecodedField::info: &'static canboat::schema::FieldInfo
-pub canboat::prelude::DecodedField::overrides: core::option::Option<alloc::boxed::Box<canboat::engine::decode::FieldOverrides>>
 pub canboat::prelude::DecodedField::repeat_index: core::option::Option<u32>
 pub canboat::prelude::DecodedField::repeat_set: u8
 pub canboat::prelude::DecodedField::value: canboat::FieldValue
@@ -200,6 +199,26 @@ impl core::fmt::Debug for canboat::Frame
 pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Frame
 pub mod canboat::read
+pub enum canboat::read::InputFormat
+pub canboat::read::InputFormat::ActisenseAscii
+pub canboat::read::InputFormat::Airmar
+pub canboat::read::InputFormat::Candump
+pub canboat::read::InputFormat::Chetco
+pub canboat::read::InputFormat::GarminCsv
+pub canboat::read::InputFormat::GarminCsv2
+pub canboat::read::InputFormat::Ikonvert
+pub canboat::read::InputFormat::Plain
+pub canboat::read::InputFormat::PlainMixFast
+pub canboat::read::InputFormat::Ydwg02
+impl core::clone::Clone for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::clone(&self) -> canboat::read::InputFormat
+impl core::cmp::Eq for canboat::read::InputFormat
+impl core::cmp::PartialEq for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::eq(&self, &canboat::read::InputFormat) -> bool
+impl core::fmt::Debug for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::InputFormat
+impl core::marker::StructuralPartialEq for canboat::read::InputFormat
 pub struct canboat::read::Decoder<S>
 impl<S: canboat::read::FrameSource> canboat::read::Decoder<S>
 pub fn canboat::read::Decoder<S>::new(S, &'static canboat::Database) -> Self
@@ -333,6 +352,24 @@ pub fn canboat::schema::IndirectLookupValue::clone(&self) -> canboat::schema::In
 impl core::fmt::Debug for canboat::schema::IndirectLookupValue
 pub fn canboat::schema::IndirectLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::IndirectLookupValue
+pub struct canboat::schema::LookupFieldTypeValue
+pub canboat::schema::LookupFieldTypeValue::bits: core::option::Option<u32>
+pub canboat::schema::LookupFieldTypeValue::field_type: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::lookup_bit_enumeration: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::lookup_enumeration: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::name: &'static str
+pub canboat::schema::LookupFieldTypeValue::precision: u8
+pub canboat::schema::LookupFieldTypeValue::resolution: core::option::Option<f64>
+pub canboat::schema::LookupFieldTypeValue::signed: bool
+pub canboat::schema::LookupFieldTypeValue::unit: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::value: u64
+impl canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::bit_length(&self) -> core::option::Option<u32>
+impl core::clone::Clone for canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::clone(&self) -> canboat::schema::LookupFieldTypeValue
+impl core::fmt::Debug for canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::LookupFieldTypeValue
 pub struct canboat::schema::LookupTable
 pub canboat::schema::LookupTable::by_value: &'static [(u64, u32)]
 pub canboat::schema::LookupTable::max_value: core::option::Option<u64>
@@ -378,6 +415,12 @@ pub fn canboat::schema::PgnInfo::clone(&self) -> canboat::schema::PgnInfo
 impl core::fmt::Debug for canboat::schema::PgnInfo
 pub fn canboat::schema::PgnInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::PgnInfo
+pub struct canboat::schema::PgnVariants
+impl core::iter::traits::exact_size::ExactSizeIterator for canboat::schema::PgnVariants
+impl core::iter::traits::iterator::Iterator for canboat::schema::PgnVariants
+pub type canboat::schema::PgnVariants::Item = &'static canboat::schema::PgnInfo
+pub fn canboat::schema::PgnVariants::next(&mut self) -> core::option::Option<Self::Item>
+pub fn canboat::schema::PgnVariants::size_hint(&self) -> (usize, core::option::Option<usize>)
 pub enum canboat::DecodeError
 pub canboat::DecodeError::ShortPayload
 pub canboat::DecodeError::ShortPayload::field: alloc::string::String
@@ -580,15 +623,15 @@ pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Res
 pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder
 pub fn canboat::Database::fallback_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::field(&self, &str, &str) -> core::option::Option<canboat::FieldId>
-pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::engine::types::LookupFieldTypeValue>
-pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::engine::types::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup(&self, &str, u64) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
+pub fn canboat::Database::field_type_lookup_by_name(&self, &str, &str) -> core::option::Option<&'static canboat::schema::LookupFieldTypeValue>
 pub fn canboat::Database::first_pgn(&self, u32) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::indirect_lookup(&self, &str, u64, u64) -> core::option::Option<&'static str>
 pub fn canboat::Database::is_j1939(&self) -> bool
 pub fn canboat::Database::lookup(&self, &str) -> core::option::Option<&'static canboat::schema::LookupTable>
 pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'static canboat::schema::PgnInfo>
 pub fn canboat::Database::pgn_count(&self) -> usize
-pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::engine::db::PgnVariants
+pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
 pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
 pub fn canboat::Database::units(&self) -> canboat::Units
 impl canboat::Database
@@ -598,7 +641,6 @@ pub struct canboat::DecodedField
 pub canboat::DecodedField::bit_length: core::option::Option<u32>
 pub canboat::DecodedField::bit_offset: core::option::Option<u32>
 pub canboat::DecodedField::info: &'static canboat::schema::FieldInfo
-pub canboat::DecodedField::overrides: core::option::Option<alloc::boxed::Box<canboat::engine::decode::FieldOverrides>>
 pub canboat::DecodedField::repeat_index: core::option::Option<u32>
 pub canboat::DecodedField::repeat_set: u8
 pub canboat::DecodedField::value: canboat::FieldValue
