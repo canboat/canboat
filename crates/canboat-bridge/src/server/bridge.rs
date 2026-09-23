@@ -70,10 +70,6 @@ pub struct Bridge {
     nmea_filter: Option<Arc<Mutex<crate::n2kd::nmea_filter::NmeaFilter>>>,
     overrides: Option<Arc<Mutex<crate::n2kd::overrides::OverrideEngine>>>,
 
-    /// Injection point for the write-only input port and the client-write
-    /// loopback. `None` in stdin-only mode (no device writer).
-    inject: Option<tcp::InjectPoint>,
-
     /// Optional in-process decoded tap (installed by [`Bridge::decoded`]).
     decoded_tx: Option<mpsc::Sender<Arc<DecodedPgn>>>,
 
@@ -217,20 +213,12 @@ impl Bridge {
         // In device mode treat stdin like `actisense-serial -p`: parse
         // PLAIN/FAST lines, write the resulting frames to the device, AND
         // loop them back into the pipeline source so they show up in NMEA
-        // 0183 / TCP outputs alongside device-originated frames. TCP
-        // read/write ports get the same loopback channel.
-        let (frames_rx, inject) = match device_sender.clone() {
-            Some(sender) => {
-                let (rx, loopback) =
-                    super::install_stdin_loopback(frames_rx, sender, pre_coalesced.clone());
-                let inject = tcp::InjectPoint {
-                    device: device_sender.clone().expect("device_sender Some"),
-                    loopback,
-                    claim_addr: claim_addr.clone(),
-                };
-                (rx, Some(inject))
-            }
-            None => (frames_rx, None),
+        // 0183 / TCP outputs alongside device-originated frames. The TCP
+        // input port deliberately does NOT share this loopback (see
+        // `tcp::spawn_input_server`).
+        let frames_rx = match device_sender.clone() {
+            Some(sender) => super::install_stdin_loopback(frames_rx, sender, pre_coalesced.clone()),
+            None => frames_rx,
         };
 
         // Mirror canboat C `n2kd`'s periodic ISO claim / product-info
@@ -301,7 +289,6 @@ impl Bridge {
             engine,
             nmea_filter,
             overrides,
-            inject,
             decoded_tx: None,
             serve_stop: Arc::new(AtomicBool::new(false)),
             tcp_joins: Vec::new(),
@@ -391,15 +378,16 @@ impl Bridge {
         }
         // Write-only input port (`SERVER_INPUT_STREAM`): clients write
         // PLAIN/FAST lines encoded and forwarded onto the bus. Nothing is
-        // streamed back, so it adds no serialization cost.
+        // streamed back and nothing is echoed into the pipeline, so it
+        // adds no serialization cost.
         if config.input_port != 0
-            && let Some(inject) = self.inject.clone()
+            && let Some(sender) = self.device_sender.clone()
         {
             self.tcp_joins.push(tcp::spawn_input_server(
                 "input",
                 config.bind,
                 config.input_port,
-                Some(inject),
+                Some(sender),
                 stop(),
             )?);
         }

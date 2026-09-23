@@ -1070,11 +1070,10 @@ mod imp {
     /// `claim_addr` is shared with the worker: it starts at
     /// [`super::CLAIM_UNCLAIMED`] (254) and is updated to our
     /// currently-claimed source address every time the worker decides
-    /// it. Callers that need to rewrite an outbound `src` to match the
-    /// gateway's live address (e.g. canboat-pipeline's CSV-port
-    /// injector, so the in-process loopback shows the same `src` the
-    /// rewritten frame will reach the bus with) read it from this
-    /// atom. The supervisor reuses the same atom across reconnects.
+    /// it. Callers that need to know the gateway's live address (e.g.
+    /// `Bridge::claimed_address`, and the quirks that emit as our own
+    /// node) read it from this atom. The supervisor reuses the same
+    /// atom across reconnects.
     /// NMEA 2000 runs at a fixed 250 kbit/s — the standard never varies, so
     /// the managed bring-up hard-codes it rather than exposing a knob.
     const NMEA2000_BITRATE: u32 = 250_000;

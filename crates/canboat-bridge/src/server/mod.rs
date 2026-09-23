@@ -835,18 +835,17 @@ fn stdin_pump(
 /// Spawn a forwarder thread that pulls from `device_frames_rx` into a
 /// fresh merge channel, plus a stdin pump that parses PLAIN/FAST
 /// lines from stdin and pushes them onto the same merge channel
-/// *and* writes them to the device via `sender`. Returns
-/// `(merge_rx, loopback_tx)` — the receiver becomes the pipeline's
-/// source and the sender is handed to TCP servers so client writes
-/// can join the same loopback.
+/// *and* writes them to the device via `sender`. Returns the merge
+/// receiver, which becomes the pipeline's source. Only stdin joins
+/// this loopback; the TCP input port writes to the device alone.
 fn install_stdin_loopback(
     device_frames_rx: mpsc::Receiver<RawFrame>,
     sender: FrameSender,
     pre_coalesced: Arc<AtomicBool>,
-) -> (mpsc::Receiver<RawFrame>, mpsc::Sender<RawFrame>) {
+) -> mpsc::Receiver<RawFrame> {
     let (merge_tx, merge_rx) = mpsc::channel::<RawFrame>();
     let merge_tx_device = merge_tx.clone();
-    let merge_tx_stdin = merge_tx.clone();
+    let merge_tx_stdin = merge_tx;
     thread::Builder::new()
         .name("device-forward".into())
         .spawn(move || {
@@ -861,7 +860,7 @@ fn install_stdin_loopback(
         .name("stdin-pump".into())
         .spawn(move || stdin_pump(merge_tx_stdin, pre_coalesced, Some(sender)))
         .expect("spawn stdin-pump");
-    (merge_rx, merge_tx)
+    merge_rx
 }
 
 // Suppress an unused-import warning when no device flag is built (we
