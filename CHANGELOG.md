@@ -6,6 +6,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.2.1](https://github.com/canboat/canboat/compare/v8.2.0...v8.2.1) (2026-09-23)
+
+
+### Changed
+
+* **rust:** collapse the workspace into the single canboat crate ([#907](https://github.com/canboat/canboat/issues/907)) ([56f3954](https://github.com/canboat/canboat/commit/56f3954ed005387e200bd770b70f7ebfebf9edc3))
+
 ## [8.2.0](https://github.com/canboat/canboat/compare/v8.1.0...v8.2.0) (2026-09-23)
 
 
