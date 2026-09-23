@@ -93,7 +93,7 @@ impl Name {
     }
 
     /// Pack into the 64-bit ISO 11783-5 NAME.
-    pub fn to_u64(&self) -> u64 {
+    pub fn to_u64(self) -> u64 {
         let unique = (self.unique_number & 0x1f_ffff) as u64;
         let mfr = (self.manufacturer_code & 0x7ff) as u64;
         let di = self.device_instance as u64;

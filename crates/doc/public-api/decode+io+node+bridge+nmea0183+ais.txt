@@ -153,7 +153,7 @@ pub fn canboat::device::Name::industry_group(self, u8) -> Self
 pub fn canboat::device::Name::is_arbitrary_address_capable(&self) -> bool
 pub fn canboat::device::Name::new(u16, u32) -> Self
 pub fn canboat::device::Name::system_instance(self, u8) -> Self
-pub fn canboat::device::Name::to_u64(&self) -> u64
+pub fn canboat::device::Name::to_u64(self) -> u64
 impl core::clone::Clone for canboat::device::Name
 pub fn canboat::device::Name::clone(&self) -> canboat::device::Name
 impl core::cmp::Eq for canboat::device::Name
