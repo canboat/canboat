@@ -6,27 +6,35 @@ project and was merged into canboat in v8; it shares the one PGN database in
 
 It serves two purposes. First, a more composable way of working with
 the CANboat database, built with modern tools: the PGN database is compiled
-into a sans-I/O core library, with thin sync and async adapters above it, so
-you can embed NMEA 2000 decoding in your own application instead of parsing
-another program's output. Second, more polished end-to-end solutions —
+into a sans-I/O engine, with thin sync adapters above it, so you can embed
+NMEA 2000 decoding in your own application instead of parsing another
+program's output. Second, more polished end-to-end solutions —
 `canboat server` runs the whole device-to-services chain in one process,
 and `canboat tui` puts an interactive monitor on top of it.
 
 ## The library side
 
-- **`canboat-core`** — sans-I/O. PGN database, format parsers, reassembly,
-  decoder, encoder, output formatters. No `std::io`, no `tokio`, no threads.
-  The schema (`canboat.json`) is compiled in at build time; there is nothing
-  to load or distribute at runtime.
-- **`canboat-io`** — sync `std::io` adapters (stdin, serial, `std::net`).
-  Used by the standalone binaries.
-- **`canboat-tokio`** — async tokio adapters, for embedding the decode
-  pipeline in a tokio application.
-- **`canboat-cli`**, **`canboat-schema`** — shared CLI plumbing and schema
-  types.
+There is one crate, `canboat` (`crates/canboat/`), and its public surface is
+the curated facade in `src/lib.rs` — locked by the `cargo public-api`
+snapshots in `public-api/` and `#![deny(missing_docs)]`. Everything else is a
+private module, so the compiler rather than convention keeps it off the API:
 
-Note: as this is not hitting crates.io yet, we may decide that a different
-crate structure is better. This is still v0.x, so expect breakage!
+- **`src/engine/`** — sans-I/O. PGN database types and generated tables,
+  format parsers, reassembly, decoder, encoder, output formatters. No
+  `std::io`, no `tokio`, no threads. The schema is compiled in; there is
+  nothing to load or distribute at runtime. (Feature `decode`.)
+- **`src/io/`** — sync `std::io` adapters (files, serial, `std::net`) and
+  the gateway device drivers (`io`), plus the transport-free ISO 11783-5
+  node pieces: NAME, address claim, standard responses (`node`).
+- **`src/server/`, `src/n2kd/`** — the live-bus pipeline and the TCP
+  serving layer behind `canboat server` (`bridge`).
+- **`src/cli/`** — the subcommands and their clap plumbing (`cli`, the
+  package default; library users set `default-features = false`).
+
+Before v8.3 these were separate workspace crates (`canboat-core`, `-io`,
+`-schema`, `-cli`, `-bridge`, `-tokio`); they were folded into the one crate
+ahead of the first crates.io release so the sub-crate boundaries never became
+public API.
 
 ## The tool side
 
@@ -91,8 +99,8 @@ runtime can never be a schema behind the analyzer.
 
 `keel` compiles it into Rust tables which are **committed**:
 
-    crates/canboat-core/src/schema_generated.rs     the PGN tables
-    crates/canboat-io/src/fastpacket_generated.rs   fast-packet framing
+    crates/canboat/src/engine/schema_generated.rs     the PGN tables
+    crates/canboat/src/io/fastpacket_generated.rs   fast-packet framing
 
 Neither crate has a build script. That is deliberate: a build script cannot
 read `database/`, which sits above the crate, so a published crate would carry

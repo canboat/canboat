@@ -2,7 +2,7 @@
 
 //! Bit-level extraction primitives shared by the field decoder.
 //!
-//! Lifted from canboat-rs (crates/canboat-core/src/bits.rs, same author &
+//! Lifted from canboat-rs (crates/canboat/src/engine/bits.rs, same author &
 //! license); kept as a copy because canboat-rs depends on this repo's
 //! canboat.json - a crate dependency would be circular.
 //!

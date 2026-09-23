@@ -1,8 +1,8 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-//! Emit the Rust schema tables that `canboat-core` compiles in.
+//! Emit the Rust schema tables that the `canboat` crate compiles in.
 //!
-//! This was `crates/canboat-core/build.rs` until the crates became
+//! This was the `canboat-core` build script until the crates became
 //! publishable: a build script cannot reach `database/`, which lives above
 //! the package root, so the tables are generated here and committed instead.
 //! The code is otherwise a straight move — the derivation it performs (the
@@ -628,7 +628,7 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
          /// describes the Metric schema.\n\
          pub mod pgn {{\n\
          use super::PGNS_SI;\n\
-         use canboat_schema::PgnInfo;"
+         use crate::engine::types::PgnInfo;"
     )
     .unwrap();
     let mut used: HashSet<&str> = HashSet::new();
@@ -643,7 +643,7 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
 
     writeln!(
         out,
-        "/// Compile-time [`FieldRef`] per (PGN, field), grouped by PGN id:\n\
+        "/// Compile-time [`FieldRef`](crate::engine::types::FieldRef) per (PGN, field), grouped by PGN id:\n\
          /// `field::wind_data::WIND_ANGLE`.\n\
          pub mod field {{"
     )
@@ -670,7 +670,7 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
         }
         writeln!(
             out,
-            "pub mod {module} {{\nuse super::super::{{PGNS_SI, F{i}}};\nuse canboat_schema::FieldRef;"
+            "pub mod {module} {{\nuse super::super::{{PGNS_SI, F{i}}};\nuse crate::engine::types::FieldRef;"
         )
         .unwrap();
         for (name, j) in consts {
@@ -1211,9 +1211,8 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
 //\n\
 //   GENERATED FILE - DO NOT EDIT.\n\
 //\n\
-//   Written by canboat-core/build.rs from the YAML database in database/,\n\
-//   via keel. It is regenerated on every build, so an edit here is lost the\n\
-//   moment you run cargo.\n\
+//   Written by `keel generate` from the YAML database in database/. An\n\
+//   edit here is lost the next time it runs.\n\
 //\n\
 //   To change a PGN, a lookup or a field type, edit the YAML:\n\
 //\n\
@@ -1221,8 +1220,8 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
 //       database/lookups/<NAME>.yaml      one file per enumeration\n\
 //       database/fieldtypes.yaml          the field-type hierarchy\n\
 //\n\
-//   `cargo build` picks the change up on its own; `make generated` also\n\
-//   refreshes the C tables and canboat.xml.\n\
+//   Then run `keel generate` (or `make generated`, which also refreshes\n\
+//   the C tables and canboat.xml); a bare `cargo build` does not.\n\
 //\n\
 // ==========================================================================",
         pgns = if j1939 { "j1939/pgns" } else { "pgns" }
@@ -1255,7 +1254,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         imports.push("LookupFieldTypeValue");
     }
     imports.sort_unstable();
-    writeln!(out, "use canboat_schema::{{{}}};", imports.join(", ")).unwrap();
+    writeln!(out, "use crate::engine::types::{{{}}};", imports.join(", ")).unwrap();
 
     if !j1939 {
         writeln!(
@@ -1597,7 +1596,7 @@ fn emit_per_pgn_dispatch(out: &mut String, pgn_num: u32, variants: &[VariantEntr
         let name = var_name(*off, *len, *signed, *off_k);
         writeln!(
             out,
-            "    let {name} = crate::bits::extract_bits(payload, {off}, {len}, {signed}, {off_k}).map(|e| e.value);"
+            "    let {name} = crate::engine::bits::extract_bits(payload, {off}, {len}, {signed}, {off_k}).map(|e| e.value);"
         )
         .unwrap();
     }
@@ -1670,14 +1669,14 @@ fn emit_per_pgn_dispatch(out: &mut String, pgn_num: u32, variants: &[VariantEntr
 }
 
 // ---------------------------------------------------------------------
-// canboat-io: the fast-packet lookup table
+// canboat io: the fast-packet lookup table
 // ---------------------------------------------------------------------
 
 const MIXED_START: u32 = 0x1F000;
 const MIXED_END: u32 = 0x20000; // exclusive; table covers 0x1F000..0x1FFFF
 const PROPRIETARY_START: u32 = 0x1FF00;
 
-/// Render `fastpacket_generated.rs` for `canboat-io`.
+/// Render `fastpacket_generated.rs` for the `canboat` crate's io module.
 ///
 /// PGNs 0x1F000..0x1FFFF are the one range where single-frame and
 /// fast-packet messages are interleaved, so a receiver cannot tell them

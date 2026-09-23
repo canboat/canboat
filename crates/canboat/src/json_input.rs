@@ -30,7 +30,7 @@
 //! unit-agnostic and unaffected.
 //!
 //! This lives in the `canboat` crate behind the `json-input` feature
-//! rather than in `canboat-core` because it is the one place a real
+//! rather than in the engine because it is the one place a real
 //! JSON parser is warranted — nested repeating lists and `-nv` objects
 //! are beyond `analyzer_json`'s deliberate substring-scan minimalism —
 //! and `serde_json` has no business in the core's dependency closure.
@@ -38,10 +38,10 @@
 
 use std::io::BufRead;
 
+use crate::engine::source::FrameSource;
+use crate::engine::types::{FieldInfo, FieldType};
+use crate::engine::{EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use anyhow::{Context, Result, anyhow, bail};
-use canboat_core::source::FrameSource;
-use canboat_core::types::{FieldInfo, FieldType};
-use canboat_core::{EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use serde_json::{Map, Value};
 
 /// Top-level keys of a bare (non-camel) analyzer record. A single-key
@@ -93,14 +93,14 @@ impl<R: BufRead> JsonFrameReader<R> {
 /// The unit system an analyzer banner declares, or `None` when `line`
 /// isn't a banner or doesn't say. canboat spells them `"si"` (strict SI)
 /// and `"std"` (canboat's practical Metric).
-fn banner_units(line: &str) -> Option<canboat_core::Units> {
+fn banner_units(line: &str) -> Option<crate::engine::Units> {
     if !line.starts_with("{\"version\"") {
         return None;
     }
     let root: Value = serde_json::from_str(line).ok()?;
     match root.as_object()?.get("units")?.as_str()? {
-        "si" => Some(canboat_core::Units::Si),
-        "std" => Some(canboat_core::Units::Metric),
+        "si" => Some(crate::engine::Units::Si),
+        "std" => Some(crate::engine::Units::Metric),
         _ => None,
     }
 }
@@ -124,7 +124,7 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
                 if units != self.db.units() {
                     log::info!(
                         "input declares {} units; reading values against that schema",
-                        if units == canboat_core::Units::Si {
+                        if units == crate::engine::Units::Si {
                             "SI (rad/K/Pa)"
                         } else {
                             "Metric (deg/°C/bar)"
@@ -468,9 +468,9 @@ fn variant_by_match_fields(
     db: &'static PgnDatabase,
     pgn: u32,
     fields: Option<&Value>,
-) -> Option<&'static canboat_core::types::PgnInfo> {
+) -> Option<&'static crate::engine::types::PgnInfo> {
     let fields = fields?.as_object()?;
-    let mut best: Option<(usize, &'static canboat_core::types::PgnInfo)> = None;
+    let mut best: Option<(usize, &'static crate::engine::types::PgnInfo)> = None;
     let mut tied = false;
     'variants: for info in db.pgn_variants(pgn) {
         let mut agreed = 0usize;
@@ -555,7 +555,7 @@ fn parse_hex(s: &str) -> Result<Vec<u8>> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use canboat_core::Units;
+    use crate::engine::Units;
 
     fn db() -> &'static PgnDatabase {
         PgnDatabase::embedded(Units::Metric)
@@ -597,8 +597,8 @@ mod tests {
             .iter()
             .filter(|f| f.info.id == "prn" && f.repeat_set == 1)
             .map(|f| match &f.value {
-                canboat_core::FieldValue::Integer(n) => *n,
-                canboat_core::FieldValue::Number(x) => *x as i64,
+                crate::engine::FieldValue::Integer(n) => *n,
+                crate::engine::FieldValue::Number(x) => *x as i64,
                 other => panic!("prn: {other:?}"),
             })
             .collect();
@@ -629,7 +629,7 @@ mod tests {
         let frame = frame_from_json(db(), &line).unwrap().unwrap();
         let decoded = db().decode(&frame).unwrap();
         match &decoded.field_by_name("Communication State").unwrap().value {
-            canboat_core::FieldValue::Binary(b) => {
+            crate::engine::FieldValue::Binary(b) => {
                 assert_eq!(&b[..], &[0x2a, 0x4c, 0x01]);
             }
             other => panic!("communicationState: {other:?}"),

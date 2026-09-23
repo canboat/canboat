@@ -184,15 +184,15 @@ fn run() -> Result<i32, String> {
                 // build script cannot read `database/`, which sits above
                 // the package root. Generated here and committed instead.
                 (
-                    root.join("crates/canboat-core/src/schema_generated.rs"),
+                    root.join("crates/canboat/src/engine/schema_generated.rs"),
                     emit_rust::emit_schema(&db, &root, false),
                 ),
                 (
-                    root.join("crates/canboat-core/src/schema_generated_j1939.rs"),
+                    root.join("crates/canboat/src/engine/schema_generated_j1939.rs"),
                     emit_rust::emit_schema(&db, &root, true),
                 ),
                 (
-                    root.join("crates/canboat-io/src/fastpacket_generated.rs"),
+                    root.join("crates/canboat/src/io/fastpacket_generated.rs"),
                     emit_rust::emit_fastpacket(&db),
                 ),
                 // The Basic RDS character set, for fields that declare
@@ -203,7 +203,7 @@ fn run() -> Result<i32, String> {
                     charset::emit_charset_h(),
                 ),
                 (
-                    root.join("crates/canboat-core/src/charset_generated.rs"),
+                    root.join("crates/canboat/src/engine/charset_generated.rs"),
                     charset::emit_charset_rs(),
                 ),
             ];

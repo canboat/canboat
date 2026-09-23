@@ -42,7 +42,12 @@ status=0
 for set in "${FEATURESETS[@]}"; do
     name="${set//,/+}"
     snapshot="$OUT_DIR/$name.txt"
-    current="$(cargo public-api -p canboat --no-default-features --features "$set" 2>/dev/null)"
+    # -ss omits blanket and auto-trait impls (pure noise now that the items
+    # live in this crate instead of behind `pub use` lines). The generated
+    # `ids::pgn::*` / `ids::field::*` constants are dropped too: they track
+    # database/ one-to-one, so every PGN change would otherwise trip the
+    # snapshot, and the facade design does not govern them.
+    current="$(cargo public-api -p canboat -ss --no-default-features --features "$set" 2>/dev/null | grep -v "canboat::ids::")"
     if [[ $bless -eq 1 ]]; then
         printf '%s\n' "$current" > "$snapshot"
         echo "blessed $snapshot"

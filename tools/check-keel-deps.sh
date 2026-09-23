@@ -42,8 +42,7 @@ echo "$closure" | sed 's/^/  /'
 status=0
 
 # 1. No runtime crate may appear anywhere in the subtree.
-for forbidden in canboat-core canboat-io canboat-tokio canboat-bridge canboat-wire \
-                 canboat-schema canboat-cli canboat tokio socketcan ratatui serde serde_json; do
+for forbidden in canboat tokio socketcan ratatui serde serde_json; do
   if echo "$closure" | grep -qx "$forbidden"; then
     echo "ERROR: keel's dependency closure contains '$forbidden'." >&2
     status=1

@@ -99,16 +99,17 @@ since it is where the data comes from.
 
 ## The library
 
-The decoder is also a set of Rust crates, so you can embed NMEA 2000 handling
-instead of parsing another program's output:
+The decoder is also a Rust crate, `canboat`, so you can embed NMEA 2000
+handling instead of parsing another program's output. One crate, a small
+public API, and features that gate the weight you pay for:
 
-| | |
+| feature | |
 | --- | --- |
-| `canboat-core` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No `std::io`, no threads. The database is compiled in — nothing to load at runtime |
-| `canboat-io` | sync `std::io` adapters (stdin, serial, `std::net`) |
-| `canboat-tokio` | async tokio adapters |
-| `canboat-bridge` | the n2kd/server pipeline as a library |
-| `canboat-schema` | the schema types the others share |
+| `decode` | sans-I/O: PGN database, parsers, reassembly, decode, encode, output formatters. No threads, no sockets. The database is compiled in — nothing to load at runtime |
+| `io` | readers for captures and `bus::open_*` for a live NGT-1 / iKonvert / SocketCAN link |
+| `node` | be a compliant NMEA 2000 node: ISO NAME, address claim, the standard responses |
+| `bridge` | the whole `canboat server` pipeline as a library: device → decode → quirks → TCP serving |
+| `cli` | the `canboat` binary itself (the default; library users turn it off) |
 
 See [`crates/doc/README.md`](./crates/doc/README.md) for the design and
 [`crates/doc/library-api-plan.md`](./crates/doc/library-api-plan.md) for the API.

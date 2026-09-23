@@ -114,15 +114,15 @@ fn generated_artifacts_are_up_to_date() {
             emit_c::emit_pgn_data_h(&db, true),
         ),
         (
-            "crates/canboat-core/src/schema_generated.rs",
+            "crates/canboat/src/engine/schema_generated.rs",
             emit_rust::emit_schema(&db, &root, false),
         ),
         (
-            "crates/canboat-core/src/schema_generated_j1939.rs",
+            "crates/canboat/src/engine/schema_generated_j1939.rs",
             emit_rust::emit_schema(&db, &root, true),
         ),
         (
-            "crates/canboat-io/src/fastpacket_generated.rs",
+            "crates/canboat/src/io/fastpacket_generated.rs",
             emit_rust::emit_fastpacket(&db),
         ),
     ];

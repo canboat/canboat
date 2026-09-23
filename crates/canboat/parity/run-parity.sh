@@ -4,7 +4,7 @@
 # Manual parity check: drive canboat C n2kd and canboat-rs n2kd from
 # the same analyzer-JSON input, then capture each of the five TCP
 # ports on both and report per-port line counts. Use it after any
-# change that touches `crates/canboat/src/n2kd/` or `canboat_core::snapshot` to
+# change that touches `crates/canboat/src/n2kd/` or `the engine snapshot module` to
 # confirm the shapes still line up with canboat C.
 #
 # Not run by `cargo test` — this needs a built canboat C n2kd binary,
