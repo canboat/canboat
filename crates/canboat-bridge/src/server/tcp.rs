@@ -6,9 +6,12 @@
 //! live in [`crate::n2kd::serving::tcp`]. What stays here needs the device
 //! writer and the wire protocol, so only the `server` pipeline uses it:
 //!
-//! * **Write server** (WO) — accepts PLAIN/FAST lines and injects them
-//!   onto the bus via an [`InjectPoint`] (device writer + pipeline
-//!   loopback).
+//! * **Write server** (WO) — accepts PLAIN/FAST lines and hands them to
+//!   the device writer. Nothing is echoed back into the pipeline: the
+//!   writer already knows what it sent, and a consumer that both reads
+//!   the bus and writes to it (Signal K) would otherwise see its own
+//!   output come back as bus data and loop. This matches the SocketCAN
+//!   adapter's own policy for user-initiated sends.
 //!
 //! * **Filter control server** (RW) — the one bidirectional port: it
 //!   carries the PGN 262657 NMEA-0183-filter control channel between the
@@ -17,39 +20,20 @@
 
 use std::io::{BufRead, BufReader, Write};
 use std::net::{Ipv4Addr, Shutdown, SocketAddrV4, TcpListener, TcpStream};
-use std::sync::atomic::{AtomicBool, AtomicU8, Ordering};
-use std::sync::{Arc, Mutex, mpsc};
+use std::sync::atomic::AtomicBool;
+use std::sync::{Arc, Mutex};
 use std::thread::{self, JoinHandle};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use anyhow::{Context, Result};
 
+use canboat_core::PgnDatabase;
 use canboat_core::format::{PlainError, parse_plain};
 use canboat_core::output::{JsonOptions, write_json};
-use canboat_core::{PgnDatabase, RawFrame};
 use canboat_io::device::FrameSender;
 
 use crate::n2kd::nmea_filter::NmeaFilter;
 use crate::n2kd::overrides::OverrideEngine;
-
-/// Where a client-written frame goes. In device mode, we forward to
-/// the device *and* loop it back into the pipeline source so it
-/// appears in NMEA 0183 / snapshot / read-side TCP output, mirroring
-/// the stdin-pump behaviour. In stdin mode there's no device and no
-/// loopback channel, so writes are dropped on the floor.
-#[derive(Clone)]
-pub struct InjectPoint {
-    pub device: FrameSender,
-    pub loopback: mpsc::Sender<RawFrame>,
-    /// Live claim address from the underlying device adapter, when
-    /// known (today only `--socketcan` exposes it). Used to rewrite a
-    /// client-supplied `src == 0` (PC-gateway default) or `src == 255`
-    /// (broadcast — never a valid source) to the gateway's address on
-    /// the loopback side, so the in-process pipeline sees the same
-    /// `src` the rewritten frame will reach the bus with. `None`
-    /// disables the rewrite (other device backends; stdin mode).
-    pub claim_addr: Option<Arc<AtomicU8>>,
-}
 
 use crate::n2kd::serving::tcp::accept_until;
 
@@ -64,24 +48,27 @@ use crate::n2kd::serving::tcp::accept_until;
 // out small.
 
 /// Bind a **write-only** TCP input server: clients connect and write
-/// PLAIN/FAST lines that are parsed and injected onto the bus via
-/// `inject`. Nothing is streamed back — this is the canonical
-/// `SERVER_INPUT_STREAM` slot (canboat C n2kd `port+3`). Unlike the
-/// broadcast ports it never subscribes to a hub, so it adds no
-/// serialization pressure; that's what makes it the cheap write path
-/// for a consumer that reads its data elsewhere (e.g. the binary
-/// port). `inject: None` (stdin mode, no device) still accepts and
-/// drains client writes, logging them at debug.
+/// PLAIN/FAST lines that are parsed and handed to `device`. Nothing
+/// is streamed back — this is the canonical `SERVER_INPUT_STREAM`
+/// slot (canboat C n2kd `port+3`). Unlike the broadcast ports it
+/// never subscribes to a hub, so it adds no serialization pressure;
+/// that's what makes it the cheap write path for a consumer that
+/// reads its data elsewhere (e.g. the binary port). Injected frames
+/// are not looped back into the pipeline either: they reach the
+/// output ports only if the bus (or the gateway) returns them, which
+/// SocketCAN, the NGT-1 and the iKonvert do not. `device: None`
+/// (stdin mode, no device) still accepts and drains client writes,
+/// logging them at debug.
 pub fn spawn_input_server(
     name: &'static str,
     bind: Ipv4Addr,
     port: u16,
-    inject: Option<InjectPoint>,
+    device: Option<FrameSender>,
     stop: Option<Arc<AtomicBool>>,
 ) -> Result<JoinHandle<()>> {
     let listener = TcpListener::bind(SocketAddrV4::new(bind, port))
         .with_context(|| format!("binding {name} TCP port {}:{}", bind, port))?;
-    let mode = if inject.is_some() {
+    let mode = if device.is_some() {
         "write-only"
     } else {
         "write-only (writes dropped)"
@@ -89,19 +76,19 @@ pub fn spawn_input_server(
     log::info!("{name} server listening on {}:{} ({mode})", bind, port);
     Ok(thread::Builder::new()
         .name(format!("{name}-accept"))
-        .spawn(move || input_accept(name, listener, inject, stop))
+        .spawn(move || input_accept(name, listener, device, stop))
         .expect("spawn input accept"))
 }
 
 fn input_accept(
     name: &'static str,
     listener: TcpListener,
-    inject: Option<InjectPoint>,
+    device: Option<FrameSender>,
     stop: Option<Arc<AtomicBool>>,
 ) {
     accept_until(name, listener, stop, |stream, peer| {
         log::info!("{name} client connected: {peer}");
-        let inj = inject.clone();
+        let dev = device.clone();
         thread::Builder::new()
             .name(format!("{name}-client"))
             .spawn(move || {
@@ -110,24 +97,24 @@ fn input_accept(
                 if let Err(e) = stream.shutdown(Shutdown::Write) {
                     log::debug!("{name}: shutdown(write) failed: {e}");
                 }
-                run_inbound_reader(name, stream, inj);
+                run_inbound_reader(name, stream, dev);
             })
             .ok();
     });
 }
 
-fn run_inbound_reader(name: &'static str, stream: TcpStream, inject: Option<InjectPoint>) {
+fn run_inbound_reader(name: &'static str, stream: TcpStream, device: Option<FrameSender>) {
     let reader = BufReader::new(stream);
     for line in reader.lines() {
         let line = match line {
             Ok(l) => l,
             Err(_) => return,
         };
-        match &inject {
+        match &device {
             // Device wired up: forward the line. Stop when the writer
-            // (or pipeline) has gone away.
-            Some(i) => {
-                if !forward_plain_line(&line, i) {
+            // has gone away.
+            Some(d) => {
+                if !forward_plain_line(&line, d) {
                     return;
                 }
             }
@@ -145,11 +132,12 @@ fn run_inbound_reader(name: &'static str, stream: TcpStream, inject: Option<Inje
     }
 }
 
-/// Parse one PLAIN/FAST line, send to the device, AND loop it back
-/// into the pipeline source so it appears in the pipeline's output
-/// streams. Returns `false` when either the device writer or the
-/// pipeline has gone away (caller should stop).
-fn forward_plain_line(line: &str, inject: &InjectPoint) -> bool {
+/// Parse one PLAIN/FAST line and send it to the device. A `src` of 0
+/// or 255 is left for the device adapter to stamp with its live claim
+/// address (SocketCAN does; the serial gateways send it as given).
+/// Returns `false` when the device writer has gone away (caller
+/// should stop).
+fn forward_plain_line(line: &str, device: &FrameSender) -> bool {
     let trimmed = line.trim_end_matches(['\r', '\n']);
     if trimmed.is_empty() || trimmed.starts_with('#') {
         return true;
@@ -166,7 +154,7 @@ fn forward_plain_line(line: &str, inject: &InjectPoint) -> bool {
         return true;
     }
     match parse_plain(trimmed) {
-        Ok(mut frame) => {
+        Ok(frame) => {
             // The NMEA 0183 filter control PGN is never a bus frame and
             // no longer travels this port: it has its own dedicated
             // bidirectional control port (see
@@ -182,27 +170,7 @@ fn forward_plain_line(line: &str, inject: &InjectPoint) -> bool {
                 );
                 return true;
             }
-            // Rewrite a default / broadcast `src` to our gateway's
-            // live claim address on BOTH paths. The device adapter
-            // does the same rewrite internally for the bus side, but
-            // the loopback bypasses that — so without this, the
-            // in-process pipeline (n2kd snapshot / analyzer-port JSON
-            // / NMEA 0183) shows the original `src=0` or `src=255`
-            // even though the on-wire frame has the gateway's src.
-            // `CLAIM_UNCLAIMED` (254) means we haven't claimed yet —
-            // leave src as-is rather than guess.
-            if matches!(frame.src, 0 | 255)
-                && let Some(claim) = inject.claim_addr.as_deref()
-            {
-                let live = claim.load(Ordering::Relaxed);
-                if live != canboat_io::device::socketcan::CLAIM_UNCLAIMED {
-                    frame.src = live;
-                }
-            }
-            if inject.device.send_frame(frame.clone()).is_err() {
-                return false;
-            }
-            inject.loopback.send(frame).is_ok()
+            device.send_frame(frame).is_ok()
         }
         Err(PlainError::Empty) => true,
         Err(e) => {
