@@ -65,7 +65,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
-Features gate the weight you pay for, not correctness:
+Features enable you to choose what you want to do and not pay for (in terms of binary size and dependencies) what you do not need.
 
 | feature | |
 | --- | --- |
@@ -84,7 +84,8 @@ The tables are generated from the YAML database in the CANboat repository
 by its `keel` tool — the same source the C `analyzer` and
 [canboat.json](https://canboat.github.io/canboat) are generated from — and
 are committed into this crate, so the published crate is self-contained. To
-change a PGN, edit the database in the repository, not this crate.
+change a PGN, edit the database upstream by forking the `canboat` github
+repository and running `keel`, followed by a PR back upstream, not this crate.
 
 ## License
 
