@@ -8,7 +8,18 @@ license     = { workspace = true }
 authors     = { workspace = true }
 repository  = { workspace = true }
 rust-version = { workspace = true }
-description = "The CANboat NMEA 2000 toolkit: a decode/encode library and a CLI (convert / interface / server / tui)."
+description = "NMEA 2000 decoding, encoding and live-bus access: the CANboat PGN database as a library, plus the canboat CLI (convert / interface / server / tui)."
+homepage    = "https://canboat.github.io/canboat"
+readme      = "README.md"
+keywords    = ["nmea2000", "nmea", "canbus", "marine", "j1939"]
+categories  = ["parser-implementations", "encoding", "hardware-support", "command-line-utilities"]
+# The parity harness needs a full canboat checkout; it is not part of the crate.
+exclude     = ["parity/"]
+
+# docs.rs documents the whole library surface and none of the CLI.
+[package.metadata.docs.rs]
+no-default-features = true
+features = ["decode", "io", "node", "bridge", "nmea0183", "ais", "json-input"]
 
 # The one crate. The library's public surface is curated (see
 # crates/doc/library-api-plan.md) and gated behind the `decode` / `io` /

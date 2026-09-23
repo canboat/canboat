@@ -79,7 +79,7 @@ binaries as one archive per platform: static musl Linux builds for x86_64,
 aarch64, and armv7 (Raspberry Pi class), a macOS universal binary, and
 Windows x86_64.
 
-Or build from source (Rust 1.88+):
+Or `cargo install canboat` from crates.io, or build from source (Rust 1.96+):
 
 ```
 git clone https://github.com/canboat/canboat
@@ -102,12 +102,16 @@ runtime can never be a schema behind the analyzer.
     crates/canboat/src/engine/schema_generated.rs     the PGN tables
     crates/canboat/src/io/fastpacket_generated.rs   fast-packet framing
 
-Neither crate has a build script. That is deliberate: a build script cannot
+The crate's build script does not generate them (it only records the git
+commit for the version banner). That is deliberate: a build script cannot
 read `database/`, which sits above the crate, so a published crate would carry
 no schema at all. The cost is that **a bare `cargo build` does not pick up a
 `database/` edit** — run `make rust`, which regenerates first, or
 `keel generate` by hand. `keel generate --check` is the staleness gate and CI
 enforces it.
+
+The crate's own `README.md` (`crates/canboat/README.md`) is the crates.io
+landing page; this file is the repository-side story.
 
 The `CANBOAT_BEM` pseudo-PGNs (0x40000+) are ordinary members of `database/`
 now — they are excluded from the public `docs/canboat.json`, since they never
@@ -152,6 +156,6 @@ checkout: a sibling `../canboat`, or point `CANBOAT_DIR` at one.
 
 ## License
 
-Apache-2.0. See [LICENSE](LICENSE).
+Apache-2.0. See [LICENSE](../../LICENSE).
 
 (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
