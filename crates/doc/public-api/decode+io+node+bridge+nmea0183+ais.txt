@@ -1,14 +1,48 @@
 pub mod canboat
 pub mod canboat::bridge
+pub enum canboat::bridge::GpsRolloverDevice
+pub canboat::bridge::GpsRolloverDevice::Address(u8)
+pub canboat::bridge::GpsRolloverDevice::Name(u64)
+pub canboat::bridge::GpsRolloverDevice::Product
+pub canboat::bridge::GpsRolloverDevice::Product::manufacturer: u16
+pub canboat::bridge::GpsRolloverDevice::Product::unique: u32
+impl core::clone::Clone for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::clone(&self) -> canboat::bridge::GpsRolloverDevice
+impl core::cmp::Eq for canboat::bridge::GpsRolloverDevice
+impl core::cmp::PartialEq for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::eq(&self, &canboat::bridge::GpsRolloverDevice) -> bool
+impl core::fmt::Debug for canboat::bridge::GpsRolloverDevice
+pub fn canboat::bridge::GpsRolloverDevice::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::bridge::GpsRolloverDevice
+impl core::marker::StructuralPartialEq for canboat::bridge::GpsRolloverDevice
+impl core::str::traits::FromStr for canboat::bridge::GpsRolloverDevice
+pub type canboat::bridge::GpsRolloverDevice::Err = alloc::string::String
+pub fn canboat::bridge::GpsRolloverDevice::from_str(&str) -> core::result::Result<Self, Self::Err>
+pub enum canboat::bridge::GpsRolloverTarget
+pub canboat::bridge::GpsRolloverTarget::All
+pub canboat::bridge::GpsRolloverTarget::Devices(alloc::vec::Vec<canboat::bridge::GpsRolloverDevice>)
+pub canboat::bridge::GpsRolloverTarget::Gnss
+impl canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::parse(core::option::Option<&str>) -> core::result::Result<canboat::bridge::GpsRolloverTarget, alloc::string::String>
+impl core::clone::Clone for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::clone(&self) -> canboat::bridge::GpsRolloverTarget
+impl core::cmp::Eq for canboat::bridge::GpsRolloverTarget
+impl core::cmp::PartialEq for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::eq(&self, &canboat::bridge::GpsRolloverTarget) -> bool
+impl core::default::Default for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::default() -> canboat::bridge::GpsRolloverTarget
+impl core::fmt::Debug for canboat::bridge::GpsRolloverTarget
+pub fn canboat::bridge::GpsRolloverTarget::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::bridge::GpsRolloverTarget
 pub enum canboat::bridge::Quirk
 pub canboat::bridge::Quirk::GpsRelay
-pub canboat::bridge::Quirk::GpsRollover(canboat::engine::quirk::Target)
+pub canboat::bridge::Quirk::GpsRollover(canboat::bridge::GpsRolloverTarget)
 pub canboat::bridge::Quirk::Motion
 pub canboat::bridge::Quirk::Scx20
 pub canboat::bridge::Quirk::Wmm
 impl canboat::bridge::Quirk
 pub fn canboat::bridge::Quirk::gps_relay_has_devices(&[canboat::bridge::Quirk]) -> bool
-pub fn canboat::bridge::Quirk::gps_rollover_target(&[canboat::bridge::Quirk]) -> core::option::Option<&canboat::engine::quirk::Target>
+pub fn canboat::bridge::Quirk::gps_rollover_target(&[canboat::bridge::Quirk]) -> core::option::Option<&canboat::bridge::GpsRolloverTarget>
 pub fn canboat::bridge::Quirk::name(&self) -> &'static str
 impl core::clone::Clone for canboat::bridge::Quirk
 pub fn canboat::bridge::Quirk::clone(&self) -> canboat::bridge::Quirk

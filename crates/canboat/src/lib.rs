@@ -441,6 +441,9 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
+    /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
+    /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
+    pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
     pub use crate::server::{Bridge, BridgeConfig, QuirkKind as Quirk, Transmitter};
 }
 
