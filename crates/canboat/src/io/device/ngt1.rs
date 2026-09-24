@@ -136,18 +136,8 @@ impl Default for Decoder {
 
 impl DeviceDecoder for Decoder {
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
-        // Wall-clock fallback, for a gateway whose P-codes are off and
-        // so never sends a System Status to trigger on. Driven by
-        // arriving bytes rather than a timer thread, which on a live
-        // bus is close enough — the C uses a real timer in its main
-        // loop.
+        self.tick(events);
         let now = now_ms();
-        if now >= self.net.next_ms {
-            self.emit_network_status(events);
-        }
-        if !self.tx_list.is_done() {
-            send_all(events, self.tx_list.on_tick(now));
-        }
         for ev in self.inner.push_bytes(bytes) {
             match ev {
                 NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
@@ -164,6 +154,20 @@ impl DeviceDecoder for Decoder {
                 // decoder never enables that, so this arm is dead.
                 NgtEvent::Header(_) => {}
             }
+        }
+    }
+
+    /// The decoder's deadlines, run on every read and on every read
+    /// timeout, so they advance on a quiet bus too.
+    fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+        let now = now_ms();
+        // Wall-clock fallback, for a gateway whose P-codes are off and
+        // so never sends a System Status to trigger on.
+        if now >= self.net.next_ms {
+            self.emit_network_status(events);
+        }
+        if !self.tx_list.is_done() {
+            send_all(events, self.tx_list.on_tick(now));
         }
     }
 }
