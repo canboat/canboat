@@ -18937,7 +18937,38 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                       <a href="#ft-NUMBER">NUMBER</a></td><td>true</td></tr><tr><td>6</td><td>Gain</td><td/><td><div class="xs">-127 .. 124</div></td><td>8 bits
                   
                         signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-130820">0x1FF04:
+            PGN 130820
+            - Fusion: System Capabilities</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>419</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Message ID</td><td>32829</td></tr></table></p><p/><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            12
+            bytes long and contains 5 fields.
+
+            
+              The default priority (as observed in the field) is 7.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>419:
+                  Fusion Electronics</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Message ID</td><td>32829:
+                  System Capabilities</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-FUSION_STATUS_MESSAGE_ID">FUSION_STATUS_MESSAGE_ID</a></td><td>true</td></tr><tr><td>5</td><td>Capabilities</td><td/><td><div class="xs">0 .. 1.84467440737096e+19</div></td><td>64 bits
+                  
+                      bitfield
+                      <a href="#lookupbit-FUSION_SYSTEM_CAPABILITY_BITFIELD">FUSION_SYSTEM_CAPABILITY_BITFIELD</a></td><td/></tr></table><h3 id="pgn-130821">0x1FF05:
             PGN 130821
             - Navico: ASCII Data</h3><p>
               This PGN description applies when the following field(s) match:
@@ -24238,7 +24269,9 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 2^1-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Play queue</td></tr><tr><td>1</td><td>All</td></tr></table><h3 id="lookupbit-FURUNO_BASELINE_STATUS">FURUNO_BASELINE_STATUS
         (0 - 2^7-1)
-      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Baseline Antenna 1-2</td></tr><tr><td>1</td><td>Baseline Antenna 2-3</td></tr><tr><td>2</td><td>Baseline Antenna 3-4</td></tr><tr><td>3</td><td>Baseline Antenna 4-1</td></tr><tr><td>4</td><td>Baseline Antenna 1-3</td></tr><tr><td>5</td><td>Baseline Antenna 2-4</td></tr></table><h3 id="lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>Baseline Antenna 1-2</td></tr><tr><td>1</td><td>Baseline Antenna 2-3</td></tr><tr><td>2</td><td>Baseline Antenna 3-4</td></tr><tr><td>3</td><td>Baseline Antenna 4-1</td></tr><tr><td>4</td><td>Baseline Antenna 1-3</td></tr><tr><td>5</td><td>Baseline Antenna 2-4</td></tr></table><h3 id="lookupbit-FUSION_SYSTEM_CAPABILITY_BITFIELD">FUSION_SYSTEM_CAPABILITY_BITFIELD
+        (0 - 2^63-1)
+      </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>ANT</td></tr><tr><td>1</td><td>Bluetooth</td></tr><tr><td>2</td><td>Wi-Fi</td></tr><tr><td>3</td><td>Ethernet</td></tr><tr><td>4</td><td>NMEA 2000</td></tr><tr><td>5</td><td>RV VIS Port</td></tr><tr><td>6</td><td>LCD</td></tr><tr><td>7</td><td>Power Button</td></tr><tr><td>8</td><td>Button Matrix</td></tr><tr><td>9</td><td>Touch Panel</td></tr><tr><td>10</td><td>USB Connector</td></tr><tr><td>11</td><td>USB Connector 2</td></tr><tr><td>12</td><td>DSP</td></tr><tr><td>13</td><td>AM/FM Antenna</td></tr><tr><td>14</td><td>DAB Antenna</td></tr><tr><td>15</td><td>SiriusXM Connector</td></tr><tr><td>16</td><td>S/PDIF</td></tr><tr><td>17</td><td>HDMI ARC</td></tr><tr><td>18</td><td>HDMI</td></tr><tr><td>19</td><td>Telephone Mute</td></tr><tr><td>20</td><td>Dimmer Wire</td></tr><tr><td>21</td><td>Ignition Wire</td></tr><tr><td>22</td><td>NMEA 2000 Power</td></tr><tr><td>23</td><td>STM32 Coprocessor</td></tr><tr><td>24</td><td>Standby</td></tr><tr><td>25</td><td>Multiroom Source</td></tr><tr><td>26</td><td>Multiroom Renderer</td></tr><tr><td>33</td><td>Amplifier and Line Out Independent</td></tr><tr><td>34</td><td>Wake on LAN</td></tr><tr><td>35</td><td>SiriusXM Instant Replay</td></tr><tr><td>36</td><td>SiriusXM TuneMix</td></tr><tr><td>37</td><td>Artist and Song Alert</td></tr><tr><td>38</td><td>Game Alert</td></tr><tr><td>39</td><td>Sports Flash</td></tr><tr><td>41</td><td>Zone 1 Amplifier 2 Ohm Stable</td></tr><tr><td>42</td><td>Zone 1 Amplifier 4 Ohm Stable</td></tr><tr><td>43</td><td>Zone 2 Amplifier 2 Ohm Stable</td></tr><tr><td>44</td><td>Zone 2 Amplifier 4 Ohm Stable</td></tr><tr><td>45</td><td>Apple AirPlay</td></tr><tr><td>46</td><td>Volume Sync Zone</td></tr><tr><td>47</td><td>Source Disable</td></tr><tr><td>48</td><td>Source Rename</td></tr><tr><td>50</td><td>Internal DAB Module</td></tr></table><h3 id="lookupbit-SIMNET_ALERT_BITFIELD">SIMNET_ALERT_BITFIELD
         (0 - 2^63-1)
       </h3><table><tr><th>Bit</th><th>Description</th></tr><tr><td>0</td><td>No GPS fix</td></tr><tr><td>2</td><td>No active autopilot control unit</td></tr><tr><td>4</td><td>No autopilot computer</td></tr><tr><td>6</td><td>AP clutch overload</td></tr><tr><td>8</td><td>AP clutch disengaged</td></tr><tr><td>10</td><td>Rudder controller fault</td></tr><tr><td>12</td><td>No rudder response</td></tr><tr><td>14</td><td>Rudder drive overload</td></tr><tr><td>16</td><td>High drive supply</td></tr><tr><td>18</td><td>Low drive supply</td></tr><tr><td>20</td><td>Memory fail</td></tr><tr><td>22</td><td>AP position data missing</td></tr><tr><td>24</td><td>AP speed data missing</td></tr><tr><td>26</td><td>AP depth data missing</td></tr><tr><td>28</td><td>AP heading data missing</td></tr><tr><td>30</td><td>AP nav data missing</td></tr><tr><td>32</td><td>AP rudder data missing</td></tr><tr><td>34</td><td>AP wind data missing</td></tr><tr><td>36</td><td>AP off course</td></tr><tr><td>38</td><td>High drive temperature</td></tr><tr><td>40</td><td>Drive inhibit</td></tr><tr><td>42</td><td>Rudder limit</td></tr><tr><td>44</td><td>Drive computer missing</td></tr><tr><td>46</td><td>Drive ready missing</td></tr><tr><td>48</td><td>EVC com error</td></tr><tr><td>50</td><td>EVC override</td></tr><tr><td>52</td><td>Low CAN bus voltage</td></tr><tr><td>54</td><td>CAN bus supply overload</td></tr><tr><td>56</td><td>Wind sensor battery low</td></tr></table><h3 id="lookupbit-SIMNET_AP_MODE_BITFIELD">SIMNET_AP_MODE_BITFIELD
         (0 - 2^15-1)
