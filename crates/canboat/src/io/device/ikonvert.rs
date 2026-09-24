@@ -74,7 +74,18 @@ pub struct Config {
     /// TX and RX lists (after the two strings above) so it advertises
     /// them in PGN 126464 and agrees to transmit them. Receive PGNs here
     /// do not turn on `NORMAL` mode.
+    ///
+    /// **⚠️ ONCE A TRANSMIT LIST IS NAMED — HERE OR IN `tx_list` — ANY PGN
+    /// NOT ON IT IS REFUSED: THE DRIVER DOES NOT SEND IT.** The gateway
+    /// would reject it anyway (`NAK,PGN_NOT_IN_TX_LIST`), and its list
+    /// cannot change while it is on the bus. Name every PGN you will send
+    /// before opening the device. Network-management PGNs are always sent.
     pub pgn_lists: PgnLists,
+    /// PGNs canboat itself transmits through the gateway (a quirk's, such
+    /// as `wmm`'s 127258). Added to the TX list and allowed; unlike
+    /// `pgn_lists.tx` they never on their own make the driver refuse
+    /// other PGNs.
+    pub extra_tx_pgns: Vec<u32>,
     /// Disable the iKonvert TX rate limit. Off by default.
     pub rate_limit_off: bool,
     /// Skip the init handshake entirely. Useful when the "writer
@@ -113,7 +124,11 @@ impl Init {
     fn new(config: &Config) -> Self {
         Self {
             rx_list: list_sentence(config.rx_list.as_deref(), &config.pgn_lists.rx, "RX"),
-            tx_list: list_sentence(config.tx_list.as_deref(), &config.pgn_lists.tx, "TX"),
+            tx_list: list_sentence(
+                config.tx_list.as_deref(),
+                &[config.pgn_lists.tx.as_slice(), &config.extra_tx_pgns].concat(),
+                "TX",
+            ),
             normal_mode: config.rx_list.is_some(),
             rate_limit_off: config.rate_limit_off,
         }
@@ -154,8 +169,11 @@ pub fn run(
     writer: Box<dyn Write + Send>,
     config: Config,
 ) -> DeviceHandle {
-    let skip_init = config.skip_init;
-    super::run(Decoder::new(config), Encoder { skip_init }, reader, writer)
+    let encoder = Encoder {
+        skip_init: config.skip_init,
+        refusal: Refusal::for_config(&config),
+    };
+    super::run(Decoder::new(config), encoder, reader, writer)
 }
 
 /// Decoder buffers a partial line across reads and owns the
@@ -355,6 +373,59 @@ impl Decoder {
 
 pub struct Encoder {
     skip_init: bool,
+    refusal: Option<Refusal>,
+}
+
+/// Refuses PGNs missing from a named transmit list; see
+/// [`Config::pgn_lists`].
+struct Refusal {
+    allowed: Vec<u32>,
+    /// PGNs refused so far, so each is logged once.
+    refused: Mutex<Vec<u32>>,
+}
+
+impl Refusal {
+    /// A refusal when the client named a transmit list; `None` otherwise,
+    /// and when the handshake is skipped (nothing sets the gateway's list).
+    fn for_config(config: &Config) -> Option<Self> {
+        let named = pgns_in(config.tx_list.as_deref());
+        if config.skip_init || (named.is_empty() && config.pgn_lists.tx.is_empty()) {
+            return None;
+        }
+        let mut allowed = pgn_list::NETWORK_MANAGEMENT_PGNS.to_vec();
+        allowed.extend(named);
+        allowed.extend_from_slice(&config.pgn_lists.tx);
+        allowed.extend_from_slice(&config.extra_tx_pgns);
+        Some(Self {
+            allowed,
+            refused: Mutex::new(Vec::new()),
+        })
+    }
+
+    /// Whether `pgn` may be sent, logging the first refusal of each PGN.
+    fn allows(&self, pgn: u32) -> bool {
+        if self.allowed.contains(&pgn) {
+            return true;
+        }
+        if let Ok(mut refused) = self.refused.lock()
+            && !refused.contains(&pgn)
+        {
+            refused.push(pgn);
+            log::warn!(
+                "ikonvert: refusing to send PGN {pgn}: it is not in the transmit list; \
+                 name it (--tx-pgn / pgn_lists.tx) before starting"
+            );
+        }
+        false
+    }
+}
+
+/// The PGNs in a legacy comma-separated list.
+fn pgns_in(list: Option<&str>) -> Vec<u32> {
+    list.unwrap_or("")
+        .split(',')
+        .filter_map(|p| p.trim().parse().ok())
+        .collect()
 }
 
 impl DeviceEncoder for Encoder {
@@ -372,6 +443,11 @@ impl DeviceEncoder for Encoder {
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
         if frame.pgn >= IKONVERT_SYNTHETIC_PGN {
             log::debug!("ikonvert: skipping synthetic PGN {}", frame.pgn);
+            return None;
+        }
+        if let Some(refusal) = &self.refusal
+            && !refusal.allows(frame.pgn)
+        {
             return None;
         }
         Some(ikonvert::encode_tx_frame(frame).into_bytes())
@@ -485,7 +561,10 @@ mod tests {
     /// as TEXT (the OFFLINE-completion banner), and every subsequent
     /// as ACK. Collects the bytes the codec wants written back.
     fn run_init(config: Config) -> Vec<String> {
-        let encoder = Encoder { skip_init: false };
+        let encoder = Encoder {
+            skip_init: false,
+            refusal: None,
+        };
         let first = String::from_utf8(encoder.init_bytes()).unwrap();
         let mut commands = vec![first];
 
@@ -590,6 +669,82 @@ mod tests {
                 "$PDGY,TX_LIST,127508,127506\r\n".to_string(),
                 "$PDGY,N2NET_INIT,NORMAL\r\n".to_string(),
             ]
+        );
+    }
+
+    fn frame(pgn: u32) -> RawFrame {
+        RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn,
+            src: 0,
+            dst: 255,
+            data: vec![0; 8].into(),
+        }
+    }
+
+    fn encoder_for(config: &Config) -> Encoder {
+        Encoder {
+            skip_init: config.skip_init,
+            refusal: Refusal::for_config(config),
+        }
+    }
+
+    /// With a named transmit list, only its PGNs, canboat's own and the
+    /// network-management PGNs go out; the rest is refused.
+    #[test]
+    fn a_named_transmit_list_refuses_the_rest() {
+        let encoder = encoder_for(&Config {
+            tx_list: Some("130306".to_string()),
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            extra_tx_pgns: vec![127258],
+            ..Config::default()
+        });
+        for pgn in [127508, 130306, 127258, 59904, 126996] {
+            assert!(encoder.encode_frame(&frame(pgn)).is_some(), "{pgn} allowed");
+        }
+        assert!(encoder.encode_frame(&frame(127506)).is_none(), "not listed");
+    }
+
+    /// Nothing named (a quirk's PGN alone does not count), or a replay
+    /// with no handshake: nothing is refused.
+    #[test]
+    fn without_a_named_list_nothing_is_refused() {
+        for config in [
+            Config {
+                extra_tx_pgns: vec![127258],
+                ..Config::default()
+            },
+            Config {
+                pgn_lists: PgnLists {
+                    tx: vec![127508],
+                    rx: vec![],
+                },
+                skip_init: true,
+                ..Config::default()
+            },
+        ] {
+            assert!(encoder_for(&config).encode_frame(&frame(127506)).is_some());
+        }
+    }
+
+    /// canboat's own PGNs join the TX list without being named.
+    #[test]
+    fn extra_pgns_join_the_tx_list() {
+        let cmds = run_init(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            extra_tx_pgns: vec![127258],
+            ..Config::default()
+        });
+        assert!(
+            cmds.contains(&"$PDGY,TX_LIST,127508,127258\r\n".to_string()),
+            "{cmds:?}"
         );
     }
 

@@ -24,14 +24,35 @@ pub const MAX_PGN_LIST_LEN: usize = 74;
 /// PGNs included) never goes on the wire, so it is never advertised.
 pub(crate) const MAX_PGN: u32 = 0x1_FFFF;
 
+/// ISO and NMEA 2000 network-management PGNs: acknowledgement, request,
+/// transport protocol, address claim, group function, PGN list, heartbeat,
+/// product and configuration information. Always allowed out, whatever the
+/// transmit list says.
+pub const NETWORK_MANAGEMENT_PGNS: [u32; 10] = [
+    59392, 59904, 60160, 60416, 60928, 126208, 126464, 126993, 126996, 126998,
+];
+
 /// The PGNs the application transmits and receives, to advertise on top of
 /// the gateway's own ISO housekeeping PGNs. Set before the device opens.
 ///
-/// These are advertisements only: they never filter what the gateway passes
-/// up or lets out.
+/// # ⚠️ ON AN iKONVERT, `tx` IS THE WHOLE TRANSMIT LIST
+///
+/// **ONCE `tx` NAMES ANY PGN, EVERY PGN NOT IN IT IS REFUSED — NOT SENT.**
+/// The gateway itself only transmits the PGNs in its transmit list, and that
+/// list can only be set before it goes on the bus, so the driver refuses
+/// the rest up front (logging each refused PGN once) rather than handing the
+/// gateway frames it will reject. Decide the complete list *before* opening
+/// the device. The network-management PGNs ([`NETWORK_MANAGEMENT_PGNS`])
+/// are always allowed. With `tx` empty nothing is refused, and the
+/// gateway's own list decides.
+///
+/// On SocketCAN the lists are advertisements only: nothing is filtered.
+/// `rx` never filters anything.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct PgnLists {
-    /// PGNs the application transmits (PGN 126464 function code 0).
+    /// PGNs the application transmits (PGN 126464 function code 0). **On an
+    /// iKonvert, the only PGNs (besides network management) it will send;
+    /// see the type's documentation.**
     pub tx: Vec<u32>,
     /// PGNs the application receives (PGN 126464 function code 1).
     pub rx: Vec<u32>,

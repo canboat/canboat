@@ -171,7 +171,9 @@ pub struct Args {
     ikonvert_rx: Option<String>,
 
     /// iKonvert TX filter list (`<pgn>,<pgn>,...`). Triggers the
-    /// `N2NET_RESET` + `TX_LIST` handshake steps.
+    /// `N2NET_RESET` + `TX_LIST` handshake steps. WARNING — ONCE GIVEN,
+    /// EVERY PGN NOT ON IT (OR ON --tx-pgn) IS REFUSED (NOT SENT), apart
+    /// from network management.
     #[arg(long, value_name = "PGN,PGN,...")]
     ikonvert_tx: Option<String>,
 
@@ -183,6 +185,10 @@ pub struct Args {
     /// PGN 126464 Transmit list.
     /// Repeatable, or comma-separated. Honoured by `--socketcan` and
     /// `--ikonvert`; other backends warn and ignore it.
+    ///
+    /// WARNING — WITH --ikonvert, THIS IS THE WHOLE TRANSMIT LIST: ONCE ANY
+    /// --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT SENT), apart from
+    /// network management. List every PGN you will send.
     #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
     tx_pgn: Vec<u32>,
 
@@ -385,6 +391,10 @@ pub struct BridgeConfig {
     /// the other backends log a warning.
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
+    ///
+    /// **⚠️ ON AN iKONVERT, `pgn_lists.tx` IS THE WHOLE TRANSMIT LIST: ONCE
+    /// IT NAMES ANY PGN, EVERY OTHER PGN IS REFUSED — NOT SENT** (network
+    /// management and the quirks' own PGNs excepted). See [`PgnLists`].
     pub pgn_lists: PgnLists,
     /// Add each PGN the gateway transmits as itself to the advertised
     /// Transmit list when it is first sent (SocketCAN only). On by default.
@@ -600,9 +610,13 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let path = path.to_string();
         let rx_list = config.ikonvert_rx.clone();
         let tx_list = config.ikonvert_tx.clone();
-        let pgn_lists = effective_pgn_lists(config);
+        // What the embedder named — which, once it names a transmit PGN,
+        // is all the driver will send — and the quirks' own PGNs apart.
+        let pgn_lists = config.pgn_lists.clone();
+        let extra_tx_pgns = quirk_tx_pgns(config);
+        let effective = effective_pgn_lists(config);
         let pgn_list_status =
-            (!pgn_lists.is_empty()).then(|| device::ikonvert::pgn_list_status(&pgn_lists));
+            (!effective.is_empty()).then(|| device::ikonvert::pgn_list_status(&effective));
         let rate_limit_off = config.ikonvert_rate_limit_off;
         let factory = NamedFactory::new("ikonvert", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
@@ -610,6 +624,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
                 rx_list: rx_list.clone(),
                 tx_list: tx_list.clone(),
                 pgn_lists: pgn_lists.clone(),
+                extra_tx_pgns: extra_tx_pgns.clone(),
                 rate_limit_off,
                 ..Default::default()
             };
@@ -733,11 +748,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
 /// embedder does not have to name those.
 fn effective_pgn_lists(config: &BridgeConfig) -> PgnLists {
     let mut lists = config.pgn_lists.clone();
-    let wmm = quirks::wmm::PGN_MAGNETIC_VARIATION;
-    if config.quirk.contains(&quirks::QuirkKind::Wmm) && !lists.tx.contains(&wmm) {
-        lists.tx.push(wmm);
+    for pgn in quirk_tx_pgns(config) {
+        if !lists.tx.contains(&pgn) {
+            lists.tx.push(pgn);
+        }
     }
     lists
+}
+
+/// The PGNs the configured quirks transmit from the gateway's own address.
+fn quirk_tx_pgns(config: &BridgeConfig) -> Vec<u32> {
+    let mut pgns = Vec::new();
+    if config.quirk.contains(&quirks::QuirkKind::Wmm) {
+        pgns.push(quirks::wmm::PGN_MAGNETIC_VARIATION);
+    }
+    pgns
 }
 
 /// The status for a backend that cannot advertise PGN lists, warning when
