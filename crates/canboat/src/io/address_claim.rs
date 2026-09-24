@@ -276,14 +276,18 @@ impl AddressClaim {
     }
 }
 
-/// A NAME for the log: who it is, in the fields arbitration compares.
+/// A NAME for the log: the raw 64-bit value, which is what arbitration
+/// compares, plus its fields decoded.
 fn describe_name(name: u64) -> String {
     format!(
-        "manufacturer {}, class {}, function {}, instance {}, unique {:#x}",
+        "{name:#018x}: manufacturer {}, class {}, function {}, instance {}, \
+         system instance {}, industry {}, unique {:#x}",
         (name >> 21) & 0x7ff,
         (name >> 49) & 0x7f,
         (name >> 40) & 0xff,
         (name >> 32) & 0xff,
+        (name >> 56) & 0x0f,
+        (name >> 60) & 0x07,
         name & 0x1f_ffff
     )
 }
@@ -405,8 +409,22 @@ mod tests {
             .to_u64();
         assert_eq!(
             describe_name(name),
-            "manufacturer 381, class 60, function 140, instance 0, unique 0x1234"
+            format!(
+                "{name:#018x}: manufacturer 381, class 60, function 140, instance 0, \
+                 system instance 0, industry 4, unique 0x1234"
+            )
         );
+    }
+
+    /// NAMEs that differ only in system instance arbitrate differently,
+    /// so the log must tell them apart.
+    #[test]
+    fn a_description_shows_the_system_instance() {
+        let base = crate::io::name::Name::new(999, 0x1234).device_class(25);
+        let a = describe_name(base.to_u64());
+        let b = describe_name(base.system_instance(15).to_u64());
+        assert_ne!(a, b);
+        assert!(b.contains("system instance 15"), "{b}");
     }
 
     #[test]
