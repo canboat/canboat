@@ -47,6 +47,13 @@ notes: |-
   lockId values are returned across allocation exchanges and then carried by
   subsequent menu operations.
 
+
+  Garmin's Fusion Audio app works the same way: it sends a random seed as the
+  token, keeps the lockId only from the reply that echoes its own seed, and
+  compares it against the lockId of every Menu Action, Menu Count and Menu Item
+  reply. A reply carrying a different lockId means another controller holds
+  the menu, which the app shows as locked.
+
   Evidence: samples/fusion-ra70n-menu-lock.raw and samples/fusion-130820-status.raw.
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130820,13,255,9,a3,99,12,80,f8,15,00,00,3c"  # from fusion-130820-status.raw

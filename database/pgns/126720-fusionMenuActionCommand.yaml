@@ -47,13 +47,9 @@ fields:
   name: Lock ID
   type: UINT8
 notes: |-
-  lockId is the one-byte menu lock ID allocated by PGN 130820 message id 32786
-  "Menu Lock ID". It is then carried by Menu Action, Menu Count and Menu Item
-  operations.
-
-  It is distinct from the four-byte requestToken used to correlate the PGN
-  126720 proprietary id 12 request with the allocation response. Capture
-  evidence shows the returned lockId being reused by subsequent menu operations.
+  lockId is the menu lock ID allocated by PGN 130820 message id 32786 "Menu
+  Lock ID" in reply to PGN 126720 proprietary id 12 "Request Menu Lock ID"; see
+  those for how it is obtained and used.
 
   Evidence: samples/fusion-ra70n-menu-operations.raw and the existing
   samples/boatkit-fusion-menu.raw.

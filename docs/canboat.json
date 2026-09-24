@@ -1614,8 +1614,20 @@
         "EnumValues":[
           {"Name":"Open", "Value":1},
           {"Name":"Select", "Value":2},
-          {"Name":"Update", "Value":3},
-          {"Name":"Close", "Value":4}
+          {"Name":"Step Back", "Value":3},
+          {"Name":"Close", "Value":4},
+          {"Name":"Exit", "Value":5}
+        ]
+      },
+      {
+        "Name":"FUSION_MENU_STATUS",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Opened At Root", "Value":1},
+          {"Name":"Opened", "Value":2},
+          {"Name":"Item Updated", "Value":3},
+          {"Name":"Closed", "Value":4},
+          {"Name":"Locked", "Value":5}
         ]
       },
       {
@@ -72664,7 +72676,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MENU_ACTION"
+            "LookupEnumeration":"FUSION_MENU_STATUS"
           },
           {
             "Order":8,

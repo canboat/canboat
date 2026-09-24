@@ -46,6 +46,13 @@ notes: |-
   little-endian and all four bytes belong to the echoed token; no arithmetic
   meaning is implied.
 
+
+  Garmin's Fusion Audio app works the same way: it sends a random seed as the
+  token, keeps the lockId only from the reply that echoes its own seed, and
+  compares it against the lockId of every Menu Action, Menu Count and Menu Item
+  reply. A reply carrying a different lockId means another controller holds
+  the menu, which the app shows as locked.
+
   Evidence: samples/fusion-ra70n-menu-lock.raw.
 samples:
 - raw:

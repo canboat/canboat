@@ -8882,7 +8882,7 @@ Pgn pgnList[] = {
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32783, .description = "Menu Action", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .description = "Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.", .partOfPrimaryKey = true},
       {.name = "Item Index", .camelName = "itemIndex", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Action", .camelName = "action", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MENU_ACTION, .lookup.name = "FUSION_MENU_ACTION"},
+      {.name = "Action", .camelName = "action", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MENU_STATUS, .lookup.name = "FUSION_MENU_STATUS"},
       {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "fusionMenuActionStatus",

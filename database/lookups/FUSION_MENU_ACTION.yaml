@@ -4,5 +4,6 @@ bits: 8
 values:
   1: Open
   2: Select
-  3: Update
+  3: Step Back
   4: Close
+  5: Exit

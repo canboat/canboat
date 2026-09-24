@@ -43,18 +43,19 @@ fields:
   name: Action
   type: LOOKUP
   bits: 8
-  lookup: FUSION_MENU_ACTION
+  lookup: FUSION_MENU_STATUS
 - id: lockId
   name: Lock ID
   type: UINT8
 notes: |-
-  lockId is the one-byte menu lock ID allocated by PGN 130820 message id 32786
-  "Menu Lock ID". It is then carried by Menu Action, Menu Count and Menu Item
-  operations.
+  The status uses its own enumeration (FUSION_MENU_STATUS), not the command's
+  FUSION_MENU_ACTION: value 3 is Item Updated here but Step Back in the
+  command, and 5 is Locked here but Exit there. Both enumerations are from
+  Garmin's Fusion Audio app; Item Updated is also seen on the wire.
 
-  It is distinct from the four-byte requestToken used to correlate the PGN
-  126720 proprietary id 12 request with the allocation response. Capture
-  evidence shows the returned lockId being reused by subsequent menu operations.
+  lockId is the menu lock ID allocated by PGN 130820 message id 32786 "Menu
+  Lock ID" in reply to PGN 126720 proprietary id 12 "Request Menu Lock ID"; see
+  those for how it is obtained and used.
 
   Evidence: samples/fusion-ra70n-menu-operations.raw and the existing
   samples/boatkit-fusion-menu.raw.
@@ -66,7 +67,7 @@ samples:
     messageId: "Menu Action"
     sourceId: 2
     itemIndex: 4
-    action: "Close"
+    action: "Closed"
     lockId: 0
 - raw: "2026-09-19T06:43:06.945504Z,7,130820,12,255,11,a3,99,0f,80,06,00,00,00,00,03,01"
   expects:
@@ -75,5 +76,5 @@ samples:
     messageId: "Menu Action"
     sourceId: 6
     itemIndex: 0
-    action: "Update"
+    action: "Item Updated"
     lockId: 1

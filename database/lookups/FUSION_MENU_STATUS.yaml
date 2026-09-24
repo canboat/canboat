@@ -1,0 +1,9 @@
+name: FUSION_MENU_STATUS
+kind: pair
+bits: 8
+values:
+  1: Opened At Root
+  2: Opened
+  3: Item Updated
+  4: Closed
+  5: Locked

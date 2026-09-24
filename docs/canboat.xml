@@ -1250,8 +1250,16 @@ limitations under the License.
     <LookupEnumeration Name="FUSION_MENU_ACTION" MaxValue="255">
       <EnumPair Value="1" Name="Open" />
       <EnumPair Value="2" Name="Select" />
-      <EnumPair Value="3" Name="Update" />
+      <EnumPair Value="3" Name="Step Back" />
       <EnumPair Value="4" Name="Close" />
+      <EnumPair Value="5" Name="Exit" />
+    </LookupEnumeration>
+    <LookupEnumeration Name="FUSION_MENU_STATUS" MaxValue="255">
+      <EnumPair Value="1" Name="Opened At Root" />
+      <EnumPair Value="2" Name="Opened" />
+      <EnumPair Value="3" Name="Item Updated" />
+      <EnumPair Value="4" Name="Closed" />
+      <EnumPair Value="5" Name="Locked" />
     </LookupEnumeration>
     <LookupEnumeration Name="FUSION_MESSAGE_ID" MaxValue="65535">
       <EnumPair Value="1" Name="Request Status" />
@@ -72686,7 +72694,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>LOOKUP</FieldType>
-          <LookupEnumeration>FUSION_MENU_ACTION</LookupEnumeration>
+          <LookupEnumeration>FUSION_MENU_STATUS</LookupEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
