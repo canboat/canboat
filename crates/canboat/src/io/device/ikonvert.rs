@@ -28,6 +28,15 @@
 //! [`Encoder::init_bytes`] writes only step 1; the rest flow back
 //! via [`super::DeviceEvent::SendBytes`] each time the decoder sees
 //! an ACK.
+//!
+//! The two lists do more than filter. Per Digital Yacht's *iKonvert
+//! Gateway Developer's Guide* (V1.04, §3.2, §4.5–4.8) the gateway stores
+//! them in non-volatile memory, answers other devices' PGN 126464
+//! requests with them, and refuses to transmit a PGN missing from the TX
+//! list (`$PDGY,NAK,PGN_NOT_IN_TX_LIST`). Only `N2NET_INIT,NORMAL` makes
+//! the RX list a receive filter; in `ALL` mode everything is passed on.
+//! So [`Config::pgn_lists`] goes into both lists but keeps `ALL` mode,
+//! and only the legacy [`Config::rx_list`] asks for `NORMAL`.
 
 use std::io::{Read, Write};
 use std::sync::{Arc, Mutex};
@@ -41,6 +50,7 @@ use crate::engine::format::ikonvert::{
 };
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
+use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
 
 /// Synthetic-PGN marker. iKonvert silently drops `>= 0x40000` PGNs
 /// the same way actisense-serial does.
@@ -52,19 +62,90 @@ pub const IKONVERT_SYNTHETIC_PGN: u32 = 0x40000;
 #[derive(Debug, Clone, Default)]
 pub struct Config {
     /// Comma-separated PGN filter for receive. If set, init enters
-    /// `NORMAL` mode instead of `ALL` and runs the `RX_LIST` step.
+    /// `NORMAL` mode instead of `ALL`, so the gateway passes on only
+    /// these PGNs (and [`Self::pgn_lists`]'s receive PGNs).
     /// `N2NET_RESET` is always sent during init regardless of this
     /// field — see the module-level handshake docs.
     pub rx_list: Option<String>,
     /// Comma-separated PGN filter for transmit. Triggers the
     /// `TX_LIST` step (the `N2NET_RESET` step always runs).
     pub tx_list: Option<String>,
+    /// PGNs the application sends and reads, written into the gateway's
+    /// TX and RX lists (after the two strings above) so it advertises
+    /// them in PGN 126464 and agrees to transmit them. Receive PGNs here
+    /// do not turn on `NORMAL` mode.
+    pub pgn_lists: PgnLists,
     /// Disable the iKonvert TX rate limit. Off by default.
     pub rate_limit_off: bool,
     /// Skip the init handshake entirely. Useful when the "writer
     /// side" is `/dev/null` (replay-from-file mode), since there's
     /// no device on the other end to ACK the commands.
     pub skip_init: bool,
+}
+
+/// How the gateway takes `lists`: it stores both in its own memory and
+/// answers PGN 126464 from them, so both are [`PgnListSupport::Pushed`];
+/// `dropped` names the PGNs that do not fit.
+pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
+    let (_, mut dropped) = pgn_list::merge(&[], &lists.tx);
+    for pgn in pgn_list::merge(&[], &lists.rx).1 {
+        if !dropped.contains(&pgn) {
+            dropped.push(pgn);
+        }
+    }
+    PgnListStatus {
+        tx: PgnListSupport::Pushed,
+        rx: PgnListSupport::Pushed,
+        dropped,
+    }
+}
+
+/// The init handshake's settings, resolved once from a [`Config`].
+struct Init {
+    rx_list: Option<String>,
+    tx_list: Option<String>,
+    /// `N2NET_INIT,NORMAL` (the RX list filters) rather than `ALL`.
+    normal_mode: bool,
+    rate_limit_off: bool,
+}
+
+impl Init {
+    fn new(config: &Config) -> Self {
+        Self {
+            rx_list: list_sentence(config.rx_list.as_deref(), &config.pgn_lists.rx, "RX"),
+            tx_list: list_sentence(config.tx_list.as_deref(), &config.pgn_lists.tx, "TX"),
+            normal_mode: config.rx_list.is_some(),
+            rate_limit_off: config.rate_limit_off,
+        }
+    }
+}
+
+/// The PGNs for one `$PDGY,…_LIST` sentence: the legacy comma-separated
+/// `list` first, then `extra`'s not already in it; `None` when both are
+/// empty.
+fn list_sentence(list: Option<&str>, extra: &[u32], which: &str) -> Option<String> {
+    let mut pgns: Vec<u32> = Vec::new();
+    for item in list.unwrap_or("").split(',').map(str::trim) {
+        match item.parse() {
+            Ok(pgn) => pgns.push(pgn),
+            Err(_) if item.is_empty() => {}
+            Err(_) => log::warn!("ikonvert: ignoring {which} list entry {item:?}, not a PGN"),
+        }
+    }
+    pgns.extend_from_slice(extra);
+    let (pgns, dropped) = pgn_list::merge(&[], &pgns);
+    if !dropped.is_empty() {
+        log::warn!("ikonvert: leaving {which} PGNs {dropped:?} out (invalid, or the list is full)");
+    }
+    if pgns.is_empty() {
+        return None;
+    }
+    Some(
+        pgns.iter()
+            .map(u32::to_string)
+            .collect::<Vec<_>>()
+            .join(","),
+    )
 }
 
 /// Start the iKonvert reader/writer threads.
@@ -81,7 +162,7 @@ pub fn run(
 /// ACK-driven init state machine.
 pub struct Decoder {
     acc: String,
-    config: Config,
+    init: Init,
     /// Sequence counter that mirrors C's `sendInitState`. Even values
     /// are "ready to send the next command"; odd values are "waiting
     /// for the ACK of the command we just sent". `0` means init is
@@ -101,7 +182,7 @@ impl Decoder {
         };
         Self {
             acc: String::with_capacity(1024),
-            config,
+            init: Init::new(&config),
             init_state: Arc::new(Mutex::new(start)),
         }
     }
@@ -221,7 +302,7 @@ impl Decoder {
         match *state {
             STATE_WAIT_OFFLINE_ACK => {
                 *state = STATE_SEND_RESET;
-                if let Some(cmd) = next_init_command(&mut state, &self.config) {
+                if let Some(cmd) = next_init_command(&mut state, &self.init) {
                     events.push(DeviceEvent::SendBytes(cmd.into_bytes()));
                 } else {
                     log::info!("ikonvert: initialization complete");
@@ -232,7 +313,7 @@ impl Decoder {
                 // Skip OFFLINE since the device is already offline
                 // post-reboot; resume with the unconditional RESET.
                 *state = STATE_SEND_RESET;
-                if let Some(cmd) = next_init_command(&mut state, &self.config) {
+                if let Some(cmd) = next_init_command(&mut state, &self.init) {
                     events.push(DeviceEvent::SendBytes(cmd.into_bytes()));
                 }
             }
@@ -250,7 +331,7 @@ impl Decoder {
             return;
         }
         *state -= 1;
-        if let Some(cmd) = next_init_command(&mut state, &self.config) {
+        if let Some(cmd) = next_init_command(&mut state, &self.init) {
             events.push(DeviceEvent::SendBytes(cmd.into_bytes()));
         } else {
             log::info!("ikonvert: initialization complete");
@@ -316,7 +397,7 @@ const STATE_WAIT_OFFLINE_ACK: u32 = 13;
 /// Drive the state machine forward starting from an *even* state.
 /// Returns the bytes of whatever command should go on the wire next,
 /// or `None` when init is complete.
-fn next_init_command(state: &mut u32, config: &Config) -> Option<String> {
+fn next_init_command(state: &mut u32, init: &Init) -> Option<String> {
     loop {
         match *state {
             STATE_SEND_RESET => {
@@ -328,7 +409,7 @@ fn next_init_command(state: &mut u32, config: &Config) -> Option<String> {
                 return Some("$PDGY,N2NET_RESET\r\n".to_string());
             }
             STATE_MAYBE_RX_LIST => {
-                if let Some(list) = &config.rx_list {
+                if let Some(list) = &init.rx_list {
                     *state = STATE_WAIT_RX_LIST_ACK;
                     log::info!("ikonvert: send RX_LIST {list}");
                     return Some(format!("$PDGY,RX_LIST,{list}\r\n"));
@@ -336,7 +417,7 @@ fn next_init_command(state: &mut u32, config: &Config) -> Option<String> {
                 *state = STATE_MAYBE_TX_LIST;
             }
             STATE_MAYBE_TX_LIST => {
-                if let Some(list) = &config.tx_list {
+                if let Some(list) = &init.tx_list {
                     *state = STATE_WAIT_TX_LIST_ACK;
                     log::info!("ikonvert: send TX_LIST {list}");
                     return Some(format!("$PDGY,TX_LIST,{list}\r\n"));
@@ -350,7 +431,7 @@ fn next_init_command(state: &mut u32, config: &Config) -> Option<String> {
             }
             STATE_SEND_INIT => {
                 *state = STATE_WAIT_INIT_ACK;
-                let cmd = if config.rx_list.is_some() {
+                let cmd = if init.normal_mode {
                     TX_ONLINE_NORMAL
                 } else {
                     TX_ONLINE_ALL
@@ -360,7 +441,7 @@ fn next_init_command(state: &mut u32, config: &Config) -> Option<String> {
             }
             STATE_MAYBE_LIMIT_OFF => {
                 // TX_LIMIT,OFF has no ACK; we move straight to DONE.
-                let cmd = if config.rate_limit_off {
+                let cmd = if init.rate_limit_off {
                     log::info!("ikonvert: send TX_LIMIT,OFF");
                     Some(TX_LIMIT_OFF.to_string())
                 } else {
@@ -462,6 +543,65 @@ mod tests {
                 "$PDGY,N2NET_INIT,NORMAL\r\n".to_string(),
             ]
         );
+    }
+
+    /// The application's PGNs fill both lists but leave the gateway in
+    /// `ALL` mode: advertising what we read must not filter it.
+    #[test]
+    fn pgn_lists_fill_both_lists_without_filtering() {
+        let cfg = Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508, 127506],
+                rx: vec![129025],
+            },
+            ..Config::default()
+        };
+        assert_eq!(
+            run_init(cfg),
+            vec![
+                "$PDGY,N2NET_OFFLINE\r\n".to_string(),
+                "$PDGY,N2NET_RESET\r\n".to_string(),
+                "$PDGY,RX_LIST,129025\r\n".to_string(),
+                "$PDGY,TX_LIST,127508,127506\r\n".to_string(),
+                "$PDGY,N2NET_INIT,ALL\r\n".to_string(),
+            ]
+        );
+    }
+
+    /// With the legacy filter strings too, the application's PGNs follow
+    /// them without duplicates, and the RX filter keeps `NORMAL` mode.
+    #[test]
+    fn pgn_lists_extend_the_legacy_filters() {
+        let cfg = Config {
+            rx_list: Some("129025, 129026".to_string()),
+            tx_list: Some("127508".to_string()),
+            pgn_lists: PgnLists {
+                tx: vec![127508, 127506, 0x40000],
+                rx: vec![129026, 130306],
+            },
+            ..Config::default()
+        };
+        assert_eq!(
+            run_init(cfg),
+            vec![
+                "$PDGY,N2NET_OFFLINE\r\n".to_string(),
+                "$PDGY,N2NET_RESET\r\n".to_string(),
+                "$PDGY,RX_LIST,129025,129026,130306\r\n".to_string(),
+                "$PDGY,TX_LIST,127508,127506\r\n".to_string(),
+                "$PDGY,N2NET_INIT,NORMAL\r\n".to_string(),
+            ]
+        );
+    }
+
+    #[test]
+    fn the_gateway_holds_both_lists() {
+        let status = pgn_list_status(&PgnLists {
+            tx: vec![127508, 0x40000],
+            rx: vec![],
+        });
+        assert_eq!(status.tx, PgnListSupport::Pushed);
+        assert_eq!(status.rx, PgnListSupport::Pushed);
+        assert_eq!(status.dropped, [0x40000]);
     }
 
     #[test]

@@ -26,6 +26,7 @@ pub mod device;
 pub mod fastpacket;
 pub mod name;
 pub mod nmea_responder;
+pub mod pgn_list;
 #[cfg(feature = "io")]
 pub mod stream;
 

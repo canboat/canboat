@@ -271,6 +271,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 tx_list: args.tx.clone(),
                 rate_limit_off: args.rate_limit_off,
                 skip_init: false,
+                ..Default::default()
             };
             Ok(device::ikonvert::run(r, w, config))
         }
