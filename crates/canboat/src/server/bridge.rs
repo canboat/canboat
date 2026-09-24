@@ -35,6 +35,7 @@ use anyhow::{Result, anyhow};
 use crate::engine::output::JsonOptions;
 use crate::engine::{DecodedPgn, PgnDatabase, RawFrame};
 use crate::io::device::{FrameSender, Supervisor};
+use crate::io::pgn_list::PgnListStatus;
 
 use crate::n2kd::request_engine::{self, RequestEngine};
 use crate::n2kd::serving::Hub;
@@ -59,6 +60,7 @@ pub struct Bridge {
     pre_coalesced: Arc<AtomicBool>,
     device_sender: Option<FrameSender>,
     claim_addr: Option<Arc<AtomicU8>>,
+    pgn_list_status: Option<PgnListStatus>,
 
     // Broadcast hubs — held as clonable `Arc`s so `serve` can attach TCP
     // listeners and the pipeline can consume its own clones.
@@ -176,6 +178,7 @@ impl Bridge {
             supervisor,
             pre_coalesced,
             claim_addr,
+            pgn_list_status,
         } = super::open_source(&config)?;
         let device_sender = supervisor.as_ref().map(|s| s.frame_sender());
 
@@ -282,6 +285,7 @@ impl Bridge {
             pre_coalesced,
             device_sender,
             claim_addr,
+            pgn_list_status,
             raw_hub: Arc::new(Hub::new()),
             nmea_hub: Arc::new(Hub::new()),
             analyzer_hub: Arc::new(Hub::new()),
@@ -349,6 +353,14 @@ impl Bridge {
         pgn: u32,
     ) -> Result<crate::engine::PgnBuilder, crate::engine::EncodeError> {
         self.db.encode_by_pgn(pgn)
+    }
+
+    /// What the backend did with [`BridgeConfig::pgn_lists`]: whether it
+    /// advertises each list in its PGN 126464 answer, and which PGNs did not
+    /// fit. `None` when there is nothing to advertise: the config named no
+    /// PGNs and no quirk transmits from the gateway's address.
+    pub fn pgn_list_status(&self) -> Option<&PgnListStatus> {
+        self.pgn_list_status.as_ref()
     }
 
     /// The live claimed ISO source address, if the backend exposes one
