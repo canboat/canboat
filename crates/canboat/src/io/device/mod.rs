@@ -29,6 +29,7 @@ pub mod ikonvert;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
+pub mod ngt1_tx_list;
 pub mod socketcan;
 pub mod supervisor;
 

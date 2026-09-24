@@ -183,12 +183,13 @@ pub struct Args {
 
     /// A PGN the application transmits, to advertise in the gateway's
     /// PGN 126464 Transmit list.
-    /// Repeatable, or comma-separated. Honoured by `--socketcan` and
-    /// `--ikonvert`; other backends warn and ignore it.
+    /// Repeatable, or comma-separated. Honoured by `--socketcan`,
+    /// `--ikonvert` and `--actisense` (which enables it in the NGT-1's
+    /// Transmit PGN Enable list); other backends warn and ignore it.
     ///
-    /// WARNING — WITH --ikonvert, THIS IS THE WHOLE TRANSMIT LIST: ONCE ANY
-    /// --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT SENT), apart from
-    /// network management. List every PGN you will send.
+    /// WARNING — WITH --ikonvert OR --actisense, THIS IS THE WHOLE TRANSMIT
+    /// LIST: ONCE ANY --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT
+    /// SENT), apart from network management. List every PGN you will send.
     #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
     tx_pgn: Vec<u32>,
 
@@ -387,7 +388,9 @@ pub struct BridgeConfig {
     /// PGNs the application sends and receives, advertised in the
     /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
     /// transmits from the gateway's address (`wmm`: 127258) are added
-    /// without being named here. SocketCAN and the iKonvert honour them;
+    /// without being named here. SocketCAN advertises both lists, the
+    /// iKonvert stores both, and the NGT-1 enables the transmit PGNs in its
+    /// Transmit PGN Enable list;
     /// the other backends log a warning.
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
@@ -588,9 +591,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     if let Some(path) = config.actisense.as_deref() {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
+        let pgn_lists = effective_pgn_lists(config);
+        if !config.pgn_lists.rx.is_empty() {
+            log::warn!(
+                "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
+                config.pgn_lists.rx
+            );
+        }
+        let pgn_list_status =
+            (!pgn_lists.is_empty()).then(|| device::ngt1::pgn_list_status(&pgn_lists));
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
-            Ok(device::ngt1::run(reader, writer))
+            let config = device::ngt1::Config {
+                pgn_lists: pgn_lists.clone(),
+            };
+            Ok(device::ngt1::run_with_config(reader, writer, config))
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);
@@ -602,7 +617,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
-            pgn_list_status: unsupported_pgn_lists(config),
+            pgn_list_status,
         });
     }
     if let Some(path) = config.ikonvert.as_deref() {

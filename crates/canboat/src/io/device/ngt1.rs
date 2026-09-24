@@ -8,6 +8,10 @@
 //! keepalive resends the NGT-1 startup ping while the channel is
 //! quiet. Synthetic PGNs (`>= 0x40000`) are skipped on the write
 //! path, matching canboat's behaviour.
+//!
+//! With [`Config::pgn_lists`] naming Transmit PGNs, the decoder also
+//! brings the gateway's Transmit PGN Enable list up to date after startup
+//! (see [`super::ngt1_tx_list`]).
 
 use std::io::{Read, Write};
 use std::time::Duration;
@@ -19,7 +23,9 @@ use crate::engine::format::{
     ngt1::{Ngt1Decoder, NgtEvent},
 };
 
+use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListSync};
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
+use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
 
 /// Re-ping the NGT-1 startup sequence every 20 s — matches the C
 /// `actisense-serial` keepalive.
@@ -37,9 +43,39 @@ const ACTISENSE_SYSTEM_STATUS_PGN: u32 = ACTISENSE_SYNTHETIC_PGN + 0xf2;
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
 
+/// NGT-1 settings. `Config::default()` leaves the gateway's lists alone.
+#[derive(Debug, Clone, Default)]
+pub struct Config {
+    /// PGNs the application sends and reads. The Transmit PGNs are added
+    /// to the gateway's Transmit PGN Enable list when missing from it —
+    /// the NGT-1 does not transmit a PGN that is not there. The Receive
+    /// PGNs are not used: the gateway runs in receive-all mode.
+    pub pgn_lists: PgnLists,
+}
+
+/// How the gateway takes `lists`: the Transmit list is written into it
+/// ([`PgnListSupport::Pushed`]); there is no known way to set what it
+/// advertises as received. `dropped` names the PGNs that do not fit.
+pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
+    PgnListStatus {
+        tx: PgnListSupport::Pushed,
+        rx: PgnListSupport::Unsupported,
+        dropped: pgn_list::merge(&[], &lists.tx).1,
+    }
+}
+
 /// Start the NGT-1 reader/writer threads. See [`super::run`].
 pub fn run(reader: Box<dyn Read + Send>, writer: Box<dyn Write + Send>) -> DeviceHandle {
-    super::run(Decoder::new(), Encoder, reader, writer)
+    run_with_config(reader, writer, Config::default())
+}
+
+/// [`run`], with [`Config`].
+pub fn run_with_config(
+    reader: Box<dyn Read + Send>,
+    writer: Box<dyn Write + Send>,
+    config: Config,
+) -> DeviceHandle {
+    super::run(Decoder::with_config(config), Encoder, reader, writer)
 }
 
 /// Decoder wrapper that adapts [`Ngt1Decoder`] to [`DeviceDecoder`].
@@ -50,6 +86,8 @@ pub struct Decoder {
     /// consumer sees the same per-gateway record whichever gateway is
     /// feeding it. canboat C's `actisense-serial` does the same.
     net: NetworkStatusState,
+    /// Brings the gateway's Transmit PGN Enable list up to date.
+    tx_list: TxListSync,
 }
 
 struct NetworkStatusState {
@@ -65,6 +103,16 @@ struct NetworkStatusState {
 
 impl Decoder {
     pub fn new() -> Self {
+        Self::with_config(Config::default())
+    }
+
+    pub fn with_config(config: Config) -> Self {
+        let (tx_pgns, dropped) = pgn_list::merge(&[], &config.pgn_lists.tx);
+        if !dropped.is_empty() {
+            log::warn!(
+                "ngt1: not enabling transmit PGNs {dropped:?} (invalid, or the list is full)"
+            );
+        }
         let now = now_ms();
         Self {
             inner: Ngt1Decoder::new(),
@@ -75,6 +123,7 @@ impl Decoder {
                 load_pct: None,
                 errors: None,
             },
+            tx_list: TxListSync::new(tx_pgns),
         }
     }
 }
@@ -92,11 +141,18 @@ impl DeviceDecoder for Decoder {
         // arriving bytes rather than a timer thread, which on a live
         // bus is close enough — the C uses a real timer in its main
         // loop.
-        if now_ms() >= self.net.next_ms {
+        let now = now_ms();
+        if now >= self.net.next_ms {
             self.emit_network_status(events);
+        }
+        if !self.tx_list.is_done() {
+            send_all(events, self.tx_list.on_tick(now));
         }
         for ev in self.inner.push_bytes(bytes) {
             match ev {
+                NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
+                    send_all(events, self.tx_list.on_message(&msg.payload, now));
+                }
                 NgtEvent::Message(msg) => {
                     if let Some(frame) = msg.to_raw_frame() {
                         self.note_frame(frame, events);
@@ -110,6 +166,11 @@ impl DeviceDecoder for Decoder {
             }
         }
     }
+}
+
+/// Queue each command for the writer.
+fn send_all(events: &mut Vec<DeviceEvent>, commands: Vec<Vec<u8>>) {
+    events.extend(commands.into_iter().map(DeviceEvent::SendBytes));
 }
 
 impl Decoder {
@@ -266,6 +327,29 @@ mod network_status_tests {
         // The NGT-1 knows neither of these.
         assert_eq!(status.data[10], 0xff, "gateway address sentinel");
         assert_eq!(&status.data[11..15], &[0xff; 4], "rejected TX sentinel");
+    }
+
+    /// The gateway's own answers (`NGT_MSG_RECEIVED`) feed the transmit
+    /// list sync and never surface as bus frames.
+    #[test]
+    fn gateway_answers_are_not_frames() {
+        let mut d = Decoder::with_config(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+        });
+        let mut wire = Vec::new();
+        crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &[0x11, 1], &mut wire);
+        let mut events = Vec::new();
+        d.decode(&wire, &mut events);
+        assert!(
+            !events
+                .iter()
+                .any(|e| matches!(e, DeviceEvent::Frame(f) if f.pgn != 0x40100)),
+            "{events:?}"
+        );
+        assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
     }
 
     /// With no System Status ever seen — P-codes off — the two fields
