@@ -86,12 +86,22 @@ pub trait DeviceEncoder: Send + Sync + 'static {
     /// Encode a [`RawFrame`] for transmission. `None` means "silently
     /// drop" — used to skip synthetic PGNs that never hit the bus.
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>>;
+
+    /// Bytes to write when the application closes the device on purpose
+    /// ([`DeviceHandle::close`]), e.g. to take a gateway off the bus.
+    /// Empty when the device needs nothing.
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        Vec::new()
+    }
 }
 
 /// Commands accepted by the writer thread.
 pub(crate) enum WriterCmd {
     Bytes(Vec<u8>),
     Frame(RawFrame),
+    /// Write the encoder's [`DeviceEncoder::shutdown_bytes`] and stop,
+    /// then signal the sender, if any, that it is done.
+    Shutdown(Option<mpsc::Sender<()>>),
 }
 
 /// Returned by [`run`]. Owns the reader/writer threads' join handles
@@ -102,6 +112,9 @@ pub struct DeviceHandle {
     pub frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    /// The writer thread, joined apart from the others by [`Self::close`].
+    /// `None` for a codec that has no separate writer (SocketCAN).
+    writer: Option<JoinHandle<()>>,
 }
 
 /// Returned by [`DeviceHandle::send_frame`] / [`FrameSender::send_frame`]
@@ -137,9 +150,52 @@ impl DeviceHandle {
     /// to exit.
     pub fn join(self) {
         drop(self.cmd_tx);
-        for j in self.joins {
+        for j in self.joins.into_iter().chain(self.writer) {
             let _ = j.join();
         }
+    }
+
+    /// Close the device on purpose: the writer sends the encoder's
+    /// [`DeviceEncoder::shutdown_bytes`] (an iKonvert goes off the bus)
+    /// and stops, and this waits for it. The reader thread is not joined:
+    /// it may be blocked reading the device, and ends with it.
+    pub fn close(self) {
+        let _ = self.cmd_tx.send(WriterCmd::Shutdown(None));
+        if let Some(writer) = self.writer {
+            let _ = writer.join();
+        }
+    }
+
+    /// A handle another thread can [`close`](DeviceCloser::close) the
+    /// device with — for a signal handler while this thread is busy
+    /// reading.
+    pub fn closer(&self) -> DeviceCloser {
+        DeviceCloser {
+            cmd_tx: self.cmd_tx.clone(),
+        }
+    }
+}
+
+/// Closes a device from another thread; see [`DeviceHandle::closer`].
+#[derive(Clone)]
+pub struct DeviceCloser {
+    cmd_tx: mpsc::Sender<WriterCmd>,
+}
+
+impl DeviceCloser {
+    /// [`DeviceHandle::close`] from elsewhere: have the writer send the
+    /// encoder's shutdown bytes and stop, waiting up to `timeout` for it.
+    /// Returns whether the writer confirmed.
+    pub fn close(&self, timeout: Duration) -> bool {
+        let (done_tx, done_rx) = mpsc::channel();
+        if self
+            .cmd_tx
+            .send(WriterCmd::Shutdown(Some(done_tx)))
+            .is_err()
+        {
+            return false;
+        }
+        done_rx.recv_timeout(timeout).is_ok()
     }
 }
 
@@ -177,6 +233,7 @@ pub(crate) fn from_parts(
         frames_rx,
         cmd_tx,
         joins,
+        writer: None,
     }
 }
 
@@ -208,7 +265,8 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
     DeviceHandle {
         frames_rx,
         cmd_tx,
-        joins: vec![reader_join, writer_join],
+        joins: vec![reader_join],
+        writer: Some(writer_join),
     }
 }
 
@@ -313,6 +371,19 @@ fn writer_thread<E: DeviceEncoder>(
                 Some(b) => b,
                 None => continue,
             },
+            WriterCmd::Shutdown(done) => {
+                let bytes = encoder.shutdown_bytes();
+                if !bytes.is_empty() {
+                    if let Err(e) = writer.write_all(&bytes) {
+                        log::warn!("device shutdown write failed: {e}");
+                    }
+                    let _ = writer.flush();
+                }
+                if let Some(done) = done {
+                    let _ = done.send(());
+                }
+                return;
+            }
         };
         if let Err(e) = writer.write_all(&bytes) {
             log::error!("device write failed: {e}");

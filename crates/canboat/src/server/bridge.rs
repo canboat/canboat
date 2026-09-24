@@ -533,6 +533,14 @@ impl Bridge {
         Ok(())
     }
 
+    /// Whether a [`spawn`](Bridge::spawn)ed pipeline is still running —
+    /// `false` once its frame source has ended, or if it was never spawned.
+    pub fn is_running(&self) -> bool {
+        self.pipeline_join
+            .as_ref()
+            .is_some_and(|join| !join.is_finished())
+    }
+
     /// Block until a [`spawn`](Bridge::spawn)ed pipeline finishes (the frame
     /// source closed), then tear everything down. No-op if the pipeline was
     /// never spawned.

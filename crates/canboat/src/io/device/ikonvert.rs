@@ -416,6 +416,18 @@ impl DeviceEncoder for Encoder {
         TX_OFFLINE.as_bytes().to_vec()
     }
 
+    /// The gateway stays on the bus after the application goes away —
+    /// still answering address-claim, product-information and PGN-list
+    /// requests with nothing driving it. `N2NET_OFFLINE` takes it off (it
+    /// reboots, and waits to be initialised again).
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        if self.skip_init {
+            return Vec::new();
+        }
+        log::info!("ikonvert: send N2NET_OFFLINE");
+        TX_OFFLINE.as_bytes().to_vec()
+    }
+
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
         if frame.pgn >= IKONVERT_SYNTHETIC_PGN {
             log::debug!("ikonvert: skipping synthetic PGN {}", frame.pgn);
@@ -765,6 +777,15 @@ mod tests {
         events.clear();
         decoder.handle_control("ACK,stray", &mut events); // ignored
         assert!(events.is_empty(), "post-init ACKs must not emit commands");
+    }
+
+    /// Closing takes the gateway off the bus, which it otherwise stays on;
+    /// with no handshake there is nothing to undo.
+    #[test]
+    fn closing_sends_offline() {
+        let encoder = Encoder { skip_init: false };
+        assert_eq!(encoder.shutdown_bytes(), b"$PDGY,N2NET_OFFLINE\r\n");
+        assert!(Encoder { skip_init: true }.shutdown_bytes().is_empty());
     }
 
     #[test]

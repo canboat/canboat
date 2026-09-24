@@ -326,7 +326,7 @@ pub mod read {
 pub mod bus {
     use std::io;
 
-    pub use crate::io::device::{DeviceHandle, DeviceWriterGone, FrameSender};
+    pub use crate::io::device::{DeviceCloser, DeviceHandle, DeviceWriterGone, FrameSender};
 
     /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically
     /// `115_200` baud), speaking the Actisense binary protocol.

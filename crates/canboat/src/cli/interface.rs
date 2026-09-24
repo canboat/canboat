@@ -154,6 +154,15 @@ pub struct Args {
 
 pub fn run(args: Args) -> Result<()> {
     let mut handle = open_device(&args)?;
+    // Close the device on purpose — when we are stopped, and when the
+    // stream ends — so a gateway is taken off the bus (iKonvert).
+    let closer = handle.closer();
+    {
+        let closer = closer.clone();
+        super::stop_signal::on_stop(move || {
+            closer.close(CLOSE_TIMEOUT);
+        });
+    }
 
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
@@ -197,8 +206,12 @@ pub fn run(args: Args) -> Result<()> {
             drop(pump); // device closed; don't wait on a blocked stdin read
         }
     }
+    closer.close(CLOSE_TIMEOUT);
     Ok(())
 }
+
+/// How long to wait for the device writer to say goodbye.
+const CLOSE_TIMEOUT: std::time::Duration = std::time::Duration::from_secs(2);
 
 /// Pump PLAIN frames from stdin into `sender` until stdin ends.
 fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {

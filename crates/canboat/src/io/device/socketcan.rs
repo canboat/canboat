@@ -1138,6 +1138,13 @@ mod imp {
                 // it into the analyzer side directly.)
                 bus.send_pgn(f.prio, f.pgn, src, f.dst, &f.data, false);
             }
+            // The gateway leaves the bus when its socket closes; nothing
+            // to send first.
+            WriterCmd::Shutdown(done) => {
+                if let Some(done) = done {
+                    let _ = done.send(());
+                }
+            }
             WriterCmd::Bytes(_) => {
                 // The SocketCAN backend has no concept of raw "bytes"
                 // since the wire format is frame-based. Silently drop;
