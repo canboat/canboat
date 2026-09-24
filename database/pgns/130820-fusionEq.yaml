@@ -45,66 +45,69 @@ fields:
   name: Treble
   type: INT8
 notes: |-
-  Tone status contains a zero-based zone byte followed by signed Bass, Mid and
-  Treble values. The corresponding command is PGN 126720 proprietary id 22
-  "Set Equalizer", which carries the same zone/bass/mid/treble payload.
+  Tone status: a zone byte followed by signed Bass, Mid and Treble values. The
+  corresponding command is PGN 126720 proprietary id 22 "Set Equalizer", with
+  the same zone/bass/mid/treble payload.
 
-  Despite the zone byte, Tone/EQ is not necessarily a per-zone control. On the
-  MS-RA70N the user-facing Bass, Mid and Treble controls are stereo-wide: changing
-  them produces Set Equalizer commands with zone 0 and Tone status responses with
-  zone 0. The MS-WB670 has independently been observed using the same zone-0
-  master-tone semantics. The zone field should therefore be preserved as wire
-  data rather than interpreted as proof that a particular model supports
-  per-zone EQ.
+  Zone is a zero-based zone index 0 .. n-1, where n is the number of zones
+  whose PGN 130820 "Capabilities" word is non-zero. The value n itself
+  addresses the stereo as a whole: Garmin's Fusion Audio app sends its global,
+  stereo-wide tone control with zone = available zone count. Because n depends
+  on the unit, this is not a fixed value. Observed:
 
-  The MS-RA70N capture also exercises signed values across the full documented
-  -15 to +15 range. Command and status frames track each other while an axis is
-  adjusted, confirming INT8 rather than an unsigned or biased representation.
+    MS-RA70N  2 zones, EQ only in the global capability word  -> zone 2
+    MS-BB300R 3 zones                                          -> zone 3
+    MS-WB670  3 zones, global capability word 0x0000           -> zone 0
+
+  The MS-RA70N capture contains a sweep of the signed tone values, including
+  the endpoints +15 (0x0f) and -15 (0xf1), with each command echoed by a
+  matching "Tone" status. This confirms the signed INT8 representation and the
+  -15 to +15 range.
 
   Evidence: samples/fusion-ra70n-tone.raw, and samples/fusion-set-equalizer.raw
   for the MS-WB670 command side.
 samples:
 - raw:
-  - "2023-01-01-00:00:00.000,7,130820,12,255,8,00,08,a3,99,1b,80,00,00"
-  - "2023-01-01-00:00:00.000,7,130820,12,255,3,01,fc,05"
+  - "2026-09-19T06:23:42.189Z,7,130820,12,255,8,00,08,a3,99,1b,80,02,00"
+  - "2026-09-19T06:23:42.190Z,7,130820,12,255,8,01,fc,05,ff,ff,ff,ff,ff"
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Tone"
-    zone: 0
+    zone: 2
     bass: 0
     mid: -4
     treble: 5
 - raw:
-  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
-  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,0f"
+  - "2026-09-19T06:23:58.522Z,7,130820,12,255,8,20,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:23:58.523Z,7,130820,12,255,8,21,fd,0f,ff,ff,ff,ff,ff"
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Tone"
-    zone: 0
+    zone: 2
     bass: 7
     mid: -3
     treble: 15
 - raw:
-  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
-  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,00"
+  - "2026-09-19T06:24:00.594Z,7,130820,12,255,8,a0,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:24:00.595Z,7,130820,12,255,8,a1,fd,00,ff,ff,ff,ff,ff"
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Tone"
-    zone: 0
+    zone: 2
     bass: 7
     mid: -3
     treble: 0
 - raw:
-  - "2023-01-01-00:00:00.000,7,130820,12,255,8,20,08,a3,99,1b,80,00,07"
-  - "2023-01-01-00:00:00.000,7,130820,12,255,3,21,fd,f1"
+  - "2026-09-19T06:24:02.327Z,7,130820,12,255,8,20,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:24:02.327Z,7,130820,12,255,8,21,fd,f1,ff,ff,ff,ff,ff"
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Tone"
-    zone: 0
+    zone: 2
     bass: 7
     mid: -3
     treble: -15
