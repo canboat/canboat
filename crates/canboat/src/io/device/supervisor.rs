@@ -491,7 +491,7 @@ mod tests {
     #[test]
     fn closing_a_device_writes_its_goodbye() {
         let written = RecordingWriter::default();
-        quiet_device(&written).close();
+        assert!(quiet_device(&written).close());
         assert_eq!(*written.0.lock().unwrap(), b"BYE");
     }
 
@@ -506,6 +506,29 @@ mod tests {
                 .unwrap()
         );
         assert_eq!(*written.0.lock().unwrap(), b"BYE");
+    }
+
+    /// A writer that fails every write.
+    struct BrokenWriter;
+    impl Write for BrokenWriter {
+        fn write(&mut self, _buf: &[u8]) -> io::Result<usize> {
+            Err(io::ErrorKind::BrokenPipe.into())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// A goodbye that could not be written is not confirmed.
+    #[test]
+    fn a_failed_goodbye_is_not_confirmed() {
+        let handle = run_device(
+            TestDecoder,
+            ByeEncoder,
+            Box::new(QuietReader),
+            Box::new(BrokenWriter),
+        );
+        assert!(!handle.close());
     }
 
     /// Stopping the supervisor closes the device on purpose, even on a

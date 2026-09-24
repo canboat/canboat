@@ -100,8 +100,8 @@ pub(crate) enum WriterCmd {
     Bytes(Vec<u8>),
     Frame(RawFrame),
     /// Write the encoder's [`DeviceEncoder::shutdown_bytes`] and stop,
-    /// then signal the sender, if any, that it is done.
-    Shutdown(Option<mpsc::Sender<()>>),
+    /// then tell the sender, if any, whether that succeeded.
+    Shutdown(Option<mpsc::Sender<bool>>),
 }
 
 /// Returned by [`run`]. Owns the reader/writer threads' join handles
@@ -157,13 +157,20 @@ impl DeviceHandle {
 
     /// Close the device on purpose: the writer sends the encoder's
     /// [`DeviceEncoder::shutdown_bytes`] (an iKonvert goes off the bus)
-    /// and stops, and this waits for it. The reader thread is not joined:
-    /// it may be blocked reading the device, and ends with it.
-    pub fn close(self) {
-        let _ = self.cmd_tx.send(WriterCmd::Shutdown(None));
-        if let Some(writer) = self.writer {
-            let _ = writer.join();
+    /// and stops. Waits up to [`CLOSE_TIMEOUT`] for it — a writer stuck
+    /// behind a full socket is left behind rather than hanging shutdown —
+    /// and returns whether the device confirmed. The reader thread is not
+    /// joined: it may be blocked reading the device, and ends with it.
+    pub fn close(self) -> bool {
+        let closed = self.closer().close(CLOSE_TIMEOUT);
+        if closed {
+            if let Some(writer) = self.writer {
+                let _ = writer.join();
+            }
+        } else {
+            log::warn!("device did not confirm closing within {CLOSE_TIMEOUT:?}; leaving it");
         }
+        closed
     }
 
     /// A handle another thread can [`close`](DeviceCloser::close) the
@@ -176,6 +183,9 @@ impl DeviceHandle {
     }
 }
 
+/// How long [`DeviceHandle::close`] waits for the device to confirm.
+pub const CLOSE_TIMEOUT: Duration = Duration::from_secs(2);
+
 /// Closes a device from another thread; see [`DeviceHandle::closer`].
 #[derive(Clone)]
 pub struct DeviceCloser {
@@ -185,7 +195,8 @@ pub struct DeviceCloser {
 impl DeviceCloser {
     /// [`DeviceHandle::close`] from elsewhere: have the writer send the
     /// encoder's shutdown bytes and stop, waiting up to `timeout` for it.
-    /// Returns whether the writer confirmed.
+    /// Returns whether the device confirmed the close: the goodbye written
+    /// and flushed (or none needed).
     pub fn close(&self, timeout: Duration) -> bool {
         let (done_tx, done_rx) = mpsc::channel();
         if self
@@ -195,7 +206,7 @@ impl DeviceCloser {
         {
             return false;
         }
-        done_rx.recv_timeout(timeout).is_ok()
+        matches!(done_rx.recv_timeout(timeout), Ok(true))
     }
 }
 
@@ -373,14 +384,16 @@ fn writer_thread<E: DeviceEncoder>(
             },
             WriterCmd::Shutdown(done) => {
                 let bytes = encoder.shutdown_bytes();
-                if !bytes.is_empty() {
-                    if let Err(e) = writer.write_all(&bytes) {
-                        log::warn!("device shutdown write failed: {e}");
-                    }
-                    let _ = writer.flush();
-                }
+                let sent = bytes.is_empty()
+                    || match writer.write_all(&bytes).and_then(|()| writer.flush()) {
+                        Ok(()) => true,
+                        Err(e) => {
+                            log::warn!("device shutdown write failed: {e}");
+                            false
+                        }
+                    };
                 if let Some(done) = done {
-                    let _ = done.send(());
+                    let _ = done.send(sent);
                 }
                 return;
             }

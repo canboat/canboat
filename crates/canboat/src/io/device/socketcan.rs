@@ -1138,13 +1138,8 @@ mod imp {
                 // it into the analyzer side directly.)
                 bus.send_pgn(f.prio, f.pgn, src, f.dst, &f.data, false);
             }
-            // The gateway leaves the bus when its socket closes; nothing
-            // to send first.
-            WriterCmd::Shutdown(done) => {
-                if let Some(done) = done {
-                    let _ = done.send(());
-                }
-            }
+            // Handled by the worker loop, which owns the socket.
+            WriterCmd::Shutdown(_) => {}
             WriterCmd::Bytes(_) => {
                 // The SocketCAN backend has no concept of raw "bytes"
                 // since the wire format is frame-based. Silently drop;
@@ -1314,6 +1309,15 @@ mod imp {
             // 1. Drain any user-side sends into the TX ring.
             loop {
                 match cmd_rx.try_recv() {
+                    Ok(WriterCmd::Shutdown(done)) => {
+                        // Closing the socket is how the gateway leaves the
+                        // bus; confirm only once it is closed.
+                        drop(sock);
+                        if let Some(done) = done {
+                            let _ = done.send(true);
+                        }
+                        return;
+                    }
                     Ok(cmd) => {
                         let mut bus = Bus {
                             tx_buf: &mut tx_buf,
