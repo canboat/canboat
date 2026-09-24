@@ -166,8 +166,13 @@ pub fn run(args: Args) -> Result<()> {
 
     let result = stream(&args, handle);
     // Also when a stream step failed: the gateway still has to leave the bus.
-    closer.close(device::CLOSE_TIMEOUT);
-    result
+    let closed = closer.close(device::CLOSE_TIMEOUT);
+    // A stream error is the one to report; otherwise an unconfirmed close.
+    result?;
+    if !closed {
+        anyhow::bail!("the device did not confirm closing (a gateway may still be on the bus)");
+    }
+    Ok(())
 }
 
 /// Move frames between the device and stdin/stdout until a stream ends.
