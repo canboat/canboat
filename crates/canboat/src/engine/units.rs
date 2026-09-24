@@ -15,7 +15,8 @@
 ///
 /// Covers exactly the pairs canboat's `fixupUnit` relates: angle
 /// `rad`↔`deg`, angular rate `rad/s`↔`deg/s`, temperature `K`↔`C`
-/// (Celsius), pressure `Pa`↔`bar`, and charge `C`↔`Ah` (Coulomb). The
+/// (Celsius), pressure `Pa`↔`bar`, charge `C`↔`Ah` (Coulomb) and
+/// energy `J`↔`kWh`. The
 /// `C` string is overloaded (Celsius vs Coulomb) but the source/target
 /// pair disambiguates: `C↔K` is temperature, `C↔Ah` is charge.
 pub fn convert_unit(v: f64, from: &str, to: &str) -> Option<f64> {
@@ -34,6 +35,8 @@ pub fn convert_unit(v: f64, from: &str, to: &str) -> Option<f64> {
         ("bar", "Pa") => v * 100_000.0,
         ("C", "Ah") => v / 3600.0,
         ("Ah", "C") => v * 3600.0,
+        ("J", "kWh") => v / 3.6e6,
+        ("kWh", "J") => v * 3.6e6,
         _ => return None,
     })
 }
@@ -50,6 +53,8 @@ mod tests {
         assert!((convert_unit(300.0, "K", "C").unwrap() - 26.85).abs() < 1e-9);
         assert!((convert_unit(100_000.0, "Pa", "bar").unwrap() - 1.0).abs() < 1e-9);
         assert!((convert_unit(3600.0, "C", "Ah").unwrap() - 1.0).abs() < 1e-9);
+        assert!((convert_unit(3.6e6, "J", "kWh").unwrap() - 1.0).abs() < 1e-9);
+        assert!((convert_unit(1.0, "kWh", "J").unwrap() - 3.6e6).abs() < 1e-3);
     }
 
     #[test]

@@ -193,7 +193,7 @@ struct FieldView {
 /// can share one `FieldInfo` slice between both schemas.
 fn field_converts(f: &RawField) -> bool {
     match f.unit.as_deref() {
-        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") => true,
+        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") | Some("kWh") | Some("Ah") => true,
         Some("K") => !f.signed.unwrap_or(false),
         _ => false,
     }
@@ -220,7 +220,24 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
     }
 
     if units == Units::Si {
-        return v; // strict SI base units — no fixupUnit
+        // Strict SI base units. The database keeps NMEA 2000's own kWh
+        // and Ah; canboat's SI `fixupUnit` turns them into J and C.
+        match f.unit.as_deref() {
+            Some("kWh") => {
+                v.resolution = f.resolution.map(|r| r * 3.6e6);
+                v.range_min = f.range_min.map(|x| x * 3.6e6);
+                v.range_max = f.range_max.map(|x| x * 3.6e6);
+                v.unit = Some("J".to_string());
+            }
+            Some("Ah") => {
+                v.resolution = f.resolution.map(|r| r * 3600.0);
+                v.range_min = f.range_min.map(|x| x * 3600.0);
+                v.range_max = f.range_max.map(|x| x * 3600.0);
+                v.unit = Some("C".to_string());
+            }
+            _ => {}
+        }
+        return v;
     }
 
     match f.unit.as_deref() {
