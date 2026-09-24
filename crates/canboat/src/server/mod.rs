@@ -180,7 +180,7 @@ pub struct Args {
     ikonvert_rate_limit_off: bool,
 
     /// A PGN the application transmits, to advertise in the gateway's
-    /// PGN 126464 Transmit list (displays pick data sources from it).
+    /// PGN 126464 Transmit list.
     /// Repeatable, or comma-separated. Honoured by `--socketcan`; other
     /// backends warn and ignore it.
     #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]

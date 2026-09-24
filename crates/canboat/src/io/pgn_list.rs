@@ -2,12 +2,12 @@
 
 //! The PGNs a node advertises in its PGN 126464 Transmit / Receive PGN lists.
 //!
-//! A display that asks a node what it sends (an ISO Request for 126464) uses
-//! the answer to decide which data it can pick that node as a source for —
-//! a Navico MFD lists a node's data but will not offer it as a field source
-//! when the PGN is missing from the node's Transmit list. A gateway therefore
-//! has to advertise the PGNs its *application* sends, not only the ISO
-//! housekeeping PGNs the gateway itself originates.
+//! Other devices ask a node what it sends and reads with an ISO Request for
+//! PGN 126464. NMEA 2000 expects the answer to cover every PGN the node
+//! transmits, so a gateway should advertise the PGNs its *application*
+//! sends, not only the ISO housekeeping PGNs it originates itself. How much
+//! a given display relies on the list (for instance when choosing data
+//! sources) varies by make and firmware.
 //!
 //! [`PgnLists`] is what the application declares, before the device is
 //! opened. How a backend honours it differs per gateway, which

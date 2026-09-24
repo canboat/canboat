@@ -107,9 +107,8 @@ mod config {
         pub configure_link: bool,
         /// PGNs the application sends and receives through this gateway,
         /// advertised in the PGN 126464 lists after the gateway's own
-        /// ISO housekeeping PGNs. Displays pick a node as a data source
-        /// from its Transmit list, so list every PGN the application
-        /// originates.
+        /// ISO housekeeping PGNs. The Transmit list should name every PGN
+        /// the application originates.
         pub pgn_lists: PgnLists,
     }
 
