@@ -1,8 +1,0 @@
-name: FUSION_GLOBAL_CAPABILITY_BITFIELD
-kind: bit
-bits: 16
-values:
-  4: Subwoofer Low-pass Filter
-  6: Bass
-  7: Midrange
-  8: Treble

@@ -5407,27 +5407,25 @@
         ]
       },
       {
-        "Name":"FUSION_GLOBAL_CAPABILITY_BITFIELD",
+        "Name":"FUSION_CAPABILITY_BITFIELD",
         "MaxValue":15,
         "EnumBitValues":[
-          {"Name":"Subwoofer Low-pass Filter", "Bit":4},
-          {"Name":"Bass", "Bit":6},
-          {"Name":"Midrange", "Bit":7},
-          {"Name":"Treble", "Bit":8}
-        ]
-      },
-      {
-        "Name":"FUSION_ZONE_CAPABILITY_BITFIELD",
-        "MaxValue":15,
-        "EnumBitValues":[
+          {"Name":"Volume", "Bit":0},
           {"Name":"Volume Limit", "Bit":1},
           {"Name":"Balance", "Bit":2},
-          {"Name":"Subwoofer Level", "Bit":3},
-          {"Name":"Subwoofer Low-pass Filter", "Bit":4},
-          {"Name":"Bass", "Bit":6},
-          {"Name":"Midrange", "Bit":7},
-          {"Name":"Treble", "Bit":8},
-          {"Name":"Variable/Fixed Line Output", "Bit":9}
+          {"Name":"Subwoofer", "Bit":3},
+          {"Name":"Low Pass Filter", "Bit":4},
+          {"Name":"High Pass Filter", "Bit":5},
+          {"Name":"EQ Bass", "Bit":6},
+          {"Name":"EQ Mid", "Bit":7},
+          {"Name":"EQ Treble", "Bit":8},
+          {"Name":"Line Out", "Bit":9},
+          {"Name":"DSP", "Bit":10},
+          {"Name":"Internal Amp", "Bit":11},
+          {"Name":"Loudness", "Bit":12},
+          {"Name":"Tweeter", "Bit":13},
+          {"Name":"Subwoofer On Amp", "Bit":14},
+          {"Name":"Mono", "Bit":15}
         ]
       },
       {
@@ -71023,7 +71021,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -71036,7 +71034,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":7,
@@ -71049,7 +71047,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -71062,7 +71060,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":9,
@@ -71075,7 +71073,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_GLOBAL_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           }
         ]
       },
@@ -72912,7 +72910,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -72935,7 +72933,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -72958,7 +72956,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":10,
@@ -72981,7 +72979,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_ZONE_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":12,
@@ -73004,7 +73002,7 @@
             "RangeMin":0,
             "RangeMax":65535,
             "FieldType":"BITLOOKUP",
-            "LookupBitEnumeration":"FUSION_GLOBAL_CAPABILITY_BITFIELD"
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":14,

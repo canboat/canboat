@@ -35,88 +35,79 @@ fields:
   name: Zone 1
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone2
   name: Zone 2
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone3
   name: Zone 3
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone4
   name: Zone 4
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: global
   name: Global
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_GLOBAL_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 notes: |-
-  The four zone words advertise which controls are supported by each zone;
-  they do not contain the current values of those controls. The global word
-  is decoded separately: matching bit positions are not assumed to have the
-  same meaning unless independently established.
+  One 16-bit capability word per zone slot plus a global word. Each advertises
+  which controls exist; none carries a current value. All five words use the
+  same bit assignments (FUSION_CAPABILITY_BITFIELD).
 
-  Confirmed zone capability bits are 1 Volume Limit, 2 Balance, 3 Subwoofer
-  Level, 4 Subwoofer Low-pass Filter, 6 Bass, 7 Midrange, 8 Treble and
-  9 Variable/Fixed Line Output. Bits 0, 5 and 10-15 remain unknown.
+  The bit names come from Garmin's own decoder in the Fusion Audio Android app,
+  which reads all five words with one class. The app treats a zone as available
+  exactly when its word is non-zero, and counts available zones that way.
 
-  Confirmed global capability bits are 4 Subwoofer Low-pass Filter and 6-8
-  Bass/Midrange/Treble. All other global bits remain unknown.
+  The words describe outputs, not the zones in the product literature. On the
+  MS-WB670 IntAmp (bit 11) is clear and Line Out (bit 9) set only on index 2,
+  its line-level pre-out; only index 0, the internal-amp zone, has Subwoofer On
+  Amp (bit 14). The MS-RA70N advertises Bass/Mid/Treble only in its global word,
+  matching its stereo-wide tone controls.
 
-  A zone capability word of 0x0000 advertises none of the controls represented
-  by this bitfield. A non-zero capability word does not by itself establish that
-  the corresponding zone exists; zone availability must be determined
-  separately.
+  Static: unchanged by the "Internal Amps On" setting. Broadcast on a 5-minute
+  cycle and answered on demand via FUSION_MESSAGE_ID 1 "Request Status".
 
-  The MS-RA70N also provides useful evidence for the global word. Its tone/EQ
-  controls (Bass, Midrange and Treble) are stereo-wide rather than per-zone,
-  and the corresponding capability bits are advertised in its non-zero global
-  word. In contrast, the MS-WB670 reports Global 0x0000. A zero global word
-  therefore means only that no capabilities represented by this global bitfield
-  are advertised; it must not be interpreted as absence of the stereo or of
-  global functionality in general. Conversely, a non-zero global word describes
-  advertised global capabilities, not current control values.
+  PGN 130820 message id 32865 "Zone Capabilities Extended" repeats these words
+  as the first two bytes of each eight-byte record.
 
-  The unknown bits are intentionally left unnamed in the bit lookups. No
-  specific meaning for bits 0, 5 or 10-15 has yet been established strongly
-  enough to name them. Treat possible associations seen while comparing models
-  as hypotheses only until capture evidence establishes their meaning.
-
-  Observed model patterns provide useful targets for that testing. The MS-RA70N
-  sample below reports Zone 1 0x000F, Zone 2 0x000F, Zone 3 0x020F,
-  Zone 4 0x0000 and Global 0x01D0. The MS-WB670 reports Zone 1 0xFDFF,
-  Zone 2 0xBDFF, Zone 3 0xB7FF, Zone 4 0x0000 and Global 0x0000. These
-  differences should not by themselves be interpreted as meanings for the
-  unknown bits.
-
-  PGN 130820 message id 32865 "Zone Capabilities Extended" repeats these same
-  16-bit capability words as the first two bytes of each eight-byte record.
-  Evidence for that correspondence is in
-  samples/fusion-zone-capabilities-extended.raw.
+  Evidence: samples/fusion-ra70n-capabilities.raw (MS-RA70N),
+  samples/fusion-zone-capabilities-extended.raw (MS-WB670) and
+  samples/fusion-130820.log (a 2017 capture of an unidentified Fusion unit).
 samples:
-- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log, unidentified unit
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Capabilities"
-    zone1: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level"]
-    zone2: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level"]
-    zone3: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Variable/Fixed Line Output"]
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer"]
+    zone2: ["Volume", "Volume Limit", "Balance", "Subwoofer"]
+    zone3: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Line Out"]
     zone4: []
-    global: ["Subwoofer Low-pass Filter", "Bass", "Midrange", "Treble"]
-- raw: "2026-09-18T13:45:28.835Z,7,130820,51,255,14,a3,99,1e,80,ff,fd,ff,bd,ff,b7,00,00,00,00"  # from fusion-zone-capabilities-extended.raw
+    global: ["Low Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble"]
+- raw: "2026-09-19T06:23:22.115Z,7,130820,12,255,14,a3,99,1e,80,1f,00,07,00,00,00,00,00,c7,01"  # from fusion-ra70n-capabilities.raw, MS-RA70N
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Capabilities"
-    zone1: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "bit 10", "bit 11", "bit 12", "bit 13", "bit 14", "bit 15"]
-    zone2: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "bit 10", "bit 11", "bit 12", "bit 13", "bit 15"]
-    zone3: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "Variable/Fixed Line Output", "bit 10", "bit 12", "bit 13", "bit 15"]
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter"]
+    zone2: ["Volume", "Volume Limit", "Balance"]
+    zone3: []
+    zone4: []
+    global: ["Volume", "Volume Limit", "Balance", "EQ Bass", "EQ Mid", "EQ Treble"]
+- raw: "2026-09-18T13:45:28.835Z,7,130820,51,255,14,a3,99,1e,80,ff,fd,ff,bd,ff,b7,00,00,00,00"  # from fusion-zone-capabilities-extended.raw, MS-WB670
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Capabilities"
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Subwoofer On Amp", "Mono"]
+    zone2: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Mono"]
+    zone3: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "Line Out", "DSP", "Loudness", "Tweeter", "Mono"]
     zone4: []
     global: []

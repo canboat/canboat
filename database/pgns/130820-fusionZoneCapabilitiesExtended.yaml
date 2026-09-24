@@ -35,7 +35,7 @@ fields:
   name: Zone 1 Capabilities
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone1Extra
   name: Zone 1 Extra
   type: BINARY
@@ -44,7 +44,7 @@ fields:
   name: Zone 2 Capabilities
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone2Extra
   name: Zone 2 Extra
   type: BINARY
@@ -53,7 +53,7 @@ fields:
   name: Zone 3 Capabilities
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone3Extra
   name: Zone 3 Extra
   type: BINARY
@@ -62,7 +62,7 @@ fields:
   name: Zone 4 Capabilities
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_ZONE_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone4Extra
   name: Zone 4 Extra
   type: BINARY
@@ -71,7 +71,7 @@ fields:
   name: Global Capabilities
   type: BITLOOKUP
   bits: 16
-  lookupBits: FUSION_GLOBAL_CAPABILITY_BITFIELD
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: globalExtra
   name: Global Extra
   type: BINARY
@@ -87,9 +87,11 @@ notes: |-
     Capabilities (32798)  Zone 1 0xFDFF  Zone 2 0xBDFF  Zone 3 0xB7FF  Zone 4 0  Global 0
     Extended     (32865)  record 0xFDFF  record 0xBDFF  record 0xB7FF  0000      0000
 
-  The remaining six bytes of each populated record read 02,00,00,00,00,00 and
-  are zero for the unpopulated slots. Their meaning is NOT established, so they
-  are left as BINARY rather than being given speculative names.
+  The leading 16 bits use FUSION_CAPABILITY_BITFIELD, as in 32798. The
+  remaining six bytes of each populated record read 02,00,00,00,00,00 and are
+  zero for the unpopulated slots. Garmin's Fusion Audio app reads each record
+  as one 64-bit flag word and tests bit 17 (the 02) as "has crossover type";
+  the other bits are not established, so they are left as BINARY for now.
 
   32798 "Capabilities" was separately shown to be static: it is unchanged by
   the "Internal Amps On" setting, verified by requesting a fresh copy with the
@@ -103,11 +105,11 @@ samples:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Zone Capabilities Extended"
-    zone1Capabilities: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "bit 10", "bit 11", "bit 12", "bit 13", "bit 14", "bit 15"]
+    zone1Capabilities: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Subwoofer On Amp", "Mono"]
     zone1Extra: "0x020000000000"
-    zone2Capabilities: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "bit 10", "bit 11", "bit 12", "bit 13", "bit 15"]
+    zone2Capabilities: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Mono"]
     zone2Extra: "0x020000000000"
-    zone3Capabilities: ["bit 0", "Volume Limit", "Balance", "Subwoofer Level", "Subwoofer Low-pass Filter", "bit 5", "Bass", "Midrange", "Treble", "Variable/Fixed Line Output", "bit 10", "bit 12", "bit 13", "bit 15"]
+    zone3Capabilities: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "Line Out", "DSP", "Loudness", "Tweeter", "Mono"]
     zone3Extra: "0x020000000000"
     zone4Capabilities: []
     zone4Extra: "0x000000000000"
