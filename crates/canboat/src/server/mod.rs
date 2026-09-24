@@ -395,7 +395,7 @@ pub struct BridgeConfig {
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
     ///
-    /// **⚠️ ON AN iKONVERT, `pgn_lists.tx` IS THE WHOLE TRANSMIT LIST: ONCE
+    /// **⚠️ ON AN iKONVERT OR NGT-1, `pgn_lists.tx` IS THE WHOLE TRANSMIT LIST: ONCE
     /// IT NAMES ANY PGN, EVERY OTHER PGN IS REFUSED — NOT SENT** (network
     /// management and the quirks' own PGNs excepted). See [`PgnLists`].
     pub pgn_lists: PgnLists,
@@ -591,7 +591,11 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     if let Some(path) = config.actisense.as_deref() {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
-        let pgn_lists = effective_pgn_lists(config);
+        // What the embedder named — which, once it names a transmit PGN,
+        // is all the driver will send — and the quirks' own PGNs apart.
+        let pgn_lists = config.pgn_lists.clone();
+        let extra_tx_pgns = quirk_tx_pgns(config);
+        let effective = effective_pgn_lists(config);
         if !config.pgn_lists.rx.is_empty() {
             log::warn!(
                 "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
@@ -599,11 +603,12 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             );
         }
         let pgn_list_status =
-            (!pgn_lists.is_empty()).then(|| device::ngt1::pgn_list_status(&pgn_lists));
+            (!effective.is_empty()).then(|| device::ngt1::pgn_list_status(&effective));
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ngt1::Config {
                 pgn_lists: pgn_lists.clone(),
+                extra_tx_pgns: extra_tx_pgns.clone(),
             };
             Ok(device::ngt1::run_with_config(reader, writer, config))
         });

@@ -25,7 +25,7 @@ use crate::engine::format::{
 
 use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListSync};
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
-use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
+use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
 /// Re-ping the NGT-1 startup sequence every 20 s — matches the C
 /// `actisense-serial` keepalive.
@@ -50,7 +50,19 @@ pub struct Config {
     /// to the gateway's Transmit PGN Enable list when missing from it —
     /// the NGT-1 does not transmit a PGN that is not there. The Receive
     /// PGNs are not used: the gateway runs in receive-all mode.
+    ///
+    /// **⚠️ ONCE `pgn_lists.tx` NAMES ANY PGN, EVERY PGN NOT ON IT IS
+    /// REFUSED: THE DRIVER DOES NOT SEND IT.** The NGT-1 only transmits the
+    /// PGNs in its list, and the driver sets that list once, at startup, so
+    /// name every PGN you will send before opening the device.
+    /// Network-management PGNs are always sent. With `tx` empty the
+    /// gateway's list is left alone and nothing is refused.
     pub pgn_lists: PgnLists,
+    /// PGNs canboat itself transmits through the gateway (a quirk's, such
+    /// as `wmm`'s 127258). Enabled in the gateway's list and allowed;
+    /// unlike `pgn_lists.tx` they never on their own make the driver refuse
+    /// other PGNs.
+    pub extra_tx_pgns: Vec<u32>,
 }
 
 /// How the gateway takes `lists`: the Transmit list is written into it
@@ -75,7 +87,10 @@ pub fn run_with_config(
     writer: Box<dyn Write + Send>,
     config: Config,
 ) -> DeviceHandle {
-    super::run(Decoder::with_config(config), Encoder, reader, writer)
+    let encoder = Encoder {
+        gate: TxGate::new("ngt1", &config.pgn_lists.tx, &config.extra_tx_pgns),
+    };
+    super::run(Decoder::with_config(config), encoder, reader, writer)
 }
 
 /// Decoder wrapper that adapts [`Ngt1Decoder`] to [`DeviceDecoder`].
@@ -107,7 +122,8 @@ impl Decoder {
     }
 
     pub fn with_config(config: Config) -> Self {
-        let (tx_pgns, dropped) = pgn_list::merge(&[], &config.pgn_lists.tx);
+        let wanted = [config.pgn_lists.tx.as_slice(), &config.extra_tx_pgns].concat();
+        let (tx_pgns, dropped) = pgn_list::merge(&[], &wanted);
         if !dropped.is_empty() {
             log::warn!(
                 "ngt1: not enabling transmit PGNs {dropped:?} (invalid, or the list is full)"
@@ -252,8 +268,12 @@ fn now_ms() -> u64 {
         .unwrap_or(0)
 }
 
-/// Stateless encoder.
-pub struct Encoder;
+/// Encodes frames for the gateway, refusing those not on a named transmit
+/// list (see [`Config::pgn_lists`]).
+#[derive(Default)]
+pub struct Encoder {
+    gate: Option<TxGate>,
+}
 
 impl DeviceEncoder for Encoder {
     fn init_bytes(&self) -> Vec<u8> {
@@ -267,6 +287,11 @@ impl DeviceEncoder for Encoder {
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
         if frame.pgn >= ACTISENSE_SYNTHETIC_PGN {
             log::debug!("ngt1: skipping synthetic PGN {}", frame.pgn);
+            return None;
+        }
+        if let Some(gate) = &self.gate
+            && !gate.allows(frame.pgn)
+        {
             return None;
         }
         Some(encode_n2k_send_frame(frame))
@@ -342,6 +367,7 @@ mod network_status_tests {
                 tx: vec![127508],
                 rx: vec![],
             },
+            ..Default::default()
         });
         let mut wire = Vec::new();
         crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &[0x11, 1], &mut wire);
@@ -354,6 +380,32 @@ mod network_status_tests {
             "{events:?}"
         );
         assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
+    }
+
+    /// With a named transmit list, only its PGNs, canboat's own and the
+    /// network-management PGNs go out; with only canboat's own, nothing is
+    /// refused.
+    #[test]
+    fn a_named_transmit_list_refuses_the_rest() {
+        let frame = |pgn| RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn,
+            src: 0,
+            dst: 255,
+            data: vec![0; 8].into(),
+        };
+        let strict = Encoder {
+            gate: TxGate::new("ngt1", &[127508], &[127258]),
+        };
+        for pgn in [127508, 127258, 59904] {
+            assert!(strict.encode_frame(&frame(pgn)).is_some(), "{pgn}");
+        }
+        assert!(strict.encode_frame(&frame(127506)).is_none());
+        let open = Encoder {
+            gate: TxGate::new("ngt1", &[], &[127258]),
+        };
+        assert!(open.encode_frame(&frame(127506)).is_some());
     }
 
     /// With no System Status ever seen — P-codes off — the two fields
