@@ -160,7 +160,13 @@ pub fn run(args: Args) -> Result<()> {
     {
         let closer = closer.clone();
         super::stop_signal::on_stop(move || {
-            closer.close(device::CLOSE_TIMEOUT);
+            let closed = closer.close(device::CLOSE_TIMEOUT);
+            if !closed {
+                log::error!(
+                    "the device did not confirm closing (a gateway may still be on the bus)"
+                );
+            }
+            closed
         });
     }
 

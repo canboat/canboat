@@ -38,8 +38,9 @@ pub fn received() -> bool {
 
 /// Catch the signals, and on the first one run `stop` on a watcher thread
 /// and then exit — for a command whose main thread is blocked and cannot
-/// poll [`received`].
-pub fn on_stop(stop: impl FnOnce() + Send + 'static) {
+/// poll [`received`]. `stop` returns whether it stopped cleanly; the exit
+/// status is 0 if so, 1 if not.
+pub fn on_stop(stop: impl FnOnce() -> bool + Send + 'static) {
     install();
     thread::Builder::new()
         .name("stop-signal".into())
@@ -48,8 +49,8 @@ pub fn on_stop(stop: impl FnOnce() + Send + 'static) {
                 thread::sleep(Duration::from_millis(100));
             }
             log::info!("stopping on signal");
-            stop();
-            std::process::exit(0);
+            let clean = stop();
+            std::process::exit(if clean { 0 } else { 1 });
         })
         .expect("spawn stop-signal watcher");
 }
