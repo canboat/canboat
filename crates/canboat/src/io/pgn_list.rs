@@ -51,6 +51,10 @@ pub enum PgnListSupport {
     /// canboat answers PGN 126464 itself and advertises the list (the
     /// SocketCAN gateway).
     Answered,
+    /// The list is written into the gateway, which answers PGN 126464 with
+    /// it (iKonvert, NGT-1). On these gateways the Transmit list also
+    /// decides which PGNs the gateway will put on the bus at all.
+    Pushed,
     /// The backend has no known way to advertise the list; it was ignored.
     Unsupported,
 }

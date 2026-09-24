@@ -659,12 +659,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     }
     if let Some(iface) = config.socketcan.as_deref() {
         let iface = iface.to_string();
-        // The wmm quirk transmits 127258 from the gateway's own address,
-        // so the gateway advertises it without the embedder naming it.
-        let mut pgn_lists = config.pgn_lists.clone();
-        if config.quirk.contains(&quirks::QuirkKind::Wmm) {
-            pgn_lists.tx.push(quirks::wmm::PGN_MAGNETIC_VARIATION);
-        }
+        let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
             address: config.socketcan_address,
             model_version: Some("canboat-pipeline-rs"),
@@ -718,17 +713,31 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     })
 }
 
+/// The PGN lists a backend advertises: the embedder's, plus what a quirk
+/// transmits from the gateway's own address (`wmm`: 127258), so the
+/// embedder does not have to name those.
+fn effective_pgn_lists(config: &BridgeConfig) -> PgnLists {
+    let mut lists = config.pgn_lists.clone();
+    let wmm = quirks::wmm::PGN_MAGNETIC_VARIATION;
+    if config.quirk.contains(&quirks::QuirkKind::Wmm) && !lists.tx.contains(&wmm) {
+        lists.tx.push(wmm);
+    }
+    lists
+}
+
 /// The status for a backend that cannot advertise PGN lists, warning when
-/// the config asked for some.
+/// the embedder asked for some.
 fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
-    if config.pgn_lists.is_empty() {
+    if !config.pgn_lists.is_empty() {
+        log::warn!(
+            "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
+            config.pgn_lists.tx,
+            config.pgn_lists.rx
+        );
+    }
+    if effective_pgn_lists(config).is_empty() {
         return None;
     }
-    log::warn!(
-        "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
-        config.pgn_lists.tx,
-        config.pgn_lists.rx
-    );
     Some(PgnListStatus {
         tx: PgnListSupport::Unsupported,
         rx: PgnListSupport::Unsupported,
