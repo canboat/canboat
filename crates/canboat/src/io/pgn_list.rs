@@ -22,7 +22,7 @@ pub const MAX_PGN_LIST_LEN: usize = 74;
 
 /// Highest valid PGN; anything above it (canboat's synthetic `>= 0x40000`
 /// PGNs included) never goes on the wire, so it is never advertised.
-const MAX_PGN: u32 = 0x1_FFFF;
+pub(crate) const MAX_PGN: u32 = 0x1_FFFF;
 
 /// The PGNs the application transmits and receives, to advertise on top of
 /// the gateway's own ISO housekeeping PGNs. Set before the device opens.

@@ -743,14 +743,22 @@ fn effective_pgn_lists(config: &BridgeConfig) -> PgnLists {
 /// The status for a backend that cannot advertise PGN lists, warning when
 /// the embedder asked for some.
 fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
+    let effective = effective_pgn_lists(config);
     if !config.pgn_lists.is_empty() {
         log::warn!(
             "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
             config.pgn_lists.tx,
             config.pgn_lists.rx
         );
+    } else if !effective.is_empty() {
+        // Only a quirk's PGN (wmm's 127258): the user asked for no lists,
+        // so say so without a warning.
+        log::info!(
+            "this backend cannot advertise PGN lists; the quirks' transmit PGNs {:?} are not advertised",
+            effective.tx
+        );
     }
-    if effective_pgn_lists(config).is_empty() {
+    if effective.is_empty() {
         return None;
     }
     Some(PgnListStatus {

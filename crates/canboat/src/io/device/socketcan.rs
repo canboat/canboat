@@ -589,7 +589,9 @@ mod imp {
         /// Advertise `pgn` in the Transmit list from now on: the
         /// application just sent it from our address.
         fn learn_tx_pgn(&mut self, pgn: u32) {
-            if !self.learn_tx_pgns || self.tx_pgns.contains(&pgn) {
+            // A frame can carry a PGN the extended CAN id encodes but NMEA
+            // 2000 does not define; never advertise one.
+            if pgn > pgn_list::MAX_PGN || !self.learn_tx_pgns || self.tx_pgns.contains(&pgn) {
                 return;
             }
             if self.tx_pgns.len() >= pgn_list::MAX_PGN_LIST_LEN {
@@ -1845,6 +1847,7 @@ mod imp {
             send(&mut dev, 127508, 0);
             send(&mut dev, 130824, 24); // as the impersonated H5000
             send(&mut dev, 0x40100, 0); // synthetic, never on the wire
+            send(&mut dev, 0x2_0000, 0); // beyond the 17-bit PGN range
             assert_eq!(&dev.tx_pgns[TX_PGN_LIST.len()..], [127508]);
 
             let config = Config {
