@@ -192,6 +192,11 @@ pub struct Args {
     #[arg(long = "rx-pgn", value_name = "PGN", value_delimiter = ',')]
     rx_pgn: Vec<u32>,
 
+    /// Do not add the PGNs the gateway transmits to its advertised
+    /// Transmit list as they are first sent (`--socketcan`).
+    #[arg(long)]
+    no_learn_tx_pgns: bool,
+
     /// Suppress the periodic ISO Address Claim / Product Info request
     /// engine. By default it runs whenever a device writer is wired up
     /// (matching canboat C `n2kd`'s default). Stdin-only mode always
@@ -381,6 +386,9 @@ pub struct BridgeConfig {
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
     pub pgn_lists: PgnLists,
+    /// Add each PGN the gateway transmits as itself to the advertised
+    /// Transmit list when it is first sent (SocketCAN only). On by default.
+    pub learn_tx_pgns: bool,
     pub no_request_claims: bool,
     pub quirk: Vec<quirks::QuirkKind>,
     pub bind: Ipv4Addr,
@@ -434,6 +442,7 @@ impl Default for BridgeConfig {
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
             pgn_lists: PgnLists::default(),
+            learn_tx_pgns: true,
             no_request_claims: false,
             quirk: Vec::new(),
             bind: Ipv4Addr::new(0, 0, 0, 0),
@@ -493,6 +502,7 @@ impl From<Args> for BridgeConfig {
                 tx: a.tx_pgn,
                 rx: a.rx_pgn,
             },
+            learn_tx_pgns: !a.no_learn_tx_pgns,
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,
@@ -669,6 +679,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
+            learn_tx_pgns: config.learn_tx_pgns,
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address

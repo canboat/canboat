@@ -110,6 +110,12 @@ mod config {
         /// ISO housekeeping PGNs. The Transmit list should name every PGN
         /// the application originates.
         pub pgn_lists: PgnLists,
+        /// Add each PGN the application transmits from the gateway's own
+        /// address to the advertised Transmit list, as it goes out. On by
+        /// default. It covers PGNs `pgn_lists` misses, but only from their
+        /// first transmission on: a display that asked for the list before
+        /// then is not told, so name the PGNs up front as well.
+        pub learn_tx_pgns: bool,
     }
 
     impl Default for Config {
@@ -125,6 +131,7 @@ mod config {
                 model_version: None,
                 configure_link: false,
                 pgn_lists: PgnLists::default(),
+                learn_tx_pgns: true,
             }
         }
     }
@@ -423,6 +430,10 @@ mod imp {
         /// PGN 126464 lists: the housekeeping PGNs plus `Config::pgn_lists`.
         tx_pgns: Vec<u32>,
         rx_pgns: Vec<u32>,
+        /// `Config::learn_tx_pgns`.
+        learn_tx_pgns: bool,
+        /// Whether the "Transmit list is full" warning has been given.
+        tx_pgns_full_warned: bool,
         // -- NMEA 2000 gateway: network status (PGN 262400) emission --
         /// Interface name passed to `socketcan::CanSocket::open`, kept
         /// so the network-status tick can read kernel CAN counters via
@@ -479,6 +490,8 @@ mod imp {
                 model_version: config.model_version.unwrap_or(DEFAULT_MODEL_VERSION),
                 tx_pgns: advertised_pgns(&TX_PGN_LIST, &config.pgn_lists.tx, "transmit"),
                 rx_pgns: advertised_pgns(&RX_PGN_LIST, &config.pgn_lists.rx, "receive"),
+                learn_tx_pgns: config.learn_tx_pgns,
+                tx_pgns_full_warned: false,
                 iface: iface.to_string(),
                 start_ms: now_ms(),
                 next_network_status: 0,
@@ -571,6 +584,23 @@ mod imp {
                 load_equivalency: i64::from(LOAD_EQUIVALENCY),
             };
             emit(bus, pi.frame(self.addr()).into_iter().collect());
+        }
+
+        /// Advertise `pgn` in the Transmit list from now on: the
+        /// application just sent it from our address.
+        fn learn_tx_pgn(&mut self, pgn: u32) {
+            if !self.learn_tx_pgns || self.tx_pgns.contains(&pgn) {
+                return;
+            }
+            if self.tx_pgns.len() >= pgn_list::MAX_PGN_LIST_LEN {
+                if !self.tx_pgns_full_warned {
+                    log::warn!("socketcan: transmit PGN list is full; not advertising PGN {pgn}");
+                    self.tx_pgns_full_warned = true;
+                }
+                return;
+            }
+            log::info!("socketcan: advertising transmit PGN {pgn}, first sent now");
+            self.tx_pgns.push(pgn);
         }
 
         // PGN List (Transmit and Receive), PGN 126464: one message per list.
@@ -1083,7 +1113,7 @@ mod imp {
     /// interpreted as "use my claim address"; any other value is
     /// forwarded unchanged so quirk synthesisers can impersonate other
     /// nodes on the wire (e.g. the SCX-20 quirk uses `src = 52`).
-    fn dispatch_cmd(bus: &mut Bus<'_>, claimer: &NmeaDevice, cmd: WriterCmd) {
+    fn dispatch_cmd(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, cmd: WriterCmd) {
         match cmd {
             WriterCmd::Frame(f) => {
                 if f.pgn >= CANBOAT_PGN_START {
@@ -1094,6 +1124,11 @@ mod imp {
                 } else {
                     f.src
                 };
+                // Only what goes out as us: a quirk impersonating another
+                // device sends from that device's address.
+                if src == claimer.addr() {
+                    claimer.learn_tx_pgn(f.pgn);
+                }
                 // emit=false: this is a user-initiated send; the caller
                 // already has visibility into what they sent. (For the
                 // SCX-20 quirk we want the synthetic 126996 to be
@@ -1275,7 +1310,7 @@ mod imp {
                             tx_buf: &mut tx_buf,
                             frames_tx: &frames_tx,
                         };
-                        dispatch_cmd(&mut bus, &claimer, cmd);
+                        dispatch_cmd(&mut bus, &mut claimer, cmd);
                     }
                     Err(mpsc::TryRecvError::Empty) => break,
                     Err(mpsc::TryRecvError::Disconnected) => return,
@@ -1780,6 +1815,45 @@ mod imp {
             let status = super::super::pgn_list_status(&config.pgn_lists);
             assert_eq!(status.tx, PgnListSupport::Answered);
             assert_eq!(status.dropped, [0x40000]);
+        }
+
+        /// A PGN the application sends from our address joins the
+        /// Transmit list; one sent as another device, or with learning
+        /// off, does not.
+        #[test]
+        fn transmitted_pgns_are_learned() {
+            fn send(dev: &mut NmeaDevice, pgn: u32, src: u8) {
+                let mut tx_buf = TxBuffer::new();
+                let (frames_tx, _frames_rx) = mpsc::channel();
+                let mut bus = Bus {
+                    tx_buf: &mut tx_buf,
+                    frames_tx: &frames_tx,
+                };
+                let frame = RawFrame {
+                    timestamp: None,
+                    prio: 6,
+                    pgn,
+                    src,
+                    dst: ADDR_GLOBAL,
+                    data: vec![0; 8].into(),
+                };
+                dispatch_cmd(&mut bus, dev, WriterCmd::Frame(frame));
+            }
+
+            let mut dev = NmeaDevice::new(&Config::default(), "vcan-none");
+            send(&mut dev, 127508, 0);
+            send(&mut dev, 127508, 0);
+            send(&mut dev, 130824, 24); // as the impersonated H5000
+            send(&mut dev, 0x40100, 0); // synthetic, never on the wire
+            assert_eq!(&dev.tx_pgns[TX_PGN_LIST.len()..], [127508]);
+
+            let config = Config {
+                learn_tx_pgns: false,
+                ..Default::default()
+            };
+            let mut dev = NmeaDevice::new(&config, "vcan-none");
+            send(&mut dev, 127508, 0);
+            assert_eq!(dev.tx_pgns, TX_PGN_LIST);
         }
 
         /// The gateway announces itself as a PC Gateway (130) in the
