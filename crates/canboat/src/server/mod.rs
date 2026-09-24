@@ -374,7 +374,9 @@ pub struct BridgeConfig {
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
     /// PGNs the application sends and receives, advertised in the
-    /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). Only the
+    /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
+    /// transmits from the gateway's address (`wmm`: 127258) are added
+    /// without being named here. Only the
     /// SocketCAN backend honours them today; the others log a warning.
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
@@ -657,7 +659,12 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     }
     if let Some(iface) = config.socketcan.as_deref() {
         let iface = iface.to_string();
-        let pgn_lists = config.pgn_lists.clone();
+        // The wmm quirk transmits 127258 from the gateway's own address,
+        // so the gateway advertises it without the embedder naming it.
+        let mut pgn_lists = config.pgn_lists.clone();
+        if config.quirk.contains(&quirks::QuirkKind::Wmm) {
+            pgn_lists.tx.push(quirks::wmm::PGN_MAGNETIC_VARIATION);
+        }
         let config = device::socketcan::Config {
             address: config.socketcan_address,
             model_version: Some("canboat-pipeline-rs"),

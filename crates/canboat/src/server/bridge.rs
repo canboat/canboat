@@ -357,7 +357,8 @@ impl Bridge {
 
     /// What the backend did with [`BridgeConfig::pgn_lists`]: whether it
     /// advertises each list in its PGN 126464 answer, and which PGNs did not
-    /// fit. `None` when the config named no PGNs.
+    /// fit. `None` when there is nothing to advertise: the config named no
+    /// PGNs and no quirk transmits from the gateway's address.
     pub fn pgn_list_status(&self) -> Option<&PgnListStatus> {
         self.pgn_list_status.as_ref()
     }
