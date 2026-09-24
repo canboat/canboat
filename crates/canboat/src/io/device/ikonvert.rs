@@ -50,7 +50,7 @@ use crate::engine::format::ikonvert::{
 };
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
-use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
+use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
 /// Synthetic-PGN marker. iKonvert silently drops `>= 0x40000` PGNs
 /// the same way actisense-serial does.
@@ -171,7 +171,7 @@ pub fn run(
 ) -> DeviceHandle {
     let encoder = Encoder {
         skip_init: config.skip_init,
-        refusal: Refusal::for_config(&config),
+        refusal: tx_gate(&config),
     };
     super::run(Decoder::new(config), encoder, reader, writer)
 }
@@ -373,51 +373,19 @@ impl Decoder {
 
 pub struct Encoder {
     skip_init: bool,
-    refusal: Option<Refusal>,
+    refusal: Option<TxGate>,
 }
 
-/// Refuses PGNs missing from a named transmit list; see
-/// [`Config::pgn_lists`].
-struct Refusal {
-    allowed: Vec<u32>,
-    /// PGNs refused so far, so each is logged once.
-    refused: Mutex<Vec<u32>>,
-}
-
-impl Refusal {
-    /// A refusal when the client named a transmit list; `None` otherwise,
-    /// and when the handshake is skipped (nothing sets the gateway's list).
-    fn for_config(config: &Config) -> Option<Self> {
-        let named = pgns_in(config.tx_list.as_deref());
-        if config.skip_init || (named.is_empty() && config.pgn_lists.tx.is_empty()) {
-            return None;
-        }
-        let mut allowed = pgn_list::NETWORK_MANAGEMENT_PGNS.to_vec();
-        allowed.extend(named);
-        allowed.extend_from_slice(&config.pgn_lists.tx);
-        allowed.extend_from_slice(&config.extra_tx_pgns);
-        Some(Self {
-            allowed,
-            refused: Mutex::new(Vec::new()),
-        })
+/// The refusal of unlisted PGNs, when the client named a transmit list;
+/// see [`Config::pgn_lists`]. None with the handshake skipped: nothing
+/// sets the gateway's list then.
+fn tx_gate(config: &Config) -> Option<TxGate> {
+    if config.skip_init {
+        return None;
     }
-
-    /// Whether `pgn` may be sent, logging the first refusal of each PGN.
-    fn allows(&self, pgn: u32) -> bool {
-        if self.allowed.contains(&pgn) {
-            return true;
-        }
-        if let Ok(mut refused) = self.refused.lock()
-            && !refused.contains(&pgn)
-        {
-            refused.push(pgn);
-            log::warn!(
-                "ikonvert: refusing to send PGN {pgn}: it is not in the transmit list; \
-                 name it (--tx-pgn / pgn_lists.tx) before starting"
-            );
-        }
-        false
-    }
+    let mut named = pgns_in(config.tx_list.as_deref());
+    named.extend_from_slice(&config.pgn_lists.tx);
+    TxGate::new("ikonvert", &named, &config.extra_tx_pgns)
 }
 
 /// The PGNs in a legacy comma-separated list.
@@ -445,8 +413,8 @@ impl DeviceEncoder for Encoder {
             log::debug!("ikonvert: skipping synthetic PGN {}", frame.pgn);
             return None;
         }
-        if let Some(refusal) = &self.refusal
-            && !refusal.allows(frame.pgn)
+        if let Some(gate) = &self.refusal
+            && !gate.allows(frame.pgn)
         {
             return None;
         }
@@ -686,7 +654,7 @@ mod tests {
     fn encoder_for(config: &Config) -> Encoder {
         Encoder {
             skip_init: config.skip_init,
-            refusal: Refusal::for_config(config),
+            refusal: tx_gate(config),
         }
     }
 

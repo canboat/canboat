@@ -90,6 +90,52 @@ pub struct PgnListStatus {
     pub dropped: Vec<u32>,
 }
 
+/// Refuses PGNs missing from a transmit list the client named, for the
+/// gateways that only send what is on their list (see [`PgnLists`]).
+pub(crate) struct TxGate {
+    label: &'static str,
+    allowed: Vec<u32>,
+    /// PGNs refused so far, so each is logged once.
+    refused: std::sync::Mutex<Vec<u32>>,
+}
+
+impl TxGate {
+    /// A gate allowing `named`, canboat's own `extra` PGNs and the
+    /// network-management PGNs — or `None` when the client named none, so
+    /// nothing is refused. `extra` alone never closes the gate.
+    pub(crate) fn new(label: &'static str, named: &[u32], extra: &[u32]) -> Option<Self> {
+        if named.is_empty() {
+            return None;
+        }
+        let mut allowed = NETWORK_MANAGEMENT_PGNS.to_vec();
+        allowed.extend_from_slice(named);
+        allowed.extend_from_slice(extra);
+        Some(Self {
+            label,
+            allowed,
+            refused: std::sync::Mutex::new(Vec::new()),
+        })
+    }
+
+    /// Whether `pgn` may be sent, logging the first refusal of each PGN.
+    pub(crate) fn allows(&self, pgn: u32) -> bool {
+        if self.allowed.contains(&pgn) {
+            return true;
+        }
+        if let Ok(mut refused) = self.refused.lock()
+            && !refused.contains(&pgn)
+        {
+            refused.push(pgn);
+            log::warn!(
+                "{}: refusing to send PGN {pgn}: it is not in the transmit list; \
+                 name it (--tx-pgn / pgn_lists.tx) before starting",
+                self.label
+            );
+        }
+        false
+    }
+}
+
 /// A list as advertised: `builtin` first, then each PGN of `extra` not
 /// already in it. Returns the list and the PGNs of `extra` left out — invalid
 /// ones, and those that would take the list past [`MAX_PGN_LIST_LEN`].
@@ -114,6 +160,16 @@ pub fn merge(builtin: &[u32], extra: &[u32]) -> (Vec<u32>, Vec<u32>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_gate_allows_what_is_named_and_refuses_the_rest() {
+        let gate = TxGate::new("test", &[127508], &[127258]).unwrap();
+        for pgn in [127508, 127258, 59904, 126996] {
+            assert!(gate.allows(pgn), "{pgn}");
+        }
+        assert!(!gate.allows(127506));
+        assert!(TxGate::new("test", &[], &[127258]).is_none(), "extra alone");
+    }
 
     #[test]
     fn extra_pgns_follow_the_builtin_ones_without_duplicates() {
