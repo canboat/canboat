@@ -215,9 +215,11 @@ fn list_pgns(payload: &[u8]) -> Vec<u32> {
     payload
         .get(13..)
         .unwrap_or(&[])
-        .chunks_exact(4)
+        .as_chunks::<4>()
+        .0
+        .iter()
         .take(count as usize)
-        .map(|b| u32::from_le_bytes([b[0], b[1], b[2], b[3]]))
+        .map(|b| u32::from_le_bytes(*b))
         .collect()
 }
 
