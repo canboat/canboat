@@ -71,6 +71,7 @@ use crate::engine::format::{
 };
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
+use crate::io::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 
 /// Clap front-end for the `canboat server` CLI. Gated behind the `cli` feature
 /// so the library path ([`BridgeConfig`] + [`run`]) stays clap-free; convert
@@ -177,6 +178,19 @@ pub struct Args {
     /// Disable the iKonvert TX rate limit. Use at your own risk.
     #[arg(long)]
     ikonvert_rate_limit_off: bool,
+
+    /// A PGN the application transmits, to advertise in the gateway's
+    /// PGN 126464 Transmit list (displays pick data sources from it).
+    /// Repeatable, or comma-separated. Honoured by `--socketcan`; other
+    /// backends warn and ignore it.
+    #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
+    tx_pgn: Vec<u32>,
+
+    /// A PGN the application receives, to advertise in the gateway's
+    /// PGN 126464 Receive list. Only advertised — it never filters what
+    /// the gateway passes on. Repeatable, or comma-separated.
+    #[arg(long = "rx-pgn", value_name = "PGN", value_delimiter = ',')]
+    rx_pgn: Vec<u32>,
 
     /// Suppress the periodic ISO Address Claim / Product Info request
     /// engine. By default it runs whenever a device writer is wired up
@@ -359,6 +373,12 @@ pub struct BridgeConfig {
     pub ikonvert_rx: Option<String>,
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
+    /// PGNs the application sends and receives, advertised in the
+    /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). Only the
+    /// SocketCAN backend honours them today; the others log a warning.
+    /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
+    /// the outcome.
+    pub pgn_lists: PgnLists,
     pub no_request_claims: bool,
     pub quirk: Vec<quirks::QuirkKind>,
     pub bind: Ipv4Addr,
@@ -411,6 +431,7 @@ impl Default for BridgeConfig {
             ikonvert_rx: None,
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
+            pgn_lists: PgnLists::default(),
             no_request_claims: false,
             quirk: Vec::new(),
             bind: Ipv4Addr::new(0, 0, 0, 0),
@@ -466,6 +487,10 @@ impl From<Args> for BridgeConfig {
             ikonvert_rx: a.ikonvert_rx,
             ikonvert_tx: a.ikonvert_tx,
             ikonvert_rate_limit_off: a.ikonvert_rate_limit_off,
+            pgn_lists: PgnLists {
+                tx: a.tx_pgn,
+                rx: a.rx_pgn,
+            },
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,
@@ -527,6 +552,9 @@ struct OpenedSource {
     /// only `--socketcan` exposes one). Read by the CSV-port
     /// injector to rewrite client-supplied default-`src` frames.
     claim_addr: Option<Arc<std::sync::atomic::AtomicU8>>,
+    /// What the backend does with `BridgeConfig::pgn_lists`; `None` when
+    /// none were given.
+    pgn_list_status: Option<PgnListStatus>,
 }
 
 // Config-dir *discovery* (the `/etc/default/canboat` vs `~/.local/canboat`
@@ -552,6 +580,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(path) = config.ikonvert.as_deref() {
@@ -579,6 +608,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(url) = config.maretron.as_deref() {
@@ -600,6 +630,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(read_url) = config.canboat_csv.as_deref() {
@@ -621,14 +652,17 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(iface) = config.socketcan.as_deref() {
         let iface = iface.to_string();
+        let pgn_lists = config.pgn_lists.clone();
         let config = device::socketcan::Config {
             address: config.socketcan_address,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
+            pgn_lists: pgn_lists.clone(),
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address
@@ -651,6 +685,8 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: Some(claim_addr),
+            pgn_list_status: (!pgn_lists.is_empty())
+                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
         });
     }
     // stdin fallback — no device, no reconnect logic needed. We
@@ -671,6 +707,25 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         supervisor: None,
         pre_coalesced,
         claim_addr: None,
+        pgn_list_status: unsupported_pgn_lists(config),
+    })
+}
+
+/// The status for a backend that cannot advertise PGN lists, warning when
+/// the config asked for some.
+fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
+    if config.pgn_lists.is_empty() {
+        return None;
+    }
+    log::warn!(
+        "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
+        config.pgn_lists.tx,
+        config.pgn_lists.rx
+    );
+    Some(PgnListStatus {
+        tx: PgnListSupport::Unsupported,
+        rx: PgnListSupport::Unsupported,
+        dropped: Vec::new(),
     })
 }
 

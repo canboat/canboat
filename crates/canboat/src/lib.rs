@@ -378,6 +378,7 @@ pub mod device {
     pub use crate::io::nmea_responder::{
         ProductInfo, heartbeat_frame, iso_ack_frame, pgn_list_frames,
     };
+    pub use crate::io::pgn_list::{MAX_PGN_LIST_LEN, PgnListStatus, PgnListSupport, PgnLists};
 }
 
 // ─────────────────────────────── bridge ──────────────────────────────────
@@ -444,6 +445,8 @@ pub mod bridge {
     /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};
+    /// [`BridgeConfig::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
+    pub use crate::io::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
     pub use crate::server::{Bridge, BridgeConfig, QuirkKind as Quirk, Transmitter};
 }
 
