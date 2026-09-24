@@ -584,6 +584,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ngt1::Config {
                 pgn_lists: pgn_lists.clone(),
+                ..Default::default()
             };
             Ok(device::ngt1::run_with_config(reader, writer, config))
         });
@@ -609,12 +610,16 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_list_status =
             (!pgn_lists.is_empty()).then(|| device::ikonvert::pgn_list_status(&pgn_lists));
         let rate_limit_off = config.ikonvert_rate_limit_off;
+        // Shared by every session, so PGNs learned before a reconnect are
+        // in the next session's TX list.
+        let learned_tx_pgns = Arc::new(std::sync::Mutex::new(Vec::new()));
         let factory = NamedFactory::new("ikonvert", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ikonvert::Config {
                 rx_list: rx_list.clone(),
                 tx_list: tx_list.clone(),
                 pgn_lists: pgn_lists.clone(),
+                learned_tx_pgns: learned_tx_pgns.clone(),
                 rate_limit_off,
                 ..Default::default()
             };

@@ -14,6 +14,7 @@
 //! (see [`super::ngt1_tx_list`]).
 
 use std::io::{Read, Write};
+use std::sync::{Mutex, mpsc};
 use std::time::Duration;
 
 use crate::engine::RawFrame;
@@ -43,14 +44,28 @@ const ACTISENSE_SYSTEM_STATUS_PGN: u32 = ACTISENSE_SYNTHETIC_PGN + 0xf2;
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
 
-/// NGT-1 settings. `Config::default()` leaves the gateway's lists alone.
-#[derive(Debug, Clone, Default)]
+/// NGT-1 settings.
+#[derive(Debug, Clone)]
 pub struct Config {
     /// PGNs the application sends and reads. The Transmit PGNs are added
     /// to the gateway's Transmit PGN Enable list when missing from it —
     /// the NGT-1 does not transmit a PGN that is not there. The Receive
     /// PGNs are not used: the gateway runs in receive-all mode.
     pub pgn_lists: PgnLists,
+    /// Also add each PGN the application sends, a few seconds after it is
+    /// first sent (the gateway drops it until then). On by default. Like
+    /// `pgn_lists`, this writes the gateway's EEPROM only when a PGN is
+    /// missing.
+    pub learn_tx_pgns: bool,
+}
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            pgn_lists: PgnLists::default(),
+            learn_tx_pgns: true,
+        }
+    }
 }
 
 /// How the gateway takes `lists`: the Transmit list is written into it
@@ -75,7 +90,18 @@ pub fn run_with_config(
     writer: Box<dyn Write + Send>,
     config: Config,
 ) -> DeviceHandle {
-    super::run(Decoder::with_config(config), Encoder, reader, writer)
+    let learn = config.learn_tx_pgns;
+    let mut decoder = Decoder::with_config(config);
+    let mut encoder = Encoder::new();
+    if learn {
+        let (tx, rx) = mpsc::channel();
+        decoder.learned = Some(rx);
+        encoder.learner = Some(Learner {
+            sent: Mutex::new(Vec::new()),
+            tx,
+        });
+    }
+    super::run(decoder, encoder, reader, writer)
 }
 
 /// Decoder wrapper that adapts [`Ngt1Decoder`] to [`DeviceDecoder`].
@@ -88,6 +114,8 @@ pub struct Decoder {
     net: NetworkStatusState,
     /// Brings the gateway's Transmit PGN Enable list up to date.
     tx_list: TxListSync,
+    /// PGNs the encoder has sent for the first time, to learn.
+    learned: Option<mpsc::Receiver<u32>>,
 }
 
 struct NetworkStatusState {
@@ -124,6 +152,7 @@ impl Decoder {
                 errors: None,
             },
             tx_list: TxListSync::new(tx_pgns),
+            learned: None,
         }
     }
 }
@@ -166,7 +195,12 @@ impl DeviceDecoder for Decoder {
         if now >= self.net.next_ms {
             self.emit_network_status(events);
         }
-        if !self.tx_list.is_done() {
+        if let Some(learned) = &self.learned {
+            for pgn in learned.try_iter() {
+                self.tx_list.learn(pgn, now);
+            }
+        }
+        if !self.tx_list.is_idle() {
             send_all(events, self.tx_list.on_tick(now));
         }
     }
@@ -252,8 +286,23 @@ fn now_ms() -> u64 {
         .unwrap_or(0)
 }
 
-/// Stateless encoder.
-pub struct Encoder;
+/// Encodes frames for the gateway, and reports each PGN it sends for the
+/// first time so the decoder can make sure the gateway transmits it.
+#[derive(Default)]
+pub struct Encoder {
+    learner: Option<Learner>,
+}
+
+impl Encoder {
+    pub fn new() -> Self {
+        Self::default()
+    }
+}
+
+struct Learner {
+    sent: Mutex<Vec<u32>>,
+    tx: mpsc::Sender<u32>,
+}
 
 impl DeviceEncoder for Encoder {
     fn init_bytes(&self) -> Vec<u8> {
@@ -268,6 +317,13 @@ impl DeviceEncoder for Encoder {
         if frame.pgn >= ACTISENSE_SYNTHETIC_PGN {
             log::debug!("ngt1: skipping synthetic PGN {}", frame.pgn);
             return None;
+        }
+        if let Some(learner) = &self.learner
+            && let Ok(mut sent) = learner.sent.lock()
+            && !sent.contains(&frame.pgn)
+        {
+            sent.push(frame.pgn);
+            let _ = learner.tx.send(frame.pgn);
         }
         Some(encode_n2k_send_frame(frame))
     }
@@ -342,6 +398,7 @@ mod network_status_tests {
                 tx: vec![127508],
                 rx: vec![],
             },
+            ..Default::default()
         });
         let mut wire = Vec::new();
         crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &[0x11, 1], &mut wire);
@@ -353,7 +410,32 @@ mod network_status_tests {
                 .any(|e| matches!(e, DeviceEvent::Frame(f) if f.pgn != 0x40100)),
             "{events:?}"
         );
-        assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
+        assert!(!d.tx_list.is_idle(), "startup confirmed, list read pending");
+    }
+
+    /// The encoder reports each PGN it sends once, never a synthetic one.
+    #[test]
+    fn the_encoder_reports_first_sends() {
+        let (tx, rx) = mpsc::channel();
+        let encoder = Encoder {
+            learner: Some(Learner {
+                sent: Mutex::new(Vec::new()),
+                tx,
+            }),
+        };
+        let frame = |pgn| RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn,
+            src: 0,
+            dst: 255,
+            data: vec![0; 8].into(),
+        };
+        encoder.encode_frame(&frame(127508));
+        encoder.encode_frame(&frame(127508));
+        encoder.encode_frame(&frame(0x40100));
+        encoder.encode_frame(&frame(127506));
+        assert_eq!(rx.try_iter().collect::<Vec<_>>(), [127508, 127506]);
     }
 
     /// With no System Status ever seen — P-codes off — the two fields

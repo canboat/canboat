@@ -59,7 +59,7 @@ pub const IKONVERT_SYNTHETIC_PGN: u32 = 0x40000;
 /// iKonvert initialisation parameters. All fields are optional —
 /// `Config::default()` brings the bus online in `ALL` mode with no
 /// rate-limit override.
-#[derive(Debug, Clone, Default)]
+#[derive(Debug, Clone)]
 pub struct Config {
     /// Comma-separated PGN filter for receive. If set, init enters
     /// `NORMAL` mode instead of `ALL`, so the gateway passes on only
@@ -81,7 +81,37 @@ pub struct Config {
     /// side" is `/dev/null` (replay-from-file mode), since there's
     /// no device on the other end to ACK the commands.
     pub skip_init: bool,
+    /// Learn each PGN the application sends that the gateway's TX list
+    /// lacks. The gateway refuses such a PGN (`NAK,PGN_NOT_IN_TX_LIST`),
+    /// and its lists can only change before `N2NET_INIT`, so the PGN is
+    /// added at the next initialisation rather than by rebooting a live
+    /// gateway. On by default.
+    pub learn_tx_pgns: bool,
+    /// Where learned PGNs are kept. Share one across reconnects (clone
+    /// the `Arc` into each session's `Config`) so a new session starts
+    /// with them in its TX list.
+    pub learned_tx_pgns: Arc<Mutex<Vec<u32>>>,
 }
+
+impl Default for Config {
+    fn default() -> Self {
+        Self {
+            rx_list: None,
+            tx_list: None,
+            pgn_lists: PgnLists::default(),
+            rate_limit_off: false,
+            skip_init: false,
+            learn_tx_pgns: true,
+            learned_tx_pgns: Arc::default(),
+        }
+    }
+}
+
+/// The TX PGNs the gateway allows whatever its list says, as `SHOW_LISTS`
+/// reports them on a reset iKonvert (firmware v2.49). Never learned.
+const MANDATORY_TX_PGNS: [u32; 10] = [
+    59392, 59904, 60160, 60416, 60928, 126208, 126464, 126993, 126996, 126998,
+];
 
 /// How the gateway takes `lists`: it stores both in its own memory and
 /// answers PGN 126464 from them, so both are [`PgnListSupport::Pushed`];
@@ -103,7 +133,11 @@ pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
 /// The init handshake's settings, resolved once from a [`Config`].
 struct Init {
     rx_list: Option<String>,
-    tx_list: Option<String>,
+    /// The TX list's parts; the sentence is built when it is sent, so it
+    /// includes what was learned by then.
+    tx_legacy: Option<String>,
+    tx_extra: Vec<u32>,
+    learned: Arc<Mutex<Vec<u32>>>,
     /// `N2NET_INIT,NORMAL` (the RX list filters) rather than `ALL`.
     normal_mode: bool,
     rate_limit_off: bool,
@@ -113,10 +147,21 @@ impl Init {
     fn new(config: &Config) -> Self {
         Self {
             rx_list: list_sentence(config.rx_list.as_deref(), &config.pgn_lists.rx, "RX"),
-            tx_list: list_sentence(config.tx_list.as_deref(), &config.pgn_lists.tx, "TX"),
+            tx_legacy: config.tx_list.clone(),
+            tx_extra: config.pgn_lists.tx.clone(),
+            learned: config.learned_tx_pgns.clone(),
             normal_mode: config.rx_list.is_some(),
             rate_limit_off: config.rate_limit_off,
         }
+    }
+
+    /// The `TX_LIST` PGNs: the configured ones, then those learned.
+    fn tx_list(&self) -> Option<String> {
+        let mut extra = self.tx_extra.clone();
+        if let Ok(learned) = self.learned.lock() {
+            extra.extend_from_slice(&learned);
+        }
+        list_sentence(self.tx_legacy.as_deref(), &extra, "TX")
     }
 }
 
@@ -154,8 +199,11 @@ pub fn run(
     writer: Box<dyn Write + Send>,
     config: Config,
 ) -> DeviceHandle {
-    let skip_init = config.skip_init;
-    super::run(Decoder::new(config), Encoder { skip_init }, reader, writer)
+    let encoder = Encoder {
+        skip_init: config.skip_init,
+        learner: (config.learn_tx_pgns && !config.skip_init).then(|| Learner::new(&config)),
+    };
+    super::run(Decoder::new(config), encoder, reader, writer)
 }
 
 /// Decoder buffers a partial line across reads and owns the
@@ -355,6 +403,55 @@ impl Decoder {
 
 pub struct Encoder {
     skip_init: bool,
+    learner: Option<Learner>,
+}
+
+/// Notes the PGNs the gateway will refuse, for the next initialisation.
+struct Learner {
+    /// What the gateway accepts now: its mandatory PGNs, the configured
+    /// TX list, and what was learned.
+    allowed: Mutex<Vec<u32>>,
+    learned: Arc<Mutex<Vec<u32>>>,
+}
+
+impl Learner {
+    fn new(config: &Config) -> Self {
+        let mut allowed = MANDATORY_TX_PGNS.to_vec();
+        let legacy = config.tx_list.as_deref().unwrap_or("");
+        allowed.extend(
+            legacy
+                .split(',')
+                .filter_map(|p| p.trim().parse::<u32>().ok()),
+        );
+        allowed.extend_from_slice(&config.pgn_lists.tx);
+        if let Ok(learned) = config.learned_tx_pgns.lock() {
+            allowed.extend_from_slice(&learned);
+        }
+        Self {
+            allowed: Mutex::new(allowed),
+            learned: config.learned_tx_pgns.clone(),
+        }
+    }
+
+    fn note(&self, pgn: u32) {
+        if pgn > pgn_list::MAX_PGN {
+            return;
+        }
+        let Ok(mut allowed) = self.allowed.lock() else {
+            return;
+        };
+        if allowed.contains(&pgn) {
+            return;
+        }
+        allowed.push(pgn);
+        if let Ok(mut learned) = self.learned.lock() {
+            learned.push(pgn);
+        }
+        log::warn!(
+            "ikonvert: PGN {pgn} is not in the gateway's TX list, so it refuses to send it; \
+             it is added at the next initialisation"
+        );
+    }
 }
 
 impl DeviceEncoder for Encoder {
@@ -373,6 +470,9 @@ impl DeviceEncoder for Encoder {
         if frame.pgn >= IKONVERT_SYNTHETIC_PGN {
             log::debug!("ikonvert: skipping synthetic PGN {}", frame.pgn);
             return None;
+        }
+        if let Some(learner) = &self.learner {
+            learner.note(frame.pgn);
         }
         Some(ikonvert::encode_tx_frame(frame).into_bytes())
     }
@@ -417,7 +517,7 @@ fn next_init_command(state: &mut u32, init: &Init) -> Option<String> {
                 *state = STATE_MAYBE_TX_LIST;
             }
             STATE_MAYBE_TX_LIST => {
-                if let Some(list) = &init.tx_list {
+                if let Some(list) = init.tx_list() {
                     *state = STATE_WAIT_TX_LIST_ACK;
                     log::info!("ikonvert: send TX_LIST {list}");
                     return Some(format!("$PDGY,TX_LIST,{list}\r\n"));
@@ -485,7 +585,10 @@ mod tests {
     /// as TEXT (the OFFLINE-completion banner), and every subsequent
     /// as ACK. Collects the bytes the codec wants written back.
     fn run_init(config: Config) -> Vec<String> {
-        let encoder = Encoder { skip_init: false };
+        let encoder = Encoder {
+            skip_init: false,
+            learner: None,
+        };
         let first = String::from_utf8(encoder.init_bytes()).unwrap();
         let mut commands = vec![first];
 
@@ -590,6 +693,73 @@ mod tests {
                 "$PDGY,TX_LIST,127508,127506\r\n".to_string(),
                 "$PDGY,N2NET_INIT,NORMAL\r\n".to_string(),
             ]
+        );
+    }
+
+    fn frame(pgn: u32) -> RawFrame {
+        RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn,
+            src: 0,
+            dst: 255,
+            data: vec![0; 8].into(),
+        }
+    }
+
+    /// A sent PGN the TX list lacks is learned once; mandatory, listed and
+    /// synthetic PGNs are not.
+    #[test]
+    fn refused_pgns_are_learned() {
+        let config = Config {
+            tx_list: Some("127508".to_string()),
+            ..Config::default()
+        };
+        let learner = Learner::new(&config);
+        for pgn in [127508, 126996, 0x40100, 127506, 127506] {
+            learner.note(pgn);
+        }
+        assert_eq!(*config.learned_tx_pgns.lock().unwrap(), [127506]);
+    }
+
+    /// Learned PGNs join TX_LIST at the next initialisation — including
+    /// the re-initialisation after the gateway reboots itself.
+    #[test]
+    fn learned_pgns_join_the_next_tx_list() {
+        let config = Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            ..Config::default()
+        };
+        let learned = config.learned_tx_pgns.clone();
+        let decoder = Decoder::new(config.clone());
+        let encoder = Encoder {
+            skip_init: false,
+            learner: Some(Learner::new(&config)),
+        };
+        let mut events = Vec::new();
+        decoder.handle_control("TEXT,banner", &mut events); // → RESET
+        decoder.handle_control("ACK,reset", &mut events); // → TX_LIST
+        decoder.handle_control("ACK,tx", &mut events); // → INIT
+        decoder.handle_control("ACK,init", &mut events); // → done
+        encoder.encode_frame(&frame(127506));
+        assert_eq!(*learned.lock().unwrap(), [127506]);
+
+        events.clear();
+        decoder.handle_control("TEXT,banner", &mut events); // rebooted → RESET
+        decoder.handle_control("ACK,reset", &mut events); // → TX_LIST
+        let sent: Vec<String> = events
+            .iter()
+            .filter_map(|e| match e {
+                DeviceEvent::SendBytes(b) => Some(String::from_utf8_lossy(b).into_owned()),
+                _ => None,
+            })
+            .collect();
+        assert!(
+            sent.contains(&"$PDGY,TX_LIST,127508,127506\r\n".to_string()),
+            "{sent:?}"
         );
     }
 

@@ -21,10 +21,12 @@
 //! words of `0x47` are copied from canboatjs; their meaning is unknown.
 //!
 //! canboatjs stopped doing this by default in 2020 ("this is possibly
-//! causing issues", canboatjs#136). So this runs only when the embedder
-//! names Transmit PGNs, reads the list first, and writes — enable, save,
-//! activate — only when a PGN is missing, so a device already set up is
-//! never written to again.
+//! causing issues", canboatjs#136). So this runs only for PGNs the
+//! embedder names or the application actually sends ([`TxListSync::learn`]),
+//! reads the list first, and writes — enable, save, activate — only when a
+//! PGN is missing, so a device already set up is never written to again.
+//! Learned PGNs are batched: one round, one save, a few seconds after the
+//! last new one.
 
 use crate::engine::format::ngt1::{NGT_MSG_SEND, encode_ngt_message};
 
@@ -50,6 +52,9 @@ const ANSWER_TIMEOUT_MS: u64 = 10_000;
 /// Reads of the list before giving up (an NGT-1 firmware that does not
 /// know the command never answers).
 const READ_ATTEMPTS: u32 = 3;
+/// Quiet spell after the last newly learned PGN before a round starts, so
+/// PGNs first sent together share one EEPROM save.
+const LEARN_DELAY_MS: u64 = 5_000;
 
 #[derive(Debug, PartialEq, Eq)]
 enum State {
@@ -81,6 +86,11 @@ pub struct TxListSync {
     state: State,
     /// When the pending answer times out.
     deadline: u64,
+    /// Whether the gateway has confirmed startup; nothing is sent before.
+    started: bool,
+    /// Learned PGNs waiting for the next round, and when it may start.
+    learned: Vec<u32>,
+    learn_at: u64,
 }
 
 impl TxListSync {
@@ -95,12 +105,35 @@ impl TxListSync {
             wanted,
             state,
             deadline: u64::MAX,
+            started: false,
+            learned: Vec::new(),
+            learn_at: u64::MAX,
         }
     }
 
-    /// Whether the sync has finished, successfully or not.
-    pub fn is_done(&self) -> bool {
-        self.state == State::Done
+    /// Whether there is nothing to do: the sync has finished, successfully
+    /// or not, and no learned PGN is waiting.
+    pub fn is_idle(&self) -> bool {
+        self.state == State::Done && self.learned.is_empty()
+    }
+
+    /// The application just sent `pgn`: make sure the gateway will transmit
+    /// it. A few seconds after the last new one, the list is read again and
+    /// whatever is missing enabled in one round.
+    pub fn learn(&mut self, pgn: u32, now: u64) {
+        if pgn > crate::io::pgn_list::MAX_PGN
+            || self.wanted.contains(&pgn)
+            || self.learned.contains(&pgn)
+        {
+            return;
+        }
+        if self.wanted.len() + self.learned.len() >= crate::io::pgn_list::MAX_PGN_LIST_LEN {
+            log::warn!("ngt1: transmit PGN list is full; not enabling PGN {pgn}");
+            return;
+        }
+        log::info!("ngt1: sending PGN {pgn}; making sure the gateway's transmit list has it");
+        self.learned.push(pgn);
+        self.learn_at = now + LEARN_DELAY_MS;
     }
 
     /// Advance on an `NGT_MSG_RECEIVED` payload.
@@ -108,6 +141,9 @@ impl TxListSync {
         let (Some(&cmd), status) = (payload.first(), payload.get(1).copied()) else {
             return Vec::new();
         };
+        if cmd == CMD_STARTUP {
+            self.started = true;
+        }
         match (&mut self.state, cmd) {
             (State::AwaitStartup, CMD_STARTUP) => {
                 self.state = State::ReadAt {
@@ -170,6 +206,10 @@ impl TxListSync {
     /// over, and retry or give up on an answer that does not come.
     pub fn on_tick(&mut self, now: u64) -> Vec<Vec<u8>> {
         match &self.state {
+            State::Done if self.started && !self.learned.is_empty() && now >= self.learn_at => {
+                self.wanted.append(&mut self.learned);
+                self.read(1, now)
+            }
             State::ReadAt { at } if now >= *at => self.read(1, now),
             State::Reading { attempt, .. } if now >= self.deadline => {
                 if *attempt < READ_ATTEMPTS {
@@ -268,7 +308,7 @@ mod tests {
     #[test]
     fn nothing_wanted_means_nothing_sent() {
         let mut s = TxListSync::new(Vec::new());
-        assert!(s.is_done());
+        assert!(s.is_idle());
         assert!(s.on_message(&[CMD_STARTUP, 1], 0).is_empty());
         assert!(s.on_tick(u64::MAX).is_empty());
     }
@@ -282,7 +322,7 @@ mod tests {
             s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_300)
                 .is_empty()
         );
-        assert!(s.is_done());
+        assert!(s.is_idle());
     }
 
     #[test]
@@ -306,7 +346,7 @@ mod tests {
             vec![command(&[CMD_ACTIVATE])]
         );
         assert!(s.on_message(&[CMD_ACTIVATE], 2_600).is_empty());
-        assert!(s.is_done());
+        assert!(s.is_idle());
     }
 
     /// The enable command's bytes, as canboatjs's `composeEnablePGN`
@@ -334,7 +374,7 @@ mod tests {
             vec![command(&[CMD_READ_TX_LIST])]
         );
         assert!(s.on_tick(t + 2 * ANSWER_TIMEOUT_MS).is_empty());
-        assert!(s.is_done());
+        assert!(s.is_idle());
     }
 
     /// The periodic startup ping keeps being confirmed; only the first
@@ -344,6 +384,40 @@ mod tests {
         let mut s = started(vec![127508]);
         assert!(s.on_message(&[CMD_STARTUP, 1], 2_100).is_empty());
         assert!(matches!(s.state, State::Reading { .. }));
+    }
+
+    /// A PGN the application sends starts its own round, batched after
+    /// a quiet spell, once the gateway has started — even with no PGNs
+    /// named up front.
+    #[test]
+    fn a_sent_pgn_is_enabled_after_a_quiet_spell() {
+        let mut s = TxListSync::new(Vec::new());
+        s.learn(127508, 0);
+        assert!(s.on_tick(LEARN_DELAY_MS).is_empty(), "not before startup");
+        s.on_message(&[CMD_STARTUP, 1], LEARN_DELAY_MS);
+        s.learn(127506, LEARN_DELAY_MS + 100); // pushes the round back
+        assert!(s.on_tick(2 * LEARN_DELAY_MS).is_empty());
+        assert_eq!(
+            s.on_tick(2 * LEARN_DELAY_MS + 100),
+            vec![command(&[CMD_READ_TX_LIST])]
+        );
+        s.on_message(&list_part(&[127508]), 2 * LEARN_DELAY_MS + 200);
+        assert_eq!(
+            s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2 * LEARN_DELAY_MS + 300),
+            vec![enable_command(127506)],
+            "only the PGN the gateway lacks"
+        );
+    }
+
+    #[test]
+    fn what_is_known_or_invalid_is_not_learned() {
+        let mut s = started(vec![127508]);
+        s.learn(127508, 2_100);
+        s.learn(0x2_0000, 2_100);
+        assert!(s.learned.is_empty());
+        s.learn(127506, 2_100);
+        s.learn(127506, 2_200);
+        assert_eq!(s.learned, [127506]);
     }
 
     #[test]
