@@ -181,8 +181,8 @@ pub struct Args {
 
     /// A PGN the application transmits, to advertise in the gateway's
     /// PGN 126464 Transmit list.
-    /// Repeatable, or comma-separated. Honoured by `--socketcan`; other
-    /// backends warn and ignore it.
+    /// Repeatable, or comma-separated. Honoured by `--socketcan` and
+    /// `--ikonvert`; other backends warn and ignore it.
     #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
     tx_pgn: Vec<u32>,
 
@@ -376,8 +376,8 @@ pub struct BridgeConfig {
     /// PGNs the application sends and receives, advertised in the
     /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
     /// transmits from the gateway's address (`wmm`: 127258) are added
-    /// without being named here. Only the
-    /// SocketCAN backend honours them today; the others log a warning.
+    /// without being named here. SocketCAN and the iKonvert honour them;
+    /// the other backends log a warning.
     /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
     /// the outcome.
     pub pgn_lists: PgnLists,
@@ -590,12 +590,16 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let path = path.to_string();
         let rx_list = config.ikonvert_rx.clone();
         let tx_list = config.ikonvert_tx.clone();
+        let pgn_lists = effective_pgn_lists(config);
+        let pgn_list_status =
+            (!pgn_lists.is_empty()).then(|| device::ikonvert::pgn_list_status(&pgn_lists));
         let rate_limit_off = config.ikonvert_rate_limit_off;
         let factory = NamedFactory::new("ikonvert", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ikonvert::Config {
                 rx_list: rx_list.clone(),
                 tx_list: tx_list.clone(),
+                pgn_lists: pgn_lists.clone(),
                 rate_limit_off,
                 ..Default::default()
             };
@@ -610,7 +614,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
-            pgn_list_status: unsupported_pgn_lists(config),
+            pgn_list_status,
         });
     }
     if let Some(url) = config.maretron.as_deref() {
