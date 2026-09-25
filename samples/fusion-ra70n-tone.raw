@@ -1,0 +1,33 @@
+# format=FAST
+# Fusion MS-RA70N at source 12, commanded from an MS-NRX300 at source 33.
+# From @lmjogback's fusion-nrx300-settone.log (issue #886), reassembled from
+# candump.
+#
+# 126720 proprietary id 22 "Set Equalizer" and the matching 130820 message id
+# 32795 "Tone" status. Every EQ frame in that capture, 144 commands and 149
+# statuses, carries zone 2.
+#
+# Zone 2 is not a third zone. This unit has two available zones (Capabilities
+# 0x001F, 0x0007, 0, 0) and advertises Bass/Mid/Treble only in its global
+# capability word (0x01C7). Garmin's Fusion Audio app addresses the global,
+# stereo-wide control with a zone equal to the available zone count, here 2.
+#
+# Selected from a sweep of the Tone controls: ordinary signed values and the
+# Treble endpoints +15 (0x0f), 0 and -15 (0xf1). Each command is followed by a
+# status carrying the same zone/bass/mid/treble values.
+#
+# bass 0, mid -4, treble 5
+2026-09-19T06:23:42.143Z,3,126720,33,12,8,a3,99,16,00,02,00,fc,05
+2026-09-19T06:23:42.189Z,7,130820,12,255,8,a3,99,1b,80,02,00,fc,05
+#
+# bass 7, mid -3, treble +15
+2026-09-19T06:23:58.519Z,3,126720,33,12,8,a3,99,16,00,02,07,fd,0f
+2026-09-19T06:23:58.522Z,7,130820,12,255,8,a3,99,1b,80,02,07,fd,0f
+#
+# bass 7, mid -3, treble 0
+2026-09-19T06:24:00.592Z,3,126720,33,12,8,a3,99,16,00,02,07,fd,00
+2026-09-19T06:24:00.594Z,7,130820,12,255,8,a3,99,1b,80,02,07,fd,00
+#
+# bass 7, mid -3, treble -15
+2026-09-19T06:24:02.324Z,3,126720,33,12,8,a3,99,16,00,02,07,fd,f1
+2026-09-19T06:24:02.327Z,7,130820,12,255,8,a3,99,1b,80,02,07,fd,f1

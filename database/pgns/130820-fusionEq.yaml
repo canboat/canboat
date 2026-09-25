@@ -44,4 +44,72 @@ fields:
 - id: treble
   name: Treble
   type: INT8
-notes: 'Range: -15 to +15'
+notes: |-
+  Tone status: a zone byte followed by signed Bass, Mid and Treble values. The
+  corresponding command is PGN 126720 proprietary id 22 "Set Equalizer", with
+  the same zone/bass/mid/treble payload.
+
+  Zone is a zero-based zone index 0 .. n-1, where n is the number of zones
+  whose PGN 130820 "Capabilities" word is non-zero. Garmin's Fusion Audio app
+  sends its global, stereo-wide tone control with zone = n, one past the last
+  zone. That is how the app addresses the whole stereo on a unit that
+  advertises global tone, not a rule every unit follows: the MS-WB670, whose
+  global capability word is 0x0000, took its tone command for zone 0. Because
+  n depends on the unit, the whole-stereo zone is not a fixed value. Observed:
+
+    MS-RA70N  2 zones, EQ only in the global capability word  -> zone 2
+    MS-BB300R 3 zones                                          -> zone 3
+    MS-WB670  3 zones, global capability word 0x0000           -> zone 0
+
+  The MS-RA70N capture contains a sweep of the signed tone values, including
+  the endpoints +15 (0x0f) and -15 (0xf1), with each command echoed by a
+  matching "Tone" status. This confirms the signed INT8 representation and the
+  -15 to +15 range.
+
+  Evidence: samples/fusion-ra70n-tone.raw, and samples/fusion-set-equalizer.raw
+  for the MS-WB670 command side.
+samples:
+- raw:
+  - "2026-09-19T06:23:42.189Z,7,130820,12,255,8,00,08,a3,99,1b,80,02,00"
+  - "2026-09-19T06:23:42.190Z,7,130820,12,255,8,01,fc,05,ff,ff,ff,ff,ff"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 2
+    bass: 0
+    mid: -4
+    treble: 5
+- raw:
+  - "2026-09-19T06:23:58.522Z,7,130820,12,255,8,20,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:23:58.523Z,7,130820,12,255,8,21,fd,0f,ff,ff,ff,ff,ff"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 2
+    bass: 7
+    mid: -3
+    treble: 15
+- raw:
+  - "2026-09-19T06:24:00.594Z,7,130820,12,255,8,a0,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:24:00.595Z,7,130820,12,255,8,a1,fd,00,ff,ff,ff,ff,ff"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 2
+    bass: 7
+    mid: -3
+    treble: 0
+- raw:
+  - "2026-09-19T06:24:02.327Z,7,130820,12,255,8,20,08,a3,99,1b,80,02,07"
+  - "2026-09-19T06:24:02.327Z,7,130820,12,255,8,21,fd,f1,ff,ff,ff,ff,ff"
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Tone"
+    zone: 2
+    bass: 7
+    mid: -3
+    treble: -15
