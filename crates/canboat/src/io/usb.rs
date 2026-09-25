@@ -25,8 +25,10 @@ use nusb::{Endpoint, Interface, MaybeFuture};
 /// FTDI's vendor id.
 pub const FTDI_VID: u16 = 0x0403;
 
-/// Actisense product ids on FTDI's vendor id (the `ACTISENSE_*_PID` block
-/// in Linux's `ftdi_sio_ids.h`): NDC-x, USG-x, NGT-1, NGW-1 and reserved.
+/// Actisense product ids on FTDI's vendor id — the whole `ACTISENSE_*_PID`
+/// block in Linux's `ftdi_sio_ids.h`: NDC, USG, NGT, NGW, UID, USA, NGX and
+/// one reserved id. A plain `usb` also takes an FTDI device whose USB
+/// manufacturer string names Actisense, so a later product id works too.
 pub const ACTISENSE_PIDS: std::ops::RangeInclusive<u16> = 0xD9A8..=0xD9AF;
 
 /// How long a read waits for data before reporting `TimedOut`; matches
@@ -66,7 +68,7 @@ const LATENCY_MS: u16 = 2;
 /// Which USB device a `usb:` spelling names.
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Selector {
-    /// `None`: any Actisense product id on [`FTDI_VID`].
+    /// `None`: any Actisense device on [`FTDI_VID`] (see [`ACTISENSE_PIDS`]).
     pub ids: Option<(u16, u16)>,
     /// `None`: any serial number.
     pub serial: Option<String>,
@@ -117,16 +119,126 @@ impl Selector {
         })
     }
 
-    fn matches(&self, info: &nusb::DeviceInfo) -> bool {
+    fn matches(&self, c: &Candidate) -> bool {
         let ids_ok = match self.ids {
-            Some((vid, pid)) => info.vendor_id() == vid && info.product_id() == pid,
-            None => info.vendor_id() == FTDI_VID && ACTISENSE_PIDS.contains(&info.product_id()),
+            Some((vid, pid)) => c.vid == vid && c.pid == pid,
+            None => c.is_actisense(),
         };
         ids_ok
             && self
                 .serial
                 .as_deref()
-                .is_none_or(|want| info.serial_number() == Some(want))
+                .is_none_or(|want| c.serial.as_deref() == Some(want))
+    }
+}
+
+/// What matching and the error listings need from an attached device.
+#[derive(Debug, Clone, Default)]
+struct Candidate {
+    vid: u16,
+    pid: u16,
+    manufacturer: Option<String>,
+    product: Option<String>,
+    serial: Option<String>,
+}
+
+impl Candidate {
+    fn new(info: &nusb::DeviceInfo) -> Self {
+        Self {
+            vid: info.vendor_id(),
+            pid: info.product_id(),
+            manufacturer: info.manufacturer_string().map(str::to_string),
+            product: info.product_string().map(str::to_string),
+            serial: info.serial_number().map(str::to_string),
+        }
+    }
+
+    fn is_actisense(&self) -> bool {
+        self.vid == FTDI_VID
+            && (ACTISENSE_PIDS.contains(&self.pid)
+                || self
+                    .manufacturer
+                    .as_deref()
+                    .is_some_and(|m| m.to_ascii_lowercase().contains("actisense")))
+    }
+
+    /// The shortest device spelling that picks this device out of
+    /// `all`: `usb:SERIAL` when the serial number is unique, else with
+    /// the ids in front. `None` when nothing tells it apart.
+    fn spelling(&self, all: &[Candidate]) -> Option<String> {
+        let same_serial = |c: &&Candidate| c.serial == self.serial;
+        let same_ids = |c: &&Candidate| c.vid == self.vid && c.pid == self.pid;
+        let ids = format!("usb:{:04x}:{:04x}", self.vid, self.pid);
+        match &self.serial {
+            Some(serial) if all.iter().filter(same_serial).count() == 1 => {
+                Some(format!("usb:{serial}"))
+            }
+            Some(serial) if all.iter().filter(same_ids).filter(same_serial).count() == 1 => {
+                Some(format!("{ids}:{serial}"))
+            }
+            None if all.iter().filter(same_ids).count() == 1 => Some(ids),
+            _ => None,
+        }
+    }
+
+    fn describe(&self) -> String {
+        let name = self.product.as_deref().unwrap_or("unnamed device");
+        match &self.serial {
+            Some(serial) => format!("{name}, serial {serial}"),
+            None => format!("{name}, no serial number"),
+        }
+    }
+}
+
+/// One line per device in `all`, each with the spelling that selects it.
+fn listing(all: &[Candidate]) -> String {
+    all.iter()
+        .map(|c| match c.spelling(all) {
+            Some(spelling) => format!("\n  {spelling:<20} {}", c.describe()),
+            None => format!(
+                "\n  {:<20} {} (cannot be told apart from another)",
+                "?",
+                c.describe()
+            ),
+        })
+        .collect()
+}
+
+/// Choose the one device `selector` names from what is attached, or say
+/// why not — listing the Actisense devices present and how to name each.
+fn choose(selector: &Selector, attached: &[Candidate]) -> io::Result<usize> {
+    let matched: Vec<usize> = (0..attached.len())
+        .filter(|&i| selector.matches(&attached[i]))
+        .collect();
+    let actisense: Vec<Candidate> = attached
+        .iter()
+        .filter(|c| c.is_actisense())
+        .cloned()
+        .collect();
+    match matched.as_slice() {
+        [one] => Ok(*one),
+        [] => {
+            let msg = if actisense.is_empty() {
+                "no matching USB device, and no Actisense device is attached".to_string()
+            } else {
+                format!(
+                    "no matching USB device; Actisense devices attached:{}",
+                    listing(&actisense)
+                )
+            };
+            Err(io::Error::new(io::ErrorKind::NotFound, msg))
+        }
+        many => {
+            let matched: Vec<Candidate> = many.iter().map(|&i| attached[i].clone()).collect();
+            Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!(
+                    "{} USB devices match; name the one to use:{}",
+                    matched.len(),
+                    listing(&matched)
+                ),
+            ))
+        }
     }
 }
 
@@ -183,45 +295,18 @@ fn strip_status(data: &[u8], packet_size: usize, out: &mut Vec<u8>) {
     }
 }
 
-/// Every device `selector` matches, for error messages and listings.
-fn find(selector: &Selector) -> io::Result<Vec<nusb::DeviceInfo>> {
-    Ok(nusb::list_devices()
-        .wait()
-        .map_err(io::Error::other)?
-        .filter(|d| selector.matches(d))
-        .collect())
-}
-
 /// Open the FTDI gateway `selector` names at `baud` 8N1 and return an
 /// independent `(reader, writer)` pair, like [`super::open_serial_rw`].
 pub fn open_rw(
     selector: &Selector,
     baud: u32,
 ) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
-    let mut found = find(selector)?;
-    let info = match found.len() {
-        0 => {
-            return Err(io::Error::new(
-                io::ErrorKind::NotFound,
-                "no matching USB device".to_string(),
-            ));
-        }
-        1 => found.remove(0),
-        _ => {
-            let serials: Vec<String> = found
-                .iter()
-                .map(|d| format!("usb:{}", d.serial_number().unwrap_or("?")))
-                .collect();
-            return Err(io::Error::new(
-                io::ErrorKind::InvalidInput,
-                format!(
-                    "{} devices match; pick one of {}",
-                    found.len(),
-                    serials.join(", ")
-                ),
-            ));
-        }
-    };
+    let mut devices: Vec<nusb::DeviceInfo> = nusb::list_devices()
+        .wait()
+        .map_err(io::Error::other)?
+        .collect();
+    let attached: Vec<Candidate> = devices.iter().map(Candidate::new).collect();
+    let info = devices.swap_remove(choose(selector, &attached)?);
     // bcdDevice 0x0700.. are the Hi-Speed parts with a 12 MHz baud clock
     // and multiple ports; 0x1000 is FT-X, which behaves like FT232R.
     let chip = info.device_version();
@@ -428,6 +513,113 @@ mod tests {
         out.clear();
         strip_status(&[0x01, 0x60], 64, &mut out);
         assert!(out.is_empty());
+    }
+
+    fn dev(pid: u16, product: &str, serial: Option<&str>) -> Candidate {
+        Candidate {
+            vid: FTDI_VID,
+            pid,
+            manufacturer: Some("Actisense".into()),
+            product: Some(product.into()),
+            serial: serial.map(str::to_string),
+        }
+    }
+
+    fn any() -> Selector {
+        Selector::parse("usb").unwrap().unwrap()
+    }
+
+    #[test]
+    fn plain_usb_takes_every_actisense_product() {
+        let ngx = dev(0xD9AE, "NGX-1", Some("A1"));
+        assert!(any().matches(&ngx));
+        // A product id outside the known block, named by its manufacturer.
+        let future = dev(0xE000, "NGX-2", Some("A2"));
+        assert!(any().matches(&future));
+        // A plain FTDI cable is not a gateway.
+        let cable = Candidate {
+            manufacturer: Some("FTDI".into()),
+            ..dev(0x6001, "FT232R USB UART", Some("B1"))
+        };
+        assert!(!any().matches(&cable));
+        // Neither is another vendor's chip that says Actisense.
+        let other_vid = Candidate {
+            vid: 0x10C4,
+            ..dev(0xD9AA, "NGT-1", Some("C1"))
+        };
+        assert!(!any().matches(&other_vid));
+    }
+
+    #[test]
+    fn one_actisense_device_among_others_is_chosen() {
+        let attached = [
+            Candidate {
+                manufacturer: Some("FTDI".into()),
+                ..dev(0x6001, "FT232R USB UART", Some("B1"))
+            },
+            dev(0xD9AA, "NGT-1-A", Some("19FAC")),
+        ];
+        assert_eq!(choose(&any(), &attached).unwrap(), 1);
+    }
+
+    #[test]
+    fn several_matches_are_refused_with_how_to_name_each() {
+        let attached = [
+            dev(0xD9AA, "NGT-1-A", Some("19FAC")),
+            dev(0xD9AE, "NGX-1", Some("2B3C4")),
+        ];
+        let err = choose(&any(), &attached).unwrap_err();
+        assert_eq!(err.kind(), io::ErrorKind::InvalidInput);
+        let msg = err.to_string();
+        assert!(
+            msg.starts_with("2 USB devices match; name the one to use:"),
+            "{msg}"
+        );
+        assert!(
+            msg.contains("\n  usb:19FAC            NGT-1-A, serial 19FAC"),
+            "{msg}"
+        );
+        assert!(
+            msg.contains("\n  usb:2B3C4            NGX-1, serial 2B3C4"),
+            "{msg}"
+        );
+        // Following the advice works.
+        let pick = Selector::parse("usb:2B3C4").unwrap().unwrap();
+        assert_eq!(choose(&pick, &attached).unwrap(), 1);
+    }
+
+    #[test]
+    fn spelling_falls_back_to_ids_when_the_serial_does_not_decide() {
+        let attached = [
+            dev(0xD9AA, "NGT-1", Some("X")),
+            dev(0xD9AE, "NGX-1", Some("X")),
+            dev(0xD9A9, "USG-1", None),
+            dev(0xD9AB, "NGW-1", None),
+            dev(0xD9AB, "NGW-1", None),
+        ];
+        let spell: Vec<Option<String>> = attached.iter().map(|c| c.spelling(&attached)).collect();
+        assert_eq!(
+            spell,
+            [
+                Some("usb:0403:d9aa:X".into()),
+                Some("usb:0403:d9ae:X".into()),
+                Some("usb:0403:d9a9".into()),
+                None,
+                None,
+            ]
+        );
+        assert!(listing(&attached).contains("cannot be told apart"));
+    }
+
+    #[test]
+    fn a_missing_device_lists_what_is_attached() {
+        let attached = [dev(0xD9AA, "NGT-1-A", Some("19FAC"))];
+        let wrong = Selector::parse("usb:NOPE").unwrap().unwrap();
+        let err = choose(&wrong, &attached).unwrap_err();
+        assert_eq!(err.kind(), io::ErrorKind::NotFound);
+        assert!(err.to_string().contains("usb:19FAC"), "{err}");
+        let err = choose(&any(), &[]).unwrap_err();
+        assert!(err.to_string().contains("no Actisense device"), "{err}");
     }
 
     #[test]
