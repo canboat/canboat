@@ -594,6 +594,11 @@ mod tests {
 
     /// A backlog longer than the timeout still drains, goodbye included,
     /// because the writer keeps making progress.
+    ///
+    /// The backlog (30 writes of 20 ms, ~600 ms) outlasts the timeout, while
+    /// a single write would have to stall for ~480 ms to look stuck. With
+    /// 60 ms writes against 150 ms, one oversleep on a busy macOS runner
+    /// failed it (#928).
     #[test]
     fn a_long_backlog_drains_before_the_goodbye() {
         let written = Arc::new(Mutex::new(Vec::new()));
@@ -601,13 +606,13 @@ mod tests {
             TestDecoder,
             ByteEncoder,
             Box::new(QuietReader),
-            Box::new(SlowWriter(Some(Duration::from_millis(60)), written.clone())),
+            Box::new(SlowWriter(Some(Duration::from_millis(20)), written.clone())),
         );
-        for _ in 0..8 {
+        for _ in 0..30 {
             handle.send_frame(frame()).unwrap();
         }
         let closer = handle.closer();
-        assert_eq!(closer.close(Duration::from_millis(150)), Closed::Confirmed);
+        assert_eq!(closer.close(Duration::from_millis(500)), Closed::Confirmed);
         assert!(written.lock().unwrap().ends_with(b"BYE"));
     }
 
