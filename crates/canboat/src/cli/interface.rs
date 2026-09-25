@@ -84,7 +84,10 @@ pub struct Args {
     kind: Kind,
 
     /// Endpoint: serial path (ngt1/ikonvert), `host:port` (maretron),
-    /// or CAN interface name such as `can0` (socketcan).
+    /// or CAN interface name such as `can0` (socketcan). An FTDI-based
+    /// gateway such as the NGT-1 can also be opened directly over USB as
+    /// `usb`, `usb:SERIAL` or `usb:VVVV:PPPP[:SERIAL]` — for macOS, whose
+    /// serial driver does not recognise the NGT-1.
     #[arg(value_name = "DEVICE")]
     device: String,
 

@@ -46,6 +46,9 @@ default = ["cli"]
 decode   = ["dep:thiserror", "dep:smallvec", "dep:indexmap", "dep:itoa"]
 # byte-source readers (read::*Reader) and the bus::open_* gateway drivers
 io       = ["decode", "dep:serialport", "dep:flate2", "dep:tar", "dep:socketcan", "dep:libc"]
+# FTDI-based gateways (Actisense NGT-1, ...) opened straight over USB as
+# `usb:[serial]`, for hosts whose serial driver does not bind them (macOS)
+usb      = ["io", "dep:nusb"]
 # device::{Name, Claimer, Responder} — be a node without owning a transport
 node     = ["decode"]
 # live-bus: Bridge + BridgeConfig + serving
@@ -63,7 +66,7 @@ cli = [
     "decode", "io", "node", "bridge", "nmea0183", "ais", "json-input",
     "dep:clap", "dep:env_logger", "dep:anyhow",
     "dep:serde", "dep:serde_json", "dep:tokio", "dep:crossterm",
-    "dep:ratatui", "dep:futures", "dep:chrono", "dep:indexmap",
+    "dep:ratatui", "dep:futures", "dep:chrono", "dep:indexmap", "usb",
 ]
 
 [dependencies]
@@ -106,6 +109,9 @@ futures    = { workspace = true, optional = true }
 # Local-time formatting for the tui file browser (cross-platform), and
 # json-input's timestamp parsing.
 chrono     = { version = "0.4", optional = true, default-features = false, features = ["clock"] }
+
+# usb: pure-Rust USB host access (IOKit / usbfs / WinUSB) — no libusb to link
+nusb       = { version = "0.2.7", optional = true }
 
 [target.'cfg(target_os = "linux")'.dependencies]
 socketcan = { version = "4", optional = true }
