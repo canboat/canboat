@@ -351,11 +351,12 @@ jobs:
         id: app
         env:
           APP_ID: ${{ secrets.RELEASE_APP_ID }}
+          APP_PRIVATE_KEY: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
         run: |
-          if [ -n "$APP_ID" ]; then
+          if [ -n "$APP_ID" ] && [ -n "$APP_PRIVATE_KEY" ]; then
             echo "configured=true" >> "$GITHUB_OUTPUT"
           else
-            echo "RELEASE_APP_ID is not set; not notifying canboat-wasm"
+            echo "RELEASE_APP_ID / RELEASE_APP_PRIVATE_KEY not both set; not notifying canboat-wasm"
           fi
 
       - name: Token for canboat-wasm
@@ -367,6 +368,8 @@ jobs:
           private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
           owner: canboat
           repositories: canboat-wasm
+          # A repository_dispatch needs Contents: write, and nothing else.
+          permission-contents: write
 
       - name: Dispatch canboat-release
         if: steps.app.outputs.configured == 'true'
