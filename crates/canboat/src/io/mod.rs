@@ -22,12 +22,12 @@ pub mod analyze;
 pub mod container;
 #[cfg(feature = "io")]
 pub mod device;
-#[cfg(feature = "io")]
-pub mod fastpacket;
 pub mod name;
 pub mod nmea_responder;
 #[cfg(feature = "io")]
 pub mod stream;
+#[cfg(feature = "usb")]
+pub mod usb;
 
 #[cfg(feature = "io")]
 pub use stream::{
@@ -109,11 +109,19 @@ pub fn open_serial(path: &str, baud: u32) -> io::Result<Box<dyn serialport::Seri
 /// once, then `try_clone` the handle so the read and write threads
 /// each own an fd-sharing handle without a mutex. Hides
 /// `serialport::SerialPort` from callers that just want byte streams.
+///
+/// With the `usb` feature, a `path` of `usb[:SERIAL]` or
+/// `usb:VVVV:PPPP[:SERIAL]` opens an FTDI-based gateway directly over
+/// USB instead — see [`usb`].
 #[cfg(feature = "io")]
 pub fn open_serial_rw(
     path: &str,
     baud: u32,
 ) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    #[cfg(feature = "usb")]
+    if let Some(selector) = usb::Selector::parse(path) {
+        return usb::open_rw(&selector?, baud);
+    }
     let read_port = open_serial(path, baud)?;
     let write_port = read_port
         .try_clone()

@@ -133,6 +133,15 @@ canboat
 │     from_analyzer_json    // analyzer-JSON text -> DecodedPgn (was the free fn json_to_decoded)
 │   // low-level byte helpers stay private unless a consumer proves a need.
 │
+│   codec::                 // the gateways' wire protocols, sans-I/O (#921: canboat-wasm
+│                           //   proved the need — a browser has bytes, not a serial port)
+│     trait Codec           // open / receive(bytes, now_ms) / tick / send(&Frame) / close
+│     Event, Refused, PgnLists
+│     ngt1::Ngt1, ikonvert::Ikonvert, maretron::Maretron   // + each gateway's Config
+│     can_id::{compose, decompose}                        // 29-bit CAN id <-> prio/pgn/src/dst
+│     fastpacket::{fragment, packet_type}                 // outgoing message -> CAN frames
+│   // bus::open_* (feature `io`) are these codecs on a reader + writer thread.
+│
 ├── ─────────── feature `wire`: cross-process transport ───────────
 │
 │   wire::
@@ -426,6 +435,18 @@ address-claimed, and (c) still serves 2597–2606 identically** — verified aga
 parity harness and the live boat. That exercises decode, encode, node (claim), bridge, and
 serve — i.e. every feature except the file readers — which is exactly the coverage we want
 before merging into canboat.
+
+### Second consumer: canboat-wasm
+
+[canboat-wasm](https://github.com/canboat/canboat-wasm) (`@canboat/wasm`) builds
+`canboat` with `default-features = false` and the `decode` (+ `json-input`) features for
+`wasm32-unknown-unknown`. Besides the decode/encode surface it uses `codec::` to talk to an
+NGT-1, iKonvert or Maretron IPG from the browser, over WebSerial or a WebSocket. The collapse
+into one crate (#907) broke it because it still depended on the old sub-crates (#921), so:
+the `wasm` job in `rust-ci.yml` runs clippy for that target and those features on every PR,
+and nothing on the `codec` path may read the clock, spawn a thread or touch `std::io`. The
+job covers `node` as well: canboat-wasm does not use it today, but it is transport-free by
+design (`Claimer` takes `now` from its caller), so a browser can be a node too.
 
 ## 6. Risks & open questions
 

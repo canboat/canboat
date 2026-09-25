@@ -87,9 +87,19 @@ fn canboat_path() -> PathBuf {
 /// spaced field names in its humanized units. The Rust `analyzer` now
 /// defaults to the machine-facing shape (camelCase keys, strict SI, no
 /// record wrapper), so every golden case asks for the C shape back
-/// explicitly. Comparing against C is the whole point of these tests —
+/// explicitly (the units via [`default_units`]). Comparing against C is the whole point of these tests —
 /// the defaults are exercised by the unit tests in `output_opts`.
-const C_SHAPE: &[&str] = &["--id", "spaces", "--units", "metric"];
+const C_SHAPE: &[&str] = &["--id", "spaces"];
+
+/// canboat C's default unit system, unless the case picks its own
+/// (`-si` there is `--units si` here, and clap rejects a repeat).
+fn default_units(args: &[&str]) -> &'static [&'static str] {
+    if args.contains(&"--units") {
+        &[]
+    } else {
+        &["--units", "metric"]
+    }
+}
 
 /// Drive the analyzer binary on `<test_dir>/<in_name>` with `args`,
 /// then byte-diff stdout against `<test_dir>/<expected_name>`.
@@ -120,6 +130,7 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     let mut child = Command::new(canboat_path())
         .arg0("analyzer")
         .args(C_SHAPE)
+        .args(default_units(args))
         .args(args)
         .stdin(Stdio::piped())
         .stdout(Stdio::piped())
@@ -184,6 +195,17 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
             );
         }
     }
+}
+
+/// `-si`: the database's kWh and Ah fields leave as J and C (test28 in
+/// analyzer/tests/Makefile) — 65005 energy, 127506 and 127513 charge.
+#[test]
+fn pgn_si_units_json() {
+    run_case(
+        "pgn-si-units.in",
+        "pgn-si-units.out",
+        &["--json", "--units", "si", "--fixtime", "pgn-test"],
+    );
 }
 
 #[test]

@@ -1,0 +1,16 @@
+# format=FAST
+# PGN 130820 message id 32829 (0x803D) "System Capabilities" from two Fusion
+# head units. Payload after the message id is one little-endian 64-bit word;
+# bit names are from Garmin's Fusion Audio Android app.
+#
+# Fusion MS-WB670 at source 51, 2026-09-24, on a live bus, in reply to a
+# Request Status (126720 id 1). Identical to its 2026-09-18 copy in
+# samples/live.all and across power cycles:
+#   0x0019EAFEFEA9B49B
+2026-09-24T03:35:36.610Z,7,130820,51,255,12,a3,99,3d,80,9b,b4,a9,fe,fe,ea,19,00
+#
+# Fusion MS-RA70N at source 12, from @lmjogback's fusion-nrx300-settone.log
+# (issue #886), reassembled from candump. All 26 copies across ten logs,
+# including a firmware update and a factory reset, are identical:
+#   0x0000140018006483
+2026-09-19T06:23:22.137Z,7,130820,12,255,12,a3,99,3d,80,83,64,00,18,00,14,00,00

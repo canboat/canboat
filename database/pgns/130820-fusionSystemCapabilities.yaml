@@ -1,0 +1,71 @@
+pgn: 130820
+id: fusionSystemCapabilities
+description: 'Fusion: System Capabilities'
+type: Fast
+variantOrder: 71
+priority: 7
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Fusion Electronics
+  match: 419
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: messageId
+  name: Message ID
+  type: LOOKUP
+  bits: 16
+  description: System Capabilities
+  match: 32829
+  lookup: FUSION_STATUS_MESSAGE_ID
+  primaryKey: true
+- id: capabilities
+  name: Capabilities
+  type: BITLOOKUP
+  bits: 64
+  lookupBits: FUSION_SYSTEM_CAPABILITY_BITFIELD
+notes: |-
+  A 64-bit word advertising the head unit's hardware and features: connectors,
+  radios, controls and amplifier ratings. It describes what the unit has, not
+  what is currently connected or enabled.
+
+  The bit names come from Garmin's own decoder in the Fusion Audio Android app,
+  which reads this message as one little-endian 64-bit word and tests each
+  feature with a single-bit mask. Bits 27-32, 40, 49 and 51-63 have no name in
+  the app; bits 27-31, 51 and 52 are nevertheless set on real units.
+
+  Static: identical across power cycles, a firmware update and a factory reset
+  on the MS-RA70N, and across six days and power cycles on the MS-WB670. Sent
+  in the status dump together with 32798 "Capabilities" and 32865 "Zone
+  Capabilities Extended", in that order.
+
+  Older firmware appears not to set every bit that applies: the MS-RA70N has an
+  LCD and an NMEA 2000 port but sets neither bit. Treat a set bit as reliable
+  and a clear bit as "not advertised".
+
+  Evidence: samples/fusion-system-capabilities.raw (MS-WB670 and MS-RA70N).
+samples:
+- raw: "2026-09-24T03:35:36.610Z,7,130820,51,255,12,a3,99,3d,80,9b,b4,a9,fe,fe,ea,19,00"  # MS-WB670
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "System Capabilities"
+    capabilities: ["ANT", "Bluetooth", "Ethernet", "NMEA 2000", "Power Button", "USB Connector", "DSP", "AM/FM Antenna", "SiriusXM Connector", "S/PDIF", "Telephone Mute", "Ignition Wire", "STM32 Coprocessor", "Multiroom Source", "Multiroom Renderer", "bit 27", "bit 28", "bit 29", "bit 30", "bit 31", "Amplifier and Line Out Independent", "Wake on LAN", "SiriusXM Instant Replay", "SiriusXM TuneMix", "Artist and Song Alert", "Game Alert", "Sports Flash", "Zone 1 Amplifier 2 Ohm Stable", "Zone 2 Amplifier 2 Ohm Stable", "Apple AirPlay", "Volume Sync Zone", "Source Disable", "Source Rename", "bit 51", "bit 52"]
+- raw: "2026-09-19T06:23:22.137Z,7,130820,12,255,12,a3,99,3d,80,83,64,00,18,00,14,00,00"  # MS-RA70N
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "System Capabilities"
+    capabilities: ["ANT", "Bluetooth", "Power Button", "USB Connector", "AM/FM Antenna", "DAB Antenna", "bit 27", "bit 28", "Zone 1 Amplifier 4 Ohm Stable", "Zone 2 Amplifier 4 Ohm Stable"]

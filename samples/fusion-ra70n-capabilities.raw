@@ -1,0 +1,16 @@
+# format=FAST
+# Fusion MS-RA70N at source 12, from @lmjogback's fusion-nrx300-settone.log
+# (issue #886), reassembled from candump. Sent five times, identical, in that
+# capture.
+#
+# 130820 message id 32798 "Capabilities":
+#   Zone 1 0x001F  Volume, Volume Limit, Balance, Subwoofer, Low Pass Filter
+#   Zone 2 0x0007  Volume, Volume Limit, Balance
+#   Zone 3 0x0000
+#   Zone 4 0x0000
+#   Global 0x01C7  Volume, Volume Limit, Balance, EQ Bass, EQ Mid, EQ Treble
+#
+# Two available zones, and the tone controls are advertised only on the global
+# word: this unit's Bass/Mid/Treble are stereo-wide, not per zone.
+#
+2026-09-19T06:23:22.115Z,7,130820,12,255,14,a3,99,1e,80,1f,00,07,00,00,00,00,00,c7,01

@@ -122,7 +122,7 @@ fn generated_artifacts_are_up_to_date() {
             emit_rust::emit_schema(&db, &root, true),
         ),
         (
-            "crates/canboat/src/io/fastpacket_generated.rs",
+            "crates/canboat/src/engine/fastpacket_generated.rs",
             emit_rust::emit_fastpacket(&db),
         ),
     ];

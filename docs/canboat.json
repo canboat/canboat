@@ -5420,10 +5420,81 @@
         ]
       },
       {
+        "Name":"FUSION_CAPABILITY_BITFIELD",
+        "MaxValue":15,
+        "EnumBitValues":[
+          {"Name":"Volume", "Bit":0},
+          {"Name":"Volume Limit", "Bit":1},
+          {"Name":"Balance", "Bit":2},
+          {"Name":"Subwoofer", "Bit":3},
+          {"Name":"Low Pass Filter", "Bit":4},
+          {"Name":"High Pass Filter", "Bit":5},
+          {"Name":"EQ Bass", "Bit":6},
+          {"Name":"EQ Mid", "Bit":7},
+          {"Name":"EQ Treble", "Bit":8},
+          {"Name":"Line Out", "Bit":9},
+          {"Name":"DSP", "Bit":10},
+          {"Name":"Internal Amp", "Bit":11},
+          {"Name":"Loudness", "Bit":12},
+          {"Name":"Tweeter", "Bit":13},
+          {"Name":"Subwoofer On Amp", "Bit":14},
+          {"Name":"Mono", "Bit":15}
+        ]
+      },
+      {
         "Name":"FUSION_MENU_ITEM_FLAGS",
         "MaxValue":7,
         "EnumBitValues":[
           {"Name":"Selected", "Bit":1}
+        ]
+      },
+      {
+        "Name":"FUSION_SYSTEM_CAPABILITY_BITFIELD",
+        "MaxValue":63,
+        "EnumBitValues":[
+          {"Name":"ANT", "Bit":0},
+          {"Name":"Bluetooth", "Bit":1},
+          {"Name":"Wi-Fi", "Bit":2},
+          {"Name":"Ethernet", "Bit":3},
+          {"Name":"NMEA 2000", "Bit":4},
+          {"Name":"RV VIS Port", "Bit":5},
+          {"Name":"LCD", "Bit":6},
+          {"Name":"Power Button", "Bit":7},
+          {"Name":"Button Matrix", "Bit":8},
+          {"Name":"Touch Panel", "Bit":9},
+          {"Name":"USB Connector", "Bit":10},
+          {"Name":"USB Connector 2", "Bit":11},
+          {"Name":"DSP", "Bit":12},
+          {"Name":"AM/FM Antenna", "Bit":13},
+          {"Name":"DAB Antenna", "Bit":14},
+          {"Name":"SiriusXM Connector", "Bit":15},
+          {"Name":"S/PDIF", "Bit":16},
+          {"Name":"HDMI ARC", "Bit":17},
+          {"Name":"HDMI", "Bit":18},
+          {"Name":"Telephone Mute", "Bit":19},
+          {"Name":"Dimmer Wire", "Bit":20},
+          {"Name":"Ignition Wire", "Bit":21},
+          {"Name":"NMEA 2000 Power", "Bit":22},
+          {"Name":"STM32 Coprocessor", "Bit":23},
+          {"Name":"Standby", "Bit":24},
+          {"Name":"Multiroom Source", "Bit":25},
+          {"Name":"Multiroom Renderer", "Bit":26},
+          {"Name":"Amplifier and Line Out Independent", "Bit":33},
+          {"Name":"Wake on LAN", "Bit":34},
+          {"Name":"SiriusXM Instant Replay", "Bit":35},
+          {"Name":"SiriusXM TuneMix", "Bit":36},
+          {"Name":"Artist and Song Alert", "Bit":37},
+          {"Name":"Game Alert", "Bit":38},
+          {"Name":"Sports Flash", "Bit":39},
+          {"Name":"Zone 1 Amplifier 2 Ohm Stable", "Bit":41},
+          {"Name":"Zone 1 Amplifier 4 Ohm Stable", "Bit":42},
+          {"Name":"Zone 2 Amplifier 2 Ohm Stable", "Bit":43},
+          {"Name":"Zone 2 Amplifier 4 Ohm Stable", "Bit":44},
+          {"Name":"Apple AirPlay", "Bit":45},
+          {"Name":"Volume Sync Zone", "Bit":46},
+          {"Name":"Source Disable", "Bit":47},
+          {"Name":"Source Rename", "Bit":48},
+          {"Name":"Internal DAB Module", "Bit":50}
         ]
       },
       {
@@ -71101,13 +71172,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -71117,13 +71185,10 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":7,
@@ -71133,13 +71198,10 @@
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -71149,13 +71211,10 @@
             "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":9,
@@ -71165,13 +71224,10 @@
             "BitOffset":96,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           }
         ]
       },
@@ -73005,13 +73061,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -73031,13 +73084,10 @@
             "BitOffset":96,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -73057,13 +73107,10 @@
             "BitOffset":160,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":10,
@@ -73083,13 +73130,10 @@
             "BitOffset":224,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":12,
@@ -73109,13 +73153,10 @@
             "BitOffset":288,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":14,
@@ -73338,6 +73379,92 @@
             "OutOfRangeValue":126,
             "ReservedValue":125,
             "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":130820,
+        "Id":"fusionSystemCapabilities",
+        "Description":"Fusion: System Capabilities",
+        "Priority":7,
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":5,
+        "Length":12,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"messageId",
+            "Name":"Message ID",
+            "Description":"System Capabilities",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":32829,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_STATUS_MESSAGE_ID",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"capabilities",
+            "Name":"Capabilities",
+            "BitLength":64,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "RangeMin":0,
+            "RangeMax":1.84467440737096e+19,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_SYSTEM_CAPABILITY_BITFIELD"
           }
         ]
       },

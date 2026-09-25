@@ -45,7 +45,7 @@ use world_magnetic_model::uom::si::length::meter;
 const PGN_POSITION_RAPID: u32 = 129025;
 const PGN_GNSS_POSITION: u32 = 129029;
 const PGN_SYSTEM_TIME: u32 = 126992;
-const PGN_MAGNETIC_VARIATION: u32 = 127258;
+pub(crate) const PGN_MAGNETIC_VARIATION: u32 = 127258;
 
 /// `MAGNETIC_VARIATION` lookup value for the model we compute with.
 /// When WMM 2030 ships (canboat.json adds value 10 and the crate gains

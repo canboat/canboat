@@ -29,13 +29,44 @@ pub use imp::run;
 
 pub use config::Config;
 
+use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
+
 /// Sentinel value stored in the claim-address atom when the gateway
 /// hasn't successfully claimed an address yet. Callers (e.g.
 /// `canboat-pipeline`'s CSV-port injector) treat this as "no rewrite
 /// available, leave the caller's `src` alone".
 pub const CLAIM_UNCLAIMED: u8 = 254;
 
+/// PGNs the gateway itself originates, always first in its PGN 126464
+/// Transmit list: ISO Acknowledgement, ISO Request, ISO Address Claim, Group
+/// Function, PGN List, Heartbeat and Product Information.
+const BUILTIN_TX_PGNS: [u32; 7] = [59392, 59904, 60928, 126208, 126464, 126993, 126996];
+
+/// PGNs the gateway itself consumes, always first in its Receive list: ISO
+/// Request, ISO Address Claim and Group Function.
+const BUILTIN_RX_PGNS: [u32; 3] = [59904, 60928, 126208];
+
+/// How the gateway advertises `lists`: it answers PGN 126464 itself, so both
+/// lists are [`Answered`](PgnListSupport::Answered); `dropped` names the PGNs
+/// that do not fit.
+pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
+    let (_, mut dropped) = pgn_list::merge(&BUILTIN_TX_PGNS, &lists.tx);
+    let (_, rx_dropped) = pgn_list::merge(&BUILTIN_RX_PGNS, &lists.rx);
+    for pgn in rx_dropped {
+        if !dropped.contains(&pgn) {
+            dropped.push(pgn);
+        }
+    }
+    PgnListStatus {
+        tx: PgnListSupport::Answered,
+        rx: PgnListSupport::Answered,
+        dropped,
+    }
+}
+
 mod config {
+    use crate::engine::pgn_list::PgnLists;
+
     /// Bus-participant configuration. All fields have sensible defaults
     /// via [`Config::default`]; tweak only what differs from canboat C
     /// `socketcan-serial`'s built-in defaults.
@@ -74,6 +105,17 @@ mod config {
         /// mode"). `false` leaves the interface untouched, assuming it was
         /// configured externally (e.g. a systemd `ip link set … up` unit).
         pub configure_link: bool,
+        /// PGNs the application sends and receives through this gateway,
+        /// advertised in the PGN 126464 lists after the gateway's own
+        /// ISO housekeeping PGNs. The Transmit list should name every PGN
+        /// the application originates.
+        pub pgn_lists: PgnLists,
+        /// Add each PGN the application transmits from the gateway's own
+        /// address to the advertised Transmit list, as it goes out. On by
+        /// default. It covers PGNs `pgn_lists` misses, but only from their
+        /// first transmission on: a display that asked for the list before
+        /// then is not told, so name the PGNs up front as well.
+        pub learn_tx_pgns: bool,
     }
 
     impl Default for Config {
@@ -88,6 +130,8 @@ mod config {
                 timeout_secs: 0,
                 model_version: None,
                 configure_link: false,
+                pgn_lists: PgnLists::default(),
+                learn_tx_pgns: true,
             }
         }
     }
@@ -109,7 +153,7 @@ pub fn run(
 mod imp {
     use std::collections::{HashMap, VecDeque};
     use std::os::fd::AsRawFd;
-    use std::sync::atomic::{AtomicU8, Ordering};
+    use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
     use std::sync::{Arc, mpsc};
     use std::thread;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -121,9 +165,10 @@ mod imp {
     use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket};
 
     use super::config::Config;
+    use crate::engine::fastpacket;
+    use crate::engine::pgn_list;
     use crate::io::address_claim::{AddressClaim, ClaimState};
     use crate::io::device::{DeviceHandle, WriterCmd, from_parts};
-    use crate::io::fastpacket;
     use crate::io::nmea_responder::{self, ProductInfo};
 
     const CAN_EFF_MASK: u32 = 0x1FFF_FFFF;
@@ -167,7 +212,6 @@ mod imp {
         at_ms: u64,
     }
 
-    const PGN_ISO_ACK: u32 = 59392;
     const PGN_ISO_REQUEST: u32 = 59904;
     const PGN_ISO_ADDRESS_CLAIM: u32 = 60928;
     const PGN_GROUP_FUNCTION: u32 = 126208;
@@ -195,17 +239,7 @@ mod imp {
     const TX_INTERVAL_NO_CHANGE: u32 = 0xffff_ffff;
     const TX_INTERVAL_RESTORE_DEFAULT: u32 = 0xffff_fffe;
 
-    // PGNs we originate / consume, reported via PGN 126464 on request.
-    const TX_PGN_LIST: [u32; 7] = [
-        PGN_ISO_ACK,
-        PGN_ISO_REQUEST,
-        PGN_ISO_ADDRESS_CLAIM,
-        PGN_GROUP_FUNCTION,
-        PGN_PGN_LIST,
-        PGN_HEARTBEAT,
-        PGN_PRODUCT_INFO,
-    ];
-    const RX_PGN_LIST: [u32; 3] = [PGN_ISO_REQUEST, PGN_ISO_ADDRESS_CLAIM, PGN_GROUP_FUNCTION];
+    use super::{BUILTIN_RX_PGNS as RX_PGN_LIST, BUILTIN_TX_PGNS as TX_PGN_LIST};
 
     /// Hold outbound frames until the kernel CAN qdisc has room. The
     /// worker thread drains one frame per POLLOUT wakeup so a single
@@ -236,6 +270,18 @@ mod imp {
         let (y, mo, d) = days_to_ymd(days);
         let (h, mi, s) = (tod / 3600, (tod % 3600) / 60, tod % 60);
         format!("{y:04}-{mo:02}-{d:02}T{h:02}:{mi:02}:{s:02}.{millis:03}Z")
+    }
+
+    /// One PGN 126464 list: the gateway's `builtin` PGNs plus the
+    /// application's, warning about any that cannot be advertised.
+    fn advertised_pgns(builtin: &[u32], extra: &[u32], which: &str) -> Vec<u32> {
+        let (list, dropped) = pgn_list::merge(builtin, extra);
+        if !dropped.is_empty() {
+            log::warn!(
+                "socketcan: not advertising {which} PGNs {dropped:?} (invalid, or the list is full)"
+            );
+        }
+        list
     }
 
     /// Build the 64-bit ISO NAME from a [`Config`].
@@ -348,7 +394,14 @@ mod imp {
                 self.tx_buf.push(can_id, data);
             } else {
                 let seq = self.tx_buf.next_fast_seq(pgn, src);
-                for frame in fastpacket::fragment(seq, data) {
+                let Some(frames) = fastpacket::fragment(seq, data) else {
+                    log::warn!(
+                        "socketcan: not sending PGN {pgn}: {} bytes exceed one fast-packet",
+                        data.len()
+                    );
+                    return;
+                };
+                for frame in frames {
                     self.tx_buf.push(can_id, &frame);
                 }
             }
@@ -381,6 +434,13 @@ mod imp {
         next_heartbeat: u64,    // ms
         last_product_info: u64, // ms; rate-limit broadcast bursts
         model_version: &'static str,
+        /// PGN 126464 lists: the housekeeping PGNs plus `Config::pgn_lists`.
+        tx_pgns: Vec<u32>,
+        rx_pgns: Vec<u32>,
+        /// `Config::learn_tx_pgns`.
+        learn_tx_pgns: bool,
+        /// Whether the "Transmit list is full" warning has been given.
+        tx_pgns_full_warned: bool,
         // -- NMEA 2000 gateway: network status (PGN 262400) emission --
         /// Interface name passed to `socketcan::CanSocket::open`, kept
         /// so the network-status tick can read kernel CAN counters via
@@ -435,6 +495,10 @@ mod imp {
                 next_heartbeat: 0,
                 last_product_info: 0,
                 model_version: config.model_version.unwrap_or(DEFAULT_MODEL_VERSION),
+                tx_pgns: advertised_pgns(&TX_PGN_LIST, &config.pgn_lists.tx, "transmit"),
+                rx_pgns: advertised_pgns(&RX_PGN_LIST, &config.pgn_lists.rx, "receive"),
+                learn_tx_pgns: config.learn_tx_pgns,
+                tx_pgns_full_warned: false,
                 iface: iface.to_string(),
                 start_ms: now_ms(),
                 next_network_status: 0,
@@ -529,11 +593,30 @@ mod imp {
             emit(bus, pi.frame(self.addr()).into_iter().collect());
         }
 
+        /// Advertise `pgn` in the Transmit list from now on: the
+        /// application just sent it from our address.
+        fn learn_tx_pgn(&mut self, pgn: u32) {
+            // A frame can carry a PGN the extended CAN id encodes but NMEA
+            // 2000 does not define; never advertise one.
+            if pgn > pgn_list::MAX_PGN || !self.learn_tx_pgns || self.tx_pgns.contains(&pgn) {
+                return;
+            }
+            if self.tx_pgns.len() >= pgn_list::MAX_PGN_LIST_LEN {
+                if !self.tx_pgns_full_warned {
+                    log::warn!("socketcan: transmit PGN list is full; not advertising PGN {pgn}");
+                    self.tx_pgns_full_warned = true;
+                }
+                return;
+            }
+            log::info!("socketcan: advertising transmit PGN {pgn}, first sent now");
+            self.tx_pgns.push(pgn);
+        }
+
         // PGN List (Transmit and Receive), PGN 126464: one message per list.
         fn send_pgn_list(&self, bus: &mut Bus<'_>, dst: u8) {
             emit(
                 bus,
-                nmea_responder::pgn_list_frames(self.addr(), dst, &TX_PGN_LIST, &RX_PGN_LIST),
+                nmea_responder::pgn_list_frames(self.addr(), dst, &self.tx_pgns, &self.rx_pgns),
             );
         }
 
@@ -813,6 +896,31 @@ mod imp {
     /// Try to write the oldest queued frame. Returns true if a frame was
     /// actually delivered; false on empty queue or kernel backpressure
     /// (the frame stays queued, retried on the next wakeup).
+    /// Write out everything in the TX ring, for a close. Gives up after
+    /// [`super::super::CLOSE_TIMEOUT`] without a frame going out; returns
+    /// whether the ring emptied.
+    ///
+    /// Each frame written bumps `progress`, which the closer watches: a
+    /// backlog longer than the timeout keeps the close waiting.
+    fn flush_tx(sock: &CanSocket, tx_buf: &mut TxBuffer, progress: &AtomicU64) -> bool {
+        let mut last_progress = std::time::Instant::now();
+        while !tx_buf.queue.is_empty() {
+            if tx_drain_one(sock, tx_buf) {
+                progress.fetch_add(1, Ordering::Relaxed);
+                last_progress = std::time::Instant::now();
+            } else if last_progress.elapsed() >= crate::io::device::CLOSE_TIMEOUT {
+                log::warn!(
+                    "socketcan: closing with {} frames unsent",
+                    tx_buf.queue.len()
+                );
+                return false;
+            } else {
+                std::thread::sleep(std::time::Duration::from_millis(2));
+            }
+        }
+        true
+    }
+
     fn tx_drain_one(sock: &CanSocket, tx_buf: &mut TxBuffer) -> bool {
         let Some(frame) = tx_buf.queue.front().cloned() else {
             return false;
@@ -1039,7 +1147,7 @@ mod imp {
     /// interpreted as "use my claim address"; any other value is
     /// forwarded unchanged so quirk synthesisers can impersonate other
     /// nodes on the wire (e.g. the SCX-20 quirk uses `src = 52`).
-    fn dispatch_cmd(bus: &mut Bus<'_>, claimer: &NmeaDevice, cmd: WriterCmd) {
+    fn dispatch_cmd(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, cmd: WriterCmd) {
         match cmd {
             WriterCmd::Frame(f) => {
                 if f.pgn >= CANBOAT_PGN_START {
@@ -1050,6 +1158,11 @@ mod imp {
                 } else {
                     f.src
                 };
+                // Only what goes out as us: a quirk impersonating another
+                // device sends from that device's address.
+                if src == claimer.addr() {
+                    claimer.learn_tx_pgn(f.pgn);
+                }
                 // emit=false: this is a user-initiated send; the caller
                 // already has visibility into what they sent. (For the
                 // SCX-20 quirk we want the synthetic 126996 to be
@@ -1057,6 +1170,8 @@ mod imp {
                 // it into the analyzer side directly.)
                 bus.send_pgn(f.prio, f.pgn, src, f.dst, &f.data, false);
             }
+            // Handled by the worker loop, which owns the socket.
+            WriterCmd::Shutdown(_) => {}
             WriterCmd::Bytes(_) => {
                 // The SocketCAN backend has no concept of raw "bytes"
                 // since the wire format is frame-based. Silently drop;
@@ -1172,11 +1287,26 @@ mod imp {
         let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd>();
 
         let iface_owned = iface.to_string();
+        let progress = Arc::new(AtomicU64::new(0));
+        let worker_progress = progress.clone();
         let join = thread::Builder::new()
             .name("socketcan-worker".into())
-            .spawn(move || worker(sock, fd, iface_owned, config, frames_tx, cmd_rx, claim_addr))?;
+            .spawn(move || {
+                let shared = Shared {
+                    claim_addr,
+                    progress: worker_progress,
+                };
+                worker(sock, fd, iface_owned, config, frames_tx, cmd_rx, shared)
+            })?;
 
-        Ok(from_parts(frames_rx, cmd_tx, vec![join]))
+        Ok(from_parts(frames_rx, cmd_tx, vec![join], progress))
+    }
+
+    /// What the worker shares with the rest of the process: the claimed
+    /// address, and its completed writes (for [`super::super::Closed`]).
+    struct Shared {
+        claim_addr: Arc<AtomicU8>,
+        progress: Arc<AtomicU64>,
     }
 
     /// The single worker thread that owns the socket and runs the poll
@@ -1190,8 +1320,12 @@ mod imp {
         config: Config,
         frames_tx: mpsc::Sender<RawFrame>,
         cmd_rx: mpsc::Receiver<WriterCmd>,
-        claim_addr: Arc<AtomicU8>,
+        shared: Shared,
     ) {
+        let Shared {
+            claim_addr,
+            progress,
+        } = shared;
         let mut claimer = NmeaDevice::new(&config, &iface);
         // Reset the claim atom to "unclaimed" so a reconnect resumes
         // with no stale value visible to consumers.
@@ -1226,12 +1360,24 @@ mod imp {
             // 1. Drain any user-side sends into the TX ring.
             loop {
                 match cmd_rx.try_recv() {
+                    Ok(WriterCmd::Shutdown(done)) => {
+                        // Send what is still queued first, as the serial
+                        // writers do, then close the socket — which is how
+                        // the gateway leaves the bus — and confirm only if
+                        // nothing was left behind.
+                        let flushed = flush_tx(&sock, &mut tx_buf, &progress);
+                        drop(sock);
+                        if let Some(done) = done {
+                            let _ = done.send(flushed);
+                        }
+                        return;
+                    }
                     Ok(cmd) => {
                         let mut bus = Bus {
                             tx_buf: &mut tx_buf,
                             frames_tx: &frames_tx,
                         };
-                        dispatch_cmd(&mut bus, &claimer, cmd);
+                        dispatch_cmd(&mut bus, &mut claimer, cmd);
                     }
                     Err(mpsc::TryRecvError::Empty) => break,
                     Err(mpsc::TryRecvError::Disconnected) => return,
@@ -1693,6 +1839,89 @@ mod imp {
             assert_eq!(format_iso(0), "1970-01-01T00:00:00.000Z");
             assert_eq!(format_iso(90_061_500), "1970-01-02T01:01:01.500Z");
             assert_eq!(format_iso(1_764_500_000_123), "2025-11-30T10:53:20.123Z");
+        }
+
+        /// The hoisted housekeeping lists name the same PGNs as the
+        /// driver's own constants, in the order they were always sent.
+        #[test]
+        fn the_builtin_lists_are_the_housekeeping_pgns() {
+            assert_eq!(
+                TX_PGN_LIST,
+                [
+                    59392, // ISO Acknowledgement
+                    PGN_ISO_REQUEST,
+                    PGN_ISO_ADDRESS_CLAIM,
+                    PGN_GROUP_FUNCTION,
+                    PGN_PGN_LIST,
+                    PGN_HEARTBEAT,
+                    PGN_PRODUCT_INFO,
+                ]
+            );
+            assert_eq!(
+                RX_PGN_LIST,
+                [PGN_ISO_REQUEST, PGN_ISO_ADDRESS_CLAIM, PGN_GROUP_FUNCTION]
+            );
+        }
+
+        /// The application's PGNs follow the housekeeping ones in the
+        /// 126464 answer, and the status reports what did not fit.
+        #[test]
+        fn the_pgn_lists_carry_the_application_pgns() {
+            use crate::engine::pgn_list::{PgnListSupport, PgnLists};
+            let config = Config {
+                pgn_lists: PgnLists {
+                    tx: vec![127508, 127506, 0x40000],
+                    rx: vec![127245],
+                },
+                ..Default::default()
+            };
+            let dev = NmeaDevice::new(&config, "vcan-none");
+            assert_eq!(&dev.tx_pgns[..7], &TX_PGN_LIST);
+            assert_eq!(&dev.tx_pgns[7..], [127508, 127506]);
+            assert_eq!(&dev.rx_pgns[3..], [127245]);
+            let status = super::super::pgn_list_status(&config.pgn_lists);
+            assert_eq!(status.tx, PgnListSupport::Answered);
+            assert_eq!(status.dropped, [0x40000]);
+        }
+
+        /// A PGN the application sends from our address joins the
+        /// Transmit list; one sent as another device, or with learning
+        /// off, does not.
+        #[test]
+        fn transmitted_pgns_are_learned() {
+            fn send(dev: &mut NmeaDevice, pgn: u32, src: u8) {
+                let mut tx_buf = TxBuffer::new();
+                let (frames_tx, _frames_rx) = mpsc::channel();
+                let mut bus = Bus {
+                    tx_buf: &mut tx_buf,
+                    frames_tx: &frames_tx,
+                };
+                let frame = RawFrame {
+                    timestamp: None,
+                    prio: 6,
+                    pgn,
+                    src,
+                    dst: ADDR_GLOBAL,
+                    data: vec![0; 8].into(),
+                };
+                dispatch_cmd(&mut bus, dev, WriterCmd::Frame(frame));
+            }
+
+            let mut dev = NmeaDevice::new(&Config::default(), "vcan-none");
+            send(&mut dev, 127508, 0);
+            send(&mut dev, 127508, 0);
+            send(&mut dev, 130824, 24); // as the impersonated H5000
+            send(&mut dev, 0x40100, 0); // synthetic, never on the wire
+            send(&mut dev, 0x2_0000, 0); // beyond the 17-bit PGN range
+            assert_eq!(&dev.tx_pgns[TX_PGN_LIST.len()..], [127508]);
+
+            let config = Config {
+                learn_tx_pgns: false,
+                ..Default::default()
+            };
+            let mut dev = NmeaDevice::new(&config, "vcan-none");
+            send(&mut dev, 127508, 0);
+            assert_eq!(dev.tx_pgns, TX_PGN_LIST);
         }
 
         /// The gateway announces itself as a PC Gateway (130) in the

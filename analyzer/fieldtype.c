@@ -141,6 +141,23 @@ void fixupUnit(Field *f)
         f->rangeMax = min(f->rangeMax, 2 * Pi);
       }
     }
+    // The database keeps NMEA 2000's own kWh and Ah; SI wants J and C.
+    else if (strcmp(f->unit, "kWh") == 0)
+    {
+      f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ
+      f->rangeMin *= 3.6e6;
+      f->rangeMax *= 3.6e6;
+      f->unit = "J";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
+    else if (strcmp(f->unit, "Ah") == 0)
+    {
+      f->resolution *= 3600.0; // 1 Ah = 3600 C
+      f->rangeMin *= 3600.0;
+      f->rangeMax *= 3600.0;
+      f->unit = "C";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
 
     // Many more to follow, but pgn.h is not yet complete enough...
   }

@@ -4358,8 +4358,71 @@ limitations under the License.
       <BitPair Bit="4" Name="Baseline Antenna 1-3" />
       <BitPair Bit="5" Name="Baseline Antenna 2-4" />
     </LookupBitEnumeration>
+    <LookupBitEnumeration Name="FUSION_CAPABILITY_BITFIELD" MaxValue="15">
+      <BitPair Bit="0" Name="Volume" />
+      <BitPair Bit="1" Name="Volume Limit" />
+      <BitPair Bit="2" Name="Balance" />
+      <BitPair Bit="3" Name="Subwoofer" />
+      <BitPair Bit="4" Name="Low Pass Filter" />
+      <BitPair Bit="5" Name="High Pass Filter" />
+      <BitPair Bit="6" Name="EQ Bass" />
+      <BitPair Bit="7" Name="EQ Mid" />
+      <BitPair Bit="8" Name="EQ Treble" />
+      <BitPair Bit="9" Name="Line Out" />
+      <BitPair Bit="10" Name="DSP" />
+      <BitPair Bit="11" Name="Internal Amp" />
+      <BitPair Bit="12" Name="Loudness" />
+      <BitPair Bit="13" Name="Tweeter" />
+      <BitPair Bit="14" Name="Subwoofer On Amp" />
+      <BitPair Bit="15" Name="Mono" />
+    </LookupBitEnumeration>
     <LookupBitEnumeration Name="FUSION_MENU_ITEM_FLAGS" MaxValue="7">
       <BitPair Bit="1" Name="Selected" />
+    </LookupBitEnumeration>
+    <LookupBitEnumeration Name="FUSION_SYSTEM_CAPABILITY_BITFIELD" MaxValue="63">
+      <BitPair Bit="0" Name="ANT" />
+      <BitPair Bit="1" Name="Bluetooth" />
+      <BitPair Bit="2" Name="Wi-Fi" />
+      <BitPair Bit="3" Name="Ethernet" />
+      <BitPair Bit="4" Name="NMEA 2000" />
+      <BitPair Bit="5" Name="RV VIS Port" />
+      <BitPair Bit="6" Name="LCD" />
+      <BitPair Bit="7" Name="Power Button" />
+      <BitPair Bit="8" Name="Button Matrix" />
+      <BitPair Bit="9" Name="Touch Panel" />
+      <BitPair Bit="10" Name="USB Connector" />
+      <BitPair Bit="11" Name="USB Connector 2" />
+      <BitPair Bit="12" Name="DSP" />
+      <BitPair Bit="13" Name="AM/FM Antenna" />
+      <BitPair Bit="14" Name="DAB Antenna" />
+      <BitPair Bit="15" Name="SiriusXM Connector" />
+      <BitPair Bit="16" Name="S/PDIF" />
+      <BitPair Bit="17" Name="HDMI ARC" />
+      <BitPair Bit="18" Name="HDMI" />
+      <BitPair Bit="19" Name="Telephone Mute" />
+      <BitPair Bit="20" Name="Dimmer Wire" />
+      <BitPair Bit="21" Name="Ignition Wire" />
+      <BitPair Bit="22" Name="NMEA 2000 Power" />
+      <BitPair Bit="23" Name="STM32 Coprocessor" />
+      <BitPair Bit="24" Name="Standby" />
+      <BitPair Bit="25" Name="Multiroom Source" />
+      <BitPair Bit="26" Name="Multiroom Renderer" />
+      <BitPair Bit="33" Name="Amplifier and Line Out Independent" />
+      <BitPair Bit="34" Name="Wake on LAN" />
+      <BitPair Bit="35" Name="SiriusXM Instant Replay" />
+      <BitPair Bit="36" Name="SiriusXM TuneMix" />
+      <BitPair Bit="37" Name="Artist and Song Alert" />
+      <BitPair Bit="38" Name="Game Alert" />
+      <BitPair Bit="39" Name="Sports Flash" />
+      <BitPair Bit="41" Name="Zone 1 Amplifier 2 Ohm Stable" />
+      <BitPair Bit="42" Name="Zone 1 Amplifier 4 Ohm Stable" />
+      <BitPair Bit="43" Name="Zone 2 Amplifier 2 Ohm Stable" />
+      <BitPair Bit="44" Name="Zone 2 Amplifier 4 Ohm Stable" />
+      <BitPair Bit="45" Name="Apple AirPlay" />
+      <BitPair Bit="46" Name="Volume Sync Zone" />
+      <BitPair Bit="47" Name="Source Disable" />
+      <BitPair Bit="48" Name="Source Rename" />
+      <BitPair Bit="50" Name="Internal DAB Module" />
     </LookupBitEnumeration>
     <LookupBitEnumeration Name="SIMNET_ALERT_BITFIELD" MaxValue="63">
       <BitPair Bit="0" Name="No GPS fix" />
@@ -71104,13 +71167,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
@@ -71120,13 +71180,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>7</Order>
@@ -71136,13 +71193,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>64</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -71152,13 +71206,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>80</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>9</Order>
@@ -71168,13 +71219,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
       </Fields>
     </PGNInfo>
@@ -73026,13 +73074,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>6</Order>
@@ -73052,13 +73097,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>96</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>8</Order>
@@ -73078,13 +73120,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>160</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>10</Order>
@@ -73104,13 +73143,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>224</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>12</Order>
@@ -73130,13 +73166,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitOffset>288</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>65535</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
         <Field>
           <Order>14</Order>
@@ -73361,6 +73394,93 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <OutOfRangeValue>126</OutOfRangeValue>
           <ReservedValue>125</ReservedValue>
           <FieldType>NUMBER</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>130820</PGN>
+      <Id>fusionSystemCapabilities</Id>
+      <Description>Fusion: System Capabilities</Description>
+      <Priority>7</Priority>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>5</FieldCount>
+      <Length>12</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Fusion Electronics</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>419</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>messageId</Id>
+          <Name>Message ID</Name>
+          <Description>System Capabilities</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>32829</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>65532</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>FUSION_STATUS_MESSAGE_ID</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>capabilities</Id>
+          <Name>Capabilities</Name>
+          <BitLength>64</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1.84467440737096e+19</RangeMax>
+          <FieldType>BITLOOKUP</FieldType>
+          <LookupBitEnumeration>FUSION_SYSTEM_CAPABILITY_BITFIELD</LookupBitEnumeration>
         </Field>
       </Fields>
     </PGNInfo>

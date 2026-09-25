@@ -28,6 +28,7 @@ mod format_message;
 mod interface;
 mod legacy;
 mod replay;
+mod stop_signal;
 mod tui;
 
 pub use quirk::QuirkArgs;

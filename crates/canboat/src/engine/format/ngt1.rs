@@ -77,7 +77,15 @@ pub enum NgtError {
     LengthMismatch { declared: u8, actual: usize },
     #[error("NGT escape byte 0x{0:02x} not followed by STX/ETX/DLE")]
     BadEscape(u8),
+    #[error("NGT message longer than {MAX_COLLECT} bytes without an end, discarded")]
+    TooLong,
 }
+
+/// Most bytes collected for one message or EBL record before it is given
+/// up on. A real NGT-1 message is at most 258 (cmd, len, 255 payload,
+/// checksum); the margin keeps garbage without a `DLE ETX` from growing
+/// the buffer without limit.
+const MAX_COLLECT: usize = 1024;
 
 /// EBL header records (only emitted when the decoder is in EBL mode).
 /// Actisense's `.ebl` logger writes a timestamp record before every NGT-1
@@ -188,7 +196,7 @@ impl Ngt1Decoder {
                         prev: PrevState::InFrame,
                     };
                 } else {
-                    self.buf.push(b);
+                    return self.collect(b);
                 }
                 None
             }
@@ -201,7 +209,7 @@ impl Ngt1Decoder {
                         prev: PrevState::InHeader,
                     };
                 } else {
-                    self.buf.push(b);
+                    return self.collect(b);
                 }
                 None
             }
@@ -227,17 +235,17 @@ impl Ngt1Decoder {
                     r
                 }
                 DLE => {
-                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
-                        self.buf.push(DLE);
-                    }
                     self.state = restore(prev);
+                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
+                        return self.collect(DLE);
+                    }
                     None
                 }
                 ESC if self.ebl => {
-                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
-                        self.buf.push(ESC);
-                    }
                     self.state = restore(prev);
+                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
+                        return self.collect(ESC);
+                    }
                     None
                 }
                 other => {
@@ -256,6 +264,18 @@ impl Ngt1Decoder {
                 }
             },
         }
+    }
+
+    /// Add a byte to the message being collected, or give the message up
+    /// once it passes [`MAX_COLLECT`].
+    fn collect(&mut self, b: u8) -> Option<NgtEvent> {
+        if self.buf.len() >= MAX_COLLECT {
+            self.buf.clear();
+            self.state = State::Idle;
+            return Some(NgtEvent::Error(NgtError::TooLong));
+        }
+        self.buf.push(b);
+        None
     }
 
     fn is_escape(&self, b: u8) -> bool {
@@ -391,6 +411,31 @@ pub fn encode_n2k_send_frame(frame: &RawFrame) -> Vec<u8> {
     out
 }
 
+/// The bytes an NGT-1 emits for a frame it received from the bus: an
+/// `N2K_MSG_RECEIVED` (0x93) message with the header `prio, pgn[0..2]
+/// (LE), dst, src, timestamp (u32 LE), dlen`, then the data. The inverse of
+/// [`NgtMessage::to_raw_frame`], for simulating a gateway in tests and
+/// harnesses. `timestamp_ms` is the NGT-1's own counter (ms since it
+/// started). `None` when the data does not fit one NGT-1 message (more
+/// than 244 bytes).
+pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Option<Vec<u8>> {
+    const HEADER: usize = 11;
+    if HEADER + frame.data.len() > u8::MAX as usize {
+        return None;
+    }
+    let mut payload = Vec::with_capacity(HEADER + frame.data.len());
+    payload.push(frame.prio);
+    payload.extend_from_slice(&frame.pgn.to_le_bytes()[..3]);
+    payload.push(frame.dst);
+    payload.push(frame.src);
+    payload.extend_from_slice(&timestamp_ms.to_le_bytes());
+    payload.push(frame.data.len() as u8);
+    payload.extend_from_slice(&frame.data);
+    let mut out = Vec::with_capacity(payload.len() + 8);
+    encode_ngt_message(N2K_MSG_RECEIVED, &payload, &mut out);
+    Some(out)
+}
+
 /// The reverse-engineered NGT-1 startup sequence (3 bytes wrapped in an
 /// `NGT_MSG_SEND` command). Sent on connect and periodically afterwards
 /// to keep the NGT-1's TX queue unlocked. Magic comes from canboat's
@@ -452,6 +497,57 @@ impl NgtMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A `DLE STX` never followed by `DLE ETX` gives up at the limit, once,
+    /// and the decoder then reads the next message normally.
+    #[test]
+    fn an_unterminated_message_is_given_up_on() {
+        let mut d = Ngt1Decoder::new();
+        let mut junk = vec![DLE, STX];
+        junk.extend(std::iter::repeat_n(0x55, 10 * MAX_COLLECT));
+        let events = d.push_bytes(&junk);
+        assert_eq!(events, [NgtEvent::Error(NgtError::TooLong)]);
+        assert!(d.buf.len() <= MAX_COLLECT);
+        let frame = RawFrame::new(None, 2, 130306, 35, 255, [1, 2, 3, 4, 5, 6, 7, 8]);
+        let ok = d.push_bytes(&encode_n2k_received_frame(&frame, 0).unwrap());
+        assert!(matches!(&ok[..], [NgtEvent::Message(_)]), "{ok:?}");
+    }
+
+    /// A received-frame message decodes back to the frame it was built
+    /// from, the NGT-1 counter surfacing as the timestamp.
+    #[test]
+    fn received_frame_round_trips() {
+        let frame = RawFrame::new(None, 2, 130306, 35, 255, [0x10, 0x10, 3, 4, 5, 6, 7, 8]);
+        let bytes = encode_n2k_received_frame(&frame, 1234).expect("fits");
+        let mut d = Ngt1Decoder::new();
+        let events = d.push_bytes(&bytes);
+        let [NgtEvent::Message(msg)] = &events[..] else {
+            panic!("expected one message, got {events:?}")
+        };
+        let back = msg.to_raw_frame().expect("an N2K frame");
+        assert_eq!(back.timestamp.as_deref(), Some("1234"));
+        assert_eq!(
+            (back.prio, back.pgn, back.src, back.dst),
+            (2, 130306, 35, 255)
+        );
+        assert_eq!(back.data, frame.data);
+    }
+
+    /// 11 header bytes + data must fit the one-byte NGT-1 length: 244
+    /// bytes of data encode, 245 are refused rather than panicking.
+    #[test]
+    fn received_frame_longer_than_one_message_is_refused() {
+        let mut frame = RawFrame::new(None, 6, 126996, 35, 255, [0u8; 8]);
+        frame.data = std::iter::repeat_n(0xab, 244).collect();
+        let bytes = encode_n2k_received_frame(&frame, 0).expect("244 bytes fit");
+        let events = Ngt1Decoder::new().push_bytes(&bytes);
+        let [NgtEvent::Message(msg)] = &events[..] else {
+            panic!("expected one message, got {events:?}")
+        };
+        assert_eq!(msg.to_raw_frame().expect("a frame").data.len(), 244);
+        frame.data.push(0xab);
+        assert_eq!(encode_n2k_received_frame(&frame, 0), None);
+    }
 
     /// Build a valid NGT-1 frame from command + payload, applying
     /// DLE-stuffing and computing the checksum.
