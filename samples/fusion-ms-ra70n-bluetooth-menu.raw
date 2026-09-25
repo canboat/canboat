@@ -1,0 +1,6 @@
+# Fusion Bluetooth menu messages captured while toggling Discoverable from an MS-NRX300 connected to an MS-RA70N.
+# Menu Item flags change from 0x89 to 0x8b after the Select command; the following Menu Action status uses action 3.
+2026-09-19T06:43:05.684240Z,7,130820,12,255,25,a3,99,11,80,06,00,00,00,00,89,01,0c,44,69,73,63,6f,76,65,72,61,62,6c,65,00
+2026-09-19T06:43:06.938395Z,7,126720,33,12,11,a3,99,09,00,06,00,00,00,00,02,01
+2026-09-19T06:43:06.941235Z,7,130820,12,255,25,a3,99,11,80,06,00,00,00,00,8b,01,0c,44,69,73,63,6f,76,65,72,61,62,6c,65,00
+2026-09-19T06:43:06.945504Z,7,130820,12,255,11,a3,99,0f,80,06,00,00,00,00,03,01

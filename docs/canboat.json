@@ -1614,7 +1614,20 @@
         "EnumValues":[
           {"Name":"Open", "Value":1},
           {"Name":"Select", "Value":2},
-          {"Name":"Close", "Value":4}
+          {"Name":"Step Back", "Value":3},
+          {"Name":"Close", "Value":4},
+          {"Name":"Exit", "Value":5}
+        ]
+      },
+      {
+        "Name":"FUSION_MENU_STATUS",
+        "MaxValue":255,
+        "EnumValues":[
+          {"Name":"Opened At Root", "Value":1},
+          {"Name":"Opened", "Value":2},
+          {"Name":"Item Updated", "Value":3},
+          {"Name":"Closed", "Value":4},
+          {"Name":"Locked", "Value":5}
         ]
       },
       {
@@ -5426,6 +5439,13 @@
           {"Name":"Tweeter", "Bit":13},
           {"Name":"Subwoofer On Amp", "Bit":14},
           {"Name":"Mono", "Bit":15}
+        ]
+      },
+      {
+        "Name":"FUSION_MENU_ITEM_FLAGS",
+        "MaxValue":7,
+        "EnumBitValues":[
+          {"Name":"Selected", "Bit":1}
         ]
       },
       {
@@ -29091,6 +29111,94 @@
             "UnknownValue":255,
             "OutOfRangeValue":254,
             "ReservedValue":253,
+            "FieldType":"NUMBER"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"fusionRequestMenuLockId",
+        "Description":"Fusion: Request Menu Lock ID",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["Interval"
+        ],
+        "FieldCount":5,
+        "Length":8,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Fusion Electronics",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":419,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"Request Menu Lock ID",
+            "BitLength":16,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":12,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":65532,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"FUSION_MESSAGE_ID",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"requestToken",
+            "Name":"Request Token",
+            "BitLength":32,
+            "BitOffset":32,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":4294967292,
+            "UnknownValue":4294967295,
+            "OutOfRangeValue":4294967294,
+            "ReservedValue":4294967293,
             "FieldType":"NUMBER"
           }
         ]
@@ -68335,8 +68443,8 @@
           },
           {
             "Order":5,
-            "Id":"lockId",
-            "Name":"Lock ID",
+            "Id":"requestToken",
+            "Name":"Request Token",
             "BitLength":32,
             "BitOffset":32,
             "BitStart":0,
@@ -68351,8 +68459,8 @@
           },
           {
             "Order":6,
-            "Id":"flags",
-            "Name":"Flags",
+            "Id":"lockId",
+            "Name":"Lock ID",
             "BitLength":8,
             "BitOffset":64,
             "BitStart":0,
@@ -69654,13 +69762,10 @@
             "BitOffset":72,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":252,
-            "UnknownValue":255,
-            "OutOfRangeValue":254,
-            "ReservedValue":253,
-            "FieldType":"NUMBER"
+            "RangeMax":255,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_MENU_ITEM_FLAGS"
           },
           {
             "Order":8,
@@ -72627,7 +72732,7 @@
             "OutOfRangeValue":254,
             "ReservedValue":253,
             "FieldType":"LOOKUP",
-            "LookupEnumeration":"FUSION_MENU_ACTION"
+            "LookupEnumeration":"FUSION_MENU_STATUS"
           },
           {
             "Order":8,

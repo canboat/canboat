@@ -42,6 +42,13 @@ fields:
 - id: lockId
   name: Lock ID
   type: UINT8
+notes: |-
+  lockId is the menu lock ID allocated by PGN 130820 message id 32786 "Menu
+  Lock ID" in reply to PGN 126720 proprietary id 12 "Request Menu Lock ID"; see
+  those for how it is obtained and used.
+
+  Evidence: samples/fusion-ra70n-menu-operations.raw and the existing
+  samples/boatkit-fusion-menu.raw.
 samples:
 - raw: "2026-08-09T13:42:58.155785489-07:00,7,130820,10,255,10,a3,99,10,80,02,1f,00,00,00,00"  # from boatkit-fusion-menu.raw
   expects:

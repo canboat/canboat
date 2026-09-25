@@ -1,0 +1,11 @@
+# format=FAST
+# Fusion MS-RA70N at source 12, commanded from an MS-NRX300 at source 33.
+#
+# Menu lock handshake observed during NRX300 startup. The remote sends a
+# four-byte requestToken in 126720 proprietary id 12 "Request Menu Lock ID".
+# The stereo replies with 130820 message id 32786 "Menu Lock ID", echoing the
+# same requestToken and returning the allocated one-byte lockId.
+#
+# requestToken = 0x000081cd (33229), lockId = 1
+2026-09-19T08:46:38.140Z,3,126720,33,12,8,a3,99,0c,00,cd,81,00,00
+2026-09-19T08:46:38.371Z,7,130820,12,255,9,a3,99,12,80,cd,81,00,00,01

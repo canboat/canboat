@@ -3438,6 +3438,19 @@ Pgn pgnList[] = {
      },
      .camelDescription = "fusionRequestMenuItems"},
 
+    {"Fusion: Request Menu Lock ID",
+     126720,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 12, .description = "Request Menu Lock ID", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MESSAGE_ID, .lookup.name = "FUSION_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Request Token", .camelName = "requestToken", .fieldType = "UINT32", .resolution = 1.0}
+     },
+     .camelDescription = "fusionRequestMenuLockId"},
+
     {"Fusion: Set Setting",
      126720,
      PACKET_COMPLETE,
@@ -8300,8 +8313,8 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32786, .description = "Menu Lock ID", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
-      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Flags", .camelName = "flags", .fieldType = "UINT8", .resolution = 1.0}
+      {.name = "Request Token", .camelName = "requestToken", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "fusionMenuLockId",
      .priority = 7},
@@ -8475,7 +8488,7 @@ Pgn pgnList[] = {
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32785, .description = "Menu Item", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .partOfPrimaryKey = true},
       {.name = "Item Index", .camelName = "itemIndex", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Flags", .camelName = "flags", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Flags", .camelName = "flags", .fieldType = "BITLOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_MENU_ITEM_FLAGS, .lookup.name = "FUSION_MENU_ITEM_FLAGS"},
       {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Text", .camelName = "text", .fieldType = "STRING_LZ"}
      },
@@ -8869,7 +8882,7 @@ Pgn pgnList[] = {
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32783, .description = "Menu Action", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
       {.name = "Source ID", .camelName = "sourceId", .fieldType = "UINT8", .resolution = 1.0, .description = "Runtime source identifier announced by Fusion Source status messages; not a stable source-type enumeration.", .partOfPrimaryKey = true},
       {.name = "Item Index", .camelName = "itemIndex", .fieldType = "UINT32", .resolution = 1.0},
-      {.name = "Action", .camelName = "action", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MENU_ACTION, .lookup.name = "FUSION_MENU_ACTION"},
+      {.name = "Action", .camelName = "action", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_MENU_STATUS, .lookup.name = "FUSION_MENU_STATUS"},
       {.name = "Lock ID", .camelName = "lockId", .fieldType = "UINT8", .resolution = 1.0}
      },
      .camelDescription = "fusionMenuActionStatus",
