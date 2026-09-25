@@ -52,7 +52,7 @@ pub mod canboat::codec::can_id
 pub fn canboat::codec::can_id::compose(u8, u32, u8, u8) -> u32
 pub fn canboat::codec::can_id::decompose(u32) -> (u8, u32, u8, u8)
 pub mod canboat::codec::fastpacket
-pub fn canboat::codec::fastpacket::fragment(u8, &[u8]) -> alloc::vec::Vec<[u8; 8]>
+pub fn canboat::codec::fastpacket::fragment(u8, &[u8]) -> core::option::Option<alloc::vec::Vec<[u8; 8]>>
 pub fn canboat::codec::fastpacket::packet_type(u32) -> canboat::FramePacketType
 pub mod canboat::codec::ikonvert
 pub struct canboat::codec::ikonvert::Config

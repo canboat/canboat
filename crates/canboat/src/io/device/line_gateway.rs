@@ -139,7 +139,15 @@ impl DeviceEncoder for Encoder {
                 };
                 if fastpacket::packet_type(frame.pgn) == FramePacketType::Fast {
                     let seq = self.next_seq(frame.pgn, frame.src);
-                    for chunk in fastpacket::fragment(seq, &frame.data) {
+                    let Some(chunks) = fastpacket::fragment(seq, &frame.data) else {
+                        log::warn!(
+                            "not sending PGN {}: {} bytes exceed one fast-packet",
+                            frame.pgn,
+                            frame.data.len()
+                        );
+                        return None;
+                    };
+                    for chunk in chunks {
                         write_one(&mut out, &chunk);
                     }
                 } else {

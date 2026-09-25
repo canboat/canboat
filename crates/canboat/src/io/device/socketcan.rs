@@ -394,7 +394,14 @@ mod imp {
                 self.tx_buf.push(can_id, data);
             } else {
                 let seq = self.tx_buf.next_fast_seq(pgn, src);
-                for frame in fastpacket::fragment(seq, data) {
+                let Some(frames) = fastpacket::fragment(seq, data) else {
+                    log::warn!(
+                        "socketcan: not sending PGN {pgn}: {} bytes exceed one fast-packet",
+                        data.len()
+                    );
+                    return;
+                };
+                for frame in frames {
                     self.tx_buf.push(can_id, &frame);
                 }
             }
