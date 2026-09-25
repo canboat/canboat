@@ -15,7 +15,8 @@ use crate::engine::format::maretron_ipg::{
     build_set_mode_binary, parse,
 };
 
-use super::{Codec, Event, Refused, SYNTHETIC_PGN_START, iso_ms};
+use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
+use crate::engine::format_iso_ms;
 
 /// Maretron session configuration.
 #[derive(Debug, Clone, Default)]
@@ -104,7 +105,7 @@ impl Codec for Maretron {
 }
 
 fn to_raw(frame: &MaretronFrame, now_ms: u64) -> RawFrame {
-    frame.to_raw(Some(iso_ms(now_ms)))
+    frame.to_raw(Some(format_iso_ms(now_ms)))
 }
 
 #[cfg(test)]
@@ -255,7 +256,7 @@ mod tests {
         let mut events = Vec::new();
         d.receive(&binary_frame(&[7]), NOW, &mut events);
         match &events[0] {
-            Event::Frame(f) => assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826")),
+            Event::Frame(f) => assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z")),
             other => panic!("expected Frame, got {other:?}"),
         }
     }

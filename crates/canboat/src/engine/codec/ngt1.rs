@@ -26,7 +26,8 @@ use crate::engine::format::{
 use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
 use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
-use super::{Codec, Event, Refused, SYNTHETIC_PGN_START, iso_ms};
+use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
+use crate::engine::format_iso_ms;
 
 /// Re-ping the NGT-1 startup sequence every 20 s — matches the C
 /// `actisense-serial` keepalive.
@@ -199,7 +200,7 @@ impl Ngt1 {
                 gateway_addr: 0xff,
                 rejected_tx: None,
             },
-            Some(iso_ms(now_ms)),
+            Some(format_iso_ms(now_ms)),
         );
         events.push(Event::Frame(frame));
         self.net.next_ms = now_ms + NETWORK_STATUS_INTERVAL_MS;
@@ -230,7 +231,12 @@ impl Codec for Ngt1 {
                     send_all(events, self.tx_list.on_message(&msg.payload, now_ms));
                 }
                 NgtEvent::Message(msg) => {
-                    if let Some(frame) = msg.to_raw_frame() {
+                    if let Some(mut frame) = msg.to_raw_frame() {
+                        // The message carries the NGT-1's ms-since-power-up
+                        // clock; a live stream wants wall-clock time, as
+                        // canboat C's actisense-serial and the iKonvert
+                        // codec give it.
+                        frame.timestamp = Some(format_iso_ms(now_ms));
                         self.note_frame(frame, now_ms, events);
                     }
                 }
@@ -340,7 +346,10 @@ mod network_status_tests {
         // The NGT-1 knows neither of these.
         assert_eq!(status.data[10], 0xff, "gateway address sentinel");
         assert_eq!(&status.data[11..15], &[0xff; 4], "rejected TX sentinel");
-        assert_eq!(status.timestamp.as_deref(), Some("2026-05-29T19:16:04.826"));
+        assert_eq!(
+            status.timestamp.as_deref(),
+            Some("2026-05-29T19:16:04.826Z")
+        );
     }
 
     /// The status timer and the uptime run on the caller's clock.
@@ -362,6 +371,30 @@ mod network_status_tests {
             7,
             "uptime in seconds"
         );
+    }
+
+    /// A received bus frame is stamped with the caller's time, not the
+    /// NGT-1's ms-since-power-up clock that rides in the message.
+    #[test]
+    fn received_frames_carry_the_callers_time() {
+        let frame = RawFrame::new(
+            None,
+            2,
+            127250,
+            52,
+            255,
+            [0xff, 0xac, 0xc9, 0xff, 0x7f, 0xff, 0x7f, 0xfd],
+        );
+        let wire =
+            crate::engine::format::ngt1::encode_n2k_received_frame(&frame, 148).expect("fits");
+        let mut d = Ngt1::default();
+        let mut events = Vec::new();
+        d.receive(&wire, NOW, &mut events);
+        let [Event::Frame(f)] = &events[..] else {
+            panic!("expected one frame, got {events:?}")
+        };
+        assert_eq!(f.pgn, 127250);
+        assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z"));
     }
 
     /// The gateway's own answers (`NGT_MSG_RECEIVED`) feed the transmit

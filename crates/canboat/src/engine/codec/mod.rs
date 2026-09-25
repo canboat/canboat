@@ -28,7 +28,6 @@ pub mod ngt1_tx_list;
 use std::time::Duration;
 
 use crate::engine::RawFrame;
-use crate::engine::format::days_to_ymd;
 
 /// What a [`Codec`] hands back as bytes arrive.
 #[derive(Debug, Clone, PartialEq)]
@@ -101,31 +100,6 @@ pub trait Codec {
     }
 }
 
-/// `YYYY-MM-DDTHH:MM:SS.mmm` (UTC, no zone suffix) from Unix
-/// milliseconds: the timestamp the gateway drivers have always stamped,
-/// as canboat C's `fmtTimestamp` does.
-pub(crate) fn iso_ms(ms: u64) -> String {
-    let secs = (ms / 1000) as i64;
-    let millis = ms % 1000;
-    let days = secs.div_euclid(86_400);
-    let day_secs = secs.rem_euclid(86_400) as u32;
-    let (h, m, s) = (day_secs / 3600, (day_secs / 60) % 60, day_secs % 60);
-    let (y, mo, d) = days_to_ymd(days);
-    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{millis:03}")
-}
-
 /// Synthetic-PGN marker: frames at or above it are canboat-internal and
 /// never reach the bus.
 pub const SYNTHETIC_PGN_START: u32 = 0x40000;
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn iso_ms_is_utc_without_suffix() {
-        // 2026-05-29T19:16:04.826 UTC
-        assert_eq!(iso_ms(1_780_082_164_826), "2026-05-29T19:16:04.826");
-        assert_eq!(iso_ms(0), "1970-01-01T00:00:00.000");
-    }
-}

@@ -44,7 +44,8 @@ use crate::engine::format::ikonvert::{
 };
 use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
-use super::{Codec, Event, Refused, SYNTHETIC_PGN_START, iso_ms};
+use super::{Codec, Event, Refused, SYNTHETIC_PGN_START};
+use crate::engine::format_iso_ms;
 
 /// iKonvert initialisation parameters. All fields are optional —
 /// `Config::default()` brings the bus online in `ALL` mode with no
@@ -227,7 +228,7 @@ impl Codec for Ikonvert {
                     // (see `computeIKonvertTime`). The device clock
                     // is known to drift, and downstream tools (the
                     // analyzer, n2kd) expect a wall-clock timestamp.
-                    f.timestamp = Some(iso_ms(now_ms));
+                    f.timestamp = Some(format_iso_ms(now_ms));
                     events.push(Event::Frame(f));
                 }
                 Ok(IkonvertLine::Control(c)) => self.handle_control(&c, now_ms, events),
@@ -313,7 +314,7 @@ impl Ikonvert {
         // resend, mirroring C's unconditional `sendNextInitCommand`
         // call after each handled ASCII line.
         if body.starts_with("000000,") {
-            match synthesize_network_status(body, iso_ms(now_ms)) {
+            match synthesize_network_status(body, format_iso_ms(now_ms)) {
                 Some(frame) => {
                     log::debug!(
                         "ikonvert: synthesized network status (load={} count={})",
@@ -554,7 +555,7 @@ mod tests {
         assert_eq!(f.pgn, 127257);
         assert_eq!(f.src, 35);
         assert_eq!(&f.data[..], &[1, 2, 3]);
-        assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826"));
+        assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z"));
     }
 
     #[test]
