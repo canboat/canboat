@@ -272,17 +272,21 @@ impl FrameSender {
 /// handles. Used by codecs whose I/O model isn't byte-stream-shaped
 /// (e.g. `socketcan`) and can't use the generic [`run`] runner below.
 #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+///
+/// `progress` counts the device's completed writes, as the generic
+/// writer's does, so a close can tell a draining backlog from a stuck one.
 pub(crate) fn from_parts(
     frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    progress: Arc<AtomicU64>,
 ) -> DeviceHandle {
     DeviceHandle {
         frames_rx,
         cmd_tx,
         joins,
         writer: None,
-        progress: Arc::default(),
+        progress,
     }
 }
 
