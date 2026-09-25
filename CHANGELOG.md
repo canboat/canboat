@@ -6,6 +6,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Sections can be: Added Changed Deprecated Removed Fixed Security.
 
+## [8.3.0](https://github.com/canboat/canboat/compare/v8.2.1...v8.3.0) (2026-09-25)
+
+
+### Added
+
+* **fusion:** decode 130820 System Capabilities (message id 32829) ([#912](https://github.com/canboat/canboat/issues/912)) ([dc47d01](https://github.com/canboat/canboat/commit/dc47d01f66f81cf2c536f61ba6bb606624ada8ea))
+* **fusion:** decode capability bitfields ([#909](https://github.com/canboat/canboat/issues/909)) ([130b915](https://github.com/canboat/canboat/commit/130b91534a3b8bf30b1abf54285d270d11c9b648))
+* **fusion:** decode menu locking and state ([#911](https://github.com/canboat/canboat/issues/911)) ([93ee824](https://github.com/canboat/canboat/commit/93ee8247b5d928bb2adc6c7d72f3f19e34f21881))
+* **fusion:** document Tone EQ semantics ([#910](https://github.com/canboat/canboat/issues/910)) ([90c7d31](https://github.com/canboat/canboat/commit/90c7d31686aaf03b220d208360d7fab67a940727))
+* **ikonvert:** refuse PGNs that are not on the named transmit list ([#924](https://github.com/canboat/canboat/issues/924)) ([a64c65c](https://github.com/canboat/canboat/commit/a64c65cf21db7db5b0ab15833d277647424de3d8))
+* **ikonvert:** take the gateway off the bus when closing ([#919](https://github.com/canboat/canboat/issues/919)) ([e669c56](https://github.com/canboat/canboat/commit/e669c56e5178ef950f7e8cc93cd5b3f9512991d4))
+* **ikonvert:** write the PGN lists into the gateway ([#916](https://github.com/canboat/canboat/issues/916)) ([419988c](https://github.com/canboat/canboat/commit/419988c7bfaffec32d06e8d7e59fb2ee47301ee2))
+* **ngt1:** enable the application's PGNs in the Transmit PGN Enable list ([#917](https://github.com/canboat/canboat/issues/917)) ([100bf1b](https://github.com/canboat/canboat/commit/100bf1bdd2e07bf8991105f7d0b697ee38826d42))
+* **rust:** public sans-I/O gateway codecs (canboat::codec) ([#925](https://github.com/canboat/canboat/issues/925)) ([f12402c](https://github.com/canboat/canboat/commit/f12402c4b5c5304180455a512f9ab3b0660cc1b3))
+* **socketcan:** advertise the application's PGNs in the PGN 126464 lists ([#915](https://github.com/canboat/canboat/issues/915)) ([9809515](https://github.com/canboat/canboat/commit/980951597c554ea44a99aad8dd712fb35448575f))
+* **socketcan:** learn transmitted PGNs into the advertised Transmit list ([#918](https://github.com/canboat/canboat/issues/918)) ([b697140](https://github.com/canboat/canboat/commit/b697140c6abcce8ba3ffbf31bed596c6bbef9435))
+* **usb:** open FTDI gateways such as the NGT-1 directly over USB ([#926](https://github.com/canboat/canboat/issues/926)) ([d7371bb](https://github.com/canboat/canboat/commit/d7371bb2f88fad24856d6c8c786539fa7c133115))
+
+
+### Fixed
+
+* **address-claim:** log contests, move up from the preferred address, forget stale claims ([#920](https://github.com/canboat/canboat/issues/920)) ([c234ae7](https://github.com/canboat/canboat/commit/c234ae70c7f8c1b52c7549d2207f004c2cabc9a7))
+* **keel:** honour # format=FAST headers in harvest ([#914](https://github.com/canboat/canboat/issues/914)) ([13b5f41](https://github.com/canboat/canboat/commit/13b5f4171b7f1df669f3963d2ab2279eb2305c7b))
+* **ngt1:** stamp received frames with host time, not the device clock ([#927](https://github.com/canboat/canboat/issues/927)) ([b7a98c2](https://github.com/canboat/canboat/commit/b7a98c2758b5ddf2410bdad011500bd48767981b))
+* output kWh and Ah fields as J and C under -si ([#922](https://github.com/canboat/canboat/issues/922)) ([18acdda](https://github.com/canboat/canboat/commit/18acdda13db333e6ecdd8c27b65cc95ec0c7e611))
+
 ## [8.2.1](https://github.com/canboat/canboat/compare/v8.2.0...v8.2.1) (2026-09-23)
 
 
