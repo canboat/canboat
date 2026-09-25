@@ -1,4 +1,210 @@
 pub mod canboat
+pub mod canboat::codec
+pub mod canboat::codec::can_id
+pub fn canboat::codec::can_id::compose(u8, u32, u8, u8) -> u32
+pub fn canboat::codec::can_id::decompose(u32) -> (u8, u32, u8, u8)
+pub mod canboat::codec::fastpacket
+pub fn canboat::codec::fastpacket::fragment(u8, &[u8]) -> core::option::Option<alloc::vec::Vec<[u8; 8]>>
+pub fn canboat::codec::fastpacket::packet_type(u32) -> canboat::FramePacketType
+pub mod canboat::codec::ikonvert
+pub struct canboat::codec::ikonvert::Config
+pub canboat::codec::ikonvert::Config::extra_tx_pgns: alloc::vec::Vec<u32>
+pub canboat::codec::ikonvert::Config::pgn_lists: canboat::codec::PgnLists
+pub canboat::codec::ikonvert::Config::rate_limit_off: bool
+pub canboat::codec::ikonvert::Config::rx_list: core::option::Option<alloc::string::String>
+pub canboat::codec::ikonvert::Config::skip_init: bool
+pub canboat::codec::ikonvert::Config::tx_list: core::option::Option<alloc::string::String>
+impl core::clone::Clone for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::ikonvert::Ikonvert
+impl canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::new(canboat::codec::ikonvert::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::line
+pub enum canboat::codec::line::InputFormat
+pub canboat::codec::line::InputFormat::ActisenseAscii
+pub canboat::codec::line::InputFormat::Airmar
+pub canboat::codec::line::InputFormat::Candump
+pub canboat::codec::line::InputFormat::Chetco
+pub canboat::codec::line::InputFormat::GarminCsv
+pub canboat::codec::line::InputFormat::GarminCsv2
+pub canboat::codec::line::InputFormat::Ikonvert
+pub canboat::codec::line::InputFormat::Plain
+pub canboat::codec::line::InputFormat::PlainMixFast
+pub canboat::codec::line::InputFormat::Ydwg02
+impl core::clone::Clone for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::clone(&self) -> Self
+impl core::cmp::Eq for canboat::read::InputFormat
+impl core::cmp::PartialEq for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::InputFormat
+impl core::marker::StructuralPartialEq for canboat::read::InputFormat
+pub enum canboat::codec::line::ParseError
+pub canboat::codec::line::ParseError::BadHeader
+pub canboat::codec::line::ParseError::BadHeader::expected: usize
+pub canboat::codec::line::ParseError::BadHeader::found: usize
+pub canboat::codec::line::ParseError::BadHexByte
+pub canboat::codec::line::ParseError::BadHexByte::index: usize
+pub canboat::codec::line::ParseError::BadHexByte::offset: core::option::Option<usize>
+pub canboat::codec::line::ParseError::BadHexByte::value: alloc::string::String
+pub canboat::codec::line::ParseError::BadInteger
+pub canboat::codec::line::ParseError::BadInteger::field: &'static str
+pub canboat::codec::line::ParseError::BadInteger::offset: core::option::Option<usize>
+pub canboat::codec::line::ParseError::BadInteger::value: alloc::string::String
+pub canboat::codec::line::ParseError::BadPayloadCount
+pub canboat::codec::line::ParseError::BadPayloadCount::expected: usize
+pub canboat::codec::line::ParseError::BadPayloadCount::found: usize
+pub canboat::codec::line::ParseError::Empty
+pub canboat::codec::line::ParseError::LengthTooLarge
+pub canboat::codec::line::ParseError::LengthTooLarge::len: usize
+pub canboat::codec::line::ParseError::MissingPayload
+pub canboat::codec::line::ParseError::MissingTimestamp
+impl canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::byte_offset(&self) -> core::option::Option<usize>
+impl core::cmp::Eq for canboat::codec::line::ParseError
+impl core::cmp::PartialEq for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::codec::line::ParseError
+impl core::fmt::Debug for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::line::ParseError
+pub fn canboat::codec::line::detect(&str) -> core::option::Option<canboat::read::InputFormat>
+pub fn canboat::codec::line::parse(canboat::read::InputFormat, &str) -> core::result::Result<core::option::Option<canboat::Frame>, canboat::codec::line::ParseError>
+pub fn canboat::codec::line::write_actisense_ascii<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
+pub fn canboat::codec::line::write_plain<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
+pub mod canboat::codec::maretron
+pub struct canboat::codec::maretron::Config
+pub canboat::codec::maretron::Config::password: alloc::string::String
+impl core::clone::Clone for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::maretron::Maretron
+impl canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::new(canboat::codec::maretron::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::ngt1
+pub struct canboat::codec::ngt1::Config
+pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
+pub canboat::codec::ngt1::Config::pgn_lists: canboat::codec::PgnLists
+pub canboat::codec::ngt1::Config::tx_list_record: alloc::sync::Arc<std::sync::poison::mutex::Mutex<canboat::codec::ngt1::TxListRecord>>
+impl core::clone::Clone for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::ngt1::Ngt1
+impl canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::new(canboat::codec::ngt1::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::default() -> Self
+pub struct canboat::codec::ngt1::TxListRecord
+impl core::default::Default for canboat::codec::ngt1::TxListRecord
+pub fn canboat::codec::ngt1::TxListRecord::default() -> Self
+impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
+pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
+pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> core::option::Option<alloc::vec::Vec<u8>>
+pub enum canboat::codec::Event
+pub canboat::codec::Event::Error(alloc::string::String)
+pub canboat::codec::Event::Frame(canboat::Frame)
+pub canboat::codec::Event::Send(alloc::vec::Vec<u8>)
+impl core::clone::Clone for canboat::codec::Event
+pub fn canboat::codec::Event::clone(&self) -> Self
+impl core::cmp::PartialEq for canboat::codec::Event
+pub fn canboat::codec::Event::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::Event
+pub fn canboat::codec::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::Event
+pub enum canboat::codec::Refused
+pub canboat::codec::Refused::NotOnTxList
+pub canboat::codec::Refused::Synthetic
+pub canboat::codec::Refused::TooLarge
+impl core::clone::Clone for canboat::codec::Refused
+pub fn canboat::codec::Refused::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::Refused
+impl core::cmp::PartialEq for canboat::codec::Refused
+pub fn canboat::codec::Refused::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::codec::Refused
+impl core::fmt::Debug for canboat::codec::Refused
+pub fn canboat::codec::Refused::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::Refused
+pub fn canboat::codec::Refused::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::codec::Refused
+impl core::marker::StructuralPartialEq for canboat::codec::Refused
+pub struct canboat::codec::PgnLists
+pub canboat::codec::PgnLists::rx: alloc::vec::Vec<u32>
+pub canboat::codec::PgnLists::tx: alloc::vec::Vec<u32>
+impl canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::is_empty(&self) -> bool
+impl core::clone::Clone for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::PgnLists
+impl core::cmp::PartialEq for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::default() -> Self
+impl core::fmt::Debug for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::PgnLists
+pub trait canboat::codec::Codec
+pub fn canboat::codec::Codec::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::Codec::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::ids
 pub mod canboat::output
 pub enum canboat::output::CamelCase
@@ -6,12 +212,12 @@ pub canboat::output::CamelCase::Lower
 pub canboat::output::CamelCase::Off
 pub canboat::output::CamelCase::Upper
 impl core::clone::Clone for canboat::output::CamelCase
-pub fn canboat::output::CamelCase::clone(&self) -> canboat::output::CamelCase
+pub fn canboat::output::CamelCase::clone(&self) -> Self
 impl core::cmp::Eq for canboat::output::CamelCase
 impl core::cmp::PartialEq for canboat::output::CamelCase
-pub fn canboat::output::CamelCase::eq(&self, &canboat::output::CamelCase) -> bool
+pub fn canboat::output::CamelCase::eq(&self, &Self) -> bool
 impl core::default::Default for canboat::output::CamelCase
-pub fn canboat::output::CamelCase::default() -> canboat::output::CamelCase
+pub fn canboat::output::CamelCase::default() -> Self
 impl core::fmt::Debug for canboat::output::CamelCase
 pub fn canboat::output::CamelCase::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::output::CamelCase
@@ -23,9 +229,9 @@ pub canboat::output::JsonOptions::include_empty: bool
 pub canboat::output::JsonOptions::name_value: bool
 pub canboat::output::JsonOptions::wrap: bool
 impl core::clone::Clone for canboat::output::JsonOptions
-pub fn canboat::output::JsonOptions::clone(&self) -> canboat::output::JsonOptions
+pub fn canboat::output::JsonOptions::clone(&self) -> Self
 impl core::default::Default for canboat::output::JsonOptions
-pub fn canboat::output::JsonOptions::default() -> canboat::output::JsonOptions
+pub fn canboat::output::JsonOptions::default() -> Self
 impl core::fmt::Debug for canboat::output::JsonOptions
 pub fn canboat::output::JsonOptions::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub fn canboat::output::write_json<W: core::fmt::Write>(&mut W, &canboat::DecodedPgn, &canboat::output::JsonOptions) -> core::fmt::Result
@@ -88,19 +294,19 @@ pub fn canboat::FieldValue::is_not_available(&self) -> bool
 pub fn canboat::FieldValue::is_sentinel(&self) -> bool
 pub fn canboat::FieldValue::lookup_value(&self) -> core::option::Option<u64>
 impl core::clone::Clone for canboat::FieldValue
-pub fn canboat::FieldValue::clone(&self) -> canboat::FieldValue
+pub fn canboat::FieldValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::FieldValue
 pub fn canboat::FieldValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 #[non_exhaustive] pub enum canboat::prelude::Units
 pub canboat::prelude::Units::Metric
 pub canboat::prelude::Units::Si
 impl core::clone::Clone for canboat::Units
-pub fn canboat::Units::clone(&self) -> canboat::Units
+pub fn canboat::Units::clone(&self) -> Self
 impl core::cmp::Eq for canboat::Units
 impl core::cmp::PartialEq for canboat::Units
-pub fn canboat::Units::eq(&self, &canboat::Units) -> bool
+pub fn canboat::Units::eq(&self, &Self) -> bool
 impl core::default::Default for canboat::Units
-pub fn canboat::Units::default() -> canboat::Units
+pub fn canboat::Units::default() -> Self
 impl core::fmt::Debug for canboat::Units
 pub fn canboat::Units::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::Units
@@ -149,7 +355,7 @@ pub fn canboat::DecodedField::precision(&self) -> u8
 pub fn canboat::DecodedField::resolution(&self) -> core::option::Option<f64>
 pub fn canboat::DecodedField::unit(&self) -> core::option::Option<&'static str>
 impl core::clone::Clone for canboat::DecodedField
-pub fn canboat::DecodedField::clone(&self) -> canboat::DecodedField
+pub fn canboat::DecodedField::clone(&self) -> Self
 impl core::fmt::Debug for canboat::DecodedField
 pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::prelude::DecodedPgn
@@ -170,14 +376,14 @@ pub fn canboat::DecodedPgn::field(&self, canboat::FieldId) -> core::option::Opti
 pub fn canboat::DecodedPgn::field_by_name(&self, &str) -> core::option::Option<&canboat::DecodedField>
 pub fn canboat::DecodedPgn::iso_name(&self) -> core::option::Option<u64>
 impl core::clone::Clone for canboat::DecodedPgn
-pub fn canboat::DecodedPgn::clone(&self) -> canboat::DecodedPgn
+pub fn canboat::DecodedPgn::clone(&self) -> Self
 impl core::fmt::Debug for canboat::DecodedPgn
 pub fn canboat::DecodedPgn::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::prelude::FieldId
 pub canboat::prelude::FieldId::field: &'static canboat::schema::FieldInfo
 pub canboat::prelude::FieldId::pgn: &'static canboat::schema::PgnInfo
 impl core::clone::Clone for canboat::FieldId
-pub fn canboat::FieldId::clone(&self) -> canboat::FieldId
+pub fn canboat::FieldId::clone(&self) -> Self
 impl core::fmt::Debug for canboat::FieldId
 pub fn canboat::FieldId::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::FieldId
@@ -191,10 +397,10 @@ pub canboat::prelude::Frame::timestamp: core::option::Option<alloc::string::Stri
 impl canboat::Frame
 pub fn canboat::Frame::new(core::option::Option<alloc::string::String>, u8, u32, u8, u8, impl core::iter::traits::collect::IntoIterator<Item = u8>) -> Self
 impl core::clone::Clone for canboat::Frame
-pub fn canboat::Frame::clone(&self) -> canboat::Frame
+pub fn canboat::Frame::clone(&self) -> Self
 impl core::cmp::Eq for canboat::Frame
 impl core::cmp::PartialEq for canboat::Frame
-pub fn canboat::Frame::eq(&self, &canboat::Frame) -> bool
+pub fn canboat::Frame::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::Frame
 pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Frame
@@ -211,10 +417,10 @@ pub canboat::read::InputFormat::Plain
 pub canboat::read::InputFormat::PlainMixFast
 pub canboat::read::InputFormat::Ydwg02
 impl core::clone::Clone for canboat::read::InputFormat
-pub fn canboat::read::InputFormat::clone(&self) -> canboat::read::InputFormat
+pub fn canboat::read::InputFormat::clone(&self) -> Self
 impl core::cmp::Eq for canboat::read::InputFormat
 impl core::cmp::PartialEq for canboat::read::InputFormat
-pub fn canboat::read::InputFormat::eq(&self, &canboat::read::InputFormat) -> bool
+pub fn canboat::read::InputFormat::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::read::InputFormat
 pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::read::InputFormat
@@ -258,10 +464,10 @@ pub canboat::schema::FieldType::StringLz
 pub canboat::schema::FieldType::Time
 pub canboat::schema::FieldType::Variable
 impl core::clone::Clone for canboat::schema::FieldType
-pub fn canboat::schema::FieldType::clone(&self) -> canboat::schema::FieldType
+pub fn canboat::schema::FieldType::clone(&self) -> Self
 impl core::cmp::Eq for canboat::schema::FieldType
 impl core::cmp::PartialEq for canboat::schema::FieldType
-pub fn canboat::schema::FieldType::eq(&self, &canboat::schema::FieldType) -> bool
+pub fn canboat::schema::FieldType::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::schema::FieldType
 pub fn canboat::schema::FieldType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::FieldType
@@ -272,10 +478,10 @@ pub canboat::schema::PacketType::Iso
 pub canboat::schema::PacketType::Mixed
 pub canboat::schema::PacketType::Single
 impl core::clone::Clone for canboat::schema::PacketType
-pub fn canboat::schema::PacketType::clone(&self) -> canboat::schema::PacketType
+pub fn canboat::schema::PacketType::clone(&self) -> Self
 impl core::cmp::Eq for canboat::schema::PacketType
 impl core::cmp::PartialEq for canboat::schema::PacketType
-pub fn canboat::schema::PacketType::eq(&self, &canboat::schema::PacketType) -> bool
+pub fn canboat::schema::PacketType::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::schema::PacketType
 pub fn canboat::schema::PacketType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::PacketType
@@ -292,7 +498,7 @@ pub canboat::schema::BitLookupValue::bit: u8
 pub canboat::schema::BitLookupValue::id: core::option::Option<&'static str>
 pub canboat::schema::BitLookupValue::name: &'static str
 impl core::clone::Clone for canboat::schema::BitLookupValue
-pub fn canboat::schema::BitLookupValue::clone(&self) -> canboat::schema::BitLookupValue
+pub fn canboat::schema::BitLookupValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::BitLookupValue
 pub fn canboat::schema::BitLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::BitLookupValue
@@ -331,7 +537,7 @@ pub canboat::schema::FieldInfo::unit: core::option::Option<&'static str>
 pub canboat::schema::FieldInfo::unit_offset: f64
 pub canboat::schema::FieldInfo::unknown_value: core::option::Option<u64>
 impl core::clone::Clone for canboat::schema::FieldInfo
-pub fn canboat::schema::FieldInfo::clone(&self) -> canboat::schema::FieldInfo
+pub fn canboat::schema::FieldInfo::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::FieldInfo
 pub fn canboat::schema::FieldInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::FieldInfo
@@ -348,7 +554,7 @@ pub canboat::schema::IndirectLookupValue::name: &'static str
 pub canboat::schema::IndirectLookupValue::value1: u64
 pub canboat::schema::IndirectLookupValue::value2: u64
 impl core::clone::Clone for canboat::schema::IndirectLookupValue
-pub fn canboat::schema::IndirectLookupValue::clone(&self) -> canboat::schema::IndirectLookupValue
+pub fn canboat::schema::IndirectLookupValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::IndirectLookupValue
 pub fn canboat::schema::IndirectLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::IndirectLookupValue
@@ -366,7 +572,7 @@ pub canboat::schema::LookupFieldTypeValue::value: u64
 impl canboat::schema::LookupFieldTypeValue
 pub fn canboat::schema::LookupFieldTypeValue::bit_length(&self) -> core::option::Option<u32>
 impl core::clone::Clone for canboat::schema::LookupFieldTypeValue
-pub fn canboat::schema::LookupFieldTypeValue::clone(&self) -> canboat::schema::LookupFieldTypeValue
+pub fn canboat::schema::LookupFieldTypeValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::LookupFieldTypeValue
 pub fn canboat::schema::LookupFieldTypeValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::LookupFieldTypeValue
@@ -382,7 +588,7 @@ pub canboat::schema::LookupValue::id: core::option::Option<&'static str>
 pub canboat::schema::LookupValue::name: &'static str
 pub canboat::schema::LookupValue::value: u64
 impl core::clone::Clone for canboat::schema::LookupValue
-pub fn canboat::schema::LookupValue::clone(&self) -> canboat::schema::LookupValue
+pub fn canboat::schema::LookupValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::LookupValue
 pub fn canboat::schema::LookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::LookupValue
@@ -411,7 +617,7 @@ pub canboat::schema::PgnInfo::transmission_interval: core::option::Option<u32>
 pub canboat::schema::PgnInfo::transmission_irregular: core::option::Option<bool>
 pub canboat::schema::PgnInfo::url: core::option::Option<&'static str>
 impl core::clone::Clone for canboat::schema::PgnInfo
-pub fn canboat::schema::PgnInfo::clone(&self) -> canboat::schema::PgnInfo
+pub fn canboat::schema::PgnInfo::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::PgnInfo
 pub fn canboat::schema::PgnInfo::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::PgnInfo
@@ -466,9 +672,9 @@ pub canboat::EncodeError::VariableUnresolved
 pub canboat::EncodeError::VariableUnresolved::field: &'static str
 pub canboat::EncodeError::VariableUnresolved::reason: &'static str
 impl core::clone::Clone for canboat::EncodeError
-pub fn canboat::EncodeError::clone(&self) -> canboat::EncodeError
+pub fn canboat::EncodeError::clone(&self) -> Self
 impl core::cmp::PartialEq for canboat::EncodeError
-pub fn canboat::EncodeError::eq(&self, &canboat::EncodeError) -> bool
+pub fn canboat::EncodeError::eq(&self, &Self) -> bool
 impl core::error::Error for canboat::EncodeError
 impl core::fmt::Debug for canboat::EncodeError
 pub fn canboat::EncodeError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
@@ -484,9 +690,9 @@ pub canboat::EncodeValue::Number(f64)
 pub canboat::EncodeValue::Pgn(u32)
 pub canboat::EncodeValue::Text(alloc::string::String)
 impl core::clone::Clone for canboat::EncodeValue
-pub fn canboat::EncodeValue::clone(&self) -> canboat::EncodeValue
+pub fn canboat::EncodeValue::clone(&self) -> Self
 impl core::cmp::PartialEq for canboat::EncodeValue
-pub fn canboat::EncodeValue::eq(&self, &canboat::EncodeValue) -> bool
+pub fn canboat::EncodeValue::eq(&self, &Self) -> bool
 impl core::convert::From<&[u8]> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(&[u8]) -> Self
 impl core::convert::From<&str> for canboat::EncodeValue
@@ -555,7 +761,7 @@ pub fn canboat::FieldValue::is_not_available(&self) -> bool
 pub fn canboat::FieldValue::is_sentinel(&self) -> bool
 pub fn canboat::FieldValue::lookup_value(&self) -> core::option::Option<u64>
 impl core::clone::Clone for canboat::FieldValue
-pub fn canboat::FieldValue::clone(&self) -> canboat::FieldValue
+pub fn canboat::FieldValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::FieldValue
 pub fn canboat::FieldValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub enum canboat::FramePacketType
@@ -563,10 +769,10 @@ pub canboat::FramePacketType::Fast
 pub canboat::FramePacketType::Other
 pub canboat::FramePacketType::Single
 impl core::clone::Clone for canboat::FramePacketType
-pub fn canboat::FramePacketType::clone(&self) -> canboat::FramePacketType
+pub fn canboat::FramePacketType::clone(&self) -> Self
 impl core::cmp::Eq for canboat::FramePacketType
 impl core::cmp::PartialEq for canboat::FramePacketType
-pub fn canboat::FramePacketType::eq(&self, &canboat::FramePacketType) -> bool
+pub fn canboat::FramePacketType::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::FramePacketType
 pub fn canboat::FramePacketType::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::FramePacketType
@@ -578,7 +784,7 @@ pub canboat::Reassembled::Partial
 pub canboat::Reassembled::PassThrough(canboat::Frame)
 impl core::cmp::Eq for canboat::Reassembled
 impl core::cmp::PartialEq for canboat::Reassembled
-pub fn canboat::Reassembled::eq(&self, &canboat::Reassembled) -> bool
+pub fn canboat::Reassembled::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::Reassembled
 pub fn canboat::Reassembled::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Reassembled
@@ -589,7 +795,7 @@ pub canboat::ReassemblyError::OutOfSlots::pgn: u32
 pub canboat::ReassemblyError::OutOfSlots::src: u8
 impl core::cmp::Eq for canboat::ReassemblyError
 impl core::cmp::PartialEq for canboat::ReassemblyError
-pub fn canboat::ReassemblyError::eq(&self, &canboat::ReassemblyError) -> bool
+pub fn canboat::ReassemblyError::eq(&self, &Self) -> bool
 impl core::error::Error for canboat::ReassemblyError
 impl core::fmt::Debug for canboat::ReassemblyError
 pub fn canboat::ReassemblyError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
@@ -600,12 +806,12 @@ impl core::marker::StructuralPartialEq for canboat::ReassemblyError
 pub canboat::Units::Metric
 pub canboat::Units::Si
 impl core::clone::Clone for canboat::Units
-pub fn canboat::Units::clone(&self) -> canboat::Units
+pub fn canboat::Units::clone(&self) -> Self
 impl core::cmp::Eq for canboat::Units
 impl core::cmp::PartialEq for canboat::Units
-pub fn canboat::Units::eq(&self, &canboat::Units) -> bool
+pub fn canboat::Units::eq(&self, &Self) -> bool
 impl core::default::Default for canboat::Units
-pub fn canboat::Units::default() -> canboat::Units
+pub fn canboat::Units::default() -> Self
 impl core::fmt::Debug for canboat::Units
 pub fn canboat::Units::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::Units
@@ -654,7 +860,7 @@ pub fn canboat::DecodedField::precision(&self) -> u8
 pub fn canboat::DecodedField::resolution(&self) -> core::option::Option<f64>
 pub fn canboat::DecodedField::unit(&self) -> core::option::Option<&'static str>
 impl core::clone::Clone for canboat::DecodedField
-pub fn canboat::DecodedField::clone(&self) -> canboat::DecodedField
+pub fn canboat::DecodedField::clone(&self) -> Self
 impl core::fmt::Debug for canboat::DecodedField
 pub fn canboat::DecodedField::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::DecodedPgn
@@ -675,14 +881,14 @@ pub fn canboat::DecodedPgn::field(&self, canboat::FieldId) -> core::option::Opti
 pub fn canboat::DecodedPgn::field_by_name(&self, &str) -> core::option::Option<&canboat::DecodedField>
 pub fn canboat::DecodedPgn::iso_name(&self) -> core::option::Option<u64>
 impl core::clone::Clone for canboat::DecodedPgn
-pub fn canboat::DecodedPgn::clone(&self) -> canboat::DecodedPgn
+pub fn canboat::DecodedPgn::clone(&self) -> Self
 impl core::fmt::Debug for canboat::DecodedPgn
 pub fn canboat::DecodedPgn::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub struct canboat::FieldId
 pub canboat::FieldId::field: &'static canboat::schema::FieldInfo
 pub canboat::FieldId::pgn: &'static canboat::schema::PgnInfo
 impl core::clone::Clone for canboat::FieldId
-pub fn canboat::FieldId::clone(&self) -> canboat::FieldId
+pub fn canboat::FieldId::clone(&self) -> Self
 impl core::fmt::Debug for canboat::FieldId
 pub fn canboat::FieldId::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::FieldId
@@ -696,10 +902,10 @@ pub canboat::Frame::timestamp: core::option::Option<alloc::string::String>
 impl canboat::Frame
 pub fn canboat::Frame::new(core::option::Option<alloc::string::String>, u8, u32, u8, u8, impl core::iter::traits::collect::IntoIterator<Item = u8>) -> Self
 impl core::clone::Clone for canboat::Frame
-pub fn canboat::Frame::clone(&self) -> canboat::Frame
+pub fn canboat::Frame::clone(&self) -> Self
 impl core::cmp::Eq for canboat::Frame
 impl core::cmp::PartialEq for canboat::Frame
-pub fn canboat::Frame::eq(&self, &canboat::Frame) -> bool
+pub fn canboat::Frame::eq(&self, &Self) -> bool
 impl core::fmt::Debug for canboat::Frame
 pub fn canboat::Frame::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::Frame

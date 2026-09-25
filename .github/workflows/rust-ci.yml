@@ -20,6 +20,8 @@
 #                 leg also brings up a vcan interface so the SocketCAN device
 #                 tests exercise a real socket.
 #   - msrv:       cargo check at the workspace's declared rust-version.
+#   - wasm:       the sans-I/O library features (decode, json-input, node)
+#                 build for wasm32-unknown-unknown, which canboat-wasm needs.
 #   - clippy:     -D warnings, all targets; then each library feature set
 #                 on its own (no cli) so a bad feature gate cannot hide
 #                 behind the default build.
@@ -118,6 +120,37 @@ jobs:
       # the toolchain explicitly and wins over the file.
       - name: Check
         run: rustup run ${{ steps.msrv.outputs.version }} cargo check --workspace --all-targets --locked
+
+  # canboat-wasm builds the `decode` (engine + `codec`) and `json-input`
+  # features for the browser. Checked here rather than by building that repo,
+  # so a regression shows on the PR that causes it (#921). `node` is checked
+  # too: it is transport-free by design, so a browser can be a node. Clippy
+  # rather than `cargo check` because a wasm-only cfg can leave dead code
+  # behind.
+  wasm:
+    name: Rust wasm32
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Rust stable with the wasm32 target
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+          components: clippy
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Clippy for wasm32-unknown-unknown
+        run: |
+          for set in decode json-input node; do
+            echo "::group::--features $set"
+            cargo clippy -p canboat --target wasm32-unknown-unknown \
+              --no-default-features --features "$set" --locked -- -D warnings
+            echo "::endgroup::"
+          done
 
   clippy:
     name: Rust Clippy

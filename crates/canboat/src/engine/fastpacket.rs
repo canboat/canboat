@@ -31,7 +31,7 @@
 //! asking the database instead would fall through to a catch-all and take
 //! that catch-all's framing, which is a different rule.
 
-use crate::engine::FramePacketType;
+use crate::engine::{FASTPACKET_MAX_SIZE, FramePacketType};
 
 include!("fastpacket_generated.rs");
 
@@ -66,7 +66,13 @@ pub fn packet_type(pgn: u32) -> FramePacketType {
 /// and the last frame is padded with 0xff. The caller owns the
 /// per-(pgn, src) sequence counter. Both TX paths — socketcan and the
 /// line gateways — fragment through here.
-pub fn fragment(seq: u8, data: &[u8]) -> Vec<[u8; 8]> {
+///
+/// `None` past [`FASTPACKET_MAX_SIZE`] (223) bytes: the frame index has
+/// five bits, so a 33rd frame would wrap to index 0.
+pub fn fragment(seq: u8, data: &[u8]) -> Option<Vec<[u8; 8]>> {
+    if data.len() > FASTPACKET_MAX_SIZE {
+        return None;
+    }
     let mut out = Vec::with_capacity(data.len() / 7 + 1);
     let mut index: u8 = 0;
     let mut remaining = data.len();
@@ -89,12 +95,25 @@ pub fn fragment(seq: u8, data: &[u8]) -> Vec<[u8; 8]> {
             break;
         }
     }
-    out
+    Some(out)
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// 223 bytes is exactly 32 frames (6 + 31 × 7), indexes 0..=31; one
+    /// byte more would need a 33rd frame whose index wraps to 0.
+    #[test]
+    fn fragment_fills_32_frames_and_refuses_more() {
+        let data = [0xab; FASTPACKET_MAX_SIZE];
+        let frames = fragment(5, &data).expect("223 bytes fit");
+        assert_eq!(frames.len(), 32);
+        assert_eq!(frames[0][..2], [5 << 5, 223]);
+        assert_eq!(frames[31][0], (5 << 5) | 31);
+        assert_eq!(frames[31][1..], [0xab; 7]);
+        assert_eq!(fragment(5, &[0xab; FASTPACKET_MAX_SIZE + 1]), None);
+    }
 
     /// PGN 127508 (Battery Status) sits in the mixed range and per
     /// `docs/canboat.json` is **single-frame**, not fast — the table
