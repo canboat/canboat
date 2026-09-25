@@ -11,7 +11,10 @@
 //! the device. Both threads are owned by the runner here; the
 //! per-device codec lives behind two small traits ([`DeviceDecoder`]
 //! and [`DeviceEncoder`]) so the runner stays oblivious to the
-//! protocol.
+//! protocol. The gateways with a public sans-I/O
+//! [`Codec`](crate::engine::codec::Codec) (NGT-1, iKonvert, Maretron)
+//! run through [`run_codec`], which shares the one codec between both
+//! threads and supplies the clock.
 //!
 //! A typical use, through the public `bus::open_*` wrappers (which open
 //! the serial port and call the runner, e.g. `ngt1::run(reader, writer)`):
@@ -29,7 +32,6 @@ pub mod ikonvert;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
-pub mod ngt1_tx_list;
 pub mod socketcan;
 pub mod supervisor;
 
@@ -37,11 +39,12 @@ pub use supervisor::{DeviceFactory, Supervisor};
 
 use std::io::{self, Read, Write};
 use std::sync::atomic::{AtomicU64, Ordering};
-use std::sync::{Arc, mpsc};
+use std::sync::{Arc, Mutex, mpsc};
 use std::thread::{self, JoinHandle};
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use crate::engine::RawFrame;
+use crate::engine::codec::{Codec, Event};
 
 /// Events emitted by a [`DeviceDecoder`] as bytes are pumped in.
 #[derive(Debug)]
@@ -335,6 +338,97 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
     }
 }
 
+/// Run a sans-I/O [`Codec`] under [`run`]: the reader thread feeds it
+/// the bytes it reads, the writer thread has it encode frames, and both
+/// pass it the host clock. `fixtime`, when set, replaces the timestamp of
+/// every frame it produces (canboat's `-fixtime`, for reproducible output).
+pub fn run_codec<C: Codec + Send + 'static>(
+    codec: C,
+    fixtime: Option<String>,
+    reader: Box<dyn Read + Send>,
+    writer: Box<dyn Write + Send>,
+) -> DeviceHandle {
+    let codec = Arc::new(Mutex::new(codec));
+    let decoder = CodecDecoder {
+        codec: codec.clone(),
+        fixtime,
+        events: Vec::with_capacity(8),
+    };
+    run(decoder, CodecEncoder { codec }, reader, writer)
+}
+
+/// The host clock in Unix milliseconds, as the codecs take it.
+fn now_ms() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0)
+}
+
+/// The locked codec; a panic in the other thread does not lose it.
+fn lock<C>(codec: &Mutex<C>) -> std::sync::MutexGuard<'_, C> {
+    codec
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+}
+
+/// The reader thread's view of a shared [`Codec`].
+struct CodecDecoder<C> {
+    codec: Arc<Mutex<C>>,
+    fixtime: Option<String>,
+    events: Vec<Event>,
+}
+
+impl<C> CodecDecoder<C> {
+    fn deliver(&mut self, out: &mut Vec<DeviceEvent>) {
+        out.extend(self.events.drain(..).map(|ev| match ev {
+            Event::Frame(mut f) => {
+                if let Some(ts) = &self.fixtime {
+                    f.timestamp = Some(ts.clone());
+                }
+                DeviceEvent::Frame(f)
+            }
+            Event::Send(b) => DeviceEvent::SendBytes(b),
+            Event::Error(e) => DeviceEvent::Error(e),
+        }));
+    }
+}
+
+impl<C: Codec + Send + 'static> DeviceDecoder for CodecDecoder<C> {
+    fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
+        lock(&self.codec).receive(bytes, now_ms(), &mut self.events);
+        self.deliver(events);
+    }
+
+    fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+        lock(&self.codec).tick(now_ms(), &mut self.events);
+        self.deliver(events);
+    }
+}
+
+/// The writer thread's view of a shared [`Codec`].
+struct CodecEncoder<C> {
+    codec: Arc<Mutex<C>>,
+}
+
+impl<C: Codec + Send + 'static> DeviceEncoder for CodecEncoder<C> {
+    fn init_bytes(&self) -> Vec<u8> {
+        lock(&self.codec).open()
+    }
+
+    fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
+        lock(&self.codec).keepalive()
+    }
+
+    fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
+        lock(&self.codec).send(frame).ok()
+    }
+
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        lock(&self.codec).close()
+    }
+}
+
 fn reader_thread<D: DeviceDecoder>(
     reader: &mut dyn Read,
     mut decoder: D,
@@ -504,6 +598,64 @@ mod tests {
         fn encode_frame(&self, _frame: &RawFrame) -> Option<Vec<u8>> {
             None
         }
+    }
+
+    /// Collects what the writer thread writes.
+    #[derive(Clone, Default)]
+    struct Sink(Arc<Mutex<Vec<u8>>>);
+    impl Write for Sink {
+        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            self.0.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// A codec under the threaded runner: `open` goes out first, the
+    /// handshake reply it asks for reaches the writer, frames come out
+    /// with `fixtime` stamped on, sends are encoded by the same codec, and
+    /// closing writes its goodbye.
+    #[test]
+    fn run_codec_drives_a_codec_on_threads() {
+        use crate::engine::codec::maretron::{Config, Maretron};
+        use crate::engine::format::maretron_ipg::{
+            F1_SYNC_BIT, FRAME_SYNC, build_connect, build_frame, build_set_mode_binary,
+        };
+
+        let mut input = b"CONNECTED\t1234567\0".to_vec();
+        input.extend([
+            FRAME_SYNC,
+            F1_SYNC_BIT | (6 << 4) | (1 << 1),
+            0xF1,
+            0x01,
+            0x17,
+            1,
+            0x42,
+        ]);
+        let sink = Sink::default();
+        let handle = run_codec(
+            Maretron::new(Config {
+                password: "pw".into(),
+            }),
+            Some("fixed".into()),
+            Box::new(io::Cursor::new(input)),
+            Box::new(sink.clone()),
+        );
+
+        let frame = handle.frames_rx.recv().expect("a frame");
+        assert_eq!(frame.pgn, 0xF101);
+        assert_eq!(frame.timestamp.as_deref(), Some("fixed"));
+
+        let out = RawFrame::new(None, 3, 127508, 17, 255, [1u8, 2, 3, 4, 5, 6, 7, 8]);
+        handle.send_frame(out.clone()).unwrap();
+        assert_eq!(handle.close(), Closed::Confirmed);
+
+        let mut expected = build_connect("pw");
+        expected.extend(build_set_mode_binary());
+        expected.extend(build_frame(out.pgn, out.prio, out.dst, &out.data).unwrap());
+        assert_eq!(*sink.0.lock().unwrap(), expected);
     }
 
     /// A decoder's deadlines advance on a quiet line: each read timeout

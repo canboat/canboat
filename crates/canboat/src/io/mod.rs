@@ -22,11 +22,8 @@ pub mod analyze;
 pub mod container;
 #[cfg(feature = "io")]
 pub mod device;
-#[cfg(feature = "io")]
-pub mod fastpacket;
 pub mod name;
 pub mod nmea_responder;
-pub mod pgn_list;
 #[cfg(feature = "io")]
 pub mod stream;
 #[cfg(feature = "usb")]

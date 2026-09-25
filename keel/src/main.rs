@@ -192,7 +192,7 @@ fn run() -> Result<i32, String> {
                     emit_rust::emit_schema(&db, &root, true),
                 ),
                 (
-                    root.join("crates/canboat/src/io/fastpacket_generated.rs"),
+                    root.join("crates/canboat/src/engine/fastpacket_generated.rs"),
                     emit_rust::emit_fastpacket(&db),
                 ),
                 // The Basic RDS character set, for fields that declare

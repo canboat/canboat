@@ -1693,7 +1693,7 @@ const MIXED_START: u32 = 0x1F000;
 const MIXED_END: u32 = 0x20000; // exclusive; table covers 0x1F000..0x1FFFF
 const PROPRIETARY_START: u32 = 0x1FF00;
 
-/// Render `fastpacket_generated.rs` for the `canboat` crate's io module.
+/// Render `fastpacket_generated.rs` for the `canboat` crate's engine.
 ///
 /// PGNs 0x1F000..0x1FFFF are the one range where single-frame and
 /// fast-packet messages are interleaved, so a receiver cannot tell them

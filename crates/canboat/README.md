@@ -69,7 +69,7 @@ Features enable you to choose what you want to do and not pay for (in terms of b
 
 | feature | |
 | --- | --- |
-| `decode` | the baseline: schema, decode, encode, JSON output. No threads, no sockets, no I/O |
+| `decode` | the baseline: schema, decode, encode, JSON output, and `codec` — the NGT-1 / iKonvert / Maretron wire protocols for a transport you bring (WebSerial, async, embedded). No threads, no sockets, no I/O; builds for `wasm32-unknown-unknown` |
 | `io` | readers for capture files, and `bus::open_ngt1` / `open_ikonvert` / `open_socketcan` for a live link |
 | `node` | be a compliant NMEA 2000 node without owning a transport: ISO NAME, address claim, the standard responses |
 | `bridge` | the whole `canboat server` pipeline as a library: `Bridge` owns the bus, hands you a `Receiver<DecodedPgn>`, and optionally re-serves the TCP ports |

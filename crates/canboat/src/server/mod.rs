@@ -69,9 +69,9 @@ use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_format_header, parse_with,
 };
+use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
-use crate::io::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 
 /// Clap front-end for the `canboat server` CLI. Gated behind the `cli` feature
 /// so the library path ([`BridgeConfig`] + [`Bridge`]) stays clap-free; convert
