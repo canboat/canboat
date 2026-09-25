@@ -24,7 +24,7 @@ use crate::engine::format::{
     ngt1::{Ngt1Decoder, NgtEvent},
 };
 
-use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListSync};
+use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
 use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
@@ -64,11 +64,11 @@ pub struct Config {
     /// with it and allowed; on their own they neither write the gateway's
     /// list nor make the driver refuse anything.
     pub extra_tx_pgns: Vec<u32>,
-    /// PGNs already written into the gateway in this run. Share one across
-    /// reconnects (clone the `Arc` into each session's `Config`), so a PGN
-    /// the gateway's list read does not show (it is truncated on a long
-    /// list) or that it does not keep is not written again and again.
-    pub tried_tx_pgns: Arc<Mutex<Vec<u32>>>,
+    /// What this run has learned about the gateway's transmit list. Share
+    /// one across reconnects (clone the `Arc` into each session's
+    /// `Config`), so a reconnect does not write again what is known; see
+    /// [`TxListSync::new`].
+    pub tx_list_record: Arc<Mutex<TxListRecord>>,
 }
 
 /// The Transmit PGNs to enable: the named ones and canboat's own — none
@@ -163,7 +163,7 @@ impl Decoder {
                 load_pct: None,
                 errors: None,
             },
-            tx_list: TxListSync::new(tx_pgns, config.tried_tx_pgns.clone()),
+            tx_list: TxListSync::new(tx_pgns, config.tx_list_record.clone()),
         }
     }
 }

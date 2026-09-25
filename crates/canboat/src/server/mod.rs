@@ -606,13 +606,13 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             .then(|| device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns));
         // Shared by every session: a PGN written once this run is not
         // written again after a reconnect.
-        let tried_tx_pgns = Arc::new(std::sync::Mutex::new(Vec::new()));
+        let tx_list_record = Arc::default();
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ngt1::Config {
                 pgn_lists: pgn_lists.clone(),
                 extra_tx_pgns: extra_tx_pgns.clone(),
-                tried_tx_pgns: tried_tx_pgns.clone(),
+                tx_list_record: Arc::clone(&tx_list_record),
             };
             Ok(device::ngt1::run_with_config(reader, writer, config))
         });
