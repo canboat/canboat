@@ -189,7 +189,9 @@ jobs:
       - name: Setup musl cross compiler
         run: |
           mkdir "$HOME/musl" && cd "$HOME/musl"
-          wget "https://keversoft.com/downloads/${TARGET}-cross.tgz"
+          # Mirrored from keversoft.com/downloads, whose DNS took CI down.
+          wget "https://github.com/canboat/ci-toolchains/releases/download/armv7l-linux-musleabihf/${TARGET}-cross.tgz"
+          echo "f49f1a15ec62364ef5e4edb4e3990c0e1d2d1a54c90153b8f3869dad63328a10  ${TARGET}-cross.tgz" | sha256sum -c -
           tar xf "${TARGET}-cross.tgz"
 
       - name: Build C tools (musl)
