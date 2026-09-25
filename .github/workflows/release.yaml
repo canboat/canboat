@@ -335,3 +335,45 @@ jobs:
             exit 0
           fi
           cargo publish -p canboat --locked
+
+  # Tell canboat-wasm a release is out, once the crate it pins is on
+  # crates.io. Its track-canboat workflow then opens the PR moving its pin
+  # to this version (it otherwise only notices on a daily schedule). A
+  # workflow here cannot trigger one in another repository with the default
+  # token, so this uses the canboat-release-bot GitHub App that
+  # canboat-wasm's own workflows use: RELEASE_APP_ID / RELEASE_APP_PRIVATE_KEY
+  # must be set here as well. Without them the job does nothing.
+  notify-canboat-wasm:
+    needs: crates-io
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check for the release app
+        id: app
+        env:
+          APP_ID: ${{ secrets.RELEASE_APP_ID }}
+        run: |
+          if [ -n "$APP_ID" ]; then
+            echo "configured=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "RELEASE_APP_ID is not set; not notifying canboat-wasm"
+          fi
+
+      - name: Token for canboat-wasm
+        if: steps.app.outputs.configured == 'true'
+        id: token
+        uses: actions/create-github-app-token@v3
+        with:
+          app-id: ${{ secrets.RELEASE_APP_ID }}
+          private-key: ${{ secrets.RELEASE_APP_PRIVATE_KEY }}
+          owner: canboat
+          repositories: canboat-wasm
+
+      - name: Dispatch canboat-release
+        if: steps.app.outputs.configured == 'true'
+        env:
+          GH_TOKEN: ${{ steps.token.outputs.token }}
+        run: |
+          gh api repos/canboat/canboat-wasm/dispatches \
+            -f event_type=canboat-release \
+            -f "client_payload[tag]=${GITHUB_REF_NAME}"
+          echo "Dispatched canboat-release for ${GITHUB_REF_NAME} to canboat/canboat-wasm"
