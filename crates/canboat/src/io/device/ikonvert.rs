@@ -783,9 +783,16 @@ mod tests {
     /// with no handshake there is nothing to undo.
     #[test]
     fn closing_sends_offline() {
-        let encoder = Encoder { skip_init: false };
+        let encoder = Encoder {
+            skip_init: false,
+            refusal: None,
+        };
         assert_eq!(encoder.shutdown_bytes(), b"$PDGY,N2NET_OFFLINE\r\n");
-        assert!(Encoder { skip_init: true }.shutdown_bytes().is_empty());
+        let replay = Encoder {
+            skip_init: true,
+            refusal: None,
+        };
+        assert!(replay.shutdown_bytes().is_empty());
     }
 
     #[test]
