@@ -413,6 +413,8 @@ pub mod codec {
     pub mod ngt1 {
         pub use crate::engine::codec::ngt1::{Config, KEEPALIVE_INTERVAL, Ngt1};
         pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
+        /// What an NGT-1 sends for a frame it received — to simulate one.
+        pub use crate::engine::format::ngt1::encode_n2k_received_frame as encode_received;
     }
 
     /// Digital Yacht iKonvert (`$PDGY` / `!PDGY` ASCII, typically 230 400
@@ -440,6 +442,27 @@ pub mod codec {
     /// Splitting an outgoing message into CAN frames.
     pub mod fastpacket {
         pub use crate::engine::fastpacket::{fragment, packet_type};
+    }
+
+    /// The text line dialects, one [`Frame`](crate::Frame) per line: canboat
+    /// PLAIN / FAST, Actisense N2K ASCII, YDWG-02 RAW, candump, iKonvert
+    /// `!PDGY`, Airmar, Chetco, Garmin CSV. For a gateway that speaks one of
+    /// them over a socket, or a capture read without the `io` feature.
+    pub mod line {
+        /// Which dialect a line is in; the same type as `read::InputFormat`.
+        pub use crate::engine::format::InputFormat;
+        /// Why a line did not parse.
+        pub use crate::engine::format::PlainError as ParseError;
+        /// Frame → an Actisense N2K ASCII (W2K-1) line.
+        pub use crate::engine::format::actisense_ascii::write_line as write_actisense_ascii;
+        /// The dialect of a line, or `None` when nothing matches (canboat
+        /// then reads it as PLAIN).
+        pub use crate::engine::format::detect;
+        /// One line in the given dialect → a frame; `Ok(None)` for a line
+        /// that carries no frame (an iKonvert control sentence).
+        pub use crate::engine::format::parse_with as parse;
+        /// Frame → a canboat PLAIN line.
+        pub use crate::engine::format::plain::write_line as write_plain;
     }
 }
 

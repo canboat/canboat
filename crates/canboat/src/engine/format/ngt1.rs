@@ -391,6 +391,26 @@ pub fn encode_n2k_send_frame(frame: &RawFrame) -> Vec<u8> {
     out
 }
 
+/// The bytes an NGT-1 emits for a frame it received from the bus: an
+/// `N2K_MSG_RECEIVED` (0x93) message with the header `prio, pgn[0..2]
+/// (LE), dst, src, timestamp (u32 LE), dlen`, then the data. The inverse of
+/// [`NgtMessage::to_raw_frame`], for simulating a gateway in tests and
+/// harnesses. `timestamp_ms` is the NGT-1's own counter (ms since it
+/// started).
+pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Vec<u8> {
+    let mut payload = Vec::with_capacity(11 + frame.data.len());
+    payload.push(frame.prio);
+    payload.extend_from_slice(&frame.pgn.to_le_bytes()[..3]);
+    payload.push(frame.dst);
+    payload.push(frame.src);
+    payload.extend_from_slice(&timestamp_ms.to_le_bytes());
+    payload.push(frame.data.len() as u8);
+    payload.extend_from_slice(&frame.data);
+    let mut out = Vec::with_capacity(payload.len() + 8);
+    encode_ngt_message(N2K_MSG_RECEIVED, &payload, &mut out);
+    out
+}
+
 /// The reverse-engineered NGT-1 startup sequence (3 bytes wrapped in an
 /// `NGT_MSG_SEND` command). Sent on connect and periodically afterwards
 /// to keep the NGT-1's TX queue unlocked. Magic comes from canboat's
@@ -452,6 +472,26 @@ impl NgtMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A received-frame message decodes back to the frame it was built
+    /// from, the NGT-1 counter surfacing as the timestamp.
+    #[test]
+    fn received_frame_round_trips() {
+        let frame = RawFrame::new(None, 2, 130306, 35, 255, [0x10, 0x10, 3, 4, 5, 6, 7, 8]);
+        let bytes = encode_n2k_received_frame(&frame, 1234);
+        let mut d = Ngt1Decoder::new();
+        let events = d.push_bytes(&bytes);
+        let [NgtEvent::Message(msg)] = &events[..] else {
+            panic!("expected one message, got {events:?}")
+        };
+        let back = msg.to_raw_frame().expect("an N2K frame");
+        assert_eq!(back.timestamp.as_deref(), Some("1234"));
+        assert_eq!(
+            (back.prio, back.pgn, back.src, back.dst),
+            (2, 130306, 35, 255)
+        );
+        assert_eq!(back.data, frame.data);
+    }
 
     /// Build a valid NGT-1 frame from command + payload, applying
     /// DLE-stuffing and computing the checksum.

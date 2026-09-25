@@ -78,6 +78,62 @@ pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::line
+pub enum canboat::codec::line::InputFormat
+pub canboat::codec::line::InputFormat::ActisenseAscii
+pub canboat::codec::line::InputFormat::Airmar
+pub canboat::codec::line::InputFormat::Candump
+pub canboat::codec::line::InputFormat::Chetco
+pub canboat::codec::line::InputFormat::GarminCsv
+pub canboat::codec::line::InputFormat::GarminCsv2
+pub canboat::codec::line::InputFormat::Ikonvert
+pub canboat::codec::line::InputFormat::Plain
+pub canboat::codec::line::InputFormat::PlainMixFast
+pub canboat::codec::line::InputFormat::Ydwg02
+impl core::clone::Clone for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::clone(&self) -> Self
+impl core::cmp::Eq for canboat::read::InputFormat
+impl core::cmp::PartialEq for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::read::InputFormat
+pub fn canboat::read::InputFormat::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::read::InputFormat
+impl core::marker::StructuralPartialEq for canboat::read::InputFormat
+pub enum canboat::codec::line::ParseError
+pub canboat::codec::line::ParseError::BadHeader
+pub canboat::codec::line::ParseError::BadHeader::expected: usize
+pub canboat::codec::line::ParseError::BadHeader::found: usize
+pub canboat::codec::line::ParseError::BadHexByte
+pub canboat::codec::line::ParseError::BadHexByte::index: usize
+pub canboat::codec::line::ParseError::BadHexByte::offset: core::option::Option<usize>
+pub canboat::codec::line::ParseError::BadHexByte::value: alloc::string::String
+pub canboat::codec::line::ParseError::BadInteger
+pub canboat::codec::line::ParseError::BadInteger::field: &'static str
+pub canboat::codec::line::ParseError::BadInteger::offset: core::option::Option<usize>
+pub canboat::codec::line::ParseError::BadInteger::value: alloc::string::String
+pub canboat::codec::line::ParseError::BadPayloadCount
+pub canboat::codec::line::ParseError::BadPayloadCount::expected: usize
+pub canboat::codec::line::ParseError::BadPayloadCount::found: usize
+pub canboat::codec::line::ParseError::Empty
+pub canboat::codec::line::ParseError::LengthTooLarge
+pub canboat::codec::line::ParseError::LengthTooLarge::len: usize
+pub canboat::codec::line::ParseError::MissingPayload
+pub canboat::codec::line::ParseError::MissingTimestamp
+impl canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::byte_offset(&self) -> core::option::Option<usize>
+impl core::cmp::Eq for canboat::codec::line::ParseError
+impl core::cmp::PartialEq for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::codec::line::ParseError
+impl core::fmt::Debug for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::line::ParseError
+pub fn canboat::codec::line::ParseError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::line::ParseError
+pub fn canboat::codec::line::detect(&str) -> core::option::Option<canboat::read::InputFormat>
+pub fn canboat::codec::line::parse(canboat::read::InputFormat, &str) -> core::result::Result<core::option::Option<canboat::Frame>, canboat::codec::line::ParseError>
+pub fn canboat::codec::line::write_actisense_ascii<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
+pub fn canboat::codec::line::write_plain<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
 pub mod canboat::codec::maretron
 pub struct canboat::codec::maretron::Config
 pub canboat::codec::maretron::Config::password: alloc::string::String
@@ -126,6 +182,7 @@ pub fn canboat::codec::ngt1::TxListRecord::default() -> Self
 impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
 pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
+pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> alloc::vec::Vec<u8>
 pub enum canboat::codec::Event
 pub canboat::codec::Event::Error(alloc::string::String)
 pub canboat::codec::Event::Frame(canboat::Frame)
