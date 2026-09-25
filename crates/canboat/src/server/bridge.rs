@@ -22,8 +22,10 @@
 //! pipeline on a background thread (leaving the `Bridge` alive to transmit
 //! and shut down) or drives it to completion in place with [`Bridge::run`].
 //!
-//! The CLI `canboat server` is exactly `Bridge::new(config).serve().run()`,
-//! so the daemon and an embedding library share one code path.
+//! The CLI `canboat server` is `Bridge::new(config)`, `serve()` and
+//! `spawn()`, then `shutdown()` on SIGINT/SIGTERM — so the daemon and an
+//! embedding library share one code path, and a signal closes the device
+//! cleanly.
 
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU8};
@@ -531,6 +533,14 @@ impl Bridge {
             .map_err(|e| anyhow!("spawning the bridge pipeline thread: {e}"))?;
         self.pipeline_join = Some(join);
         Ok(())
+    }
+
+    /// Whether a [`spawn`](Bridge::spawn)ed pipeline is still running —
+    /// `false` once its frame source has ended, or if it was never spawned.
+    pub fn is_running(&self) -> bool {
+        self.pipeline_join
+            .as_ref()
+            .is_some_and(|join| !join.is_finished())
     }
 
     /// Block until a [`spawn`](Bridge::spawn)ed pipeline finishes (the frame

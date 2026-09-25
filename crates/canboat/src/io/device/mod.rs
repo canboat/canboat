@@ -36,7 +36,8 @@ pub mod supervisor;
 pub use supervisor::{DeviceFactory, Supervisor};
 
 use std::io::{self, Read, Write};
-use std::sync::mpsc;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, mpsc};
 use std::thread::{self, JoinHandle};
 use std::time::{Duration, Instant};
 
@@ -86,12 +87,22 @@ pub trait DeviceEncoder: Send + Sync + 'static {
     /// Encode a [`RawFrame`] for transmission. `None` means "silently
     /// drop" — used to skip synthetic PGNs that never hit the bus.
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>>;
+
+    /// Bytes to write when the application closes the device on purpose
+    /// ([`DeviceHandle::close`]), e.g. to take a gateway off the bus.
+    /// Empty when the device needs nothing.
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        Vec::new()
+    }
 }
 
 /// Commands accepted by the writer thread.
 pub(crate) enum WriterCmd {
     Bytes(Vec<u8>),
     Frame(RawFrame),
+    /// Write the encoder's [`DeviceEncoder::shutdown_bytes`] and stop,
+    /// then tell the sender, if any, whether that succeeded.
+    Shutdown(Option<mpsc::Sender<bool>>),
 }
 
 /// Returned by [`run`]. Owns the reader/writer threads' join handles
@@ -102,6 +113,12 @@ pub struct DeviceHandle {
     pub frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    /// The writer thread, joined apart from the others by [`Self::close`].
+    /// `None` for a codec that has no separate writer (SocketCAN).
+    writer: Option<JoinHandle<()>>,
+    /// Writes the writer thread has completed, so a close can tell a
+    /// writer still draining a backlog from a stuck one.
+    progress: Arc<AtomicU64>,
 }
 
 /// Returned by [`DeviceHandle::send_frame`] / [`FrameSender::send_frame`]
@@ -137,8 +154,95 @@ impl DeviceHandle {
     /// to exit.
     pub fn join(self) {
         drop(self.cmd_tx);
-        for j in self.joins {
+        for j in self.joins.into_iter().chain(self.writer) {
             let _ = j.join();
+        }
+    }
+
+    /// Close the device on purpose: the writer finishes what is queued,
+    /// sends the encoder's [`DeviceEncoder::shutdown_bytes`] (an iKonvert
+    /// goes off the bus) and stops. See [`DeviceCloser::close`] for the
+    /// wait; a writer that stops making progress is left behind rather
+    /// than hanging shutdown. The reader thread is not joined: it may be
+    /// blocked reading the device, and ends with it.
+    pub fn close(self) -> Closed {
+        let closed = self.closer().close(CLOSE_TIMEOUT);
+        match closed {
+            Closed::Confirmed | Closed::Gone => {
+                if let Some(writer) = self.writer {
+                    let _ = writer.join();
+                }
+            }
+            Closed::Unconfirmed => {
+                log::warn!("the device did not confirm closing; leaving it");
+            }
+        }
+        closed
+    }
+
+    /// A handle another thread can [`close`](DeviceCloser::close) the
+    /// device with — for a signal handler while this thread is busy
+    /// reading.
+    pub fn closer(&self) -> DeviceCloser {
+        DeviceCloser {
+            cmd_tx: self.cmd_tx.clone(),
+            progress: self.progress.clone(),
+        }
+    }
+}
+
+/// How long [`DeviceHandle::close`] waits for the device to confirm, or —
+/// while it is still draining a backlog — for its next completed write.
+pub const CLOSE_TIMEOUT: Duration = Duration::from_secs(2);
+
+/// How a [`close`](DeviceHandle::close) went.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Closed {
+    /// Everything queued and the goodbye (if any) were written and
+    /// flushed.
+    Confirmed,
+    /// The device had already gone: its writer had stopped (the device
+    /// was unplugged, or timed out), so there was nothing left to close.
+    Gone,
+    /// The goodbye could not be written, or the writer stopped making
+    /// progress: a gateway may still be on the bus.
+    Unconfirmed,
+}
+
+/// Closes a device from another thread; see [`DeviceHandle::closer`].
+#[derive(Clone)]
+pub struct DeviceCloser {
+    cmd_tx: mpsc::Sender<WriterCmd>,
+    progress: Arc<AtomicU64>,
+}
+
+impl DeviceCloser {
+    /// [`DeviceHandle::close`] from elsewhere: the writer finishes what is
+    /// queued, sends the encoder's shutdown bytes and stops. Waits for that
+    /// as long as the writer keeps completing writes, giving up only after
+    /// `timeout` without one — a long backlog still drains, a stuck writer
+    /// does not hang the caller.
+    pub fn close(&self, timeout: Duration) -> Closed {
+        let (done_tx, done_rx) = mpsc::channel();
+        if self
+            .cmd_tx
+            .send(WriterCmd::Shutdown(Some(done_tx)))
+            .is_err()
+        {
+            return Closed::Gone;
+        }
+        loop {
+            let before = self.progress.load(Ordering::Relaxed);
+            match done_rx.recv_timeout(timeout) {
+                Ok(true) => return Closed::Confirmed,
+                Ok(false) => return Closed::Unconfirmed,
+                // The writer ended without getting to the shutdown: it
+                // stopped on a failed write, the device is gone.
+                Err(mpsc::RecvTimeoutError::Disconnected) => return Closed::Gone,
+                Err(mpsc::RecvTimeoutError::Timeout)
+                    if self.progress.load(Ordering::Relaxed) != before => {}
+                Err(mpsc::RecvTimeoutError::Timeout) => return Closed::Unconfirmed,
+            }
         }
     }
 }
@@ -168,15 +272,21 @@ impl FrameSender {
 /// handles. Used by codecs whose I/O model isn't byte-stream-shaped
 /// (e.g. `socketcan`) and can't use the generic [`run`] runner below.
 #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+///
+/// `progress` counts the device's completed writes, as the generic
+/// writer's does, so a close can tell a draining backlog from a stuck one.
 pub(crate) fn from_parts(
     frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    progress: Arc<AtomicU64>,
 ) -> DeviceHandle {
     DeviceHandle {
         frames_rx,
         cmd_tx,
         joins,
+        writer: None,
+        progress,
     }
 }
 
@@ -194,10 +304,21 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
 
     let init = encoder.init_bytes();
     let keepalive = encoder.keepalive();
+    let progress = Arc::new(AtomicU64::new(0));
+    let writer_progress = progress.clone();
 
     let writer_join = thread::Builder::new()
         .name("device-writer".into())
-        .spawn(move || writer_thread(&mut *writer, encoder, init, keepalive, cmd_rx))
+        .spawn(move || {
+            writer_thread(
+                &mut *writer,
+                encoder,
+                init,
+                keepalive,
+                cmd_rx,
+                &writer_progress,
+            )
+        })
         .expect("spawn device writer");
 
     let reader_join = thread::Builder::new()
@@ -208,7 +329,9 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
     DeviceHandle {
         frames_rx,
         cmd_tx,
-        joins: vec![reader_join, writer_join],
+        joins: vec![reader_join],
+        writer: Some(writer_join),
+        progress,
     }
 }
 
@@ -271,6 +394,7 @@ fn writer_thread<E: DeviceEncoder>(
     init: Vec<u8>,
     keepalive: Option<(Duration, Vec<u8>)>,
     rx: mpsc::Receiver<WriterCmd>,
+    progress: &AtomicU64,
 ) {
     if !init.is_empty() {
         if let Err(e) = writer.write_all(&init) {
@@ -313,12 +437,28 @@ fn writer_thread<E: DeviceEncoder>(
                 Some(b) => b,
                 None => continue,
             },
+            WriterCmd::Shutdown(done) => {
+                let bytes = encoder.shutdown_bytes();
+                let sent = bytes.is_empty()
+                    || match writer.write_all(&bytes).and_then(|()| writer.flush()) {
+                        Ok(()) => true,
+                        Err(e) => {
+                            log::warn!("device shutdown write failed: {e}");
+                            false
+                        }
+                    };
+                if let Some(done) = done {
+                    let _ = done.send(sent);
+                }
+                return;
+            }
         };
         if let Err(e) = writer.write_all(&bytes) {
             log::error!("device write failed: {e}");
             return;
         }
         let _ = writer.flush();
+        progress.fetch_add(1, Ordering::Relaxed);
         // Push the keepalive deadline forward — every real write
         // counts as activity.
         if let Some((interval, _)) = keepalive.as_ref() {

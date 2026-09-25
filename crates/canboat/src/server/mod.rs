@@ -74,7 +74,7 @@ use crate::io::open_serial_rw;
 use crate::io::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 
 /// Clap front-end for the `canboat server` CLI. Gated behind the `cli` feature
-/// so the library path ([`BridgeConfig`] + [`run`]) stays clap-free; convert
+/// so the library path ([`BridgeConfig`] + [`Bridge`]) stays clap-free; convert
 /// with [`BridgeConfig::from`].
 #[cfg(feature = "cli")]
 #[derive(Debug, clap::Args)]
@@ -363,7 +363,7 @@ pub struct Args {
     quiet: bool,
 }
 
-/// Plain, clap-free configuration for the pipeline [`run`]. Construct with
+/// Plain, clap-free configuration for a [`Bridge`]. Construct with
 /// [`BridgeConfig::default`] and set the fields you need — or, under the `cli`
 /// feature, `BridgeConfig::from(args)`. Field meanings mirror the `canboat
 /// server` flags one-for-one.
@@ -538,17 +538,6 @@ impl From<Args> for BridgeConfig {
             quiet: a.quiet,
         }
     }
-}
-
-/// Run the single-process pipeline to completion (blocks until the frame
-/// source ends). Thin wrapper over [`Bridge`]: build the core, spawn the
-/// TCP serving layer, then drive the pipeline in place — so the CLI
-/// `canboat server` and an embedding library share one code path. The host
-/// owns logger setup; this no longer initialises `env_logger`.
-pub fn run(config: BridgeConfig) -> Result<()> {
-    let mut bridge = Bridge::new(config)?;
-    bridge.serve()?;
-    bridge.run()
 }
 
 /// Open whichever input source the CLI selected. Returns

@@ -109,6 +109,9 @@ chrono     = { version = "0.4", optional = true, default-features = false, featu
 
 [target.'cfg(target_os = "linux")'.dependencies]
 socketcan = { version = "4", optional = true }
+
+# SocketCAN on Linux, and the CLI's SIGINT/SIGTERM handling on any Unix.
+[target.'cfg(unix)'.dependencies]
 libc      = { version = "0.2", optional = true }
 
 [build-dependencies]

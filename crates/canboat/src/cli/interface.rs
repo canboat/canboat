@@ -153,11 +153,42 @@ pub struct Args {
 }
 
 pub fn run(args: Args) -> Result<()> {
-    let mut handle = open_device(&args)?;
+    let handle = open_device(&args)?;
+    // Close the device on purpose — when we are stopped, and when the
+    // stream ends — so a gateway is taken off the bus (iKonvert).
+    let closer = handle.closer();
+    {
+        let closer = closer.clone();
+        super::stop_signal::on_stop(move || {
+            // A device that has gone already has nothing left to close.
+            let closed = closer.close(device::CLOSE_TIMEOUT);
+            if closed == device::Closed::Unconfirmed {
+                log::error!(
+                    "the device did not confirm closing (a gateway may still be on the bus)"
+                );
+            }
+            closed != device::Closed::Unconfirmed
+        });
+    }
 
+    let result = stream(&args, handle);
+    // Also when a stream step failed: the gateway still has to leave the bus.
+    let closed = closer.close(device::CLOSE_TIMEOUT);
+    // A stream error is the one to report; otherwise an unconfirmed close.
+    // A device that went away first (unplugged, timed out) is not one: its
+    // writer had already stopped, so there was nothing to close.
+    result?;
+    if closed == device::Closed::Unconfirmed {
+        anyhow::bail!("the device did not confirm closing (a gateway may still be on the bus)");
+    }
+    Ok(())
+}
+
+/// Move frames between the device and stdin/stdout until a stream ends.
+fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
-    write_prologue(&mut out, &args).context("writing prologue")?;
+    write_prologue(&mut out, args).context("writing prologue")?;
 
     match (args.read_only, args.write_only) {
         // Read-only: device → PLAIN stdout, ignore stdin.

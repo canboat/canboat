@@ -153,7 +153,7 @@ pub fn run(
 mod imp {
     use std::collections::{HashMap, VecDeque};
     use std::os::fd::AsRawFd;
-    use std::sync::atomic::{AtomicU8, Ordering};
+    use std::sync::atomic::{AtomicU8, AtomicU64, Ordering};
     use std::sync::{Arc, mpsc};
     use std::thread;
     use std::time::{SystemTime, UNIX_EPOCH};
@@ -889,6 +889,31 @@ mod imp {
     /// Try to write the oldest queued frame. Returns true if a frame was
     /// actually delivered; false on empty queue or kernel backpressure
     /// (the frame stays queued, retried on the next wakeup).
+    /// Write out everything in the TX ring, for a close. Gives up after
+    /// [`super::super::CLOSE_TIMEOUT`] without a frame going out; returns
+    /// whether the ring emptied.
+    ///
+    /// Each frame written bumps `progress`, which the closer watches: a
+    /// backlog longer than the timeout keeps the close waiting.
+    fn flush_tx(sock: &CanSocket, tx_buf: &mut TxBuffer, progress: &AtomicU64) -> bool {
+        let mut last_progress = std::time::Instant::now();
+        while !tx_buf.queue.is_empty() {
+            if tx_drain_one(sock, tx_buf) {
+                progress.fetch_add(1, Ordering::Relaxed);
+                last_progress = std::time::Instant::now();
+            } else if last_progress.elapsed() >= crate::io::device::CLOSE_TIMEOUT {
+                log::warn!(
+                    "socketcan: closing with {} frames unsent",
+                    tx_buf.queue.len()
+                );
+                return false;
+            } else {
+                std::thread::sleep(std::time::Duration::from_millis(2));
+            }
+        }
+        true
+    }
+
     fn tx_drain_one(sock: &CanSocket, tx_buf: &mut TxBuffer) -> bool {
         let Some(frame) = tx_buf.queue.front().cloned() else {
             return false;
@@ -1138,6 +1163,8 @@ mod imp {
                 // it into the analyzer side directly.)
                 bus.send_pgn(f.prio, f.pgn, src, f.dst, &f.data, false);
             }
+            // Handled by the worker loop, which owns the socket.
+            WriterCmd::Shutdown(_) => {}
             WriterCmd::Bytes(_) => {
                 // The SocketCAN backend has no concept of raw "bytes"
                 // since the wire format is frame-based. Silently drop;
@@ -1253,11 +1280,26 @@ mod imp {
         let (cmd_tx, cmd_rx) = mpsc::channel::<WriterCmd>();
 
         let iface_owned = iface.to_string();
+        let progress = Arc::new(AtomicU64::new(0));
+        let worker_progress = progress.clone();
         let join = thread::Builder::new()
             .name("socketcan-worker".into())
-            .spawn(move || worker(sock, fd, iface_owned, config, frames_tx, cmd_rx, claim_addr))?;
+            .spawn(move || {
+                let shared = Shared {
+                    claim_addr,
+                    progress: worker_progress,
+                };
+                worker(sock, fd, iface_owned, config, frames_tx, cmd_rx, shared)
+            })?;
 
-        Ok(from_parts(frames_rx, cmd_tx, vec![join]))
+        Ok(from_parts(frames_rx, cmd_tx, vec![join], progress))
+    }
+
+    /// What the worker shares with the rest of the process: the claimed
+    /// address, and its completed writes (for [`super::super::Closed`]).
+    struct Shared {
+        claim_addr: Arc<AtomicU8>,
+        progress: Arc<AtomicU64>,
     }
 
     /// The single worker thread that owns the socket and runs the poll
@@ -1271,8 +1313,12 @@ mod imp {
         config: Config,
         frames_tx: mpsc::Sender<RawFrame>,
         cmd_rx: mpsc::Receiver<WriterCmd>,
-        claim_addr: Arc<AtomicU8>,
+        shared: Shared,
     ) {
+        let Shared {
+            claim_addr,
+            progress,
+        } = shared;
         let mut claimer = NmeaDevice::new(&config, &iface);
         // Reset the claim atom to "unclaimed" so a reconnect resumes
         // with no stale value visible to consumers.
@@ -1307,6 +1353,18 @@ mod imp {
             // 1. Drain any user-side sends into the TX ring.
             loop {
                 match cmd_rx.try_recv() {
+                    Ok(WriterCmd::Shutdown(done)) => {
+                        // Send what is still queued first, as the serial
+                        // writers do, then close the socket — which is how
+                        // the gateway leaves the bus — and confirm only if
+                        // nothing was left behind.
+                        let flushed = flush_tx(&sock, &mut tx_buf, &progress);
+                        drop(sock);
+                        if let Some(done) = done {
+                            let _ = done.send(flushed);
+                        }
+                        return;
+                    }
                     Ok(cmd) => {
                         let mut bus = Bus {
                             tx_buf: &mut tx_buf,
