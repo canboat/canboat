@@ -35,11 +35,11 @@ pub const NETWORK_MANAGEMENT_PGNS: [u32; 10] = [
 /// The PGNs the application transmits and receives, to advertise on top of
 /// the gateway's own ISO housekeeping PGNs. Set before the device opens.
 ///
-/// # ⚠️ ON AN iKONVERT, `tx` IS THE WHOLE TRANSMIT LIST
+/// # ⚠️ ON AN iKONVERT OR NGT-1, `tx` IS THE WHOLE TRANSMIT LIST
 ///
 /// **ONCE `tx` NAMES ANY PGN, EVERY PGN NOT IN IT IS REFUSED — NOT SENT.**
-/// The gateway itself only transmits the PGNs in its transmit list, and that
-/// list can only be set before it goes on the bus, so the driver refuses
+/// The gateway itself only transmits the PGNs in its transmit list, and the
+/// driver sets that list once, before the gateway starts sending, so it refuses
 /// the rest up front (logging each refused PGN once) rather than handing the
 /// gateway frames it will reject. Decide the complete list *before* opening
 /// the device. The network-management PGNs ([`NETWORK_MANAGEMENT_PGNS`])
@@ -51,8 +51,8 @@ pub const NETWORK_MANAGEMENT_PGNS: [u32; 10] = [
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct PgnLists {
     /// PGNs the application transmits (PGN 126464 function code 0). **On an
-    /// iKonvert, the only PGNs (besides network management) it will send;
-    /// see the type's documentation.**
+    /// iKonvert or NGT-1, the only PGNs (besides network management) it will
+    /// send; see the type's documentation.**
     pub tx: Vec<u32>,
     /// PGNs the application receives (PGN 126464 function code 1).
     pub rx: Vec<u32>,
@@ -78,6 +78,9 @@ pub enum PgnListSupport {
     Pushed,
     /// The backend has no known way to advertise the list; it was ignored.
     Unsupported,
+    /// Nothing was named for this list, so the gateway's own list is left
+    /// as it is.
+    Untouched,
 }
 
 /// What a backend did with the [`PgnLists`] it was given, per list.

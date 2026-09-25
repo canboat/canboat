@@ -8,8 +8,13 @@
 //! keepalive resends the NGT-1 startup ping while the channel is
 //! quiet. Synthetic PGNs (`>= 0x40000`) are skipped on the write
 //! path, matching canboat's behaviour.
+//!
+//! With [`Config::pgn_lists`] naming Transmit PGNs, the decoder also
+//! brings the gateway's Transmit PGN Enable list up to date after startup
+//! (see [`super::ngt1_tx_list`]).
 
 use std::io::{Read, Write};
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::engine::RawFrame;
@@ -19,7 +24,9 @@ use crate::engine::format::{
     ngt1::{Ngt1Decoder, NgtEvent},
 };
 
+use super::ngt1_tx_list::{NGT_MSG_RECEIVED, TxListRecord, TxListSync};
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
+use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists, TxGate};
 
 /// Re-ping the NGT-1 startup sequence every 20 s — matches the C
 /// `actisense-serial` keepalive.
@@ -37,9 +44,78 @@ const ACTISENSE_SYSTEM_STATUS_PGN: u32 = ACTISENSE_SYNTHETIC_PGN + 0xf2;
 /// How often to emit the synthetic gateway network status.
 const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
 
+/// NGT-1 settings. `Config::default()` leaves the gateway's lists alone.
+#[derive(Debug, Clone, Default)]
+pub struct Config {
+    /// PGNs the application sends and reads. The Transmit PGNs are added
+    /// to the gateway's Transmit PGN Enable list when missing from it —
+    /// the NGT-1 does not transmit a PGN that is not there. The Receive
+    /// PGNs are not used: the gateway runs in receive-all mode.
+    ///
+    /// **⚠️ ONCE `pgn_lists.tx` NAMES ANY PGN, EVERY PGN NOT ON IT IS
+    /// REFUSED: THE DRIVER DOES NOT SEND IT.** The NGT-1 only transmits the
+    /// PGNs in its list, and the driver sets that list once, at startup, so
+    /// name every PGN you will send before opening the device.
+    /// Network-management PGNs are always sent. With `tx` empty the
+    /// gateway's list is left alone and nothing is refused.
+    pub pgn_lists: PgnLists,
+    /// PGNs canboat itself transmits through the gateway (a quirk's, such
+    /// as `wmm`'s 127258). Once `pgn_lists.tx` names a PGN they are enabled
+    /// with it and allowed; on their own they neither write the gateway's
+    /// list nor make the driver refuse anything.
+    pub extra_tx_pgns: Vec<u32>,
+    /// What this run has learned about the gateway's transmit list. Share
+    /// one across reconnects (clone the `Arc` into each session's
+    /// `Config`), so a reconnect does not write again what is known; see
+    /// [`TxListSync::new`].
+    pub tx_list_record: Arc<Mutex<TxListRecord>>,
+}
+
+/// The Transmit PGNs to enable: the named ones and canboat's own — none
+/// when nothing is named, so the gateway's list is left alone.
+fn wanted_tx_pgns(named: &[u32], extra: &[u32]) -> (Vec<u32>, Vec<u32>) {
+    if named.is_empty() {
+        return (Vec::new(), Vec::new());
+    }
+    pgn_list::merge(&[], &[named, extra].concat())
+}
+
+/// How the gateway takes the `named` lists (and canboat's own `extra`
+/// PGNs): a named Transmit list is written into it
+/// ([`PgnListSupport::Pushed`]), otherwise its list is left
+/// ([`PgnListSupport::Untouched`]); there is no known way to set what it
+/// advertises as received. `dropped` names the PGNs that do not fit.
+pub fn pgn_list_status(named: &PgnLists, extra: &[u32]) -> PgnListStatus {
+    PgnListStatus {
+        tx: if named.tx.is_empty() {
+            PgnListSupport::Untouched
+        } else {
+            PgnListSupport::Pushed
+        },
+        rx: if named.rx.is_empty() {
+            PgnListSupport::Untouched
+        } else {
+            PgnListSupport::Unsupported
+        },
+        dropped: wanted_tx_pgns(&named.tx, extra).1,
+    }
+}
+
 /// Start the NGT-1 reader/writer threads. See [`super::run`].
 pub fn run(reader: Box<dyn Read + Send>, writer: Box<dyn Write + Send>) -> DeviceHandle {
-    super::run(Decoder::new(), Encoder, reader, writer)
+    run_with_config(reader, writer, Config::default())
+}
+
+/// [`run`], with [`Config`].
+pub fn run_with_config(
+    reader: Box<dyn Read + Send>,
+    writer: Box<dyn Write + Send>,
+    config: Config,
+) -> DeviceHandle {
+    let encoder = Encoder {
+        gate: TxGate::new("ngt1", &config.pgn_lists.tx, &config.extra_tx_pgns),
+    };
+    super::run(Decoder::with_config(config), encoder, reader, writer)
 }
 
 /// Decoder wrapper that adapts [`Ngt1Decoder`] to [`DeviceDecoder`].
@@ -50,6 +126,8 @@ pub struct Decoder {
     /// consumer sees the same per-gateway record whichever gateway is
     /// feeding it. canboat C's `actisense-serial` does the same.
     net: NetworkStatusState,
+    /// Brings the gateway's Transmit PGN Enable list up to date.
+    tx_list: TxListSync,
 }
 
 struct NetworkStatusState {
@@ -65,6 +143,16 @@ struct NetworkStatusState {
 
 impl Decoder {
     pub fn new() -> Self {
+        Self::with_config(Config::default())
+    }
+
+    pub fn with_config(config: Config) -> Self {
+        let (tx_pgns, dropped) = wanted_tx_pgns(&config.pgn_lists.tx, &config.extra_tx_pgns);
+        if !dropped.is_empty() {
+            log::warn!(
+                "ngt1: not enabling transmit PGNs {dropped:?} (invalid, or the list is full)"
+            );
+        }
         let now = now_ms();
         Self {
             inner: Ngt1Decoder::new(),
@@ -75,6 +163,7 @@ impl Decoder {
                 load_pct: None,
                 errors: None,
             },
+            tx_list: TxListSync::new(tx_pgns, config.tx_list_record.clone()),
         }
     }
 }
@@ -87,16 +176,13 @@ impl Default for Decoder {
 
 impl DeviceDecoder for Decoder {
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
-        // Wall-clock fallback, for a gateway whose P-codes are off and
-        // so never sends a System Status to trigger on. Driven by
-        // arriving bytes rather than a timer thread, which on a live
-        // bus is close enough — the C uses a real timer in its main
-        // loop.
-        if now_ms() >= self.net.next_ms {
-            self.emit_network_status(events);
-        }
+        self.tick(events);
+        let now = now_ms();
         for ev in self.inner.push_bytes(bytes) {
             match ev {
+                NgtEvent::Message(msg) if msg.command == NGT_MSG_RECEIVED => {
+                    send_all(events, self.tx_list.on_message(&msg.payload, now));
+                }
                 NgtEvent::Message(msg) => {
                     if let Some(frame) = msg.to_raw_frame() {
                         self.note_frame(frame, events);
@@ -110,6 +196,25 @@ impl DeviceDecoder for Decoder {
             }
         }
     }
+
+    /// The decoder's deadlines, run on every read and on every read
+    /// timeout, so they advance on a quiet bus too.
+    fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+        let now = now_ms();
+        // Wall-clock fallback, for a gateway whose P-codes are off and
+        // so never sends a System Status to trigger on.
+        if now >= self.net.next_ms {
+            self.emit_network_status(events);
+        }
+        if !self.tx_list.is_done() {
+            send_all(events, self.tx_list.on_tick(now));
+        }
+    }
+}
+
+/// Queue each command for the writer.
+fn send_all(events: &mut Vec<DeviceEvent>, commands: Vec<Vec<u8>>) {
+    events.extend(commands.into_iter().map(DeviceEvent::SendBytes));
 }
 
 impl Decoder {
@@ -187,8 +292,12 @@ fn now_ms() -> u64 {
         .unwrap_or(0)
 }
 
-/// Stateless encoder.
-pub struct Encoder;
+/// Encodes frames for the gateway, refusing those not on a named transmit
+/// list (see [`Config::pgn_lists`]).
+#[derive(Default)]
+pub struct Encoder {
+    gate: Option<TxGate>,
+}
 
 impl DeviceEncoder for Encoder {
     fn init_bytes(&self) -> Vec<u8> {
@@ -202,6 +311,11 @@ impl DeviceEncoder for Encoder {
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
         if frame.pgn >= ACTISENSE_SYNTHETIC_PGN {
             log::debug!("ngt1: skipping synthetic PGN {}", frame.pgn);
+            return None;
+        }
+        if let Some(gate) = &self.gate
+            && !gate.allows(frame.pgn)
+        {
             return None;
         }
         Some(encode_n2k_send_frame(frame))
@@ -266,6 +380,78 @@ mod network_status_tests {
         // The NGT-1 knows neither of these.
         assert_eq!(status.data[10], 0xff, "gateway address sentinel");
         assert_eq!(&status.data[11..15], &[0xff; 4], "rejected TX sentinel");
+    }
+
+    /// The gateway's own answers (`NGT_MSG_RECEIVED`) feed the transmit
+    /// list sync and never surface as bus frames.
+    #[test]
+    fn gateway_answers_are_not_frames() {
+        let mut d = Decoder::with_config(Config {
+            pgn_lists: PgnLists {
+                tx: vec![127508],
+                rx: vec![],
+            },
+            ..Default::default()
+        });
+        let mut wire = Vec::new();
+        crate::engine::format::ngt1::encode_ngt_message(NGT_MSG_RECEIVED, &[0x11, 1], &mut wire);
+        let mut events = Vec::new();
+        d.decode(&wire, &mut events);
+        assert!(
+            !events
+                .iter()
+                .any(|e| matches!(e, DeviceEvent::Frame(f) if f.pgn != 0x40100)),
+            "{events:?}"
+        );
+        assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
+    }
+
+    /// canboat's own PGNs alone (the wmm quirk) do not write the gateway's
+    /// list, and a status says so.
+    #[test]
+    fn extra_pgns_alone_leave_the_list_alone() {
+        let d = Decoder::with_config(Config {
+            extra_tx_pgns: vec![127258],
+            ..Default::default()
+        });
+        assert!(d.tx_list.is_done(), "nothing to write");
+        let status = pgn_list_status(&PgnLists::default(), &[127258]);
+        assert_eq!(status.tx, PgnListSupport::Untouched);
+        let status = pgn_list_status(
+            &PgnLists {
+                tx: vec![],
+                rx: vec![129025],
+            },
+            &[],
+        );
+        assert_eq!(status.tx, PgnListSupport::Untouched);
+        assert_eq!(status.rx, PgnListSupport::Unsupported);
+    }
+
+    /// With a named transmit list, only its PGNs, canboat's own and the
+    /// network-management PGNs go out; with only canboat's own, nothing is
+    /// refused.
+    #[test]
+    fn a_named_transmit_list_refuses_the_rest() {
+        let frame = |pgn| RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn,
+            src: 0,
+            dst: 255,
+            data: vec![0; 8].into(),
+        };
+        let strict = Encoder {
+            gate: TxGate::new("ngt1", &[127508], &[127258]),
+        };
+        for pgn in [127508, 127258, 59904] {
+            assert!(strict.encode_frame(&frame(pgn)).is_some(), "{pgn}");
+        }
+        assert!(strict.encode_frame(&frame(127506)).is_none());
+        let open = Encoder {
+            gate: TxGate::new("ngt1", &[], &[127258]),
+        };
+        assert!(open.encode_frame(&frame(127506)).is_some());
     }
 
     /// With no System Status ever seen — P-codes off — the two fields

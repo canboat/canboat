@@ -94,9 +94,10 @@ pub struct Config {
     pub skip_init: bool,
 }
 
-/// How the gateway takes `lists`: it stores both in its own memory and
-/// answers PGN 126464 from them, so both are [`PgnListSupport::Pushed`];
-/// `dropped` names the PGNs that do not fit.
+/// How the gateway takes `lists`: it stores each non-empty list in its own
+/// memory and answers PGN 126464 from it ([`PgnListSupport::Pushed`]); an
+/// empty one is not written ([`PgnListSupport::Untouched`]). `dropped`
+/// names the PGNs that do not fit.
 pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
     let (_, mut dropped) = pgn_list::merge(&[], &lists.tx);
     for pgn in pgn_list::merge(&[], &lists.rx).1 {
@@ -104,9 +105,16 @@ pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
             dropped.push(pgn);
         }
     }
+    let written = |list: &[u32]| {
+        if list.is_empty() {
+            PgnListSupport::Untouched
+        } else {
+            PgnListSupport::Pushed
+        }
+    };
     PgnListStatus {
-        tx: PgnListSupport::Pushed,
-        rx: PgnListSupport::Pushed,
+        tx: written(&lists.tx),
+        rx: written(&lists.rx),
         dropped,
     }
 }
@@ -723,7 +731,7 @@ mod tests {
             rx: vec![],
         });
         assert_eq!(status.tx, PgnListSupport::Pushed);
-        assert_eq!(status.rx, PgnListSupport::Pushed);
+        assert_eq!(status.rx, PgnListSupport::Untouched, "nothing named");
         assert_eq!(status.dropped, [0x40000]);
     }
 

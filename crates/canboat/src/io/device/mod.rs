@@ -29,6 +29,7 @@ pub mod ikonvert;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
+pub mod ngt1_tx_list;
 pub mod socketcan;
 pub mod supervisor;
 
@@ -59,6 +60,11 @@ pub enum DeviceEvent {
 /// [`DeviceEvent`]s.
 pub trait DeviceDecoder: Send + 'static {
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>);
+
+    /// Called when a read times out with nothing received (a serial port
+    /// does every 250 ms), so a decoder's own deadlines advance on a quiet
+    /// line too. Nothing by default.
+    fn tick(&mut self, _events: &mut Vec<DeviceEvent>) {}
 }
 
 /// Encoder half: turns app-side [`RawFrame`]s into device bytes, plus
@@ -214,31 +220,42 @@ fn reader_thread<D: DeviceDecoder>(
 ) {
     let mut buf = [0u8; 4096];
     let mut events: Vec<DeviceEvent> = Vec::with_capacity(8);
+    // Hand the decoder's events on; `false` once a channel is gone.
+    let deliver = |events: &mut Vec<DeviceEvent>| -> bool {
+        for ev in events.drain(..) {
+            match ev {
+                DeviceEvent::Frame(f) => {
+                    if frames_tx.send(f).is_err() {
+                        return false;
+                    }
+                }
+                DeviceEvent::SendBytes(b) => {
+                    if cmd_tx.send(WriterCmd::Bytes(b)).is_err() {
+                        return false;
+                    }
+                }
+                DeviceEvent::Error(e) => {
+                    log::warn!("device decode error: {e}");
+                }
+            }
+        }
+        true
+    };
     loop {
         match reader.read(&mut buf) {
             Ok(0) => return,
             Ok(n) => {
-                events.clear();
                 decoder.decode(&buf[..n], &mut events);
-                for ev in events.drain(..) {
-                    match ev {
-                        DeviceEvent::Frame(f) => {
-                            if frames_tx.send(f).is_err() {
-                                return;
-                            }
-                        }
-                        DeviceEvent::SendBytes(b) => {
-                            if cmd_tx.send(WriterCmd::Bytes(b)).is_err() {
-                                return;
-                            }
-                        }
-                        DeviceEvent::Error(e) => {
-                            log::warn!("device decode error: {e}");
-                        }
-                    }
+                if !deliver(&mut events) {
+                    return;
                 }
             }
-            Err(e) if e.kind() == io::ErrorKind::TimedOut => continue,
+            Err(e) if e.kind() == io::ErrorKind::TimedOut => {
+                decoder.tick(&mut events);
+                if !deliver(&mut events) {
+                    return;
+                }
+            }
             Err(e) if e.kind() == io::ErrorKind::Interrupted => continue,
             Err(e) => {
                 log::error!("device read error: {e}");
@@ -307,5 +324,59 @@ fn writer_thread<E: DeviceEncoder>(
         if let Some((interval, _)) = keepalive.as_ref() {
             next_keepalive = Some(Instant::now() + *interval);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A line that stays quiet: every read times out, then it closes.
+    struct QuietThenEof(u32);
+    impl Read for QuietThenEof {
+        fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+            if self.0 == 0 {
+                return Ok(0);
+            }
+            self.0 -= 1;
+            Err(io::ErrorKind::TimedOut.into())
+        }
+    }
+
+    /// Emits one frame per tick.
+    struct Ticker;
+    impl DeviceDecoder for Ticker {
+        fn decode(&mut self, _bytes: &[u8], _events: &mut Vec<DeviceEvent>) {}
+        fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+            events.push(DeviceEvent::Frame(RawFrame::new(
+                None,
+                0,
+                1,
+                0,
+                0,
+                std::iter::empty(),
+            )));
+        }
+    }
+
+    struct NoEncoder;
+    impl DeviceEncoder for NoEncoder {
+        fn encode_frame(&self, _frame: &RawFrame) -> Option<Vec<u8>> {
+            None
+        }
+    }
+
+    /// A decoder's deadlines advance on a quiet line: each read timeout
+    /// ticks it, and what the tick produces is delivered.
+    #[test]
+    fn read_timeouts_tick_the_decoder() {
+        let handle = run(
+            Ticker,
+            NoEncoder,
+            Box::new(QuietThenEof(3)),
+            Box::new(io::sink()),
+        );
+        let ticks = handle.frames_rx.iter().count();
+        assert_eq!(ticks, 3);
     }
 }
