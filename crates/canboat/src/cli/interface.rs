@@ -106,7 +106,9 @@ pub struct Args {
     #[arg(long, value_name = "PGN,...")]
     rx: Option<String>,
 
-    /// iKonvert: comma-separated transmit PGN allow-list.
+    /// iKonvert: comma-separated transmit PGN allow-list. WARNING — ONCE
+    /// GIVEN, EVERY PGN NOT ON IT IS REFUSED (NOT SENT), apart from network
+    /// management. List every PGN you will send.
     #[arg(long, value_name = "PGN,...")]
     tx: Option<String>,
 

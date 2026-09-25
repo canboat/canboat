@@ -24,14 +24,35 @@ pub const MAX_PGN_LIST_LEN: usize = 74;
 /// PGNs included) never goes on the wire, so it is never advertised.
 pub(crate) const MAX_PGN: u32 = 0x1_FFFF;
 
+/// ISO and NMEA 2000 network-management PGNs: acknowledgement, request,
+/// transport protocol, address claim, group function, PGN list, heartbeat,
+/// product and configuration information. Always allowed out, whatever the
+/// transmit list says.
+pub const NETWORK_MANAGEMENT_PGNS: [u32; 10] = [
+    59392, 59904, 60160, 60416, 60928, 126208, 126464, 126993, 126996, 126998,
+];
+
 /// The PGNs the application transmits and receives, to advertise on top of
 /// the gateway's own ISO housekeeping PGNs. Set before the device opens.
 ///
-/// These are advertisements only: they never filter what the gateway passes
-/// up or lets out.
+/// # ⚠️ ON AN iKONVERT, `tx` IS THE WHOLE TRANSMIT LIST
+///
+/// **ONCE `tx` NAMES ANY PGN, EVERY PGN NOT IN IT IS REFUSED — NOT SENT.**
+/// The gateway itself only transmits the PGNs in its transmit list, and that
+/// list can only be set before it goes on the bus, so the driver refuses
+/// the rest up front (logging each refused PGN once) rather than handing the
+/// gateway frames it will reject. Decide the complete list *before* opening
+/// the device. The network-management PGNs ([`NETWORK_MANAGEMENT_PGNS`])
+/// are always allowed. With `tx` empty nothing is refused, and the
+/// gateway's own list decides.
+///
+/// On SocketCAN the lists are advertisements only: nothing is filtered.
+/// `rx` never filters anything.
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct PgnLists {
-    /// PGNs the application transmits (PGN 126464 function code 0).
+    /// PGNs the application transmits (PGN 126464 function code 0). **On an
+    /// iKonvert, the only PGNs (besides network management) it will send;
+    /// see the type's documentation.**
     pub tx: Vec<u32>,
     /// PGNs the application receives (PGN 126464 function code 1).
     pub rx: Vec<u32>,
@@ -69,6 +90,57 @@ pub struct PgnListStatus {
     pub dropped: Vec<u32>,
 }
 
+/// Refuses PGNs missing from a transmit list the client named, for the
+/// gateways that only send what is on their list (see [`PgnLists`]).
+pub(crate) struct TxGate {
+    label: &'static str,
+    allowed: Vec<u32>,
+    /// PGNs refused so far, so each is logged once.
+    refused: std::sync::Mutex<Vec<u32>>,
+}
+
+impl TxGate {
+    /// A gate allowing `named`, canboat's own `extra` PGNs and the
+    /// network-management PGNs — or `None` when the client named none, so
+    /// nothing is refused. `extra` alone never closes the gate.
+    ///
+    /// `named` then `extra` go through [`merge`], exactly as the list
+    /// written into the gateway does, so a PGN that list leaves out
+    /// (invalid, or past [`MAX_PGN_LIST_LEN`]) is refused here too rather
+    /// than sent to be rejected by the gateway.
+    pub(crate) fn new(label: &'static str, named: &[u32], extra: &[u32]) -> Option<Self> {
+        if named.is_empty() {
+            return None;
+        }
+        let (listed, _) = merge(&[], &[named, extra].concat());
+        let mut allowed = NETWORK_MANAGEMENT_PGNS.to_vec();
+        allowed.extend(listed);
+        Some(Self {
+            label,
+            allowed,
+            refused: std::sync::Mutex::new(Vec::new()),
+        })
+    }
+
+    /// Whether `pgn` may be sent, logging the first refusal of each PGN.
+    pub(crate) fn allows(&self, pgn: u32) -> bool {
+        if self.allowed.contains(&pgn) {
+            return true;
+        }
+        if let Ok(mut refused) = self.refused.lock()
+            && !refused.contains(&pgn)
+        {
+            refused.push(pgn);
+            log::warn!(
+                "{}: refusing to send PGN {pgn}: it is not in the transmit list; \
+                 name it (--tx-pgn / pgn_lists.tx) before starting",
+                self.label
+            );
+        }
+        false
+    }
+}
+
 /// A list as advertised: `builtin` first, then each PGN of `extra` not
 /// already in it. Returns the list and the PGNs of `extra` left out — invalid
 /// ones, and those that would take the list past [`MAX_PGN_LIST_LEN`].
@@ -93,6 +165,28 @@ pub fn merge(builtin: &[u32], extra: &[u32]) -> (Vec<u32>, Vec<u32>) {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn a_gate_allows_what_is_named_and_refuses_the_rest() {
+        let gate = TxGate::new("test", &[127508], &[127258]).unwrap();
+        for pgn in [127508, 127258, 59904, 126996] {
+            assert!(gate.allows(pgn), "{pgn}");
+        }
+        assert!(!gate.allows(127506));
+        assert!(TxGate::new("test", &[], &[127258]).is_none(), "extra alone");
+    }
+
+    /// What the gateway's list leaves out is refused too: a PGN beyond
+    /// the list's limit (here a quirk's, appended last) or an invalid one.
+    #[test]
+    fn a_gate_refuses_what_the_list_leaves_out() {
+        let named: Vec<u32> = (130_000..130_000 + MAX_PGN_LIST_LEN as u32).collect();
+        let gate = TxGate::new("test", &named, &[127258]).unwrap();
+        assert!(gate.allows(130_000));
+        assert!(!gate.allows(127258), "past the limit");
+        let gate = TxGate::new("test", &[127508, 0x2_0000], &[]).unwrap();
+        assert!(!gate.allows(0x2_0000), "invalid");
+    }
 
     #[test]
     fn extra_pgns_follow_the_builtin_ones_without_duplicates() {
