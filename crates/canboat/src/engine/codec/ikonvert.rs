@@ -120,11 +120,17 @@ struct Init {
 
 impl Init {
     fn new(config: &Config) -> Self {
+        // canboat's own PGNs join a transmit list the client named; on
+        // their own they must not write one, or the gateway would refuse
+        // every other PGN (see `Config::extra_tx_pgns`).
+        let named_tx =
+            !pgns_in(config.tx_list.as_deref()).is_empty() || !config.pgn_lists.tx.is_empty();
+        let extra_tx: &[u32] = if named_tx { &config.extra_tx_pgns } else { &[] };
         Self {
             rx_list: list_sentence(config.rx_list.as_deref(), &config.pgn_lists.rx, "RX"),
             tx_list: list_sentence(
                 config.tx_list.as_deref(),
-                &[config.pgn_lists.tx.as_slice(), &config.extra_tx_pgns].concat(),
+                &[config.pgn_lists.tx.as_slice(), extra_tx].concat(),
                 "TX",
             ),
             normal_mode: config.rx_list.is_some(),
@@ -705,6 +711,20 @@ mod tests {
         });
         assert!(
             cmds.contains(&"$PDGY,TX_LIST,127508,127258\r\n".to_string()),
+            "{cmds:?}"
+        );
+    }
+
+    /// canboat's own PGNs alone (the wmm quirk) write no TX list: the
+    /// gateway would then refuse every other PGN.
+    #[test]
+    fn extra_pgns_alone_write_no_tx_list() {
+        let cmds = run_init(Config {
+            extra_tx_pgns: vec![127258],
+            ..Config::default()
+        });
+        assert!(
+            !cmds.iter().any(|c| c.starts_with("$PDGY,TX_LIST")),
             "{cmds:?}"
         );
     }
