@@ -82,7 +82,7 @@ rust-clippy:
 # everything, so it cannot catch a `#[cfg(feature = …)]` gate that leaves
 # a smaller set with a dangling `use` or an unreachable helper — only
 # building the smaller sets does. Kept in step with scripts/check-public-api.sh.
-RUST_LIB_FEATURESETS = decode io node bridge json-input nmea0183,ais decode,io,node,bridge,nmea0183,ais,json-input
+RUST_LIB_FEATURESETS = decode io usb node bridge json-input nmea0183,ais decode,io,node,bridge,nmea0183,ais,json-input
 
 rust-features:
 	@for set in $(RUST_LIB_FEATURESETS); do \

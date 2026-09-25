@@ -1,0 +1,462 @@
+// (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+
+//! FTDI serial gateways opened directly over USB, without an OS serial
+//! driver.
+//!
+//! The Actisense NGT-1 (and its siblings) is an FTDI FT232R behind
+//! Actisense's own product id `0403:d9aa`. Linux's `ftdi_sio` knows that
+//! id, but macOS's built-in FTDI driver does not, so no
+//! `/dev/cu.usbserial-*` ever appears there. The UART protocol on top of
+//! the chip is small: a few vendor control requests to set the line up,
+//! then bulk transfers where every IN packet starts with two modem-status
+//! bytes. This module speaks it through `nusb`, so a device spelled
+//! `usb:[serial]` works wherever the interface is not claimed by a driver.
+//!
+//! Only the single-port chips with a 3 MHz baud clock (FT232BM/FT232R/FT-X)
+//! are handled; every Actisense gateway is one of those.
+
+use std::fmt;
+use std::io::{self, Read, Write};
+use std::time::Duration;
+
+use nusb::transfer::{Buffer, Bulk, ControlOut, ControlType, In, Out, Recipient, TransferError};
+use nusb::{Endpoint, Interface, MaybeFuture};
+
+/// FTDI's vendor id.
+pub const FTDI_VID: u16 = 0x0403;
+
+/// Actisense product ids on FTDI's vendor id (the `ACTISENSE_*_PID` block
+/// in Linux's `ftdi_sio_ids.h`): NDC-x, USG-x, NGT-1, NGW-1 and reserved.
+pub const ACTISENSE_PIDS: std::ops::RangeInclusive<u16> = 0xD9A8..=0xD9AF;
+
+/// How long a read waits for data before reporting `TimedOut`; matches
+/// the serial-port timeout in [`super::open_serial`] so device runners
+/// tick at the same rate on either transport.
+const READ_TIMEOUT: Duration = Duration::from_millis(250);
+const CONTROL_TIMEOUT: Duration = Duration::from_millis(500);
+const WRITE_TIMEOUT: Duration = Duration::from_secs(2);
+
+/// Bulk IN transfers kept queued, and the packets each one asks for.
+const READ_TRANSFERS: usize = 4;
+const PACKETS_PER_TRANSFER: usize = 8;
+
+/// Bytes of modem/line status that open every IN packet.
+const STATUS_LEN: usize = 2;
+
+// FTDI vendor requests (libftdi / ftdi_sio names).
+const SIO_RESET: u8 = 0;
+const SIO_SET_MODEM_CTRL: u8 = 1;
+const SIO_SET_FLOW_CTRL: u8 = 2;
+const SIO_SET_BAUDRATE: u8 = 3;
+const SIO_SET_DATA: u8 = 4;
+const SIO_SET_LATENCY_TIMER: u8 = 9;
+
+const SIO_RESET_SIO: u16 = 0;
+const SIO_RESET_PURGE_RX: u16 = 1;
+const SIO_RESET_PURGE_TX: u16 = 2;
+/// DTR and RTS high, each with its "change this line" mask bit — what a
+/// tty open does on the other platforms.
+const SIO_SET_DTR_RTS_HIGH: u16 = 0x0303;
+/// 8 data bits, no parity, 1 stop bit.
+const SIO_DATA_8N1: u16 = 8;
+/// Milliseconds the chip holds a partial IN packet; 16 (the default)
+/// delays every short NGT-1 frame by that much.
+const LATENCY_MS: u16 = 2;
+
+/// Which USB device a `usb:` spelling names.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct Selector {
+    /// `None`: any Actisense product id on [`FTDI_VID`].
+    pub ids: Option<(u16, u16)>,
+    /// `None`: any serial number.
+    pub serial: Option<String>,
+}
+
+impl Selector {
+    /// Parse `usb`, `usb:SERIAL`, `usb:VVVV:PPPP` or `usb:VVVV:PPPP:SERIAL`
+    /// (ids in hex). Returns `None` when `device` is not a `usb` spelling.
+    pub fn parse(device: &str) -> Option<io::Result<Self>> {
+        let rest = match device.strip_prefix("usb") {
+            Some("") => "",
+            Some(r) => r.strip_prefix(':')?,
+            None => return None,
+        };
+        let parts: Vec<&str> = if rest.is_empty() {
+            Vec::new()
+        } else {
+            rest.split(':').collect()
+        };
+        let hex = |s: &str| {
+            u16::from_str_radix(s, 16).map_err(|_| {
+                io::Error::new(
+                    io::ErrorKind::InvalidInput,
+                    format!("'{s}' is not a hex USB id"),
+                )
+            })
+        };
+        let serial = |s: &str| (!s.is_empty()).then(|| s.to_string());
+        Some(match parts.as_slice() {
+            [] => Ok(Self {
+                ids: None,
+                serial: None,
+            }),
+            [s] => Ok(Self {
+                ids: None,
+                serial: serial(s),
+            }),
+            [v, p] | [v, p, _] => (|| {
+                Ok(Self {
+                    ids: Some((hex(v)?, hex(p)?)),
+                    serial: parts.get(2).and_then(|s| serial(s)),
+                })
+            })(),
+            _ => Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                "expected usb[:SERIAL] or usb:VVVV:PPPP[:SERIAL]".to_string(),
+            )),
+        })
+    }
+
+    fn matches(&self, info: &nusb::DeviceInfo) -> bool {
+        let ids_ok = match self.ids {
+            Some((vid, pid)) => info.vendor_id() == vid && info.product_id() == pid,
+            None => info.vendor_id() == FTDI_VID && ACTISENSE_PIDS.contains(&info.product_id()),
+        };
+        ids_ok
+            && self
+                .serial
+                .as_deref()
+                .is_none_or(|want| info.serial_number() == Some(want))
+    }
+}
+
+impl fmt::Display for Selector {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str("usb")?;
+        if let Some((vid, pid)) = self.ids {
+            write!(f, ":{vid:04x}:{pid:04x}")?;
+        }
+        if let Some(serial) = &self.serial {
+            write!(f, ":{serial}")?;
+        }
+        Ok(())
+    }
+}
+
+/// The FT232BM/R/X divisor for `baud` off the chip's 3 MHz baud clock, as
+/// the `(wValue, wIndex)` of `SIO_SET_BAUDRATE`, plus the baud rate that
+/// divisor really gives. Integer part in bits 0..14, eighths in a
+/// scrambled 3-bit code in bits 14..17 (libftdi `ftdi_to_clkbits`).
+fn baud_divisor(baud: u32) -> io::Result<(u16, u16, u32)> {
+    const CLOCK: u32 = 3_000_000;
+    const FRAC_CODE: [u32; 8] = [0, 3, 2, 4, 1, 5, 6, 7];
+    if baud == 0 || baud > CLOCK {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!("baud rate {baud} is out of range for an FTDI chip"),
+        ));
+    }
+    let (encoded, actual) = if baud >= CLOCK * 2 / 3 {
+        // Divisors 1 and 1.5 have dedicated codes.
+        if baud >= CLOCK {
+            (0, CLOCK)
+        } else {
+            (1, CLOCK * 2 / 3)
+        }
+    } else {
+        // Divisor in sixteenths, rounded to eighths.
+        let sixteenths = CLOCK * 16 / baud;
+        let eighths = (sixteenths.div_ceil(2)).min(0x1_FFFF);
+        let encoded = (eighths >> 3) | (FRAC_CODE[(eighths & 7) as usize] << 14);
+        (encoded, CLOCK * 8 / eighths)
+    };
+    Ok(((encoded & 0xFFFF) as u16, (encoded >> 16) as u16, actual))
+}
+
+/// Remove the two status bytes that head every `packet_size` packet of an
+/// IN transfer, appending the payload to `out`.
+fn strip_status(data: &[u8], packet_size: usize, out: &mut Vec<u8>) {
+    for packet in data.chunks(packet_size) {
+        if packet.len() > STATUS_LEN {
+            out.extend_from_slice(&packet[STATUS_LEN..]);
+        }
+    }
+}
+
+/// Every device `selector` matches, for error messages and listings.
+fn find(selector: &Selector) -> io::Result<Vec<nusb::DeviceInfo>> {
+    Ok(nusb::list_devices()
+        .wait()
+        .map_err(io::Error::other)?
+        .filter(|d| selector.matches(d))
+        .collect())
+}
+
+/// Open the FTDI gateway `selector` names at `baud` 8N1 and return an
+/// independent `(reader, writer)` pair, like [`super::open_serial_rw`].
+pub fn open_rw(
+    selector: &Selector,
+    baud: u32,
+) -> io::Result<(Box<dyn Read + Send>, Box<dyn Write + Send>)> {
+    let mut found = find(selector)?;
+    let info = match found.len() {
+        0 => {
+            return Err(io::Error::new(
+                io::ErrorKind::NotFound,
+                "no matching USB device".to_string(),
+            ));
+        }
+        1 => found.remove(0),
+        _ => {
+            let serials: Vec<String> = found
+                .iter()
+                .map(|d| format!("usb:{}", d.serial_number().unwrap_or("?")))
+                .collect();
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!(
+                    "{} devices match; pick one of {}",
+                    found.len(),
+                    serials.join(", ")
+                ),
+            ));
+        }
+    };
+    // bcdDevice 0x0700.. are the Hi-Speed parts with a 12 MHz baud clock
+    // and multiple ports; 0x1000 is FT-X, which behaves like FT232R.
+    let chip = info.device_version();
+    if (0x0700..0x1000).contains(&chip) {
+        return Err(io::Error::new(
+            io::ErrorKind::Unsupported,
+            format!("FTDI chip revision {chip:#06x} is not supported"),
+        ));
+    }
+    let device = info.open().wait().map_err(io::Error::other)?;
+    let interface = device.claim_interface(0).wait().map_err(|e| {
+        io::Error::other(format!(
+            "claiming the USB interface: {e} (is another program, or a serial driver, using it?)"
+        ))
+    })?;
+
+    let (value, index, actual) = baud_divisor(baud)?;
+    if actual.abs_diff(baud) * 100 > baud * 3 {
+        log::warn!("{selector}: {baud} baud is {actual} on the wire");
+    }
+    let control = |request, value, index| {
+        interface
+            .control_out(
+                ControlOut {
+                    control_type: ControlType::Vendor,
+                    recipient: Recipient::Device,
+                    request,
+                    value,
+                    index,
+                    data: &[],
+                },
+                CONTROL_TIMEOUT,
+            )
+            .wait()
+            .map_err(|e| io::Error::other(format!("FTDI request {request}: {e}")))
+    };
+    control(SIO_RESET, SIO_RESET_SIO, 0)?;
+    control(SIO_SET_BAUDRATE, value, index)?;
+    control(SIO_SET_DATA, SIO_DATA_8N1, 0)?;
+    control(SIO_SET_FLOW_CTRL, 0, 0)?;
+    control(SIO_SET_MODEM_CTRL, SIO_SET_DTR_RTS_HIGH, 0)?;
+    control(SIO_SET_LATENCY_TIMER, LATENCY_MS, 0)?;
+    control(SIO_RESET, SIO_RESET_PURGE_RX, 0)?;
+    control(SIO_RESET, SIO_RESET_PURGE_TX, 0)?;
+
+    let (in_addr, out_addr) = bulk_endpoints(&interface)?;
+    let reader = UsbReader::new(&interface, in_addr)?;
+    let writer = UsbWriter {
+        endpoint: interface
+            .endpoint::<Bulk, Out>(out_addr)
+            .map_err(io::Error::other)?,
+        _interface: interface,
+    };
+    log::info!(
+        "{selector}: opened {} {} at {baud} baud",
+        info.product_string().unwrap_or("FTDI device"),
+        info.serial_number().unwrap_or("")
+    );
+    Ok((Box::new(reader), Box::new(writer)))
+}
+
+/// The bulk IN and OUT endpoint addresses of interface 0.
+fn bulk_endpoints(interface: &Interface) -> io::Result<(u8, u8)> {
+    let desc = interface
+        .descriptor()
+        .ok_or_else(|| io::Error::other("USB interface has no descriptor"))?;
+    let bulk: Vec<u8> = desc
+        .endpoints()
+        .filter(|e| e.transfer_type() == nusb::descriptors::TransferType::Bulk)
+        .map(|e| e.address())
+        .collect();
+    let in_addr = bulk.iter().copied().find(|a| a & 0x80 != 0);
+    let out_addr = bulk.iter().copied().find(|a| a & 0x80 == 0);
+    in_addr
+        .zip(out_addr)
+        .ok_or_else(|| io::Error::other("USB interface has no bulk IN/OUT endpoint pair"))
+}
+
+/// Maps a transfer failure onto the `io` error the device supervisor
+/// treats as "gone": an unplugged gateway must end the session so it can
+/// be reopened.
+fn transfer_error(e: TransferError) -> io::Error {
+    match e {
+        TransferError::Disconnected => io::Error::new(io::ErrorKind::NotConnected, e),
+        _ => io::Error::other(e),
+    }
+}
+
+struct UsbReader {
+    endpoint: Endpoint<Bulk, In>,
+    packet_size: usize,
+    /// Payload received but not yet handed out, from `pos`.
+    pending: Vec<u8>,
+    pos: usize,
+    _interface: Interface,
+}
+
+impl UsbReader {
+    fn new(interface: &Interface, address: u8) -> io::Result<Self> {
+        let mut endpoint = interface
+            .endpoint::<Bulk, In>(address)
+            .map_err(io::Error::other)?;
+        let packet_size = endpoint.max_packet_size();
+        for _ in 0..READ_TRANSFERS {
+            let buf = endpoint.allocate(packet_size * PACKETS_PER_TRANSFER);
+            endpoint.submit(buf);
+        }
+        Ok(Self {
+            endpoint,
+            packet_size,
+            pending: Vec::with_capacity(packet_size * PACKETS_PER_TRANSFER),
+            pos: 0,
+            _interface: interface.clone(),
+        })
+    }
+}
+
+impl Read for UsbReader {
+    fn read(&mut self, out: &mut [u8]) -> io::Result<usize> {
+        // The chip sends a status-only packet every latency period even
+        // when idle, so loop until there is payload or the timeout passes.
+        let deadline = std::time::Instant::now() + READ_TIMEOUT;
+        while self.pos == self.pending.len() {
+            let left = deadline.saturating_duration_since(std::time::Instant::now());
+            let Some(done) = self.endpoint.wait_next_complete(left) else {
+                return Err(io::ErrorKind::TimedOut.into());
+            };
+            let mut buf: Buffer = done.buffer;
+            let status = done.status;
+            self.pending.clear();
+            self.pos = 0;
+            if status.is_ok() {
+                strip_status(&buf, self.packet_size, &mut self.pending);
+            }
+            buf.clear();
+            buf.set_requested_len(self.packet_size * PACKETS_PER_TRANSFER);
+            self.endpoint.submit(buf);
+            status.map_err(transfer_error)?;
+        }
+        let n = out.len().min(self.pending.len() - self.pos);
+        out[..n].copy_from_slice(&self.pending[self.pos..self.pos + n]);
+        self.pos += n;
+        Ok(n)
+    }
+}
+
+struct UsbWriter {
+    endpoint: Endpoint<Bulk, Out>,
+    _interface: Interface,
+}
+
+impl Write for UsbWriter {
+    fn write(&mut self, data: &[u8]) -> io::Result<usize> {
+        if data.is_empty() {
+            return Ok(0);
+        }
+        let done = self
+            .endpoint
+            .transfer_blocking(Buffer::from(data), WRITE_TIMEOUT);
+        done.status.map_err(transfer_error)?;
+        Ok(done.actual_len)
+    }
+
+    fn flush(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn divisors_match_libftdi() {
+        assert_eq!(baud_divisor(230_400).unwrap(), (13, 0, 230_769));
+        assert_eq!(baud_divisor(115_200).unwrap(), (26, 0, 115_384));
+        // 312.5: half an eighth-step, frac code 1 in bit 14.
+        assert_eq!(baud_divisor(9600).unwrap(), (0x4138, 0, 9600));
+        assert_eq!(baud_divisor(3_000_000).unwrap(), (0, 0, 3_000_000));
+        assert_eq!(baud_divisor(2_000_000).unwrap(), (1, 0, 2_000_000));
+        assert!(baud_divisor(0).is_err());
+    }
+
+    #[test]
+    fn divisor_uses_bit_16_for_the_top_fraction_codes() {
+        // 3_000_000 / 38400 = 78.125 = 78 + 1/8 → frac code 3 → bits 14, 15.
+        assert_eq!(baud_divisor(38_400).unwrap().0, 78 | (3 << 14));
+        // x + 3/8 → frac code 4 → bit 16, carried in wIndex.
+        let (value, index, _) = baud_divisor(3_000_000 * 8 / (100 * 8 + 3)).unwrap();
+        assert_eq!((value, index), (100, 1));
+    }
+
+    #[test]
+    fn status_bytes_are_stripped_per_packet() {
+        let mut data = vec![0x01, 0x60];
+        data.extend(0..62u8);
+        data.extend([0x01, 0x60, 0xAA, 0xBB]);
+        let mut out = Vec::new();
+        strip_status(&data, 64, &mut out);
+        let mut want: Vec<u8> = (0..62u8).collect();
+        want.extend([0xAA, 0xBB]);
+        assert_eq!(out, want);
+
+        out.clear();
+        strip_status(&[0x01, 0x60], 64, &mut out);
+        assert!(out.is_empty());
+    }
+
+    #[test]
+    fn selector_spellings() {
+        let p = |s: &str| Selector::parse(s).map(|r| r.unwrap());
+        assert_eq!(p("/dev/ttyUSB0"), None);
+        assert_eq!(p("usbserial"), None);
+        let any = Selector {
+            ids: None,
+            serial: None,
+        };
+        assert_eq!(p("usb"), Some(any.clone()));
+        assert_eq!(p("usb:"), Some(any));
+        assert_eq!(
+            p("usb:19FAC"),
+            Some(Selector {
+                ids: None,
+                serial: Some("19FAC".into())
+            })
+        );
+        assert_eq!(
+            p("usb:0403:d9aa:19FAC"),
+            Some(Selector {
+                ids: Some((0x0403, 0xD9AA)),
+                serial: Some("19FAC".into())
+            })
+        );
+        assert_eq!(p("usb:0403:d9aa").unwrap().to_string(), "usb:0403:d9aa");
+        assert!(Selector::parse("usb:zz:1").unwrap().is_err());
+        assert!(Selector::parse("usb:1:2:3:4").unwrap().is_err());
+    }
+}
