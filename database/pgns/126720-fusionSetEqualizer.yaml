@@ -48,10 +48,12 @@ notes: |-
   triple rather than only the axis that moved.
 
   Zone is a zero-based zone index 0 .. n-1, where n is the number of zones
-  whose PGN 130820 "Capabilities" word is non-zero. The value n itself
-  addresses the stereo as a whole: Garmin's Fusion Audio app sends its global,
-  stereo-wide tone control with zone = available zone count. Because n depends
-  on the unit, this is not a fixed value. Observed:
+  whose PGN 130820 "Capabilities" word is non-zero. Garmin's Fusion Audio app
+  sends its global, stereo-wide tone control with zone = n, one past the last
+  zone. That is how the app addresses the whole stereo on a unit that
+  advertises global tone, not a rule every unit follows: the MS-WB670, whose
+  global capability word is 0x0000, took its tone command for zone 0. Because
+  n depends on the unit, the whole-stereo zone is not a fixed value. Observed:
 
     MS-RA70N  2 zones, EQ only in the global capability word  -> zone 2
     MS-BB300R 3 zones                                          -> zone 3
