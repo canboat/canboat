@@ -103,13 +103,18 @@ impl TxGate {
     /// A gate allowing `named`, canboat's own `extra` PGNs and the
     /// network-management PGNs — or `None` when the client named none, so
     /// nothing is refused. `extra` alone never closes the gate.
+    ///
+    /// `named` then `extra` go through [`merge`], exactly as the list
+    /// written into the gateway does, so a PGN that list leaves out
+    /// (invalid, or past [`MAX_PGN_LIST_LEN`]) is refused here too rather
+    /// than sent to be rejected by the gateway.
     pub(crate) fn new(label: &'static str, named: &[u32], extra: &[u32]) -> Option<Self> {
         if named.is_empty() {
             return None;
         }
+        let (listed, _) = merge(&[], &[named, extra].concat());
         let mut allowed = NETWORK_MANAGEMENT_PGNS.to_vec();
-        allowed.extend_from_slice(named);
-        allowed.extend_from_slice(extra);
+        allowed.extend(listed);
         Some(Self {
             label,
             allowed,
@@ -169,6 +174,18 @@ mod tests {
         }
         assert!(!gate.allows(127506));
         assert!(TxGate::new("test", &[], &[127258]).is_none(), "extra alone");
+    }
+
+    /// What the gateway's list leaves out is refused too: a PGN beyond
+    /// the list's limit (here a quirk's, appended last) or an invalid one.
+    #[test]
+    fn a_gate_refuses_what_the_list_leaves_out() {
+        let named: Vec<u32> = (130_000..130_000 + MAX_PGN_LIST_LEN as u32).collect();
+        let gate = TxGate::new("test", &named, &[127258]).unwrap();
+        assert!(gate.allows(130_000));
+        assert!(!gate.allows(127258), "past the limit");
+        let gate = TxGate::new("test", &[127508, 0x2_0000], &[]).unwrap();
+        assert!(!gate.allows(0x2_0000), "invalid");
     }
 
     #[test]
