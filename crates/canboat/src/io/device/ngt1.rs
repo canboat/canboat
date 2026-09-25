@@ -277,17 +277,10 @@ impl Decoder {
     }
 }
 
-/// ISO-8601 UTC with milliseconds — the timestamp form every canboat
-/// text format uses. Same shape as the ikonvert and maretron drivers'.
+/// `YYYY-MM-DDTHH:MM:SS.mmmZ` from the host clock in UTC, the shape
+/// every canboat gateway driver stamps and canboat C prints.
 fn now_iso_ms() -> String {
-    let ms_total = now_ms();
-    let secs = (ms_total / 1000) as i64;
-    let ms = (ms_total % 1000) as u32;
-    let days = secs.div_euclid(86_400);
-    let day_secs = secs.rem_euclid(86_400) as u32;
-    let (h, m, s) = (day_secs / 3600, (day_secs / 60) % 60, day_secs % 60);
-    let (y, mo, d) = crate::engine::format::days_to_ymd(days);
-    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{ms:03}")
+    crate::engine::format_iso_ms(now_ms())
 }
 
 fn now_ms() -> u64 {

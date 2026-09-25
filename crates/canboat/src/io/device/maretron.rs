@@ -14,7 +14,6 @@ use std::io::{Read, Write};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::engine::RawFrame;
-use crate::engine::format::days_to_ymd;
 use crate::engine::format::maretron_ipg::{
     MaretronFrame, ParseOutcome, RX_CONNECTED, RX_DETAILED_LICENSES_USED, RX_INSTANCE_DATA,
     RX_LICENSES_USED, RX_NO, RX_SERVER_VERSION, SessionState, build_connect, build_frame,
@@ -142,22 +141,13 @@ impl DeviceEncoder for Encoder {
     }
 }
 
-/// `YYYY-MM-DDTHH:MM:SS.mmm` from the host clock in UTC. Lifted from
-/// the old `maretron-ipg` binary so the device crate doesn't pull in
-/// `chrono`.
+/// `YYYY-MM-DDTHH:MM:SS.mmmZ` from the host clock in UTC, the shape
+/// every canboat gateway driver stamps and canboat C prints.
 fn now_iso_ms() -> String {
     let dur = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default();
-    let secs = dur.as_secs() as i64;
-    let ms = dur.subsec_millis();
-    let days = secs.div_euclid(86_400);
-    let day_secs = secs.rem_euclid(86_400) as u32;
-    let h = day_secs / 3600;
-    let m = (day_secs / 60) % 60;
-    let s = day_secs % 60;
-    let (y, mo, d) = days_to_ymd(days);
-    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{ms:03}")
+    crate::engine::format_iso_ms(dur.as_millis() as u64)
 }
 
 #[cfg(test)]
@@ -317,10 +307,11 @@ mod tests {
     #[test]
     fn host_clock_stamp_is_iso_8601() {
         let ts = now_iso_ms();
-        assert_eq!(ts.len(), 23, "YYYY-MM-DDTHH:MM:SS.mmm, got {ts}");
+        assert_eq!(ts.len(), 24, "YYYY-MM-DDTHH:MM:SS.mmmZ, got {ts}");
         assert_eq!(&ts[4..5], "-");
         assert_eq!(&ts[10..11], "T");
         assert_eq!(&ts[19..20], ".");
+        assert_eq!(&ts[23..], "Z");
         assert!(ts[..4].parse::<u32>().unwrap() >= 2026);
     }
 
