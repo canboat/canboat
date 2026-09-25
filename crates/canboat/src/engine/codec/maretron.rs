@@ -26,6 +26,10 @@ pub struct Config {
     pub password: String,
 }
 
+/// Most bytes kept while a message is incomplete: above the largest binary
+/// frame (7 header bytes + a 16-bit length), far above any handshake line.
+const MAX_PENDING: usize = 70 * 1024;
+
 /// The Maretron IPG protocol; see the [module docs](self).
 pub struct Maretron {
     acc: Vec<u8>,
@@ -73,7 +77,17 @@ impl Codec for Maretron {
         self.acc.extend_from_slice(bytes);
         loop {
             match parse(&self.acc, self.state) {
-                ParseOutcome::NeedMore => return,
+                ParseOutcome::NeedMore => {
+                    // A handshake line that never ends, or a length that
+                    // never arrives, must not grow the buffer without limit.
+                    if self.acc.len() > MAX_PENDING {
+                        self.acc.clear();
+                        events.push(Event::Error(format!(
+                            "maretron: nothing complete in {MAX_PENDING} bytes, discarded"
+                        )));
+                    }
+                    return;
+                }
                 ParseOutcome::Drop { consumed } => {
                     self.acc.drain(..consumed);
                 }
@@ -137,6 +151,20 @@ mod tests {
         ];
         v.extend_from_slice(payload);
         v
+    }
+
+    /// Handshake text that never ends is dropped at the limit, and the
+    /// handshake still works afterwards.
+    #[test]
+    fn an_endless_handshake_line_is_dropped() {
+        let mut d = Maretron::new(Config::default());
+        let mut events = Vec::new();
+        d.receive(&vec![b'x'; MAX_PENDING + 1], NOW, &mut events);
+        assert!(matches!(&events[..], [Event::Error(_)]), "{events:?}");
+        assert!(d.acc.is_empty());
+        events.clear();
+        d.receive(b"CONNECTED\t1234567\0", NOW, &mut events);
+        assert_eq!(events, [Event::Send(build_set_mode_binary())]);
     }
 
     /// `CONNECTED` is the reception-driven half of the handshake: the

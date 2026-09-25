@@ -168,6 +168,11 @@ fn list_sentence(list: Option<&str>, extra: &[u32], which: &str) -> Option<Strin
     )
 }
 
+/// Longest line kept while waiting for its end. A `!PDGY` frame line is at
+/// most about 340 characters and the longest control line (a PGN list)
+/// about 520.
+const MAX_LINE: usize = 4096;
+
 /// The iKonvert protocol; see the [module docs](self).
 pub struct Ikonvert {
     acc: String,
@@ -250,6 +255,14 @@ impl Codec for Ikonvert {
                     }
                 }
             }
+        }
+        // Bytes that never make a line (a wrong baud rate, not an iKonvert)
+        // must not grow the buffer without limit.
+        if self.acc.len() > MAX_LINE {
+            self.acc.clear();
+            events.push(Event::Error(format!(
+                "ikonvert: no line end in {MAX_LINE} bytes, discarded"
+            )));
         }
     }
 
@@ -556,6 +569,23 @@ mod tests {
         assert_eq!(f.src, 35);
         assert_eq!(&f.data[..], &[1, 2, 3]);
         assert_eq!(f.timestamp.as_deref(), Some("2026-05-29T19:16:04.826Z"));
+    }
+
+    /// Bytes without a line end are dropped at the limit, and lines that
+    /// follow still decode.
+    #[test]
+    fn endless_bytes_without_a_line_end_are_dropped() {
+        let mut codec = Ikonvert::new(Config {
+            skip_init: true,
+            ..Config::default()
+        });
+        let mut events = Vec::new();
+        codec.receive(&vec![b'x'; 3 * MAX_LINE], NOW, &mut events);
+        assert!(matches!(&events[..], [Event::Error(_)]), "{events:?}");
+        assert!(codec.acc.is_empty());
+        events.clear();
+        codec.receive(b"!PDGY,127257,3,35,255,12.345,AQID\r\n", NOW, &mut events);
+        assert!(matches!(&events[..], [Event::Frame(_)]), "{events:?}");
     }
 
     #[test]

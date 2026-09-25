@@ -77,7 +77,15 @@ pub enum NgtError {
     LengthMismatch { declared: u8, actual: usize },
     #[error("NGT escape byte 0x{0:02x} not followed by STX/ETX/DLE")]
     BadEscape(u8),
+    #[error("NGT message longer than {MAX_COLLECT} bytes without an end, discarded")]
+    TooLong,
 }
+
+/// Most bytes collected for one message or EBL record before it is given
+/// up on. A real NGT-1 message is at most 258 (cmd, len, 255 payload,
+/// checksum); the margin keeps garbage without a `DLE ETX` from growing
+/// the buffer without limit.
+const MAX_COLLECT: usize = 1024;
 
 /// EBL header records (only emitted when the decoder is in EBL mode).
 /// Actisense's `.ebl` logger writes a timestamp record before every NGT-1
@@ -188,7 +196,7 @@ impl Ngt1Decoder {
                         prev: PrevState::InFrame,
                     };
                 } else {
-                    self.buf.push(b);
+                    return self.collect(b);
                 }
                 None
             }
@@ -201,7 +209,7 @@ impl Ngt1Decoder {
                         prev: PrevState::InHeader,
                     };
                 } else {
-                    self.buf.push(b);
+                    return self.collect(b);
                 }
                 None
             }
@@ -227,17 +235,17 @@ impl Ngt1Decoder {
                     r
                 }
                 DLE => {
-                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
-                        self.buf.push(DLE);
-                    }
                     self.state = restore(prev);
+                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
+                        return self.collect(DLE);
+                    }
                     None
                 }
                 ESC if self.ebl => {
-                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
-                        self.buf.push(ESC);
-                    }
                     self.state = restore(prev);
+                    if matches!(prev, PrevState::InFrame | PrevState::InHeader) {
+                        return self.collect(ESC);
+                    }
                     None
                 }
                 other => {
@@ -256,6 +264,18 @@ impl Ngt1Decoder {
                 }
             },
         }
+    }
+
+    /// Add a byte to the message being collected, or give the message up
+    /// once it passes [`MAX_COLLECT`].
+    fn collect(&mut self, b: u8) -> Option<NgtEvent> {
+        if self.buf.len() >= MAX_COLLECT {
+            self.buf.clear();
+            self.state = State::Idle;
+            return Some(NgtEvent::Error(NgtError::TooLong));
+        }
+        self.buf.push(b);
+        None
     }
 
     fn is_escape(&self, b: u8) -> bool {
@@ -477,6 +497,21 @@ impl NgtMessage {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A `DLE STX` never followed by `DLE ETX` gives up at the limit, once,
+    /// and the decoder then reads the next message normally.
+    #[test]
+    fn an_unterminated_message_is_given_up_on() {
+        let mut d = Ngt1Decoder::new();
+        let mut junk = vec![DLE, STX];
+        junk.extend(std::iter::repeat_n(0x55, 10 * MAX_COLLECT));
+        let events = d.push_bytes(&junk);
+        assert_eq!(events, [NgtEvent::Error(NgtError::TooLong)]);
+        assert!(d.buf.len() <= MAX_COLLECT);
+        let frame = RawFrame::new(None, 2, 130306, 35, 255, [1, 2, 3, 4, 5, 6, 7, 8]);
+        let ok = d.push_bytes(&encode_n2k_received_frame(&frame, 0).unwrap());
+        assert!(matches!(&ok[..], [NgtEvent::Message(_)]), "{ok:?}");
+    }
 
     /// A received-frame message decodes back to the frame it was built
     /// from, the NGT-1 counter surfacing as the timestamp.
