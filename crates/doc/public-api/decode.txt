@@ -134,7 +134,7 @@ pub fn canboat::codec::ngt1::TxListRecord::default() -> Self
 impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
 pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
-pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::encode_received(&canboat::Frame, u32) -> core::option::Option<alloc::vec::Vec<u8>>
 pub enum canboat::codec::Event
 pub canboat::codec::Event::Error(alloc::string::String)
 pub canboat::codec::Event::Frame(canboat::Frame)

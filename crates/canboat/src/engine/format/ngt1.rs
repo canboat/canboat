@@ -396,9 +396,14 @@ pub fn encode_n2k_send_frame(frame: &RawFrame) -> Vec<u8> {
 /// (LE), dst, src, timestamp (u32 LE), dlen`, then the data. The inverse of
 /// [`NgtMessage::to_raw_frame`], for simulating a gateway in tests and
 /// harnesses. `timestamp_ms` is the NGT-1's own counter (ms since it
-/// started).
-pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Vec<u8> {
-    let mut payload = Vec::with_capacity(11 + frame.data.len());
+/// started). `None` when the data does not fit one NGT-1 message (more
+/// than 244 bytes).
+pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Option<Vec<u8>> {
+    const HEADER: usize = 11;
+    if HEADER + frame.data.len() > u8::MAX as usize {
+        return None;
+    }
+    let mut payload = Vec::with_capacity(HEADER + frame.data.len());
     payload.push(frame.prio);
     payload.extend_from_slice(&frame.pgn.to_le_bytes()[..3]);
     payload.push(frame.dst);
@@ -408,7 +413,7 @@ pub fn encode_n2k_received_frame(frame: &RawFrame, timestamp_ms: u32) -> Vec<u8>
     payload.extend_from_slice(&frame.data);
     let mut out = Vec::with_capacity(payload.len() + 8);
     encode_ngt_message(N2K_MSG_RECEIVED, &payload, &mut out);
-    out
+    Some(out)
 }
 
 /// The reverse-engineered NGT-1 startup sequence (3 bytes wrapped in an
@@ -478,7 +483,7 @@ mod tests {
     #[test]
     fn received_frame_round_trips() {
         let frame = RawFrame::new(None, 2, 130306, 35, 255, [0x10, 0x10, 3, 4, 5, 6, 7, 8]);
-        let bytes = encode_n2k_received_frame(&frame, 1234);
+        let bytes = encode_n2k_received_frame(&frame, 1234).expect("fits");
         let mut d = Ngt1Decoder::new();
         let events = d.push_bytes(&bytes);
         let [NgtEvent::Message(msg)] = &events[..] else {
@@ -491,6 +496,22 @@ mod tests {
             (2, 130306, 35, 255)
         );
         assert_eq!(back.data, frame.data);
+    }
+
+    /// 11 header bytes + data must fit the one-byte NGT-1 length: 244
+    /// bytes of data encode, 245 are refused rather than panicking.
+    #[test]
+    fn received_frame_longer_than_one_message_is_refused() {
+        let mut frame = RawFrame::new(None, 6, 126996, 35, 255, [0u8; 8]);
+        frame.data = std::iter::repeat_n(0xab, 244).collect();
+        let bytes = encode_n2k_received_frame(&frame, 0).expect("244 bytes fit");
+        let events = Ngt1Decoder::new().push_bytes(&bytes);
+        let [NgtEvent::Message(msg)] = &events[..] else {
+            panic!("expected one message, got {events:?}")
+        };
+        assert_eq!(msg.to_raw_frame().expect("a frame").data.len(), 244);
+        frame.data.push(0xab);
+        assert_eq!(encode_n2k_received_frame(&frame, 0), None);
     }
 
     /// Build a valid NGT-1 frame from command + payload, applying

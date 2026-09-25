@@ -414,6 +414,7 @@ pub mod codec {
         pub use crate::engine::codec::ngt1::{Config, KEEPALIVE_INTERVAL, Ngt1};
         pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
         /// What an NGT-1 sends for a frame it received — to simulate one.
+        /// `None` for more than 244 bytes of data.
         pub use crate::engine::format::ngt1::encode_n2k_received_frame as encode_received;
     }
 

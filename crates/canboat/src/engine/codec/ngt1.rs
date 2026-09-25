@@ -267,6 +267,10 @@ impl Codec for Ngt1 {
         {
             return Err(Refused::NotOnTxList);
         }
+        // Six header bytes + data must fit the one-byte message length.
+        if 6 + frame.data.len() > u8::MAX as usize {
+            return Err(Refused::TooLarge);
+        }
         Ok(encode_n2k_send_frame(frame))
     }
 
@@ -432,6 +436,11 @@ mod network_status_tests {
         }
         assert_eq!(strict.send(&frame(127506)), Err(Refused::NotOnTxList));
         assert_eq!(strict.send(&frame(0x40100)), Err(Refused::Synthetic));
+        let mut long = frame(127508);
+        long.data = std::iter::repeat_n(0, 250).collect();
+        assert_eq!(strict.send(&long), Err(Refused::TooLarge));
+        long.data.pop();
+        assert!(strict.send(&long).is_ok(), "249 bytes of data fit");
         let mut open = Ngt1::new(Config {
             extra_tx_pgns: vec![127258],
             ..Default::default()
