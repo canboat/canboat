@@ -5407,6 +5407,28 @@
         ]
       },
       {
+        "Name":"FUSION_CAPABILITY_BITFIELD",
+        "MaxValue":15,
+        "EnumBitValues":[
+          {"Name":"Volume", "Bit":0},
+          {"Name":"Volume Limit", "Bit":1},
+          {"Name":"Balance", "Bit":2},
+          {"Name":"Subwoofer", "Bit":3},
+          {"Name":"Low Pass Filter", "Bit":4},
+          {"Name":"High Pass Filter", "Bit":5},
+          {"Name":"EQ Bass", "Bit":6},
+          {"Name":"EQ Mid", "Bit":7},
+          {"Name":"EQ Treble", "Bit":8},
+          {"Name":"Line Out", "Bit":9},
+          {"Name":"DSP", "Bit":10},
+          {"Name":"Internal Amp", "Bit":11},
+          {"Name":"Loudness", "Bit":12},
+          {"Name":"Tweeter", "Bit":13},
+          {"Name":"Subwoofer On Amp", "Bit":14},
+          {"Name":"Mono", "Bit":15}
+        ]
+      },
+      {
         "Name":"FUSION_SYSTEM_CAPABILITY_BITFIELD",
         "MaxValue":63,
         "EnumBitValues":[
@@ -71045,13 +71067,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -71061,13 +71080,10 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":7,
@@ -71077,13 +71093,10 @@
             "BitOffset":64,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -71093,13 +71106,10 @@
             "BitOffset":80,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":9,
@@ -71109,13 +71119,10 @@
             "BitOffset":96,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           }
         ]
       },
@@ -72949,13 +72956,10 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":6,
@@ -72975,13 +72979,10 @@
             "BitOffset":96,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":8,
@@ -73001,13 +73002,10 @@
             "BitOffset":160,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":10,
@@ -73027,13 +73025,10 @@
             "BitOffset":224,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":12,
@@ -73053,13 +73048,10 @@
             "BitOffset":288,
             "BitStart":0,
             "Resolution":1,
-            "Signed":false,
             "RangeMin":0,
-            "RangeMax":65532,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
-            "FieldType":"NUMBER"
+            "RangeMax":65535,
+            "FieldType":"BITLOOKUP",
+            "LookupBitEnumeration":"FUSION_CAPABILITY_BITFIELD"
           },
           {
             "Order":14,

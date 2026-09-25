@@ -1,0 +1,20 @@
+name: FUSION_CAPABILITY_BITFIELD
+kind: bit
+bits: 16
+values:
+  0: Volume
+  1: Volume Limit
+  2: Balance
+  3: Subwoofer
+  4: Low Pass Filter
+  5: High Pass Filter
+  6: EQ Bass
+  7: EQ Mid
+  8: EQ Treble
+  9: Line Out
+  10: DSP
+  11: Internal Amp
+  12: Loudness
+  13: Tweeter
+  14: Subwoofer On Amp
+  15: Mono
