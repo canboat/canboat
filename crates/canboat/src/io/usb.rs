@@ -163,20 +163,30 @@ impl Candidate {
     }
 
     /// The shortest device spelling that picks this device out of
-    /// `all`: `usb:SERIAL` when the serial number is unique, else with
-    /// the ids in front. `None` when nothing tells it apart.
-    fn spelling(&self, all: &[Candidate]) -> Option<String> {
+    /// everything `attached`: `usb:SERIAL` for an Actisense device whose
+    /// serial number no other Actisense device shares (that spelling only
+    /// considers Actisense devices), else with the ids in front. `None`
+    /// when nothing tells it apart.
+    fn spelling(&self, attached: &[Candidate]) -> Option<String> {
         let same_serial = |c: &&Candidate| c.serial == self.serial;
         let same_ids = |c: &&Candidate| c.vid == self.vid && c.pid == self.pid;
         let ids = format!("usb:{:04x}:{:04x}", self.vid, self.pid);
         match &self.serial {
-            Some(serial) if all.iter().filter(same_serial).count() == 1 => {
+            Some(serial)
+                if self.is_actisense()
+                    && attached
+                        .iter()
+                        .filter(|c| c.is_actisense())
+                        .filter(same_serial)
+                        .count()
+                        == 1 =>
+            {
                 Some(format!("usb:{serial}"))
             }
-            Some(serial) if all.iter().filter(same_ids).filter(same_serial).count() == 1 => {
+            Some(serial) if attached.iter().filter(same_ids).filter(same_serial).count() == 1 => {
                 Some(format!("{ids}:{serial}"))
             }
-            None if all.iter().filter(same_ids).count() == 1 => Some(ids),
+            None if attached.iter().filter(same_ids).count() == 1 => Some(ids),
             _ => None,
         }
     }
@@ -190,10 +200,12 @@ impl Candidate {
     }
 }
 
-/// One line per device in `all`, each with the spelling that selects it.
-fn listing(all: &[Candidate]) -> String {
-    all.iter()
-        .map(|c| match c.spelling(all) {
+/// One line per device in `shown`, each with the spelling that selects
+/// it from everything `attached`.
+fn listing(shown: &[Candidate], attached: &[Candidate]) -> String {
+    shown
+        .iter()
+        .map(|c| match c.spelling(attached) {
             Some(spelling) => format!("\n  {spelling:<20} {}", c.describe()),
             None => format!(
                 "\n  {:<20} {} (cannot be told apart from another)",
@@ -223,7 +235,7 @@ fn choose(selector: &Selector, attached: &[Candidate]) -> io::Result<usize> {
             } else {
                 format!(
                     "no matching USB device; Actisense devices attached:{}",
-                    listing(&actisense)
+                    listing(&actisense, attached)
                 )
             };
             Err(io::Error::new(io::ErrorKind::NotFound, msg))
@@ -235,7 +247,7 @@ fn choose(selector: &Selector, attached: &[Candidate]) -> io::Result<usize> {
                 format!(
                     "{} USB devices match; name the one to use:{}",
                     matched.len(),
-                    listing(&matched)
+                    listing(&matched, attached)
                 ),
             ))
         }
@@ -268,13 +280,14 @@ fn baud_divisor(baud: u32) -> io::Result<(u16, u16, u32)> {
             format!("baud rate {baud} is out of range for an FTDI chip"),
         ));
     }
-    let (encoded, actual) = if baud >= CLOCK * 2 / 3 {
-        // Divisors 1 and 1.5 have dedicated codes.
-        if baud >= CLOCK {
-            (0, CLOCK)
-        } else {
-            (1, CLOCK * 2 / 3)
-        }
+    let (encoded, actual) = if baud >= CLOCK {
+        (0, CLOCK)
+    } else if baud >= CLOCK * 2 / 3 {
+        // Divisor 1.5 has a dedicated code.
+        (1, CLOCK * 2 / 3)
+    } else if baud >= CLOCK / 2 {
+        // Fractions below 2 are not allowed (AN120), so this band is /2.
+        (2, CLOCK / 2)
     } else {
         // Divisor in sixteenths, rounded to eighths.
         let sixteenths = CLOCK * 16 / baud;
@@ -307,10 +320,12 @@ pub fn open_rw(
         .collect();
     let attached: Vec<Candidate> = devices.iter().map(Candidate::new).collect();
     let info = devices.swap_remove(choose(selector, &attached)?);
-    // bcdDevice 0x0700.. are the Hi-Speed parts with a 12 MHz baud clock
-    // and multiple ports; 0x1000 is FT-X, which behaves like FT232R.
+    // bcdDevice names the chip: 0x0400 FT232BM, 0x0600 FT232R, 0x1000
+    // FT-X — single-port, 3 MHz baud clock. The rest need another divisor
+    // encoding (AM, and the 12 MHz Hi-Speed parts) or a port index in
+    // every request (FT2232C/D and the multi-port Hi-Speed parts).
     let chip = info.device_version();
-    if (0x0700..0x1000).contains(&chip) {
+    if ![0x0400, 0x0600, 0x1000].contains(&chip) {
         return Err(io::Error::new(
             io::ErrorKind::Unsupported,
             format!("FTDI chip revision {chip:#06x} is not supported"),
@@ -487,6 +502,10 @@ mod tests {
         assert_eq!(baud_divisor(9600).unwrap(), (0x4138, 0, 9600));
         assert_eq!(baud_divisor(3_000_000).unwrap(), (0, 0, 3_000_000));
         assert_eq!(baud_divisor(2_000_000).unwrap(), (1, 0, 2_000_000));
+        // Between 2 MHz and 1.5 MHz only /2 is legal (libftdi does the same).
+        assert_eq!(baud_divisor(1_900_000).unwrap(), (2, 0, 1_500_000));
+        assert_eq!(baud_divisor(1_500_000).unwrap(), (2, 0, 1_500_000));
+        assert_eq!(baud_divisor(921_600).unwrap(), (3 | (2 << 14), 0, 923_076));
         assert!(baud_divisor(0).is_err());
     }
 
@@ -608,7 +627,31 @@ mod tests {
                 None,
             ]
         );
-        assert!(listing(&attached).contains("cannot be told apart"));
+        assert!(listing(&attached, &attached).contains("cannot be told apart"));
+    }
+
+    #[test]
+    fn non_actisense_matches_are_named_with_their_ids() {
+        // `usb:SERIAL` only looks at Actisense devices, so it must not be
+        // offered for a plain FTDI cable picked by explicit ids.
+        let cable = |serial| Candidate {
+            manufacturer: Some("FTDI".into()),
+            ..dev(0x6001, "FT232R USB UART", Some(serial))
+        };
+        let attached = [cable("B1"), cable("B2"), dev(0xD9AA, "NGT-1-A", Some("B1"))];
+        let ids = Selector::parse("usb:0403:6001").unwrap().unwrap();
+        let msg = choose(&ids, &attached).unwrap_err().to_string();
+        assert!(msg.contains("\n  usb:0403:6001:B1 "), "{msg}");
+        assert!(msg.contains("\n  usb:0403:6001:B2 "), "{msg}");
+        // The NGT-1 keeps the short form: no other Actisense device is B1.
+        assert_eq!(attached[2].spelling(&attached).as_deref(), Some("usb:B1"));
+        // And each suggestion selects exactly its device.
+        for (i, c) in attached.iter().enumerate() {
+            let pick = Selector::parse(&c.spelling(&attached).unwrap())
+                .unwrap()
+                .unwrap();
+            assert_eq!(choose(&pick, &attached).unwrap(), i);
+        }
     }
 
     #[test]
