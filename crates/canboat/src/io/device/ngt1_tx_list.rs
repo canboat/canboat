@@ -18,7 +18,16 @@
 //!
 //! In a `[0x49, 1, …]` answer the PGN count is at byte 12 and the PGNs
 //! follow as little-endian `u32`s from byte 13. The two `0xfffffffe`
-//! words of `0x47` are copied from canboatjs; their meaning is unknown.
+//! words of `0x47` are copied from canboatjs.
+//!
+//! Seen on an NGT-1-A (2026-09): the list comes back in four parts, all
+//! with the same count. Part 1 has the PGNs; part 2 a per-PGN `u32` that
+//! reads as a transmit interval in ms (`65535` for all but 126993
+//! Heartbeat's `60000`); part 3 a per-PGN `u32`, all zero; part 4 ends
+//! it. The two words of `0x47` are presumably those two attributes, set to
+//! "default". About 30 s after an activate the gateway resets and
+//! re-enumerates on USB, so the session ends and reconnects once; the new
+//! session finds the list complete and writes nothing.
 //!
 //! canboatjs stopped doing this by default in 2020 ("this is possibly
 //! causing issues", canboatjs#136). So this runs only when the embedder
@@ -121,6 +130,7 @@ impl TxListSync {
                 Vec::new()
             }
             (State::Reading { have, .. }, CMD_READ_TX_LIST) if status == Some(LIST_END) => {
+                log::debug!("ngt1: the gateway's transmit PGN list: {have:?}");
                 let todo: Vec<u32> = self
                     .wanted
                     .iter()
