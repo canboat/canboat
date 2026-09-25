@@ -43,7 +43,6 @@ use std::sync::{Arc, Mutex};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use crate::engine::RawFrame;
-use crate::engine::format::days_to_ymd;
 use crate::engine::format::ikonvert::{
     self, IkonvertLine, TX_LIMIT_OFF, TX_OFFLINE, TX_ONLINE_ALL, TX_ONLINE_NORMAL,
     synthesize_network_status,
@@ -522,22 +521,13 @@ fn next_init_command(state: &mut u32, init: &Init) -> Option<String> {
     }
 }
 
-/// `YYYY-MM-DDTHH:MM:SS.mmm` from the host clock in UTC. Same shape
-/// the Maretron codec emits and what canboat C produces via
-/// `fmtTimestamp`.
+/// `YYYY-MM-DDTHH:MM:SS.mmmZ` from the host clock in UTC, the shape
+/// every canboat gateway driver stamps and canboat C prints.
 fn now_iso_ms() -> String {
     let dur = SystemTime::now()
         .duration_since(UNIX_EPOCH)
         .unwrap_or_default();
-    let secs = dur.as_secs() as i64;
-    let ms = dur.subsec_millis();
-    let days = secs.div_euclid(86_400);
-    let day_secs = secs.rem_euclid(86_400) as u32;
-    let h = day_secs / 3600;
-    let m = (day_secs / 60) % 60;
-    let s = day_secs % 60;
-    let (y, mo, d) = days_to_ymd(days);
-    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{ms:03}")
+    crate::engine::format_iso_ms(dur.as_millis() as u64)
 }
 
 #[cfg(test)]

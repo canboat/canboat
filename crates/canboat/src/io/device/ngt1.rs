@@ -184,7 +184,12 @@ impl DeviceDecoder for Decoder {
                     send_all(events, self.tx_list.on_message(&msg.payload, now));
                 }
                 NgtEvent::Message(msg) => {
-                    if let Some(frame) = msg.to_raw_frame() {
+                    if let Some(mut frame) = msg.to_raw_frame() {
+                        // The message carries the NGT-1's ms-since-power-up
+                        // clock; a live stream wants wall-clock time, as
+                        // canboat C's actisense-serial and the iKonvert
+                        // driver give it.
+                        frame.timestamp = Some(now_iso_ms());
                         self.note_frame(frame, events);
                     }
                 }
@@ -272,17 +277,10 @@ impl Decoder {
     }
 }
 
-/// ISO-8601 UTC with milliseconds — the timestamp form every canboat
-/// text format uses. Same shape as the ikonvert and maretron drivers'.
+/// `YYYY-MM-DDTHH:MM:SS.mmmZ` from the host clock in UTC, the shape
+/// every canboat gateway driver stamps and canboat C prints.
 fn now_iso_ms() -> String {
-    let ms_total = now_ms();
-    let secs = (ms_total / 1000) as i64;
-    let ms = (ms_total % 1000) as u32;
-    let days = secs.div_euclid(86_400);
-    let day_secs = secs.rem_euclid(86_400) as u32;
-    let (h, m, s) = (day_secs / 3600, (day_secs / 60) % 60, day_secs % 60);
-    let (y, mo, d) = crate::engine::format::days_to_ymd(days);
-    format!("{y:04}-{mo:02}-{d:02}T{h:02}:{m:02}:{s:02}.{ms:03}")
+    crate::engine::format_iso_ms(now_ms())
 }
 
 fn now_ms() -> u64 {
@@ -380,6 +378,35 @@ mod network_status_tests {
         // The NGT-1 knows neither of these.
         assert_eq!(status.data[10], 0xff, "gateway address sentinel");
         assert_eq!(&status.data[11..15], &[0xff; 4], "rejected TX sentinel");
+    }
+
+    /// A received bus frame is stamped with host time, not the NGT-1's
+    /// ms-since-power-up clock that rides in the message.
+    #[test]
+    fn received_frames_carry_host_time() {
+        use crate::engine::format::ngt1::{N2K_MSG_RECEIVED, encode_ngt_message};
+        // prio, PGN 127250 (LE), dst, src, device clock 148 ms (LE), len, data
+        let mut payload = vec![2, 0x12, 0xF1, 0x01, 255, 52];
+        payload.extend(148u32.to_le_bytes());
+        payload.push(8);
+        payload.extend([0xff, 0xac, 0xc9, 0xff, 0x7f, 0xff, 0x7f, 0xfd]);
+        let mut wire = Vec::new();
+        encode_ngt_message(N2K_MSG_RECEIVED, &payload, &mut wire);
+
+        let mut d = Decoder::new();
+        let mut events = Vec::new();
+        let before = now_ms();
+        d.decode(&wire, &mut events);
+        let frame = events
+            .iter()
+            .find_map(|e| match e {
+                DeviceEvent::Frame(f) if f.pgn == 127_250 => Some(f),
+                _ => None,
+            })
+            .expect("the bus frame");
+        let ts = frame.timestamp.as_deref().expect("a timestamp");
+        let ms = crate::engine::parse_iso_ms(ts).unwrap_or_else(|| panic!("not ISO: {ts}")) as u64;
+        assert!(ms + 1000 >= before && ms <= now_ms(), "{ts} is not now");
     }
 
     /// The gateway's own answers (`NGT_MSG_RECEIVED`) feed the transmit
