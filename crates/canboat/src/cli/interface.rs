@@ -160,13 +160,14 @@ pub fn run(args: Args) -> Result<()> {
     {
         let closer = closer.clone();
         super::stop_signal::on_stop(move || {
+            // A device that has gone already has nothing left to close.
             let closed = closer.close(device::CLOSE_TIMEOUT);
-            if !closed {
+            if closed == device::Closed::Unconfirmed {
                 log::error!(
                     "the device did not confirm closing (a gateway may still be on the bus)"
                 );
             }
-            closed
+            closed != device::Closed::Unconfirmed
         });
     }
 
@@ -174,8 +175,10 @@ pub fn run(args: Args) -> Result<()> {
     // Also when a stream step failed: the gateway still has to leave the bus.
     let closed = closer.close(device::CLOSE_TIMEOUT);
     // A stream error is the one to report; otherwise an unconfirmed close.
+    // A device that went away first (unplugged, timed out) is not one: its
+    // writer had already stopped, so there was nothing to close.
     result?;
-    if !closed {
+    if closed == device::Closed::Unconfirmed {
         anyhow::bail!("the device did not confirm closing (a gateway may still be on the bus)");
     }
     Ok(())

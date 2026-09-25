@@ -889,6 +889,27 @@ mod imp {
     /// Try to write the oldest queued frame. Returns true if a frame was
     /// actually delivered; false on empty queue or kernel backpressure
     /// (the frame stays queued, retried on the next wakeup).
+    /// Write out everything in the TX ring, for a close. Gives up after
+    /// [`super::super::CLOSE_TIMEOUT`] without a frame going out; returns
+    /// whether the ring emptied.
+    fn flush_tx(sock: &CanSocket, tx_buf: &mut TxBuffer) -> bool {
+        let mut last_progress = std::time::Instant::now();
+        while !tx_buf.queue.is_empty() {
+            if tx_drain_one(sock, tx_buf) {
+                last_progress = std::time::Instant::now();
+            } else if last_progress.elapsed() >= crate::io::device::CLOSE_TIMEOUT {
+                log::warn!(
+                    "socketcan: closing with {} frames unsent",
+                    tx_buf.queue.len()
+                );
+                return false;
+            } else {
+                std::thread::sleep(std::time::Duration::from_millis(2));
+            }
+        }
+        true
+    }
+
     fn tx_drain_one(sock: &CanSocket, tx_buf: &mut TxBuffer) -> bool {
         let Some(frame) = tx_buf.queue.front().cloned() else {
             return false;
@@ -1310,11 +1331,14 @@ mod imp {
             loop {
                 match cmd_rx.try_recv() {
                     Ok(WriterCmd::Shutdown(done)) => {
-                        // Closing the socket is how the gateway leaves the
-                        // bus; confirm only once it is closed.
+                        // Send what is still queued first, as the serial
+                        // writers do, then close the socket — which is how
+                        // the gateway leaves the bus — and confirm only if
+                        // nothing was left behind.
+                        let flushed = flush_tx(&sock, &mut tx_buf);
                         drop(sock);
                         if let Some(done) = done {
-                            let _ = done.send(true);
+                            let _ = done.send(flushed);
                         }
                         return;
                     }

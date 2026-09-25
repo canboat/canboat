@@ -298,7 +298,7 @@ fn run_session(
         // goes off the bus) and wait until it has. A device that just
         // died, or one about to be reconnected, is left alone.
         log::info!("{name}: closing the device");
-        handle.close();
+        let _ = handle.close();
     } else {
         drop(handle);
     }
@@ -313,7 +313,7 @@ fn run_session(
 #[cfg(test)]
 mod tests {
     use super::*;
-    use crate::io::device::{DeviceDecoder, DeviceEncoder, DeviceEvent, run as run_device};
+    use crate::io::device::{Closed, DeviceDecoder, DeviceEncoder, DeviceEvent, run as run_device};
     use std::io::{self, Read, Write};
     use std::sync::Mutex;
     use std::sync::atomic::AtomicU32;
@@ -491,7 +491,7 @@ mod tests {
     #[test]
     fn closing_a_device_writes_its_goodbye() {
         let written = RecordingWriter::default();
-        assert!(quiet_device(&written).close());
+        assert_eq!(quiet_device(&written).close(), Closed::Confirmed);
         assert_eq!(*written.0.lock().unwrap(), b"BYE");
     }
 
@@ -500,10 +500,11 @@ mod tests {
         let written = RecordingWriter::default();
         let handle = quiet_device(&written);
         let closer = handle.closer();
-        assert!(
+        assert_eq!(
             thread::spawn(move || closer.close(Duration::from_secs(5)))
                 .join()
-                .unwrap()
+                .unwrap(),
+            Closed::Confirmed
         );
         assert_eq!(*written.0.lock().unwrap(), b"BYE");
     }
@@ -528,7 +529,7 @@ mod tests {
             Box::new(QuietReader),
             Box::new(BrokenWriter),
         );
-        assert!(!handle.close());
+        assert_eq!(handle.close(), Closed::Unconfirmed);
     }
 
     /// Stopping the supervisor closes the device on purpose, even on a
@@ -556,5 +557,88 @@ mod tests {
         thread::sleep(Duration::from_millis(200)); // the device goes away
         assert!(written.0.lock().unwrap().is_empty(), "no goodbye on EOF");
         drop(sup);
+    }
+
+    /// A writer that takes `delay` per write, or never returns (`None`).
+    struct SlowWriter(Option<Duration>, Arc<Mutex<Vec<u8>>>);
+    impl Write for SlowWriter {
+        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            match self.0 {
+                Some(d) => thread::sleep(d),
+                None => loop {
+                    thread::sleep(Duration::from_secs(3600));
+                },
+            }
+            self.1.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// Encodes every frame as one byte.
+    struct ByteEncoder;
+    impl DeviceEncoder for ByteEncoder {
+        fn encode_frame(&self, _frame: &RawFrame) -> Option<Vec<u8>> {
+            Some(vec![1])
+        }
+        fn shutdown_bytes(&self) -> Vec<u8> {
+            b"BYE".to_vec()
+        }
+    }
+
+    fn frame() -> RawFrame {
+        RawFrame::new(None, 0, 1, 0, 0, std::iter::empty())
+    }
+
+    /// A backlog longer than the timeout still drains, goodbye included,
+    /// because the writer keeps making progress.
+    #[test]
+    fn a_long_backlog_drains_before_the_goodbye() {
+        let written = Arc::new(Mutex::new(Vec::new()));
+        let handle = run_device(
+            TestDecoder,
+            ByteEncoder,
+            Box::new(QuietReader),
+            Box::new(SlowWriter(Some(Duration::from_millis(60)), written.clone())),
+        );
+        for _ in 0..8 {
+            handle.send_frame(frame()).unwrap();
+        }
+        let closer = handle.closer();
+        assert_eq!(closer.close(Duration::from_millis(150)), Closed::Confirmed);
+        assert!(written.lock().unwrap().ends_with(b"BYE"));
+    }
+
+    /// A writer that stops making progress is given up on.
+    #[test]
+    fn a_stuck_writer_is_unconfirmed() {
+        let handle = run_device(
+            TestDecoder,
+            ByteEncoder,
+            Box::new(QuietReader),
+            Box::new(SlowWriter(None, Arc::default())),
+        );
+        handle.send_frame(frame()).unwrap();
+        assert_eq!(
+            handle.closer().close(Duration::from_millis(150)),
+            Closed::Unconfirmed
+        );
+    }
+
+    /// A device whose writer has already stopped (a failed write) has
+    /// nothing left to close: that is not a failed close.
+    #[test]
+    fn a_device_that_went_away_is_gone() {
+        let handle = run_device(
+            TestDecoder,
+            ByteEncoder,
+            Box::new(QuietReader),
+            Box::new(BrokenWriter),
+        );
+        handle.send_frame(frame()).unwrap(); // the writer fails and stops
+        thread::sleep(Duration::from_millis(100));
+        assert_eq!(handle.close(), Closed::Gone);
     }
 }

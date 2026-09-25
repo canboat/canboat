@@ -22,8 +22,10 @@
 //! pipeline on a background thread (leaving the `Bridge` alive to transmit
 //! and shut down) or drives it to completion in place with [`Bridge::run`].
 //!
-//! The CLI `canboat server` is exactly `Bridge::new(config).serve().run()`,
-//! so the daemon and an embedding library share one code path.
+//! The CLI `canboat server` is `Bridge::new(config)`, `serve()` and
+//! `spawn()`, then `shutdown()` on SIGINT/SIGTERM — so the daemon and an
+//! embedding library share one code path, and a signal closes the device
+//! cleanly.
 
 use std::path::{Path, PathBuf};
 use std::sync::atomic::{AtomicBool, AtomicU8};
