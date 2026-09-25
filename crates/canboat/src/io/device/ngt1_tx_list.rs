@@ -35,6 +35,8 @@
 //! activate — only when a PGN is missing, so a device already set up is
 //! never written to again.
 
+use std::sync::{Arc, Mutex};
+
 use crate::engine::format::ngt1::{NGT_MSG_SEND, encode_ngt_message};
 
 /// Actisense's "NGT-specific message received" command: the gateway's
@@ -73,9 +75,11 @@ enum State {
         have: Vec<u32>,
         attempt: u32,
     },
-    /// Enabling the PGNs still in `todo`, the first one's answer pending.
+    /// Enabling the PGNs still in `todo`, the first one's answer pending;
+    /// `enabled` counts those the gateway accepted.
     Enabling {
         todo: Vec<u32>,
+        enabled: usize,
     },
     Committing,
     Activating,
@@ -90,11 +94,17 @@ pub struct TxListSync {
     state: State,
     /// When the pending answer times out.
     deadline: u64,
+    /// PGNs already written in this run, shared across sessions. The
+    /// gateway resets after a save, so a PGN it refuses or does not keep
+    /// would otherwise be written — and the gateway reset — on every
+    /// reconnect.
+    tried: Arc<Mutex<Vec<u32>>>,
 }
 
 impl TxListSync {
-    /// A sync for `wanted`; one that has nothing to do when it is empty.
-    pub fn new(wanted: Vec<u32>) -> Self {
+    /// A sync for `wanted`, sharing `tried` with the other sessions of
+    /// this run; one that has nothing to do when `wanted` is empty.
+    pub fn new(wanted: Vec<u32>, tried: Arc<Mutex<Vec<u32>>>) -> Self {
         let state = if wanted.is_empty() {
             State::Done
         } else {
@@ -104,6 +114,7 @@ impl TxListSync {
             wanted,
             state,
             deadline: u64::MAX,
+            tried,
         }
     }
 
@@ -131,31 +142,57 @@ impl TxListSync {
             }
             (State::Reading { have, .. }, CMD_READ_TX_LIST) if status == Some(LIST_END) => {
                 log::debug!("ngt1: the gateway's transmit PGN list: {have:?}");
-                let todo: Vec<u32> = self
+                let missing: Vec<u32> = self
                     .wanted
                     .iter()
                     .copied()
                     .filter(|pgn| !have.contains(pgn))
                     .collect();
-                if todo.is_empty() {
+                if missing.is_empty() {
                     log::info!("ngt1: transmit PGN list already has {:?}", self.wanted);
                     self.state = State::Done;
                     return Vec::new();
                 }
+                // Write each PGN at most once per run.
+                let Ok(mut tried) = self.tried.lock() else {
+                    self.state = State::Done;
+                    return Vec::new();
+                };
+                let (again, todo): (Vec<u32>, Vec<u32>) =
+                    missing.into_iter().partition(|pgn| tried.contains(pgn));
+                if !again.is_empty() {
+                    log::warn!(
+                        "ngt1: the gateway did not keep transmit PGNs {again:?} enabled; \
+                         not writing them again"
+                    );
+                }
+                if todo.is_empty() {
+                    self.state = State::Done;
+                    return Vec::new();
+                }
+                tried.extend_from_slice(&todo);
+                drop(tried);
                 log::info!("ngt1: enabling transmit PGNs {todo:?}");
                 let first = enable_command(todo[0]);
-                self.state = State::Enabling { todo };
+                self.state = State::Enabling { todo, enabled: 0 };
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 vec![first]
             }
-            (State::Enabling { todo }, CMD_ENABLE_TX_PGN) => {
+            (State::Enabling { todo, enabled }, CMD_ENABLE_TX_PGN) => {
                 let pgn = todo.remove(0);
-                if status != Some(ENABLE_OK) {
+                if status == Some(ENABLE_OK) {
+                    *enabled += 1;
+                } else {
                     log::warn!("ngt1: the gateway refused transmit PGN {pgn} (status {status:?})");
                 }
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 match todo.first() {
                     Some(&next) => vec![enable_command(next)],
+                    // Nothing changed: no save, so no EEPROM write and no reset.
+                    None if *enabled == 0 => {
+                        self.state = State::Done;
+                        Vec::new()
+                    }
                     None => {
                         self.state = State::Committing;
                         vec![command(&[CMD_COMMIT])]
@@ -265,7 +302,7 @@ mod tests {
 
     /// Walk a sync through startup up to the list request.
     fn started(wanted: Vec<u32>) -> TxListSync {
-        let mut s = TxListSync::new(wanted);
+        let mut s = TxListSync::new(wanted, Arc::default());
         assert!(s.on_message(&[CMD_STARTUP, 1], 0).is_empty());
         assert!(
             s.on_tick(READ_DELAY_MS - 1).is_empty(),
@@ -277,7 +314,7 @@ mod tests {
 
     #[test]
     fn nothing_wanted_means_nothing_sent() {
-        let mut s = TxListSync::new(Vec::new());
+        let mut s = TxListSync::new(Vec::new(), Arc::default());
         assert!(s.is_done());
         assert!(s.on_message(&[CMD_STARTUP, 1], 0).is_empty());
         assert!(s.on_tick(u64::MAX).is_empty());
@@ -354,6 +391,39 @@ mod tests {
         let mut s = started(vec![127508]);
         assert!(s.on_message(&[CMD_STARTUP, 1], 2_100).is_empty());
         assert!(matches!(s.state, State::Reading { .. }));
+    }
+
+    /// When the gateway refuses every PGN nothing changed, so nothing is
+    /// saved: no EEPROM write and no reset.
+    #[test]
+    fn nothing_is_saved_when_every_pgn_is_refused() {
+        let mut s = started(vec![127508]);
+        s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
+        assert!(s.on_message(&[CMD_ENABLE_TX_PGN, 0], 2_200).is_empty());
+        assert!(s.is_done());
+    }
+
+    /// A PGN written once this run is not written again by the next
+    /// session, even though the gateway (which resets after a save) still
+    /// lacks it.
+    #[test]
+    fn a_pgn_is_written_at_most_once_per_run() {
+        let tried = Arc::new(Mutex::new(Vec::new()));
+        let mut first = TxListSync::new(vec![127508], tried.clone());
+        first.on_message(&[CMD_STARTUP, 1], 0);
+        first.on_tick(READ_DELAY_MS);
+        assert_eq!(
+            first.on_message(&[CMD_READ_TX_LIST, LIST_END], READ_DELAY_MS + 1),
+            vec![enable_command(127508)]
+        );
+        let mut next = TxListSync::new(vec![127508], tried);
+        next.on_message(&[CMD_STARTUP, 1], 0);
+        next.on_tick(READ_DELAY_MS);
+        assert!(
+            next.on_message(&[CMD_READ_TX_LIST, LIST_END], READ_DELAY_MS + 1)
+                .is_empty()
+        );
+        assert!(next.is_done());
     }
 
     #[test]

@@ -14,6 +14,7 @@
 //! (see [`super::ngt1_tx_list`]).
 
 use std::io::{Read, Write};
+use std::sync::{Arc, Mutex};
 use std::time::Duration;
 
 use crate::engine::RawFrame;
@@ -59,20 +60,44 @@ pub struct Config {
     /// gateway's list is left alone and nothing is refused.
     pub pgn_lists: PgnLists,
     /// PGNs canboat itself transmits through the gateway (a quirk's, such
-    /// as `wmm`'s 127258). Enabled in the gateway's list and allowed;
-    /// unlike `pgn_lists.tx` they never on their own make the driver refuse
-    /// other PGNs.
+    /// as `wmm`'s 127258). Once `pgn_lists.tx` names a PGN they are enabled
+    /// with it and allowed; on their own they neither write the gateway's
+    /// list nor make the driver refuse anything.
     pub extra_tx_pgns: Vec<u32>,
+    /// PGNs already written into the gateway in this run. Share one across
+    /// reconnects (clone the `Arc` into each session's `Config`): the
+    /// gateway resets after a save, and a PGN it refuses or does not keep
+    /// is then not written — and the gateway not reset — again and again.
+    pub tried_tx_pgns: Arc<Mutex<Vec<u32>>>,
 }
 
-/// How the gateway takes `lists`: the Transmit list is written into it
-/// ([`PgnListSupport::Pushed`]); there is no known way to set what it
+/// The Transmit PGNs to enable: the named ones and canboat's own — none
+/// when nothing is named, so the gateway's list is left alone.
+fn wanted_tx_pgns(named: &[u32], extra: &[u32]) -> (Vec<u32>, Vec<u32>) {
+    if named.is_empty() {
+        return (Vec::new(), Vec::new());
+    }
+    pgn_list::merge(&[], &[named, extra].concat())
+}
+
+/// How the gateway takes the `named` lists (and canboat's own `extra`
+/// PGNs): a named Transmit list is written into it
+/// ([`PgnListSupport::Pushed`]), otherwise its list is left
+/// ([`PgnListSupport::Untouched`]); there is no known way to set what it
 /// advertises as received. `dropped` names the PGNs that do not fit.
-pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
+pub fn pgn_list_status(named: &PgnLists, extra: &[u32]) -> PgnListStatus {
     PgnListStatus {
-        tx: PgnListSupport::Pushed,
-        rx: PgnListSupport::Unsupported,
-        dropped: pgn_list::merge(&[], &lists.tx).1,
+        tx: if named.tx.is_empty() {
+            PgnListSupport::Untouched
+        } else {
+            PgnListSupport::Pushed
+        },
+        rx: if named.rx.is_empty() {
+            PgnListSupport::Untouched
+        } else {
+            PgnListSupport::Unsupported
+        },
+        dropped: wanted_tx_pgns(&named.tx, extra).1,
     }
 }
 
@@ -122,8 +147,7 @@ impl Decoder {
     }
 
     pub fn with_config(config: Config) -> Self {
-        let wanted = [config.pgn_lists.tx.as_slice(), &config.extra_tx_pgns].concat();
-        let (tx_pgns, dropped) = pgn_list::merge(&[], &wanted);
+        let (tx_pgns, dropped) = wanted_tx_pgns(&config.pgn_lists.tx, &config.extra_tx_pgns);
         if !dropped.is_empty() {
             log::warn!(
                 "ngt1: not enabling transmit PGNs {dropped:?} (invalid, or the list is full)"
@@ -139,7 +163,7 @@ impl Decoder {
                 load_pct: None,
                 errors: None,
             },
-            tx_list: TxListSync::new(tx_pgns),
+            tx_list: TxListSync::new(tx_pgns, config.tried_tx_pgns.clone()),
         }
     }
 }
@@ -380,6 +404,28 @@ mod network_status_tests {
             "{events:?}"
         );
         assert!(!d.tx_list.is_done(), "startup confirmed, list read pending");
+    }
+
+    /// canboat's own PGNs alone (the wmm quirk) do not write the gateway's
+    /// list, and a status says so.
+    #[test]
+    fn extra_pgns_alone_leave_the_list_alone() {
+        let d = Decoder::with_config(Config {
+            extra_tx_pgns: vec![127258],
+            ..Default::default()
+        });
+        assert!(d.tx_list.is_done(), "nothing to write");
+        let status = pgn_list_status(&PgnLists::default(), &[127258]);
+        assert_eq!(status.tx, PgnListSupport::Untouched);
+        let status = pgn_list_status(
+            &PgnLists {
+                tx: vec![],
+                rx: vec![129025],
+            },
+            &[],
+        );
+        assert_eq!(status.tx, PgnListSupport::Untouched);
+        assert_eq!(status.rx, PgnListSupport::Unsupported);
     }
 
     /// With a named transmit list, only its PGNs, canboat's own and the

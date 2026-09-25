@@ -78,6 +78,9 @@ pub enum PgnListSupport {
     Pushed,
     /// The backend has no known way to advertise the list; it was ignored.
     Unsupported,
+    /// Nothing was named for this list, so the gateway's own list is left
+    /// as it is.
+    Untouched,
 }
 
 /// What a backend did with the [`PgnLists`] it was given, per list.
