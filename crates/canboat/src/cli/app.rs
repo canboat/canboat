@@ -109,7 +109,7 @@ pub fn main() -> ExitCode {
             env_logger::Builder::from_env(env_logger::Env::default().default_filter_or(level))
                 .init();
             crate::cli::log_startup(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"));
-            server::run(config)
+            run_server(config)
         }
         Command::Tui(args) => run_tui(args),
         Command::Replay(args) => replay::run(args),
@@ -117,6 +117,28 @@ pub fn main() -> ExitCode {
         Command::InstallShims { dir } => install_shims(dir),
     };
     finish(result)
+}
+
+/// Run the bridge until its frame source ends or SIGINT / SIGTERM arrives,
+/// then stop it cleanly: the bridge shuts its device down (an iKonvert goes
+/// off the bus) before we exit.
+fn run_server(config: server::BridgeConfig) -> anyhow::Result<()> {
+    let mut bridge = server::Bridge::new(config)?;
+    bridge.serve()?;
+    bridge.spawn()?;
+    super::stop_signal::install();
+    while bridge.is_running() && !super::stop_signal::received() {
+        std::thread::sleep(std::time::Duration::from_millis(100));
+    }
+    if super::stop_signal::received() {
+        // Close the device, but don't wait for the pipeline to drain: fed
+        // from stdin, it only ends when stdin does.
+        log::info!("stopping on signal");
+        bridge.shutdown();
+    } else {
+        bridge.wait();
+    }
+    Ok(())
 }
 
 /// Print any error and translate to a process exit code.

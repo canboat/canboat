@@ -16,14 +16,17 @@
 pub mod analyzer_json;
 pub mod bits;
 mod charset_generated;
+pub mod codec;
 pub mod db;
 pub mod decode;
 pub mod encode;
+pub mod fastpacket;
 pub mod format;
 pub mod frame;
 pub mod from_json;
 pub mod os;
 pub mod output;
+pub mod pgn_list;
 pub mod quirk;
 pub mod reassembly;
 pub(crate) use charset_generated::rds_g0_char;

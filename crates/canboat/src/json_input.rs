@@ -562,6 +562,34 @@ mod tests {
     }
 
     #[test]
+    fn si_energy_and_charge_encode_from_joules_and_coulombs() {
+        // The database keeps kWh and Ah; the SI schema reads J and C
+        // back, so both unit systems put the same bits on the wire.
+        let si = PgnDatabase::embedded(Units::Si);
+        for (si_line, metric_line) in [
+            (
+                r#"{"pgn":65005,"fields":{"totalEnergyExport":14806800000,"totalEnergyImport":1080000000}}"#,
+                r#"{"pgn":65005,"fields":{"totalEnergyExport":4113,"totalEnergyImport":300}}"#,
+            ),
+            (
+                r#"{"pgn":127506,"fields":{"instance":1,"remainingCapacity":360000}}"#,
+                r#"{"pgn":127506,"fields":{"instance":1,"remainingCapacity":100}}"#,
+            ),
+        ] {
+            let from_si = frame_from_json(si, si_line).unwrap().unwrap();
+            let from_metric = frame_from_json(db(), metric_line).unwrap().unwrap();
+            assert_eq!(from_si.data, from_metric.data, "{si_line}");
+        }
+        let f = frame_from_json(
+            si,
+            r#"{"pgn":65005,"fields":{"totalEnergyExport":14806800000}}"#,
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(f.data[..4], [0x11, 0x10, 0x00, 0x00]);
+    }
+
+    #[test]
     fn camel_envelope_encodes_byte_exact() {
         // Integer-only PGN → wire-exact round trip. The envelope id
         // selects the variant; -nv objects carry raw values verbatim.

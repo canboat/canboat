@@ -1,0 +1,47 @@
+name: FUSION_SYSTEM_CAPABILITY_BITFIELD
+kind: bit
+bits: 64
+values:
+  0: ANT
+  1: Bluetooth
+  2: Wi-Fi
+  3: Ethernet
+  4: NMEA 2000
+  5: RV VIS Port
+  6: LCD
+  7: Power Button
+  8: Button Matrix
+  9: Touch Panel
+  10: USB Connector
+  11: USB Connector 2
+  12: DSP
+  13: AM/FM Antenna
+  14: DAB Antenna
+  15: SiriusXM Connector
+  16: S/PDIF
+  17: HDMI ARC
+  18: HDMI
+  19: Telephone Mute
+  20: Dimmer Wire
+  21: Ignition Wire
+  22: NMEA 2000 Power
+  23: STM32 Coprocessor
+  24: Standby
+  25: Multiroom Source
+  26: Multiroom Renderer
+  33: Amplifier and Line Out Independent
+  34: Wake on LAN
+  35: SiriusXM Instant Replay
+  36: SiriusXM TuneMix
+  37: Artist and Song Alert
+  38: Game Alert
+  39: Sports Flash
+  41: Zone 1 Amplifier 2 Ohm Stable
+  42: Zone 1 Amplifier 4 Ohm Stable
+  43: Zone 2 Amplifier 2 Ohm Stable
+  44: Zone 2 Amplifier 4 Ohm Stable
+  45: Apple AirPlay
+  46: Volume Sync Zone
+  47: Source Disable
+  48: Source Rename
+  50: Internal DAB Module

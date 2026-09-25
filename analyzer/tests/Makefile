@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 tests
 
 all:	tests
 
@@ -250,7 +250,17 @@ test25:
 	diff $(TEMPDIR)/iso-tp-preassembled-test.out iso-tp-preassembled-test.out
 	diff $(TEMPDIR)/iso-tp-preassembled-test.err iso-tp-preassembled-test.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27
+#
+# -si: the database keeps NMEA 2000's kWh and Ah; strict SI output is J and C
+# (65005 energy, 127506 / 127513 charge).
+#
+test28:
+	$(ANALYZER) -json -si < pgn-si-units.in > $(TEMPDIR)/pgn-si-units.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-si-units.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-si-units.out
+	diff $(TEMPDIR)/pgn-si-units.out pgn-si-units.out
+	diff $(TEMPDIR)/pgn-si-units.err pgn-si-units.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so
