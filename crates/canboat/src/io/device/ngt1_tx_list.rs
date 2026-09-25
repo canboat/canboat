@@ -12,7 +12,7 @@
 //! | Command | Sent                                    | Answer                      |
 //! |---------|-----------------------------------------|-----------------------------|
 //! | `0x49`  | read the Transmit PGN Enable list       | `[0x49, 1, …]` with PGNs, then `[0x49, 4, …]` at the end |
-//! | `0x47`  | `[0x47, pgn u32, 1, 0xfffffffe u32 ×2]`: enable one PGN | `[0x47, 1, …]` on success |
+//! | `0x47`  | `[0x47, pgn u32, 1, 0xfffffffe u32 ×2]`: enable one PGN | `[0x47, 1, …, result i32 @8, pgn u32 @12, …]` |
 //! | `0x01`  | save the lists to EEPROM                | `[0x01, …]`                 |
 //! | `0x4b`  | activate the saved lists                | `[0x4b, …]`                 |
 //!
@@ -20,15 +20,25 @@
 //! follow as little-endian `u32`s from byte 13. The two `0xfffffffe`
 //! words of `0x47` are copied from canboatjs.
 //!
-//! Seen on an NGT-1-A (2026-09): the list comes back in four parts, all
-//! with the same count. Part 1 has the PGNs; part 2 a per-PGN `u32` that
-//! reads as a transmit interval in ms (`65535` for all but 126993
-//! Heartbeat's `60000`); part 3 a per-PGN `u32`, all zero; part 4 ends
-//! it. The two words of `0x47` are presumably those two attributes, set to
-//! "default". About 30 s after an activate the gateway resets and
-//! re-enumerates on USB, so the session ends and reconnects once; the new
-//! session finds the list complete and writes nothing.
+//! Seen on an NGT-1-A (2026-09):
 //!
+//! - The list comes back in four parts, all with the same count. Part 1
+//!   has the PGNs; part 2 a per-PGN `u32` that reads as a transmit interval
+//!   in ms (`65535` for all but 126993 Heartbeat's `60000`); part 3 a
+//!   per-PGN `u32`, all zero; part 4 ends it. The two words of `0x47` are
+//!   presumably those two attributes, set to "default".
+//! - **The read is truncated on a long list**: with 17 PGNs enabled it
+//!   reported 14, with 23 it reported 13 (the lowest ones). A PGN past that
+//!   point looks missing although it is enabled.
+//! - `0x47` answers status 1 whatever happens; the outcome is the `i32` at
+//!   byte 8: 0 added, −996 already on the list (see the truncated read),
+//!   −997 refused (PGN 0x40000).
+//! - A PDU1 PGN is stored with its low (destination) byte cleared: enabling
+//!   PGN 1 enables PGN 0.
+//!
+//! Hence: nothing is saved unless an enable actually added a PGN, and each
+//! PGN is written at most once per run ([`TxListSync::new`]'s `tried`), so
+//! a PGN the read cannot show never causes repeated EEPROM writes.//!
 //! canboatjs stopped doing this by default in 2020 ("this is possibly
 //! causing issues", canboatjs#136). So this runs only when the embedder
 //! names Transmit PGNs, reads the list first, and writes — enable, save,
@@ -94,10 +104,9 @@ pub struct TxListSync {
     state: State,
     /// When the pending answer times out.
     deadline: u64,
-    /// PGNs already written in this run, shared across sessions. The
-    /// gateway resets after a save, so a PGN it refuses or does not keep
-    /// would otherwise be written — and the gateway reset — on every
-    /// reconnect.
+    /// PGNs already written in this run, shared across sessions. A PGN
+    /// the gateway's (truncated) list read cannot show would otherwise be
+    /// written again on every reconnect.
     tried: Arc<Mutex<Vec<u32>>>,
 }
 
@@ -162,8 +171,8 @@ impl TxListSync {
                     missing.into_iter().partition(|pgn| tried.contains(pgn));
                 if !again.is_empty() {
                     log::warn!(
-                        "ngt1: the gateway did not keep transmit PGNs {again:?} enabled; \
-                         not writing them again"
+                        "ngt1: transmit PGNs {again:?} were written already this run \
+                         and are still not listed; not writing them again"
                     );
                 }
                 if todo.is_empty() {
@@ -180,15 +189,19 @@ impl TxListSync {
             }
             (State::Enabling { todo, enabled }, CMD_ENABLE_TX_PGN) => {
                 let pgn = todo.remove(0);
-                if status == Some(ENABLE_OK) {
-                    *enabled += 1;
-                } else {
-                    log::warn!("ngt1: the gateway refused transmit PGN {pgn} (status {status:?})");
+                match enable_result(payload, status) {
+                    Ok(Enabled::Now) => *enabled += 1,
+                    // The list read is truncated on a long list, so a PGN
+                    // can look missing while it is there.
+                    Ok(Enabled::Already) => {
+                        log::debug!("ngt1: transmit PGN {pgn} was already enabled");
+                    }
+                    Err(why) => log::warn!("ngt1: the gateway refused transmit PGN {pgn} ({why})"),
                 }
                 self.deadline = now + ANSWER_TIMEOUT_MS;
                 match todo.first() {
                     Some(&next) => vec![enable_command(next)],
-                    // Nothing changed: no save, so no EEPROM write and no reset.
+                    // Nothing changed: no save, so no EEPROM write.
                     None if *enabled == 0 => {
                         self.state = State::Done;
                         Vec::new()
@@ -270,6 +283,36 @@ fn list_pgns(payload: &[u8]) -> Vec<u32> {
         .collect()
 }
 
+/// What an accepted `0x47` did.
+#[derive(Debug, PartialEq, Eq)]
+enum Enabled {
+    /// The PGN was added: the list changed and needs saving.
+    Now,
+    /// The PGN was on the list already: nothing changed.
+    Already,
+}
+
+/// The `0x47` result code for a PGN already on the list.
+const ALREADY_ENABLED: i32 = -996;
+
+/// What an `0x47` answer says. The status byte only says the command was
+/// taken — an NGT-1-A answers 1 whatever happened — and the outcome is an
+/// `i32` at payload byte 8: 0 added, −996 already on the list, other
+/// values refused (−997 for 0x40000).
+fn enable_result(payload: &[u8], status: Option<u8>) -> Result<Enabled, String> {
+    if status != Some(ENABLE_OK) {
+        return Err(format!("status {status:?}"));
+    }
+    match payload.get(8..12) {
+        Some(b) => match i32::from_le_bytes([b[0], b[1], b[2], b[3]]) {
+            0 => Ok(Enabled::Now),
+            ALREADY_ENABLED => Ok(Enabled::Already),
+            code => Err(format!("error {code}")),
+        },
+        None => Err("short answer".into()),
+    }
+}
+
 fn enable_command(pgn: u32) -> Vec<u8> {
     let mut payload = vec![CMD_ENABLE_TX_PGN];
     payload.extend_from_slice(&pgn.to_le_bytes());
@@ -298,6 +341,52 @@ mod tests {
             p.extend_from_slice(&pgn.to_le_bytes());
         }
         p
+    }
+
+    /// An `0x47` answer as an NGT-1-A sends it: status 1 whatever the
+    /// outcome, `result` at byte 8 (0 accepted), the PGN at byte 12.
+    fn answer(pgn: u32, result: i32) -> Vec<u8> {
+        let mut p = vec![CMD_ENABLE_TX_PGN, 1, 0x0e, 0x00, 0xac, 0x9f, 0x01, 0x00];
+        p.extend_from_slice(&result.to_le_bytes());
+        p.extend_from_slice(&pgn.to_le_bytes());
+        p.extend_from_slice(&[0x01, 0xff, 0xff, 0, 0, 0, 0, 0, 0, 0x07, 0x9e]);
+        p
+    }
+
+    /// The answers an NGT-1-A gave on hardware, all under status 1: PGN 0
+    /// added; PGN 1 (the same PDU1 PGN as 0) already there, -996; PGN
+    /// 0x40000 refused, -997.
+    #[test]
+    fn the_result_code_not_the_status_tells() {
+        let added =
+            hex("47 01 0e 00 ac 9f 01 00 00 00 00 00 00 00 00 00 01 ff ff 00 00 00 00 00 00 07 9e");
+        let already =
+            hex("47 01 0e 00 ac 9f 01 00 1c fc ff ff 01 00 00 00 01 ff ff 00 00 00 00 00 00 07 87");
+        let refused =
+            hex("47 01 0e 00 ac 9f 01 00 1b fc ff ff 00 00 04 00 01 fe ff ff ff 00 00 00 00 fe 91");
+        let result = |p: &[u8]| enable_result(p, p.get(1).copied());
+        assert_eq!(result(&added), Ok(Enabled::Now));
+        assert_eq!(result(&already), Ok(Enabled::Already));
+        assert_eq!(result(&refused), Err("error -997".to_string()));
+    }
+
+    /// A PGN the (truncated) list read missed but the gateway already has
+    /// changes nothing, so nothing is saved.
+    #[test]
+    fn an_already_enabled_pgn_is_not_saved() {
+        let mut s = started(vec![127508]);
+        s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
+        assert!(
+            s.on_message(&answer(127508, ALREADY_ENABLED), 2_200)
+                .is_empty()
+        );
+        assert!(s.is_done());
+    }
+
+    fn hex(s: &str) -> Vec<u8> {
+        s.split(' ')
+            .map(|b| u8::from_str_radix(b, 16).unwrap())
+            .collect()
     }
 
     /// Walk a sync through startup up to the list request.
@@ -341,11 +430,11 @@ mod tests {
             vec![enable_command(127508)]
         );
         assert_eq!(
-            s.on_message(&[CMD_ENABLE_TX_PGN, ENABLE_OK], 2_300),
+            s.on_message(&answer(127508, 0), 2_300),
             vec![enable_command(127258)]
         );
         assert_eq!(
-            s.on_message(&[CMD_ENABLE_TX_PGN, ENABLE_OK], 2_400),
+            s.on_message(&answer(127258, 0), 2_400),
             vec![command(&[CMD_COMMIT])]
         );
         assert_eq!(
@@ -394,17 +483,17 @@ mod tests {
     }
 
     /// When the gateway refuses every PGN nothing changed, so nothing is
-    /// saved: no EEPROM write and no reset.
+    /// saved: no EEPROM write.
     #[test]
     fn nothing_is_saved_when_every_pgn_is_refused() {
         let mut s = started(vec![127508]);
         s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
-        assert!(s.on_message(&[CMD_ENABLE_TX_PGN, 0], 2_200).is_empty());
+        assert!(s.on_message(&answer(127508, -996), 2_200).is_empty());
         assert!(s.is_done());
     }
 
     /// A PGN written once this run is not written again by the next
-    /// session, even though the gateway (which resets after a save) still
+    /// session, even though the gateway's list read still
     /// lacks it.
     #[test]
     fn a_pgn_is_written_at_most_once_per_run() {
@@ -431,7 +520,7 @@ mod tests {
         let mut s = started(vec![127508, 127506]);
         s.on_message(&[CMD_READ_TX_LIST, LIST_END], 2_100);
         assert_eq!(
-            s.on_message(&[CMD_ENABLE_TX_PGN, 0], 2_200),
+            s.on_message(&answer(127508, -996), 2_200),
             vec![enable_command(127506)]
         );
     }

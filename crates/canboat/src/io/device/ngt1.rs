@@ -65,9 +65,9 @@ pub struct Config {
     /// list nor make the driver refuse anything.
     pub extra_tx_pgns: Vec<u32>,
     /// PGNs already written into the gateway in this run. Share one across
-    /// reconnects (clone the `Arc` into each session's `Config`): the
-    /// gateway resets after a save, and a PGN it refuses or does not keep
-    /// is then not written — and the gateway not reset — again and again.
+    /// reconnects (clone the `Arc` into each session's `Config`), so a PGN
+    /// the gateway's list read does not show (it is truncated on a long
+    /// list) or that it does not keep is not written again and again.
     pub tried_tx_pgns: Arc<Mutex<Vec<u32>>>,
 }
 

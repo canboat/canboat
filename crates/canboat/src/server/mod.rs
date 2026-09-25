@@ -605,7 +605,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_list_status = (!effective.is_empty())
             .then(|| device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns));
         // Shared by every session: a PGN written once this run is not
-        // written again after the gateway's post-save reset.
+        // written again after a reconnect.
         let tried_tx_pgns = Arc::new(std::sync::Mutex::new(Vec::new()));
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
