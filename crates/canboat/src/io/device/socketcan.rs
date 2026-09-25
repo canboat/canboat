@@ -29,7 +29,7 @@ pub use imp::run;
 
 pub use config::Config;
 
-use crate::io::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
+use crate::engine::pgn_list::{self, PgnListStatus, PgnListSupport, PgnLists};
 
 /// Sentinel value stored in the claim-address atom when the gateway
 /// hasn't successfully claimed an address yet. Callers (e.g.
@@ -65,7 +65,7 @@ pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
 }
 
 mod config {
-    use crate::io::pgn_list::PgnLists;
+    use crate::engine::pgn_list::PgnLists;
 
     /// Bus-participant configuration. All fields have sensible defaults
     /// via [`Config::default`]; tweak only what differs from canboat C
@@ -165,11 +165,11 @@ mod imp {
     use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket};
 
     use super::config::Config;
+    use crate::engine::fastpacket;
+    use crate::engine::pgn_list;
     use crate::io::address_claim::{AddressClaim, ClaimState};
     use crate::io::device::{DeviceHandle, WriterCmd, from_parts};
-    use crate::io::fastpacket;
     use crate::io::nmea_responder::{self, ProductInfo};
-    use crate::io::pgn_list;
 
     const CAN_EFF_MASK: u32 = 0x1FFF_FFFF;
     const CAN_ERR_FLAG: u32 = 0x2000_0000;
@@ -1860,7 +1860,7 @@ mod imp {
         /// 126464 answer, and the status reports what did not fit.
         #[test]
         fn the_pgn_lists_carry_the_application_pgns() {
-            use crate::io::pgn_list::{PgnListSupport, PgnLists};
+            use crate::engine::pgn_list::{PgnListSupport, PgnLists};
             let config = Config {
                 pgn_lists: PgnLists {
                     tx: vec![127508, 127506, 0x40000],

@@ -22,7 +22,7 @@ use crate::engine::reassembly::{Reassembled, Reassembler};
 use crate::engine::{FramePacketType, RawFrame};
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
-use crate::io::fastpacket;
+use crate::engine::fastpacket;
 
 /// Which line protocol the socket speaks.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

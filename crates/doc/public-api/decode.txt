@@ -1,4 +1,153 @@
 pub mod canboat
+pub mod canboat::codec
+pub mod canboat::codec::can_id
+pub fn canboat::codec::can_id::compose(u8, u32, u8, u8) -> u32
+pub fn canboat::codec::can_id::decompose(u32) -> (u8, u32, u8, u8)
+pub mod canboat::codec::fastpacket
+pub fn canboat::codec::fastpacket::fragment(u8, &[u8]) -> alloc::vec::Vec<[u8; 8]>
+pub fn canboat::codec::fastpacket::packet_type(u32) -> canboat::FramePacketType
+pub mod canboat::codec::ikonvert
+pub struct canboat::codec::ikonvert::Config
+pub canboat::codec::ikonvert::Config::extra_tx_pgns: alloc::vec::Vec<u32>
+pub canboat::codec::ikonvert::Config::pgn_lists: canboat::codec::PgnLists
+pub canboat::codec::ikonvert::Config::rate_limit_off: bool
+pub canboat::codec::ikonvert::Config::rx_list: core::option::Option<alloc::string::String>
+pub canboat::codec::ikonvert::Config::skip_init: bool
+pub canboat::codec::ikonvert::Config::tx_list: core::option::Option<alloc::string::String>
+impl core::clone::Clone for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::ikonvert::Config
+pub fn canboat::codec::ikonvert::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::ikonvert::Ikonvert
+impl canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::new(canboat::codec::ikonvert::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::maretron
+pub struct canboat::codec::maretron::Config
+pub canboat::codec::maretron::Config::password: alloc::string::String
+impl core::clone::Clone for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::maretron::Config
+pub fn canboat::codec::maretron::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::maretron::Maretron
+impl canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::new(canboat::codec::maretron::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::ngt1
+pub struct canboat::codec::ngt1::Config
+pub canboat::codec::ngt1::Config::extra_tx_pgns: alloc::vec::Vec<u32>
+pub canboat::codec::ngt1::Config::pgn_lists: canboat::codec::PgnLists
+pub canboat::codec::ngt1::Config::tx_list_record: alloc::sync::Arc<std::sync::poison::mutex::Mutex<canboat::codec::ngt1::TxListRecord>>
+impl core::clone::Clone for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::clone(&self) -> Self
+impl core::default::Default for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::default() -> Self
+impl core::fmt::Debug for canboat::codec::ngt1::Config
+pub fn canboat::codec::ngt1::Config::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub struct canboat::codec::ngt1::Ngt1
+impl canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::new(canboat::codec::ngt1::Config) -> Self
+impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::default() -> Self
+pub struct canboat::codec::ngt1::TxListRecord
+impl core::default::Default for canboat::codec::ngt1::TxListRecord
+pub fn canboat::codec::ngt1::TxListRecord::default() -> Self
+impl core::fmt::Debug for canboat::codec::ngt1::TxListRecord
+pub fn canboat::codec::ngt1::TxListRecord::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub const canboat::codec::ngt1::KEEPALIVE_INTERVAL: core::time::Duration
+pub enum canboat::codec::Event
+pub canboat::codec::Event::Error(alloc::string::String)
+pub canboat::codec::Event::Frame(canboat::Frame)
+pub canboat::codec::Event::Send(alloc::vec::Vec<u8>)
+impl core::clone::Clone for canboat::codec::Event
+pub fn canboat::codec::Event::clone(&self) -> Self
+impl core::cmp::PartialEq for canboat::codec::Event
+pub fn canboat::codec::Event::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::codec::Event
+pub fn canboat::codec::Event::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::Event
+pub enum canboat::codec::Refused
+pub canboat::codec::Refused::NotOnTxList
+pub canboat::codec::Refused::Synthetic
+pub canboat::codec::Refused::TooLarge
+impl core::clone::Clone for canboat::codec::Refused
+pub fn canboat::codec::Refused::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::Refused
+impl core::cmp::PartialEq for canboat::codec::Refused
+pub fn canboat::codec::Refused::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::codec::Refused
+impl core::fmt::Debug for canboat::codec::Refused
+pub fn canboat::codec::Refused::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::Refused
+pub fn canboat::codec::Refused::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::codec::Refused
+impl core::marker::StructuralPartialEq for canboat::codec::Refused
+pub struct canboat::codec::PgnLists
+pub canboat::codec::PgnLists::rx: alloc::vec::Vec<u32>
+pub canboat::codec::PgnLists::tx: alloc::vec::Vec<u32>
+impl canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::is_empty(&self) -> bool
+impl core::clone::Clone for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::PgnLists
+impl core::cmp::PartialEq for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::default() -> Self
+impl core::fmt::Debug for canboat::codec::PgnLists
+pub fn canboat::codec::PgnLists::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::codec::PgnLists
+pub trait canboat::codec::Codec
+pub fn canboat::codec::Codec::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::Codec::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
+pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::maretron::Maretron
+pub fn canboat::codec::maretron::Maretron::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::maretron::Maretron::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::maretron::Maretron::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::maretron::Maretron::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::maretron::Maretron::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::ngt1::Ngt1
+pub fn canboat::codec::ngt1::Ngt1::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::ngt1::Ngt1::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::ngt1::Ngt1::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::ngt1::Ngt1::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::ngt1::Ngt1::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub mod canboat::ids
 pub mod canboat::output
 pub enum canboat::output::CamelCase
