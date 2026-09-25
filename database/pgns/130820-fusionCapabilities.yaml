@@ -33,27 +33,81 @@ fields:
   primaryKey: true
 - id: zone1
   name: Zone 1
-  type: UINT16
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone2
   name: Zone 2
-  type: UINT16
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone3
   name: Zone 3
-  type: UINT16
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: zone4
   name: Zone 4
-  type: UINT16
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: FUSION_CAPABILITY_BITFIELD
 - id: global
   name: Global
-  type: UINT16
+  type: BITLOOKUP
+  bits: 16
+  lookupBits: FUSION_CAPABILITY_BITFIELD
+notes: |-
+  One 16-bit capability word per zone slot plus a global word. Each advertises
+  which controls exist; none carries a current value. All five words use the
+  same bit assignments (FUSION_CAPABILITY_BITFIELD).
+
+  The bit names come from Garmin's own decoder in the Fusion Audio Android app,
+  which reads all five words with one class. The app treats a zone as available
+  exactly when its word is non-zero, and counts available zones that way.
+
+  The words describe outputs, not the zones in the product literature. On the
+  MS-WB670 IntAmp (bit 11) is clear and Line Out (bit 9) set only on index 2,
+  its line-level pre-out; only index 0, the internal-amp zone, has Subwoofer On
+  Amp (bit 14). The MS-RA70N advertises Bass/Mid/Treble only in its global word,
+  matching its stereo-wide tone controls.
+
+  Static: unchanged by the "Internal Amps On" setting. Broadcast on a 5-minute
+  cycle and answered on demand via FUSION_MESSAGE_ID 1 "Request Status".
+
+  PGN 130820 message id 32865 "Zone Capabilities Extended" repeats these words
+  as the first two bytes of each eight-byte record.
+
+  Evidence: samples/fusion-ra70n-capabilities.raw (MS-RA70N),
+  samples/fusion-zone-capabilities-extended.raw (MS-WB670) and
+  samples/fusion-130820.log (a 2017 capture of an unidentified Fusion unit).
 samples:
-- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log
+- raw: "2023-01-01-00:00:00.000,7,130820,10,255,14,a3,99,1e,80,0f,00,0f,00,0f,02,00,00,d0,01"  # from fusion-130820.log, unidentified unit
   expects:
     manufacturerCode: "Fusion Electronics"
     industryCode: "Marine Industry"
     messageId: "Capabilities"
-    zone1: 15
-    zone2: 15
-    zone3: 527
-    zone4: 0
-    global: 464
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer"]
+    zone2: ["Volume", "Volume Limit", "Balance", "Subwoofer"]
+    zone3: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Line Out"]
+    zone4: []
+    global: ["Low Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble"]
+- raw: "2026-09-19T06:23:22.115Z,7,130820,12,255,14,a3,99,1e,80,1f,00,07,00,00,00,00,00,c7,01"  # from fusion-ra70n-capabilities.raw, MS-RA70N
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Capabilities"
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter"]
+    zone2: ["Volume", "Volume Limit", "Balance"]
+    zone3: []
+    zone4: []
+    global: ["Volume", "Volume Limit", "Balance", "EQ Bass", "EQ Mid", "EQ Treble"]
+- raw: "2026-09-18T13:45:28.835Z,7,130820,51,255,14,a3,99,1e,80,ff,fd,ff,bd,ff,b7,00,00,00,00"  # from fusion-zone-capabilities-extended.raw, MS-WB670
+  expects:
+    manufacturerCode: "Fusion Electronics"
+    industryCode: "Marine Industry"
+    messageId: "Capabilities"
+    zone1: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Subwoofer On Amp", "Mono"]
+    zone2: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "DSP", "Internal Amp", "Loudness", "Tweeter", "Mono"]
+    zone3: ["Volume", "Volume Limit", "Balance", "Subwoofer", "Low Pass Filter", "High Pass Filter", "EQ Bass", "EQ Mid", "EQ Treble", "Line Out", "DSP", "Loudness", "Tweeter", "Mono"]
+    zone4: []
+    global: []

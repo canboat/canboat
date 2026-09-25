@@ -141,6 +141,36 @@ That's 46 % less wall time than the piped setup while doing strictly more
 work (it's a long-running service with TCP fan-out); on CPU time the ratio
 is closer to 3.4 ×.
 
+## Transmit and receive PGN lists (`--tx-pgn`, `--rx-pgn`)
+
+Other devices ask a node which PGNs it sends and reads (PGN 126464).
+`canboat server --tx-pgn <pgn>[,…] --rx-pgn <pgn>[,…]` (or
+`BridgeConfig::pgn_lists` in the library) names the PGNs your application
+sends and reads, so the gateway can answer truthfully. What happens with
+them depends on the gateway:
+
+| Gateway | Transmit list | Receive list |
+|---|---|---|
+| SocketCAN | Advertised by canboat itself. Nothing is filtered. | Advertised |
+| iKonvert | Written into the gateway, which only transmits what is on it | Written into the gateway; filters only in `--ikonvert-rx` (`NORMAL`) mode |
+| NGT-1 | Missing PGNs enabled in the gateway's Transmit PGN Enable list (EEPROM, only when something is missing); it only transmits what is on it | Not supported |
+| Others | Ignored, with a warning | Ignored, with a warning |
+
+> [!WARNING]
+> ## ON AN iKONVERT OR NGT-1, THE TRANSMIT LIST IS FINAL
+>
+> **Once you name any transmit PGN (`--tx-pgn`, `--ikonvert-tx`, or
+> `pgn_lists.tx`), canboat REFUSES TO SEND EVERY PGN THAT IS NOT ON THE
+> LIST.** The gateway only transmits the PGNs in its list, and canboat
+> sets that list once, when it starts, so canboat drops the rest up front,
+> logging each refused PGN once, instead of handing the gateway frames it
+> will reject.
+>
+> **Decide the complete list before you start.** Only the ISO/NMEA
+> network-management PGNs, and the PGNs of the quirks you enabled (such as
+> `wmm`'s 127258), are allowed without being named. With no transmit PGN
+> named, nothing is refused and the gateway's own list decides.
+
 ## File formats
 
 `analyzer` reads NMEA 2000 data from a number of text formats on stdin and turns

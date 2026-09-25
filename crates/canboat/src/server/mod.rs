@@ -69,11 +69,12 @@ use crate::engine::RawFrame;
 use crate::engine::format::{
     InputFormat, detect, header_implies_coalesced, parse_format_header, parse_with,
 };
+use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 use crate::io::device::{self, FrameSender, Supervisor};
 use crate::io::open_serial_rw;
 
 /// Clap front-end for the `canboat server` CLI. Gated behind the `cli` feature
-/// so the library path ([`BridgeConfig`] + [`run`]) stays clap-free; convert
+/// so the library path ([`BridgeConfig`] + [`Bridge`]) stays clap-free; convert
 /// with [`BridgeConfig::from`].
 #[cfg(feature = "cli")]
 #[derive(Debug, clap::Args)]
@@ -170,13 +171,38 @@ pub struct Args {
     ikonvert_rx: Option<String>,
 
     /// iKonvert TX filter list (`<pgn>,<pgn>,...`). Triggers the
-    /// `N2NET_RESET` + `TX_LIST` handshake steps.
+    /// `N2NET_RESET` + `TX_LIST` handshake steps. WARNING — ONCE GIVEN,
+    /// EVERY PGN NOT ON IT (OR ON --tx-pgn) IS REFUSED (NOT SENT), apart
+    /// from network management.
     #[arg(long, value_name = "PGN,PGN,...")]
     ikonvert_tx: Option<String>,
 
     /// Disable the iKonvert TX rate limit. Use at your own risk.
     #[arg(long)]
     ikonvert_rate_limit_off: bool,
+
+    /// A PGN the application transmits, to advertise in the gateway's
+    /// PGN 126464 Transmit list.
+    /// Repeatable, or comma-separated. Honoured by `--socketcan`,
+    /// `--ikonvert` and `--actisense` (which enables it in the NGT-1's
+    /// Transmit PGN Enable list); other backends warn and ignore it.
+    ///
+    /// WARNING — WITH --ikonvert OR --actisense, THIS IS THE WHOLE TRANSMIT
+    /// LIST: ONCE ANY --tx-pgn IS GIVEN, EVERY OTHER PGN IS REFUSED (NOT
+    /// SENT), apart from network management. List every PGN you will send.
+    #[arg(long = "tx-pgn", value_name = "PGN", value_delimiter = ',')]
+    tx_pgn: Vec<u32>,
+
+    /// A PGN the application receives, to advertise in the gateway's
+    /// PGN 126464 Receive list. Only advertised — it never filters what
+    /// the gateway passes on. Repeatable, or comma-separated.
+    #[arg(long = "rx-pgn", value_name = "PGN", value_delimiter = ',')]
+    rx_pgn: Vec<u32>,
+
+    /// Do not add the PGNs the gateway transmits to its advertised
+    /// Transmit list as they are first sent (`--socketcan`).
+    #[arg(long)]
+    no_learn_tx_pgns: bool,
 
     /// Suppress the periodic ISO Address Claim / Product Info request
     /// engine. By default it runs whenever a device writer is wired up
@@ -337,7 +363,7 @@ pub struct Args {
     quiet: bool,
 }
 
-/// Plain, clap-free configuration for the pipeline [`run`]. Construct with
+/// Plain, clap-free configuration for a [`Bridge`]. Construct with
 /// [`BridgeConfig::default`] and set the fields you need — or, under the `cli`
 /// feature, `BridgeConfig::from(args)`. Field meanings mirror the `canboat
 /// server` flags one-for-one.
@@ -359,6 +385,23 @@ pub struct BridgeConfig {
     pub ikonvert_rx: Option<String>,
     pub ikonvert_tx: Option<String>,
     pub ikonvert_rate_limit_off: bool,
+    /// PGNs the application sends and receives, advertised in the
+    /// gateway's PGN 126464 lists (`--tx-pgn` / `--rx-pgn`). PGNs a quirk
+    /// transmits from the gateway's address (`wmm`: 127258) are added
+    /// without being named here. SocketCAN advertises both lists, the
+    /// iKonvert stores both, and the NGT-1 enables the transmit PGNs in its
+    /// Transmit PGN Enable list;
+    /// the other backends log a warning.
+    /// [`Bridge::pgn_list_status`](bridge::Bridge::pgn_list_status) reports
+    /// the outcome.
+    ///
+    /// **⚠️ ON AN iKONVERT OR NGT-1, `pgn_lists.tx` IS THE WHOLE TRANSMIT LIST: ONCE
+    /// IT NAMES ANY PGN, EVERY OTHER PGN IS REFUSED — NOT SENT** (network
+    /// management and the quirks' own PGNs excepted). See [`PgnLists`].
+    pub pgn_lists: PgnLists,
+    /// Add each PGN the gateway transmits as itself to the advertised
+    /// Transmit list when it is first sent (SocketCAN only). On by default.
+    pub learn_tx_pgns: bool,
     pub no_request_claims: bool,
     pub quirk: Vec<quirks::QuirkKind>,
     pub bind: Ipv4Addr,
@@ -411,6 +454,8 @@ impl Default for BridgeConfig {
             ikonvert_rx: None,
             ikonvert_tx: None,
             ikonvert_rate_limit_off: false,
+            pgn_lists: PgnLists::default(),
+            learn_tx_pgns: true,
             no_request_claims: false,
             quirk: Vec::new(),
             bind: Ipv4Addr::new(0, 0, 0, 0),
@@ -466,6 +511,11 @@ impl From<Args> for BridgeConfig {
             ikonvert_rx: a.ikonvert_rx,
             ikonvert_tx: a.ikonvert_tx,
             ikonvert_rate_limit_off: a.ikonvert_rate_limit_off,
+            pgn_lists: PgnLists {
+                tx: a.tx_pgn,
+                rx: a.rx_pgn,
+            },
+            learn_tx_pgns: !a.no_learn_tx_pgns,
             no_request_claims: a.no_request_claims,
             quirk: a.quirk,
             bind: a.bind,
@@ -488,17 +538,6 @@ impl From<Args> for BridgeConfig {
             quiet: a.quiet,
         }
     }
-}
-
-/// Run the single-process pipeline to completion (blocks until the frame
-/// source ends). Thin wrapper over [`Bridge`]: build the core, spawn the
-/// TCP serving layer, then drive the pipeline in place — so the CLI
-/// `canboat server` and an embedding library share one code path. The host
-/// owns logger setup; this no longer initialises `env_logger`.
-pub fn run(config: BridgeConfig) -> Result<()> {
-    let mut bridge = Bridge::new(config)?;
-    bridge.serve()?;
-    bridge.run()
 }
 
 /// Open whichever input source the CLI selected. Returns
@@ -527,6 +566,9 @@ struct OpenedSource {
     /// only `--socketcan` exposes one). Read by the CSV-port
     /// injector to rewrite client-supplied default-`src` frames.
     claim_addr: Option<Arc<std::sync::atomic::AtomicU8>>,
+    /// What the backend does with `BridgeConfig::pgn_lists`; `None` when
+    /// none were given.
+    pgn_list_status: Option<PgnListStatus>,
 }
 
 // Config-dir *discovery* (the `/etc/default/canboat` vs `~/.local/canboat`
@@ -538,9 +580,30 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     if let Some(path) = config.actisense.as_deref() {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
+        // What the embedder named — which, once it names a transmit PGN,
+        // is all the driver will send — and the quirks' own PGNs apart.
+        let pgn_lists = config.pgn_lists.clone();
+        let extra_tx_pgns = quirk_tx_pgns(config);
+        let effective = effective_pgn_lists(config);
+        if !config.pgn_lists.rx.is_empty() {
+            log::warn!(
+                "the NGT-1 cannot advertise receive PGNs; ignoring {:?}",
+                config.pgn_lists.rx
+            );
+        }
+        let pgn_list_status = (!effective.is_empty())
+            .then(|| device::ngt1::pgn_list_status(&pgn_lists, &extra_tx_pgns));
+        // Shared by every session: a PGN written once this run is not
+        // written again after a reconnect.
+        let tx_list_record = Arc::default();
         let factory = NamedFactory::new("ngt1", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
-            Ok(device::ngt1::run(reader, writer))
+            let config = device::ngt1::Config {
+                pgn_lists: pgn_lists.clone(),
+                extra_tx_pgns: extra_tx_pgns.clone(),
+                tx_list_record: Arc::clone(&tx_list_record),
+            };
+            Ok(device::ngt1::run_with_config(reader, writer, config))
         });
         let sup = Supervisor::new(factory);
         let (rx, sup) = split_supervisor(sup);
@@ -552,6 +615,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status,
         });
     }
     if let Some(path) = config.ikonvert.as_deref() {
@@ -559,12 +623,21 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let path = path.to_string();
         let rx_list = config.ikonvert_rx.clone();
         let tx_list = config.ikonvert_tx.clone();
+        // What the embedder named — which, once it names a transmit PGN,
+        // is all the driver will send — and the quirks' own PGNs apart.
+        let pgn_lists = config.pgn_lists.clone();
+        let extra_tx_pgns = quirk_tx_pgns(config);
+        let effective = effective_pgn_lists(config);
+        let pgn_list_status =
+            (!effective.is_empty()).then(|| device::ikonvert::pgn_list_status(&effective));
         let rate_limit_off = config.ikonvert_rate_limit_off;
         let factory = NamedFactory::new("ikonvert", move || {
             let (reader, writer) = open_serial_rw(&path, baud)?;
             let config = device::ikonvert::Config {
                 rx_list: rx_list.clone(),
                 tx_list: tx_list.clone(),
+                pgn_lists: pgn_lists.clone(),
+                extra_tx_pgns: extra_tx_pgns.clone(),
                 rate_limit_off,
                 ..Default::default()
             };
@@ -579,6 +652,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status,
         });
     }
     if let Some(url) = config.maretron.as_deref() {
@@ -600,6 +674,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(read_url) = config.canboat_csv.as_deref() {
@@ -621,14 +696,18 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
         });
     }
     if let Some(iface) = config.socketcan.as_deref() {
         let iface = iface.to_string();
+        let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
             address: config.socketcan_address,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
+            pgn_lists: pgn_lists.clone(),
+            learn_tx_pgns: config.learn_tx_pgns,
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address
@@ -651,6 +730,8 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
             claim_addr: Some(claim_addr),
+            pgn_list_status: (!pgn_lists.is_empty())
+                .then(|| device::socketcan::pgn_list_status(&pgn_lists)),
         });
     }
     // stdin fallback — no device, no reconnect logic needed. We
@@ -671,6 +752,57 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         supervisor: None,
         pre_coalesced,
         claim_addr: None,
+        pgn_list_status: unsupported_pgn_lists(config),
+    })
+}
+
+/// The PGN lists a backend advertises: the embedder's, plus what a quirk
+/// transmits from the gateway's own address (`wmm`: 127258), so the
+/// embedder does not have to name those.
+fn effective_pgn_lists(config: &BridgeConfig) -> PgnLists {
+    let mut lists = config.pgn_lists.clone();
+    for pgn in quirk_tx_pgns(config) {
+        if !lists.tx.contains(&pgn) {
+            lists.tx.push(pgn);
+        }
+    }
+    lists
+}
+
+/// The PGNs the configured quirks transmit from the gateway's own address.
+fn quirk_tx_pgns(config: &BridgeConfig) -> Vec<u32> {
+    let mut pgns = Vec::new();
+    if config.quirk.contains(&quirks::QuirkKind::Wmm) {
+        pgns.push(quirks::wmm::PGN_MAGNETIC_VARIATION);
+    }
+    pgns
+}
+
+/// The status for a backend that cannot advertise PGN lists, warning when
+/// the embedder asked for some.
+fn unsupported_pgn_lists(config: &BridgeConfig) -> Option<PgnListStatus> {
+    let effective = effective_pgn_lists(config);
+    if !config.pgn_lists.is_empty() {
+        log::warn!(
+            "this backend cannot advertise PGN lists; ignoring transmit {:?} and receive {:?}",
+            config.pgn_lists.tx,
+            config.pgn_lists.rx
+        );
+    } else if !effective.is_empty() {
+        // Only a quirk's PGN (wmm's 127258): the user asked for no lists,
+        // so say so without a warning.
+        log::info!(
+            "this backend cannot advertise PGN lists; the quirks' transmit PGNs {:?} are not advertised",
+            effective.tx
+        );
+    }
+    if effective.is_empty() {
+        return None;
+    }
+    Some(PgnListStatus {
+        tx: PgnListSupport::Unsupported,
+        rx: PgnListSupport::Unsupported,
+        dropped: Vec::new(),
     })
 }
 

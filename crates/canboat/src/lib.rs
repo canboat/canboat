@@ -103,7 +103,8 @@
 //!
 //! # Features
 //!
-//! * `decode` (baseline) — sans-I/O core: schema, decode, encode, formatters.
+//! * `decode` (baseline) — sans-I/O core: schema, decode, encode, formatters,
+//!   and `codec`: the NGT-1 / iKonvert / Maretron wire protocols without a port.
 //!   No threads, no async, no sockets.
 //! * `io` — byte-source readers (`read::*Reader`) for files / text, plus
 //!   `bus::open_*` to read+write a live NGT-1 / iKonvert / SocketCAN link.
@@ -326,7 +327,9 @@ pub mod read {
 pub mod bus {
     use std::io;
 
-    pub use crate::io::device::{DeviceHandle, DeviceWriterGone, FrameSender};
+    pub use crate::io::device::{
+        Closed, DeviceCloser, DeviceHandle, DeviceWriterGone, FrameSender,
+    };
 
     /// Open an Actisense NGT-1 / NGT-1-USB on a serial port (typically
     /// `115_200` baud), speaking the Actisense binary protocol.
@@ -358,6 +361,112 @@ pub mod bus {
     }
 }
 
+// ─────────────────────────────── codec ───────────────────────────────────
+
+/// The gateways' wire protocols without the I/O: bytes in, [`Frame`]s out,
+/// and back. For a transport the `bus` openers cannot reach — WebSerial or a
+/// WebSocket in a browser, an async runtime, an embedded UART.
+///
+/// Each gateway is one stateful object implementing [`Codec`](codec::Codec)
+/// — [`Ngt1`](codec::ngt1::Ngt1), [`Ikonvert`](codec::ikonvert::Ikonvert),
+/// [`Maretron`](codec::maretron::Maretron) — that holds everything its
+/// protocol needs: the partial message between reads, the init handshake,
+/// the transmit list. It never touches a port, a thread or the clock; the
+/// caller writes what it returns and passes the time in. The `io` feature's
+/// `bus::open_*` openers are these same codecs on a pair of threads.
+///
+/// ```
+/// use canboat::codec::{Codec, Event};
+/// use canboat::codec::ikonvert::{Config, Ikonvert};
+///
+/// let mut gw = Ikonvert::new(Config::default());
+/// let mut to_port: Vec<Vec<u8>> = vec![gw.open()]; // $PDGY,N2NET_OFFLINE
+///
+/// // Whatever the port delivers, fed in with the current time.
+/// let now_ms = 1_780_082_164_826;
+/// let mut events = Vec::new();
+/// gw.receive(b"$PDGY,TEXT,Digital_Yacht_iKonvert\r\n", now_ms, &mut events);
+/// for ev in events.drain(..) {
+///     match ev {
+///         Event::Frame(frame) => println!("PGN {} from {}", frame.pgn, frame.src),
+///         Event::Send(bytes) => to_port.push(bytes), // the next handshake step
+///         Event::Error(e) => eprintln!("{e}"),
+///     }
+/// }
+/// assert_eq!(to_port[1], b"$PDGY,N2NET_RESET\r\n");
+///
+/// // Closing takes the iKonvert off the bus.
+/// to_port.push(gw.close());
+/// ```
+///
+/// To speak raw CAN over a byte pipe instead (SLCAN, candump over a socket),
+/// [`can_id`](codec::can_id) maps the 29-bit identifier and
+/// [`fastpacket`](codec::fastpacket) splits an outgoing message into its
+/// CAN frames; [`Reassembler`] joins incoming ones.
+#[cfg(feature = "decode")]
+pub mod codec {
+    pub use crate::engine::codec::{Codec, Event, Refused};
+    /// The PGNs a gateway is told the application sends and reads.
+    pub use crate::engine::pgn_list::PgnLists;
+
+    /// Actisense NGT-1 (Actisense binary protocol, typically 115 200 baud).
+    pub mod ngt1 {
+        pub use crate::engine::codec::ngt1::{Config, KEEPALIVE_INTERVAL, Ngt1};
+        pub use crate::engine::codec::ngt1_tx_list::TxListRecord;
+        /// What an NGT-1 sends for a frame it received — to simulate one.
+        /// `None` for more than 244 bytes of data.
+        pub use crate::engine::format::ngt1::encode_n2k_received_frame as encode_received;
+    }
+
+    /// Digital Yacht iKonvert (`$PDGY` / `!PDGY` ASCII, typically 230 400
+    /// baud).
+    pub mod ikonvert {
+        pub use crate::engine::codec::ikonvert::{Config, Ikonvert};
+    }
+
+    /// Maretron IPG100 / IPG200 (TCP).
+    pub mod maretron {
+        pub use crate::engine::codec::maretron::{Config, Maretron};
+    }
+
+    /// The 29-bit ISO 11783 CAN identifier ⇄ priority, PGN, source and
+    /// destination.
+    pub mod can_id {
+        /// `(prio, pgn, src, dst)` → CAN identifier. For a PDU2 PGN the
+        /// destination is part of the PGN and `dst` is ignored.
+        pub use crate::engine::format::iso11783_compose as compose;
+        /// CAN identifier → `(prio, pgn, src, dst)`; `dst` is 255 for a
+        /// PDU2 PGN.
+        pub use crate::engine::format::iso11783_decompose as decompose;
+    }
+
+    /// Splitting an outgoing message into CAN frames.
+    pub mod fastpacket {
+        pub use crate::engine::fastpacket::{fragment, packet_type};
+    }
+
+    /// The text line dialects, one [`Frame`](crate::Frame) per line: canboat
+    /// PLAIN / FAST, Actisense N2K ASCII, YDWG-02 RAW, candump, iKonvert
+    /// `!PDGY`, Airmar, Chetco, Garmin CSV. For a gateway that speaks one of
+    /// them over a socket, or a capture read without the `io` feature.
+    pub mod line {
+        /// Which dialect a line is in; the same type as `read::InputFormat`.
+        pub use crate::engine::format::InputFormat;
+        /// Why a line did not parse.
+        pub use crate::engine::format::PlainError as ParseError;
+        /// Frame → an Actisense N2K ASCII (W2K-1) line.
+        pub use crate::engine::format::actisense_ascii::write_line as write_actisense_ascii;
+        /// The dialect of a line, or `None` when nothing matches (canboat
+        /// then reads it as PLAIN).
+        pub use crate::engine::format::detect;
+        /// One line in the given dialect → a frame; `Ok(None)` for a line
+        /// that carries no frame (an iKonvert control sentence).
+        pub use crate::engine::format::parse_with as parse;
+        /// Frame → a canboat PLAIN line.
+        pub use crate::engine::format::plain::write_line as write_plain;
+    }
+}
+
 // ─────────────────────────────── device ──────────────────────────────────
 
 /// Be a compliant N2K node without owning a transport, all [`Frame`]-in /
@@ -373,6 +482,7 @@ pub mod bus {
 /// socketcan gateway and the motion quirk both do).
 #[cfg(feature = "node")]
 pub mod device {
+    pub use crate::engine::pgn_list::{MAX_PGN_LIST_LEN, PgnListStatus, PgnListSupport, PgnLists};
     pub use crate::io::address_claim::{AddressClaim as Claimer, ClaimState};
     pub use crate::io::name::Name;
     pub use crate::io::nmea_responder::{
@@ -441,6 +551,8 @@ pub mod device {
 /// ```
 #[cfg(feature = "bridge")]
 pub mod bridge {
+    /// [`BridgeConfig::pgn_lists`] and [`Bridge::pgn_list_status`]'s types.
+    pub use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
     /// Which dates [`Quirk::GpsRollover`] corrects, and how a device on
     /// that list is named. Both parse from the `gps-rollover=…` CLI syntax.
     pub use crate::engine::quirk::{Device as GpsRolloverDevice, Target as GpsRolloverTarget};

@@ -8667,11 +8667,11 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32798, .description = "Capabilities", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
-      {.name = "Zone 1", .camelName = "zone1", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Zone 2", .camelName = "zone2", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Zone 3", .camelName = "zone3", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Zone 4", .camelName = "zone4", .fieldType = "UINT16", .resolution = 1.0},
-      {.name = "Global", .camelName = "global", .fieldType = "UINT16", .resolution = 1.0}
+      {.name = "Zone 1", .camelName = "zone1", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
+      {.name = "Zone 2", .camelName = "zone2", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
+      {.name = "Zone 3", .camelName = "zone3", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
+      {.name = "Zone 4", .camelName = "zone4", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
+      {.name = "Global", .camelName = "global", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"}
      },
      .camelDescription = "fusionCapabilities",
      .priority = 7},
@@ -8915,15 +8915,15 @@ Pgn pgnList[] = {
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32865, .description = "Zone Capabilities Extended", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
-      {.name = "Zone 1 Capabilities", .camelName = "zone1Capabilities", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Zone 1 Capabilities", .camelName = "zone1Capabilities", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
       {.name = "Zone 1 Extra", .camelName = "zone1Extra", .fieldType = "BINARY", .size = 48, .resolution = 1.0},
-      {.name = "Zone 2 Capabilities", .camelName = "zone2Capabilities", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Zone 2 Capabilities", .camelName = "zone2Capabilities", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
       {.name = "Zone 2 Extra", .camelName = "zone2Extra", .fieldType = "BINARY", .size = 48, .resolution = 1.0},
-      {.name = "Zone 3 Capabilities", .camelName = "zone3Capabilities", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Zone 3 Capabilities", .camelName = "zone3Capabilities", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
       {.name = "Zone 3 Extra", .camelName = "zone3Extra", .fieldType = "BINARY", .size = 48, .resolution = 1.0},
-      {.name = "Zone 4 Capabilities", .camelName = "zone4Capabilities", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Zone 4 Capabilities", .camelName = "zone4Capabilities", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
       {.name = "Zone 4 Extra", .camelName = "zone4Extra", .fieldType = "BINARY", .size = 48, .resolution = 1.0},
-      {.name = "Global Capabilities", .camelName = "globalCapabilities", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Global Capabilities", .camelName = "globalCapabilities", .fieldType = "BITLOOKUP", .size = 16, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_CAPABILITY_BITFIELD, .lookup.name = "FUSION_CAPABILITY_BITFIELD"},
       {.name = "Global Extra", .camelName = "globalExtra", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
      },
      .camelDescription = "fusionZoneCapabilitiesExtended",
@@ -8957,6 +8957,20 @@ Pgn pgnList[] = {
       {.name = "Gain", .camelName = "gain", .fieldType = "INT8", .resolution = 1.0, .hasSign = true}
      },
      .camelDescription = "fusionInternalAmpGain",
+     .priority = 7},
+
+    {"Fusion: System Capabilities",
+     130820,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 419, .description = "Fusion Electronics", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Message ID", .camelName = "messageId", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .hasMatchValue = true, .matchValue = 32829, .description = "System Capabilities", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupFUSION_STATUS_MESSAGE_ID, .lookup.name = "FUSION_STATUS_MESSAGE_ID", .partOfPrimaryKey = true},
+      {.name = "Capabilities", .camelName = "capabilities", .fieldType = "BITLOOKUP", .size = 64, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_BIT, LOOKUP_BIT_MEMBER = lookupFUSION_SYSTEM_CAPABILITY_BITFIELD, .lookup.name = "FUSION_SYSTEM_CAPABILITY_BITFIELD"}
+     },
+     .camelDescription = "fusionSystemCapabilities",
      .priority = 7},
 
     {"Navico: ASCII Data",

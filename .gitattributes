@@ -36,4 +36,4 @@ docs/canboat.dbc                                  linguist-generated=true
 analyzer/*-generated-data.h                       linguist-generated=true
 crates/canboat/src/engine/schema_generated.rs       linguist-generated=true
 crates/canboat/src/engine/schema_generated_j1939.rs linguist-generated=true
-crates/canboat/src/io/fastpacket_generated.rs     linguist-generated=true
+crates/canboat/src/engine/fastpacket_generated.rs     linguist-generated=true

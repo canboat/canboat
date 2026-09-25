@@ -11,7 +11,10 @@
 //! the device. Both threads are owned by the runner here; the
 //! per-device codec lives behind two small traits ([`DeviceDecoder`]
 //! and [`DeviceEncoder`]) so the runner stays oblivious to the
-//! protocol.
+//! protocol. The gateways with a public sans-I/O
+//! [`Codec`](crate::engine::codec::Codec) (NGT-1, iKonvert, Maretron)
+//! run through [`run_codec`], which shares the one codec between both
+//! threads and supplies the clock.
 //!
 //! A typical use, through the public `bus::open_*` wrappers (which open
 //! the serial port and call the runner, e.g. `ngt1::run(reader, writer)`):
@@ -35,11 +38,13 @@ pub mod supervisor;
 pub use supervisor::{DeviceFactory, Supervisor};
 
 use std::io::{self, Read, Write};
-use std::sync::mpsc;
+use std::sync::atomic::{AtomicU64, Ordering};
+use std::sync::{Arc, Mutex, mpsc};
 use std::thread::{self, JoinHandle};
-use std::time::{Duration, Instant};
+use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
 use crate::engine::RawFrame;
+use crate::engine::codec::{Codec, Event};
 
 /// Events emitted by a [`DeviceDecoder`] as bytes are pumped in.
 #[derive(Debug)]
@@ -59,6 +64,11 @@ pub enum DeviceEvent {
 /// [`DeviceEvent`]s.
 pub trait DeviceDecoder: Send + 'static {
     fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>);
+
+    /// Called when a read times out with nothing received (a serial port
+    /// does every 250 ms), so a decoder's own deadlines advance on a quiet
+    /// line too. Nothing by default.
+    fn tick(&mut self, _events: &mut Vec<DeviceEvent>) {}
 }
 
 /// Encoder half: turns app-side [`RawFrame`]s into device bytes, plus
@@ -80,12 +90,22 @@ pub trait DeviceEncoder: Send + Sync + 'static {
     /// Encode a [`RawFrame`] for transmission. `None` means "silently
     /// drop" — used to skip synthetic PGNs that never hit the bus.
     fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>>;
+
+    /// Bytes to write when the application closes the device on purpose
+    /// ([`DeviceHandle::close`]), e.g. to take a gateway off the bus.
+    /// Empty when the device needs nothing.
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        Vec::new()
+    }
 }
 
 /// Commands accepted by the writer thread.
 pub(crate) enum WriterCmd {
     Bytes(Vec<u8>),
     Frame(RawFrame),
+    /// Write the encoder's [`DeviceEncoder::shutdown_bytes`] and stop,
+    /// then tell the sender, if any, whether that succeeded.
+    Shutdown(Option<mpsc::Sender<bool>>),
 }
 
 /// Returned by [`run`]. Owns the reader/writer threads' join handles
@@ -96,6 +116,12 @@ pub struct DeviceHandle {
     pub frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    /// The writer thread, joined apart from the others by [`Self::close`].
+    /// `None` for a codec that has no separate writer (SocketCAN).
+    writer: Option<JoinHandle<()>>,
+    /// Writes the writer thread has completed, so a close can tell a
+    /// writer still draining a backlog from a stuck one.
+    progress: Arc<AtomicU64>,
 }
 
 /// Returned by [`DeviceHandle::send_frame`] / [`FrameSender::send_frame`]
@@ -131,8 +157,95 @@ impl DeviceHandle {
     /// to exit.
     pub fn join(self) {
         drop(self.cmd_tx);
-        for j in self.joins {
+        for j in self.joins.into_iter().chain(self.writer) {
             let _ = j.join();
+        }
+    }
+
+    /// Close the device on purpose: the writer finishes what is queued,
+    /// sends the encoder's [`DeviceEncoder::shutdown_bytes`] (an iKonvert
+    /// goes off the bus) and stops. See [`DeviceCloser::close`] for the
+    /// wait; a writer that stops making progress is left behind rather
+    /// than hanging shutdown. The reader thread is not joined: it may be
+    /// blocked reading the device, and ends with it.
+    pub fn close(self) -> Closed {
+        let closed = self.closer().close(CLOSE_TIMEOUT);
+        match closed {
+            Closed::Confirmed | Closed::Gone => {
+                if let Some(writer) = self.writer {
+                    let _ = writer.join();
+                }
+            }
+            Closed::Unconfirmed => {
+                log::warn!("the device did not confirm closing; leaving it");
+            }
+        }
+        closed
+    }
+
+    /// A handle another thread can [`close`](DeviceCloser::close) the
+    /// device with — for a signal handler while this thread is busy
+    /// reading.
+    pub fn closer(&self) -> DeviceCloser {
+        DeviceCloser {
+            cmd_tx: self.cmd_tx.clone(),
+            progress: self.progress.clone(),
+        }
+    }
+}
+
+/// How long [`DeviceHandle::close`] waits for the device to confirm, or —
+/// while it is still draining a backlog — for its next completed write.
+pub const CLOSE_TIMEOUT: Duration = Duration::from_secs(2);
+
+/// How a [`close`](DeviceHandle::close) went.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Closed {
+    /// Everything queued and the goodbye (if any) were written and
+    /// flushed.
+    Confirmed,
+    /// The device had already gone: its writer had stopped (the device
+    /// was unplugged, or timed out), so there was nothing left to close.
+    Gone,
+    /// The goodbye could not be written, or the writer stopped making
+    /// progress: a gateway may still be on the bus.
+    Unconfirmed,
+}
+
+/// Closes a device from another thread; see [`DeviceHandle::closer`].
+#[derive(Clone)]
+pub struct DeviceCloser {
+    cmd_tx: mpsc::Sender<WriterCmd>,
+    progress: Arc<AtomicU64>,
+}
+
+impl DeviceCloser {
+    /// [`DeviceHandle::close`] from elsewhere: the writer finishes what is
+    /// queued, sends the encoder's shutdown bytes and stops. Waits for that
+    /// as long as the writer keeps completing writes, giving up only after
+    /// `timeout` without one — a long backlog still drains, a stuck writer
+    /// does not hang the caller.
+    pub fn close(&self, timeout: Duration) -> Closed {
+        let (done_tx, done_rx) = mpsc::channel();
+        if self
+            .cmd_tx
+            .send(WriterCmd::Shutdown(Some(done_tx)))
+            .is_err()
+        {
+            return Closed::Gone;
+        }
+        loop {
+            let before = self.progress.load(Ordering::Relaxed);
+            match done_rx.recv_timeout(timeout) {
+                Ok(true) => return Closed::Confirmed,
+                Ok(false) => return Closed::Unconfirmed,
+                // The writer ended without getting to the shutdown: it
+                // stopped on a failed write, the device is gone.
+                Err(mpsc::RecvTimeoutError::Disconnected) => return Closed::Gone,
+                Err(mpsc::RecvTimeoutError::Timeout)
+                    if self.progress.load(Ordering::Relaxed) != before => {}
+                Err(mpsc::RecvTimeoutError::Timeout) => return Closed::Unconfirmed,
+            }
         }
     }
 }
@@ -162,15 +275,21 @@ impl FrameSender {
 /// handles. Used by codecs whose I/O model isn't byte-stream-shaped
 /// (e.g. `socketcan`) and can't use the generic [`run`] runner below.
 #[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+///
+/// `progress` counts the device's completed writes, as the generic
+/// writer's does, so a close can tell a draining backlog from a stuck one.
 pub(crate) fn from_parts(
     frames_rx: mpsc::Receiver<RawFrame>,
     cmd_tx: mpsc::Sender<WriterCmd>,
     joins: Vec<JoinHandle<()>>,
+    progress: Arc<AtomicU64>,
 ) -> DeviceHandle {
     DeviceHandle {
         frames_rx,
         cmd_tx,
         joins,
+        writer: None,
+        progress,
     }
 }
 
@@ -188,10 +307,21 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
 
     let init = encoder.init_bytes();
     let keepalive = encoder.keepalive();
+    let progress = Arc::new(AtomicU64::new(0));
+    let writer_progress = progress.clone();
 
     let writer_join = thread::Builder::new()
         .name("device-writer".into())
-        .spawn(move || writer_thread(&mut *writer, encoder, init, keepalive, cmd_rx))
+        .spawn(move || {
+            writer_thread(
+                &mut *writer,
+                encoder,
+                init,
+                keepalive,
+                cmd_rx,
+                &writer_progress,
+            )
+        })
         .expect("spawn device writer");
 
     let reader_join = thread::Builder::new()
@@ -202,7 +332,100 @@ pub fn run<D: DeviceDecoder, E: DeviceEncoder>(
     DeviceHandle {
         frames_rx,
         cmd_tx,
-        joins: vec![reader_join, writer_join],
+        joins: vec![reader_join],
+        writer: Some(writer_join),
+        progress,
+    }
+}
+
+/// Run a sans-I/O [`Codec`] under [`run`]: the reader thread feeds it
+/// the bytes it reads, the writer thread has it encode frames, and both
+/// pass it the host clock. `fixtime`, when set, replaces the timestamp of
+/// every frame it produces (canboat's `-fixtime`, for reproducible output).
+pub fn run_codec<C: Codec + Send + 'static>(
+    codec: C,
+    fixtime: Option<String>,
+    reader: Box<dyn Read + Send>,
+    writer: Box<dyn Write + Send>,
+) -> DeviceHandle {
+    let codec = Arc::new(Mutex::new(codec));
+    let decoder = CodecDecoder {
+        codec: codec.clone(),
+        fixtime,
+        events: Vec::with_capacity(8),
+    };
+    run(decoder, CodecEncoder { codec }, reader, writer)
+}
+
+/// The host clock in Unix milliseconds, as the codecs take it.
+fn now_ms() -> u64 {
+    SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .map(|d| d.as_millis() as u64)
+        .unwrap_or(0)
+}
+
+/// The locked codec; a panic in the other thread does not lose it.
+fn lock<C>(codec: &Mutex<C>) -> std::sync::MutexGuard<'_, C> {
+    codec
+        .lock()
+        .unwrap_or_else(std::sync::PoisonError::into_inner)
+}
+
+/// The reader thread's view of a shared [`Codec`].
+struct CodecDecoder<C> {
+    codec: Arc<Mutex<C>>,
+    fixtime: Option<String>,
+    events: Vec<Event>,
+}
+
+impl<C> CodecDecoder<C> {
+    fn deliver(&mut self, out: &mut Vec<DeviceEvent>) {
+        out.extend(self.events.drain(..).map(|ev| match ev {
+            Event::Frame(mut f) => {
+                if let Some(ts) = &self.fixtime {
+                    f.timestamp = Some(ts.clone());
+                }
+                DeviceEvent::Frame(f)
+            }
+            Event::Send(b) => DeviceEvent::SendBytes(b),
+            Event::Error(e) => DeviceEvent::Error(e),
+        }));
+    }
+}
+
+impl<C: Codec + Send + 'static> DeviceDecoder for CodecDecoder<C> {
+    fn decode(&mut self, bytes: &[u8], events: &mut Vec<DeviceEvent>) {
+        lock(&self.codec).receive(bytes, now_ms(), &mut self.events);
+        self.deliver(events);
+    }
+
+    fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+        lock(&self.codec).tick(now_ms(), &mut self.events);
+        self.deliver(events);
+    }
+}
+
+/// The writer thread's view of a shared [`Codec`].
+struct CodecEncoder<C> {
+    codec: Arc<Mutex<C>>,
+}
+
+impl<C: Codec + Send + 'static> DeviceEncoder for CodecEncoder<C> {
+    fn init_bytes(&self) -> Vec<u8> {
+        lock(&self.codec).open()
+    }
+
+    fn keepalive(&self) -> Option<(Duration, Vec<u8>)> {
+        lock(&self.codec).keepalive()
+    }
+
+    fn encode_frame(&self, frame: &RawFrame) -> Option<Vec<u8>> {
+        lock(&self.codec).send(frame).ok()
+    }
+
+    fn shutdown_bytes(&self) -> Vec<u8> {
+        lock(&self.codec).close()
     }
 }
 
@@ -214,31 +437,42 @@ fn reader_thread<D: DeviceDecoder>(
 ) {
     let mut buf = [0u8; 4096];
     let mut events: Vec<DeviceEvent> = Vec::with_capacity(8);
+    // Hand the decoder's events on; `false` once a channel is gone.
+    let deliver = |events: &mut Vec<DeviceEvent>| -> bool {
+        for ev in events.drain(..) {
+            match ev {
+                DeviceEvent::Frame(f) => {
+                    if frames_tx.send(f).is_err() {
+                        return false;
+                    }
+                }
+                DeviceEvent::SendBytes(b) => {
+                    if cmd_tx.send(WriterCmd::Bytes(b)).is_err() {
+                        return false;
+                    }
+                }
+                DeviceEvent::Error(e) => {
+                    log::warn!("device decode error: {e}");
+                }
+            }
+        }
+        true
+    };
     loop {
         match reader.read(&mut buf) {
             Ok(0) => return,
             Ok(n) => {
-                events.clear();
                 decoder.decode(&buf[..n], &mut events);
-                for ev in events.drain(..) {
-                    match ev {
-                        DeviceEvent::Frame(f) => {
-                            if frames_tx.send(f).is_err() {
-                                return;
-                            }
-                        }
-                        DeviceEvent::SendBytes(b) => {
-                            if cmd_tx.send(WriterCmd::Bytes(b)).is_err() {
-                                return;
-                            }
-                        }
-                        DeviceEvent::Error(e) => {
-                            log::warn!("device decode error: {e}");
-                        }
-                    }
+                if !deliver(&mut events) {
+                    return;
                 }
             }
-            Err(e) if e.kind() == io::ErrorKind::TimedOut => continue,
+            Err(e) if e.kind() == io::ErrorKind::TimedOut => {
+                decoder.tick(&mut events);
+                if !deliver(&mut events) {
+                    return;
+                }
+            }
             Err(e) if e.kind() == io::ErrorKind::Interrupted => continue,
             Err(e) => {
                 log::error!("device read error: {e}");
@@ -254,6 +488,7 @@ fn writer_thread<E: DeviceEncoder>(
     init: Vec<u8>,
     keepalive: Option<(Duration, Vec<u8>)>,
     rx: mpsc::Receiver<WriterCmd>,
+    progress: &AtomicU64,
 ) {
     if !init.is_empty() {
         if let Err(e) = writer.write_all(&init) {
@@ -296,16 +531,144 @@ fn writer_thread<E: DeviceEncoder>(
                 Some(b) => b,
                 None => continue,
             },
+            WriterCmd::Shutdown(done) => {
+                let bytes = encoder.shutdown_bytes();
+                let sent = bytes.is_empty()
+                    || match writer.write_all(&bytes).and_then(|()| writer.flush()) {
+                        Ok(()) => true,
+                        Err(e) => {
+                            log::warn!("device shutdown write failed: {e}");
+                            false
+                        }
+                    };
+                if let Some(done) = done {
+                    let _ = done.send(sent);
+                }
+                return;
+            }
         };
         if let Err(e) = writer.write_all(&bytes) {
             log::error!("device write failed: {e}");
             return;
         }
         let _ = writer.flush();
+        progress.fetch_add(1, Ordering::Relaxed);
         // Push the keepalive deadline forward — every real write
         // counts as activity.
         if let Some((interval, _)) = keepalive.as_ref() {
             next_keepalive = Some(Instant::now() + *interval);
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A line that stays quiet: every read times out, then it closes.
+    struct QuietThenEof(u32);
+    impl Read for QuietThenEof {
+        fn read(&mut self, _buf: &mut [u8]) -> io::Result<usize> {
+            if self.0 == 0 {
+                return Ok(0);
+            }
+            self.0 -= 1;
+            Err(io::ErrorKind::TimedOut.into())
+        }
+    }
+
+    /// Emits one frame per tick.
+    struct Ticker;
+    impl DeviceDecoder for Ticker {
+        fn decode(&mut self, _bytes: &[u8], _events: &mut Vec<DeviceEvent>) {}
+        fn tick(&mut self, events: &mut Vec<DeviceEvent>) {
+            events.push(DeviceEvent::Frame(RawFrame::new(
+                None,
+                0,
+                1,
+                0,
+                0,
+                std::iter::empty(),
+            )));
+        }
+    }
+
+    struct NoEncoder;
+    impl DeviceEncoder for NoEncoder {
+        fn encode_frame(&self, _frame: &RawFrame) -> Option<Vec<u8>> {
+            None
+        }
+    }
+
+    /// Collects what the writer thread writes.
+    #[derive(Clone, Default)]
+    struct Sink(Arc<Mutex<Vec<u8>>>);
+    impl Write for Sink {
+        fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
+            self.0.lock().unwrap().extend_from_slice(buf);
+            Ok(buf.len())
+        }
+        fn flush(&mut self) -> io::Result<()> {
+            Ok(())
+        }
+    }
+
+    /// A codec under the threaded runner: `open` goes out first, the
+    /// handshake reply it asks for reaches the writer, frames come out
+    /// with `fixtime` stamped on, sends are encoded by the same codec, and
+    /// closing writes its goodbye.
+    #[test]
+    fn run_codec_drives_a_codec_on_threads() {
+        use crate::engine::codec::maretron::{Config, Maretron};
+        use crate::engine::format::maretron_ipg::{
+            F1_SYNC_BIT, FRAME_SYNC, build_connect, build_frame, build_set_mode_binary,
+        };
+
+        let mut input = b"CONNECTED\t1234567\0".to_vec();
+        input.extend([
+            FRAME_SYNC,
+            F1_SYNC_BIT | (6 << 4) | (1 << 1),
+            0xF1,
+            0x01,
+            0x17,
+            1,
+            0x42,
+        ]);
+        let sink = Sink::default();
+        let handle = run_codec(
+            Maretron::new(Config {
+                password: "pw".into(),
+            }),
+            Some("fixed".into()),
+            Box::new(io::Cursor::new(input)),
+            Box::new(sink.clone()),
+        );
+
+        let frame = handle.frames_rx.recv().expect("a frame");
+        assert_eq!(frame.pgn, 0xF101);
+        assert_eq!(frame.timestamp.as_deref(), Some("fixed"));
+
+        let out = RawFrame::new(None, 3, 127508, 17, 255, [1u8, 2, 3, 4, 5, 6, 7, 8]);
+        handle.send_frame(out.clone()).unwrap();
+        assert_eq!(handle.close(), Closed::Confirmed);
+
+        let mut expected = build_connect("pw");
+        expected.extend(build_set_mode_binary());
+        expected.extend(build_frame(out.pgn, out.prio, out.dst, &out.data).unwrap());
+        assert_eq!(*sink.0.lock().unwrap(), expected);
+    }
+
+    /// A decoder's deadlines advance on a quiet line: each read timeout
+    /// ticks it, and what the tick produces is delivered.
+    #[test]
+    fn read_timeouts_tick_the_decoder() {
+        let handle = run(
+            Ticker,
+            NoEncoder,
+            Box::new(QuietThenEof(3)),
+            Box::new(io::sink()),
+        );
+        let ticks = handle.frames_rx.iter().count();
+        assert_eq!(ticks, 3);
     }
 }

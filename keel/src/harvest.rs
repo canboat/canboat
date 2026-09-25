@@ -72,16 +72,27 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
             .unwrap_or_else(|| file.clone());
 
         let mut re = Reassembler::default();
+        // A `# format=FAST` (or other coalesced) header means every line is
+        // already a complete message, however short. Without it a fast-packet
+        // message of <= 8 bytes is indistinguishable from one CAN frame.
+        let mut coalesced = false;
+        let (mut file_frames, mut file_msgs) = (0usize, 0usize);
         for line in text.lines() {
             let t = line.trim();
-            if t.is_empty() || t.starts_with('#') {
+            if t.is_empty() {
+                continue;
+            }
+            if t.starts_with('#') {
+                coalesced |= header_implies_coalesced(t);
                 continue;
             }
             let Ok(f) = parse_line(t) else { continue };
-            let Some(a) = re.feed(f, |pgn| fast.contains(&pgn)) else {
+            file_frames += 1;
+            let Some(a) = re.feed(f, coalesced, |pgn| fast.contains(&pgn)) else {
                 continue;
             };
             msgs_seen += 1;
+            file_msgs += 1;
             let Some(p) = decode::select_variant(db, a.pgn, &a.data, false) else {
                 continue;
             };
@@ -102,6 +113,12 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
                     source: base.clone(),
                 });
             }
+        }
+        if file_frames > 0 && file_msgs == 0 {
+            eprintln!(
+                "keel harvest: {file}: {file_frames} frame(s) but no complete message; \
+                 if it holds reassembled messages, add a `# format=FAST` header"
+            );
         }
     }
 
@@ -327,6 +344,19 @@ fn dq(s: &str) -> String {
     out
 }
 
+/// True when a `# format=<NAME>` header declares already-reassembled
+/// messages. Mirrors `header_implies_coalesced` in the canboat crate
+/// (engine/format/mod.rs); keel deliberately does not depend on it.
+fn header_implies_coalesced(line: &str) -> bool {
+    let Some(rest) = line.strip_prefix("# format=") else {
+        return false;
+    };
+    !matches!(
+        rest.trim().to_ascii_uppercase().as_str(),
+        "PLAIN" | "PLAIN_OR_FAST" | "PLAIN_MIX_FAST" | "YDWG02" | "CANDUMP"
+    )
+}
+
 /// Streaming fast-packet reassembler (single-message-at-a-time port of
 /// samples::reassemble_lenient, so a 76 MB capture never materializes all
 /// messages at once).
@@ -352,9 +382,15 @@ pub struct HarvestMsg {
 
 impl Reassembler {
     /// Feed one frame; returns a completed message if this frame finished one.
-    fn feed<F: Fn(u32) -> bool>(&mut self, f: RawFrame, is_fast: F) -> Option<HarvestMsg> {
-        // Single-frame (or already-assembled coalesced) -> pass straight through.
-        if !is_fast(f.pgn) || f.data.len() > 8 {
+    fn feed<F: Fn(u32) -> bool>(
+        &mut self,
+        f: RawFrame,
+        coalesced: bool,
+        is_fast: F,
+    ) -> Option<HarvestMsg> {
+        // Single-frame, or already assembled (declared by a coalesced format
+        // header, or longer than one frame can be) -> pass straight through.
+        if coalesced || !is_fast(f.pgn) || f.data.len() > 8 {
             return Some(HarvestMsg {
                 prio: f.prio,
                 pgn: f.pgn,
@@ -420,5 +456,38 @@ impl Reassembler {
             });
         }
         None
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // Fusion 126720 "Set Equalizer" from an MS-RA70N: an 8-byte fast-packet
+    // message, the length that is ambiguous without a format header (#910).
+    const TONE: &str = "2026-09-19T06:23:58.519Z,3,126720,33,12,8,a3,99,16,00,02,07,fd,0f";
+
+    #[test]
+    fn coalesced_short_fast_message_passes_through() {
+        let f = parse_line(TONE).unwrap();
+        let m = Reassembler::default().feed(f, true, |_| true).unwrap();
+        assert_eq!(m.data, [0xa3, 0x99, 0x16, 0x00, 0x02, 0x07, 0xfd, 0x0f]);
+    }
+
+    #[test]
+    fn undeclared_short_fast_line_is_a_frame() {
+        // Without the header the same line is read as a fast-packet frame
+        // (0xa3 = sequence 5, frame 3) and cannot complete a message.
+        let f = parse_line(TONE).unwrap();
+        assert!(Reassembler::default().feed(f, false, |_| true).is_none());
+    }
+
+    #[test]
+    fn header_detection() {
+        assert!(header_implies_coalesced("# format=FAST"));
+        assert!(header_implies_coalesced("# format=actisense"));
+        assert!(!header_implies_coalesced("# format=PLAIN"));
+        assert!(!header_implies_coalesced("# format=CANDUMP"));
+        assert!(!header_implies_coalesced("# a comment"));
     }
 }

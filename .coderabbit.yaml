@@ -33,7 +33,7 @@ reviews:
     - "!analyzer/*-generated-data.h"
     - "!crates/canboat/src/engine/schema_generated.rs"
     - "!crates/canboat/src/engine/schema_generated_j1939.rs"
-    - "!crates/canboat/src/io/fastpacket_generated.rs"
+    - "!crates/canboat/src/engine/fastpacket_generated.rs"
     # --- derived from database/ via keel + xsltproc + dbc-exporter ---
     - "!docs/canboat.xml"
     - "!docs/canboat.json"

@@ -27,6 +27,12 @@ pub const ADDR_MAX: u8 = 253;
 pub const CLAIM_TIMEOUT_MS: u64 = 250;
 /// How long to listen for others' claims before picking an address.
 pub const SCAN_TIMEOUT_MS: u64 = 1000;
+/// How long an address stays "in use" after its claim was last heard.
+/// Devices don't announce leaving; canboat asks every device to re-claim
+/// every 5 minutes (`n2kd::request_engine::DEVICE_REQUEST_INTERVAL`), so
+/// three missed rounds mean it is gone. A device that is still there but
+/// quiet simply wins or loses the arbitration if we pick its address.
+pub const USED_TTL_MS: u64 = 15 * 60 * 1000;
 
 const PGN_ISO_REQUEST: u32 = 59904;
 const PGN_ISO_ADDRESS_CLAIM: u32 = 60928;
@@ -57,8 +63,9 @@ pub struct AddressClaim {
     /// The NAME's arbitrary-address-capable bit: when set we move to
     /// another free address on losing a conflict, otherwise we go silent.
     arbitrary: bool,
-    /// Addresses observed in use (via others' 60928 claims).
-    used: [bool; 256],
+    /// When each address was last claimed by someone else (a 60928 heard,
+    /// or a contest lost); `None` if never. See [`USED_TTL_MS`].
+    last_seen: [Option<u64>; 256],
 }
 
 impl AddressClaim {
@@ -73,7 +80,7 @@ impl AddressClaim {
             state: ClaimState::Pending,
             deadline: 0,
             arbitrary,
-            used: [false; 256],
+            last_seen: [None; 256],
         }
     }
 
@@ -159,26 +166,42 @@ impl AddressClaim {
         }
         // While scanning we own no address yet — just learn what's in use.
         if self.state == ClaimState::Scanning || src != self.address {
-            self.used[src as usize] = true;
+            self.last_seen[src as usize] = Some(now);
             return Vec::new();
         }
         // Contention on our address. Lowest NAME wins (ISO 11783-5).
         if self.name < their_name {
+            log::info!(
+                "address claim: kept address {src} against a higher NAME ({}); ours is {}",
+                describe_name(their_name),
+                describe_name(self.name)
+            );
             self.state = ClaimState::Pending;
             self.deadline = now + CLAIM_TIMEOUT_MS;
             return vec![self.claim_frame()];
         }
         // We lost: yield the address.
-        self.used[src as usize] = true;
+        self.last_seen[src as usize] = Some(now);
         if self.arbitrary
-            && let Some(next) = self.pick_free()
+            && let Some(next) = self.pick_free(now)
         {
+            log::warn!(
+                "address claim: lost address {src} to a lower NAME ({}); ours ({}) moves to {next}",
+                describe_name(their_name),
+                describe_name(self.name)
+            );
             self.address = next;
             self.state = ClaimState::Pending;
             self.deadline = now + CLAIM_TIMEOUT_MS;
             return vec![self.claim_frame()];
         }
         // Nowhere to go (bus full or not arbitrary-address-capable).
+        log::warn!(
+            "address claim: lost address {src} to a lower NAME ({}); ours ({}) has no other \
+             address to go to and goes silent",
+            describe_name(their_name),
+            describe_name(self.name)
+        );
         self.address = ADDR_NULL;
         self.state = ClaimState::Failed;
         vec![self.claim_frame()] // "cannot claim" — broadcast from the null address
@@ -210,8 +233,8 @@ impl AddressClaim {
     /// Pick an address (preferred if free, else the lowest free one) and
     /// broadcast the claim.
     fn begin_claim(&mut self, now: u64) -> Vec<RawFrame> {
-        if self.used[self.preferred as usize] {
-            match self.pick_free() {
+        if self.in_use(self.preferred, now) {
+            match self.pick_free(now) {
                 Some(next) => self.address = next,
                 None => {
                     self.address = ADDR_NULL;
@@ -227,8 +250,18 @@ impl AddressClaim {
         vec![self.claim_frame()]
     }
 
-    fn pick_free(&self) -> Option<u8> {
-        (0..=ADDR_MAX).find(|a| !self.used[*a as usize])
+    /// Whether someone else claimed `address` within [`USED_TTL_MS`].
+    fn in_use(&self, address: u8, now: u64) -> bool {
+        self.last_seen[address as usize].is_some_and(|seen| now.saturating_sub(seen) < USED_TTL_MS)
+    }
+
+    /// The first free address upward from the preferred one, wrapping
+    /// round. Not the lowest free address: that is where real devices
+    /// like to sit, so a node parked there keeps being displaced.
+    fn pick_free(&self, now: u64) -> Option<u8> {
+        (self.preferred..=ADDR_MAX)
+            .chain(0..self.preferred)
+            .find(|&a| !self.in_use(a, now))
     }
 
     fn claim_frame(&self) -> RawFrame {
@@ -241,6 +274,22 @@ impl AddressClaim {
             self.name.to_le_bytes(),
         )
     }
+}
+
+/// A NAME for the log: the raw 64-bit value, which is what arbitration
+/// compares, plus its fields decoded.
+fn describe_name(name: u64) -> String {
+    format!(
+        "{name:#018x}: manufacturer {}, class {}, function {}, instance {}, \
+         system instance {}, industry {}, unique {:#x}",
+        (name >> 21) & 0x7ff,
+        (name >> 49) & 0x7f,
+        (name >> 40) & 0xff,
+        (name >> 32) & 0xff,
+        (name >> 56) & 0x0f,
+        (name >> 60) & 0x07,
+        name & 0x1f_ffff
+    )
 }
 
 /// A PGN 59904 ISO Request for `pgn`, from `src` to `dst`.
@@ -297,8 +346,8 @@ mod tests {
         // 42 is already claimed by someone else during the scan.
         assert!(c.on_address_claim(10, 42, HIGH).is_empty());
         let out = c.tick(SCAN_TIMEOUT_MS);
-        // Preferred 42 is taken → falls back to the lowest free address (0).
-        assert_eq!(claim_frames(&out), vec![(0, ADDR_GLOBAL)]);
+        // Preferred 42 is taken → the next free address up from it.
+        assert_eq!(claim_frames(&out), vec![(43, ADDR_GLOBAL)]);
     }
 
     #[test]
@@ -319,10 +368,63 @@ mod tests {
         c.tick(SCAN_TIMEOUT_MS); // Pending on 42
         // A lower NAME claims 42: we lose and move to another free address.
         let out = c.on_address_claim(SCAN_TIMEOUT_MS, 42, LOW);
-        let claims = claim_frames(&out);
-        assert_eq!(claims.len(), 1);
-        assert_ne!(claims[0].0, 42, "moved off the contested address");
+        assert_eq!(
+            claim_frames(&out),
+            vec![(43, ADDR_GLOBAL)],
+            "moved up from the contested address, not down to 0"
+        );
         assert_eq!(c.state(), ClaimState::Pending);
+    }
+
+    #[test]
+    fn the_search_for_a_free_address_wraps_round() {
+        let mut c = AddressClaim::new(LOW, ADDR_MAX, true);
+        c.start(0);
+        c.on_address_claim(10, ADDR_MAX, HIGH);
+        let out = c.tick(SCAN_TIMEOUT_MS);
+        assert_eq!(claim_frames(&out), vec![(0, ADDR_GLOBAL)]);
+    }
+
+    /// An address whose claim has not been heard for USED_TTL_MS is free
+    /// again: devices never say they leave.
+    #[test]
+    fn an_address_not_heard_from_is_free_again() {
+        let mut c = AddressClaim::new(HIGH, 42, true);
+        c.start(0);
+        c.tick(SCAN_TIMEOUT_MS); // Pending on 42
+        c.on_address_claim(SCAN_TIMEOUT_MS, 42, LOW); // lose 42 → 43
+        assert_eq!(c.pick_free(SCAN_TIMEOUT_MS + 1), Some(43));
+        assert_eq!(
+            c.pick_free(SCAN_TIMEOUT_MS + USED_TTL_MS),
+            Some(42),
+            "the winner has not re-claimed 42 for a TTL"
+        );
+    }
+
+    #[test]
+    fn a_name_is_described_by_the_fields_that_arbitrate() {
+        let name = crate::io::name::Name::new(381, 0x1234)
+            .device_function(140)
+            .device_class(60)
+            .to_u64();
+        assert_eq!(
+            describe_name(name),
+            format!(
+                "{name:#018x}: manufacturer 381, class 60, function 140, instance 0, \
+                 system instance 0, industry 4, unique 0x1234"
+            )
+        );
+    }
+
+    /// NAMEs that differ only in system instance arbitrate differently,
+    /// so the log must tell them apart.
+    #[test]
+    fn a_description_shows_the_system_instance() {
+        let base = crate::io::name::Name::new(999, 0x1234).device_class(25);
+        let a = describe_name(base.to_u64());
+        let b = describe_name(base.system_instance(15).to_u64());
+        assert_ne!(a, b);
+        assert!(b.contains("system instance 15"), "{b}");
     }
 
     #[test]
