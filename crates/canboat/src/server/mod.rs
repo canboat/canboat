@@ -129,6 +129,20 @@ pub struct Args {
     )]
     socketcan_address: u8,
 
+    /// ISO NAME System Instance (0..15) the SocketCAN gateway claims with.
+    /// Defaults to 15 (the maximum), so our NAME yields to real hardware
+    /// that leaves it at 0 rather than stealing its address. Set 0 to look
+    /// like one of the boat's own devices to a display that groups sources
+    /// by system instance. Ignored without `--socketcan`.
+    #[arg(
+        long = "socketcan-system-instance",
+        value_name = "N",
+        default_value_t = 15,
+        value_parser = clap::value_parser!(u8).range(0..=15),
+        requires = "socketcan"
+    )]
+    socketcan_system_instance: u8,
+
     /// Chain into another `canboat server` instance over its raw
     /// output port (`--raw-port`, default 2603). Accepts `host:port`
     /// or `tcp://host[:port]`. The stream is canboat PLAIN/FAST CSV.
@@ -374,6 +388,10 @@ pub struct BridgeConfig {
     pub maretron: Option<String>,
     pub socketcan: Option<String>,
     pub socketcan_address: u8,
+    /// ISO NAME System Instance (4 bits) the SocketCAN gateway claims with
+    /// (`--socketcan-system-instance`). Defaults to 15, so the NAME loses
+    /// address arbitration to real hardware that leaves it at 0.
+    pub socketcan_system_instance: u8,
     /// When `true`, the SocketCAN driver brings the interface up itself (at
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
@@ -446,6 +464,7 @@ impl Default for BridgeConfig {
             maretron: None,
             socketcan: None,
             socketcan_address: 0,
+            socketcan_system_instance: 15,
             socketcan_configure_link: false,
             canboat_csv: None,
             canboat_csv_write: None,
@@ -501,6 +520,7 @@ impl From<Args> for BridgeConfig {
             maretron: a.maretron,
             socketcan: a.socketcan,
             socketcan_address: a.socketcan_address,
+            socketcan_system_instance: a.socketcan_system_instance,
             // The standalone `canboat` CLI keeps assuming an externally
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
@@ -704,6 +724,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
         let pgn_lists = effective_pgn_lists(config);
         let config = device::socketcan::Config {
             address: config.socketcan_address,
+            system_instance: config.socketcan_system_instance,
             model_version: Some("canboat-pipeline-rs"),
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
@@ -1003,4 +1024,40 @@ fn install_stdin_loopback(
 #[allow(dead_code)]
 fn _no_source() -> Result<()> {
     bail!("no input source");
+}
+
+#[cfg(all(test, feature = "cli"))]
+mod tests {
+    use super::*;
+    use clap::Parser;
+
+    #[derive(Parser)]
+    struct Harness {
+        #[command(flatten)]
+        args: Args,
+    }
+
+    fn config(argv: &[&str]) -> Result<BridgeConfig, clap::Error> {
+        Harness::try_parse_from(std::iter::once("server").chain(argv.iter().copied()))
+            .map(|h| BridgeConfig::from(h.args))
+    }
+
+    #[test]
+    fn the_socketcan_system_instance_defaults_to_15() {
+        assert_eq!(BridgeConfig::default().socketcan_system_instance, 15);
+        let c = config(&["--socketcan", "can0"]).unwrap();
+        assert_eq!(c.socketcan_system_instance, 15);
+    }
+
+    #[test]
+    fn the_socketcan_system_instance_can_be_set() {
+        let c = config(&["--socketcan", "can0", "--socketcan-system-instance", "0"]).unwrap();
+        assert_eq!(c.socketcan_system_instance, 0);
+    }
+
+    #[test]
+    fn the_socketcan_system_instance_is_four_bits_and_needs_socketcan() {
+        assert!(config(&["--socketcan", "can0", "--socketcan-system-instance", "16"]).is_err());
+        assert!(config(&["--socketcan-system-instance", "0"]).is_err());
+    }
 }
