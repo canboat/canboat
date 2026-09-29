@@ -536,6 +536,7 @@ limitations under the License.
       <EnumPair Value="5" Name="In progress" />
     </LookupEnumeration>
     <LookupEnumeration Name="AIRMAR_COMMAND" MaxValue="255">
+      <EnumPair Value="1" Name="Master Reset" />
       <EnumPair Value="32" Name="Attitude Offsets" />
       <EnumPair Value="33" Name="Calibrate Compass" />
       <EnumPair Value="34" Name="True Wind Options" />
@@ -546,6 +547,7 @@ limitations under the License.
       <EnumPair Value="43" Name="Speed Filter" />
       <EnumPair Value="44" Name="Temperature Filter" />
       <EnumPair Value="46" Name="NMEA 2000 options" />
+      <EnumPair Value="130" Name="Reset EEPROM" />
     </LookupEnumeration>
     <LookupEnumeration Name="AIRMAR_DEPTH_QUALITY_FACTOR" MaxValue="15">
       <EnumPair Value="0" Name="Depth unlocked" />
@@ -573,6 +575,13 @@ limitations under the License.
       <EnumPair Value="6" Name="Speed sensor" />
       <EnumPair Value="7" Name="Internal temperature sensor" />
       <EnumPair Value="8" Name="Battery voltage sensor" />
+    </LookupEnumeration>
+    <LookupEnumeration Name="AIRMAR_RESET_EEPROM_OPTIONS" MaxValue="15">
+      <EnumPair Value="0" Name="Restore entire user EEPROM except Unique Number" />
+      <EnumPair Value="1" Name="Restore all message priorities" />
+      <EnumPair Value="2" Name="Restore all message update rates" />
+      <EnumPair Value="3" Name="Restore all message priorities and update rates" />
+      <EnumPair Value="4" Name="Restore user Unique Number" />
     </LookupEnumeration>
     <LookupEnumeration Name="AIRMAR_TEMPERATURE_INSTANCE" MaxValue="3">
       <EnumPair Value="0" Name="Device Sensor" />
@@ -19205,12 +19214,12 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Unit>V</Unit>
           <Resolution>0.01</Resolution>
-          <Signed>false</Signed>
-          <RangeMin>0</RangeMin>
-          <RangeMax>655.32</RangeMax>
-          <UnknownValue>65535</UnknownValue>
-          <OutOfRangeValue>65534</OutOfRangeValue>
-          <ReservedValue>65533</ReservedValue>
+          <Signed>true</Signed>
+          <RangeMin>-327.67</RangeMin>
+          <RangeMax>327.64</RangeMax>
+          <UnknownValue>32767</UnknownValue>
+          <OutOfRangeValue>32766</OutOfRangeValue>
+          <ReservedValue>32765</ReservedValue>
           <FieldType>NUMBER</FieldType>
           <PhysicalQuantity>POTENTIAL_DIFFERENCE</PhysicalQuantity>
         </Field>
@@ -26958,6 +26967,92 @@ limitations under the License.
     </PGNInfo>
     <PGNInfo>
       <PGN>126720</PGN>
+      <Id>airmarMasterReset</Id>
+      <Description>Airmar: Master Reset</Description>
+      <Explanation>Received by the device, which then performs a master CPU reset as though power had been cycled. Requires Access Level 1 (see PGN 65287).</Explanation>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>5</FieldCount>
+      <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Airmar</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>135</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Master Reset</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>1</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>reserved5</Id>
+          <Name>Reserved</Name>
+          <BitLength>24</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
       <Id>airmarNmea2000Options</Id>
       <Description>Airmar: NMEA 2000 options</Description>
       <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
@@ -27048,6 +27143,108 @@ limitations under the License.
           <BitLength>22</BitLength>
           <BitOffset>26</BitOffset>
           <BitStart>2</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>126720</PGN>
+      <Id>airmarResetEeprom</Id>
+      <Description>Airmar: Reset EEPROM</Description>
+      <Explanation>Received by the device, which then restores part of its user EEPROM to factory defaults, as selected by the Options field. Requires Access Level 1 (see PGN 65287), including for restoring the Unique Number.</Explanation>
+      <URL>https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</URL>
+      <Type>Fast</Type>
+      <Complete>false</Complete>
+      <Missing>
+        <MissingAttribute>SampleData</MissingAttribute>
+      </Missing>
+      <FieldCount>6</FieldCount>
+      <Length>6</Length>
+      <TransmissionIrregular>true</TransmissionIrregular>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>manufacturerCode</Id>
+          <Name>Manufacturer Code</Name>
+          <Description>Airmar</Description>
+          <BitLength>11</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>135</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2044</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>MANUFACTURER_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>2</BitLength>
+          <BitOffset>11</BitOffset>
+          <BitStart>3</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>industryCode</Id>
+          <Name>Industry Code</Name>
+          <Description>Marine Industry</Description>
+          <BitLength>3</BitLength>
+          <BitOffset>13</BitOffset>
+          <BitStart>5</BitStart>
+          <Match>4</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>6</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>INDUSTRY_CODE</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>proprietaryId</Id>
+          <Name>Proprietary ID</Name>
+          <Description>Reset EEPROM</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Match>130</Match>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>252</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIRMAR_COMMAND</LookupEnumeration>
+          <PartOfPrimaryKey>true</PartOfPrimaryKey>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>options</Id>
+          <Name>Options</Name>
+          <BitLength>4</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>13</RangeMax>
+          <UnknownValue>15</UnknownValue>
+          <OutOfRangeValue>14</OutOfRangeValue>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>AIRMAR_RESET_EEPROM_OPTIONS</LookupEnumeration>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>reserved6</Id>
+          <Name>Reserved</Name>
+          <BitLength>20</BitLength>
+          <BitOffset>28</BitOffset>
+          <BitStart>4</BitStart>
           <Resolution>1</Resolution>
           <FieldType>RESERVED</FieldType>
         </Field>
@@ -89301,14 +89498,14 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <Type>Fast</Type>
       <Complete>false</Complete>
       <Missing>
-        <MissingAttribute>Fields</MissingAttribute>
-        <MissingAttribute>FieldLengths</MissingAttribute>
-        <MissingAttribute>Resolution</MissingAttribute>
-        <MissingAttribute>SampleData</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
         <MissingAttribute>Interval</MissingAttribute>
       </Missing>
       <FieldCount>8</FieldCount>
-      <Length>6</Length>
+      <MinLength>4</MinLength>
+      <RepeatingFieldSet1Size>2</RepeatingFieldSet1Size>
+      <RepeatingFieldSet1StartField>7</RepeatingFieldSet1StartField>
+      <RepeatingFieldSet1CountField>6</RepeatingFieldSet1CountField>
       <Fields>
         <Field>
           <Order>1</Order>
