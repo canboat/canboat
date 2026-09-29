@@ -36,7 +36,7 @@ fields:
   type: TEMPERATURE
 - id: supplyVoltage
   name: Supply Voltage
-  type: VOLTAGE_UFIX16_10MV
+  type: VOLTAGE_FIX16_10MV
 - id: reserved7
   name: Reserved
   type: RESERVED

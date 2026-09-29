@@ -4,10 +4,7 @@ description: 'Airmar: POST'
 type: Fast
 priority: 7
 missing:
-- Fields
-- FieldLengths
-- Resolution
-- SampleData
+- Lookups
 url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
 fields:
 - id: manufacturerCode
@@ -40,16 +37,19 @@ fields:
 - id: numberOfIdTestResultPairsToFollow
   name: Number of ID/test result pairs to follow
   type: UINT8
-- id: testId
-  name: Test ID
-  type: LOOKUP
-  bits: 8
-  description: See Airmar docs for table of IDs and failure codes; these lookup values are for DST200
-  lookup: AIRMAR_POST_ID
-- id: testResult
-  name: Test result
-  type: UINT8
-  description: Values other than 0 are failure codes
+- repeat:
+    countField: numberOfIdTestResultPairsToFollow
+    fields:
+    - id: testId
+      name: Test ID
+      type: LOOKUP
+      bits: 8
+      description: See Airmar docs for table of IDs and failure codes; these lookup values are for DST200
+      lookup: AIRMAR_POST_ID
+    - id: testResult
+      name: Test result
+      type: UINT8
+      description: Values other than 0 are failure codes
 samples:
 - raw: "2023-01-01-00:00:00.000,7,130944,35,255,20,87,98,ff,08,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00"  # from merrimac-actisense-serial-2011.raw
   expects:
@@ -59,6 +59,20 @@ samples:
     numberOfIdTestResultPairsToFollow: 8
     testId: "Format Code"
     testResult: 0
+    testId.2: "Factory EEPROM"
+    testResult.2: 0
+    testId.3: "User EEPROM"
+    testResult.3: 0
+    testId.4: "Water Temperature Sensor"
+    testResult.4: 0
+    testId.5: "Sonar Transceiver"
+    testResult.5: 0
+    testId.6: "Speed sensor"
+    testResult.6: ~
+    testId.7: "Internal temperature sensor"
+    testResult.7: 0
+    testId.8: "Battery voltage sensor"
+    testResult.8: 0
 - raw: "2023-01-01-00:00:00.000,7,130944,35,255,24,87,98,ff,0a,01,00,02,00,03,00,04,00,05,00,06,ff,07,00,08,00,10,00,14,00"  # from nac3-operations.raw
   expects:
     manufacturerCode: "Airmar"
@@ -67,3 +81,21 @@ samples:
     numberOfIdTestResultPairsToFollow: 10
     testId: "Format Code"
     testResult: 0
+    testId.2: "Factory EEPROM"
+    testResult.2: 0
+    testId.3: "User EEPROM"
+    testResult.3: 0
+    testId.4: "Water Temperature Sensor"
+    testResult.4: 0
+    testId.5: "Sonar Transceiver"
+    testResult.5: 0
+    testId.6: "Speed sensor"
+    testResult.6: ~
+    testId.7: "Internal temperature sensor"
+    testResult.7: 0
+    testId.8: "Battery voltage sensor"
+    testResult.8: 0
+    testId.9: 16
+    testResult.9: 0
+    testId.10: 20
+    testResult.10: 0

@@ -4275,9 +4275,9 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Internal Device Temperature</td><td/><td>0.01 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 655.32</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Supply Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 655.32</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Supply Voltage</td><td/><td>0.01 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">-327.67 .. 327.64</div></td><td>16 bits
                   
-                        unsigned
+                        signed
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
@@ -6623,6 +6623,37 @@ limitations under the License.
               Source:
               <a href="https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
             PGN 126720
+            - Airmar: Master Reset</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>135</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>1</td></tr></table></p><p>Received by the device, which then performs a master CPU reset as though power had been cycled. Requires Access Level 1 (see PGN 65287).</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            6
+            bytes long and contains 5 fields.
+
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
+                  Airmar</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>1:
+                  Master Reset</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>24 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
             - Airmar: NMEA 2000 options</h3><p>
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>135</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>46</td></tr></table></p><p/><p>
@@ -6653,6 +6684,40 @@ limitations under the License.
                   
                       lookup
                       <a href="#lookup-AIRMAR_TRANSMISSION_INTERVAL">AIRMAR_TRANSMISSION_INTERVAL</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>22 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
+              Source:
+              <a href="https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
+            PGN 126720
+            - Airmar: Reset EEPROM</h3><p>
+              This PGN description applies when the following field(s) match:
+              <table><tr><td>Manufacturer Code</td><td>135</td></tr><tr><td>Industry Code</td><td>4</td></tr><tr><td>Proprietary ID</td><td>130</td></tr></table></p><p>Received by the device, which then restores part of its user EEPROM to factory defaults, as selected by the Options field. Requires Access Level 1 (see PGN 65287), including for restoring the Unique Number.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The PGN has not been seen in any logfiles yet</li></ul></p><p>
+            This
+             fast-packet 
+            PGN is
+            6
+            bytes long and contains 6 fields.
+
+            
+              It is not transmitted at a regular interval, but when data is available or it is requested.
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
+                  Airmar</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
+                  
+                      lookup
+                      <a href="#lookup-MANUFACTURER_CODE">MANUFACTURER_CODE</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>2 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>3</td><td>Industry Code</td><td>4:
+                  Marine Industry</td><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  
+                      lookup
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>4</td><td>Proprietary ID</td><td>130:
+                  Reset EEPROM</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                  
+                      lookup
+                      <a href="#lookup-AIRMAR_COMMAND">AIRMAR_COMMAND</a></td><td>true</td></tr><tr><td>5</td><td>Options</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  
+                      lookup
+                      <a href="#lookup-AIRMAR_RESET_EEPROM_OPTIONS">AIRMAR_RESET_EEPROM_OPTIONS</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>20 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><p>
               Source:
               <a href="https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf">https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf</a></p><h3 id="pgn-126720">0x1EF00:
@@ -23293,14 +23358,22 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
               This PGN description applies when the following field(s) match:
               <table><tr><td>Manufacturer Code</td><td>135</td></tr><tr><td>Industry Code</td><td>4</td></tr></table></p><p/><p>
                 This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
-                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The PGN has not been seen in any logfiles yet</li><li>The default transmission interval is not known</li></ul></p><p>
+                <ul><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
             This
              fast-packet 
             PGN is
-            6
+            
+              at least 4
             bytes long and contains 8 fields.
 
             
+        The 2 fields starting at field 
+        7 
+        (with name "Test ID")
+        form repeating set 1. The set is repeated <i>n</i> times, where <i>n</i> is determined by the value of field 
+        6 
+        (with name "Number of ID/test result pairs to follow".)
+      
               The default priority (as observed in the field) is 7.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Manufacturer Code</td><td>135:
                   Airmar</td><td><div class="xs">0 .. 2044</div></td><td>11 bits
@@ -23318,10 +23391,10 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Number of ID/test result pairs to follow</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Test ID</td><td>See Airmar docs for table of IDs and failure codes; these lookup values are for DST200</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">7<div>Set 1</div></td><td>Test ID</td><td>See Airmar docs for table of IDs and failure codes; these lookup values are for DST200</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-AIRMAR_POST_ID">AIRMAR_POST_ID</a></td><td/></tr><tr><td>8</td><td>Test result</td><td>Values other than 0 are failure codes</td><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#lookup-AIRMAR_POST_ID">AIRMAR_POST_ID</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>Test result</td><td>Values other than 0 are failure codes</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><p>
@@ -23796,13 +23869,15 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
         (0 - 255)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Queried</td></tr><tr><td>1</td><td>Passed</td></tr><tr><td>2</td><td>Failed - timeout</td></tr><tr><td>3</td><td>Failed - tilt error</td></tr><tr><td>4</td><td>Failed - other</td></tr><tr><td>5</td><td>In progress</td></tr></table><h3 id="lookup-AIRMAR_COMMAND">AIRMAR_COMMAND
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>32</td><td>Attitude Offsets</td></tr><tr><td>33</td><td>Calibrate Compass</td></tr><tr><td>34</td><td>True Wind Options</td></tr><tr><td>35</td><td>Simulate Mode</td></tr><tr><td>40</td><td>Calibrate Depth</td></tr><tr><td>41</td><td>Calibrate Speed</td></tr><tr><td>42</td><td>Calibrate Temperature</td></tr><tr><td>43</td><td>Speed Filter</td></tr><tr><td>44</td><td>Temperature Filter</td></tr><tr><td>46</td><td>NMEA 2000 options</td></tr></table><h3 id="lookup-AIRMAR_DEPTH_QUALITY_FACTOR">AIRMAR_DEPTH_QUALITY_FACTOR
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Master Reset</td></tr><tr><td>32</td><td>Attitude Offsets</td></tr><tr><td>33</td><td>Calibrate Compass</td></tr><tr><td>34</td><td>True Wind Options</td></tr><tr><td>35</td><td>Simulate Mode</td></tr><tr><td>40</td><td>Calibrate Depth</td></tr><tr><td>41</td><td>Calibrate Speed</td></tr><tr><td>42</td><td>Calibrate Temperature</td></tr><tr><td>43</td><td>Speed Filter</td></tr><tr><td>44</td><td>Temperature Filter</td></tr><tr><td>46</td><td>NMEA 2000 options</td></tr><tr><td>130</td><td>Reset EEPROM</td></tr></table><h3 id="lookup-AIRMAR_DEPTH_QUALITY_FACTOR">AIRMAR_DEPTH_QUALITY_FACTOR
         (0 - 15)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Depth unlocked</td></tr><tr><td>1</td><td>Quality 10%</td></tr><tr><td>2</td><td>Quality 20%</td></tr><tr><td>3</td><td>Quality 30%</td></tr><tr><td>4</td><td>Quality 40%</td></tr><tr><td>5</td><td>Quality 50%</td></tr><tr><td>6</td><td>Quality 60%</td></tr><tr><td>7</td><td>Quality 70%</td></tr><tr><td>8</td><td>Quality 80%</td></tr><tr><td>9</td><td>Quality 90%</td></tr><tr><td>10</td><td>Quality 100%</td></tr></table><h3 id="lookup-AIRMAR_POST_CONTROL">AIRMAR_POST_CONTROL
         (0 - 1)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Report previous values</td></tr><tr><td>1</td><td>Generate new values</td></tr></table><h3 id="lookup-AIRMAR_POST_ID">AIRMAR_POST_ID
         (0 - 255)
-      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Format Code</td></tr><tr><td>2</td><td>Factory EEPROM</td></tr><tr><td>3</td><td>User EEPROM</td></tr><tr><td>4</td><td>Water Temperature Sensor</td></tr><tr><td>5</td><td>Sonar Transceiver</td></tr><tr><td>6</td><td>Speed sensor</td></tr><tr><td>7</td><td>Internal temperature sensor</td></tr><tr><td>8</td><td>Battery voltage sensor</td></tr></table><h3 id="lookup-AIRMAR_TEMPERATURE_INSTANCE">AIRMAR_TEMPERATURE_INSTANCE
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>1</td><td>Format Code</td></tr><tr><td>2</td><td>Factory EEPROM</td></tr><tr><td>3</td><td>User EEPROM</td></tr><tr><td>4</td><td>Water Temperature Sensor</td></tr><tr><td>5</td><td>Sonar Transceiver</td></tr><tr><td>6</td><td>Speed sensor</td></tr><tr><td>7</td><td>Internal temperature sensor</td></tr><tr><td>8</td><td>Battery voltage sensor</td></tr></table><h3 id="lookup-AIRMAR_RESET_EEPROM_OPTIONS">AIRMAR_RESET_EEPROM_OPTIONS
+        (0 - 15)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Restore entire user EEPROM except Unique Number</td></tr><tr><td>1</td><td>Restore all message priorities</td></tr><tr><td>2</td><td>Restore all message update rates</td></tr><tr><td>3</td><td>Restore all message priorities and update rates</td></tr><tr><td>4</td><td>Restore user Unique Number</td></tr></table><h3 id="lookup-AIRMAR_TEMPERATURE_INSTANCE">AIRMAR_TEMPERATURE_INSTANCE
         (0 - 3)
       </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>0</td><td>Device Sensor</td></tr><tr><td>1</td><td>Onboard Water Sensor</td></tr><tr><td>2</td><td>Optional Water Sensor</td></tr></table><h3 id="lookup-AIRMAR_TRANSMISSION_INTERVAL">AIRMAR_TRANSMISSION_INTERVAL
         (0 - 3)

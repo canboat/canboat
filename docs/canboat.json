@@ -588,6 +588,7 @@
         "Name":"AIRMAR_COMMAND",
         "MaxValue":255,
         "EnumValues":[
+          {"Name":"Master Reset", "Value":1},
           {"Name":"Attitude Offsets", "Value":32},
           {"Name":"Calibrate Compass", "Value":33},
           {"Name":"True Wind Options", "Value":34},
@@ -597,7 +598,8 @@
           {"Name":"Calibrate Temperature", "Value":42},
           {"Name":"Speed Filter", "Value":43},
           {"Name":"Temperature Filter", "Value":44},
-          {"Name":"NMEA 2000 options", "Value":46}
+          {"Name":"NMEA 2000 options", "Value":46},
+          {"Name":"Reset EEPROM", "Value":130}
         ]
       },
       {
@@ -637,6 +639,17 @@
           {"Name":"Speed sensor", "Value":6},
           {"Name":"Internal temperature sensor", "Value":7},
           {"Name":"Battery voltage sensor", "Value":8}
+        ]
+      },
+      {
+        "Name":"AIRMAR_RESET_EEPROM_OPTIONS",
+        "MaxValue":15,
+        "EnumValues":[
+          {"Name":"Restore entire user EEPROM except Unique Number", "Value":0},
+          {"Name":"Restore all message priorities", "Value":1},
+          {"Name":"Restore all message update rates", "Value":2},
+          {"Name":"Restore all message priorities and update rates", "Value":3},
+          {"Name":"Restore user Unique Number", "Value":4}
         ]
       },
       {
@@ -19875,12 +19888,12 @@
             "BitStart":0,
             "Unit":"V",
             "Resolution":0.01,
-            "Signed":false,
-            "RangeMin":0,
-            "RangeMax":655.32,
-            "UnknownValue":65535,
-            "OutOfRangeValue":65534,
-            "ReservedValue":65533,
+            "Signed":true,
+            "RangeMin":-327.67,
+            "RangeMax":327.64,
+            "UnknownValue":32767,
+            "OutOfRangeValue":32766,
+            "ReservedValue":32765,
             "FieldType":"NUMBER",
             "PhysicalQuantity":"POTENTIAL_DIFFERENCE"
           },
@@ -27478,6 +27491,91 @@
       },
       {
         "PGN":126720,
+        "Id":"airmarMasterReset",
+        "Description":"Airmar: Master Reset",
+        "Explanation":"Received by the device, which then performs a master CPU reset as though power had been cycled. Requires Access Level 1 (see PGN 65287).",
+        "URL":"https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["SampleData"
+        ],
+        "FieldCount":5,
+        "Length":6,
+        "TransmissionIrregular":true,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Airmar",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":135,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"Master Reset",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":1,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"reserved5",
+            "Name":"Reserved",
+            "BitLength":24,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
         "Id":"airmarNmea2000Options",
         "Description":"Airmar: NMEA 2000 options",
         "URL":"https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
@@ -27568,6 +27666,107 @@
             "BitLength":22,
             "BitOffset":26,
             "BitStart":2,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          }
+        ]
+      },
+      {
+        "PGN":126720,
+        "Id":"airmarResetEeprom",
+        "Description":"Airmar: Reset EEPROM",
+        "Explanation":"Received by the device, which then restores part of its user EEPROM to factory defaults, as selected by the Options field. Requires Access Level 1 (see PGN 65287), including for restoring the Unique Number.",
+        "URL":"https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
+        "Type":"Fast",
+        "Complete":false,
+        "Missing":["SampleData"
+        ],
+        "FieldCount":6,
+        "Length":6,
+        "TransmissionIrregular":true,
+        "Fields":[
+          {
+            "Order":1,
+            "Id":"manufacturerCode",
+            "Name":"Manufacturer Code",
+            "Description":"Airmar",
+            "BitLength":11,
+            "BitOffset":0,
+            "BitStart":0,
+            "Match":135,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":2044,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"MANUFACTURER_CODE"
+          },
+          {
+            "Order":2,
+            "Id":"reserved",
+            "Name":"Reserved",
+            "BitLength":2,
+            "BitOffset":11,
+            "BitStart":3,
+            "Resolution":1,
+            "FieldType":"RESERVED"
+          },
+          {
+            "Order":3,
+            "Id":"industryCode",
+            "Name":"Industry Code",
+            "Description":"Marine Industry",
+            "BitLength":3,
+            "BitOffset":13,
+            "BitStart":5,
+            "Match":4,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":6,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"INDUSTRY_CODE"
+          },
+          {
+            "Order":4,
+            "Id":"proprietaryId",
+            "Name":"Proprietary ID",
+            "Description":"Reset EEPROM",
+            "BitLength":8,
+            "BitOffset":16,
+            "BitStart":0,
+            "Match":130,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":252,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_COMMAND",
+            "PartOfPrimaryKey":true
+          },
+          {
+            "Order":5,
+            "Id":"options",
+            "Name":"Options",
+            "BitLength":4,
+            "BitOffset":24,
+            "BitStart":0,
+            "Resolution":1,
+            "Signed":false,
+            "RangeMin":0,
+            "RangeMax":13,
+            "UnknownValue":15,
+            "OutOfRangeValue":14,
+            "FieldType":"LOOKUP",
+            "LookupEnumeration":"AIRMAR_RESET_EEPROM_OPTIONS"
+          },
+          {
+            "Order":6,
+            "Id":"reserved6",
+            "Name":"Reserved",
+            "BitLength":20,
+            "BitOffset":28,
+            "BitStart":4,
             "Resolution":1,
             "FieldType":"RESERVED"
           }
@@ -88854,10 +89053,13 @@
         "URL":"https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf",
         "Type":"Fast",
         "Complete":false,
-        "Missing":["Fields","FieldLengths","Resolution","SampleData","Interval"
+        "Missing":["Lookups","Interval"
         ],
         "FieldCount":8,
-        "Length":6,
+        "MinLength":4,
+        "RepeatingFieldSet1Size":2,
+        "RepeatingFieldSet1StartField":7,
+        "RepeatingFieldSet1CountField":6,
         "Fields":[
           {
             "Order":1,

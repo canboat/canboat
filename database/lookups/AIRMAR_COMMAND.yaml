@@ -2,6 +2,7 @@ name: AIRMAR_COMMAND
 kind: pair
 bits: 8
 values:
+  1: Master Reset
   32: Attitude Offsets
   33: Calibrate Compass
   34: True Wind Options
@@ -12,3 +13,4 @@ values:
   43: Speed Filter
   44: Temperature Filter
   46: NMEA 2000 options
+  130: Reset EEPROM

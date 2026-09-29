@@ -2182,7 +2182,7 @@ Pgn pgnList[] = {
       {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
       {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
       {.name = "Internal Device Temperature", .camelName = "internalDeviceTemperature", .fieldType = "TEMPERATURE"},
-      {.name = "Supply Voltage", .camelName = "supplyVoltage", .fieldType = "VOLTAGE_UFIX16_10MV"},
+      {.name = "Supply Voltage", .camelName = "supplyVoltage", .fieldType = "VOLTAGE_FIX16_10MV", .hasSign = true},
       {.name = "Reserved", .camelName = "reserved7", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
      },
      .camelDescription = "airmarDeviceInformation",
@@ -3238,6 +3238,22 @@ Pgn pgnList[] = {
      .interval = UINT16_MAX,
      .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"},
 
+    {"Airmar: Master Reset",
+     126720,
+     PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 135, .description = "Airmar", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 1, .description = "Master Reset", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIRMAR_COMMAND, .lookup.name = "AIRMAR_COMMAND", .partOfPrimaryKey = true},
+      {.name = "Reserved", .camelName = "reserved5", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
+     },
+     .camelDescription = "airmarMasterReset",
+     .interval = UINT16_MAX,
+     .explanation = "Received by the device, which then performs a master CPU reset as though power had been cycled. Requires Access Level 1 (see PGN 65287).",
+     .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"},
+
     {"Airmar: NMEA 2000 options",
      126720,
      PACKET_COMPLETE,
@@ -3252,6 +3268,23 @@ Pgn pgnList[] = {
      },
      .camelDescription = "airmarNmea2000Options",
      .interval = UINT16_MAX,
+     .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"},
+
+    {"Airmar: Reset EEPROM",
+     126720,
+     PACKET_NOT_SEEN,
+     PACKET_FAST,
+     {
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 135, .description = "Airmar", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .hasMatchValue = true, .matchValue = 4, .description = "Marine Industry", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
+      {.name = "Proprietary ID", .camelName = "proprietaryId", .fieldType = "LOOKUP", .size = 8, .resolution = 1.0, .hasMatchValue = true, .matchValue = 130, .description = "Reset EEPROM", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIRMAR_COMMAND, .lookup.name = "AIRMAR_COMMAND", .partOfPrimaryKey = true},
+      {.name = "Options", .camelName = "options", .fieldType = "LOOKUP", .size = 4, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupAIRMAR_RESET_EEPROM_OPTIONS, .lookup.name = "AIRMAR_RESET_EEPROM_OPTIONS"},
+      {.name = "Reserved", .camelName = "reserved6", .fieldType = "RESERVED", .size = 20, .resolution = 1.0}
+     },
+     .camelDescription = "airmarResetEeprom",
+     .interval = UINT16_MAX,
+     .explanation = "Received by the device, which then restores part of its user EEPROM to factory defaults, as selected by the Options field. Requires Access Level 1 (see PGN 65287), including for restoring the Unique Number.",
      .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"},
 
     {"Airmar: Addressable Multi-Frame",
@@ -10961,7 +10994,7 @@ Pgn pgnList[] = {
 
     {"Airmar: POST",
      130944,
-     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_NOT_SEEN,
+     PACKET_LOOKUPS_UNKNOWN,
      PACKET_FAST,
      {
       {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .hasMatchValue = true, .matchValue = 135, .description = "Airmar", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupMANUFACTURER_CODE, .lookup.name = "MANUFACTURER_CODE"},
@@ -10975,6 +11008,9 @@ Pgn pgnList[] = {
      },
      .camelDescription = "airmarPost",
      .priority = 7,
+     .repeatingCount1 = 2,
+     .repeatingStart1 = 7,
+     .repeatingField1 = 6,
      .url = "https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf"},
 
     {"Yamaha: Engine Data",
