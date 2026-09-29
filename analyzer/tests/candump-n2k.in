@@ -1,0 +1,8 @@
+#
+# can-utils "candump -l" text, 29-bit NMEA 2000 identifiers.
+# All lines carry their own absolute timestamp, so the decoded output is
+# reproducible without -fixtime. The identifiers are real NMEA 2000 ones.
+#
+(1502979132.106111) vcan0 09F201EC#0000000000000000
+(1502979134.406111) vcan0 09F80107#24353C0000C0C0C0
+(1502979137.706111) vcan0 19F80511#0000C0C000000000

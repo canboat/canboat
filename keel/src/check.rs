@@ -34,6 +34,15 @@ const PGN_RANGES: [(u32, u32, u32, &str, &str); 8] = [
     (0x1ff00, 0x1ffff, 1, "Manufacturer", "Fast"),
 ];
 
+/// pgn-quick.h pgnRange[]: Quick uses standard 11-bit CAN identifiers, so its
+/// "PGNs" are the 0x000-0x7ff identifier space. That sits below every marine
+/// range, so the Quick tree cannot be validated against PGN_RANGES -- which is
+/// also why the J1939 tree passes those: its PGNs reuse the marine space.
+const QUICK_PGN_RANGE: (u32, u32) = (0x0, 0x7ff);
+
+/// Location prefix that marks a PGN as belonging to the Quick tree.
+const QUICK_PREFIX: &str = "quick/";
+
 /// pgn.h IS_MANUFACTURER_PGN()
 fn is_manufacturer_pgn(pgn: u32) -> bool {
     (0xff00..=0xffff).contains(&pgn) || pgn == 0x1ef00 || (0x1ff00..=0x1ffff).contains(&pgn)
@@ -44,9 +53,13 @@ pub fn check(db: &Database) -> Vec<Violation> {
 
     check_fieldtypes(db, &mut v); // R23
     check_lookup_wiring(db, &mut v); // R08, R22 (references from BOTH trees)
-    // The marine and J1939 lists are separate namespaces (both contain the
-    // ISO PGNs), so variant and id uniqueness are checked per tree.
-    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+    // The marine, J1939, and Quick lists are separate namespaces.
+    // Variant and id uniqueness are checked per tree.
+    for (prefix, list) in [
+        ("", &db.pgns),
+        ("j1939/", &db.pgns_j1939),
+        (QUICK_PREFIX, &db.pgns_quick),
+    ] {
         for pgn in list {
             check_pgn_range(prefix, pgn, &mut v); // R02
             check_frame_length(prefix, pgn, &mut v); // R04
@@ -204,6 +217,30 @@ fn expect_mismatch(expected: &Expected, got: &decode::Value) -> Option<String> {
 fn check_pgn_range(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.pgn >= ACTISENSE_BEM {
         return; // BEM pseudo-PGNs live outside the wire ranges by design
+    }
+    // Quick identifiers are the 11-bit CAN id space, not the marine PGN space,
+    // so they get the range check pgn-quick.h declares instead of PGN_RANGES.
+    if prefix == QUICK_PREFIX {
+        if p.pgn < QUICK_PGN_RANGE.0 || p.pgn > QUICK_PGN_RANGE.1 {
+            v.push(Violation {
+                rule: "R02",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!(
+                    "Quick PGN {} (0x{:x}) is outside the 11-bit CAN identifier range 0x000-0x7ff",
+                    p.pgn, p.pgn
+                ),
+            });
+        }
+        if p.type_ != "Single" {
+            v.push(Violation {
+                rule: "R02",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message: format!("Quick PGN {} has packet type {}", p.pgn, p.type_),
+            });
+        }
+        return;
     }
     let range = PGN_RANGES.iter().find(|(_, end, ..)| p.pgn <= *end);
     let Some((start, _end, step, _who, rtype)) = range else {
@@ -378,7 +415,11 @@ fn check_proprietary(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation
 fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
     let mut referenced: std::collections::HashSet<&str> = std::collections::HashSet::new();
 
-    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+    for (prefix, list) in [
+        ("", &db.pgns),
+        ("j1939/", &db.pgns_j1939),
+        (QUICK_PREFIX, &db.pgns_quick),
+    ] {
         for p in list {
             for f in &p.fields {
                 let Some((kind, name)) = f.lookup_ref() else {

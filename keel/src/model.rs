@@ -262,6 +262,8 @@ pub struct Database {
     pub pgns: Vec<Pgn>,
     /// The parallel J1939 list (pgn-j1939.h); shares every other section.
     pub pgns_j1939: Vec<Pgn>,
+    /// The parallel Quick list (pgn-quick.h); shares every other section.
+    pub pgns_quick: Vec<Pgn>,
     pub version: String,
     pub schema_version: String,
 }
@@ -334,6 +336,20 @@ impl Database {
     /// so dropping them here would be a silent contract change; they stay put
     /// until something deliberately retires them.
     pub fn lookups_used(&self, j1939: bool) -> HashSet<String> {
+        let pgns = if j1939 { &self.pgns_j1939 } else { &self.pgns };
+        self.lookups_for(pgns, !j1939, &[])
+    }
+
+    /// The lookups the Quick tree references. This is its own tree with its own
+    /// generated tables and its own document, so it takes no orphans: a lookup
+    /// that only the marine document happens to publish is not Quick's to claim.
+    pub fn lookups_used_quick(&self) -> HashSet<String> {
+        // lookup.c is compiled into every build and resolves a manufacturer
+        // name for its own error messages, whichever tree the build decodes.
+        self.lookups_for(&self.pgns_quick, false, &["MANUFACTURER_CODE"])
+    }
+
+    fn lookups_for(&self, pgns: &[Pgn], keep_orphans: bool, extra: &[&str]) -> HashSet<String> {
         let names = |pgns: &'_ [Pgn]| -> Vec<String> {
             pgns.iter()
                 .flat_map(|p| p.fields.iter())
@@ -341,13 +357,14 @@ impl Database {
                 .map(|(_, n)| n.to_string())
                 .collect()
         };
-        let pgns = if j1939 { &self.pgns_j1939 } else { &self.pgns };
         let mut used: HashSet<String> = names(pgns).into_iter().collect();
+        used.extend(extra.iter().map(|n| (*n).to_string()));
 
-        if !j1939 {
+        if keep_orphans {
             let referenced: HashSet<String> = names(&self.pgns)
                 .into_iter()
                 .chain(names(&self.pgns_j1939))
+                .chain(names(&self.pgns_quick))
                 .collect();
             used.extend(
                 self.lookups

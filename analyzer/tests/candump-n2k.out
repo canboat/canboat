@@ -1,0 +1,4 @@
+{"version":"8.3.0","units":"std","showLookupValues":true}
+{"timestamp":"2017-08-17T14:12:12.106Z","prio":2,"src":236,"dst":255,"pgn":127489,"description":"Engine Parameters, Dynamic","fields":{"Instance":{"value":0,"name":"Single Engine or Dual Engine Port","key":true},"Oil pressure":0.000,"Oil temperature":-273.1,"Temperature":-273.15,"Alternator Potential":0.00}}
+{"timestamp":"2017-08-17T14:12:14.406Z","prio":2,"src":7,"dst":255,"pgn":129025,"description":"Position, Rapid Update","fields":{"Latitude": 0.3945764,"Longitude":-106.1109760}}
+{"timestamp":"2017-08-17T14:12:17.706Z","prio":6,"src":17,"dst":255,"pgn":129029,"description":"GNSS Position Data","fields":{"SID":0,"Date":{"value":49152,"name":"2104.07.29"},"Time":{"value":192,"name":"00:00:00.0192"},"Latitude": 0.0000000}}

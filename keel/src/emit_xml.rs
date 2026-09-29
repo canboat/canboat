@@ -263,8 +263,12 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
     /// Emits only the enumerations this document's tree references, so the
     /// marine `docs/canboat.xml` does not publish the J1939 manufacturer
     /// registry (and vice versa). See `Database::lookups_used`.
-    fn lookup_sections(&mut self, j1939: bool) {
-        let keep = self.db.lookups_used(j1939);
+    fn lookup_sections(&mut self, which: &str) {
+        let keep = match which {
+            "quick" => self.db.lookups_used_quick(),
+            "j1939" => self.db.lookups_used(true),
+            _ => self.db.lookups_used(false),
+        };
         self.p("  <LookupEnumerations>\n");
         for lk in self.db.ordered_lookups_for("pair", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
@@ -655,7 +659,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
     // ----- top level ------------------------------------------------------
 
     pub fn emit(mut self, which: &str) -> String {
-        let full = which == "normal" || which == "j1939";
+        let full = which == "normal" || which == "j1939" || which == "quick";
         self.header(full);
         if full {
             // The J1939 document is the "normal" layout of the J1939 build
@@ -663,19 +667,20 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             self.physical_quantities();
             self.fieldtypes();
             self.missing();
-            self.lookup_sections(which == "j1939");
+            self.lookup_sections(which);
         }
         self.p("  <PGNs>\n");
-        let pgns: Vec<Pgn> = if which == "j1939" {
-            self.db.pgns_j1939.clone()
-        } else {
-            self.db.pgns.clone()
+        let pgns: Vec<Pgn> = match which {
+            "j1939" => self.db.pgns_j1939.clone(),
+            "quick" => self.db.pgns_quick.clone(),
+            _ => self.db.pgns.clone(),
         };
         for pgn in &pgns {
             let include = match which {
                 "normal" | "j1939" => pgn.pgn < ACTISENSE_BEM,
                 "actisense" => (ACTISENSE_BEM..IKONVERT_BEM).contains(&pgn.pgn),
                 "ikonvert" => pgn.pgn >= IKONVERT_BEM,
+                "quick" => true,
                 _ => false,
             };
             if include {

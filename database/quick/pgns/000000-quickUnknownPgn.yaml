@@ -1,0 +1,19 @@
+pgn: 0x000
+id: quickUnknownPgn
+description: 'Quick: Unknown Packet'
+type: Single
+fallback: true
+variantOrder: 1
+priority: 0
+interval: 0
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Quick message type 0x000-0x7FF that is not reverse engineered yet. Any unrecognised 11-bit Quick identifier resolves here, with its payload left as raw bytes, rather than being misreported as a packet we do have a definition for.
+fields:
+- id: data
+  name: Data
+  description: Raw payload of an unidentified Quick message type
+  type: BINARY
+  bits: 64

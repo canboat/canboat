@@ -21,7 +21,8 @@ BUILDDIR?=rel/$(PLATFORM)
 TARGETDIR=../$(BUILDDIR)
 ANALYZER=$(TARGETDIR)/analyzer
 ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
-TARGETS=$(ANALYZER) $(ANALYZER_J1939)
+ANALYZER_QUICK=$(TARGETDIR)/analyzer-quick
+TARGETS=$(ANALYZER) $(ANALYZER_J1939) $(ANALYZER_QUICK)
 KEEL=../keel/keel
 NMEA_JSONFILE=../sources/nmea_1300.json
 RECONCILE=../tools/nmea-pdf/reconcile.py
@@ -29,10 +30,13 @@ XSL2FILE=../docs/canboat.xsl
 XML2FILE=../docs/canboat.xml
 XSD2FILE=../docs/canboat.xsd
 JSON2FILE=../docs/canboat.json
+XML2FILE_QUICK=../docs/canboat-quick.xml
+JSON2FILE_QUICK=../docs/canboat-quick.json
 HTML2FILE=../docs/canboat.html
 GENERATED_DATA=pgn-generated-data.h physicalquantity-generated-data.h fieldtype-generated-data.h
 HEADERS=analyzer.h pgn.h lookup-generated-data.h fieldtype.h $(GENERATED_DATA)
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup-j1939-generated-data.h fieldtype.h physicalquantity-generated-data.h fieldtype-generated-data.h pgn-j1939-generated-data.h
+HEADERS_QUICK=analyzer.h pgn-quick.h lookup-quick-generated-data.h fieldtype.h physicalquantity-generated-data.h fieldtype-generated-data.h pgn-quick-generated-data.h
 COMMONDIR=../common
 COMMON=$(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(COMMONDIR)/common.h $(COMMONDIR)/license.h $(COMMONDIR)/utf.h $(COMMONDIR)/version.h
 CFLAGS?=-Wall -O2
@@ -42,6 +46,8 @@ all: $(TARGETS)
 
 analyzer: $(ANALYZER)
 
+analyzer-quick: $(ANALYZER_QUICK)
+
 $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER) -I$(COMMONDIR) pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
@@ -49,6 +55,10 @@ $(ANALYZER): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS) $(COMMON) 
 $(ANALYZER_J1939): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_J1939) $(COMMON) Makefile
 	@mkdir -p $(TARGETDIR)
 	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_J1939) -I$(COMMONDIR) -DJ1939 pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
+
+$(ANALYZER_QUICK): analyzer.c pgn.c lookup.c print.c fieldtype.c $(HEADERS_QUICK) $(COMMON) Makefile
+	@mkdir -p $(TARGETDIR)
+	$(CC) $(CPPFLAGS) $(CFLAGS) $(LDFLAGS) -o $(ANALYZER_QUICK) -I$(COMMONDIR) -DQUICK pgn.c analyzer.c lookup.c print.c fieldtype.c $(COMMONDIR)/common.c $(COMMONDIR)/parse.c $(COMMONDIR)/utf.c $(LDLIBS$(LDLIBS-$(@)))
 
 # canboat.xml AND the analyzer's data tables (lookup-generated-data.h, *-data.h) are
 # generated from ../database by keel (see keel/DESIGN.md). The keel shim
@@ -60,6 +70,7 @@ keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 	python3 fixup-version.py -s $(ANALYZER) $(XSD2FILE)
 	$(KEEL) generate
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
+	xmllint --schema $(XSD2FILE) $(XML2FILE_QUICK) --noout
 
 $(XML2FILE): keel-generate
 
@@ -76,11 +87,21 @@ $(JSON2FILE): keel-generate canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE) >$(@)
 	python3 validate-json.py --range $(@)
 
+# The Quick tree gets its own document pair, through the same XSLT, so the
+# published JSON has exactly the schema of docs/canboat.json and a consumer
+# (ts-pgns, then canboatjs) can read either with the same code. Quick has no
+# NMEA 2000 ranges to validate against, so --range does not apply.
+$(XML2FILE_QUICK): keel-generate
+
+$(JSON2FILE_QUICK): keel-generate canboat2json.xslt validate-json.py
+	xsltproc canboat2json.xslt $(XML2FILE_QUICK) >$(@)
+	python3 validate-json.py $(@)
+
 validation: $(JSON2FILE) $(NMEA_JSONFILE) $(RECONCILE)
 	python3 $(RECONCILE) --canboat $(JSON2FILE) --nmea $(NMEA_JSONFILE) --check
 	
 
-generated: validation $(JSON2FILE) $(HTML2FILE) 
+generated: validation $(JSON2FILE) $(JSON2FILE_QUICK) $(HTML2FILE) 
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb
@@ -91,4 +112,4 @@ tests:	$(ANALYZER)
 webserver:
 	cd ../docs; python3 -m http.server --cgi 8080
 
-.PHONY:	generated clean tests webserver analyzer validation
+.PHONY:	generated clean tests webserver analyzer analyzer-quick validation

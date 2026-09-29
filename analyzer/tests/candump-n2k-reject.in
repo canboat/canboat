@@ -1,0 +1,15 @@
+#
+# Frames the NMEA 2000 analyzer must refuse, plus one valid live-form frame
+# (candump without -l, which prints "[8]" instead of "#").
+#
+# candump prints a standard (11-bit) identifier as %03x and an extended
+# (29-bit) one as %08X, so the frame shape is recoverable from the text. An
+# 11-bit identifier is Quick, and pushing it through the J1939 bit layout would
+# invent a PGN, a priority and a source address that the frame does not carry.
+# An error frame ("##") has no decodable payload. Run with -fixtime so the
+# error log is reproducible.
+#
+  can0  09F80107   [8]  24 35 3C 00 00 C0 C0 C0
+  vcan0  00000100##1000000000000000
+(1502979135.506111) vcan0 6C1#C1186B0000000200
+  vcan0  6C1   [8]  C1 18 6B 00 00 00 02 00

@@ -1,0 +1,21 @@
+pgn: 0x6c1
+id: chainCountPacket
+description: 'Quick: Chain Count Packet'
+type: Single
+priority: 0
+interval: 0
+fields:
+- id: sourceAddress
+  name: Source Address
+  description: Talker identifier of the transmitting device
+  type: UINT16
+- id: chainDeployed
+  name: Chain Deployed
+  description: Length of chain currently deployed
+  type: UINT32
+- id: units
+  name: Units
+  description: Measurement units for the deployed chain length
+  type: LOOKUP
+  bits: 16
+  lookup: QUICK_UNIT

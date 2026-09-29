@@ -1,0 +1,9 @@
+INFO candump-quick-reject [analyzer-quick] Timestamp fixed
+ERROR candump-quick-reject [analyzer-quick] Unknown message error 1: '  vcan0  00000100##1000000000000000
+'
+ERROR candump-quick-reject [analyzer-quick] Unknown message error 1: '(1502979136.606111) vcan0 18EEFF05#04A9FFFFADFF
+'
+ERROR candump-quick-reject [analyzer-quick] Unknown message error 1: '  vcan0  6C1#R
+'
+ERROR candump-quick-reject [analyzer-quick] Unknown message error 1: '(1502979137.706111) vcan0 000006C1#C1186B0000000200
+'

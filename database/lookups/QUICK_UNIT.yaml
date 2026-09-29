@@ -1,0 +1,6 @@
+name: QUICK_UNIT
+kind: pair
+bits: 16
+values:
+  1: Meters
+  2: Feet

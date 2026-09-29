@@ -37,7 +37,8 @@ enum RawFormats
   RAWFORMAT_GARMIN_CSV1,
   RAWFORMAT_GARMIN_CSV2,
   RAWFORMAT_YDWG02,
-  RAWFORMAT_ACTISENSE_N2K_ASCII
+  RAWFORMAT_ACTISENSE_N2K_ASCII,
+  RAWFORMAT_CANDUMP
 };
 
 enum RawFormats format = RAWFORMAT_UNKNOWN;
@@ -52,7 +53,8 @@ const char *RAW_FORMAT_STR[] = {"UNKNOWN",
                                 "GARMIN_CSV1",
                                 "GARMIN_CSV2",
                                 "YDWG02",
-                                "ACTISENSE_N2K_ASCII"};
+                                "ACTISENSE_N2K_ASCII",
+                                "candump"};
 
 enum MultiPackets
 {
@@ -240,7 +242,12 @@ int main(int argc, char **argv)
     }
     else if (strcasecmp(av[1], "-raw") == 0)
     {
+#ifdef QUICK
+      logError("-raw is not supported by analyzer-quick: PLAIN format cannot represent an 11-bit CAN frame.\n");
+      exit(1);
+#else
       showRaw = true;
+#endif
     }
     else if (strcasecmp(av[1], "-debug") == 0)
     {
@@ -537,6 +544,10 @@ int main(int argc, char **argv)
         r = parseRawFormatActisenseN2KAscii(msg, &m, showJson);
         break;
 
+      case RAWFORMAT_CANDUMP:
+        r = parseRawFormatCandump(msg, &m, showJson);
+        break;
+
       default:
         logError("Unknown message format\n");
         exit(1);
@@ -708,6 +719,13 @@ static bool isTargetPgnAllowed(uint32_t pgn)
 
 static void printCanRaw(const RawMessage *msg)
 {
+#ifdef QUICK
+  /* PLAIN format is a decomposed J1939 header (prio,pgn,src,dst) plus data,
+   * and socketcan-writer rebuilds the CAN ID from those columns. An 11-bit
+   * Quick frame has no such header, so -raw is rejected at option-parse time
+   * and there is nothing to emit here.
+   */
+#else
   size_t i;
   FILE  *f = stdout;
   char   ts[DATE_LENGTH];
@@ -727,6 +745,7 @@ static void printCanRaw(const RawMessage *msg)
     }
     putc('\n', f);
   }
+#endif
 }
 
 void setSystemClock(void)
@@ -1510,14 +1529,25 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
       f = stderr;
     }
 
+    #ifdef QUICK
+    /* Quick frames carry an 11-bit CAN ID that is only a message type: there is
+     * no J1939 header, so prio/src/dst have no meaning to print.
+     */
+    fprintf(f, "%s %6u %s: ", ts, msg->pgn, pgn->description);
+#else
     fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+#endif
     for (i = 0; i < length; i++)
     {
       fprintf(f, " %2.02X", data[i]);
     }
     putc('\n', f);
 
+#ifdef QUICK
+    fprintf(f, "%s %6u %s: ", ts, msg->pgn, pgn->description);
+#else
     fprintf(f, "%s %u %3u %3u %6u %s: ", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+#endif
     for (i = 0; i < length; i++)
     {
       fprintf(f, "  %c", isalnum(data[i]) ? data[i] : '.');
@@ -1534,6 +1564,13 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
     {
       mprintf("{\"%s\":", pgn->camelDescription);
     }
+#ifdef QUICK
+    /* Quick has no J1939 header: the CAN ID is only a message type and the
+     * talker ID lives in the payload, so prio/src/dst are omitted rather than
+     * fabricated.
+     */
+    mprintf("{\"timestamp\":\"%s\",\"protocol\":\"quick\",\"pgn\":%u,\"description\":\"%s\"", ts, msg->pgn, pgn->description);
+#else
     mprintf("{\"timestamp\":\"%s\",\"prio\":%u,\"src\":%u,\"dst\":%u,\"pgn\":%u,\"description\":\"%s\"",
             ts,
             msg->prio,
@@ -1541,6 +1578,7 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
             msg->dst,
             msg->pgn,
             pgn->description);
+#endif
     if (showAllBytes)
     {
       mprintf(",\"data\":\"");
@@ -1562,7 +1600,11 @@ bool printPgn(const RawMessage *msg, const uint8_t *data, int length, bool showD
   }
   else
   {
+    #ifdef QUICK
+    mprintf("%s %6u %s:", ts, msg->pgn, pgn->description);
+#else
     mprintf("%s %u %3u %3u %6u %s:", ts, msg->prio, msg->src, msg->dst, msg->pgn, pgn->description);
+#endif
     sep = " ";
   }
   r = printFields(pgn, data, length, showData, showJson, &variableFields);

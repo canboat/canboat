@@ -1,0 +1,17 @@
+#
+# can-utils "candump -l" text, 11-bit Quick identifiers.
+#
+# There is no J1939 header on these frames: the CAN ID is only a message type
+# and becomes the PGN, and nothing reports a priority, destination or 8-bit
+# source address, because an 11-bit identifier has no room for them. The
+# 16-bit talker ID is payload and decodes as an ordinary field.
+#
+(1502979132.106111) vcan0 6C1#C1186B0000000200
+(1502979133.206111) vcan0 6C0#C118010203040506
+(1502979134.306111) vcan0 6C2#C118000000000000
+#
+# 0x123 is not a Quick message type we have reverse engineered. It must resolve
+# to the catch-all entry and keep its payload as raw bytes, rather than being
+# reported as whichever packet happens to be first in the table.
+#
+(1502979135.406111) vcan0 123#A1B2C3D4E5F60708

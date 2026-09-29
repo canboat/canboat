@@ -119,6 +119,256 @@ int parseRawFormatPlain(char *msg, RawMessage *m, bool showJson)
   return setParsedValues(m, prio, pgn, dst, src, len);
 }
 
+/*
+ * Parse can-utils "candump" text output.
+ *
+ * Two shapes are accepted, both straight from can-utils:
+ *
+ *   live (no -t):    "  can0  18EEFF05   [8]  04 A9 FF FC"
+ *   logged (-l):    "(1502979132.106111) slcan0 09F50374#000A00FFFF00FFFF"
+ *
+ * The two are told apart by the CAN ID, and this is the whole point: candump
+ * prints a standard (11-bit) identifier as %03x and an extended (29-bit) one
+ * as %08X. So the frame's very shape is recoverable from the text, with no
+ * heuristics and nothing invented.
+ *
+ *   11-bit  -> Quick. The ID is only a message type; there is no J1939
+ *              header at all, so prio/src/dst are left zero and the
+ *              16-bit talker ID is decoded from the payload as a field.
+ *   29-bit  -> NMEA 2000 / J1939. prio/pgn/src/dst come out of the ID.
+ *
+ * Each build only accepts the shape it has tables for: analyzer-quick has no
+ * NMEA 2000 PGN list, and analyzer has no Quick one. A frame of the wrong
+ * shape is reported as unparsable rather than decoded into nonsense.
+ */
+static bool isHexDigit(char c)
+{
+  return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F');
+}
+
+int parseRawFormatCandump(char *msg, RawMessage *m, bool showJson)
+{
+  char        *p    = msg;
+  char        *idtok;
+  char        *hash;
+  char        *end;
+  char         idbuf[16];
+  const char  *dp   = NULL;
+  double       secs = 0.0;
+  bool         hasTs = false;
+  unsigned int canId = 0;
+  unsigned int prio = 0;
+  unsigned int pgn  = 0;
+  unsigned int src  = 0;
+  unsigned int dst  = 0;
+  unsigned int len  = 0;
+  unsigned int b;
+
+  while (*p == ' ' || *p == '\t')
+  {
+    p++;
+  }
+
+  /* Optional absolute timestamp, as written by "candump -l". */
+  if (*p == '(')
+  {
+    secs = strtod(p + 1, &end);
+    if (end == p + 1 || *end != ')')
+    {
+      return 1;
+    }
+    hasTs = true;
+    p     = end + 1;
+    while (*p == ' ' || *p == '\t')
+    {
+      p++;
+    }
+  }
+
+  /* Interface name. */
+  while (*p && *p != ' ' && *p != '\t' && *p != '\r' && *p != '\n')
+  {
+    p++;
+  }
+  if (*p != ' ' && *p != '\t')
+  {
+    return 1;
+  }
+  while (*p == ' ' || *p == '\t')
+  {
+    p++;
+  }
+
+  /* CAN ID, which in the logged form runs straight into the '#' and data. */
+  idtok = p;
+  while (*p && *p != ' ' && *p != '\t' && *p != '\r' && *p != '\n')
+  {
+    p++;
+  }
+  if (p == idtok)
+  {
+    return 1;
+  }
+
+  /* Copy out just the identifier (up to any '#') rather than terminating the
+   * line in place, so a later error report still shows the whole line.
+   */
+  {
+    size_t      idlen = 0;
+    const char *q      = idtok;
+
+    while (q < p && *q != '#' && idlen + 1 < sizeof(idbuf))
+    {
+      idbuf[idlen++] = *q++;
+    }
+    idbuf[idlen] = 0;
+  }
+
+  canId = (unsigned int) strtoul(idbuf, &end, 16);
+  if (end == idbuf)
+  {
+    return 1; // no hex digits: not a candump line
+  }
+
+  hash = memchr(idtok, '#', (size_t) (p - idtok));
+  if (hash != NULL)
+  {
+    // "#" = data follows contiguously, "##" = error frame, "#R" = RTR frame.
+    // Neither error nor remote frames carry payload we can decode.
+    if (hash[1] == '#' || hash[1] == 'R' || hash[1] == 'r' || hash[1] == '\0')
+    {
+      return 1;
+    }
+    dp = hash + 1;
+    {
+      /* Measure the payload in validated hex digits rather than in characters.
+       * strlen() would count a CRLF terminator as payload, inflating the length
+       * by a byte and pushing the loop below off the end of the data. Only
+       * whitespace may follow the payload, and there must be whole bytes.
+       */
+      size_t hexChars = 0;
+      size_t tail;
+
+      while (isHexDigit(dp[hexChars]))
+      {
+        hexChars++;
+      }
+      if (hexChars == 0 || (hexChars % 2) != 0)
+      {
+        return 1; // no payload at all, or a dangling half byte
+      }
+      for (tail = hexChars; dp[tail] != 0; tail++)
+      {
+        if (dp[tail] != '\r' && dp[tail] != '\n' && dp[tail] != ' ' && dp[tail] != '\t')
+        {
+          return 1; // trailing junk: this is not a candump payload
+        }
+      }
+      len = (unsigned int) (hexChars / 2);
+    }
+  }
+  else
+  {
+    // Live form: "[8]" gives the DLC, then whitespace separated data bytes.
+    while (*p == ' ' || *p == '\t')
+    {
+      p++;
+    }
+    if (*p != '[')
+    {
+      return 1;
+    }
+    len = (unsigned int) strtoul(p + 1, &end, 10);
+    if (end == p + 1 || *end != ']')
+    {
+      return 1;
+    }
+    p  = end + 1;
+    dp = p;
+  }
+
+  if (len > MAX_PGN_SIZE)
+  {
+    if (showJson)
+    {
+      logError("Message size %u exceeds maximum %u: %s\n", len, (unsigned int) MAX_PGN_SIZE, msg);
+    }
+    return 1;
+  }
+
+#ifdef QUICK
+  // analyzer-quick: 11-bit IDs only. The CAN ID is the Quick message type and
+  // becomes the PGN; there is no priority, destination or 8-bit source to
+  // derive, so none is invented.
+  //
+  // Classify on the printed width, not on the value. can-utils writes a
+  // standard identifier as %03X and an extended one as %08X, so an 8-digit
+  // token is a 29-bit frame even when its numeric value happens to fall in the
+  // Quick space: 000006C1 is extended, not Quick PGN 1729. Value alone cannot
+  // tell the two apart, and accepting it here would decode an extended frame
+  // that analyzer rejects, into a Quick packet with invented field values.
+  {
+    size_t idChars = 0;
+
+    while (idbuf[idChars] != 0)
+    {
+      idChars++;
+    }
+    if (idChars > 3)
+    {
+      return 1;
+    }
+  }
+  if (canId > 0x7ff)
+  {
+    return 1;
+  }
+  pgn  = canId;
+  prio = 0;
+  src  = 0;
+  dst  = 0;
+#else
+  // analyzer: 29-bit identifiers only. An 11-bit standard frame is Quick, and
+  // running it through the J1939 bit layout would yield a bogus PGN.
+  if (canId <= 0x7ff)
+  {
+    return 1;
+  }
+  getISO11783BitsFromCanId(canId, &prio, &pgn, &src, &dst);
+#endif
+
+  for (b = 0; b < len; b++)
+  {
+    unsigned int byt;
+    int          used = 0;
+
+    // Reads at most two hex digits, which copes with both the contiguous
+    // logged form ("0A00FF") and the space separated live form ("0A 00 FF").
+    if (sscanf(dp, " %2x%n", &byt, &used) != 1 || used == 0 || byt > 0xff)
+    {
+      if (showJson)
+      {
+        logError("Unable to parse candump data byte %u in '%s'\n", b, msg);
+      }
+      return 1;
+    }
+    m->data[b] = (uint8_t) byt;
+    dp += used;
+  }
+
+  if (hasTs)
+  {
+    fmtTimestamp(m->timestamp, (uint64_t) (secs * 1000.0 + 0.5));
+  }
+  else
+  {
+    // candump without -t prints no timestamp; stamp it as now.
+    fmtTimestamp(m->timestamp, UINT64_C(0));
+  }
+
+  return setParsedValues(m, prio, pgn, dst, src, len);
+}
+
 int parseRawFormatFast(char *msg, RawMessage *m, bool showJson)
 {
   unsigned int prio, pgn, dst, src, len, r, i;

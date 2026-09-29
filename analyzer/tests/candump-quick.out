@@ -1,0 +1,5 @@
+{"version":"8.3.0","units":"std","showLookupValues":true}
+{"timestamp":"2017-08-17T14:12:12.106Z","protocol":"quick","pgn":1729,"description":"Quick: Chain Count Packet","fields":{"Source Address":6337,"Chain Deployed":107,"Units":{"value":2,"name":"Feet"}}}
+{"timestamp":"2017-08-17T14:12:13.206Z","protocol":"quick","pgn":1728,"description":"Quick: Miscellaneous Flags Packet","fields":{"Source Address":6337,"Flags":"01 02 03 04 05 06"}}
+{"timestamp":"2017-08-17T14:12:14.306Z","protocol":"quick","pgn":1730,"description":"Quick: Unknown Packet Type 1","fields":{"Source Address":6337,"Data":"00 00 00 00 00 00"}}
+{"timestamp":"2017-08-17T14:12:15.406Z","protocol":"quick","pgn":291,"description":"Quick: Unknown Packet","fields":{"Data":"A1 B2 C3 D4 E5 F6 07 08"}}

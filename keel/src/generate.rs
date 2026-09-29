@@ -20,12 +20,20 @@ pub fn emit_artifacts(
             emit_xml::emit_xml(db, "normal"),
         ),
         (
+            root.join("docs/canboat-quick.xml"),
+            emit_xml::emit_xml(db, "quick"),
+        ),
+        (
             root.join("analyzer/lookup-generated-data.h"),
-            emit_c::emit_lookup_h(db, false),
+            emit_c::emit_lookup_h(db, "normal"),
         ),
         (
             root.join("analyzer/lookup-j1939-generated-data.h"),
-            emit_c::emit_lookup_h(db, true),
+            emit_c::emit_lookup_h(db, "j1939"),
+        ),
+        (
+            root.join("analyzer/lookup-quick-generated-data.h"),
+            emit_c::emit_lookup_h(db, "quick"),
         ),
         (
             root.join("analyzer/physicalquantity-generated-data.h"),

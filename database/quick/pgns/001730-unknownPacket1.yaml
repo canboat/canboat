@@ -1,0 +1,16 @@
+pgn: 0x6c2
+id: unknownPacket1
+description: 'Quick: Unknown Packet Type 1'
+type: Single
+priority: 0
+interval: 0
+fields:
+- id: sourceAddress
+  name: Source Address
+  description: Source address of the transmitting device
+  type: UINT16
+- id: data
+  name: Data
+  description: Unknown payload (layout TBD)
+  type: BINARY
+  bits: 48

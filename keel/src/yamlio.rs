@@ -668,6 +668,15 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
         db.pgns_j1939.sort_by_key(|p| (p.pgn, p.variant_order));
     }
 
+    let quick_dir = db_dir.join("quick/pgns");
+    if quick_dir.is_dir() {
+        for path in sorted_yaml_files(&quick_dir)? {
+            let doc = load_file(&path)?;
+            db.pgns_quick.push(pgn(&doc, &path.display().to_string())?);
+        }
+        db.pgns_quick.sort_by_key(|p| (p.pgn, p.variant_order));
+    }
+
     Ok(db)
 }
 

@@ -156,12 +156,20 @@ fn run() -> Result<i32, String> {
                     emit_xml::emit_xml(&db, "normal"),
                 ),
                 (
+                    root.join("docs/canboat-quick.xml"),
+                    emit_xml::emit_xml(&db, "quick"),
+                ),
+                (
                     root.join("analyzer/lookup-generated-data.h"),
-                    emit_c::emit_lookup_h(&db, false),
+                    emit_c::emit_lookup_h(&db, "normal"),
                 ),
                 (
                     root.join("analyzer/lookup-j1939-generated-data.h"),
-                    emit_c::emit_lookup_h(&db, true),
+                    emit_c::emit_lookup_h(&db, "j1939"),
+                ),
+                (
+                    root.join("analyzer/lookup-quick-generated-data.h"),
+                    emit_c::emit_lookup_h(&db, "quick"),
                 ),
                 (
                     root.join("analyzer/physicalquantity-generated-data.h"),
@@ -178,6 +186,10 @@ fn run() -> Result<i32, String> {
                 (
                     root.join("analyzer/pgn-j1939-generated-data.h"),
                     emit_c::emit_pgn_data_h(&db, true),
+                ),
+                (
+                    root.join("analyzer/pgn-quick-generated-data.h"),
+                    emit_c::emit_pgn_data_h_quick(&db),
                 ),
                 // The Rust tables. These used to be produced by a build
                 // script in each crate, which could not be published: a

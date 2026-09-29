@@ -211,7 +211,8 @@ pub fn fill(db: &mut Database) -> Result<(), String> {
     db.index();
     fill_fieldtypes(db)?;
     fill_pgn_list(db, true)?;
-    fill_pgn_list(db, false)
+    fill_pgn_list(db, false)?;
+    fill_pgn_list_quick(db)
 }
 
 fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
@@ -361,6 +362,120 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
     } else {
         db.pgns_j1939 = pgns;
     }
+    Ok(())
+}
+
+fn fill_pgn_list_quick(db: &mut Database) -> Result<(), String> {
+    // Work around simultaneous &mut pgns / &fieldtypes borrows: take the list.
+    let mut pgns = std::mem::take(&mut db.pgns_quick);
+    for pgn in pgns.iter_mut() {
+        let mut order = 0u32;
+        for f in pgn.fields.iter_mut() {
+            order += 1;
+            let fti = db.fieldtype(&f.type_)?;
+            let ft = &db.fieldtypes[fti];
+            f.ft = fti;
+            let f_has_sign = ft.has_sign == Some(true);
+
+            let res = if let Some(r) = f.resolution {
+                r
+            } else if ft.resolution != 0.0 {
+                ft.resolution
+            } else {
+                default_field_resolution(&ft.root_name)
+            };
+            f.res_resolution = res;
+
+            let mut bits = f.bits.unwrap_or(0);
+            if ft.size != 0 && bits == 0 {
+                bits = ft.size;
+            }
+            f.res_bits = bits;
+
+            let mut offset = f.offset.unwrap_or(0);
+            if ft.offset != 0 && offset == 0 {
+                offset = ft.offset;
+            }
+            f.res_offset = offset;
+
+            f.res_unit = f.unit.clone().or_else(|| ft.unit.clone());
+
+            f.res_range_min = f.range_min.unwrap_or(0.0);
+            f.res_range_max = f.range_max.unwrap_or(0.0);
+            if f.res_range_max.is_nan() || f.res_range_max == 0.0 {
+                f.res_range_min = ft.range_min;
+                f.res_range_max = ft.range_max;
+            }
+            if let Some(unit) = &f.res_unit
+                && f.res_resolution != 0.0
+            {
+                fixup_unit(unit, f_has_sign, &mut f.res_range_min, &mut f.res_range_max);
+            }
+
+            let by_size = reserved_count_for_size(f.res_bits);
+            let count = f.special_values.unwrap_or(by_size);
+
+            let pair_lookup = f.lookup.as_ref().and_then(|n| db.lookups.get(n));
+            let ft_has_sign = ft.has_sign;
+            if f.res_bits != 0
+                && f.res_resolution != 0.0
+                && ft_has_sign.is_some()
+                && f.res_range_max.is_nan()
+            {
+                f.res_range_min =
+                    get_min_range(f.res_bits, f.res_resolution, f_has_sign, f.res_offset);
+                f.res_range_max = get_max_range(
+                    f.res_bits,
+                    f.res_resolution,
+                    f_has_sign,
+                    f.res_offset,
+                    pair_lookup,
+                    count,
+                );
+            }
+
+            if f.special_values.is_some() {
+                f.reserved_count = count;
+            } else if f.res_bits != 0
+                && f.res_bits < 64
+                && f.res_resolution > 0.0
+                && !f.res_range_max.is_nan()
+            {
+                let raw_max: u64 = (1u64 << f.res_bits) - 1;
+                let raw_range_max = (f.res_range_max / f.res_resolution + 0.5) as u64;
+                f.reserved_count = if raw_range_max >= raw_max {
+                    0
+                } else {
+                    ((raw_max - raw_range_max).min(by_size as u64)) as u32
+                };
+            } else {
+                f.reserved_count = by_size;
+            }
+
+            f.order = order;
+        }
+
+        let by_id: std::collections::HashMap<&str, u32> = pgn
+            .fields
+            .iter()
+            .map(|f| (f.id.as_str(), f.order))
+            .collect();
+        let resolved: Vec<Option<u32>> = pgn
+            .fields
+            .iter()
+            .map(|f| {
+                f.bit_length_field
+                    .as_deref()
+                    .and_then(|id| by_id.get(id).copied())
+            })
+            .collect();
+        for (f, order) in pgn.fields.iter_mut().zip(resolved) {
+            f.bit_length_field_order = order;
+        }
+
+        fill_pgn_length(pgn)?;
+    }
+    db.pgns_quick = pgns;
     Ok(())
 }
 

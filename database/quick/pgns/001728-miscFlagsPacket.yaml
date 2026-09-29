@@ -1,0 +1,16 @@
+pgn: 0x6c0
+id: miscFlagsPacket
+description: 'Quick: Miscellaneous Flags Packet'
+type: Single
+priority: 0
+interval: 0
+fields:
+- id: sourceAddress
+  name: Source Address
+  description: Source address of the transmitting device
+  type: UINT16
+- id: flags
+  name: Flags
+  description: Miscellaneous flag bits (layout TBD - placeholder for 6 remaining bytes)
+  type: BINARY
+  bits: 48

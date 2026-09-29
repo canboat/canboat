@@ -1,0 +1,9 @@
+#
+# The same three frames as candump-quick.in, but with CRLF line endings, as
+# written by anything on Windows. The carriage return is not payload: counting
+# it would inflate the length by a byte and push the decoder off the end of the
+# data, so these must decode exactly as their LF counterparts do.
+#
+(1502979132.106111) vcan0 6C1#C1186B0000000200
+(1502979133.206111) vcan0 6C0#C118010203040506
+(1502979134.306111) vcan0 6C2#C118000000000000

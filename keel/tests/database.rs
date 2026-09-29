@@ -89,13 +89,18 @@ fn generated_artifacts_are_up_to_date() {
     let (root, db, authored_fieldtypes) = load();
     let artifacts: Vec<(&str, String)> = vec![
         ("docs/canboat.xml", emit_xml::emit_xml(&db, "normal")),
+        ("docs/canboat-quick.xml", emit_xml::emit_xml(&db, "quick")),
         (
             "analyzer/lookup-generated-data.h",
-            emit_c::emit_lookup_h(&db, false),
+            emit_c::emit_lookup_h(&db, "normal"),
         ),
         (
             "analyzer/lookup-j1939-generated-data.h",
-            emit_c::emit_lookup_h(&db, true),
+            emit_c::emit_lookup_h(&db, "j1939"),
+        ),
+        (
+            "analyzer/lookup-quick-generated-data.h",
+            emit_c::emit_lookup_h(&db, "quick"),
         ),
         (
             "analyzer/physicalquantity-generated-data.h",
@@ -159,8 +164,8 @@ fn emission_is_deterministic() {
         emit_c::emit_pgn_data_h(&db, false)
     );
     assert_eq!(
-        emit_c::emit_lookup_h(&db, true),
-        emit_c::emit_lookup_h(&db, true)
+        emit_c::emit_lookup_h(&db, "j1939"),
+        emit_c::emit_lookup_h(&db, "j1939")
     );
     assert_eq!(
         emit_c::emit_fieldtype_data_h(&authored),
@@ -186,8 +191,8 @@ fn the_j1939_tables_differ_from_the_nmea_ones() {
         emit_c::emit_pgn_data_h(&db, true)
     );
     assert_ne!(
-        emit_c::emit_lookup_h(&db, false),
-        emit_c::emit_lookup_h(&db, true)
+        emit_c::emit_lookup_h(&db, "normal"),
+        emit_c::emit_lookup_h(&db, "j1939")
     );
     assert_ne!(
         emit_rust::emit_schema(&db, &root, false),

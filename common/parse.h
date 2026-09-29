@@ -42,6 +42,7 @@ bool parseConst(const char **msg, const char *str);
 
 int  parseRawFormatPlain(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatFast(char *msg, RawMessage *m, bool showJson);
+int  parseRawFormatCandump(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatAirmar(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatChetco(char *msg, RawMessage *m, bool showJson);
 int  parseRawFormatGarminCSV(char *msg, RawMessage *m, bool showJson, bool absolute);

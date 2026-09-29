@@ -129,11 +129,17 @@ const LOOKUP_EPILOGUE: &str = "// Keep this at the end, so a next include does n
 #undef LOOKUP_END
 ";
 
-/// With `j1939` set, emits only the lookups the J1939 tree references, into
-/// `analyzer/lookup-j1939-generated-data.h`. The marine flavor keeps
-/// everything else, so neither binary compiles the other's tables.
-pub fn emit_lookup_h(db: &Database, j1939: bool) -> String {
-    let keep = db.lookups_used(j1939);
+/// Emits the lookups one tree references, so no binary compiles another tree's
+/// tables: the marine flavor into `analyzer/lookup-generated-data.h`, J1939 into
+/// `analyzer/lookup-j1939-generated-data.h`, Quick into
+/// `analyzer/lookup-quick-generated-data.h`. The marine flavor also keeps the
+/// lookups no tree references ("orphans"), which are already published.
+pub fn emit_lookup_h(db: &Database, which: &str) -> String {
+    let keep = match which {
+        "quick" => db.lookups_used_quick(),
+        "j1939" => db.lookups_used(true),
+        _ => db.lookups_used(false),
+    };
     let mut out = String::with_capacity(256 << 10);
     out.push_str(BANNER);
     out.push_str(LOOKUP_PROLOGUE);
@@ -494,6 +500,17 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
 
 pub fn emit_pgn_data_h(db: &Database, j1939: bool) -> String {
     let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let mut out = String::with_capacity(2 << 20);
+    out.push_str(BANNER);
+    out.push_str("Pgn pgnList[] = {\n");
+    let pgns: Vec<String> = list.iter().map(|p| emit_pgn(db, p)).collect();
+    out.push_str(&pgns.join(",\n\n"));
+    out.push_str("\n};\n");
+    out
+}
+
+pub fn emit_pgn_data_h_quick(db: &Database) -> String {
+    let list = &db.pgns_quick;
     let mut out = String::with_capacity(2 << 20);
     out.push_str(BANNER);
     out.push_str("Pgn pgnList[] = {\n");

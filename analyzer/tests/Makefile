@@ -19,9 +19,10 @@
 PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
+ANALYZER_QUICK=$(TARGETDIR)/analyzer-quick
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 tests
 
 all:	tests
 
@@ -260,7 +261,7 @@ test28:
 	diff $(TEMPDIR)/pgn-si-units.out pgn-si-units.out
 	diff $(TEMPDIR)/pgn-si-units.err pgn-si-units.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so
@@ -315,3 +316,57 @@ test27:
 	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-gps-rollover-all.out
 	diff $(TEMPDIR)/pgn-gps-rollover-all.out pgn-gps-rollover-all.out
 	diff $(TEMPDIR)/pgn-gps-rollover-all.err pgn-gps-rollover-all.err
+
+#
+# can-utils "candump" input. candump prints a standard (11-bit) identifier as
+# %03x and an extended (29-bit) one as %08X, so the frame's shape is
+# recoverable from the text itself, with no heuristics and nothing invented.
+# Every line here carries its own timestamp, so the log stays reproducible
+# without -fixtime.
+#
+test29:
+	$(ANALYZER) -q -json -nv -format candump < candump-n2k.in > $(TEMPDIR)/candump-n2k.out 2> $(TEMPDIR)/candump-n2k.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/candump-n2k.out
+	diff $(TEMPDIR)/candump-n2k.out candump-n2k.out
+	diff $(TEMPDIR)/candump-n2k.err candump-n2k.err
+
+# The other direction of the same rule: an 11-bit identifier is Quick, not
+# NMEA 2000. The NMEA 2000 analyzer must refuse it rather than run it through
+# the J1939 bit layout and invent a PGN, priority and source address. An error
+# frame ("##") carries no decodable payload either.
+test30:
+	$(ANALYZER) -json -nv -format candump < candump-n2k-reject.in > $(TEMPDIR)/candump-n2k-reject.out -fixtime candump-n2k-reject 2> $(TEMPDIR)/candump-n2k-reject.err
+	diff $(TEMPDIR)/candump-n2k-reject.out candump-n2k-reject.out
+	diff $(TEMPDIR)/candump-n2k-reject.err candump-n2k-reject.err
+
+#
+# The same input format on the Quick side. analyzer-quick has no NMEA 2000 PGN
+# table, so it takes only the 11-bit frames: the CAN ID is the Quick message
+# type and becomes the PGN, with no priority, destination or source address to
+# report. The 16-bit talker ID is payload and decodes as a field.
+#
+test31:
+	$(ANALYZER_QUICK) -q -json -nv -format candump < candump-quick.in > $(TEMPDIR)/candump-quick.out 2> $(TEMPDIR)/candump-quick.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/candump-quick.out
+	diff $(TEMPDIR)/candump-quick.out candump-quick.out
+	diff $(TEMPDIR)/candump-quick.err candump-quick.err
+
+# And the mirror image: a 29-bit identifier is not a Quick message, a remote
+# frame ("#R") has no payload, and an error frame ("##") is not data.
+test32:
+	$(ANALYZER_QUICK) -json -nv -format candump < candump-quick-reject.in > $(TEMPDIR)/candump-quick-reject.out -fixtime candump-quick-reject 2> $(TEMPDIR)/candump-quick-reject.err
+	diff $(TEMPDIR)/candump-quick-reject.out candump-quick-reject.out
+	diff $(TEMPDIR)/candump-quick-reject.err candump-quick-reject.err
+
+#
+# The same three frames as candump-quick.in, but with CRLF line endings, as
+# written by anything on Windows. The carriage return is a line terminator, not
+# payload: counting it as payload inflates the length by a byte, and the decoder
+# then walks off the end of the data and drops the frame. The expected output is
+# byte for byte what the LF lines produce.
+#
+test33:
+	$(ANALYZER_QUICK) -q -json -nv -format candump < candump-quick-crlf.in > $(TEMPDIR)/candump-quick-crlf.out 2> $(TEMPDIR)/candump-quick-crlf.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/candump-quick-crlf.out
+	diff $(TEMPDIR)/candump-quick-crlf.out candump-quick-crlf.out
+	diff $(TEMPDIR)/candump-quick-crlf.err candump-quick-crlf.err
