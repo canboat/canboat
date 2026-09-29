@@ -828,7 +828,7 @@ BO_ 2566881790 PGN_65409_airmarSpeedPulseCount: 8 Vector__XXX
 
 BO_ 2566882046 PGN_65410_airmarDeviceInformatio: 8 Vector__XXX
  SG_ reserved7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ supplyVoltage : 40|16@1+ (0.01,0) [0|0] "V" Vector__XXX
+ SG_ supplyVoltage : 40|16@1- (0.01,0) [0|0] "V" Vector__XXX
  SG_ internalDeviceTemperature : 24|16@1+ (0.01,0) [0|0] "K" Vector__XXX
  SG_ sid : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ industryCode : 13|3@1+ (1,0) [0|0] "" Vector__XXX

@@ -1,0 +1,9 @@
+name: AIRMAR_RESET_EEPROM_OPTIONS
+kind: pair
+bits: 4
+values:
+  0: Restore entire user EEPROM except Unique Number
+  1: Restore all message priorities
+  2: Restore all message update rates
+  3: Restore all message priorities and update rates
+  4: Restore user Unique Number

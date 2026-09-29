@@ -1,0 +1,47 @@
+pgn: 126720
+id: airmarResetEeprom
+description: 'Airmar: Reset EEPROM'
+type: Fast
+variantOrder: 45
+interval: irregular
+missing:
+- SampleData
+explanation: Received by the device, which then restores part of its user EEPROM to factory defaults, as selected by
+  the Options field. Requires Access Level 1 (see PGN 65287), including for restoring the Unique Number.
+url: https://web.archive.org/web/20230330115009/www.airmartechnology.com/uploads/installguide/DST200UserlManual.pdf
+fields:
+- id: manufacturerCode
+  name: Manufacturer Code
+  type: LOOKUP
+  bits: 11
+  description: Airmar
+  match: 135
+  lookup: MANUFACTURER_CODE
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 2
+- id: industryCode
+  name: Industry Code
+  type: LOOKUP
+  bits: 3
+  description: Marine Industry
+  match: 4
+  lookup: INDUSTRY_CODE
+- id: proprietaryId
+  name: Proprietary ID
+  type: LOOKUP
+  bits: 8
+  description: Reset EEPROM
+  match: 130
+  lookup: AIRMAR_COMMAND
+  primaryKey: true
+- id: options
+  name: Options
+  type: LOOKUP
+  bits: 4
+  lookup: AIRMAR_RESET_EEPROM_OPTIONS
+- id: reserved6
+  name: Reserved
+  type: RESERVED
+  bits: 20
