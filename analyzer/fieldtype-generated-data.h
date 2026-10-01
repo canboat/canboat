@@ -1073,6 +1073,21 @@ FieldType fieldTypeList[] = {
      .resolution = 2000.0,
      .physical = &PRESSURE},
 
+    {.name = "PRESSURE_UINT8_4KPA",
+     .description = "Pressure, 8 bit unsigned in 4 kilopascal resolution",
+     .encodingDescription = "SAE J1939's engine oil and fuel pressure encoding, 0 to 1000 kPa",
+     .baseFieldType = "UINT8",
+     .resolution = 4000.0,
+     .physical = &PRESSURE},
+
+    {.name = "PRESSURE_UFIX16_J1939_CRANKCASE",
+     .description = "Pressure, J1939 16 bit crankcase",
+     .encodingDescription = "SAE J1939's crankcase pressure encoding: 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa",
+     .baseFieldType = "UFIX16",
+     .offset = -32000,
+     .resolution = 7.8125,
+     .physical = &PRESSURE},
+
     {.name = "PRESSURE_UINT8_KPA",
      .description = "Pressure, 8 bit unsigned in .5 kilopascal resolution",
      .baseFieldType = "UINT8",

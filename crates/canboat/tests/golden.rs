@@ -424,6 +424,10 @@ fn j1939_iso_tp_text() {
 /// (0x7d = 0 %, 0x96 = 25 %, 0x64 = -25 %, 0xff = not available), and a
 /// 16-bit temperature is 0.03125 deg C per bit from -273 deg C (0x2620 =
 /// 32 deg C, shown as 31.85 C because the K scale drops 0.15 K).
+/// EFL/P1 (65263): 4 kPa oil and fuel pressure, 0.4 % levels, and the
+/// 16-bit crankcase pressure, 1/128 kPa from -250 kPa (0x7d40 = 0.5 kPa,
+/// 0.005 bar in Metric). DD (65276): fuel level 0x3c = 24 %. PGN 0
+/// (TSC1) falls to the 0x0000-0xE700 catch-all.
 #[test]
 fn j1939_scaling_text() {
     run_case(

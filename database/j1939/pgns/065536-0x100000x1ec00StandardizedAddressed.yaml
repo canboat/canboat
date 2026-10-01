@@ -1,0 +1,16 @@
+pgn: 65536
+id: 0x100000x1ec00StandardizedAddressed
+description: '0x10000-0x1EC00: Standardized addressed'
+type: ISO
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Lookups
+explanation: Standardized PGNs in PDU1 (addressed) PGN range 0x10000 to 0x1EC00 (65536 - 125952), data page 1. NMEA 2000 does not use this range. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1784

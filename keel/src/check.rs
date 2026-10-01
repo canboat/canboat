@@ -34,6 +34,22 @@ const PGN_RANGES: [(u32, u32, u32, &str, &str); 8] = [
     (0x1ff00, 0x1ffff, 1, "Manufacturer", "Fast"),
 ];
 
+/// pgn-j1939.h pgnRange[]: J1939 also uses the PDU1 ranges NMEA 2000
+/// leaves empty (0x0000-0xE700, and 0x10000-0x1EC00 on data page 1),
+/// and has no fast-packet: data page 1 is single frame or ISO TP.
+const J1939_PGN_RANGES: [(u32, u32, u32, &str, &str); 10] = [
+    (0x0000, 0xe700, 256, "SAE", "ISO"),
+    (0xe800, 0xee00, 256, "ISO 11783", "Single"),
+    (0xef00, 0xef00, 256, "Manufacturer", "Single"),
+    (0xf000, 0xfeff, 1, "SAE", "Single"),
+    (0xff00, 0xffff, 1, "Manufacturer", "Single"),
+    (0x10000, 0x1ec00, 256, "SAE", "ISO"),
+    (0x1ed00, 0x1ee00, 256, "SAE", "ISO"),
+    (0x1ef00, 0x1ef00, 256, "Manufacturer", "ISO"),
+    (0x1f000, 0x1feff, 1, "SAE", "ISO"),
+    (0x1ff00, 0x1ffff, 1, "Manufacturer", "ISO"),
+];
+
 /// pgn.h IS_MANUFACTURER_PGN()
 fn is_manufacturer_pgn(pgn: u32) -> bool {
     (0xff00..=0xffff).contains(&pgn) || pgn == 0x1ef00 || (0x1ff00..=0x1ffff).contains(&pgn)
@@ -205,7 +221,12 @@ fn check_pgn_range(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.pgn >= ACTISENSE_BEM {
         return; // BEM pseudo-PGNs live outside the wire ranges by design
     }
-    let range = PGN_RANGES.iter().find(|(_, end, ..)| p.pgn <= *end);
+    let ranges: &[_] = if prefix == "j1939/" {
+        &J1939_PGN_RANGES
+    } else {
+        &PGN_RANGES
+    };
+    let range = ranges.iter().find(|(_, end, ..)| p.pgn <= *end);
     let Some((start, _end, step, _who, rtype)) = range else {
         v.push(Violation {
             rule: "R02",

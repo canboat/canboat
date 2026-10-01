@@ -25,6 +25,17 @@
 */
 
 Pgn pgnList[] = {
+    {"0x0000-0xE700: Standardized addressed",
+     0,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_LOOKUPS_UNKNOWN,
+     PACKET_ISO_TP,
+     {
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
+     },
+     .camelDescription = "0x00000xe700StandardizedAddressed",
+     .fallback = true,
+     .explanation = "Standardized PGNs in PDU1 (addressed) PGN range 0x0000 to 0xE700 (0 - 59136), such as TSC1 (0), TC1 (256) and CM1 (57344). NMEA 2000 does not use this range. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. When this is shown during analysis it means the PGN is not reverse engineered yet."},
+
     {"0xE800-0xEEFF: Standardized single-frame addressed",
      59392,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -839,7 +850,7 @@ Pgn pgnList[] = {
       {.name = "Engine Fuel Supply Pump Intake Absolute Pressure", .camelName = "engineFuelSupplyPumpIntakeAbsolutePressure", .fieldType = "PRESSURE_UINT8_2KPA", .description = "SPN 1381"},
       {.name = "Engine Fuel Filter (suction side) Differential Pressure", .camelName = "engineFuelFilterSuctionSideDifferentialPressure", .fieldType = "PRESSURE_UINT8_2KPA", .description = "SPN 1382"},
       {.name = "Engine Waste Oil Reservoir Level", .camelName = "engineWasteOilReservoirLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 3548"},
-      {.name = "Engine Oil Filter Outlet Pressure", .camelName = "engineOilFilterOutletPressure", .fieldType = "NUMBER", .size = 8, .resolution = 4.0, .unit = "kPa", .description = "SPN 3549, 4 kPa per bit"},
+      {.name = "Engine Oil Filter Outlet Pressure", .camelName = "engineOilFilterOutletPressure", .fieldType = "PRESSURE_UINT8_4KPA", .description = "SPN 3549"},
       {.name = "Engine Oil Priming Pump Switch", .camelName = "engineOilPrimingPumpSwitch", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 3550"},
       {.name = "Engine Oil Priming State", .camelName = "engineOilPrimingState", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 3551"},
       {.name = "Engine Oil Pre-Heated State", .camelName = "engineOilPreHeatedState", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 3552"},
@@ -1062,6 +1073,23 @@ Pgn pgnList[] = {
      .interval = 1000,
      .priority = 6},
 
+    {"Engine Fluid Level/Pressure 1",
+     65263,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Engine Fuel Delivery Pressure", .camelName = "engineFuelDeliveryPressure", .fieldType = "PRESSURE_UINT8_4KPA", .description = "SPN 94"},
+      {.name = "Engine Extended Crankcase Blow-by Pressure", .camelName = "engineExtendedCrankcaseBlowByPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "SPN 22"},
+      {.name = "Engine Oil Level", .camelName = "engineOilLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 98"},
+      {.name = "Engine Oil Pressure", .camelName = "engineOilPressure", .fieldType = "PRESSURE_UINT8_4KPA", .description = "SPN 100"},
+      {.name = "Engine Crankcase Pressure", .camelName = "engineCrankcasePressure", .fieldType = "PRESSURE_UFIX16_J1939_CRANKCASE", .description = "SPN 101"},
+      {.name = "Engine Coolant Pressure", .camelName = "engineCoolantPressure", .fieldType = "PRESSURE_UINT8_2KPA", .description = "SPN 109"},
+      {.name = "Engine Coolant Level", .camelName = "engineCoolantLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 111"}
+     },
+     .camelDescription = "engineFluidLevelPressure1",
+     .interval = 500,
+     .priority = 6},
+
     {"Fuel Economy",
      65266,
      PACKET_COMPLETE,
@@ -1133,6 +1161,23 @@ Pgn pgnList[] = {
      .interval = 1000,
      .priority = 6},
 
+    {"Dash Display",
+     65276,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Washer Fluid Level", .camelName = "washerFluidLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 80"},
+      {.name = "Fuel Level 1", .camelName = "fuelLevel1", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 96"},
+      {.name = "Engine Fuel Filter Differential Pressure", .camelName = "engineFuelFilterDifferentialPressure", .fieldType = "PRESSURE_UINT8_2KPA", .description = "SPN 95"},
+      {.name = "Engine Oil Filter Differential Pressure", .camelName = "engineOilFilterDifferentialPressure", .fieldType = "PRESSURE_UINT8_KPA", .description = "SPN 99"},
+      {.name = "Cargo Ambient Temperature", .camelName = "cargoAmbientTemperature", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 169"},
+      {.name = "Fuel Level 2", .camelName = "fuelLevel2", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 38"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 8, .resolution = 1.0}
+     },
+     .camelDescription = "dashDisplay",
+     .interval = 1000,
+     .priority = 6},
+
     {"0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed",
      65280,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
@@ -1143,6 +1188,17 @@ Pgn pgnList[] = {
      .camelDescription = "0xff000xffffManufacturerProprietarySingleFrameNonAddressed",
      .fallback = true,
      .explanation = "Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet."},
+
+    {"0x10000-0x1EC00: Standardized addressed",
+     65536,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_LOOKUPS_UNKNOWN,
+     PACKET_ISO_TP,
+     {
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
+     },
+     .camelDescription = "0x100000x1ec00StandardizedAddressed",
+     .fallback = true,
+     .explanation = "Standardized PGNs in PDU1 (addressed) PGN range 0x10000 to 0x1EC00 (65536 - 125952), data page 1. NMEA 2000 does not use this range. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
     {"0x1ED00 - 0x1EE00: Standardized addressed",
      126208,

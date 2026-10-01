@@ -180,6 +180,9 @@ type VariantEntry<'a> = (usize, &'a RawPgn, &'a Vec<RawField>);
 /// SI and Metric schemas.
 struct FieldView {
     resolution: Option<f64>,
+    /// The field's offset, in this view's units. `None` when a unit
+    /// conversion scaled it into `unit_offset` (see `field_view`).
+    offset: Option<i64>,
     unit: Option<String>,
     range_min: Option<f64>,
     range_max: Option<f64>,
@@ -202,6 +205,7 @@ fn field_converts(f: &RawField) -> bool {
 fn field_view(f: &RawField, units: Units) -> FieldView {
     let mut v = FieldView {
         resolution: f.resolution,
+        offset: f.offset,
         unit: f.unit.clone(),
         range_min: f.range_min,
         range_max: f.range_max,
@@ -275,6 +279,19 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
             v.unit = Some("Ah".to_string());
         }
         _ => {}
+    }
+    // `offset` is in SI units, an integer. A conversion that scales the
+    // value (Pa -> bar, rad -> deg, C -> Ah) has to scale the offset
+    // too, which leaves it fractional (J1939 crankcase pressure: -250 kPa
+    // is -2.5 bar), so it moves into `unit_offset`, which the decoder
+    // adds after it scales the raw value. K -> C does not scale, and
+    // keeps its offset.
+    if let (Some(o), Some(r0), Some(r1)) =
+        (f.offset.filter(|o| *o != 0), f.resolution, v.resolution)
+        && r0 != r1
+    {
+        v.unit_offset += o as f64 * (r1 / r0);
+        v.offset = None;
     }
     v
 }
@@ -501,7 +518,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         // Units-dependent presentation comes from the FieldView.
         resolution = opt_float(&v.resolution),
         signed = opt_bool(&f.signed),
-        offset = opt_int(&f.offset),
+        offset = opt_int(&v.offset),
         range_min = opt_float(&v.range_min),
         range_max = opt_float(&v.range_max),
         uv = opt_int(&f.unknown_value),
