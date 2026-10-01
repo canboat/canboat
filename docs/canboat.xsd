@@ -1,4 +1,4 @@
-<xs:schema version="2.6.0"
+<xs:schema version="2.7.0"
            attributeFormDefault="unqualified"
            elementFormDefault="qualified"
            xmlns:xs="http://www.w3.org/2001/XMLSchema">
@@ -72,6 +72,18 @@ limitations under the License.
       <xs:element type="xs:string" name="License"/>
       <xs:element type="xs:string" name="Version"/>
       <xs:element type="xs:string" name="Copyright"/>
+      <xs:element type="Protocol" name="Protocol" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The protocol on the CAN bus these PGNs are carried on. NMEA 2000
+            (docs/canboat.xml) and SAE J1939 (docs/canboat-j1939.xml) share
+            the ISO 11783 frame header, address claim and transport protocol
+            but define different PGNs, and only NMEA 2000 has fast-packet
+            framing. Absent in documents older than schema 2.7.0, which are
+            all NMEA 2000.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="PhysicalQuantities" name="PhysicalQuantities"/>
       <xs:element type="FieldTypes" name="FieldTypes"/>
       <xs:element type="MissingEnumerations" name="MissingEnumerations"/>
@@ -82,6 +94,13 @@ limitations under the License.
       <xs:element type="PGNs" name="PGNs"/>
     </xs:sequence>
   </xs:complexType>
+
+  <xs:simpleType name="Protocol">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="nmea2000"/>
+      <xs:enumeration value="j1939"/>
+    </xs:restriction>
+  </xs:simpleType>
 
   <xs:complexType name="EnumPair">
     <xs:simpleContent>
