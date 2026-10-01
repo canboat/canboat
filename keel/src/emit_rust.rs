@@ -283,9 +283,16 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
 struct ComputedFt {
     signed: bool,
     precision: u8,
+    unit_offset: f64,
 }
 
-fn compute_ft(v: &mut RawFieldTypeValue) -> ComputedFt {
+/// The `units` view of one field-type lookup entry: canboat C runs the
+/// same `fixupUnit` over these (`fillFieldTypeLookupField`) as over
+/// ordinary fields, so the SI and Metric tables differ exactly as
+/// [`field_view`] does — SI turns kWh/Ah into J/C, Metric turns
+/// rad/K/Pa into deg/°C/bar.
+fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
+    let mut v = v.clone();
     let mut c = ComputedFt {
         // The fieldtype's own signedness is the answer. The unit test
         // below only ever *adds* to it, for angle types that canboat
@@ -294,41 +301,38 @@ fn compute_ft(v: &mut RawFieldTypeValue) -> ComputedFt {
         ..ComputedFt::default()
     };
     let Some(unit) = v.unit.clone() else {
-        return c;
+        return (v, c);
     };
     if matches!(unit.as_str(), "rad" | "rad/s" | "deg" | "deg/s") {
         c.signed = true;
     }
-    match unit.as_str() {
-        "rad" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r *= RAD_TO_DEG;
-            }
-            v.unit = Some("deg".to_string());
+    let mut scale = |factor: f64, to: &str| {
+        if let Some(r) = v.resolution.as_mut() {
+            *r *= factor;
+        }
+        v.unit = Some(to.to_string());
+    };
+    match (units, unit.as_str()) {
+        (Units::Si, "kWh") => scale(3.6e6, "J"),
+        (Units::Si, "Ah") => scale(3600.0, "C"),
+        (Units::Si, _) => {}
+        (Units::Metric, "rad") => {
+            scale(RAD_TO_DEG, "deg");
             c.precision = 1;
         }
-        "rad/s" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r *= RAD_TO_DEG;
-            }
-            v.unit = Some("deg/s".to_string());
-        }
-        "Pa" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r /= 100_000.0;
-            }
-            v.unit = Some("bar".to_string());
+        (Units::Metric, "rad/s") => scale(RAD_TO_DEG, "deg/s"),
+        (Units::Metric, "Pa") => {
+            scale(1.0 / 100_000.0, "bar");
             c.precision = 3;
         }
-        "C" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r /= 3600.0;
-            }
-            v.unit = Some("Ah".to_string());
+        (Units::Metric, "C") => scale(1.0 / 3600.0, "Ah"),
+        (Units::Metric, "K") if !v.signed => {
+            v.unit = Some("C".to_string());
+            c.unit_offset = -273.15;
         }
         _ => {}
     }
-    c
+    (v, c)
 }
 
 // ---------------------------------------------------------------------
@@ -603,6 +607,28 @@ fn screaming(id: &str) -> String {
     out
 }
 
+/// One stable Rust name per PGN table entry, derived from its id: the
+/// variant of the generated `enum Idx` that stands for the entry's index,
+/// and the stem of its field-array statics (`F_WIND_DATA`). Indices are
+/// never written out as numbers, so adding a PGN adds lines to the
+/// generated file instead of renumbering every entry after it. A
+/// repeated id (none today) gets a `_2`, `_3`, … suffix in table order.
+fn pgn_symbols(pgns: &[(RawPgn, Vec<RawField>)]) -> Vec<String> {
+    use std::collections::HashMap;
+    let mut seen: HashMap<String, usize> = HashMap::new();
+    pgns.iter()
+        .map(|(p, _)| {
+            let mut base = screaming(&p.id);
+            if base.is_empty() {
+                base = format!("PGN_{}", p.pgn);
+            }
+            let n = seen.entry(base.clone()).or_insert(0);
+            *n += 1;
+            if *n == 1 { base } else { format!("{base}_{n}") }
+        })
+        .collect()
+}
+
 /// camelCase canboat id → `snake_case` module name. Keyword collisions
 /// (none today, but pgn ids come from an external file) get a trailing
 /// `_` so the module name always parses.
@@ -627,13 +653,13 @@ fn snake(id: &str) -> String {
 /// * `pub mod field` — a `pub mod <pgn_id>` per PGN, each with a
 ///   `pub static <FIELD_ID>: FieldRef` per field.
 ///
-/// Both index the SI arrays emitted above (`PGNS_SI`, `F{i}`), which is
+/// Both index the SI arrays emitted above (`PGNS_SI`, `F_<ID>`), which is
 /// legal because a `static`'s initializer may reference another `static`
 /// by address; id/name/order are unit-invariant so these double for
 /// Metric. Duplicate ids (repeated `reserved`/`spare` fields, and the
 /// rare shared PGN id) keep the first occurrence, mirroring
 /// [`PgnDatabase::pgn_by_id`].
-fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
+fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)], syms: &[String]) {
     use std::collections::HashSet;
 
     writeln!(
@@ -644,7 +670,7 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
          /// description, and field metadata are unit-invariant so it also\n\
          /// describes the Metric schema.\n\
          pub mod pgn {{\n\
-         use super::PGNS_SI;\n\
+         use super::{{Idx, PGNS_SI}};\n\
          use crate::engine::types::PgnInfo;"
     )
     .unwrap();
@@ -654,7 +680,12 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
         if name.is_empty() || !used.insert(p.id.as_str()) {
             continue;
         }
-        writeln!(out, "pub static {name}: &PgnInfo = &PGNS_SI[{i}];").unwrap();
+        let sym = &syms[i];
+        writeln!(
+            out,
+            "pub static {name}: &PgnInfo = &PGNS_SI[Idx::{sym} as usize];"
+        )
+        .unwrap();
     }
     writeln!(out, "}}").unwrap();
 
@@ -685,15 +716,16 @@ fn emit_id_constants(out: &mut String, pgns: &[(RawPgn, Vec<RawField>)]) {
         if consts.is_empty() {
             continue;
         }
+        let sym = &syms[i];
         writeln!(
             out,
-            "pub mod {module} {{\nuse super::super::{{PGNS_SI, F{i}}};\nuse crate::engine::types::FieldRef;"
+            "pub mod {module} {{\nuse super::super::{{Idx, PGNS_SI, F_{sym}}};\nuse crate::engine::types::FieldRef;"
         )
         .unwrap();
         for (name, j) in consts {
             writeln!(
                 out,
-                "pub static {name}: FieldRef = FieldRef {{ pgn: &PGNS_SI[{i}], field: &F{i}[{j}] }};"
+                "pub static {name}: FieldRef = FieldRef {{ pgn: &PGNS_SI[Idx::{sym} as usize], field: &F_{sym}[{j}] }};"
             )
             .unwrap();
         }
@@ -817,7 +849,8 @@ fn emit_ft_value(out: &mut String, v: &RawFieldTypeValue, c: ComputedFt) {
         out,
         "LookupFieldTypeValue{{value:{value},name:{name},field_type:{field_type},\
          bits:{bits},resolution:{resolution},unit:{unit},\
-         lookup_enumeration:{le},lookup_bit_enumeration:{lbe},signed:{signed},precision:{precision}}},",
+         lookup_enumeration:{le},lookup_bit_enumeration:{lbe},signed:{signed},precision:{precision},\
+         unit_offset:{unit_offset:?}}},",
         value = v.value,
         name = quote(&v.name),
         field_type = opt_str(&v.field_type),
@@ -828,11 +861,12 @@ fn emit_ft_value(out: &mut String, v: &RawFieldTypeValue, c: ComputedFt) {
         lbe = opt_str(&v.lookup_bit_enumeration),
         signed = c.signed,
         precision = c.precision,
+        unit_offset = c.unit_offset,
     )
     .unwrap();
 }
 
-fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[ComputedFt]) {
+fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, units: Units) {
     write!(
         out,
         "LookupFieldTypeTable{{name:{},max_value:{},values:&[",
@@ -840,8 +874,9 @@ fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[Computed
         opt_int(&t.max_value),
     )
     .unwrap();
-    for (v, c) in t.values.iter().zip(computed.iter()) {
-        emit_ft_value(out, v, *c);
+    for v in &t.values {
+        let (v, c) = compute_ft(v, units);
+        emit_ft_value(out, &v, c);
     }
     write!(out, "],by_value:&[").unwrap();
     let mut pairs: Vec<(u64, u32)> = t
@@ -1193,13 +1228,6 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         })
         .collect();
 
-    // Field-type lookups also need fix-up.
-    let mut ft_tables = canboat.lookup_field_type_enumerations;
-    let ft_computed: Vec<Vec<ComputedFt>> = ft_tables
-        .iter_mut()
-        .map(|t| t.values.iter_mut().map(compute_ft).collect())
-        .collect();
-
     // Sort lookups alphabetically by name for binary-search lookup at
     // runtime.
     let mut lookups = canboat.lookup_enumerations;
@@ -1209,10 +1237,10 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     let mut indirect_lookups = canboat.lookup_indirect_enumerations;
     indirect_lookups.sort_by(|a, b| a.name.cmp(&b.name));
 
-    // Sort ft_tables (and parallel computed array) by name.
-    let mut ft_indexed: Vec<(RawFieldTypeLookup, Vec<ComputedFt>)> =
-        ft_tables.into_iter().zip(ft_computed).collect();
-    ft_indexed.sort_by(|a, b| a.0.name.cmp(&b.0.name));
+    // Field-type lookups get the same per-units fix-up as fields, at
+    // emit time (`compute_ft`).
+    let mut ft_tables = canboat.lookup_field_type_enumerations;
+    ft_tables.sort_by(|a, b| a.name.cmp(&b.name));
 
     // pgn number -> list of indices (declaration order preserved).
     let mut pgn_index: BTreeMap<u32, Vec<usize>> = BTreeMap::new();
@@ -1267,7 +1295,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     if indirect_lookups.iter().any(|t| !t.values.is_empty()) {
         imports.push("IndirectLookupValue");
     }
-    if ft_indexed.iter().any(|(t, _)| !t.values.is_empty()) {
+    if ft_tables.iter().any(|t| !t.values.is_empty()) {
         imports.push("LookupFieldTypeValue");
     }
     imports.sort_unstable();
@@ -1352,16 +1380,34 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         .unwrap();
     }
 
-    // Field arrays, one (or two) per PGN. `F{i}` is the SI/base slice;
-    // a `F{i}M` Metric slice is emitted only when the PGN actually
-    // contains a convertible field — otherwise both schemas share `F{i}`.
+    // `enum Idx`: one variant per PGNS entry, in table order, so
+    // `Idx::WIND_DATA as usize` is that entry's index. Everything below
+    // refers to entries this way rather than by number. `__COUNT` lets
+    // the compiler check the enum and the tables stay in step.
+    let syms = pgn_symbols(&pgn_with_fields);
+    writeln!(
+        out,
+        "/// Index of each entry in `PGNS_SI` / `PGNS_METRIC`, by PGN id.\n\
+         #[allow(non_camel_case_types, clippy::upper_case_acronyms)]\n\
+         #[derive(Clone, Copy)]\n\
+         pub enum Idx {{"
+    )
+    .unwrap();
+    for sym in &syms {
+        writeln!(out, "    {sym},").unwrap();
+    }
+    writeln!(out, "    __COUNT,\n}}").unwrap();
+
+    // Field arrays, one (or two) per PGN. `F_<ID>` is the SI/base slice;
+    // a `F_<ID>_M` Metric slice is emitted only when the PGN actually
+    // contains a convertible field — otherwise both schemas share `F_<ID>`.
     // Strings inside the FieldInfo literals dedupe across both via the
     // linker's `.rodata` string merging, so only the ~74 differing PGNs
     // cost extra struct bytes.
-    for (i, (_p, fields)) in pgn_with_fields.iter().enumerate() {
-        emit_field_array(&mut out, &format!("F{i}"), fields, Units::Si);
+    for ((_p, fields), sym) in pgn_with_fields.iter().zip(&syms) {
+        emit_field_array(&mut out, &format!("F_{sym}"), fields, Units::Si);
         if fields.iter().any(field_converts) {
-            emit_field_array(&mut out, &format!("F{i}M"), fields, Units::Metric);
+            emit_field_array(&mut out, &format!("F_{sym}_M"), fields, Units::Metric);
         }
     }
 
@@ -1373,17 +1419,22 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     writeln!(out, "pub static PGNS_SI: &[PgnInfo] = &[").unwrap();
     for (i, (p, _fields)) in pgn_with_fields.iter().enumerate() {
         let is_bem = i >= canboat_pgn_count;
-        emit_pgn(&mut out, p, &format!("F{i}"), is_bem);
+        emit_pgn(&mut out, p, &format!("F_{}", syms[i]), is_bem);
     }
     writeln!(out, "];").unwrap();
+    writeln!(
+        out,
+        "const _: () = assert!(PGNS_SI.len() == Idx::__COUNT as usize);"
+    )
+    .unwrap();
 
     writeln!(out, "pub static PGNS_METRIC: &[PgnInfo] = &[").unwrap();
     for (i, (p, fields)) in pgn_with_fields.iter().enumerate() {
         let is_bem = i >= canboat_pgn_count;
         let ident = if fields.iter().any(field_converts) {
-            format!("F{i}M")
+            format!("F_{}_M", syms[i])
         } else {
-            format!("F{i}")
+            format!("F_{}", syms[i])
         };
         emit_pgn(&mut out, p, &ident, is_bem);
     }
@@ -1392,20 +1443,20 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     // Id-keyed constant references into the arrays above, so code can say
     // `pgn::WIND_DATA` / `field::wind_data::WIND_ANGLE` instead of the
     // stringly-typed `("windData","windAngle")` pair. They index the SI
-    // arrays (`PGNS_SI` / `F{i}`); id/name/order are unit-invariant.
+    // arrays (`PGNS_SI` / `F_<ID>`); id/name/order are unit-invariant.
     // The J1939 flavor skips them: nothing encodes against that table
     // by constant yet, and the two modules would otherwise export
     // colliding-by-name constants for the shared ISO PGNs.
     if !j1939 {
-        emit_id_constants(&mut out, &pgn_with_fields);
+        emit_id_constants(&mut out, &pgn_with_fields, &syms);
     }
 
     // PGN_INDEX — sorted by pgn number, value is &[u32] of indices.
     writeln!(out, "pub static PGN_INDEX: &[(u32, &[u32])] = &[").unwrap();
     for (pgn, idxs) in &pgn_index {
         write!(out, "({},&[", pgn).unwrap();
-        for i in idxs {
-            write!(out, "{},", i).unwrap();
+        for &i in idxs {
+            write!(out, "Idx::{} as u32,", syms[i]).unwrap();
         }
         writeln!(out, "]),").unwrap();
     }
@@ -1441,16 +1492,18 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         }
         writeln!(out, "];").unwrap();
 
-        // FIELD_TYPE_LOOKUPS.
-        writeln!(
-            out,
-            "pub static FIELD_TYPE_LOOKUPS: &[LookupFieldTypeTable] = &["
-        )
-        .unwrap();
-        for (t, c) in &ft_indexed {
-            emit_ft_lookup(&mut out, t, c);
+        // FIELD_TYPE_LOOKUPS_SI / FIELD_TYPE_LOOKUPS_METRIC.
+        for (units, suffix) in [(Units::Si, "SI"), (Units::Metric, "METRIC")] {
+            writeln!(
+                out,
+                "pub static FIELD_TYPE_LOOKUPS_{suffix}: &[LookupFieldTypeTable] = &["
+            )
+            .unwrap();
+            for t in &ft_tables {
+                emit_ft_lookup(&mut out, t, units);
+            }
+            writeln!(out, "];").unwrap();
         }
-        writeln!(out, "];").unwrap();
     }
 
     // --- Phase 3 codegen: per-PGN dispatch on Match fields. ---
@@ -1489,7 +1542,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         if !needs_dispatch_fn(variants) {
             continue;
         }
-        emit_per_pgn_dispatch(&mut out, *pgn_num, variants);
+        emit_per_pgn_dispatch(&mut out, *pgn_num, variants, &syms);
     }
 
     // Top-level dispatch entry point.
@@ -1509,8 +1562,8 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
             writeln!(out, "        {pgn_num} => dispatch_{pgn_num}(payload),").unwrap();
         } else {
             // Single variant, no Match fields — direct return.
-            let idx = variants[0].0;
-            writeln!(out, "        {pgn_num} => Some({idx}),").unwrap();
+            let sym = &syms[variants[0].0];
+            writeln!(out, "        {pgn_num} => Some(Idx::{sym} as usize),").unwrap();
         }
     }
     writeln!(out, "        _ => None,").unwrap();
@@ -1533,8 +1586,8 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         })
         .collect();
     writeln!(out, "pub static FALLBACKS: &[(u32, u32)] = &[").unwrap();
-    for (pgn, idx) in &fallbacks {
-        writeln!(out, "    ({pgn}, {idx}),").unwrap();
+    for &(pgn, idx) in &fallbacks {
+        writeln!(out, "    ({pgn}, Idx::{} as u32),", syms[idx]).unwrap();
     }
     writeln!(out, "];").unwrap();
     writeln!(
@@ -1570,7 +1623,12 @@ fn needs_dispatch_fn(variants: &[VariantEntry<'_>]) -> bool {
 }
 
 /// Emit `fn dispatch_<pgn>(payload: &[u8]) -> Option<usize>`.
-fn emit_per_pgn_dispatch(out: &mut String, pgn_num: u32, variants: &[VariantEntry<'_>]) {
+fn emit_per_pgn_dispatch(
+    out: &mut String,
+    pgn_num: u32,
+    variants: &[VariantEntry<'_>],
+    syms: &[String],
+) {
     use std::collections::BTreeSet;
 
     // Collect every distinct (offset, length, signed, offset_k) used by
@@ -1676,10 +1734,10 @@ fn emit_per_pgn_dispatch(out: &mut String, pgn_num: u32, variants: &[VariantEntr
             writeln!(out, "false {{}}").unwrap();
             continue;
         }
-        writeln!(out, " {{ return Some({idx}); }}").unwrap();
+        writeln!(out, " {{ return Some(Idx::{} as usize); }}", syms[*idx]).unwrap();
     }
     match specific_no_match.or(catchall_no_match) {
-        Some(idx) => writeln!(out, "    Some({idx})").unwrap(),
+        Some(idx) => writeln!(out, "    Some(Idx::{} as usize)", syms[idx]).unwrap(),
         None => writeln!(out, "    None").unwrap(),
     }
     writeln!(out, "}}").unwrap();

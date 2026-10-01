@@ -13,8 +13,8 @@
 //! - [`PGN_INDEX`] — `&[(u32, &[u32])]`, sorted by PGN number, value
 //!   is a slice of indices into [`PGNS`] (variants in declaration order).
 //! - [`LOOKUPS`], [`BIT_LOOKUPS`], [`INDIRECT_LOOKUPS`],
-//!   [`FIELD_TYPE_LOOKUPS`] — sorted alphabetically by name for
-//!   binary-search lookup.
+//!   [`FIELD_TYPE_LOOKUPS_SI`], [`FIELD_TYPE_LOOKUPS_METRIC`] — sorted
+//!   alphabetically by name for binary-search lookup.
 //! - [`SCHEMA_VERSION`], [`VERSION`] — strings from canboat.json.
 //! - [`COPYRIGHT_ID`] — the `(C) ...` line from canboat.json's
 //!   Copyright banner, for help text and verbose logging.

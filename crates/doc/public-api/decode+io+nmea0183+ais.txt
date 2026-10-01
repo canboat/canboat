@@ -634,6 +634,7 @@ pub canboat::schema::LookupFieldTypeValue::precision: u8
 pub canboat::schema::LookupFieldTypeValue::resolution: core::option::Option<f64>
 pub canboat::schema::LookupFieldTypeValue::signed: bool
 pub canboat::schema::LookupFieldTypeValue::unit: core::option::Option<&'static str>
+pub canboat::schema::LookupFieldTypeValue::unit_offset: f64
 pub canboat::schema::LookupFieldTypeValue::value: u64
 impl canboat::schema::LookupFieldTypeValue
 pub fn canboat::schema::LookupFieldTypeValue::bit_length(&self) -> core::option::Option<u32>

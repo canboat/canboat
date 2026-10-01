@@ -266,6 +266,9 @@ pub struct LookupFieldTypeValue {
     pub signed: bool,
     /// Codegen-applied display precision (0 = derive from resolution).
     pub precision: u8,
+    /// Added to the scaled value — the K→°C offset in the Metric
+    /// table, as [`FieldInfo::unit_offset`] is for ordinary fields.
+    pub unit_offset: f64,
 }
 
 impl LookupFieldTypeValue {

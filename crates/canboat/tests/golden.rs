@@ -208,6 +208,23 @@ fn pgn_si_units_json() {
     );
 }
 
+/// Dynamic field values follow the unit system as fields do (test29 in
+/// analyzer/tests/Makefile): Victron VE.Can registers in kWh, K and Ah,
+/// and Simnet 130845 Heading Offset in rad.
+#[test]
+fn pgn_dynamic_units_json() {
+    run_case(
+        "pgn-dynamic-units.in",
+        "pgn-dynamic-units.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "pgn-dynamic-units.in",
+        "pgn-dynamic-units-si.out",
+        &["--json", "--units", "si", "--fixtime", "pgn-test"],
+    );
+}
+
 #[test]
 fn pgn_60928_json_nv() {
     // The simplest passing case: two PGN 60928 frames, JSON -nv.
