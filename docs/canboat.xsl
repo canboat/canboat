@@ -782,8 +782,8 @@
             the address claim of its source address.
           </p>
           <p>
-            CANboat decodes a J1939 bus with <code>canboat convert --bus j1939</code> and
-            <code>canboat server --bus j1939</code>.
+            CANboat decodes a J1939 bus with <code>canboat convert --protocol j1939</code> and
+            <code>canboat server --protocol j1939</code>.
           </p>
           <p>
             If you have data (even if it is just a logfile for a new device) to contribute, please open an issue at
