@@ -78,7 +78,7 @@ pub struct DecodedField {
 /// (port of pgn.c getMatchingPgn): first variant with every match field
 /// equal wins; a variant without match fields is the catch-all.
 pub fn select_variant<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) -> Option<&'a Pgn> {
-    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let list = db.flavor_pgns(j1939);
     for p in list.iter().filter(|p| p.pgn == pgn && !p.fallback) {
         let mut bit = 0usize;
         let mut ok = true;
@@ -101,7 +101,7 @@ pub fn select_variant<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) 
             return Some(p);
         }
     }
-    list.iter().find(|p| p.pgn == pgn && p.fallback)
+    list.into_iter().find(|p| p.pgn == pgn && p.fallback)
 }
 
 /// A variant that agrees with the payload on every match field but one -

@@ -94,6 +94,7 @@ pub canboat::bridge::BridgeConfig::ais_port: u16
 pub canboat::bridge::BridgeConfig::analyzer_port: u16
 pub canboat::bridge::BridgeConfig::baud: core::option::Option<u32>
 pub canboat::bridge::BridgeConfig::bind: core::net::ip_addr::Ipv4Addr
+pub canboat::bridge::BridgeConfig::bus: canboat::schema::BusProtocol
 pub canboat::bridge::BridgeConfig::camel_case: canboat::output::CamelCase
 pub canboat::bridge::BridgeConfig::canboat_csv: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc::string::String>
@@ -120,6 +121,7 @@ pub canboat::bridge::BridgeConfig::raw_port: u16
 pub canboat::bridge::BridgeConfig::snapshot_port: u16
 pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::socketcan_address: u8
+pub canboat::bridge::BridgeConfig::socketcan_bitrate: u32
 pub canboat::bridge::BridgeConfig::socketcan_configure_link: bool
 pub canboat::bridge::BridgeConfig::units: canboat::Units
 pub canboat::bridge::BridgeConfig::verbose: bool
@@ -164,6 +166,32 @@ pub fn canboat::bridge::Transmitter::transmit(&self, canboat::Frame) -> anyhow::
 impl core::clone::Clone for canboat::bridge::Transmitter
 pub fn canboat::bridge::Transmitter::clone(&self) -> Self
 pub mod canboat::bus
+#[non_exhaustive] pub enum canboat::bus::BusProtocol
+pub canboat::bus::BusProtocol::J1939
+pub canboat::bus::BusProtocol::Nmea2000
+impl canboat::schema::BusProtocol
+pub const canboat::schema::BusProtocol::ALL: [canboat::schema::BusProtocol; 2]
+pub fn canboat::schema::BusProtocol::as_str(self) -> &'static str
+pub fn canboat::schema::BusProtocol::database(self, canboat::Units) -> &'static canboat::Database
+pub fn canboat::schema::BusProtocol::packet_type(self, u32) -> canboat::FramePacketType
+impl core::clone::Clone for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::clone(&self) -> Self
+impl core::cmp::Eq for canboat::schema::BusProtocol
+impl core::cmp::PartialEq for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::default() -> Self
+impl core::fmt::Debug for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::hash::Hash for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::hash<__H: core::hash::Hasher>(&self, &mut __H)
+impl core::marker::Copy for canboat::schema::BusProtocol
+impl core::marker::StructuralPartialEq for canboat::schema::BusProtocol
+impl core::str::traits::FromStr for canboat::schema::BusProtocol
+pub type canboat::schema::BusProtocol::Err = canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::BusProtocol::from_str(&str) -> core::result::Result<Self, Self::Err>
 pub enum canboat::bus::Closed
 pub canboat::bus::Closed::Confirmed
 pub canboat::bus::Closed::Gone
@@ -208,6 +236,18 @@ impl canboat::bus::FrameSender
 pub fn canboat::bus::FrameSender::send_frame(&self, canboat::Frame) -> core::result::Result<(), canboat::bus::DeviceWriterGone>
 impl core::clone::Clone for canboat::bus::FrameSender
 pub fn canboat::bus::FrameSender::clone(&self) -> Self
+pub struct canboat::bus::UnknownBusProtocol(pub alloc::string::String)
+impl core::clone::Clone for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::clone(&self) -> Self
+impl core::cmp::Eq for canboat::schema::UnknownBusProtocol
+impl core::cmp::PartialEq for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::schema::UnknownBusProtocol
+impl core::fmt::Debug for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::schema::UnknownBusProtocol
 pub fn canboat::bus::open_ikonvert(&str, u32) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub fn canboat::bus::open_ngt1(&str, u32) -> core::io::error::Result<canboat::bus::DeviceHandle>
 pub fn canboat::bus::open_socketcan(&str, u8) -> core::io::error::Result<canboat::bus::DeviceHandle>
@@ -775,6 +815,32 @@ pub fn canboat::read::EblReader<R>::read_frame(&mut self) -> core::io::error::Re
 pub fn canboat::read::from_analyzer_json(&str, &canboat::Database) -> core::option::Option<canboat::DecodedPgn>
 pub fn canboat::read::open_capture(&std::path::Path) -> core::io::error::Result<canboat::read::PlainReader<alloc::boxed::Box<dyn alloc::io::buf_read::BufRead>>>
 pub mod canboat::schema
+#[non_exhaustive] pub enum canboat::schema::BusProtocol
+pub canboat::schema::BusProtocol::J1939
+pub canboat::schema::BusProtocol::Nmea2000
+impl canboat::schema::BusProtocol
+pub const canboat::schema::BusProtocol::ALL: [canboat::schema::BusProtocol; 2]
+pub fn canboat::schema::BusProtocol::as_str(self) -> &'static str
+pub fn canboat::schema::BusProtocol::database(self, canboat::Units) -> &'static canboat::Database
+pub fn canboat::schema::BusProtocol::packet_type(self, u32) -> canboat::FramePacketType
+impl core::clone::Clone for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::clone(&self) -> Self
+impl core::cmp::Eq for canboat::schema::BusProtocol
+impl core::cmp::PartialEq for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::eq(&self, &Self) -> bool
+impl core::default::Default for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::default() -> Self
+impl core::fmt::Debug for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::hash::Hash for canboat::schema::BusProtocol
+pub fn canboat::schema::BusProtocol::hash<__H: core::hash::Hasher>(&self, &mut __H)
+impl core::marker::Copy for canboat::schema::BusProtocol
+impl core::marker::StructuralPartialEq for canboat::schema::BusProtocol
+impl core::str::traits::FromStr for canboat::schema::BusProtocol
+pub type canboat::schema::BusProtocol::Err = canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::BusProtocol::from_str(&str) -> core::result::Result<Self, Self::Err>
 pub enum canboat::schema::FieldType
 pub canboat::schema::FieldType::Address
 pub canboat::schema::FieldType::Binary
@@ -965,6 +1031,18 @@ impl core::iter::traits::iterator::Iterator for canboat::schema::PgnVariants
 pub type canboat::schema::PgnVariants::Item = &'static canboat::schema::PgnInfo
 pub fn canboat::schema::PgnVariants::next(&mut self) -> core::option::Option<Self::Item>
 pub fn canboat::schema::PgnVariants::size_hint(&self) -> (usize, core::option::Option<usize>)
+pub struct canboat::schema::UnknownBusProtocol(pub alloc::string::String)
+impl core::clone::Clone for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::clone(&self) -> Self
+impl core::cmp::Eq for canboat::schema::UnknownBusProtocol
+impl core::cmp::PartialEq for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::schema::UnknownBusProtocol
+impl core::fmt::Debug for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::schema::UnknownBusProtocol
+pub fn canboat::schema::UnknownBusProtocol::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::StructuralPartialEq for canboat::schema::UnknownBusProtocol
 pub enum canboat::DecodeError
 pub canboat::DecodeError::ShortPayload
 pub canboat::DecodeError::ShortPayload::field: alloc::string::String

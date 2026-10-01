@@ -221,6 +221,7 @@ pub mod schema {
         BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable,
         IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
     };
+    pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 }
 
 /// Generated compile-time identity constants: `ids::pgn::WIND_DATA`,
@@ -326,6 +327,8 @@ pub mod read {
 #[cfg(feature = "io")]
 pub mod bus {
     use std::io;
+
+    pub use crate::engine::{BusProtocol, UnknownBusProtocol};
 
     pub use crate::io::device::{
         Closed, DeviceCloser, DeviceHandle, DeviceWriterGone, FrameSender,

@@ -38,6 +38,23 @@ fn run(args: &[&str], input: &[u8]) -> Vec<u8> {
     out.stdout
 }
 
+/// Two different `--bus` protocols are refused on every path, including
+/// the frame-level one that never consults a PGN table.
+#[test]
+fn two_buses_are_refused_before_any_output() {
+    let out = Command::new(canboat())
+        .args([
+            "convert", "--to", "plain", "--bus", "nmea2000", "--bus", "j1939",
+        ])
+        .stdin(Stdio::null())
+        .output()
+        .expect("run canboat");
+    assert!(!out.status.success());
+    assert!(out.stdout.is_empty());
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("not supported yet"), "{stderr}");
+}
+
 /// A single received fast-packet PGN 127251 record.
 const PLAIN: &[u8] = b"2026-01-01T00:00:00.000Z,3,127251,27,255,8,00,ca,8f,f3,ff,25,02,ff\n";
 const BODY: &str = ",3,127251,27,255,8,00,ca,8f,f3,ff,25,02,ff";

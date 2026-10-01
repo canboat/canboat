@@ -493,7 +493,7 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
 }
 
 pub fn emit_pgn_data_h(db: &Database, j1939: bool) -> String {
-    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let list = db.flavor_pgns(j1939);
     let mut out = String::with_capacity(2 << 20);
     out.push_str(BANNER);
     out.push_str("Pgn pgnList[] = {\n");

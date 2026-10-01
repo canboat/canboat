@@ -147,6 +147,15 @@ pub struct Args {
     )]
     canboat_csv: Option<String>,
 
+    /// `--bus j1939` decodes against the J1939 table and runs the
+    /// SocketCAN gateway as a J1939 node: single frames and ISO TP, no
+    /// fast-packet, and no NMEA 2000 Heartbeat, Product Information or
+    /// PGN lists. Needs a source that passes raw CAN frames
+    /// (`--socketcan`, `--canboat-csv` or stdin); the NGT-1, iKonvert
+    /// and Maretron do NMEA 2000 framing themselves.
+    #[command(flatten)]
+    bus: crate::cli::bus::BusArgs,
+
     /// Separate sink for outbound PLAIN/FAST frames when chaining
     /// via `--canboat-csv`: the peer's write-only input port
     /// (`--input-port`, default 2600, the same slot as n2kd's
@@ -378,6 +387,13 @@ pub struct BridgeConfig {
     /// the fixed NMEA 2000 250 kbit/s) via netlink, instead of relying on an
     /// external `ip link set … up` unit being ordered first.
     pub socketcan_configure_link: bool,
+    /// Bit rate `socketcan_configure_link` sets: 250 000 (the default,
+    /// and always right for NMEA 2000) or 500 000 for a J1939-14 bus.
+    pub socketcan_bitrate: u32,
+    /// What the bus carries (`--bus`): picks the decode table and, with
+    /// `socketcan`, whether the gateway is an NMEA 2000 or a J1939 node.
+    /// Defaults to [`BusProtocol::Nmea2000`](crate::engine::BusProtocol).
+    pub bus: crate::engine::BusProtocol,
     pub canboat_csv: Option<String>,
     pub canboat_csv_write: Option<String>,
     pub baud: Option<u32>,
@@ -447,6 +463,8 @@ impl Default for BridgeConfig {
             socketcan: None,
             socketcan_address: 0,
             socketcan_configure_link: false,
+            socketcan_bitrate: 250_000,
+            bus: crate::engine::BusProtocol::Nmea2000,
             canboat_csv: None,
             canboat_csv_write: None,
             baud: None,
@@ -490,6 +508,12 @@ impl Args {
     pub fn warn_deprecated(&self) {
         self.shape.warn_deprecated();
     }
+
+    /// Reject what clap cannot: today, more than one `--bus`. Call
+    /// before converting to a [`BridgeConfig`].
+    pub fn check(&self) -> anyhow::Result<()> {
+        self.bus.protocol().map(|_| ())
+    }
 }
 
 #[cfg(feature = "cli")]
@@ -504,6 +528,11 @@ impl From<Args> for BridgeConfig {
             // The standalone `canboat` CLI keeps assuming an externally
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
+            socketcan_bitrate: 250_000,
+            bus: a
+                .bus
+                .protocol()
+                .expect("Args::check rejects a --bus this cannot convert"),
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
             baud: a.baud,
@@ -577,6 +606,15 @@ struct OpenedSource {
 // explicit `BridgeConfig.config_dir` (or `None` to disable persistence).
 
 fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
+    if config.bus != crate::engine::BusProtocol::Nmea2000
+        && (config.actisense.is_some() || config.ikonvert.is_some() || config.maretron.is_some())
+    {
+        anyhow::bail!(
+            "--bus {}: the NGT-1, iKonvert and Maretron do NMEA 2000 framing themselves; \
+             use --socketcan, --canboat-csv or stdin",
+            config.bus
+        );
+    }
     if let Some(path) = config.actisense.as_deref() {
         let baud = config.baud.unwrap_or(115_200);
         let path = path.to_string();
@@ -708,6 +746,8 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
             learn_tx_pgns: config.learn_tx_pgns,
+            bus: config.bus,
+            bitrate: config.socketcan_bitrate,
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address

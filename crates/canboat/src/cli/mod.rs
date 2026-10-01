@@ -20,6 +20,7 @@ use std::env;
 use std::ffi::OsString;
 
 pub mod app;
+pub mod bus;
 pub mod quirk;
 pub mod shape;
 
