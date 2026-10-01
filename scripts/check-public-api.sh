@@ -4,7 +4,7 @@
 # The facade is the ONLY supported dependency for external consumers, so its
 # public surface is a contract (see docs/library-api-plan.md §3). This script
 # regenerates the surface for each library feature set and diffs it against
-# docs/public-api/<featureset>.txt. A diff means the public API changed — either
+# crates/doc/public-api/<featureset>.txt (commas spelled `+`). A diff means the public API changed — either
 # update the snapshot on purpose (--bless) or reconsider the change.
 #
 # Requires: cargo-public-api + a nightly toolchain for rustdoc JSON.
@@ -29,11 +29,17 @@ FEATURESETS=(
     "decode,io,node,bridge,nmea0183,ais"
 )
 
-if ! cargo public-api --version >/dev/null 2>&1; then
-    echo "error: cargo-public-api not installed." >&2
+# rustdoc JSON needs nightly, but rust-toolchain.toml pins `stable`, and
+# that pin beats the `+nightly` cargo-public-api asks for. `rustup run`
+# is the one override the pin does not win against.
+public_api=(rustup run nightly cargo public-api)
+if ! "${public_api[@]}" --version >/dev/null 2>&1; then
+    echo "error: needs rustup, a nightly toolchain and cargo-public-api." >&2
     echo "  rustup toolchain install nightly && cargo install cargo-public-api" >&2
     exit 127
 fi
+err="$(mktemp)"
+trap 'rm -f "$err"' EXIT
 
 bless=0
 [[ "${1:-}" == "--bless" ]] && bless=1
@@ -47,7 +53,15 @@ for set in "${FEATURESETS[@]}"; do
     # `ids::pgn::*` / `ids::field::*` constants are dropped too: they track
     # database/ one-to-one, so every PGN change would otherwise trip the
     # snapshot, and the facade design does not govern them.
-    current="$(cargo public-api -p canboat -ss --no-default-features --features "$set" 2>/dev/null | grep -v "canboat::ids::")"
+    # --manifest-path, not -p: cargo-public-api refuses the virtual
+    # workspace manifest at the repo root.
+    if ! raw="$("${public_api[@]}" --manifest-path crates/canboat/Cargo.toml \
+        -ss --no-default-features --features "$set" 2>"$err")"; then
+        cat "$err" >&2
+        echo "error: cargo public-api failed for [$set]" >&2
+        exit 1
+    fi
+    current="$(printf '%s\n' "$raw" | grep -v "canboat::ids::")"
     if [[ $bless -eq 1 ]]; then
         printf '%s\n' "$current" > "$snapshot"
         echo "blessed $snapshot"
