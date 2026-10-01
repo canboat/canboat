@@ -395,6 +395,20 @@ fn j1939_catchall_text() {
     );
 }
 
+/// J1939 data page 1 has no fast-packet framing. An 8-byte Proprietary B
+/// frame on page 1 (PGN 130885) decodes as one frame — it used to be
+/// taken for the first frame of a fast-packet and never printed — and a
+/// 12-byte payload for the same PGN arrives through an ISO TP BAM. The
+/// C analyzer-j1939 prints the same.
+#[test]
+fn j1939_iso_tp_text() {
+    run_case(
+        "j1939-iso-tp.in",
+        "j1939-iso-tp.out",
+        &["--j1939", "--fixtime", "2023-12-10T18:58:21.487Z"],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),

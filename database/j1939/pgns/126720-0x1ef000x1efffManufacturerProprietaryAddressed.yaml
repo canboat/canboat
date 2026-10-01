@@ -1,0 +1,16 @@
+pgn: 126720
+id: 0x1ef000x1efffManufacturerProprietaryAddressed
+description: '0x1EF00-0x1EFFF: Manufacturer Proprietary addressed'
+type: ISO
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Manufacturer Proprietary PGNs in PDU1 (addressed) PGN range 0x1EF00 to 0x1EFFF (126720 - 126975), data page 1 (Proprietary A2). Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.
+notes: Unlike NMEA 2000, J1939 does not put a Manufacturer Code and Industry Code at the start of a proprietary payload; SAE J1939-21 leaves all of it to the manufacturer. Who sent the frame is known only from its source address and the NAME that address claimed (PGN 60928).
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1784
