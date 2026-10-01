@@ -231,7 +231,7 @@ Pgn pgnList[] = {
       {.name = "Momentary Engine Maximum Power Enable", .camelName = "momentaryEngineMaximumPowerEnable", .fieldType = "NUMBER", .size = 2, .resolution = 1.0, .description = "SPN 2896", .rangeMax = 2.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
       {.name = "Actual Maximum Available Engine - Percent Torque", .camelName = "actualMaximumAvailableEnginePercentTorque", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 3357"},
-      {.name = "Estimated Pumping - Percent Torque", .camelName = "estimatedPumpingPercentTorque", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 2978"}
+      {.name = "Estimated Pumping - Percent Torque", .camelName = "estimatedPumpingPercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0}
      },
      .camelDescription = "ecu2",
      .interval = 50,
@@ -244,13 +244,13 @@ Pgn pgnList[] = {
      {
       {.name = "Engine Torque Mode", .camelName = "engineTorqueMode", .fieldType = "NUMBER", .size = 4, .resolution = 1.0, .description = "SPN 899", .rangeMax = 14.0},
       {.name = "Actual Engine - Percent Torque High Resolution", .camelName = "actualEnginePercentTorqueHighResolution", .fieldType = "NUMBER", .size = 4, .resolution = 0.125, .unit = "%", .description = "SPN 4154, fractional part of the actual engine torque in 0.125 % steps", .rangeMax = 1.75},
-      {.name = "Driver's Demand Engine - Percent Torque", .camelName = "driversDemandEnginePercentTorque", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 512"},
-      {.name = "Actual Engine - Percent Torque", .camelName = "actualEnginePercentTorque", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 513"},
+      {.name = "Driver's Demand Engine - Percent Torque", .camelName = "driversDemandEnginePercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0, .description = "SPN 512"},
+      {.name = "Actual Engine - Percent Torque", .camelName = "actualEnginePercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0, .description = "SPN 513"},
       {.name = "Engine RPM", .camelName = "engineRpm", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES", .description = "SPN 190"},
       {.name = "Source Address of Controlling Device for Engine Control", .camelName = "sourceAddressOfControllingDeviceForEngineControl", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "SPN 1483", .rangeMax = 253.0},
       {.name = "Engine Starter Mode", .camelName = "engineStarterMode", .fieldType = "NUMBER", .size = 4, .resolution = 1.0, .description = "SPN 1675", .rangeMax = 14.0},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 4, .resolution = 1.0},
-      {.name = "Engine Demand - Percent Torque", .camelName = "engineDemandPercentTorque", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 2432"}
+      {.name = "Engine Demand - Percent Torque", .camelName = "engineDemandPercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0, .description = "SPN 2432"}
      },
      .camelDescription = "ecu1",
      .interval = 20,
@@ -1012,10 +1012,10 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Nominal Friction - Percent Torque", .camelName = "nominalFrictionPercentTorque", .fieldType = "PERCENTAGE_INT8", .resolution = 1.0, .hasSign = true, .description = "SPN 514"},
+      {.name = "Nominal Friction - Percent Torque", .camelName = "nominalFrictionPercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0, .description = "SPN 514"},
       {.name = "Engine's Desired Operating Speed", .camelName = "engineDesiredOperatingSpeed", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES", .description = "SPN 515"},
       {.name = "Engine's Desired Operating Speed Asymmetry Adjustment", .camelName = "engineDesiredOperatingSpeedAsymmetryAdjustment", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "SPN 519"},
-      {.name = "Estimated Engine Power Loss - Accessories", .camelName = "estimatedEnginePowerLossAccessories", .fieldType = "PERCENTAGE_UINT8", .resolution = 1.0, .description = "SPN 2978"},
+      {.name = "Estimated Engine Parasitic Losses - Percent Torque", .camelName = "estimatedEngineParasiticLossesPercentTorque", .fieldType = "PERCENTAGE_UINT8_J1939_TORQUE", .resolution = 1.0, .description = "SPN 2978"},
       {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 24, .resolution = 1.0}
      },
      .camelDescription = "ecu3",
@@ -1053,7 +1053,7 @@ Pgn pgnList[] = {
      {
       {.name = "Engine Coolant Temp", .camelName = "engineCoolantTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 110"},
       {.name = "Engine Fuel Temp 1", .camelName = "engineFuelTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 174"},
-      {.name = "Engine Oil Temp 1", .camelName = "engineOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 175, 0.03125 K per bit with a -273 K offset"},
+      {.name = "Engine Oil Temp 1", .camelName = "engineOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 175"},
       {.name = "Engine Turbocharger Oil Temp", .camelName = "engineTurbochargerOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 176"},
       {.name = "Engine Intercooler Temp", .camelName = "engineInterCoolerTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 52"},
       {.name = "Engine Intercooler Thermostat Opening", .camelName = "engineInterCoolerThermostatOpening", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 1134"}

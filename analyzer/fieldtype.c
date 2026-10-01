@@ -460,10 +460,14 @@ extern void fillFieldType(bool doUnitFixup)
     {
       logAbort("PGN %u '%s' is outside fast-packet range\n", pgn, pgnList[i].description);
     }
+#ifndef J1939
+    /* NMEA 2000 reserves 0x10000-0x1EFFF for fast-packet PGNs. J1939 has no
+     * fast-packet: any of its PGNs can be a single frame (or ISO TP). */
     if (pgnList[i].type != PACKET_FAST && !ALLOW_PGN_SINGLE_FRAME(pgn))
     {
       logError("PGN %u '%s' is outside single-frame range\n", pgn, pgnList[i].description);
     }
+#endif
     if (pgnList[i].repeatingCount1 != 0 && pgnList[i].repeatingStart1 == 0)
     {
       logAbort("PGN %u '%s' has no way to determine repeating field set 1\n", pgn, pgnList[i].description);

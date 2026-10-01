@@ -419,6 +419,25 @@ fn j1939_iso_tp_text() {
     );
 }
 
+/// J1939 scalings that differ from NMEA 2000's, with values worked out
+/// from SAE J1939-71 by hand: percent torque is 1 % per bit from -125 %
+/// (0x7d = 0 %, 0x96 = 25 %, 0x64 = -25 %, 0xff = not available), and a
+/// 16-bit temperature is 0.03125 deg C per bit from -273 deg C (0x2620 =
+/// 32 deg C, shown as 31.85 C because the K scale drops 0.15 K).
+#[test]
+fn j1939_scaling_text() {
+    run_case(
+        "j1939-scaling.in",
+        "j1939-scaling.out",
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),
