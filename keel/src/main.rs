@@ -156,6 +156,10 @@ fn run() -> Result<i32, String> {
                     emit_xml::emit_xml(&db, "normal"),
                 ),
                 (
+                    root.join("docs/canboat-j1939.xml"),
+                    emit_xml::emit_xml(&db, "j1939"),
+                ),
+                (
                     root.join("analyzer/lookup-generated-data.h"),
                     emit_c::emit_lookup_h(&db, false),
                 ),

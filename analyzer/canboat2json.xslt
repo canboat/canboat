@@ -208,7 +208,7 @@
        priority is required: these patterns and the generic text() predicates below both have
        default priority 0.5, which would otherwise be an ambiguous rule match. -->
   <xsl:template priority="2"
-                match="Comment/text() | Condition/text() | Copyright/text() | CreatorCode/text()
+                match="Bus/text() | Comment/text() | Condition/text() | Copyright/text() | CreatorCode/text()
                      | Description/text() | EncodingDescription/text() | Explanation/text()
                      | FieldType/text() | Id/text() | License/text() | LookupBitEnumeration/text()
                      | LookupEnumeration/text() | LookupFieldTypeEnumeration/text()

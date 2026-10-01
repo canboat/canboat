@@ -693,11 +693,19 @@
   <xsl:template match="/">
 
     <xsl:variable name="license" select="/PGNDefinitions/License/text()"/>
+    <!-- Which bus this document describes; absent (pre-2.7.0) means NMEA 2000. -->
+    <xsl:variable name="j1939" select="/PGNDefinitions/Bus = 'j1939'"/>
 
     <html lang="en">
       <head>
         <meta charset="UTF-8"/>
         <meta name="description" content="CANBoat PGN documentation"/>
+        <title>
+          <xsl:choose>
+            <xsl:when test="$j1939">CANboat SAE J1939 PGN documentation</xsl:when>
+            <xsl:otherwise>CANboat NMEA 2000 PGN documentation</xsl:otherwise>
+          </xsl:choose>
+        </title>
         <!-- <link rel="icon" type="image/gif" href="https://www.redwood.com/favicon.ico"/> -->
         <link rel="stylesheet" type="text/css" href="canboat.css"/>
         <script src="canboat.js"/>
@@ -728,14 +736,66 @@
 
         <div id="main">
           <p>
-            The CANBoat project PGN documentation version
+            The CANboat project
+            <xsl:choose>
+              <xsl:when test="$j1939">SAE J1939</xsl:when>
+              <xsl:otherwise>NMEA 2000</xsl:otherwise>
+            </xsl:choose>
+            PGN documentation version
             <xsl:value-of select="/PGNDefinitions/Version/text()"/>.
+          </p>
+          <p>
+            <xsl:choose>
+              <xsl:when test="$j1939">
+                This page covers buses that speak SAE J1939 (engines, gensets, transmissions). For NMEA 2000 see
+                <a href="canboat.html">the NMEA 2000 PGN documentation</a>. The data is also available as
+                <a href="canboat-j1939.xml">XML</a> and <a href="canboat-j1939.json">JSON</a>.
+              </xsl:when>
+              <xsl:otherwise>
+                This page covers NMEA 2000. Engines, gensets and transmissions often speak SAE J1939 instead; see
+                <a href="canboat-j1939.html">the SAE J1939 PGN documentation</a>. The data is also available as
+                <a href="canboat.xml">XML</a> and <a href="canboat.json">JSON</a>.
+              </xsl:otherwise>
+            </xsl:choose>
           </p>
           <h3>Copyright</h3>
           <p class='xs'>
             <xsl:value-of select="/PGNDefinitions/Copyright"/>
           </p>
 
+          <xsl:choose>
+            <xsl:when test="$j1939">
+          <h2> SAE J1939 </h2>
+
+          <p>
+            SAE J1939 is the CAN protocol of trucks, buses and off-road machinery, and of many of the engines,
+            gensets and transmissions found on boats. It runs on the same 29 bit ISO 11783 frame header as
+            NMEA 2000, with the same address claim and the same transport protocol, so a marine engine gateway
+            often bridges the two. The PGNs are different though: the same PGN number means one thing on a
+            J1939 bus and another on NMEA 2000.
+          </p>
+          <p>
+            The layouts on this page follow SAE J1939-71 where it defines them. Fields seen in real captures are
+            confirmed against them; the rest are taken from the standard and from manufacturers' public
+            installation guides, and would benefit from more captures. The manufacturer proprietary ranges are left as data: unlike NMEA 2000,
+            J1939 does not start a proprietary payload with a manufacturer code, so who sent it is only known from
+            the address claim of its source address.
+          </p>
+          <p>
+            CANboat decodes a J1939 bus with <code>canboat convert --bus j1939</code> and
+            <code>canboat server --bus j1939</code>.
+          </p>
+          <p>
+            If you have data (even if it is just a logfile for a new device) to contribute, please open an issue at
+            <a href="https://github.com/canboat/canboat/issues">https://github.com/canboat/canboat/issues</a> or send
+            a pull request at <a href="https://github.com/canboat/canboat/pulls">https://github.com/canboat/canboat/pulls</a>.
+          </p>
+          <p>
+            <b>Note:</b> It should be obvious that all data below is <i><b>not authoritative</b></i>; it is just our
+            interpretation.
+          </p>
+            </xsl:when>
+            <xsl:otherwise>
           <h2> Reverse engineering the NMEA 2000 standardized and manufacturer proprietary data </h2>
 
           <p>
@@ -768,10 +828,17 @@
             interpretation.
             If you are a manufacturer and want to create a NMEA 2000 device, become a member and buy the standard!
           </p>
+            </xsl:otherwise>
+          </xsl:choose>
 
 
 
-          <h2 id='frame-header'>ISO-11783 and NMEA2000 header</h2>
+          <h2 id='frame-header'>
+            <xsl:choose>
+              <xsl:when test="$j1939">ISO 11783 and J1939 header</xsl:when>
+              <xsl:otherwise>ISO-11783 and NMEA2000 header</xsl:otherwise>
+            </xsl:choose>
+          </h2>
 
           An "Extended 29 bit identifier" CAN frame, as mandated by NMEA 2000, consists of a 39 bit header followed by (up to) 64 data bits. The header bits are:
 
@@ -858,6 +925,20 @@
             <thead>
               <tr><th>Range Hex</th><th>Range Dec</th><th>PDU</th><th>Step</th><th>Number of possible PGNs</th><th>Use</th><th>Framing</th></tr>
             </thead>
+            <xsl:choose>
+              <xsl:when test="$j1939">
+            <tbody>
+              <tr><td><a href="#pgn-0">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
+            </tbody>
+              </xsl:when>
+              <xsl:otherwise>
             <tbody>
               <tr><td><a href="#pgn-0">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
@@ -868,12 +949,28 @@
               <tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Mixed single/fast</td></tr>
               <tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Fast packet</td></tr>
             </tbody>
+              </xsl:otherwise>
+            </xsl:choose>
           </table>
           <p>
             <b>Note:</b> There are some missing ranges in the above table: Apparently no PGN is used in range 0x0000-0xE700 or 0x10000-0x1EC00. The reason is not obvious to me. Maybe someone can enlighten us?
           </p>
 
           <h2 id='packet-framing'>Packet framing</h2>
+          <xsl:choose>
+            <xsl:when test="$j1939">
+          <p>
+            J1939 messages of 8 bytes or less are sent as a single CAN frame. Longer messages, up to 1785 bytes, use
+            the ISO 11783 Transport Protocol: a connection management frame (<a href="#pgn-60416">PGN 60416</a>)
+            announces the PGN and the size, either broadcast (BAM) or to one destination (RTS/CTS), and the data
+            follows in 7 byte chunks in data transfer frames (<a href="#pgn-60160">PGN 60160</a>).
+          </p>
+          <p>
+            J1939 has no fast packet framing. A PGN that uses fast packet framing on NMEA 2000 is, on a J1939 bus,
+            an ordinary single frame or ISO TP message.
+          </p>
+            </xsl:when>
+            <xsl:otherwise>
 
           <p>
             NMEA 2000 messages that are 8 bytes or less can be transmitted in a single CAN frame. For messages of 9 or more bytes there
@@ -897,6 +994,8 @@
             there are (older?) devices that transmit out-of-order as this is easier to program with certain CAN chips, and various new MFDs ignore out-of-order packet transmissions.
             As of v4.0.0 the CANBoat analyzer program will analyze out-of-order frames, although it means it has to heuristically determine when a packet is complete.
           </p>
+            </xsl:otherwise>
+          </xsl:choose>
 
           <xsl:call-template name="pgn-list"/>
           <xsl:call-template name="physicalquantity-list"/>

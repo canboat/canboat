@@ -4,8 +4,9 @@
 #
 # Upward-compatibility check for the canboat public contract.
 #
-# Diffs the committed docs/canboat.json against the merge-base with the target
-# branch, classifies the changes (breaking / minor / additive / cosmetic via
+# Diffs each committed contract -- docs/canboat.json (NMEA 2000) and
+# docs/canboat-j1939.json (SAE J1939) -- against the merge-base with the
+# target branch, classifies the changes (breaking / minor / additive / cosmetic via
 # tools/contract.py) and checks that the change is *declared* at a high enough
 # conventional-commit level:
 #
@@ -30,7 +31,9 @@ set -euo pipefail
 
 here="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "$here/.." && pwd)"
-canboat_json="$root/docs/canboat.json"
+# The published contracts. The first must exist at the merge-base; a later
+# one may be new, which counts as an additive change.
+contracts=(docs/canboat.json docs/canboat-j1939.json)
 
 gate=0
 base="${BASE_REF:-origin/master}"
@@ -48,23 +51,36 @@ if ! mergebase="$(git merge-base "$base" HEAD 2>/dev/null)"; then
   exit 2
 fi
 
-# Baseline contract = canboat.json as it was at the merge-base.
 basejson="$(mktemp)"
 trap 'rm -f "$basejson"' EXIT
-if ! git show "$mergebase:docs/canboat.json" > "$basejson" 2>/dev/null; then
-  echo "contract-pr: docs/canboat.json not present at $mergebase." >&2
-  exit 2
-fi
 
 echo "== canboat upward-compatibility check =="
 echo "base: $base ($mergebase)"
-echo
 
-# Classify. contract.py exits 0..4 (none/cosmetic/additive/minor/breaking).
-set +e
-python3 "$here/contract.py" diff "$basejson" "$canboat_json"
-sev=$?
-set -e
+# Classify each contract against its merge-base copy. contract.py exits 0..4
+# (none/cosmetic/additive/minor/breaking); the release needs the worst.
+sev=0
+breaking=()
+for rel in "${contracts[@]}"; do
+  echo
+  echo "-- $rel --"
+  if ! git show "$mergebase:$rel" > "$basejson" 2>/dev/null; then
+    if [ "$rel" = "${contracts[0]}" ]; then
+      echo "contract-pr: $rel not present at $mergebase." >&2
+      exit 2
+    fi
+    echo "New contract (not present at the merge-base): additive."
+    one=2
+  else
+    set +e
+    python3 "$here/contract.py" diff "$basejson" "$root/$rel"
+    one=$?
+    set -e
+    case "$one" in 0|1|2|3|4) ;; *) echo "contract.py failed (exit $one)"; exit 2 ;; esac
+  fi
+  [ "$one" -eq 4 ] && breaking+=("$rel")
+  [ "$one" -gt "$sev" ] && sev=$one
+done
 
 case "$sev" in
   0) required=none  ;;
@@ -72,7 +88,6 @@ case "$sev" in
   2) required=minor ;;   # additive
   3) required=minor ;;   # minor breaking
   4) required=major ;;   # breaking
-  *) echo "contract.py failed (exit $sev)"; exit 2 ;;
 esac
 
 # What did the author declare? Conventional-commit markers in the commit range,
@@ -108,7 +123,10 @@ if [ "$required" = "major" ]; then
   echo "the commit / PR description so release-please bumps the major version:"
   echo
   # contract.py exits with the severity code; don't let that abort the script.
-  python3 "$here/contract.py" diff "$basejson" "$canboat_json" --format footer || true
+  for rel in "${breaking[@]}"; do
+    git show "$mergebase:$rel" > "$basejson"
+    python3 "$here/contract.py" diff "$basejson" "$root/$rel" --format footer || true
+  done
 else
   echo "Use a 'feat:' commit so release-please bumps the minor version."
 fi
