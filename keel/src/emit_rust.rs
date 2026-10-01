@@ -283,9 +283,16 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
 struct ComputedFt {
     signed: bool,
     precision: u8,
+    unit_offset: f64,
 }
 
-fn compute_ft(v: &mut RawFieldTypeValue) -> ComputedFt {
+/// The `units` view of one field-type lookup entry: canboat C runs the
+/// same `fixupUnit` over these (`fillFieldTypeLookupField`) as over
+/// ordinary fields, so the SI and Metric tables differ exactly as
+/// [`field_view`] does — SI turns kWh/Ah into J/C, Metric turns
+/// rad/K/Pa into deg/°C/bar.
+fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
+    let mut v = v.clone();
     let mut c = ComputedFt {
         // The fieldtype's own signedness is the answer. The unit test
         // below only ever *adds* to it, for angle types that canboat
@@ -294,41 +301,38 @@ fn compute_ft(v: &mut RawFieldTypeValue) -> ComputedFt {
         ..ComputedFt::default()
     };
     let Some(unit) = v.unit.clone() else {
-        return c;
+        return (v, c);
     };
     if matches!(unit.as_str(), "rad" | "rad/s" | "deg" | "deg/s") {
         c.signed = true;
     }
-    match unit.as_str() {
-        "rad" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r *= RAD_TO_DEG;
-            }
-            v.unit = Some("deg".to_string());
+    let mut scale = |factor: f64, to: &str| {
+        if let Some(r) = v.resolution.as_mut() {
+            *r *= factor;
+        }
+        v.unit = Some(to.to_string());
+    };
+    match (units, unit.as_str()) {
+        (Units::Si, "kWh") => scale(3.6e6, "J"),
+        (Units::Si, "Ah") => scale(3600.0, "C"),
+        (Units::Si, _) => {}
+        (Units::Metric, "rad") => {
+            scale(RAD_TO_DEG, "deg");
             c.precision = 1;
         }
-        "rad/s" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r *= RAD_TO_DEG;
-            }
-            v.unit = Some("deg/s".to_string());
-        }
-        "Pa" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r /= 100_000.0;
-            }
-            v.unit = Some("bar".to_string());
+        (Units::Metric, "rad/s") => scale(RAD_TO_DEG, "deg/s"),
+        (Units::Metric, "Pa") => {
+            scale(1.0 / 100_000.0, "bar");
             c.precision = 3;
         }
-        "C" => {
-            if let Some(r) = v.resolution.as_mut() {
-                *r /= 3600.0;
-            }
-            v.unit = Some("Ah".to_string());
+        (Units::Metric, "C") => scale(1.0 / 3600.0, "Ah"),
+        (Units::Metric, "K") if !v.signed => {
+            v.unit = Some("C".to_string());
+            c.unit_offset = -273.15;
         }
         _ => {}
     }
-    c
+    (v, c)
 }
 
 // ---------------------------------------------------------------------
@@ -817,7 +821,8 @@ fn emit_ft_value(out: &mut String, v: &RawFieldTypeValue, c: ComputedFt) {
         out,
         "LookupFieldTypeValue{{value:{value},name:{name},field_type:{field_type},\
          bits:{bits},resolution:{resolution},unit:{unit},\
-         lookup_enumeration:{le},lookup_bit_enumeration:{lbe},signed:{signed},precision:{precision}}},",
+         lookup_enumeration:{le},lookup_bit_enumeration:{lbe},signed:{signed},precision:{precision},\
+         unit_offset:{unit_offset:?}}},",
         value = v.value,
         name = quote(&v.name),
         field_type = opt_str(&v.field_type),
@@ -828,11 +833,12 @@ fn emit_ft_value(out: &mut String, v: &RawFieldTypeValue, c: ComputedFt) {
         lbe = opt_str(&v.lookup_bit_enumeration),
         signed = c.signed,
         precision = c.precision,
+        unit_offset = c.unit_offset,
     )
     .unwrap();
 }
 
-fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[ComputedFt]) {
+fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, units: Units) {
     write!(
         out,
         "LookupFieldTypeTable{{name:{},max_value:{},values:&[",
@@ -840,8 +846,9 @@ fn emit_ft_lookup(out: &mut String, t: &RawFieldTypeLookup, computed: &[Computed
         opt_int(&t.max_value),
     )
     .unwrap();
-    for (v, c) in t.values.iter().zip(computed.iter()) {
-        emit_ft_value(out, v, *c);
+    for v in &t.values {
+        let (v, c) = compute_ft(v, units);
+        emit_ft_value(out, &v, c);
     }
     write!(out, "],by_value:&[").unwrap();
     let mut pairs: Vec<(u64, u32)> = t
@@ -1193,13 +1200,6 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         })
         .collect();
 
-    // Field-type lookups also need fix-up.
-    let mut ft_tables = canboat.lookup_field_type_enumerations;
-    let ft_computed: Vec<Vec<ComputedFt>> = ft_tables
-        .iter_mut()
-        .map(|t| t.values.iter_mut().map(compute_ft).collect())
-        .collect();
-
     // Sort lookups alphabetically by name for binary-search lookup at
     // runtime.
     let mut lookups = canboat.lookup_enumerations;
@@ -1209,10 +1209,10 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     let mut indirect_lookups = canboat.lookup_indirect_enumerations;
     indirect_lookups.sort_by(|a, b| a.name.cmp(&b.name));
 
-    // Sort ft_tables (and parallel computed array) by name.
-    let mut ft_indexed: Vec<(RawFieldTypeLookup, Vec<ComputedFt>)> =
-        ft_tables.into_iter().zip(ft_computed).collect();
-    ft_indexed.sort_by(|a, b| a.0.name.cmp(&b.0.name));
+    // Field-type lookups get the same per-units fix-up as fields, at
+    // emit time (`compute_ft`).
+    let mut ft_tables = canboat.lookup_field_type_enumerations;
+    ft_tables.sort_by(|a, b| a.name.cmp(&b.name));
 
     // pgn number -> list of indices (declaration order preserved).
     let mut pgn_index: BTreeMap<u32, Vec<usize>> = BTreeMap::new();
@@ -1267,7 +1267,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     if indirect_lookups.iter().any(|t| !t.values.is_empty()) {
         imports.push("IndirectLookupValue");
     }
-    if ft_indexed.iter().any(|(t, _)| !t.values.is_empty()) {
+    if ft_tables.iter().any(|t| !t.values.is_empty()) {
         imports.push("LookupFieldTypeValue");
     }
     imports.sort_unstable();
@@ -1441,16 +1441,18 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         }
         writeln!(out, "];").unwrap();
 
-        // FIELD_TYPE_LOOKUPS.
-        writeln!(
-            out,
-            "pub static FIELD_TYPE_LOOKUPS: &[LookupFieldTypeTable] = &["
-        )
-        .unwrap();
-        for (t, c) in &ft_indexed {
-            emit_ft_lookup(&mut out, t, c);
+        // FIELD_TYPE_LOOKUPS_SI / FIELD_TYPE_LOOKUPS_METRIC.
+        for (units, suffix) in [(Units::Si, "SI"), (Units::Metric, "METRIC")] {
+            writeln!(
+                out,
+                "pub static FIELD_TYPE_LOOKUPS_{suffix}: &[LookupFieldTypeTable] = &["
+            )
+            .unwrap();
+            for t in &ft_tables {
+                emit_ft_lookup(&mut out, t, units);
+            }
+            writeln!(out, "];").unwrap();
         }
-        writeln!(out, "];").unwrap();
     }
 
     // --- Phase 3 codegen: per-PGN dispatch on Match fields. ---

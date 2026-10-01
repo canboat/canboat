@@ -2317,7 +2317,7 @@ fn decode_dynamic_number(
     if res == 1.0 && entry.unit.is_none() {
         FieldValue::Integer(ex.value)
     } else {
-        FieldValue::Number(raw * res)
+        FieldValue::Number(raw * res + entry.unit_offset)
     }
 }
 
@@ -2529,6 +2529,29 @@ mod tests {
             .field_type_lookup("VICTRON_VREG", 8220)
             .expect("VICTRON_VREG 8220");
         assert!(entry.signed, "DC Current must be signed");
+    }
+
+    #[test]
+    fn dynamic_field_units_follow_the_database() {
+        // canboat C runs `fixupUnit` over field-type lookup entries as
+        // over fields, so each unit system has its own table.
+        use crate::engine::Units;
+        let entry = |units, key| {
+            *PgnDatabase::embedded(units)
+                .field_type_lookup("VICTRON_VREG", key)
+                .expect("VICTRON_VREG entry")
+        };
+        let energy = entry(Units::Si, 784);
+        assert_eq!(
+            (energy.unit, energy.resolution),
+            (Some("J"), Some(36_000.0))
+        );
+        let energy = entry(Units::Metric, 784);
+        assert_eq!((energy.unit, energy.resolution), (Some("kWh"), Some(0.01)));
+        let temp = entry(Units::Si, 60908);
+        assert_eq!((temp.unit, temp.unit_offset), (Some("K"), 0.0));
+        let temp = entry(Units::Metric, 60908);
+        assert_eq!((temp.unit, temp.unit_offset), (Some("C"), -273.15));
     }
 
     #[test]

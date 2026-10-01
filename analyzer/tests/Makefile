@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 tests
 
 all:	tests
 
@@ -260,7 +260,23 @@ test28:
 	diff $(TEMPDIR)/pgn-si-units.out pgn-si-units.out
 	diff $(TEMPDIR)/pgn-si-units.err pgn-si-units.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28
+#
+# Dynamic field values take the unit system too: a field-type lookup entry is
+# fixed up just like a field. Victron VE.Can registers 784 Discharged Energy
+# (kWh), 60908 Battery Temperature (K) and 4096 Battery Capacity (Ah), and
+# Simnet 130845 Heading Offset (rad), in metric and in -si.
+#
+test29:
+	$(ANALYZER) -json < pgn-dynamic-units.in > $(TEMPDIR)/pgn-dynamic-units.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-dynamic-units.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-dynamic-units.out
+	diff $(TEMPDIR)/pgn-dynamic-units.out pgn-dynamic-units.out
+	diff $(TEMPDIR)/pgn-dynamic-units.err pgn-dynamic-units.err
+	$(ANALYZER) -json -si < pgn-dynamic-units.in > $(TEMPDIR)/pgn-dynamic-units-si.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-dynamic-units-si.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-dynamic-units-si.out
+	diff $(TEMPDIR)/pgn-dynamic-units-si.out pgn-dynamic-units-si.out
+	diff $(TEMPDIR)/pgn-dynamic-units-si.err pgn-dynamic-units.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so

@@ -91,7 +91,7 @@ pub enum Units {
 // manufacturer registries (MANUFACTURER_CODE vs J1939_MANUFACTURER_CODE),
 // so each module carries only the enumerations its own PGNs reference.
 macro_rules! embedded_db {
-    ($flavor:ident, $pgns:ident, $units:expr, $j1939:expr) => {
+    ($flavor:ident, $pgns:ident, $ft_lookups:ident, $units:expr, $j1939:expr) => {
         PgnDatabase {
             schema_version: schema_data::SCHEMA_VERSION,
             version: schema_data::VERSION,
@@ -103,18 +103,41 @@ macro_rules! embedded_db {
             lookups: crate::engine::$flavor::LOOKUPS,
             bit_lookups: crate::engine::$flavor::BIT_LOOKUPS,
             indirect_lookups: crate::engine::$flavor::INDIRECT_LOOKUPS,
-            field_type_lookups: crate::engine::$flavor::FIELD_TYPE_LOOKUPS,
+            field_type_lookups: crate::engine::$flavor::$ft_lookups,
             dispatch: crate::engine::$flavor::dispatch,
             catchall: crate::engine::$flavor::find_catchall,
         }
     };
 }
 
-static EMBEDDED_SI: PgnDatabase = embedded_db!(schema_data, PGNS_SI, Units::Si, false);
-static EMBEDDED_METRIC: PgnDatabase = embedded_db!(schema_data, PGNS_METRIC, Units::Metric, false);
-static EMBEDDED_J1939_SI: PgnDatabase = embedded_db!(schema_data_j1939, PGNS_SI, Units::Si, true);
-static EMBEDDED_J1939_METRIC: PgnDatabase =
-    embedded_db!(schema_data_j1939, PGNS_METRIC, Units::Metric, true);
+static EMBEDDED_SI: PgnDatabase = embedded_db!(
+    schema_data,
+    PGNS_SI,
+    FIELD_TYPE_LOOKUPS_SI,
+    Units::Si,
+    false
+);
+static EMBEDDED_METRIC: PgnDatabase = embedded_db!(
+    schema_data,
+    PGNS_METRIC,
+    FIELD_TYPE_LOOKUPS_METRIC,
+    Units::Metric,
+    false
+);
+static EMBEDDED_J1939_SI: PgnDatabase = embedded_db!(
+    schema_data_j1939,
+    PGNS_SI,
+    FIELD_TYPE_LOOKUPS_SI,
+    Units::Si,
+    true
+);
+static EMBEDDED_J1939_METRIC: PgnDatabase = embedded_db!(
+    schema_data_j1939,
+    PGNS_METRIC,
+    FIELD_TYPE_LOOKUPS_METRIC,
+    Units::Metric,
+    true
+);
 
 impl PgnDatabase {
     /// The build-time embedded database in the requested [`Units`].
