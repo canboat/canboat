@@ -413,9 +413,18 @@ int main(int argc, char **argv)
   }
   else if (showVersion)
   {
-    printf("{\"version\":\"%s\",\"units\":\"%s\",\"showLookupValues\":%s",
+    /* "protocol" names the PGN table the records are decoded against: the
+     * same PGN number means different things on NMEA 2000 and J1939. A
+     * banner without it (before 8.4) is NMEA 2000.
+     */
+    printf("{\"version\":\"%s\",\"units\":\"%s\",\"protocol\":\"%s\",\"showLookupValues\":%s",
            VERSION,
            showSI ? "si" : "std",
+#ifdef J1939
+           "j1939",
+#else
+           "nmea2000",
+#endif
            showJsonValue ? "true" : "false");
     if (showCamel)
     {
