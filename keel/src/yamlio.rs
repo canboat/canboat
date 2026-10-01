@@ -61,6 +61,20 @@ fn opt_i64(hash: &Yaml, key: &str) -> Option<i64> {
 /// anything else here, before the `u32` cast: a `-1` would otherwise
 /// become `u32::MAX` and overflow the emitted `.reservedOverride`. R09
 /// still checks a field's count against its bit width.
+/// `spn` is a J1939 SPN: a non-negative integer. Anything else present
+/// is an error rather than an absent SPN, and a value too large for u32
+/// is refused here instead of being truncated (R42 then checks the 19
+/// bits).
+fn opt_spn(hash: &Yaml, ctx: &str) -> Result<Option<u32>> {
+    match get(hash, "spn") {
+        None => Ok(None),
+        Some(Yaml::Integer(i)) => u32::try_from(*i)
+            .map(Some)
+            .map_err(|_| format!("{ctx}: spn {i} is not an SPN (0-524287)")),
+        Some(other) => Err(format!("{ctx}: spn must be an integer, not {other:?}")),
+    }
+}
+
 fn opt_special_values(hash: &Yaml, ctx: &str) -> Result<Option<u32>> {
     match opt_i64(hash, "specialValues") {
         None => Ok(None),
@@ -396,7 +410,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         unit: opt_str(y, "unit"),
         offset: opt_i64(y, "offset").map(|o| o as i32),
         description: opt_str(y, "description"),
-        spn: opt_i64(y, "spn").map(|s| s as u32),
+        spn: opt_spn(y, ctx)?,
         note: opt_str(y, "note"),
         match_,
         lookup: opt_str(y, "lookup"),
@@ -676,6 +690,26 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    fn pgn_with_spn(spn: &str) -> String {
+        format!(
+            "pgn: 61444\nid: ecu1\ndescription: x\ntype: Single\nfields:\n- id: rpm\n  name: RPM\n  spn: {spn}\n  type: NUMBER\n  bits: 16\n"
+        )
+    }
+
+    /// A present spn: must be an integer that fits; it is never truncated
+    /// to something R42 would accept, nor dropped as if absent.
+    #[test]
+    fn spn_is_parsed_strictly() {
+        let ok = parse_pgn_str(&pgn_with_spn("190"), "t").unwrap();
+        assert_eq!(ok.fields[0].spn, Some(190));
+        for bad in ["4294967296", "-4294967296", "-1", "'190'", "190.5"] {
+            assert!(
+                parse_pgn_str(&pgn_with_spn(bad), "t").is_err(),
+                "spn: {bad} must be refused"
+            );
+        }
+    }
 
     /// A minimal well-formed PGN document; each test perturbs one thing.
     const PGN_YAML: &str = "\
