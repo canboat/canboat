@@ -25,11 +25,8 @@ fields:
   resolution: 0.4
 - id: engineOilFilterOutletPressure
   name: Engine Oil Filter Outlet Pressure
-  description: SPN 3549, 4 kPa per bit
-  type: NUMBER
-  bits: 8
-  unit: kPa
-  resolution: 4
+  description: SPN 3549
+  type: PRESSURE_UINT8_4KPA
 - id: engineOilPrimingPumpSwitch
   name: Engine Oil Priming Pump Switch
   description: SPN 3550

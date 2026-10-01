@@ -928,10 +928,12 @@
             <xsl:choose>
               <xsl:when test="$j1939">
             <tbody>
+              <tr><td><a href="#pgn-0">0x0000-0xE700</a></td><td>0 - 59136</td><td>PDU1</td><td>256</td><td>232</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-59392">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-65536">0x10000-0x1EC00</a></td><td>65536 - 125952</td><td>PDU1</td><td>256</td><td>237</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
@@ -952,9 +954,13 @@
               </xsl:otherwise>
             </xsl:choose>
           </table>
+          <xsl:if test="not($j1939)">
           <p>
-            <b>Note:</b> There are some missing ranges in the above table: Apparently no PGN is used in range 0x0000-0xE700 or 0x10000-0x1EC00. The reason is not obvious to me. Maybe someone can enlighten us?
+            <b>Note:</b> NMEA 2000 uses no PGN in the ranges 0x0000-0xE700 and 0x10000-0x1EC00. They are PDU1 ranges
+            that SAE J1939 uses (engine and transmission control, for instance); see
+            <a href="canboat-j1939.html#pgn-ranges">the J1939 PGN ranges</a>.
           </p>
+          </xsl:if>
 
           <h2 id='packet-framing'>Packet framing</h2>
           <xsl:choose>

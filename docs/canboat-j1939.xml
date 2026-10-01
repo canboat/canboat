@@ -2261,6 +2261,36 @@ limitations under the License.
   </LookupFieldTypeEnumerations>
   <PGNs>
     <PGNInfo>
+      <PGN>0</PGN>
+      <Id>0x00000xe700StandardizedAddressed</Id>
+      <Description>0x0000-0xE700: Standardized addressed</Description>
+      <Explanation>Standardized PGNs in PDU1 (addressed) PGN range 0x0000 to 0xE700 (0 - 59136), such as TSC1 (0), TC1 (256) and CM1 (57344). NMEA 2000 does not use this range. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
+      <Type>ISO</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>1</FieldCount>
+      <Length>223</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>1784</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>59392</PGN>
       <Id>0xe8000xeeffStandardizedSingleFrameAddressed</Id>
       <Description>0xE800-0xEEFF: Standardized single-frame addressed</Description>
@@ -7372,18 +7402,20 @@ limitations under the License.
           <Order>5</Order>
           <Id>engineOilFilterOutletPressure</Id>
           <Name>Engine Oil Filter Outlet Pressure</Name>
-          <Description>SPN 3549, 4 kPa per bit</Description>
+          <Description>SPN 3549</Description>
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>4</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>4000</Resolution>
+          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>1008</RangeMax>
+          <RangeMax>1008000</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>6</Order>
@@ -8804,6 +8836,153 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65263</PGN>
+      <Id>engineFluidLevelPressure1</Id>
+      <Description>Engine Fluid Level/Pressure 1</Description>
+      <Priority>6</Priority>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <TransmissionInterval>500</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>engineFuelDeliveryPressure</Id>
+          <Name>Engine Fuel Delivery Pressure</Name>
+          <Description>SPN 94</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>4000</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1008000</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>engineExtendedCrankcaseBlowByPressure</Id>
+          <Name>Engine Extended Crankcase Blow-by Pressure</Name>
+          <Description>SPN 22</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>50</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>12600</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>engineOilLevel</Id>
+          <Name>Engine Oil Level</Name>
+          <Description>SPN 98</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.4</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>100.8</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>engineOilPressure</Id>
+          <Name>Engine Oil Pressure</Name>
+          <Description>SPN 100</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>4000</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>1008000</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>engineCrankcasePressure</Id>
+          <Name>Engine Crankcase Pressure</Name>
+          <Description>SPN 101</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>7.8125</Resolution>
+          <Signed>false</Signed>
+          <Offset>-250000</Offset>
+          <RangeMin>-250000</RangeMin>
+          <RangeMax>261968.75</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>engineCoolantPressure</Id>
+          <Name>Engine Coolant Pressure</Name>
+          <Description>SPN 109</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>2000</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>504000</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>engineCoolantLevel</Id>
+          <Name>Engine Coolant Level</Name>
+          <Description>SPN 111</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.4</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>100.8</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65266</PGN>
       <Id>fuelEconomy</Id>
       <Description>Fuel Economy</Description>
@@ -9294,6 +9473,143 @@ limitations under the License.
       </Fields>
     </PGNInfo>
     <PGNInfo>
+      <PGN>65276</PGN>
+      <Id>dashDisplay</Id>
+      <Description>Dash Display</Description>
+      <Priority>6</Priority>
+      <Type>Single</Type>
+      <Complete>true</Complete>
+      <FieldCount>7</FieldCount>
+      <Length>8</Length>
+      <TransmissionInterval>1000</TransmissionInterval>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>washerFluidLevel</Id>
+          <Name>Washer Fluid Level</Name>
+          <Description>SPN 80</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.4</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>100.8</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>2</Order>
+          <Id>fuelLevel1</Id>
+          <Name>Fuel Level 1</Name>
+          <Description>SPN 96</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>8</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.4</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>100.8</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>3</Order>
+          <Id>engineFuelFilterDifferentialPressure</Id>
+          <Name>Engine Fuel Filter Differential Pressure</Name>
+          <Description>SPN 95</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>16</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>2000</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>504000</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>4</Order>
+          <Id>engineOilFilterDifferentialPressure</Id>
+          <Name>Engine Oil Filter Differential Pressure</Name>
+          <Description>SPN 99</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>24</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>Pa</Unit>
+          <Resolution>500</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>126000</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>5</Order>
+          <Id>cargoAmbientTemperature</Id>
+          <Name>Cargo Ambient Temperature</Name>
+          <Description>SPN 169</Description>
+          <BitLength>16</BitLength>
+          <BitOffset>32</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>K</Unit>
+          <Resolution>0.03125</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>2047.875</RangeMax>
+          <UnknownValue>65535</UnknownValue>
+          <OutOfRangeValue>65534</OutOfRangeValue>
+          <ReservedValue>65533</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>TEMPERATURE</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>6</Order>
+          <Id>fuelLevel2</Id>
+          <Name>Fuel Level 2</Name>
+          <Description>SPN 38</Description>
+          <BitLength>8</BitLength>
+          <BitOffset>48</BitOffset>
+          <BitStart>0</BitStart>
+          <Unit>%</Unit>
+          <Resolution>0.4</Resolution>
+          <Signed>false</Signed>
+          <RangeMin>0</RangeMin>
+          <RangeMax>100.8</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
+          <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>DIMENSIONLESS_RATIO</PhysicalQuantity>
+        </Field>
+        <Field>
+          <Order>7</Order>
+          <Id>reserved</Id>
+          <Name>Reserved</Name>
+          <BitLength>8</BitLength>
+          <BitOffset>56</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>RESERVED</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
       <PGN>65280</PGN>
       <Id>0xff000xffffManufacturerProprietarySingleFrameNonAddressed</Id>
       <Description>0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed</Description>
@@ -9315,6 +9631,36 @@ limitations under the License.
           <Id>data</Id>
           <Name>Data</Name>
           <BitLength>64</BitLength>
+          <BitOffset>0</BitOffset>
+          <BitStart>0</BitStart>
+          <Resolution>1</Resolution>
+          <FieldType>BINARY</FieldType>
+        </Field>
+      </Fields>
+    </PGNInfo>
+    <PGNInfo>
+      <PGN>65536</PGN>
+      <Id>0x100000x1ec00StandardizedAddressed</Id>
+      <Description>0x10000-0x1EC00: Standardized addressed</Description>
+      <Explanation>Standardized PGNs in PDU1 (addressed) PGN range 0x10000 to 0x1EC00 (65536 - 125952), data page 1. NMEA 2000 does not use this range. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. When this is shown during analysis it means the PGN is not reverse engineered yet.</Explanation>
+      <Type>ISO</Type>
+      <Complete>false</Complete>
+      <Fallback>true</Fallback>
+      <Missing>
+        <MissingAttribute>Fields</MissingAttribute>
+        <MissingAttribute>FieldLengths</MissingAttribute>
+        <MissingAttribute>Resolution</MissingAttribute>
+        <MissingAttribute>Lookups</MissingAttribute>
+        <MissingAttribute>Interval</MissingAttribute>
+      </Missing>
+      <FieldCount>1</FieldCount>
+      <Length>223</Length>
+      <Fields>
+        <Field>
+          <Order>1</Order>
+          <Id>data</Id>
+          <Name>Data</Name>
+          <BitLength>1784</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>

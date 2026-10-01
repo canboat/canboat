@@ -887,6 +887,19 @@
   description: Pressure, 8 bit unsigned in 2 kilopascal resolution
   resolution: 2000.0
   physical: PRESSURE
+- name: PRESSURE_UINT8_4KPA
+  base: UINT8
+  description: Pressure, 8 bit unsigned in 4 kilopascal resolution
+  encodingDescription: SAE J1939's engine oil and fuel pressure encoding, 0 to 1000 kPa
+  resolution: 4000.0
+  physical: PRESSURE
+- name: PRESSURE_UFIX16_J1939_CRANKCASE
+  base: UFIX16
+  description: Pressure, J1939 16 bit crankcase
+  encodingDescription: 'SAE J1939''s crankcase pressure encoding: 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa'
+  resolution: 7.8125
+  offset: -32000
+  physical: PRESSURE
 - name: PRESSURE_UINT8_KPA
   base: UINT8
   description: Pressure, 8 bit unsigned in .5 kilopascal resolution
