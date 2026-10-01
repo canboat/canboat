@@ -1144,47 +1144,47 @@ Pgn pgnList[] = {
      .fallback = true,
      .explanation = "Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
-    {"0x1ED00 - 0x1EE00: Standardized fast-packet addressed",
+    {"0x1ED00 - 0x1EE00: Standardized addressed",
      126208,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN | PACKET_LOOKUPS_UNKNOWN,
-     PACKET_FAST,
+     PACKET_ISO_TP,
      {
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
-     .camelDescription = "0x1ed000x1ee00StandardizedFastPacketAddressed",
+     .camelDescription = "0x1ed000x1ee00StandardizedAddressed",
      .fallback = true,
-     .explanation = "Standardized PGNs in PDU1 (addressed) fast-packet PGN range 0x1ED00 to 0x1EE00 (65536 - 126464). When this is shown during analysis it means the PGN is not reverse engineered yet."},
+     .explanation = "Standardized PGNs in PDU1 (addressed) PGN range 0x1ED00 to 0x1EE00 (126208 - 126464), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
-    {"0x1EF00-0x1EFFF: Manufacturer Proprietary fast-packet addressed",
+    {"0x1EF00-0x1EFFF: Manufacturer Proprietary addressed",
      126720,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
-     PACKET_FAST,
+     PACKET_ISO_TP,
      {
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
-     .camelDescription = "0x1ef000x1efffManufacturerProprietaryFastPacketAddressed",
+     .camelDescription = "0x1ef000x1efffManufacturerProprietaryAddressed",
      .fallback = true,
-     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) fast-packet PGN range 0x1EF00 to 0x1EFFF (126720 - 126975). When this is shown during analysis it means the PGN is not reverse engineered yet."},
+     .explanation = "Manufacturer Proprietary PGNs in PDU1 (addressed) PGN range 0x1EF00 to 0x1EFFF (126720 - 126975), data page 1 (Proprietary A2). Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
-    {"0x1F000-0x1FEFF: Standardized mixed single/fast packet non-addressed",
+    {"0x1F000-0x1FEFF: Standardized non-addressed",
      126976,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
-     PACKET_MIXED,
+     PACKET_ISO_TP,
      {
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
-     .camelDescription = "0x1f0000x1feffStandardizedMixedSingleFastPacketNonAddressed",
+     .camelDescription = "0x1f0000x1feffStandardizedNonAddressed",
      .fallback = true,
-     .explanation = "Standardized PGNs in PDU2 (non-addressed) mixed single/fast packet PGN range 0x1F000 to 0x1FEFF (126976 - 130815). When this is shown during analysis it means the PGN is not reverse engineered yet."},
+     .explanation = "Standardized PGNs in PDU2 (non-addressed) PGN range 0x1F000 to 0x1FEFF (126976 - 130815), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."},
 
-    {"0x1FF00-0x1FFFF: Manufacturer Specific fast-packet non-addressed",
+    {"0x1FF00-0x1FFFF: Manufacturer Specific non-addressed",
      130816,
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
-     PACKET_FAST,
+     PACKET_ISO_TP,
      {
       {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
-     .camelDescription = "0x1ff000x1ffffManufacturerSpecificFastPacketNonAddressed",
+     .camelDescription = "0x1ff000x1ffffManufacturerSpecificNonAddressed",
      .fallback = true,
-     .explanation = "This definition is used for Manufacturer Specific PGNs in PDU2 (non-addressed) fast-packet PGN range 0x1FF00 to 0x1FFFF (130816 - 131071). When this is shown during analysis it means the PGN is not reverse engineered yet."}
+     .explanation = "Manufacturer Specific PGNs in PDU2 (non-addressed) PGN range 0x1FF00 to 0x1FFFF (130816 - 131071), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."}
 };

@@ -234,10 +234,12 @@ PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
                        {0xef00, 0xef00, 256, "NMEA", PACKET_SINGLE},
                        {0xf000, 0xfeff, 1, "NMEA", PACKET_SINGLE},
                        {0xff00, 0xffff, 1, "Manufacturer", PACKET_SINGLE},
-                       {0x1ed00, 0x1ee00, 256, "NMEA", PACKET_FAST},
-                       {0x1ef00, 0x1ef00, 256, "Manufacturer", PACKET_FAST},
-                       {0x1f000, 0x1feff, 1, "NMEA", PACKET_MIXED},
-                       {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_FAST}};
+                       /* Data page 1. J1939 has no fast-packet: a payload over
+                        * 8 bytes arrives through ISO TP (60416 / 60160). */
+                       {0x1ed00, 0x1ee00, 256, "SAE", PACKET_ISO_TP},
+                       {0x1ef00, 0x1ef00, 256, "Manufacturer", PACKET_ISO_TP},
+                       {0x1f000, 0x1feff, 1, "SAE", PACKET_ISO_TP},
+                       {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_ISO_TP}};
 
 #include "pgn-j1939-generated-data.h"
 
