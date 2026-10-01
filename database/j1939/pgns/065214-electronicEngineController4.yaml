@@ -10,8 +10,8 @@ fields:
   description: 0.5 kW per bit
   type: NUMBER
   bits: 16
-  unit: kW
-  resolution: 0.5
+  unit: W
+  resolution: 500.0
 - id: engineRatedSpeed
   name: Engine Rated Speed
   spn: 189

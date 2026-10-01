@@ -524,6 +524,14 @@ FieldType fieldTypeList[] = {
      .resolution = 1.0,
      .physical = &CONCENTRATION},
 
+    {.name = "VOLUME_UINT8_J1939_OFFSET",
+     .description = "Volume, J1939 8 bit with offset",
+     .encodingDescription = "SAE J1939's fluid level deviation encoding: 0.5 L per bit from -62.5 L, so -62.5 to 62.5 L",
+     .baseFieldType = "UINT8",
+     .offset = -125,
+     .resolution = 0.5,
+     .physical = &VOLUME},
+
     {.name = "VOLUME_UFIX16_L",
      .description = "Volume",
      .baseFieldType = "UFIX16",
@@ -1080,9 +1088,9 @@ FieldType fieldTypeList[] = {
      .resolution = 4000.0,
      .physical = &PRESSURE},
 
-    {.name = "PRESSURE_UFIX16_J1939_CRANKCASE",
-     .description = "Pressure, J1939 16 bit crankcase",
-     .encodingDescription = "SAE J1939's crankcase pressure encoding: 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa",
+    {.name = "PRESSURE_UFIX16_J1939_OFFSET",
+     .description = "Pressure, J1939 16 bit with offset",
+     .encodingDescription = "SAE J1939's offset pressure encoding (crankcase, EGR differential): 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa",
      .baseFieldType = "UFIX16",
      .offset = -32000,
      .resolution = 7.8125,

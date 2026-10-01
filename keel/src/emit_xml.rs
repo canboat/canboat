@@ -544,10 +544,15 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             if f.res_resolution == 1.0 || f.res_resolution == 0.0 {
                 self.p(&format!("          <Offset>{}</Offset>\n", f.res_offset));
             } else {
-                self.p(&format!(
-                    "          <Offset>{}</Offset>\n",
-                    (f.res_offset as f64 * f.res_resolution) as i64
-                ));
+                // In the field's own units; a fraction is kept (J1939's
+                // -62.5 L), which canboat.xsd's xs:decimal allows.
+                let o = f.res_offset as f64 * f.res_resolution;
+                if o.fract() == 0.0 {
+                    self.p(&format!("          <Offset>{}</Offset>\n", o as i64));
+                } else {
+                    let o = self.g15(o);
+                    self.p(&format!("          <Offset>{o}</Offset>\n"));
+                }
             }
         }
 

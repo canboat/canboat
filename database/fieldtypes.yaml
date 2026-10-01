@@ -420,6 +420,13 @@
   encodingDescription: Expressed in parts per million
   resolution: 1.0
   physical: CONCENTRATION
+- name: VOLUME_UINT8_J1939_OFFSET
+  base: UINT8
+  description: Volume, J1939 8 bit with offset
+  encodingDescription: 'SAE J1939''s fluid level deviation encoding: 0.5 L per bit from -62.5 L, so -62.5 to 62.5 L'
+  resolution: 0.5
+  offset: -125
+  physical: VOLUME
 - name: VOLUME_UFIX16_L
   base: UFIX16
   description: Volume
@@ -893,10 +900,10 @@
   encodingDescription: SAE J1939's engine oil and fuel pressure encoding, 0 to 1000 kPa
   resolution: 4000.0
   physical: PRESSURE
-- name: PRESSURE_UFIX16_J1939_CRANKCASE
+- name: PRESSURE_UFIX16_J1939_OFFSET
   base: UFIX16
-  description: Pressure, J1939 16 bit crankcase
-  encodingDescription: 'SAE J1939''s crankcase pressure encoding: 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa'
+  description: Pressure, J1939 16 bit with offset
+  encodingDescription: 'SAE J1939''s offset pressure encoding (crankcase, EGR differential): 1/128 kPa per bit from -250 kPa, so -250 to 251.99 kPa'
   resolution: 7.8125
   offset: -32000
   physical: PRESSURE

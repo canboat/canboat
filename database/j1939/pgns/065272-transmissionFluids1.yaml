@@ -11,8 +11,8 @@ fields:
   description: 16 kPa per bit
   type: NUMBER
   bits: 8
-  unit: kPa
-  resolution: 16
+  unit: Pa
+  resolution: 16000.0
 - id: transmissionOilLevel1
   name: Transmission Oil Level 1
   spn: 124
@@ -28,8 +28,8 @@ fields:
   description: 16 kPa per bit
   type: NUMBER
   bits: 8
-  unit: kPa
-  resolution: 16
+  unit: Pa
+  resolution: 16000.0
 - id: transmission1OilTemperature1
   name: Transmission 1 Oil Temperature 1
   spn: 177
@@ -38,10 +38,7 @@ fields:
   name: Transmission Oil Level 1 High / Low
   spn: 3027
   description: 0.5 litre per bit with a -62.5 litre offset
-  type: NUMBER
-  bits: 8
-  unit: L
-  resolution: 0.5
+  type: VOLUME_UINT8_J1939_OFFSET
 - id: transmissionOilLevel1CountdownTimer
   name: Transmission Oil Level 1 Countdown Timer
   spn: 3028

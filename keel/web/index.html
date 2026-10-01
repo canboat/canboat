@@ -1270,6 +1270,8 @@ function fieldYaml(f, pad) {
   y += `${p}type: ${f.type}\n`;
   if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
   if (has(f.bitLengthField)) y += `${p}bitLengthField: ${f.bitLengthField}\n`;
+  // Not editable here, but carried through so a rewrite keeps it.
+  if (has(f.encoding)) y += `${p}encoding: ${f.encoding}\n`;
   if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;
   if (has(f.match))
     // integer verbatim; a lookup value NAME is written as-is (R13 resolves it)

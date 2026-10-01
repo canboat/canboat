@@ -479,7 +479,7 @@ Pgn pgnList[] = {
       {.name = "Engine Air Filter 3 Differential Pressure", .camelName = "engineAirFilter3DifferentialPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "0.05 kPa per bit"},
       {.name = "Engine Air Filter 4 Differential Pressure", .camelName = "engineAirFilter4DifferentialPressure", .fieldType = "PRESSURE_UINT8_005KPA", .description = "0.05 kPa per bit"},
       {.name = "Engine Intake Manifold", .camelName = "engineIntakeManifold2Pressure", .fieldType = "PRESSURE_UINT8_2KPA"},
-      {.name = "Engine Intake Manifold", .camelName = "engineIntakeManifold1AbsolutePressure", .fieldType = "NUMBER", .size = 8, .resolution = 0.1, .unit = "kPa", .description = "0.1 kPa per bit"},
+      {.name = "Engine Intake Manifold", .camelName = "engineIntakeManifold1AbsolutePressure", .fieldType = "NUMBER", .size = 8, .resolution = 100.0, .unit = "Pa", .description = "0.1 kPa per bit"},
       {.name = "Engine Intake Manifold 1 Absolute Pressure (High Resolution)", .camelName = "engineIntakeManifold1AbsolutePressureHighResolution", .fieldType = "PRESSURE_UFIX16_HPA", .description = "0.1 kPa per bit"},
       {.name = "Engine Intake Manifold 2 Absolute Pressure", .camelName = "engineIntakeManifold2AbsolutePressure", .fieldType = "PRESSURE_UINT8_2KPA"}
      },
@@ -871,7 +871,7 @@ Pgn pgnList[] = {
      {
       {.name = "Engine Oil Temperature 2", .camelName = "engineOilTemperature2", .fieldType = "TEMPERATURE_UFIX16_J1939"},
       {.name = "Engine ECU Temperature", .camelName = "engineEcuTemperature", .fieldType = "TEMPERATURE_UFIX16_J1939"},
-      {.name = "Engine Exhaust Gas Recirculation 1 Differential Pressure", .camelName = "engineExhaustGasRecirculation1DifferentialPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.0078125, .unit = "kPa", .description = "1/128 kPa per bit with a -250 kPa offset"},
+      {.name = "Engine Exhaust Gas Recirculation 1 Differential Pressure", .camelName = "engineExhaustGasRecirculation1DifferentialPressure", .fieldType = "PRESSURE_UFIX16_J1939_OFFSET", .description = "1/128 kPa per bit with a -250 kPa offset"},
       {.name = "Engine Exhaust Gas Recirculation 1 Temperature", .camelName = "engineExhaustGasRecirculation1Temperature", .fieldType = "TEMPERATURE_UFIX16_J1939"}
      },
      .camelDescription = "engineTemperature2",
@@ -899,10 +899,10 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Engine Turbocharger 1 Boost Pressure", .camelName = "engineTurbocharger1BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.125, .unit = "kPa", .description = "0.125 kPa per bit"},
-      {.name = "Engine Turbocharger 2 Boost Pressure", .camelName = "engineTurbocharger2BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.125, .unit = "kPa", .description = "0.125 kPa per bit"},
-      {.name = "Engine Turbocharger 3 Boost Pressure", .camelName = "engineTurbocharger3BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.125, .unit = "kPa", .description = "0.125 kPa per bit"},
-      {.name = "Engine Turbocharger 4 Boost Pressure", .camelName = "engineTurbocharger4BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.125, .unit = "kPa", .description = "0.125 kPa per bit"}
+      {.name = "Engine Turbocharger 1 Boost Pressure", .camelName = "engineTurbocharger1BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 125.0, .unit = "Pa", .description = "0.125 kPa per bit"},
+      {.name = "Engine Turbocharger 2 Boost Pressure", .camelName = "engineTurbocharger2BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 125.0, .unit = "Pa", .description = "0.125 kPa per bit"},
+      {.name = "Engine Turbocharger 3 Boost Pressure", .camelName = "engineTurbocharger3BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 125.0, .unit = "Pa", .description = "0.125 kPa per bit"},
+      {.name = "Engine Turbocharger 4 Boost Pressure", .camelName = "engineTurbocharger4BoostPressure", .fieldType = "NUMBER", .size = 16, .resolution = 125.0, .unit = "Pa", .description = "0.125 kPa per bit"}
      },
      .camelDescription = "intakeManifoldInformation1",
      .interval = 500,
@@ -913,8 +913,8 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Total ECU Distance", .camelName = "totalEcuDistance", .fieldType = "NUMBER", .size = 32, .resolution = 0.125, .unit = "km", .description = "0.125 kilometre per bit"},
-      {.name = "Total ECU Run Time", .camelName = "totalEcuRunTime", .fieldType = "NUMBER", .size = 32, .resolution = 0.05, .unit = "h", .description = "0.05 hour per bit"}
+      {.name = "Total ECU Distance", .camelName = "totalEcuDistance", .fieldType = "NUMBER", .size = 32, .resolution = 125.0, .unit = "m", .description = "0.125 kilometre per bit"},
+      {.name = "Total ECU Run Time", .camelName = "totalEcuRunTime", .fieldType = "DURATION_UFIX32_J1939_HOURS", .description = "0.05 hour per bit"}
      },
      .camelDescription = "ecuHistory",
      .interval = 1000,
@@ -942,7 +942,7 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Engine Rated Power", .camelName = "engineRatedPower", .fieldType = "NUMBER", .size = 16, .resolution = 0.5, .unit = "kW", .description = "0.5 kW per bit"},
+      {.name = "Engine Rated Power", .camelName = "engineRatedPower", .fieldType = "NUMBER", .size = 16, .resolution = 500.0, .unit = "W", .description = "0.5 kW per bit"},
       {.name = "Engine Rated Speed", .camelName = "engineRatedSpeed", .fieldType = "ROTATION_UFIX16_RPM_HIGHRES"},
       {.name = "Engine Rotation Direction", .camelName = "engineRotationDirection", .fieldType = "NUMBER", .size = 2, .resolution = 1.0},
       {.name = "Engine Intake Manifold Pressure Control Mode", .camelName = "engineIntakeManifoldPressureControlMode", .fieldType = "NUMBER", .size = 2, .resolution = 1.0},
@@ -1001,10 +1001,10 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Engine Fuel Injection Control Pressure", .camelName = "engineFuelInjectionControlPressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.00390625, .unit = "MPa", .description = "1/256 MPa per bit"},
-      {.name = "Engine Fuel 1 Injector Metering Rail 1 Pressure", .camelName = "engineFuel1InjectorMeteringRail1Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.00390625, .unit = "MPa", .description = "1/256 MPa per bit"},
-      {.name = "Engine Fuel 1 Injector Timing Rail 1 Pressure", .camelName = "engineFuel1InjectorTimingRail1Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.00390625, .unit = "MPa", .description = "1/256 MPa per bit"},
-      {.name = "Engine Fuel 1 Injector Metering Rail 2 Pressure", .camelName = "engineFuel1InjectorMeteringRail2Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 0.00390625, .unit = "MPa", .description = "1/256 MPa per bit"}
+      {.name = "Engine Fuel Injection Control Pressure", .camelName = "engineFuelInjectionControlPressure", .fieldType = "NUMBER", .size = 16, .resolution = 3906.25, .unit = "Pa", .description = "1/256 MPa per bit"},
+      {.name = "Engine Fuel 1 Injector Metering Rail 1 Pressure", .camelName = "engineFuel1InjectorMeteringRail1Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 3906.25, .unit = "Pa", .description = "1/256 MPa per bit"},
+      {.name = "Engine Fuel 1 Injector Timing Rail 1 Pressure", .camelName = "engineFuel1InjectorTimingRail1Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 3906.25, .unit = "Pa", .description = "1/256 MPa per bit"},
+      {.name = "Engine Fuel 1 Injector Metering Rail 2 Pressure", .camelName = "engineFuel1InjectorMeteringRail2Pressure", .fieldType = "NUMBER", .size = 16, .resolution = 3906.25, .unit = "Pa", .description = "1/256 MPa per bit"}
      },
      .camelDescription = "engineFluidLevelPressure2",
      .interval = 500,
@@ -1086,7 +1086,7 @@ Pgn pgnList[] = {
       {.name = "Engine Extended Crankcase Blow-by Pressure", .camelName = "engineExtendedCrankcaseBlowByPressure", .fieldType = "PRESSURE_UINT8_005KPA"},
       {.name = "Engine Oil Level", .camelName = "engineOilLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4},
       {.name = "Engine Oil Pressure", .camelName = "engineOilPressure", .fieldType = "PRESSURE_UINT8_4KPA"},
-      {.name = "Engine Crankcase Pressure", .camelName = "engineCrankcasePressure", .fieldType = "PRESSURE_UFIX16_J1939_CRANKCASE"},
+      {.name = "Engine Crankcase Pressure", .camelName = "engineCrankcasePressure", .fieldType = "PRESSURE_UFIX16_J1939_OFFSET"},
       {.name = "Engine Coolant Pressure", .camelName = "engineCoolantPressure", .fieldType = "PRESSURE_UINT8_2KPA"},
       {.name = "Engine Coolant Level", .camelName = "engineCoolantLevel", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4}
      },
@@ -1152,12 +1152,12 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Transmission Clutch 1 Pressure", .camelName = "transmissionClutch1Pressure", .fieldType = "NUMBER", .size = 8, .resolution = 16.0, .unit = "kPa", .description = "16 kPa per bit"},
+      {.name = "Transmission Clutch 1 Pressure", .camelName = "transmissionClutch1Pressure", .fieldType = "NUMBER", .size = 8, .resolution = 16000.0, .unit = "Pa", .description = "16 kPa per bit"},
       {.name = "Transmission Oil Level 1", .camelName = "transmissionOilLevel1", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4},
       {.name = "Transmission Filter Differential Pressure", .camelName = "transmissionFilterDifferentialPressure", .fieldType = "PRESSURE_UINT8_2KPA"},
-      {.name = "Transmission 1 Oil Pressure", .camelName = "transmission1OilPressure", .fieldType = "NUMBER", .size = 8, .resolution = 16.0, .unit = "kPa", .description = "16 kPa per bit"},
+      {.name = "Transmission 1 Oil Pressure", .camelName = "transmission1OilPressure", .fieldType = "NUMBER", .size = 8, .resolution = 16000.0, .unit = "Pa", .description = "16 kPa per bit"},
       {.name = "Transmission 1 Oil Temperature 1", .camelName = "transmission1OilTemperature1", .fieldType = "TEMPERATURE_UFIX16_J1939"},
-      {.name = "Transmission Oil Level 1 High / Low", .camelName = "transmissionOilLevel1HighLow", .fieldType = "NUMBER", .size = 8, .resolution = 0.5, .unit = "L", .description = "0.5 litre per bit with a -62.5 litre offset"},
+      {.name = "Transmission Oil Level 1 High / Low", .camelName = "transmissionOilLevel1HighLow", .fieldType = "VOLUME_UINT8_J1939_OFFSET", .description = "0.5 litre per bit with a -62.5 litre offset"},
       {.name = "Transmission Oil Level 1 Countdown Timer", .camelName = "transmissionOilLevel1CountdownTimer", .fieldType = "NUMBER", .size = 4, .resolution = 1.0},
       {.name = "Transmission Oil Level 1 Measurement Status", .camelName = "transmissionOilLevel1MeasurementStatus", .fieldType = "NUMBER", .size = 4, .resolution = 1.0}
      },

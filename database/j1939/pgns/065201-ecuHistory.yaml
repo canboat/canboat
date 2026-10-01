@@ -11,14 +11,11 @@ fields:
   description: 0.125 kilometre per bit
   type: NUMBER
   bits: 32
-  unit: km
-  resolution: 0.125
+  unit: m
+  resolution: 125.0
 - id: totalEcuRunTime
   name: Total ECU Run Time
   spn: 1033
   description: 0.05 hour per bit
-  type: NUMBER
-  bits: 32
-  unit: h
-  resolution: 0.05
+  type: DURATION_UFIX32_J1939_HOURS
 notes: 'ECU History (EH) PGN 65201, layout per SAE J1939-71'
