@@ -152,11 +152,12 @@ fn run_cli(cli: Cli) -> Result<()> {
     // suppresses it — unless the fixed timestamp string contains
     // "n2kd", in which case n2kd still wants the banner.
     let suppress_banner = cli.fixtime.as_deref().is_some_and(|s| !s.contains("n2kd"));
+    let protocol = cli.protocol.resolve()?;
     if cli.json && !suppress_banner {
         writeln!(
             out,
             "{}",
-            crate::build_info::version_banner(cli.shape.is_si(), cli.nv)
+            crate::build_info::version_banner(cli.shape.is_si(), cli.nv, protocol)
         )
         .context("writing JSON banner")?;
     }
@@ -170,7 +171,7 @@ fn run_cli(cli: Cli) -> Result<()> {
         dst_filter: cli.dst,
         suppress_startup_record: cli.fixtime.as_deref().is_some_and(|s| !s.contains("n2kd")),
         units,
-        protocol: cli.protocol.resolve()?,
+        protocol,
         fixed_time: cli.fixtime.as_deref(),
     };
 

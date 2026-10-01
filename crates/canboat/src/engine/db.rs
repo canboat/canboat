@@ -179,6 +179,16 @@ impl PgnDatabase {
         self.j1939
     }
 
+    /// The protocol whose PGN tables this database carries.
+    #[inline]
+    pub fn protocol(&self) -> crate::engine::BusProtocol {
+        if self.j1939 {
+            crate::engine::BusProtocol::J1939
+        } else {
+            crate::engine::BusProtocol::Nmea2000
+        }
+    }
+
     /// Total number of PGN definitions (including manufacturer variants).
     pub fn pgn_count(&self) -> usize {
         self.pgns.len()

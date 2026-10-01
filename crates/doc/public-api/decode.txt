@@ -334,6 +334,7 @@ pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'stati
 pub fn canboat::Database::pgn_count(&self) -> usize
 pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
 pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
+pub fn canboat::Database::protocol(&self) -> canboat::schema::BusProtocol
 pub fn canboat::Database::units(&self) -> canboat::Units
 impl canboat::Database
 pub fn canboat::Database::decode(&self, &canboat::Frame) -> core::result::Result<canboat::DecodedPgn, canboat::DecodeError>
@@ -878,6 +879,7 @@ pub fn canboat::Database::pgn_by_id(&self, &str) -> core::option::Option<&'stati
 pub fn canboat::Database::pgn_count(&self) -> usize
 pub fn canboat::Database::pgn_variants(&self, u32) -> canboat::schema::PgnVariants
 pub fn canboat::Database::pgns(&self) -> core::slice::iter::Iter<'static, canboat::schema::PgnInfo>
+pub fn canboat::Database::protocol(&self) -> canboat::schema::BusProtocol
 pub fn canboat::Database::units(&self) -> canboat::Units
 impl canboat::Database
 pub fn canboat::Database::decode(&self, &canboat::Frame) -> core::result::Result<canboat::DecodedPgn, canboat::DecodeError>

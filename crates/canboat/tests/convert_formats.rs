@@ -61,6 +61,10 @@ fn two_buses_are_refused_before_any_output() {
     assert!(stderr.contains("not supported yet"), "{stderr}");
 }
 
+/// A J1939 Engine Hours, Revolutions (65253) frame: 500 h, 10^9 revolutions.
+const J1939_PLAIN: &[u8] = b"2026-01-01T00:00:00.000Z,6,65253,0,255,8,10,27,00,00,40,42,0f,00\n";
+const J1939_BODY: &str = ",6,65253,0,255,8,10,27,00,00,40,42,0f,00\n";
+
 /// A single received fast-packet PGN 127251 record.
 const PLAIN: &[u8] = b"2026-01-01T00:00:00.000Z,3,127251,27,255,8,00,ca,8f,f3,ff,25,02,ff\n";
 const BODY: &str = ",3,127251,27,255,8,00,ca,8f,f3,ff,25,02,ff";
@@ -125,6 +129,65 @@ fn banner_tracks_the_output_shape() {
         banner.contains(r#""showLookupValues":true"#),
         "banner: {banner}"
     );
+}
+
+/// The banner names the table the records were decoded against: the
+/// same PGN number means different things on NMEA 2000 and J1939.
+#[test]
+fn banner_names_the_protocol() {
+    let n2k = String::from_utf8(run(&["convert", "--to", "json"], PLAIN)).unwrap();
+    let banner = n2k.lines().next().unwrap();
+    assert!(
+        banner.contains(r#""protocol":"nmea2000""#),
+        "banner: {banner}"
+    );
+
+    let j1939 = String::from_utf8(run(
+        &["convert", "--to", "json", "--protocol", "j1939"],
+        J1939_PLAIN,
+    ))
+    .unwrap();
+    let banner = j1939.lines().next().unwrap();
+    assert!(banner.contains(r#""protocol":"j1939""#), "banner: {banner}");
+}
+
+/// A J1939 JSON stream re-encodes against the J1939 table when asked
+/// to, and is refused, naming the fix, when read as NMEA 2000.
+#[test]
+fn a_j1939_json_stream_needs_protocol_j1939() {
+    let json = run(
+        &["convert", "--to", "json", "--protocol", "j1939"],
+        J1939_PLAIN,
+    );
+    let plain = String::from_utf8(run(
+        &[
+            "convert",
+            "--from",
+            "json",
+            "--to",
+            "plain",
+            "--protocol",
+            "j1939",
+        ],
+        &json,
+    ))
+    .unwrap();
+    assert!(plain.ends_with(J1939_BODY), "round trip: {plain}");
+
+    let out = Command::new(canboat())
+        .args(["convert", "--from", "json", "--to", "plain"])
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .and_then(|mut child| {
+            child.stdin.take().unwrap().write_all(&json)?;
+            child.wait_with_output()
+        })
+        .expect("run canboat");
+    assert!(!out.status.success());
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(stderr.contains("--protocol j1939"), "{stderr}");
 }
 
 #[test]
