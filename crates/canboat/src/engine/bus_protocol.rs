@@ -121,6 +121,24 @@ mod tests {
         );
     }
 
+    /// J1939 fields carry the SPN that J1939-71 gives them; NMEA 2000
+    /// fields have none.
+    #[test]
+    fn j1939_fields_carry_their_spn() {
+        let rpm = BusProtocol::J1939
+            .database(Units::Si)
+            .first_pgn(61444)
+            .unwrap()
+            .fields
+            .iter()
+            .find(|f| f.id == "engineRpm")
+            .unwrap();
+        assert_eq!(rpm.spn, Some(190));
+        let n2k = BusProtocol::Nmea2000.database(Units::Si);
+        let heading = n2k.first_pgn(127250).unwrap();
+        assert!(heading.fields.iter().all(|f| f.spn.is_none()));
+    }
+
     #[test]
     fn each_bus_has_its_own_table() {
         let n2k = BusProtocol::Nmea2000.database(Units::Si);

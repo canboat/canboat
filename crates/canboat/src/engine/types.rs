@@ -56,6 +56,10 @@ pub struct FieldInfo {
     pub id: &'static str,
     pub name: &'static str,
     pub description: Option<&'static str>,
+    /// SAE J1939's Suspect Parameter Number for this value, which J1939
+    /// documentation and diagnostic trouble codes refer to it by. Only on
+    /// fields of the J1939 tables.
+    pub spn: Option<u32>,
     pub bit_length: Option<u32>,
     pub bit_length_field: Option<&'static str>,
     /// Character set to read this field's bytes as when they are not

@@ -664,6 +664,7 @@ pub canboat::schema::FieldInfo::range_min: core::option::Option<f64>
 pub canboat::schema::FieldInfo::reserved_value: core::option::Option<u64>
 pub canboat::schema::FieldInfo::resolution: core::option::Option<f64>
 pub canboat::schema::FieldInfo::signed: core::option::Option<bool>
+pub canboat::schema::FieldInfo::spn: core::option::Option<u32>
 pub canboat::schema::FieldInfo::unit: core::option::Option<&'static str>
 pub canboat::schema::FieldInfo::unit_offset: f64
 pub canboat::schema::FieldInfo::unknown_value: core::option::Option<u64>

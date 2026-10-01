@@ -99,6 +99,9 @@ pub struct Field {
     pub unit: Option<String>,
     pub offset: Option<i32>,
     pub description: Option<String>,
+    /// SAE J1939 Suspect Parameter Number: the identifier J1939-71 gives
+    /// this value, independent of the PGN that carries it. J1939 tree only.
+    pub spn: Option<u32>,
     /// Authored research note, YAML-only documentation (never emitted to an
     /// artifact). Modeled so the editor can round-trip it through a fields:
     /// block rewrite instead of silently dropping it.

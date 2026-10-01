@@ -232,6 +232,9 @@
                   <xsl:if test="Match">
                     <xsl:value-of select="Match"/>:
                   </xsl:if>
+                  <xsl:if test="SPN">
+                    SPN <xsl:value-of select="SPN"/><xsl:if test="Description">, </xsl:if>
+                  </xsl:if>
                   <xsl:call-template name="replace-subscript">
                     <xsl:with-param name="text">
                       <xsl:value-of select="Description"/>

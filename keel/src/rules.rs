@@ -324,6 +324,21 @@ pub const RULES: &[Rule] = &[
                  number would otherwise do nothing at all, and surface much later \
                  as mojibake rather than as an error here.",
     },
+    Rule {
+        id: "R42",
+        scope: Scope::CrossFile,
+        severity: "error",
+        enforced_in: "check::check_spns",
+        title: "A field's spn: is a J1939 SPN, scaled alike wherever it appears.",
+        detail: "SAE J1939-71 defines each Suspect Parameter Number once -- its \
+                 length, resolution, offset and unit -- and then places it in one \
+                 or more PGNs. So spn: belongs only on fields of the J1939 tree, \
+                 must fit J1939's 19 bits (0..=524287), and every field carrying \
+                 the same SPN must decode it the same way: a difference means one \
+                 of them is wrong. The published JSON lets consumers look values up \
+                 by SPN, which is how J1939 documentation and DM1 trouble codes \
+                 name them.",
+    },
 ];
 
 /// Human-readable inventory, grouped by scope.

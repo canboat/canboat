@@ -64,6 +64,7 @@ struct RawField {
     id: String,
     name: String,
     description: Option<String>,
+    spn: Option<u32>,
     bit_length: Option<u32>,
     bit_length_field: Option<String>,
     encoding: Option<String>,
@@ -494,7 +495,7 @@ fn missing_arr(m: &Option<Vec<String>>) -> String {
 fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
     write!(
         out,
-        "FieldInfo{{order:{order},id:{id},name:{name},description:{description},\
+        "FieldInfo{{order:{order},id:{id},name:{name},description:{description},spn:{spn},\
          bit_length:{bit_length},bit_length_field:{blf},encoding:{enc},bit_length_variable:{blv},\
          bit_offset:{bit_offset},bit_start:{bit_start},resolution:{resolution},\
          signed:{signed},offset:{offset},range_min:{range_min},range_max:{range_max},\
@@ -509,6 +510,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         id = quote(&f.id),
         name = quote(&f.name),
         description = opt_str(&f.description),
+        spn = opt_int(&f.spn),
         bit_length = opt_int(&f.bit_length),
         blf = opt_str(&f.bit_length_field),
         enc = opt_str(&f.encoding),
@@ -980,6 +982,7 @@ fn raw_field(
         id: f.id.clone(),
         name: f.name.clone(),
         description: f.description.clone(),
+        spn: f.spn,
         bit_length: (f.res_bits != 0).then_some(f.res_bits),
         bit_length_field: f.bit_length_field_order.map(|o| o.to_string()),
         encoding: f.encoding.clone(),

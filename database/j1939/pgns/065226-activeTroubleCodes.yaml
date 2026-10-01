@@ -7,57 +7,78 @@ missing:
 - FieldLengths
 - Resolution
 fields:
-- id: malfunctionLampStatus
-  name: Malfunction Lamp Status
-  type: BINARY
-  bits: 2
-  description: Fault Lamps
-- id: redStopLampStatus
-  name: Red Stop Lamp Status
-  type: BINARY
-  bits: 2
-  description: Fault Lamps
-  note: 10 = flashing 1Hz, 11 = flashing 2Hz
-- id: amberWarningLampStatus
-  name: Amber Warning Lamp Status
-  type: BINARY
-  bits: 2
-  description: Fault Lamps
 - id: protectLampStatus
   name: Protect Lamp Status
-  type: BINARY
+  type: LOOKUP
   bits: 2
-  description: Fault Lamps
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 8
+  lookup: J1939_LAMP_STATUS
+- id: amberWarningLampStatus
+  name: Amber Warning Lamp Status
+  type: LOOKUP
+  bits: 2
+  lookup: J1939_LAMP_STATUS
+- id: redStopLampStatus
+  name: Red Stop Lamp Status
+  type: LOOKUP
+  bits: 2
+  lookup: J1939_LAMP_STATUS
+- id: malfunctionIndicatorLampStatus
+  name: Malfunction Indicator Lamp Status
+  type: LOOKUP
+  bits: 2
+  lookup: J1939_LAMP_STATUS
+- id: flashProtectLamp
+  name: Flash Protect Lamp
+  type: NUMBER
+  bits: 2
+- id: flashAmberWarningLamp
+  name: Flash Amber Warning Lamp
+  type: NUMBER
+  bits: 2
+- id: flashRedStopLamp
+  name: Flash Red Stop Lamp
+  type: NUMBER
+  bits: 2
+- id: flashMalfunctionIndicatorLamp
+  name: Flash Malfunction Indicator Lamp
+  type: NUMBER
+  bits: 2
 - repeat:
     fields:
-    - id: spn
-      name: SPN
-      type: BINARY
-      bits: 19
-      description: Suspect Parameter Number
-      note: These four fields comprise a Diagnostic Trouble Code (DTC)
+    - id: spnLow
+      name: SPN (low 16 bits)
+      description: The Suspect Parameter Number of the fault is these 16 bits plus SPN (high 3 bits) times 65536
+      type: NUMBER
+      bits: 16
+      specialValues: 0
+      note: J1939-73 splits the 19-bit SPN around the FMI. These are its bits 1-16.
     - id: fmi
       name: FMI
-      type: BINARY
+      description: Failure Mode Identifier
+      type: NUMBER
       bits: 5
-      description: Fault Mode Indicator
-      note: If there is more han one DTC the message is sent using TP
-    - id: cm
-      name: CM
-      type: BINARY
-      bits: 1
-      description: SPN Conversion Method
-      note: Not sure how to handle that actually...
+      specialValues: 0
+    - id: spnHigh
+      name: SPN (high 3 bits)
+      description: The SPN's bits 17-19
+      type: NUMBER
+      bits: 3
+      specialValues: 0
     - id: oc
       name: OC
-      type: BINARY
+      description: Occurrence Count; 127 is not available
+      type: NUMBER
       bits: 7
-      description: Occurrence Count
+      specialValues: 1
+    - id: cm
+      name: CM
+      description: SPN Conversion Method; 0 for the current SPN layout
+      type: NUMBER
+      bits: 1
+      specialValues: 0
 notes: |-
   J1939 PGN 65226 See https://embeddedflakes.com/j1939-diagnostics-part-1/
+
+  DTC layout per SAE J1939-73, as NMFTA's pretty_j1939 decodes it: bytes 1-2 SPN bits 1-16, byte 3 bits 1-5 FMI and bits 6-8 SPN bits 17-19, byte 4 bits 1-7 OC and bit 8 CM.
 
   Lamp modes are: 0 = off, 01 = on
