@@ -7,11 +7,13 @@ interval: 10000
 fields:
 - id: engineTotalHoursOfOperation
   name: Engine Total Hours of Operation
-  description: SPN 247, 0.05 hours per bit
+  spn: 247
+  description: 0.05 hours per bit
   type: DURATION_UFIX32_J1939_HOURS
 - id: engineTotalRevolutions
   name: Engine Total Revolutions
-  description: SPN 249, 1000 revolutions per bit
+  spn: 249
+  description: 1000 revolutions per bit
   type: NUMBER
   unit: r
   resolution: 1000

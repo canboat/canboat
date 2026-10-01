@@ -427,7 +427,10 @@ fn j1939_iso_tp_text() {
 /// EFL/P1 (65263): 4 kPa oil and fuel pressure, 0.4 % levels, and the
 /// 16-bit crankcase pressure, 1/128 kPa from -250 kPa (0x7d40 = 0.5 kPa,
 /// 0.005 bar in Metric). DD (65276): fuel level 0x3c = 24 %. PGN 0
-/// (TSC1) falls to the 0x0000-0xE700 catch-all.
+/// (TSC1) falls to the 0x0000-0xE700 catch-all. DM1 (65226): lamp status
+/// in J1939-73's bit order (0x40 = malfunction indicator on), and DTCs
+/// whose SPN is split around the FMI (64 00 01 03 = SPN 100, FMI 1, OC 3;
+/// 00 f0 e2 05 = SPN 61440 + 7 * 65536 = 520192, FMI 2, OC 5).
 #[test]
 fn j1939_scaling_text() {
     run_case(

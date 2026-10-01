@@ -1,0 +1,8 @@
+name: J1939_LAMP_STATUS
+kind: pair
+bits: 2
+values:
+  0: 'Off'
+  1: 'On'
+  2: Error
+note: SAE J1939-73 diagnostic lamp status in DM1; 3 is not available. Names as NMFTA's pretty_j1939 gives them.

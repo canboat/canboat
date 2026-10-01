@@ -7,14 +7,16 @@ interval: 1000
 fields:
 - id: totalEcuDistance
   name: Total ECU Distance
-  description: SPN 1032, 0.125 kilometre per bit
+  spn: 1032
+  description: 0.125 kilometre per bit
   type: NUMBER
   bits: 32
   unit: km
   resolution: 0.125
 - id: totalEcuRunTime
   name: Total ECU Run Time
-  description: SPN 1033, 0.05 hour per bit
+  spn: 1033
+  description: 0.05 hour per bit
   type: NUMBER
   bits: 32
   unit: h

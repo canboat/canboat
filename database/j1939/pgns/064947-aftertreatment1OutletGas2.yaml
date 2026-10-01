@@ -7,15 +7,16 @@ interval: 500
 fields:
 - id: aftertreatment1OutletGasTemperature2
   name: Aftertreatment 1 Outlet Gas Temperature 2
-  description: SPN 3245
+  spn: 3245
   type: TEMPERATURE_UFIX16_J1939
 - id: aftertreatment1OutletGasPressure2
   name: Aftertreatment 1 Outlet Gas Pressure 2
-  description: SPN 3246, 0.1 kPa per bit
+  spn: 3246
+  description: 0.1 kPa per bit
   type: PRESSURE_UFIX16_HPA
 - id: aftertreatment1OutletGasTemperature2PreliminaryFMI
   name: Aftertreatment 1 Outlet Gas Temperature 2 Preliminary FMI
-  description: SPN 3247
+  spn: 3247
   type: NUMBER
   bits: 5
 - id: reserved
@@ -24,7 +25,7 @@ fields:
   bits: 3
 - id: aftertreatment1OutletGasPressure2PreliminaryFMI
   name: Aftertreatment 1 Outlet Gas Pressure 2 Preliminary FMI
-  description: SPN 3248
+  spn: 3248
   type: NUMBER
   bits: 5
 - id: reserved2

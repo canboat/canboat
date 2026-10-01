@@ -124,9 +124,10 @@ const PGN_KEYS: [&str; 16] = [
 
 /// One entry of a PGN's `fields:` list. `repeat` is handled a level up, in
 /// `fields_and_repeats`, so it is deliberately absent.
-const FIELD_KEYS: [&str; 24] = [
+const FIELD_KEYS: [&str; 25] = [
     "id",
     "name",
+    "spn",
     "type",
     "bits",
     "resolution",
@@ -395,6 +396,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         unit: opt_str(y, "unit"),
         offset: opt_i64(y, "offset").map(|o| o as i32),
         description: opt_str(y, "description"),
+        spn: opt_i64(y, "spn").map(|s| s as u32),
         note: opt_str(y, "note"),
         match_,
         lookup: opt_str(y, "lookup"),

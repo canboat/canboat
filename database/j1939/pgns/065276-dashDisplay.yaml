@@ -7,29 +7,29 @@ interval: 1000
 fields:
 - id: washerFluidLevel
   name: Washer Fluid Level
-  description: SPN 80
+  spn: 80
   type: PERCENTAGE_UINT8
   resolution: 0.4
 - id: fuelLevel1
   name: Fuel Level 1
-  description: SPN 96
+  spn: 96
   type: PERCENTAGE_UINT8
   resolution: 0.4
 - id: engineFuelFilterDifferentialPressure
   name: Engine Fuel Filter Differential Pressure
-  description: SPN 95
+  spn: 95
   type: PRESSURE_UINT8_2KPA
 - id: engineOilFilterDifferentialPressure
   name: Engine Oil Filter Differential Pressure
-  description: SPN 99
+  spn: 99
   type: PRESSURE_UINT8_KPA
 - id: cargoAmbientTemperature
   name: Cargo Ambient Temperature
-  description: SPN 169
+  spn: 169
   type: TEMPERATURE_UFIX16_J1939
 - id: fuelLevel2
   name: Fuel Level 2
-  description: SPN 38
+  spn: 38
   type: PERCENTAGE_UINT8
   resolution: 0.4
 - id: reserved

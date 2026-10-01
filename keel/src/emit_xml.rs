@@ -494,6 +494,9 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
                 }
             }
         }
+        if let Some(spn) = f.spn {
+            self.xml_u(10, "SPN", spn as u64);
+        }
 
         if f.res_bits == 0 {
             self.p("          <BitLengthVariable>true</BitLengthVariable>\n");

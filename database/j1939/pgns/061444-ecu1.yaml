@@ -7,13 +7,14 @@ interval: 20
 fields:
 - id: engineTorqueMode
   name: Engine Torque Mode
-  description: SPN 899
+  spn: 899
   type: NUMBER
   bits: 4
   rangeMax: 14.0
 - id: actualEnginePercentTorqueHighResolution
   name: Actual Engine - Percent Torque High Resolution
-  description: SPN 4154, fractional part of the actual engine torque in 0.125 % steps
+  spn: 4154
+  description: Fractional part of the actual engine torque in 0.125 % steps
   unit: '%'
   resolution: 0.125
   type: NUMBER
@@ -21,25 +22,25 @@ fields:
   rangeMax: 1.75
 - id: driversDemandEnginePercentTorque
   name: Driver's Demand Engine - Percent Torque
-  description: SPN 512
+  spn: 512
   type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: actualEnginePercentTorque
   name: Actual Engine - Percent Torque
-  description: SPN 513
+  spn: 513
   type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: engineRpm
   name: Engine RPM
-  description: SPN 190
+  spn: 190
   type: ROTATION_UFIX16_RPM_HIGHRES
 - id: sourceAddressOfControllingDeviceForEngineControl
   name: Source Address of Controlling Device for Engine Control
-  description: SPN 1483
+  spn: 1483
   type: NUMBER
   bits: 8
   rangeMax: 253.0
 - id: engineStarterMode
   name: Engine Starter Mode
-  description: SPN 1675
+  spn: 1675
   type: NUMBER
   bits: 4
   rangeMax: 14.0
@@ -49,6 +50,6 @@ fields:
   bits: 4
 - id: engineDemandPercentTorque
   name: Engine Demand - Percent Torque
-  description: SPN 2432
+  spn: 2432
   type: PERCENTAGE_UINT8_J1939_TORQUE
 notes: 'J1939 ECU #1 (EEC1) PGN 61444, layout per SAE J1939-71. The percent-torque fields are offset by -125 % in J1939; canboat reports the raw signed byte.'

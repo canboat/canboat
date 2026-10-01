@@ -84,7 +84,68 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_samples(prefix, db, pgn, prefix == "j1939/", &mut v); // R40
         }
     }
+    check_spns(db, &mut v); // R42
     v
+}
+
+/// The largest SPN: J1939 carries them in 19 bits.
+const MAX_SPN: u32 = 0x7FFFF;
+
+/// How a field decodes its SPN: bits, resolution, raw offset, unit.
+type SpnScaling = (u32, f64, i32, Option<String>);
+
+// R42: spn: only on J1939 fields, within 19 bits, and decoded alike by every
+// field that carries the same SPN.
+fn check_spns(db: &Database, v: &mut Vec<Violation>) {
+    use std::collections::BTreeMap;
+    for p in &db.pgns {
+        for f in p.fields.iter().filter(|f| f.spn.is_some()) {
+            v.push(Violation {
+                rule: "R42",
+                error: true,
+                location: pgn_loc("", p),
+                message: format!("field '{}': spn: is a J1939 attribute", f.id),
+            });
+        }
+    }
+    // SPN -> where it was first seen (location, field id) and its scaling.
+    let mut seen: BTreeMap<u32, (String, String, SpnScaling)> = BTreeMap::new();
+    for p in &db.pgns_j1939 {
+        for f in &p.fields {
+            let Some(spn) = f.spn else { continue };
+            if spn > MAX_SPN {
+                v.push(Violation {
+                    rule: "R42",
+                    error: true,
+                    location: pgn_loc("j1939/", p),
+                    message: format!("field '{}': SPN {spn} is beyond 19 bits", f.id),
+                });
+                continue;
+            }
+            let scaling = (
+                f.res_bits,
+                f.res_resolution,
+                f.res_offset,
+                f.res_unit.clone(),
+            );
+            match seen.get(&spn) {
+                None => {
+                    seen.insert(spn, (pgn_loc("j1939/", p), f.id.clone(), scaling));
+                }
+                Some((loc, id, first)) if *first != scaling => v.push(Violation {
+                    rule: "R42",
+                    error: true,
+                    location: pgn_loc("j1939/", p),
+                    message: format!(
+                        "field '{}': SPN {spn} decodes as {scaling:?} here but as {first:?} in \
+                         '{id}' ({loc})",
+                        f.id
+                    ),
+                }),
+                Some(_) => {}
+            }
+        }
+    }
 }
 
 // R40: every stored sample must decode against THIS variant and satisfy its

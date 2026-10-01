@@ -7,28 +7,32 @@ interval: 500
 fields:
 - id: engineTurbocharger1BoostPressure
   name: Engine Turbocharger 1 Boost Pressure
-  description: SPN 1127, 0.125 kPa per bit
+  spn: 1127
+  description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
   unit: kPa
   resolution: 0.125
 - id: engineTurbocharger2BoostPressure
   name: Engine Turbocharger 2 Boost Pressure
-  description: SPN 1128, 0.125 kPa per bit
+  spn: 1128
+  description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
   unit: kPa
   resolution: 0.125
 - id: engineTurbocharger3BoostPressure
   name: Engine Turbocharger 3 Boost Pressure
-  description: SPN 1129, 0.125 kPa per bit
+  spn: 1129
+  description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
   unit: kPa
   resolution: 0.125
 - id: engineTurbocharger4BoostPressure
   name: Engine Turbocharger 4 Boost Pressure
-  description: SPN 1130, 0.125 kPa per bit
+  spn: 1130
+  description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
   unit: kPa

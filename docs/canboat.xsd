@@ -432,6 +432,16 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:unsignedInt" name="SPN" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            SAE J1939 only: the Suspect Parameter Number J1939-71 gives this
+            value. It identifies the value itself, whichever PGN carries it,
+            and is what J1939 documentation and diagnostic trouble codes
+            (DM1) refer to. Absent on NMEA 2000 fields.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:boolean" name="BitLengthVariable" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
