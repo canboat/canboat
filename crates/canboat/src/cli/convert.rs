@@ -18,9 +18,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::engine::RawFrame;
 use crate::engine::format::InputFormat;
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
+use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
     EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter, TextLineWriter,
     analyze, container, copy,
@@ -291,15 +291,18 @@ pub fn run(args: Args) -> Result<()> {
         .try_init();
     args.shape.warn_deprecated();
     args.quirk.apply();
+    // Resolved before any I/O, so a refused `--bus` never leaves a
+    // half-written output behind, whichever path runs.
+    let bus = args.bus.protocol()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let ebl = ebl_input(&args);
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
 
     if args.to.is_frame_level() {
-        convert_raw(&args, forced, ebl, &mut out)
+        convert_raw(&args, bus, forced, ebl, &mut out)
     } else {
-        convert_decoded(&args, forced, ebl, &mut out)
+        convert_decoded(&args, bus, forced, ebl, &mut out)
     }
 }
 
@@ -319,6 +322,7 @@ fn ebl_input(args: &Args) -> bool {
 /// chosen by `--to` (PLAIN / YDWG02 / Actisense ASCII / Actisense EBL).
 fn convert_raw<W: Write>(
     args: &Args,
+    bus: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -332,7 +336,7 @@ fn convert_raw<W: Write>(
         // a bannerless stream. `-nv` raw values are unit-agnostic.
         Box::new(crate::json_input::JsonFrameReader::new(
             source,
-            args.bus.protocol()?.database(args.shape.units()),
+            bus.database(args.shape.units()),
         ))
     } else {
         match forced {
@@ -365,6 +369,7 @@ fn convert_raw<W: Write>(
 /// JSON or text. Filters are pushed into the pipeline's `Config`.
 fn convert_decoded<W: Write>(
     args: &Args,
+    bus: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -406,7 +411,7 @@ fn convert_decoded<W: Write>(
         dst_filter: args.dst,
         suppress_startup_record: false,
         units: args.shape.units(),
-        bus: args.bus.protocol()?,
+        bus,
         fixed_time: None,
     };
 

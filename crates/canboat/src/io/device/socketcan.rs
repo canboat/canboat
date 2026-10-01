@@ -198,11 +198,6 @@ mod imp {
     /// drowning the snapshot port in identical rows.
     const NETWORK_STATUS_INTERVAL_MS: u64 = 5_000;
 
-    /// Fallback CAN bitrate when `/sys/class/net/<iface>/can_bittiming/
-    /// bitrate` isn't readable. NMEA 2000 is fixed at 250 kbit/s so
-    /// this is the right default for ~every real bus.
-    const FALLBACK_BITRATE_BPS: u32 = 250_000;
-
     /// Per-frame protocol overhead in bits for CAN 2.0B extended frames
     /// (NMEA 2000 is always 29-bit). Sum of SOF (1) + Arbitration
     /// (11+SRR+IDE+18+RTR = 32) + Control (6) + CRC (16) + ACK (2) +
@@ -503,9 +498,9 @@ mod imp {
         /// re-announce, so the claim table undercounts the bus.
         seen_addrs: [bool; 256],
         /// Bus bitrate (bits/s), read once at construction from
-        /// `/sys/class/net/<iface>/can_bittiming/bitrate`. NMEA 2000
-        /// is fixed at 250 kbit/s so the fallback covers the common
-        /// case if the kernel hasn't filled in the bittiming yet.
+        /// `/sys/class/net/<iface>/can_bittiming/bitrate`, or
+        /// `Config::bitrate` if the kernel hasn't filled in the
+        /// bittiming yet.
         bitrate_bps: u32,
         /// Most recent `LoadSample`, or `None` before the first
         /// network-status emission. Used to compute the bytes/packets
@@ -549,7 +544,7 @@ mod imp {
                 start_ms: now_ms(),
                 next_network_status: 0,
                 seen_addrs: [false; 256],
-                bitrate_bps: read_bitrate_bps(iface),
+                bitrate_bps: read_bitrate_bps(iface).unwrap_or(config.bitrate),
                 prev_load_sample: None,
             }
         }
@@ -866,19 +861,13 @@ mod imp {
     /// Read the CAN bus bitrate (bits/s) from
     /// `/sys/class/net/<iface>/can_bittiming/bitrate`. The file
     /// exists for every SocketCAN device and contains a decimal
-    /// integer (e.g. `250000`). Returns `FALLBACK_BITRATE_BPS` when
-    /// missing, unreadable, or 0 — most production NMEA 2000 buses
-    /// are fixed at 250 kbit/s.
-    fn read_bitrate_bps(iface: &str) -> u32 {
+    /// integer (e.g. `250000`). `None` when missing, unreadable, or
+    /// 0; the caller then falls back to `Config::bitrate`, which is
+    /// 250 kbit/s unless a J1939-14 bus was configured at 500.
+    fn read_bitrate_bps(iface: &str) -> Option<u32> {
         let path = format!("/sys/class/net/{iface}/can_bittiming/bitrate");
-        let raw = match std::fs::read_to_string(&path) {
-            Ok(s) => s,
-            Err(_) => return FALLBACK_BITRATE_BPS,
-        };
-        match raw.trim().parse::<u32>() {
-            Ok(0) | Err(_) => FALLBACK_BITRATE_BPS,
-            Ok(v) => v,
-        }
+        let raw = std::fs::read_to_string(&path).ok()?;
+        raw.trim().parse::<u32>().ok().filter(|&v| v != 0)
     }
 
     /// Take one read of `(rx_bytes, tx_bytes, rx_packets, tx_packets)`
@@ -1869,10 +1858,15 @@ mod imp {
         /// suppress the load reading entirely).
         #[test]
         fn a_missing_bitrate_file_falls_back() {
-            assert_eq!(
-                read_bitrate_bps("definitely-not-an-iface"),
-                FALLBACK_BITRATE_BPS
-            );
+            assert_eq!(read_bitrate_bps("definitely-not-an-iface"), None);
+            // ... to the configured rate, so a 500 kbit/s J1939-14 bus
+            // does not read twice the load it carries.
+            let config = Config {
+                bitrate: 500_000,
+                ..j1939_config()
+            };
+            let dev = NmeaDevice::new(&config, "definitely-not-an-iface");
+            assert_eq!(dev.bitrate_bps, 500_000);
         }
 
         /// Unreadable counters mean no sample, so the emitter keeps

@@ -196,6 +196,7 @@ pub fn run(args: Args) -> Result<()> {
 
 /// Move frames between the device and stdin/stdout until a stream ends.
 fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
+    let bus = args.bus.protocol()?;
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
     write_prologue(&mut out, args).context("writing prologue")?;
@@ -218,7 +219,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
                     let _ = copy(&mut rx, &mut DiscardWriter);
                 })
                 .expect("spawn frame drain");
-            pump_stdin(&mut sender).context("sending stdin frames")?;
+            pump_stdin(&mut sender, bus).context("sending stdin frames")?;
             drop(drain);
         }
         // Bidirectional (default): stdin → device on a background
@@ -228,7 +229,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
             let pump = thread::Builder::new()
                 .name("stdin-pump".into())
                 .spawn(move || {
-                    if let Err(e) = pump_stdin(&mut sender) {
+                    if let Err(e) = pump_stdin(&mut sender, bus) {
                         log::warn!("stdin pump stopped: {e}");
                     }
                 })
@@ -242,7 +243,7 @@ fn stream(args: &Args, mut handle: DeviceHandle) -> Result<()> {
 }
 
 /// Pump PLAIN frames from stdin into `sender` until stdin ends.
-fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {
+fn pump_stdin(sender: &mut device::FrameSender, bus: BusProtocol) -> io::Result<()> {
     // Two stdin dialects, dispatched per line: canboat PLAIN/FAST CSV
     // (the historical C contract — coalesced messages, the device layer
     // fragments fast-packets) and analyzer JSON records ('{'-prefixed),
@@ -250,8 +251,9 @@ fn pump_stdin(sender: &mut device::FrameSender) -> io::Result<()> {
     // (e.g. signalk-server) hand decoded PGN objects straight to the
     // bridge without running a separate encoder; both kinds may be
     // interleaved on one stream. Physical values in JSON are taken as
-    // SI, the unit system canboatjs-style producers emit.
-    let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+    // SI, the unit system canboatjs-style producers emit, and encoded
+    // against the table of the bus they go out on.
+    let db = bus.database(crate::engine::Units::Si);
     let stdin = io::stdin();
     for line in stdin.lock().lines() {
         let line = line?;
