@@ -1055,7 +1055,8 @@ fn decode_one_field_at(
 /// `bit_length` bits with the continuing bits above them, and the width of
 /// the two together. `None` when the field has no continuation, or when
 /// either part lies beyond the payload — the field then reads as its own
-/// bits alone, as a decoder without the attribute would read it.
+/// bits alone, as a decoder without the attribute would read it (and as
+/// the C analyzer does).
 fn join_continuation(
     f: &FieldInfo,
     data: &[u8],
@@ -1064,7 +1065,13 @@ fn join_continuation(
 ) -> Option<(u64, u32)> {
     let c = f.continuation?;
     let width = bit_length + c.bit_length;
-    if width > 64 {
+    // extract_bits reads what it can of a range that runs off the payload;
+    // a partial part would join into a wrong value, so require both whole.
+    let payload_bits = data.len() as u32 * 8;
+    if width > 64
+        || bit_offset + bit_length > payload_bits
+        || bit_offset + c.bit_offset + c.bit_length > payload_bits
+    {
         return None;
     }
     let low = extract_bits(data, bit_offset as usize, bit_length as usize, false, 0)?;

@@ -1265,6 +1265,24 @@ mod tests {
         ));
         assert!(decoded.fields.iter().all(|f| f.id() != "spnHigh"));
 
+        // Cut short inside the low SPN bits: no join from a partial read,
+        // so the SPN is the one byte that is there, as the C decodes it.
+        let mut short = frame.clone();
+        short.data.truncate(3);
+        let decoded = db.decode(&short).unwrap();
+        let spn = decoded.fields.iter().find(|f| f.id() == "spn").unwrap();
+        assert!(
+            matches!(
+                spn.value,
+                FieldValue::Lookup {
+                    value: 0,
+                    name: None
+                }
+            ),
+            "{:?}",
+            spn.value
+        );
+
         // A name from the SPN lookup encodes as its number.
         let frame = dtc(EncodeValue::Lookup("Engine Oil Pressure".into()));
         assert_eq!(&frame.data[2..6], &[0x64, 0x00, 0x02, 0x05]);

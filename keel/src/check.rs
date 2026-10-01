@@ -170,6 +170,13 @@ fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>)
                 f.id
             ));
         }
+        // The bits are joined as they are: a sign or an offset would have to
+        // apply to the whole value, which neither decoder does.
+        if db.fieldtypes[low.ft].has_sign == Some(true) || low.res_offset != 0 {
+            err(format!(
+                "field '{target}' is continued, so it must be unsigned and have no offset"
+            ));
+        }
         if low.value_bits() > 64 {
             err(format!(
                 "field '{target}' would be {} bits wide",

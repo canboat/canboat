@@ -354,8 +354,10 @@ pub const RULES: &[Rule] = &[
                  same record (same repeating set, nothing of variable width in \
                  between), only one field may continue another, and it is raw \
                  bits: a NUMBER with no resolution, offset, unit, lookup, match or \
-                 spn: of its own. The continued field is a NUMBER or LOOKUP of at \
-                 most 64 bits in total.",
+                 spn: of its own. The continued field is an unsigned NUMBER or \
+                 LOOKUP without an offset, of at most 64 bits in total: the bits \
+                 are joined as raw bits, so a sign or an offset would have to \
+                 apply to the joined value, which no decoder does.",
     },
 ];
 

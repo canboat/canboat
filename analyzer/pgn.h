@@ -114,10 +114,10 @@ typedef struct
   uint8_t dynamicFieldLengthOverhead; /* Non-value bytes (a per-record header sitting between this length field and the value)
                                        *    that are counted in the reported length and must be subtracted to obtain the
                                        *    value length. Set via DYNAMIC_FIELD_LENGTH_WITH_HEADER_LEN(). */
-  uint8_t continuationOffset; /* With continuationBits: this value's high bits sit in another field (keel R43), starting this
-                               *    many bits after this field's start. extractNumber() joins them in above this field's bits. */
-  uint8_t continuationBits;   /* How many high bits that is; 0 = none. */
-  bool    continues;          /* This field holds the high bits of an earlier field's value; it is not printed itself. */
+  uint32_t continuationOffset; /* With continuationBits: this value's high bits sit in another field (keel R43), starting this
+                                *    many bits after this field's start. extractNumber() joins them in above this field's bits. */
+  uint8_t continuationBits;    /* How many high bits that is; 0 = none. */
+  bool    continues;           /* This field holds the high bits of an earlier field's value; it is not printed itself. */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;

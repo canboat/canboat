@@ -268,7 +268,7 @@ fn a_dm1_spn_is_joined_and_named() {
 }
 
 /// R43 refuses a `continues:` that cannot be joined: one naming no earlier
-/// field, and one with a scaling of its own.
+/// field, one with a scaling of its own, and one continuing a signed field.
 #[test]
 fn r43_refuses_a_continuation_that_cannot_be_joined() {
     let r43 = |db: &Database| {
@@ -306,5 +306,14 @@ fn r43_refuses_a_continuation_that_cannot_be_joined() {
     let mut f = original.clone();
     f.resolution = Some(0.5);
     set(&mut db, f);
+    assert_eq!(r43(&db), 1);
+    set(&mut db, original);
+
+    // The continued field itself must be unsigned: the bits are joined raw.
+    let dm1 = db.pgns_j1939.iter().find(|p| p.pgn == 65226).unwrap();
+    let mut low = dm1.fields.iter().find(|f| f.id == "spn").unwrap().clone();
+    low.type_ = "INTEGER".into();
+    low.lookup = None;
+    set(&mut db, low);
     assert_eq!(r43(&db), 1);
 }

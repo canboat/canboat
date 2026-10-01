@@ -274,7 +274,10 @@ fn decode_one(
     // cursor and the reported position back on its own bits.
     if let Some((rel, extra)) = f.res_continuation {
         let own = f.res_bits as usize;
-        let low = extract_bits(data, ctx.bit, own, false, 0);
+        // Both parts whole, or no join: extract_bits reads a partial range.
+        let fits = ctx.bit + rel as usize + extra as usize <= data.len() * 8
+            && ctx.bit + own <= data.len() * 8;
+        let low = extract_bits(data, ctx.bit, own, false, 0).filter(|_| fits);
         let high = extract_bits(data, ctx.bit + rel as usize, extra as usize, false, 0);
         if let (Some(low), Some(high)) = (low, high) {
             let joined = (low.raw | (high.raw << own)).to_le_bytes();
@@ -288,6 +291,12 @@ fn decode_one(
             }
             return Ok(());
         }
+    }
+    // The high bits of an earlier field's value: already part of it, so not
+    // a value of their own (the runtime decoders leave them out too).
+    if f.continues.is_some() {
+        ctx.bit += f.res_bits as usize;
+        return Ok(());
     }
     decode_bits(db, f, data, ctx, instance, out, f.res_bits as usize)
 }

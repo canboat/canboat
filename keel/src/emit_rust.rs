@@ -1049,7 +1049,7 @@ fn raw_field(
                 Some(f.res_range_max)
             }
         } else if lookup_ref.is_some() && f.match_.is_none() {
-            Some(((1u128 << f.res_bits) - 1) as f64)
+            Some(((1u128 << f.value_bits()) - 1) as f64)
         } else {
             None
         },
