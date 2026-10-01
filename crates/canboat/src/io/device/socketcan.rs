@@ -1440,16 +1440,22 @@ mod imp {
                         // writers do, then close the socket — which is how
                         // the gateway leaves the bus — and confirm only if
                         // nothing was left behind.
-                        let flushed = flush_tx(&sock, &mut tx_buf, &progress);
-                        if !tx_buf.tp.is_idle() {
-                            // A BAM paces its packets 50 ms apart, and an
-                            // RTS waits on its receiver: neither is worth
-                            // holding the shutdown for.
+                        // An ISO TP transfer still running is not waited for:
+                        // a BAM paces its packets 50 ms apart (a 1785-byte
+                        // one takes ~13 s), and an RTS waits on its
+                        // receiver. Abort the RTS ones so their receivers
+                        // know, and count the message as left behind.
+                        let tp_unfinished = !tx_buf.tp.is_idle();
+                        if tp_unfinished {
                             log::warn!("socketcan: leaving with an ISO TP transfer unfinished");
+                            for f in tx_buf.tp.abort_all() {
+                                tx_buf.push_frame(&f);
+                            }
                         }
+                        let flushed = flush_tx(&sock, &mut tx_buf, &progress);
                         drop(sock);
                         if let Some(done) = done {
-                            let _ = done.send(flushed);
+                            let _ = done.send(flushed && !tp_unfinished);
                         }
                         return;
                     }

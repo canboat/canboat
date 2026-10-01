@@ -54,6 +54,8 @@ const CM_EOMA: u8 = 19;
 const CM_BAM: u8 = 32;
 const CM_ABORT: u8 = 255;
 
+/// Abort reason: the sender needed its resources for another task.
+const ABORT_RESOURCES: u8 = 2;
 /// Abort reason: a timeout occurred.
 const ABORT_TIMEOUT: u8 = 3;
 /// Abort reason: bad sequence number (a CTS asked for a packet the
@@ -356,6 +358,18 @@ impl TpSender {
     pub fn is_idle(&self) -> bool {
         self.active.is_empty() && self.queued.is_empty()
     }
+
+    /// Give up on everything: drop the queue, and return an Abort for
+    /// each running RTS/CTS transfer so its receiver need not wait out
+    /// its own timeout. A BAM has nobody to tell; it just stops.
+    pub fn abort_all(&mut self) -> Vec<RawFrame> {
+        self.queued.clear();
+        self.active
+            .drain(..)
+            .filter(|t| !t.is_bam())
+            .map(|t| t.abort(ABORT_RESOURCES))
+            .collect()
+    }
 }
 
 #[cfg(test)]
@@ -487,6 +501,22 @@ mod tests {
         );
         tp.on_frame(100, &hold);
         assert_eq!(tp.next_deadline(), Some(100 + T4_MS));
+    }
+
+    /// Giving up aborts running RTS/CTS transfers (reason 2), stops a
+    /// BAM silently, and empties the queue.
+    #[test]
+    fn abort_all_tells_the_receivers() {
+        let mut tp = TpSender::new();
+        tp.send(0, 0xDA00, SRC, DST, &payload(10)).unwrap();
+        tp.send(0, 0xDB00, SRC, DST, &payload(10)).unwrap(); // queued
+        tp.send(0, 0x1FF45, SRC, 255, &payload(10)).unwrap();
+        let out = tp.abort_all();
+        assert_eq!(out.len(), 1, "one RTS to abort, none for the BAM");
+        assert_eq!(out[0].dst, DST);
+        assert_eq!(cm(&out[0])[..2], [255, 2]);
+        assert_eq!(cm(&out[0])[5..], [0x00, 0xDA, 0x00]);
+        assert!(tp.is_idle());
     }
 
     /// The receiver's Abort ends the transfer quietly.
