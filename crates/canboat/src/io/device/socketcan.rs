@@ -1893,16 +1893,16 @@ mod imp {
             assert_eq!((pgn, dst), (PGN_TP_CM, PEER));
             assert_eq!(rts, [16, 20, 0, 3, 0xFF, 0x00, 0xDA, 0x00], "RTS");
 
-            let reply = |control: u8, b1: u8, b2: u8| {
+            let reply = |control: u8, b1: u8, b2: u8, b3: u8| {
                 let id = iso11783_compose(7, PGN_TP_CM, PEER, addr);
                 let f = socketcan::CanFrame::new(
                     ExtendedId::new(id & CAN_EFF_MASK).expect("29-bit id"),
-                    &[control, b1, b2, 0xFF, 0xFF, 0x00, 0xDA, 0x00],
+                    &[control, b1, b2, b3, 0xFF, 0x00, 0xDA, 0x00],
                 )
                 .expect("build frame");
                 peer.write_frame(&f).expect("peer writes");
             };
-            reply(17, 3, 1); // CTS: all three packets, from 1
+            reply(17, 3, 1, 0xFF); // CTS: all three packets, from 1
             let mut received = Vec::new();
             for seq in 1..=3u8 {
                 let (pgn, dst, packet, _) = next_tp_frame(&peer, addr);
@@ -1912,7 +1912,7 @@ mod imp {
             }
             received.truncate(20);
             assert_eq!(received, data);
-            reply(19, 20, 0); // EOMA
+            reply(19, 20, 0, 3); // EOMA: 20 bytes in 3 packets
         }
 
         /// Opening a nonexistent interface is an error, not a panic or a

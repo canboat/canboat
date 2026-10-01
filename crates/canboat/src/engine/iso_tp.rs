@@ -286,7 +286,23 @@ impl TpSender {
                 }
                 Vec::new()
             }
-            CM_EOMA => self.finish(now, i),
+            CM_EOMA => {
+                // Only once every packet is out, and only for this
+                // message: an early or mismatched acknowledgement must
+                // not end the transfer (and start the next) before the
+                // receiver has it all. T3 still aborts a receiver that
+                // never sends the right one.
+                let t = &self.active[i];
+                let size = u16::from_le_bytes([f.data[1], f.data[2]]) as usize;
+                if matches!(t.state, State::AwaitEoma { .. })
+                    && size == t.data.len()
+                    && f.data[3] == packets
+                {
+                    self.finish(now, i)
+                } else {
+                    Vec::new()
+                }
+            }
             CM_ABORT => self.finish(now, i),
             _ => Vec::new(),
         }
@@ -501,6 +517,53 @@ mod tests {
         );
         tp.on_frame(100, &hold);
         assert_eq!(tp.next_deadline(), Some(100 + T4_MS));
+    }
+
+    /// An End Of Message Acknowledgement before the last window, or for
+    /// a different size or packet count, does not end the transfer.
+    #[test]
+    fn only_a_matching_eoma_after_the_last_packet_completes() {
+        let mut tp = TpSender::new();
+        tp.send(0, 0xDA00, SRC, DST, &payload(20)).unwrap();
+        tp.send(0, 0xDA00, SRC, DST, &payload(10)).unwrap(); // queued behind it
+        let cm_from_peer = |b: [u8; 5]| {
+            RawFrame::new(
+                None,
+                7,
+                PGN_TP_CM,
+                DST,
+                SRC,
+                [b[0], b[1], b[2], b[3], b[4], 0x00, 0xDA, 0x00],
+            )
+        };
+        // Early: nothing sent yet.
+        assert!(
+            tp.on_frame(1, &cm_from_peer([19, 20, 0, 3, 0xFF]))
+                .is_empty()
+        );
+        tp.on_frame(2, &cm_from_peer([17, 3, 1, 0xFF, 0xFF]));
+        assert_eq!(tp.poll(2).len(), 3, "the whole message");
+        // Wrong size, then wrong packet count: still waiting.
+        assert!(
+            tp.on_frame(3, &cm_from_peer([19, 21, 0, 3, 0xFF]))
+                .is_empty()
+        );
+        assert!(
+            tp.on_frame(4, &cm_from_peer([19, 20, 0, 2, 0xFF]))
+                .is_empty()
+        );
+        assert_eq!(
+            tp.next_deadline(),
+            Some(2 + T3_MS),
+            "still the first transfer"
+        );
+        // The right one completes it and starts the queued message.
+        let next = tp.on_frame(5, &cm_from_peer([19, 20, 0, 3, 0xFF]));
+        assert_eq!(
+            cm(&next[0])[..4],
+            [16, 10, 0, 2],
+            "RTS for the queued 10 bytes"
+        );
     }
 
     /// Giving up aborts running RTS/CTS transfers (reason 2), stops a
