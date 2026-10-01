@@ -5088,10 +5088,10 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.1</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>100</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>25.2</RangeMax>
+          <RangeMax>25200</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -7625,14 +7625,17 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.0078125</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>511.96875</RangeMax>
+          <Unit>Pa</Unit>
+          <Resolution>7.8125</Resolution>
+          <Signed>false</Signed>
+          <Offset>-250000</Offset>
+          <RangeMin>-250000</RangeMin>
+          <RangeMax>261968.75</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>PRESSURE</PhysicalQuantity>
         </Field>
         <Field>
           <Order>4</Order>
@@ -7783,10 +7786,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.125</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>125</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>8191.5</RangeMax>
+          <RangeMax>8191500</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7801,10 +7804,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.125</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>125</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>8191.5</RangeMax>
+          <RangeMax>8191500</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7819,10 +7822,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.125</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>125</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>8191.5</RangeMax>
+          <RangeMax>8191500</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7837,10 +7840,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>0.125</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>125</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>8191.5</RangeMax>
+          <RangeMax>8191500</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -7868,10 +7871,10 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>km</Unit>
-          <Resolution>0.125</Resolution>
+          <Unit>m</Unit>
+          <Resolution>125</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>536870911.5</RangeMax>
+          <RangeMax>536870911500</RangeMax>
           <UnknownValue>4294967295</UnknownValue>
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
@@ -7886,14 +7889,16 @@ limitations under the License.
           <BitLength>32</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>h</Unit>
-          <Resolution>0.05</Resolution>
+          <Unit>s</Unit>
+          <Resolution>180</Resolution>
+          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>214748364.6</RangeMax>
+          <RangeMax>773094112560</RangeMax>
           <UnknownValue>4294967295</UnknownValue>
           <OutOfRangeValue>4294967294</OutOfRangeValue>
           <ReservedValue>4294967293</ReservedValue>
-          <FieldType>NUMBER</FieldType>
+          <FieldType>DURATION</FieldType>
+          <PhysicalQuantity>DURATION</PhysicalQuantity>
         </Field>
       </Fields>
     </PGNInfo>
@@ -8043,10 +8048,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kW</Unit>
-          <Resolution>0.5</Resolution>
+          <Unit>W</Unit>
+          <Resolution>500</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>32766</RangeMax>
+          <RangeMax>32766000</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -8527,10 +8532,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>MPa</Unit>
-          <Resolution>0.00390625</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>3906.25</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>255.984375</RangeMax>
+          <RangeMax>255984375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -8545,10 +8550,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>MPa</Unit>
-          <Resolution>0.00390625</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>3906.25</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>255.984375</RangeMax>
+          <RangeMax>255984375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -8563,10 +8568,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>MPa</Unit>
-          <Resolution>0.00390625</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>3906.25</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>255.984375</RangeMax>
+          <RangeMax>255984375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -8581,10 +8586,10 @@ limitations under the License.
           <BitLength>16</BitLength>
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>MPa</Unit>
-          <Resolution>0.00390625</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>3906.25</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>255.984375</RangeMax>
+          <RangeMax>255984375</RangeMax>
           <UnknownValue>65535</UnknownValue>
           <OutOfRangeValue>65534</OutOfRangeValue>
           <ReservedValue>65533</ReservedValue>
@@ -9479,10 +9484,10 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>16</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>16000</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>4032</RangeMax>
+          <RangeMax>4032000</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9535,10 +9540,10 @@ limitations under the License.
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
-          <Unit>kPa</Unit>
-          <Resolution>16</Resolution>
+          <Unit>Pa</Unit>
+          <Resolution>16000</Resolution>
           <RangeMin>0</RangeMin>
-          <RangeMax>4032</RangeMax>
+          <RangeMax>4032000</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
@@ -9574,12 +9579,15 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Unit>L</Unit>
           <Resolution>0.5</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>126</RangeMax>
+          <Signed>false</Signed>
+          <Offset>-62.5</Offset>
+          <RangeMin>-62.5</RangeMin>
+          <RangeMax>63.5</RangeMax>
           <UnknownValue>255</UnknownValue>
           <OutOfRangeValue>254</OutOfRangeValue>
           <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
+          <PhysicalQuantity>VOLUME</PhysicalQuantity>
         </Field>
         <Field>
           <Order>7</Order>

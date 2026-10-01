@@ -868,7 +868,7 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine Intake Manifold</td><td>
-                    SPN 3563, 0.1 kPa per bit</td><td>0.1 kPa<div class="xs">0 .. 25.2</div></td><td>8 bits
+                    SPN 3563, 0.1 kPa per bit</td><td>100 Pa<div class="xs">0 .. 25200</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Engine Intake Manifold 1 Absolute Pressure (High Resolution)</td><td>
                     SPN 4817, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
@@ -1612,8 +1612,11 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 1 Differential Pressure</td><td>
-                    SPN 411, 1/128 kPa per bit with a -250 kPa offset</td><td>0.0078125 kPa<div class="xs">0 .. 511.96875</div></td><td>16 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Exhaust Gas Recirculation 1 Temperature</td><td>
+                    SPN 411, 1/128 kPa per bit with a -250 kPa offset</td><td>7.8125 <a href="#pq-PRESSURE">Pa</a><div class="xs">-250000 .. 261968.75</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -250000</div></td><td/></tr><tr><td>4</td><td>Engine Exhaust Gas Recirculation 1 Temperature</td><td>
                     SPN 412</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
@@ -1674,13 +1677,13 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Turbocharger 1 Boost Pressure</td><td>
-                    SPN 1127, 0.125 kPa per bit</td><td>0.125 kPa<div class="xs">0 .. 8191.5</div></td><td>16 bits
+                    SPN 1127, 0.125 kPa per bit</td><td>125 Pa<div class="xs">0 .. 8191500</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Turbocharger 2 Boost Pressure</td><td>
-                    SPN 1128, 0.125 kPa per bit</td><td>0.125 kPa<div class="xs">0 .. 8191.5</div></td><td>16 bits
+                    SPN 1128, 0.125 kPa per bit</td><td>125 Pa<div class="xs">0 .. 8191500</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Turbocharger 3 Boost Pressure</td><td>
-                    SPN 1129, 0.125 kPa per bit</td><td>0.125 kPa<div class="xs">0 .. 8191.5</div></td><td>16 bits
+                    SPN 1129, 0.125 kPa per bit</td><td>125 Pa<div class="xs">0 .. 8191500</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Turbocharger 4 Boost Pressure</td><td>
-                    SPN 1130, 0.125 kPa per bit</td><td>0.125 kPa<div class="xs">0 .. 8191.5</div></td><td>16 bits
+                    SPN 1130, 0.125 kPa per bit</td><td>125 Pa<div class="xs">0 .. 8191500</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65201">0xFEB1:
             PGN 65201
             - ECU History</h3><p/><p>
@@ -1697,10 +1700,12 @@ limitations under the License.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Total ECU Distance</td><td>
-                    SPN 1032, 0.125 kilometre per bit</td><td>0.125 km<div class="xs">0 .. 536870911.5</div></td><td>32 bits
+                    SPN 1032, 0.125 kilometre per bit</td><td>125 m<div class="xs">0 .. 536870911500</div></td><td>32 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Total ECU Run Time</td><td>
-                    SPN 1033, 0.05 hour per bit</td><td>0.05 h<div class="xs">0 .. 214748364.6</div></td><td>32 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65213">0xFEBD:
+                    SPN 1033, 0.05 hour per bit</td><td>180 <a href="#pq-DURATION">s</a><div class="xs">0 .. 773094112560</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-DURATION">DURATION</a></td><td/></tr></table><h3 id="pgn-65213">0xFEBD:
             PGN 65213
             - Fan Drive</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -1749,7 +1754,7 @@ limitations under the License.
             
               The default priority (as observed in the field) is 6.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Rated Power</td><td>
-                    SPN 166, 0.5 kW per bit</td><td>0.5 kW<div class="xs">0 .. 32766</div></td><td>16 bits
+                    SPN 166, 0.5 kW per bit</td><td>500 W<div class="xs">0 .. 32766000</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Rated Speed</td><td>
                     SPN 189</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
                   
@@ -1858,13 +1863,13 @@ limitations under the License.
             
               It is normally transmitted every 500 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Fuel Injection Control Pressure</td><td>
-                    SPN 164, 1/256 MPa per bit</td><td>0.00390625 MPa<div class="xs">0 .. 255.984375</div></td><td>16 bits
+                    SPN 164, 1/256 MPa per bit</td><td>3906.25 Pa<div class="xs">0 .. 255984375</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Fuel 1 Injector Metering Rail 1 Pressure</td><td>
-                    SPN 157, 1/256 MPa per bit</td><td>0.00390625 MPa<div class="xs">0 .. 255.984375</div></td><td>16 bits
+                    SPN 157, 1/256 MPa per bit</td><td>3906.25 Pa<div class="xs">0 .. 255984375</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Fuel 1 Injector Timing Rail 1 Pressure</td><td>
-                    SPN 156, 1/256 MPa per bit</td><td>0.00390625 MPa<div class="xs">0 .. 255.984375</div></td><td>16 bits
+                    SPN 156, 1/256 MPa per bit</td><td>3906.25 Pa<div class="xs">0 .. 255984375</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Fuel 1 Injector Metering Rail 2 Pressure</td><td>
-                    SPN 1349, 1/256 MPa per bit</td><td>0.00390625 MPa<div class="xs">0 .. 255.984375</div></td><td>16 bits
+                    SPN 1349, 1/256 MPa per bit</td><td>3906.25 Pa<div class="xs">0 .. 255984375</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65244">0xFEDC:
             PGN 65244
             - Idle Operation</h3><p/><p>
@@ -2173,7 +2178,7 @@ limitations under the License.
             
               It is normally transmitted every 1000 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Transmission Clutch 1 Pressure</td><td>
-                    SPN 123, 16 kPa per bit</td><td>16 kPa<div class="xs">0 .. 4032</div></td><td>8 bits
+                    SPN 123, 16 kPa per bit</td><td>16000 Pa<div class="xs">0 .. 4032000</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Transmission Oil Level 1</td><td>
                     SPN 124</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
@@ -2183,14 +2188,17 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Transmission 1 Oil Pressure</td><td>
-                    SPN 127, 16 kPa per bit</td><td>16 kPa<div class="xs">0 .. 4032</div></td><td>8 bits
+                    SPN 127, 16 kPa per bit</td><td>16000 Pa<div class="xs">0 .. 4032000</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Transmission 1 Oil Temperature 1</td><td>
                     SPN 177</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transmission Oil Level 1 High / Low</td><td>
-                    SPN 3027, 0.5 litre per bit with a -62.5 litre offset</td><td>0.5 L<div class="xs">0 .. 126</div></td><td>8 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Transmission Oil Level 1 Countdown Timer</td><td>
+                    SPN 3027, 0.5 litre per bit with a -62.5 litre offset</td><td>0.5 <a href="#pq-VOLUME">L</a><div class="xs">-62.5 .. 63.5</div></td><td>8 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -62.5</div></td><td/></tr><tr><td>7</td><td>Transmission Oil Level 1 Countdown Timer</td><td>
                     SPN 3028</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Transmission Oil Level 1 Measurement Status</td><td>
                     SPN 3026</td><td><div class="xs">0 .. 13</div></td><td>4 bits

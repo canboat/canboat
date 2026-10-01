@@ -11,30 +11,30 @@ fields:
   description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
-  unit: kPa
-  resolution: 0.125
+  unit: Pa
+  resolution: 125.0
 - id: engineTurbocharger2BoostPressure
   name: Engine Turbocharger 2 Boost Pressure
   spn: 1128
   description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
-  unit: kPa
-  resolution: 0.125
+  unit: Pa
+  resolution: 125.0
 - id: engineTurbocharger3BoostPressure
   name: Engine Turbocharger 3 Boost Pressure
   spn: 1129
   description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
-  unit: kPa
-  resolution: 0.125
+  unit: Pa
+  resolution: 125.0
 - id: engineTurbocharger4BoostPressure
   name: Engine Turbocharger 4 Boost Pressure
   spn: 1130
   description: 0.125 kPa per bit
   type: NUMBER
   bits: 16
-  unit: kPa
-  resolution: 0.125
+  unit: Pa
+  resolution: 125.0
 notes: 'Intake Manifold Information 1 (IMT1) PGN 65190, layout per SAE J1939-71'

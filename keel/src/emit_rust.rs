@@ -74,6 +74,9 @@ struct RawField {
     resolution: Option<f64>,
     signed: Option<bool>,
     offset: Option<i64>,
+    /// `offset` before it is truncated to an integer: J1939's -62.5 L
+    /// fluid level deviation is the first offset with a fraction.
+    offset_exact: f64,
     range_min: Option<f64>,
     range_max: Option<f64>,
     unknown_value: Option<u64>,
@@ -242,6 +245,7 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
             }
             _ => {}
         }
+        place_offset(f, &mut v);
         return v;
     }
 
@@ -281,20 +285,31 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
         }
         _ => {}
     }
-    // `offset` is in SI units, an integer. A conversion that scales the
-    // value (Pa -> bar, rad -> deg, C -> Ah) has to scale the offset
-    // too, which leaves it fractional (J1939 crankcase pressure: -250 kPa
-    // is -2.5 bar), so it moves into `unit_offset`, which the decoder
-    // adds after it scales the raw value. K -> C does not scale, and
-    // keeps its offset.
-    if let (Some(o), Some(r0), Some(r1)) =
-        (f.offset.filter(|o| *o != 0), f.resolution, v.resolution)
-        && r0 != r1
-    {
-        v.unit_offset += o as f64 * (r1 / r0);
-        v.offset = None;
-    }
+    place_offset(f, &mut v);
     v
+}
+
+/// Put `f`'s offset where the decoder can hold it, in `v`'s units.
+fn place_offset(f: &RawField, v: &mut FieldView) {
+    // `FieldInfo::offset` is an integer. An offset with a fraction does
+    // not fit it: one in SI units already (J1939's -62.5 L fluid level
+    // deviation), or one a scaling conversion (Pa -> bar, rad -> deg,
+    // C -> Ah) leaves fractional (-250 kPa is -2.5 bar). Those go into
+    // `unit_offset`, which the decoder adds after it scales the raw value.
+    // K -> C does not scale, and keeps its offset.
+    let factor = match (f.resolution, v.resolution) {
+        (Some(r0), Some(r1)) if r0 != r1 => r1 / r0,
+        _ => 1.0,
+    };
+    if f.offset_exact != 0.0 {
+        let scaled = f.offset_exact * factor;
+        if factor == 1.0 && scaled.fract() == 0.0 {
+            v.offset = Some(scaled as i64);
+        } else {
+            v.unit_offset += scaled;
+            v.offset = None;
+        }
+    }
 }
 
 #[derive(Default, Clone, Copy)]
@@ -998,6 +1013,7 @@ fn raw_field(
         // field's own units (500 * 0.002 = 1), and the decoder adds it after
         // scaling. Passing the raw value made Peukert read 500.002.
         offset: Some((f.res_offset as f64 * f.res_resolution) as i64).filter(|o| *o != 0),
+        offset_exact: f.res_offset as f64 * f.res_resolution,
         // Ranges follow emit_xml exactly, including its two special cases:
         // a non-match lookup field with a NaN range still reports 0 ..
         // 2^bits-1 (QUIRKS Q16), and an unsigned 64-bit resolution-1 field

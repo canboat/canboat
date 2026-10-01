@@ -30,8 +30,8 @@ fields:
   description: 0.1 kPa per bit
   type: NUMBER
   bits: 8
-  unit: kPa
-  resolution: 0.1
+  unit: Pa
+  resolution: 100.0
 - id: engineIntakeManifold1AbsolutePressureHighResolution
   name: Engine Intake Manifold 1 Absolute Pressure (High Resolution)
   spn: 4817

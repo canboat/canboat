@@ -25,7 +25,7 @@ fields:
 - id: engineCrankcasePressure
   name: Engine Crankcase Pressure
   spn: 101
-  type: PRESSURE_UFIX16_J1939_CRANKCASE
+  type: PRESSURE_UFIX16_J1939_OFFSET
 - id: engineCoolantPressure
   name: Engine Coolant Pressure
   spn: 109

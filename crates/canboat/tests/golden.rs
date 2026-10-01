@@ -431,6 +431,11 @@ fn j1939_iso_tp_text() {
 /// in J1939-73's bit order (0x40 = malfunction indicator on), and DTCs
 /// whose SPN is split around the FMI (64 00 01 03 = SPN 100, FMI 1, OC 3;
 /// 00 f0 e2 05 = SPN 61440 + 7 * 65536 = 520192, FMI 2, OC 5).
+/// SI units and offsets: EGR differential pressure 0x7d40 = 0.5 kPa
+/// (1/128 kPa from -250 kPa); transmission clutch and oil pressure at
+/// 16 kPa per bit; oil level deviation 0x81 = +2 L (0.5 L from -62.5 L,
+/// the first fractional offset); rated power 0x0320 = 400 kW; ECU
+/// distance 0x320 = 100 km and run time 100 = 5 h.
 #[test]
 fn j1939_scaling_text() {
     run_case(

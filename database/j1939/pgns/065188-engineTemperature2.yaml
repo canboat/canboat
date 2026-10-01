@@ -17,10 +17,7 @@ fields:
   name: Engine Exhaust Gas Recirculation 1 Differential Pressure
   spn: 411
   description: 1/128 kPa per bit with a -250 kPa offset
-  type: NUMBER
-  bits: 16
-  unit: kPa
-  resolution: 0.0078125
+  type: PRESSURE_UFIX16_J1939_OFFSET
 - id: engineExhaustGasRecirculation1Temperature
   name: Engine Exhaust Gas Recirculation 1 Temperature
   spn: 412
