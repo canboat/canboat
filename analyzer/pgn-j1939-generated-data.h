@@ -177,10 +177,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 64, .resolution = 1.0}
      },
      .camelDescription = "0xef00ManufacturerProprietarySingleFrameAddressed",
      .fallback = true,
@@ -191,10 +188,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 64, .resolution = 1.0}
      },
      .camelDescription = "0xf0000xfeffStandardizedSingleFrameNonAddressed",
      .fallback = true,
@@ -1144,10 +1138,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_SINGLE,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 48, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 64, .resolution = 1.0}
      },
      .camelDescription = "0xff000xffffManufacturerProprietarySingleFrameNonAddressed",
      .fallback = true,
@@ -1169,10 +1160,7 @@ Pgn pgnList[] = {
      PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
      PACKET_FAST,
      {
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
-      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 2, .resolution = 1.0},
-      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "LOOKUP", .size = 3, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupINDUSTRY_CODE, .lookup.name = "INDUSTRY_CODE"},
-      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1768, .resolution = 1.0}
+      {.name = "Data", .camelName = "data", .fieldType = "BINARY", .size = 1784, .resolution = 1.0}
      },
      .camelDescription = "0x1ef000x1efffManufacturerProprietaryFastPacketAddressed",
      .fallback = true,
