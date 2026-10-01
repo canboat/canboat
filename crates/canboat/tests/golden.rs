@@ -391,7 +391,12 @@ fn j1939_catchall_text() {
     run_case(
         "j1939-catchall.in",
         "j1939-catchall.out",
-        &["--bus", "j1939", "--fixtime", "2023-12-10T18:58:21.487Z"],
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
     );
 }
 
@@ -405,7 +410,12 @@ fn j1939_iso_tp_text() {
     run_case(
         "j1939-iso-tp.in",
         "j1939-iso-tp.out",
-        &["--bus", "j1939", "--fixtime", "2023-12-10T18:58:21.487Z"],
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
     );
 }
 

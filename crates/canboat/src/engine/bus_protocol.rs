@@ -29,10 +29,10 @@ pub enum BusProtocol {
 }
 
 impl BusProtocol {
-    /// Every protocol, in the order `--bus` lists them.
+    /// Every protocol, in the order `--protocol` lists them.
     pub const ALL: [BusProtocol; 2] = [BusProtocol::Nmea2000, BusProtocol::J1939];
 
-    /// The `--bus` spelling: `nmea2000` or `j1939`.
+    /// The `--protocol` spelling: `nmea2000` or `j1939`.
     pub fn as_str(self) -> &'static str {
         match self {
             BusProtocol::Nmea2000 => "nmea2000",

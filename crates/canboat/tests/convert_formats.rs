@@ -38,13 +38,19 @@ fn run(args: &[&str], input: &[u8]) -> Vec<u8> {
     out.stdout
 }
 
-/// Two different `--bus` protocols are refused on every path, including
+/// Two different `--protocol` values are refused on every path, including
 /// the frame-level one that never consults a PGN table.
 #[test]
 fn two_buses_are_refused_before_any_output() {
     let out = Command::new(canboat())
         .args([
-            "convert", "--to", "plain", "--bus", "nmea2000", "--bus", "j1939",
+            "convert",
+            "--to",
+            "plain",
+            "--protocol",
+            "nmea2000",
+            "--protocol",
+            "j1939",
         ])
         .stdin(Stdio::null())
         .output()

@@ -147,14 +147,14 @@ pub struct Args {
     )]
     canboat_csv: Option<String>,
 
-    /// `--bus j1939` decodes against the J1939 table and runs the
+    /// `--protocol j1939` decodes against the J1939 table and runs the
     /// SocketCAN gateway as a J1939 node: single frames and ISO TP, no
     /// fast-packet, and no NMEA 2000 Heartbeat, Product Information or
     /// PGN lists. Needs a source that passes raw CAN frames
     /// (`--socketcan`, `--canboat-csv` or stdin); the NGT-1, iKonvert
     /// and Maretron do NMEA 2000 framing themselves.
     #[command(flatten)]
-    bus: crate::cli::bus::BusArgs,
+    protocol: crate::cli::protocol::ProtocolArgs,
 
     /// Separate sink for outbound PLAIN/FAST frames when chaining
     /// via `--canboat-csv`: the peer's write-only input port
@@ -390,10 +390,10 @@ pub struct BridgeConfig {
     /// Bit rate `socketcan_configure_link` sets: 250 000 (the default,
     /// and always right for NMEA 2000) or 500 000 for a J1939-14 bus.
     pub socketcan_bitrate: u32,
-    /// What the bus carries (`--bus`): picks the decode table and, with
+    /// What the bus carries (`--protocol`): picks the decode table and, with
     /// `socketcan`, whether the gateway is an NMEA 2000 or a J1939 node.
     /// Defaults to [`BusProtocol::Nmea2000`](crate::engine::BusProtocol).
-    pub bus: crate::engine::BusProtocol,
+    pub protocol: crate::engine::BusProtocol,
     pub canboat_csv: Option<String>,
     pub canboat_csv_write: Option<String>,
     pub baud: Option<u32>,
@@ -464,7 +464,7 @@ impl Default for BridgeConfig {
             socketcan_address: 0,
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
-            bus: crate::engine::BusProtocol::Nmea2000,
+            protocol: crate::engine::BusProtocol::Nmea2000,
             canboat_csv: None,
             canboat_csv_write: None,
             baud: None,
@@ -509,10 +509,10 @@ impl Args {
         self.shape.warn_deprecated();
     }
 
-    /// Reject what clap cannot: today, more than one `--bus`. Call
+    /// Reject what clap cannot: today, more than one `--protocol`. Call
     /// before converting to a [`BridgeConfig`].
     pub fn check(&self) -> anyhow::Result<()> {
-        self.bus.protocol().map(|_| ())
+        self.protocol.resolve().map(|_| ())
     }
 }
 
@@ -529,10 +529,10 @@ impl From<Args> for BridgeConfig {
             // configured interface; only library embedders (merrimac) opt in.
             socketcan_configure_link: false,
             socketcan_bitrate: 250_000,
-            bus: a
-                .bus
-                .protocol()
-                .expect("Args::check rejects a --bus this cannot convert"),
+            protocol: a
+                .protocol
+                .resolve()
+                .expect("Args::check rejects a --protocol this cannot convert"),
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
             baud: a.baud,
@@ -606,13 +606,13 @@ struct OpenedSource {
 // explicit `BridgeConfig.config_dir` (or `None` to disable persistence).
 
 fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
-    if config.bus != crate::engine::BusProtocol::Nmea2000
+    if config.protocol != crate::engine::BusProtocol::Nmea2000
         && (config.actisense.is_some() || config.ikonvert.is_some() || config.maretron.is_some())
     {
         anyhow::bail!(
-            "--bus {}: the NGT-1, iKonvert and Maretron do NMEA 2000 framing themselves; \
+            "--protocol {}: the NGT-1, iKonvert and Maretron do NMEA 2000 framing themselves; \
              use --socketcan, --canboat-csv or stdin",
-            config.bus
+            config.protocol
         );
     }
     if let Some(path) = config.actisense.as_deref() {
@@ -746,7 +746,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             configure_link: config.socketcan_configure_link,
             pgn_lists: pgn_lists.clone(),
             learn_tx_pgns: config.learn_tx_pgns,
-            bus: config.bus,
+            protocol: config.protocol,
             bitrate: config.socketcan_bitrate,
             ..device::socketcan::Config::default()
         };

@@ -123,7 +123,7 @@ mod config {
         /// what the two share — address claim, ISO Request and ISO TP —
         /// frames everything as single frames, and claims a NAME in the
         /// Global industry group.
-        pub bus: BusProtocol,
+        pub protocol: BusProtocol,
         /// Bit rate for the managed bring-up (`configure_link`). NMEA 2000
         /// is always 250 kbit/s; J1939 is 250 kbit/s (J1939-11/-15) or
         /// 500 kbit/s (J1939-14).
@@ -144,7 +144,7 @@ mod config {
                 configure_link: false,
                 pgn_lists: PgnLists::default(),
                 learn_tx_pgns: true,
-                bus: BusProtocol::Nmea2000,
+                protocol: BusProtocol::Nmea2000,
                 bitrate: 250_000,
             }
         }
@@ -308,7 +308,7 @@ mod imp {
         // PC Gateway (130) / Inter-Intranetwork Device (25); arbitrary-
         // address-capable is the builder's default. Marine industry group
         // on NMEA 2000, Global on J1939.
-        let industry_group = match config.bus {
+        let industry_group = match config.protocol {
             BusProtocol::J1939 => 0,
             _ => 4,
         };
@@ -464,10 +464,10 @@ mod imp {
         /// The shared address-claim state machine (owns NAME, address,
         /// state, and the used-address table).
         claim: AddressClaim,
-        /// `Config::bus`. The NMEA 2000-only responders (Heartbeat,
+        /// `Config::protocol`. The NMEA 2000-only responders (Heartbeat,
         /// Product Information, PGN lists, Group Function) stay silent
         /// on J1939.
-        bus: BusProtocol,
+        protocol: BusProtocol,
         heartbeat_interval: u64, // ms, 0 disables
         heartbeat_seq: u8,
         next_heartbeat: u64,    // ms
@@ -527,10 +527,10 @@ mod imp {
                 // the bit), so we yield and move on a lost conflict.
                 AddressClaim::new(name, config.address, true)
             };
-            let nmea2000 = config.bus == BusProtocol::Nmea2000;
+            let nmea2000 = config.protocol == BusProtocol::Nmea2000;
             Self {
                 claim,
-                bus: config.bus,
+                protocol: config.protocol,
                 heartbeat_interval: if nmea2000 { config.heartbeat_ms } else { 0 },
                 heartbeat_seq: 0,
                 next_heartbeat: 0,
@@ -597,7 +597,7 @@ mod imp {
                 return; // need a claimed address to answer from
             }
 
-            let nmea2000 = self.bus == BusProtocol::Nmea2000;
+            let nmea2000 = self.protocol == BusProtocol::Nmea2000;
             match requested {
                 PGN_PRODUCT_INFO if nmea2000 => self.send_product_info(bus),
                 PGN_PGN_LIST if nmea2000 => self.send_pgn_list(bus, src),
@@ -743,7 +743,7 @@ mod imp {
             // arm the heartbeat / network-status timers.
             if !was_claimed && self.claim.is_claimed() {
                 log::info!("Address {} claimed", self.addr());
-                if self.bus == BusProtocol::Nmea2000 {
+                if self.protocol == BusProtocol::Nmea2000 {
                     self.send_product_info(bus);
                 }
                 if self.heartbeat_interval > 0 {
@@ -1167,11 +1167,11 @@ mod imp {
         // the coalesced result. A real single-frame PGN takes the
         // `PassThrough` branch unchanged; a fast-packet PGN accumulates
         // until `Complete`; ISO TP is reassembled on either bus.
-        let pt = claimer.bus.packet_type(pgn);
+        let pt = claimer.protocol.packet_type(pgn);
         match reasm.push(single_frame, pt) {
             Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
                 if claimer.claim.state() != ClaimState::Disabled
-                    && claimer.bus == BusProtocol::Nmea2000
+                    && claimer.protocol == BusProtocol::Nmea2000
                     && f.pgn == PGN_GROUP_FUNCTION
                 {
                     claimer.handle_group_function(bus, src, &f.data);
@@ -1369,7 +1369,7 @@ mod imp {
         // Reset the claim atom to "unclaimed" so a reconnect resumes
         // with no stale value visible to consumers.
         claim_addr.store(super::CLAIM_UNCLAIMED, Ordering::Relaxed);
-        let mut tx_buf = TxBuffer::with_protocol(config.bus);
+        let mut tx_buf = TxBuffer::with_protocol(config.protocol);
         let mut last_published_addr: u8 = super::CLAIM_UNCLAIMED;
         // Fast-packet reassembler driven by the build-time
         // `fastpacket` table. The library hands fully coalesced
@@ -2100,7 +2100,7 @@ mod imp {
 
         fn j1939_config() -> Config {
             Config {
-                bus: BusProtocol::J1939,
+                protocol: BusProtocol::J1939,
                 ..Default::default()
             }
         }

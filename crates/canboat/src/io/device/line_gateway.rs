@@ -24,9 +24,9 @@ use crate::engine::{BusProtocol, FramePacketType, RawFrame};
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
 use crate::engine::fastpacket;
 
-/// Which line protocol the socket speaks.
+/// Which line format the socket speaks.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum Protocol {
+pub enum LineFormat {
     /// Yacht Devices RAW: `HH:MM:SS.mmm R <CANID> <bytes…>` per CAN
     /// frame received; transmit lines are `<CANID> <bytes…>`.
     YdwgRaw,
@@ -36,23 +36,23 @@ pub enum Protocol {
 }
 
 pub struct Decoder {
-    protocol: Protocol,
+    format: LineFormat,
     /// Decides which RAW frames are fast-packet fragments.
-    bus: BusProtocol,
+    protocol: BusProtocol,
     acc: String,
     reassembler: Reassembler,
 }
 
 impl Decoder {
     #[cfg(test)]
-    pub fn new(protocol: Protocol) -> Self {
-        Self::with_bus(protocol, BusProtocol::Nmea2000)
+    pub fn new(format: LineFormat) -> Self {
+        Self::with_protocol(format, BusProtocol::Nmea2000)
     }
 
-    pub fn with_bus(protocol: Protocol, bus: BusProtocol) -> Self {
+    pub fn with_protocol(format: LineFormat, protocol: BusProtocol) -> Self {
         Self {
+            format,
             protocol,
-            bus,
             acc: String::with_capacity(256),
             reassembler: Reassembler::new(),
         }
@@ -68,8 +68,8 @@ impl DeviceDecoder for Decoder {
             if line.is_empty() {
                 continue;
             }
-            match self.protocol {
-                Protocol::YdwgRaw => {
+            match self.format {
+                LineFormat::YdwgRaw => {
                     // The gateway echoes our own transmissions with a
                     // `T` direction marker — skip them, we already
                     // emitted the coalesced frame on send.
@@ -78,7 +78,7 @@ impl DeviceDecoder for Decoder {
                     }
                     match ydwg02::parse_line(&line) {
                         Ok(frame) => {
-                            let pt = self.bus.packet_type(frame.pgn);
+                            let pt = self.protocol.packet_type(frame.pgn);
                             match self.reassembler.push(frame, pt) {
                                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
                                     events.push(DeviceEvent::Frame(f))
@@ -92,7 +92,7 @@ impl DeviceDecoder for Decoder {
                         Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                     }
                 }
-                Protocol::N2kAscii => match actisense_ascii::parse_line(&line) {
+                LineFormat::N2kAscii => match actisense_ascii::parse_line(&line) {
                     Ok(frame) => events.push(DeviceEvent::Frame(frame)),
                     Err(e) => events.push(DeviceEvent::Error(format!("{line}: {e}"))),
                 },
@@ -102,23 +102,23 @@ impl DeviceDecoder for Decoder {
 }
 
 pub struct Encoder {
-    protocol: Protocol,
+    format: LineFormat,
     /// Decides which RAW transmissions are fast-packet framed.
-    bus: BusProtocol,
+    protocol: BusProtocol,
     /// Per-(pgn, src) fast-packet TX sequence counters, mod 8.
     seq: Mutex<HashMap<(u32, u8), u8>>,
 }
 
 impl Encoder {
     #[cfg(test)]
-    pub fn new(protocol: Protocol) -> Self {
-        Self::with_bus(protocol, BusProtocol::Nmea2000)
+    pub fn new(format: LineFormat) -> Self {
+        Self::with_protocol(format, BusProtocol::Nmea2000)
     }
 
-    pub fn with_bus(protocol: Protocol, bus: BusProtocol) -> Self {
+    pub fn with_protocol(format: LineFormat, protocol: BusProtocol) -> Self {
         Self {
+            format,
             protocol,
-            bus,
             seq: Mutex::new(HashMap::new()),
         }
     }
@@ -139,12 +139,12 @@ impl DeviceEncoder for Encoder {
             return None;
         }
         let mut out = String::with_capacity(64);
-        match self.protocol {
-            Protocol::N2kAscii => {
+        match self.format {
+            LineFormat::N2kAscii => {
                 actisense_ascii::write_line(&mut out, frame).ok()?;
                 out.push_str("\r\n");
             }
-            Protocol::YdwgRaw => {
+            LineFormat::YdwgRaw => {
                 let canid = iso11783_compose(frame.prio, frame.pgn, frame.src, frame.dst);
                 let write_one = |out: &mut String, data: &[u8]| {
                     let _ = write!(out, "{canid:08X}");
@@ -153,7 +153,7 @@ impl DeviceEncoder for Encoder {
                     }
                     out.push_str("\r\n");
                 };
-                if self.bus.packet_type(frame.pgn) == FramePacketType::Fast {
+                if self.protocol.packet_type(frame.pgn) == FramePacketType::Fast {
                     let seq = self.next_seq(frame.pgn, frame.src);
                     let Some(chunks) = fastpacket::fragment(seq, &frame.data) else {
                         log::warn!(
@@ -188,12 +188,12 @@ impl DeviceEncoder for Encoder {
 pub fn run(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,
-    protocol: Protocol,
-    bus: BusProtocol,
+    format: LineFormat,
+    protocol: BusProtocol,
 ) -> DeviceHandle {
     super::run(
-        Decoder::with_bus(protocol, bus),
-        Encoder::with_bus(protocol, bus),
+        Decoder::with_protocol(format, protocol),
+        Encoder::with_protocol(format, protocol),
         reader,
         writer,
     )
@@ -222,7 +222,7 @@ mod tests {
     #[test]
     fn raw_single_frame_round_trips() {
         let f = frame(130306, &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]);
-        let enc = Encoder::new(Protocol::YdwgRaw);
+        let enc = Encoder::new(LineFormat::YdwgRaw);
         let tx = String::from_utf8(enc.encode_frame(&f).unwrap()).unwrap();
         // TX shape: bare `<CANID> <bytes…>`; the gateway's RX lines add
         // a time-of-day and direction, which the decoder expects.
@@ -230,7 +230,7 @@ mod tests {
             .lines()
             .map(|l| format!("00:00:01.000 R {l}\r\n"))
             .collect();
-        let mut dec = Decoder::new(Protocol::YdwgRaw);
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
         let out = decode_all(&mut dec, &rx);
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].pgn, 130306);
@@ -242,14 +242,14 @@ mod tests {
         // 129029 GNSS Position Data: 43-byte fast-packet payload.
         let payload: Vec<u8> = (0u8..43).collect();
         let f = frame(129029, &payload);
-        let enc = Encoder::new(Protocol::YdwgRaw);
+        let enc = Encoder::new(LineFormat::YdwgRaw);
         let tx = String::from_utf8(enc.encode_frame(&f).unwrap()).unwrap();
         assert_eq!(tx.lines().count(), 7, "43 bytes -> 1x6 + 6x7 chunk frames");
         let rx: String = tx
             .lines()
             .map(|l| format!("00:00:01.000 R {l}\r\n"))
             .collect();
-        let mut dec = Decoder::new(Protocol::YdwgRaw);
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
         let out = decode_all(&mut dec, &rx);
         assert_eq!(out.len(), 1, "fragments must reassemble to one frame");
         assert_eq!(out[0].pgn, 129029);
@@ -258,7 +258,7 @@ mod tests {
 
     #[test]
     fn raw_skips_transmit_echoes_and_partial_lines() {
-        let mut dec = Decoder::new(Protocol::YdwgRaw);
+        let mut dec = Decoder::new(LineFormat::YdwgRaw);
         // A transmit echo is skipped; a split line is buffered across
         // reads and completes on the second push.
         let out = decode_all(
@@ -277,10 +277,10 @@ mod tests {
         // parser: W2K lines carry complete messages, no reassembly.
         let payload: Vec<u8> = (0u8..43).collect();
         let f = frame(129029, &payload);
-        let enc = Encoder::new(Protocol::N2kAscii);
+        let enc = Encoder::new(LineFormat::N2kAscii);
         let tx = String::from_utf8(enc.encode_frame(&f).unwrap()).unwrap();
         assert_eq!(tx.lines().count(), 1);
-        let mut dec = Decoder::new(Protocol::N2kAscii);
+        let mut dec = Decoder::new(LineFormat::N2kAscii);
         let out = decode_all(&mut dec, &tx);
         assert_eq!(out.len(), 1);
         assert_eq!(out[0].pgn, 129029);
@@ -289,7 +289,7 @@ mod tests {
 
     #[test]
     fn synthetic_pgns_are_dropped() {
-        let enc = Encoder::new(Protocol::YdwgRaw);
+        let enc = Encoder::new(LineFormat::YdwgRaw);
         assert!(enc.encode_frame(&frame(0x40200, &[1, 2, 3])).is_none());
     }
 }

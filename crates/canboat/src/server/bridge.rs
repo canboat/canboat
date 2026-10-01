@@ -117,13 +117,13 @@ impl Bridge {
         // Every quirk reads or synthesises NMEA 2000 PGNs (an SCX-20, a
         // Motion Sensor, PGN 127258, GNSS week rollover); on another bus
         // the same PGN numbers mean something else.
-        if config.bus != crate::engine::BusProtocol::Nmea2000
+        if config.protocol != crate::engine::BusProtocol::Nmea2000
             && let Some(kind) = config.quirk.first()
         {
             anyhow::bail!(
-                "--quirk {} works on NMEA 2000 PGNs and cannot run with --bus {}",
+                "--quirk {} works on NMEA 2000 PGNs and cannot run with --protocol {}",
                 kind.name(),
-                config.bus
+                config.protocol
             );
         }
         // The scx20 and motion quirks impersonate a device (motion claims a
@@ -146,7 +146,7 @@ impl Bridge {
         // path discovery, no synthetic-PGN merge — `keel generate`
         // already folded `data/synthetic-pgns.json` into the static tables.
         let units = config.units;
-        let db = config.bus.database(units);
+        let db = config.protocol.database(units);
 
         // JsonOptions mirror the pipeline's per-record serializer settings
         // so per-iteration snapshot lines (PGN 130824 etc.) come out
@@ -669,12 +669,12 @@ mod tests {
     #[test]
     fn quirks_need_an_nmea2000_bus() {
         let config = crate::server::BridgeConfig {
-            bus: crate::engine::BusProtocol::J1939,
+            protocol: crate::engine::BusProtocol::J1939,
             quirk: vec![crate::server::quirks::QuirkKind::Wmm],
             ..Default::default()
         };
         let err = super::Bridge::new(config).err().expect("refused");
-        assert!(err.to_string().contains("--bus j1939"), "{err}");
+        assert!(err.to_string().contains("--protocol j1939"), "{err}");
     }
 
     #[test]
