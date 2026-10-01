@@ -693,8 +693,8 @@
   <xsl:template match="/">
 
     <xsl:variable name="license" select="/PGNDefinitions/License/text()"/>
-    <!-- Which bus this document describes; absent (pre-2.7.0) means NMEA 2000. -->
-    <xsl:variable name="j1939" select="/PGNDefinitions/Bus = 'j1939'"/>
+    <!-- Which protocol this document describes; absent (pre-2.7.0) means NMEA 2000. -->
+    <xsl:variable name="j1939" select="/PGNDefinitions/Protocol = 'j1939'"/>
 
     <html lang="en">
       <head>

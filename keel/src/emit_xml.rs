@@ -111,7 +111,7 @@ impl<'a> Emitter<'a> {
     /// `styled` drives the stylesheet PI: canboat.xsl only ships for the main
     /// document, and the sections it styles are absent from the Actisense /
     /// iKonvert BEM documents anyway.
-    fn header(&mut self, styled: bool, bus: Option<&str>) {
+    fn header(&mut self, styled: bool, protocol: Option<&str>) {
         let cp = copyright(&self.db.version);
         self.p("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         self.p(GENERATED_WARNING);
@@ -137,8 +137,8 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             self.db.version
         ));
         self.p(&format!("  <Copyright>{cp}\n</Copyright>\n"));
-        if let Some(bus) = bus {
-            self.p(&format!("  <Bus>{bus}</Bus>\n"));
+        if let Some(protocol) = protocol {
+            self.p(&format!("  <Protocol>{protocol}</Protocol>\n"));
         }
     }
 
@@ -659,12 +659,12 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
 
     pub fn emit(mut self, which: &str) -> String {
         let full = which == "normal" || which == "j1939";
-        let bus = match which {
+        let protocol = match which {
             "normal" => Some("nmea2000"),
             "j1939" => Some("j1939"),
             _ => None,
         };
-        self.header(full, bus);
+        self.header(full, protocol);
         if full {
             // The J1939 document is the "normal" layout of the J1939 build
             // (analyzer-explain-j1939): full sections, its own pgnList.

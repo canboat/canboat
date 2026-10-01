@@ -72,10 +72,10 @@ limitations under the License.
       <xs:element type="xs:string" name="License"/>
       <xs:element type="xs:string" name="Version"/>
       <xs:element type="xs:string" name="Copyright"/>
-      <xs:element type="Bus" name="Bus" minOccurs="0">
+      <xs:element type="Protocol" name="Protocol" minOccurs="0">
         <xs:annotation>
           <xs:documentation>
-            What the bus these PGNs are carried on speaks. NMEA 2000
+            The protocol on the CAN bus these PGNs are carried on. NMEA 2000
             (docs/canboat.xml) and SAE J1939 (docs/canboat-j1939.xml) share
             the ISO 11783 frame header, address claim and transport protocol
             but define different PGNs, and only NMEA 2000 has fast-packet
@@ -95,7 +95,7 @@ limitations under the License.
     </xs:sequence>
   </xs:complexType>
 
-  <xs:simpleType name="Bus">
+  <xs:simpleType name="Protocol">
     <xs:restriction base="xs:string">
       <xs:enumeration value="nmea2000"/>
       <xs:enumeration value="j1939"/>

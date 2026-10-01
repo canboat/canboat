@@ -208,12 +208,12 @@
        priority is required: these patterns and the generic text() predicates below both have
        default priority 0.5, which would otherwise be an ambiguous rule match. -->
   <xsl:template priority="2"
-                match="Bus/text() | Comment/text() | Condition/text() | Copyright/text() | CreatorCode/text()
+                match="Comment/text() | Condition/text() | Copyright/text() | CreatorCode/text()
                      | Description/text() | EncodingDescription/text() | Explanation/text()
                      | FieldType/text() | Id/text() | License/text() | LookupBitEnumeration/text()
                      | LookupEnumeration/text() | LookupFieldTypeEnumeration/text()
                      | LookupIndirectEnumeration/text() | MissingAttribute/text() | Name/text()
-                     | PhysicalQuantity/text() | ResearchDoc/text() | SchemaVersion/text()
+                     | PhysicalQuantity/text() | Protocol/text() | ResearchDoc/text() | SchemaVersion/text()
                      | Type/text() | Unit/text() | UnitDescription/text() | URL/text()
                      | Version/text()">
     <xsl:call-template name="escape-string">
