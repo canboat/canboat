@@ -70,7 +70,7 @@ limitations under the License.
             There are a number of PGN (Parameter Group Number) ranges. When expressed in decimal the ranges do not make much sense, but in hexadecimal they do -- which is explained above.
             The PGN ranges are divided up by PDU1/PDU2 but also by the fact that there is the need to have manufacture private PGNs, so some blocks have been carved out for this purpose.
             The ranges are:
-          </p><table><thead><tr><th>Range Hex</th><th>Range Dec</th><th>PDU</th><th>Step</th><th>Number of possible PGNs</th><th>Use</th><th>Framing</th></tr></thead><tbody><tr><td><a href="#pgn-0">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td/><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td/><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr></tbody></table><p><b>Note:</b> There are some missing ranges in the above table: Apparently no PGN is used in range 0x0000-0xE700 or 0x10000-0x1EC00. The reason is not obvious to me. Maybe someone can enlighten us?
+          </p><table><thead><tr><th>Range Hex</th><th>Range Dec</th><th>PDU</th><th>Step</th><th>Number of possible PGNs</th><th>Use</th><th>Framing</th></tr></thead><tbody><tr><td><a href="#pgn-59392">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td/><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126208">0x1ED00-0x1EE00</a></td><td>126208 - 126464</td><td>PDU1</td><td>256</td><td>2</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126720">0x1EF00</a></td><td>126720</td><td>PDU1</td><td/><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-126976">0x1F000-0x1FEFF</a></td><td>126976 - 130815</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr><tr><td><a href="#pgn-130816">0x1FF00-0x1FFFF</a></td><td>130816 - 131071</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr></tbody></table><p><b>Note:</b> There are some missing ranges in the above table: Apparently no PGN is used in range 0x0000-0xE700 or 0x10000-0x1EC00. The reason is not obvious to me. Maybe someone can enlighten us?
           </p><h2 id="packet-framing">Packet framing</h2><p>
             J1939 messages of 8 bytes or less are sent as a single CAN frame. Longer messages, up to 1785 bytes, use
             the ISO 11783 Transport Protocol: a connection management frame (<a href="#pgn-60416">PGN 60416</a>)
@@ -98,7 +98,7 @@ limitations under the License.
                       <a href="#lookup-ISO_CONTROL">ISO_CONTROL</a></td><td/></tr><tr><td>2</td><td>Group Function</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td>Parameter Group Number of requested information</td><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><h3 id="pgn-59904">0xEA00:
             PGN 59904
@@ -130,7 +130,7 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>SID</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td><div class="xs">0 .. 7.20575940379279e+16</div></td><td>56 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td/><td>56 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-60416">0xEC00:
             PGN 60416
             - ISO Transport Protocol, Connection Management - Request To Send</h3><p>
@@ -187,7 +187,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Next SID</td><td>Number of next frame to be transmitted</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
@@ -216,7 +216,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Total number of frames received</td><td>Total number of of frames received</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
@@ -245,7 +245,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Packets</td><td>frames</td><td><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>PGN</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
@@ -268,8 +268,8 @@ limitations under the License.
                   Abort</td><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                       lookup
-                      <a href="#lookup-ISO_COMMAND">ISO_COMMAND</a></td><td/></tr><tr><td>2</td><td>Reason</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
+                      <a href="#lookup-ISO_COMMAND">ISO_COMMAND</a></td><td/></tr><tr><td>2</td><td>Reason</td><td/><td/><td>8 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>PGN</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
                   <a href="#ft-PGN">PGN</a></td><td/></tr></table><p>
               Source:
@@ -305,7 +305,7 @@ limitations under the License.
                       where the first column is the value from field 
                         7
                         ("Device Class")
-                    </td><td/></tr><tr><td>6</td><td>Spare</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                    </td><td/></tr><tr><td>6</td><td>Spare</td><td/><td/><td>1 bits
                   <a href="#ft-SPARE">SPARE</a></td><td/></tr><tr><td>7</td><td>Device Class</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
                   
                       lookup
@@ -353,7 +353,7 @@ limitations under the License.
                       <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>8</td><td>Progressive Shift Disable</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                      <a href="#lookup-YES_NO">YES_NO</a></td><td/></tr><tr><td>9</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>10</td><td>Transmission Input Shaft Speed</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   
                         unsigned
@@ -393,7 +393,7 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Vehicle Acceleration Rate Limit Status</td><td>SPN 2979</td><td><div class="xs">0 .. 2</div></td><td>2 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Momentary Engine Maximum Power Enable</td><td>SPN 2896</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Actual Maximum Available Engine - Percent Torque</td><td>SPN 3357</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
                         unsigned
@@ -428,7 +428,7 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Source Address of Controlling Device for Engine Control</td><td>SPN 1483</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Engine Starter Mode</td><td>SPN 1675</td><td><div class="xs">0 .. 14</div></td><td>4 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Engine Demand - Percent Torque</td><td>SPN 2432</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
                   
                         signed
@@ -474,7 +474,7 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Exhaust Gas Recirculation 1 Mass Flow Rate</td><td>SPN 2659, 0.05 kg/h per bit</td><td>0.05 kg/h<div class="xs">0 .. 3276.6</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Intake Air Mass Flow Rate</td><td>SPN 132, 0.05 kg/h per bit</td><td>0.05 kg/h<div class="xs">0 .. 3276.6</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 2 Mass Flow Rate</td><td>SPN 5257, 0.05 kg/h per bit</td><td>0.05 kg/h<div class="xs">0 .. 3276.6</div></td><td>16 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64709">0xFCC5:
             PGN 64709
             - Aftertreatment 1 SCR Exhaust Gas Temperature 2</h3><p/><p>
@@ -495,7 +495,7 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
                           stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI</td><td>SPN 5863</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 8796093022204</div></td><td>43 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>43 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64740">0xFCE4:
             PGN 64740
             - Engine Fuel Properties</h3><p/><p>
@@ -617,7 +617,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature Preliminary FMI</td><td>SPN 4768</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature Preliminary FMI</td><td>SPN 4769</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure Preliminary FMI</td><td>SPN 4770</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64908">0xFD8C:
             PGN 64908
             - Aftertreatment 1 Gas Parameters</h3><p/><p>
@@ -639,7 +639,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Particulate Filter Outlet Pressure</td><td>SPN 3610, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64914">0xFD92:
             PGN 64914
             - Engine Operating Information</h3><p/><p>
@@ -706,7 +706,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Aftertreatment 1 Exhaust Gas Temperature 2 Preliminary FMI</td><td>SPN 3252</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature Preliminary FMI</td><td>SPN 3253</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Aftertreatment 1 Diesel Particulate Filter Differential Pressure Preliminary FMI</td><td>SPN 3254</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64947">0xFDB3:
             PGN 64947
             - Aftertreatment 1 Outlet Gas 2</h3><p/><p>
@@ -730,9 +730,9 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Outlet Gas Temperature 2 Preliminary FMI</td><td>SPN 3247</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Aftertreatment 1 Outlet Gas Pressure 2 Preliminary FMI</td><td>SPN 3248</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td><div class="xs">0 .. 524284</div></td><td>19 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>19 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64948">0xFDB4:
             PGN 64948
             - Aftertreatment 1 Intake Gas 2</h3><p/><p>
@@ -756,9 +756,9 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Intake Gas Temperature 2 Preliminary FMI</td><td>SPN 3243</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>5</td><td>Aftertreatment 1 Intake Gas Pressure 2 Preliminary FMI</td><td>SPN 3244</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td><div class="xs">0 .. 524284</div></td><td>19 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>19 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64976">0xFDD0:
             PGN 64976
             - Intake/Exhaust Conditions 2</h3><p/><p>
@@ -813,7 +813,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.96875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65002">0xFDEA:
             PGN 65002
             - Bus #1 Phase B Basic AC Quantities</h3><p/><p>
@@ -834,7 +834,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.96875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65003">0xFDEB:
             PGN 65003
             - Bus #1 Phase A Basic AC Quantities</h3><p/><p>
@@ -855,7 +855,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.96875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65004">0xFDEC:
             PGN 65004
             - Bus #1 Average Basic AC Quantities</h3><p/><p>
@@ -876,7 +876,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>AC Frequency</td><td/><td>0.0078125 <a href="#pq-FREQUENCY">Hz</a><div class="xs">0 .. 511.96875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65005">0xFDED:
             PGN 65005
             - Utility Total AC Energy</h3><p/><p>
@@ -914,7 +914,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 1073741820</div></td><td>30 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65007">0xFDEF:
             PGN 65007
             - Utility Phase C AC Power</h3><p/><p>
@@ -977,7 +977,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 1073741820</div></td><td>30 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>30 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65010">0xFDF2:
             PGN 65010
             - Utility Phase B AC Power</h3><p/><p>
@@ -1041,7 +1041,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65013">0xFDF5:
             PGN 65013
             - Utility Phase A AC Power</h3><p/><p>
@@ -1105,7 +1105,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65016">0xFDF8:
             PGN 65016
             - Utility Total AC Power</h3><p/><p>
@@ -1186,7 +1186,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65020">0xFDFC:
             PGN 65020
             - Generator Phase C AC Power</h3><p/><p>
@@ -1250,7 +1250,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65023">0xFDFF:
             PGN 65023
             - Generator Phase B AC Power</h3><p/><p>
@@ -1314,7 +1314,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65026">0xFE02:
             PGN 65026
             - Generator Phase A AC Power</h3><p/><p>
@@ -1378,7 +1378,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Power Factor Lagging</td><td/><td><div class="xs">0 .. 2</div></td><td>2 bits
                   
                       lookup
-                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td><div class="xs">0 .. 16380</div></td><td>14 bits
+                      <a href="#lookup-POWER_FACTOR">POWER_FACTOR</a></td><td/></tr><tr><td>4</td><td>Reserved</td><td/><td/><td>14 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65029">0xFE05:
             PGN 65029
             - Generator Total AC Power</h3><p/><p>
@@ -1486,7 +1486,7 @@ limitations under the License.
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Engine Coolant Pre-heated State</td><td>SPN 3553</td><td><div class="xs">0 .. 2</div></td><td>2 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>10</td><td>Engine Ventilation Status</td><td>SPN 3554</td><td><div class="xs">0 .. 6</div></td><td>3 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>11</td><td>Fuel Pump Primer Status</td><td>SPN 4083</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>12</td><td>Reserved</td><td/><td/><td>3 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>13</td><td>Engine Fuel Supply Pump Intake Pressure</td><td>SPN 7104</td><td>2000 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 504000</div></td><td>8 bits
                   
                         unsigned
@@ -1553,7 +1553,7 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
+                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65190">0xFEA6:
             PGN 65190
             - Intake Manifold Information 1</h3><p/><p>
@@ -1609,7 +1609,7 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Fan Drive State</td><td>SPN 977</td><td><div class="xs">0 .. 13</div></td><td>4 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>4</td><td>Fan Speed</td><td>SPN 1639</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
                   
                         unsigned
@@ -1619,7 +1619,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Hydraulic Fan Motor Pressure 2</td><td>SPN 4212</td><td>500 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 126000</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65214">0xFEBE:
             PGN 65214
             - Electronic Engine Controller 4</h3><p/><p>
@@ -1639,9 +1639,9 @@ limitations under the License.
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Rotation Direction</td><td>SPN 3669</td><td><div class="xs">0 .. 2</div></td><td>2 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Intake Manifold Pressure Control Mode</td><td>SPN 5465</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td><div class="xs">0 .. 13</div></td><td>4 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>4 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>6</td><td>Crank Attempt Count on Present Start Attempt</td><td>SPN 3671</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65226">0xFECA:
             PGN 65226
             - Active Trouble Codes</h3><p/><p>
@@ -1659,15 +1659,15 @@ limitations under the License.
         6 
         (with name "SPN")
         form repeating set 1. The set is repeated until there is no more data in the PGN.
-      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Malfunction Lamp Status</td><td>Fault Lamps</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Red Stop Lamp Status</td><td>Fault Lamps</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>3</td><td>Amber Warning Lamp Status</td><td>Fault Lamps</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>4</td><td>Protect Lamp Status</td><td>Fault Lamps</td><td><div class="xs">0 .. 2</div></td><td>2 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>SPN</td><td>Suspect Parameter Number</td><td><div class="xs">0 .. 524284</div></td><td>19 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>FMI</td><td>Fault Mode Indicator</td><td><div class="xs">0 .. 29</div></td><td>5 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>CM</td><td>SPN Conversion Method</td><td><div class="xs">0 .. 1</div></td><td>1 bits
-                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>OC</td><td>Occurrence Count</td><td><div class="xs">0 .. 125</div></td><td>7 bits
+      </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Malfunction Lamp Status</td><td>Fault Lamps</td><td/><td>2 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Red Stop Lamp Status</td><td>Fault Lamps</td><td/><td>2 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>3</td><td>Amber Warning Lamp Status</td><td>Fault Lamps</td><td/><td>2 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>4</td><td>Protect Lamp Status</td><td>Fault Lamps</td><td/><td>2 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr class="repeatmarker"><td class="repeating">6<div>Set 1</div></td><td>SPN</td><td>Suspect Parameter Number</td><td/><td>19 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">7<div>Set 1</div></td><td>FMI</td><td>Fault Mode Indicator</td><td/><td>5 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">8<div>Set 1</div></td><td>CM</td><td>SPN Conversion Method</td><td/><td>1 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td class="repeating">9<div>Set 1</div></td><td>OC</td><td>Occurrence Count</td><td/><td>7 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-65240">0xFED8:
             PGN 65240
             - ISO Commanded Address</h3><p/><p>
@@ -1679,7 +1679,7 @@ limitations under the License.
             9
             bytes long and contains 11 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Unique Number</td><td>ISO Identity Number</td><td><div class="xs">0 .. 2097148</div></td><td>21 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Unique Number</td><td>ISO Identity Number</td><td/><td>21 bits
                   <a href="#ft-BINARY">BINARY</a></td><td/></tr><tr><td>2</td><td>Manufacturer Code</td><td/><td>Manufacturer Code<div class="xs">0 .. 2044</div></td><td>11 bits
                   
                       lookup
@@ -1696,7 +1696,7 @@ limitations under the License.
                       where the first column is the value from field 
                         7
                         ("Device Class")
-                    </td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                    </td><td/></tr><tr><td>6</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>7</td><td>Device Class</td><td/><td><div class="xs">0 .. 125</div></td><td>7 bits
                   
                       lookup
@@ -1706,7 +1706,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>9</td><td>Industry Code</td><td/><td><div class="xs">0 .. 6</div></td><td>3 bits
                   
                       lookup
-                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td><div class="xs">0 .. 1</div></td><td>1 bits
+                      <a href="#lookup-INDUSTRY_CODE">INDUSTRY_CODE</a></td><td/></tr><tr><td>10</td><td>Reserved</td><td/><td/><td>1 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>11</td><td>New Source Address</td><td/><td><div class="xs">0 .. 255</div></td><td>8 bits
                   
                         unsigned
@@ -1775,7 +1775,7 @@ limitations under the License.
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Estimated Engine Power Loss - Accessories</td><td>SPN 2978</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td><div class="xs">0 .. 16777212</div></td><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65253">0xFEE5:
             PGN 65253
             - Engine Hours, Revolutions</h3><p/><p>
@@ -1881,7 +1881,7 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Throttle Position</td><td>SPN 51</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td><div class="xs">0 .. 252</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>8 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65269">0xFEF5:
             PGN 65269
             - Ambient Conditions</h3><p/><p>
@@ -1896,7 +1896,7 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Barometric Pressure</td><td/><td>500 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 126000</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td><div class="xs">0 .. 7.20575940379279e+16</div></td><td>56 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Reserved</td><td/><td/><td>56 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65270">0xFEF6:
             PGN 65270
             - Inlet/Exhaust Conditions</h3><p/><p>
@@ -1946,11 +1946,11 @@ limitations under the License.
             8
             bytes long and contains 3 fields.
 
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reserved</td><td/><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Reserved</td><td/><td/><td>32 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>2</td><td>Battery Voltage</td><td/><td>0.05 <a href="#pq-POTENTIAL_DIFFERENCE">V</a><div class="xs">0 .. 3276.6</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>16 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65272">0xFEF8:
             PGN 65272
             - Transmission Fluids 1</h3><p/><p>

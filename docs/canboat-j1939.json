@@ -2323,8 +2323,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -2381,8 +2379,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16777212,
             "FieldType":"RESERVED"
           },
           {
@@ -2460,8 +2456,6 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":7.20575940379279e+16,
             "FieldType":"BINARY"
           }
         ]
@@ -2629,8 +2623,6 @@
             "BitOffset":24,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           },
           {
@@ -2717,8 +2709,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"RESERVED"
           },
           {
@@ -2805,8 +2795,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"RESERVED"
           },
           {
@@ -2859,8 +2847,6 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"BINARY"
           },
           {
@@ -2871,8 +2857,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16777212,
             "FieldType":"RESERVED"
           },
           {
@@ -2992,8 +2976,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"SPARE"
           },
           {
@@ -3080,8 +3062,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -3107,8 +3087,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -3253,8 +3231,6 @@
             "BitOffset":36,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":13,
             "FieldType":"RESERVED"
           },
           {
@@ -3470,8 +3446,6 @@
             "BitOffset":44,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":13,
             "FieldType":"RESERVED"
           },
           {
@@ -3648,8 +3622,6 @@
             "BitOffset":52,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":13,
             "FieldType":"RESERVED"
           },
           {
@@ -3826,8 +3798,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -3886,8 +3856,6 @@
             "BitOffset":21,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":8796093022204,
             "FieldType":"RESERVED"
           }
         ]
@@ -4319,8 +4287,6 @@
             "BitOffset":63,
             "BitStart":7,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"RESERVED"
           }
         ]
@@ -4382,8 +4348,6 @@
             "BitOffset":32,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":4294967292,
             "FieldType":"RESERVED"
           }
         ]
@@ -4789,8 +4753,6 @@
             "BitOffset":63,
             "BitStart":7,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"RESERVED"
           }
         ]
@@ -4868,8 +4830,6 @@
             "BitOffset":37,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":6,
             "FieldType":"RESERVED"
           },
           {
@@ -4895,8 +4855,6 @@
             "BitOffset":45,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":524284,
             "FieldType":"RESERVED"
           }
         ]
@@ -4974,8 +4932,6 @@
             "BitOffset":37,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":6,
             "FieldType":"RESERVED"
           },
           {
@@ -5001,8 +4957,6 @@
             "BitOffset":45,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":524284,
             "FieldType":"RESERVED"
           }
         ]
@@ -5224,8 +5178,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -5303,8 +5255,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -5382,8 +5332,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -5461,8 +5409,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -5585,8 +5531,6 @@
             "BitOffset":34,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1073741820,
             "FieldType":"RESERVED"
           }
         ]
@@ -5796,8 +5740,6 @@
             "BitOffset":34,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1073741820,
             "FieldType":"RESERVED"
           }
         ]
@@ -6008,8 +5950,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -6220,8 +6160,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -6481,8 +6419,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -6693,8 +6629,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -6905,8 +6839,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -7117,8 +7049,6 @@
             "BitOffset":50,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16380,
             "FieldType":"RESERVED"
           }
         ]
@@ -7548,8 +7478,6 @@
             "BitOffset":53,
             "BitStart":5,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":6,
             "FieldType":"RESERVED"
           },
           {
@@ -7767,8 +7695,6 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16777212,
             "FieldType":"RESERVED"
           }
         ]
@@ -7954,8 +7880,6 @@
             "BitOffset":12,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":13,
             "FieldType":"RESERVED"
           },
           {
@@ -8023,8 +7947,6 @@
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"RESERVED"
           }
         ]
@@ -8113,8 +8035,6 @@
             "BitOffset":36,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":13,
             "FieldType":"RESERVED"
           },
           {
@@ -8141,8 +8061,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -8169,8 +8087,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":2,
             "FieldType":"BINARY"
           },
           {
@@ -8182,8 +8098,6 @@
             "BitOffset":2,
             "BitStart":2,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":2,
             "FieldType":"BINARY"
           },
           {
@@ -8195,8 +8109,6 @@
             "BitOffset":4,
             "BitStart":4,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":2,
             "FieldType":"BINARY"
           },
           {
@@ -8208,8 +8120,6 @@
             "BitOffset":6,
             "BitStart":6,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":2,
             "FieldType":"BINARY"
           },
           {
@@ -8220,8 +8130,6 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"RESERVED"
           },
           {
@@ -8233,8 +8141,6 @@
             "BitOffset":16,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":524284,
             "FieldType":"BINARY"
           },
           {
@@ -8246,8 +8152,6 @@
             "BitOffset":35,
             "BitStart":3,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":29,
             "FieldType":"BINARY"
           },
           {
@@ -8259,8 +8163,6 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"BINARY"
           },
           {
@@ -8272,8 +8174,6 @@
             "BitOffset":41,
             "BitStart":1,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":125,
             "FieldType":"BINARY"
           }
         ]
@@ -8298,8 +8198,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":2097148,
             "FieldType":"BINARY"
           },
           {
@@ -8378,8 +8276,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"RESERVED"
           },
           {
@@ -8437,8 +8333,6 @@
             "BitOffset":63,
             "BitStart":7,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1,
             "FieldType":"RESERVED"
           },
           {
@@ -8680,8 +8574,6 @@
             "BitOffset":40,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":16777212,
             "FieldType":"RESERVED"
           }
         ]
@@ -9000,8 +8892,6 @@
             "BitOffset":56,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":252,
             "FieldType":"RESERVED"
           }
         ]
@@ -9043,8 +8933,6 @@
             "BitOffset":8,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":7.20575940379279e+16,
             "FieldType":"RESERVED"
           }
         ]
@@ -9213,8 +9101,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":4294967292,
             "FieldType":"RESERVED"
           },
           {
@@ -9243,8 +9129,6 @@
             "BitOffset":48,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":65532,
             "FieldType":"RESERVED"
           }
         ]
@@ -9422,8 +9306,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -9449,8 +9331,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -9476,8 +9356,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -9503,8 +9381,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]
@@ -9530,8 +9406,6 @@
             "BitOffset":0,
             "BitStart":0,
             "Resolution":1,
-            "RangeMin":0,
-            "RangeMax":1.84467440737096e+19,
             "FieldType":"BINARY"
           }
         ]

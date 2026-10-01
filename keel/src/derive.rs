@@ -298,12 +298,14 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             // The marine tree authors a range wherever its field type has no
             // sign to derive one from (keeping canboat.json as the C tables
             // had it). The J1939 tree does not, so there a plain NUMBER or
-            // PGN takes its range from its width like any other field:
-            // unsigned unless the field says otherwise, as J1939 encodes
-            // values (J1939-71 offsets do the rest).
+            // PGN takes its range from its width like any other numeric
+            // field: unsigned unless the field says otherwise, as J1939
+            // encodes values (J1939-71 offsets do the rest). Nonnumeric
+            // fields — RESERVED, BINARY, ... — keep none.
+            let j1939_numeric = !marine && matches!(ft.root_name.as_str(), "NUMBER" | "PGN");
             if f.res_bits != 0
                 && f.res_resolution != 0.0
-                && (ft_has_sign.is_some() || !marine)
+                && (ft_has_sign.is_some() || j1939_numeric)
                 && f.res_range_max.is_nan()
             {
                 f.res_range_min =

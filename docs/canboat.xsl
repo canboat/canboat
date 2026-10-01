@@ -928,7 +928,7 @@
             <xsl:choose>
               <xsl:when test="$j1939">
             <tbody>
-              <tr><td><a href="#pgn-0">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr>
+              <tr><td><a href="#pgn-59392">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame or ISO TP</td></tr>
               <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame or ISO TP</td></tr>
@@ -940,7 +940,7 @@
               </xsl:when>
               <xsl:otherwise>
             <tbody>
-              <tr><td><a href="#pgn-0">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame</td></tr>
+              <tr><td><a href="#pgn-59392">0xE800-0xEE00</a></td><td>59392 - 60928</td><td>PDU1</td><td>256</td><td>7</td><td>ISO 11783 (protocol)</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-61184">0xEF00</a></td><td>61184</td><td>PDU1</td><td></td><td>1</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-61440">0xF000-0xFEFF</a></td><td>61440 - 65279</td><td>PDU2</td><td>1</td><td>3840</td><td>Standardized</td><td>Single frame</td></tr>
               <tr><td><a href="#pgn-65280">0xFF00-0xFFFF</a></td><td>65280 - 65535</td><td>PDU2</td><td>1</td><td>256</td><td>Manufacturer proprietary</td><td>Single frame</td></tr>

@@ -21,7 +21,7 @@ import json;
 import traceback;
 
 if (sys.argv[1] == '--line-by-line'):
-    file = open(sys.argv[2])
+    file = open(sys.argv[2], encoding = 'utf-8')
     for line in file.readlines():
         try:
             data = json.loads(line)
@@ -50,7 +50,7 @@ while (args[0].startswith('--')):
         print("ERROR: unknown option", args[0])
         exit(2)
     args = args[1:]
-file = open(args[0])
+file = open(args[0], encoding = 'utf-8')
 data = json.loads(file.read())
 file.close()
 

@@ -2285,8 +2285,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -2343,8 +2341,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777212</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -2422,8 +2418,6 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>7.20575940379279e+16</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -2591,8 +2585,6 @@ limitations under the License.
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -2679,8 +2671,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -2767,8 +2757,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -2821,8 +2809,6 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -2833,8 +2819,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777212</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -2954,8 +2938,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>SPARE</FieldType>
         </Field>
         <Field>
@@ -3046,8 +3028,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -3077,8 +3057,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -3227,8 +3205,6 @@ limitations under the License.
           <BitOffset>36</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -3444,8 +3420,6 @@ limitations under the License.
           <BitOffset>44</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -3622,8 +3596,6 @@ limitations under the License.
           <BitOffset>52</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -3800,8 +3772,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -3860,8 +3830,6 @@ limitations under the License.
           <BitOffset>21</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>8796093022204</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -4293,8 +4261,6 @@ limitations under the License.
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -4356,8 +4322,6 @@ limitations under the License.
           <BitOffset>32</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967292</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -4763,8 +4727,6 @@ limitations under the License.
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -4842,8 +4804,6 @@ limitations under the License.
           <BitOffset>37</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -4869,8 +4829,6 @@ limitations under the License.
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>524284</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -4948,8 +4906,6 @@ limitations under the License.
           <BitOffset>37</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -4975,8 +4931,6 @@ limitations under the License.
           <BitOffset>45</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>524284</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5199,8 +5153,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5279,8 +5231,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5359,8 +5309,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5442,8 +5390,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5569,8 +5515,6 @@ limitations under the License.
           <BitOffset>34</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1073741820</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5783,8 +5727,6 @@ limitations under the License.
           <BitOffset>34</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1073741820</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -5998,8 +5940,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -6213,8 +6153,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -6479,8 +6417,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -6694,8 +6630,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -6909,8 +6843,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -7124,8 +7056,6 @@ limitations under the License.
           <BitOffset>50</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16380</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -7557,8 +7487,6 @@ limitations under the License.
           <BitOffset>53</BitOffset>
           <BitStart>5</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>6</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -7776,8 +7704,6 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777212</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -7963,8 +7889,6 @@ limitations under the License.
           <BitOffset>12</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -8032,8 +7956,6 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -8123,8 +8045,6 @@ limitations under the License.
           <BitOffset>36</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>13</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -8151,8 +8071,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -8183,8 +8101,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8196,8 +8112,6 @@ limitations under the License.
           <BitOffset>2</BitOffset>
           <BitStart>2</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8209,8 +8123,6 @@ limitations under the License.
           <BitOffset>4</BitOffset>
           <BitStart>4</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8222,8 +8134,6 @@ limitations under the License.
           <BitOffset>6</BitOffset>
           <BitStart>6</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8234,8 +8144,6 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -8247,8 +8155,6 @@ limitations under the License.
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>524284</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8260,8 +8166,6 @@ limitations under the License.
           <BitOffset>35</BitOffset>
           <BitStart>3</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>29</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8273,8 +8177,6 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8286,8 +8188,6 @@ limitations under the License.
           <BitOffset>41</BitOffset>
           <BitStart>1</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>125</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -8313,8 +8213,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>2097148</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
         <Field>
@@ -8393,8 +8291,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -8452,8 +8348,6 @@ limitations under the License.
           <BitOffset>63</BitOffset>
           <BitStart>7</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -8695,8 +8589,6 @@ limitations under the License.
           <BitOffset>40</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>16777212</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -9015,8 +8907,6 @@ limitations under the License.
           <BitOffset>56</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>252</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -9062,8 +8952,6 @@ limitations under the License.
           <BitOffset>8</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>7.20575940379279e+16</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -9236,8 +9124,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>4294967292</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
         <Field>
@@ -9266,8 +9152,6 @@ limitations under the License.
           <BitOffset>48</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>65532</RangeMax>
           <FieldType>RESERVED</FieldType>
         </Field>
       </Fields>
@@ -9449,8 +9333,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -9481,8 +9363,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -9512,8 +9392,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -9543,8 +9421,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
@@ -9574,8 +9450,6 @@ limitations under the License.
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <RangeMin>0</RangeMin>
-          <RangeMax>1.84467440737096e+19</RangeMax>
           <FieldType>BINARY</FieldType>
         </Field>
       </Fields>
