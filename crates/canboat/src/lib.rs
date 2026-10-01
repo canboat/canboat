@@ -218,7 +218,7 @@ pub mod schema {
     pub use crate::engine::db::PgnVariants;
     pub use crate::engine::types::LookupFieldTypeValue;
     pub use crate::engine::{
-        BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable,
+        BitLookupTable, BitLookupValue, Continuation, FieldInfo, FieldType, IndirectLookupTable,
         IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
     };
     pub use crate::engine::{BusProtocol, UnknownBusProtocol};

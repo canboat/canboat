@@ -1366,6 +1366,12 @@ static bool printField(const Field   *field,
     *bits = 0;
   }
 
+  if (field->continues)
+  {
+    // The high bits of an earlier field's value, already printed as part of it.
+    return true;
+  }
+
   fillGlobalsBasedOnField(field, data, dataLen, startBit, *bits);
 
   logDebug("PGN %u: printField <%s>, \"%s\": bits=%zu proprietary=%u refPgn=%u\n",

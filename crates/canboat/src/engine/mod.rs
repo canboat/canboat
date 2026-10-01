@@ -54,8 +54,8 @@ pub use schema_data::{field, pgn};
 pub use source::{Decoder, FrameSource};
 pub use startup::{CANBOAT_BEM, format_iso_ms, parse_iso_ms, startup_record};
 pub use types::{
-    BitLookupTable, BitLookupValue, FieldInfo, FieldRef, FieldType, IndirectLookupTable,
-    IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
+    BitLookupTable, BitLookupValue, Continuation, FieldInfo, FieldRef, FieldType,
+    IndirectLookupTable, IndirectLookupValue, LookupTable, LookupValue, PacketType, PgnInfo,
 };
 
 #[cfg(test)]

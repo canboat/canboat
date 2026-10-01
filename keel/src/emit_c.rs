@@ -418,6 +418,15 @@ fn emit_field(db: &Database, f: &Field) -> String {
     if f.proprietary {
         parts.push(".proprietary = true".into());
     }
+    // A value split around other fields (R43): extractNumber() joins the
+    // high bits in, and printField() skips the field that holds them.
+    if let Some((offset, bits)) = f.res_continuation {
+        parts.push(format!(".continuationOffset = {offset}"));
+        parts.push(format!(".continuationBits = {bits}"));
+    }
+    if f.continues.is_some() {
+        parts.push(".continues = true".into());
+    }
     if f.primary_key {
         parts.push(".partOfPrimaryKey = true".into());
     }

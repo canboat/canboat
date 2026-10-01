@@ -85,7 +85,105 @@ pub fn check(db: &Database) -> Vec<Violation> {
         }
     }
     check_spns(db, &mut v); // R42
+    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+        for pgn in list {
+            check_continues(prefix, db, pgn, &mut v); // R43
+        }
+    }
     v
+}
+
+// R43: a `continues:` field adds high bits to an earlier, plain integer field
+// of the same record, at a fixed distance from it.
+fn check_continues(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+    let set_of = |i: usize| -> u32 {
+        let order = i as u32 + 1;
+        [&p.repeating1, &p.repeating2]
+            .iter()
+            .enumerate()
+            .find_map(|(n, r)| {
+                r.as_ref()
+                    .filter(|r| r.count > 0 && order >= r.start && order < r.start + r.count)
+                    .map(|_| n as u32 + 1)
+            })
+            .unwrap_or(0)
+    };
+    let integer = |f: &crate::model::Field| {
+        matches!(db.fieldtypes[f.ft].root_name.as_str(), "NUMBER" | "LOOKUP")
+    };
+    let mut err = |message: String| {
+        v.push(Violation {
+            rule: "R43",
+            error: true,
+            location: pgn_loc(prefix, p),
+            message,
+        })
+    };
+    for (i, f) in p.fields.iter().enumerate() {
+        let Some(target) = &f.continues else { continue };
+        let Some(t) = p.fields[..i].iter().position(|g| &g.id == target) else {
+            err(format!(
+                "field '{}' continues '{target}', which is not an earlier field",
+                f.id
+            ));
+            continue;
+        };
+        let low = &p.fields[t];
+        if set_of(t) != set_of(i) {
+            err(format!(
+                "field '{}' continues '{target}' across a repeating-set boundary",
+                f.id
+            ));
+        } else if low.res_continuation.is_none() {
+            err(format!(
+                "field '{}' continues '{target}', but a field of no fixed width lies between",
+                f.id
+            ));
+        } else if p
+            .fields
+            .iter()
+            .filter(|g| g.continues.as_ref() == Some(target))
+            .count()
+            > 1
+        {
+            err(format!("more than one field continues '{target}'"));
+        }
+        if low.continues.is_some() {
+            err(format!("field '{target}' both continues and is continued"));
+        }
+        if !integer(low) || db.fieldtypes[f.ft].root_name != "NUMBER" {
+            err(format!(
+                "field '{}' continues '{target}': both must be integers (NUMBER or LOOKUP)",
+                f.id
+            ));
+        }
+        if f.resolution.unwrap_or(1.0) != 1.0
+            || f.offset.unwrap_or(0) != 0
+            || f.unit.is_some()
+            || f.lookup_ref().is_some()
+            || f.match_.is_some()
+            || f.spn.is_some()
+        {
+            err(format!(
+                "field '{}' continues '{target}', so it is raw bits: no resolution, offset, \
+                 unit, lookup, match or spn of its own",
+                f.id
+            ));
+        }
+        // The bits are joined as they are: a sign or an offset would have to
+        // apply to the whole value, which neither decoder does.
+        if db.fieldtypes[low.ft].has_sign == Some(true) || low.res_offset != 0 {
+            err(format!(
+                "field '{target}' is continued, so it must be unsigned and have no offset"
+            ));
+        }
+        if low.value_bits() > 64 {
+            err(format!(
+                "field '{target}' would be {} bits wide",
+                low.value_bits()
+            ));
+        }
+    }
 }
 
 /// The largest SPN: J1939 carries them in 19 bits.
@@ -511,12 +609,14 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                             "triplet" => lk.triplets.iter().map(|(_, v2, _)| *v2).max(),
                             _ => lk.fieldtypes.iter().map(|e| e.value).max(),
                         };
-                        let mismatch = f.res_bits != lk.bits;
+                        // A continued field's value is wider than its own bits.
+                        let width = f.value_bits();
+                        let mismatch = width != lk.bits;
                         let unreachable = named_max.is_some_and(|named_max| {
                             if lk.kind == "bit" {
-                                named_max >= f.res_bits as u64 // bit index beyond width
+                                named_max >= width as u64 // bit index beyond width
                             } else {
-                                f.res_bits < 64 && named_max >= (1u64 << f.res_bits)
+                                width < 64 && named_max >= (1u64 << width)
                             }
                         });
                         if unreachable && !(lk.kind == "bit" && f.allow_lookup_width_mismatch) {
@@ -527,7 +627,7 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                             message: format!(
                                 "field '{}' is {} bits; lookup '{name}' names unreachable value {}",
                                 f.id,
-                                f.res_bits,
+                                width,
                                 named_max.unwrap()
                             ),
                         });
@@ -539,7 +639,7 @@ fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
                                 message: format!(
                                     "field '{}' is {} bits but lookup '{name}' declares {}; \
                                  add allowLookupWidthMismatch: true if deliberate",
-                                    f.id, f.res_bits, lk.bits
+                                    f.id, width, lk.bits
                                 ),
                             });
                         } else if !mismatch && f.allow_lookup_width_mismatch {

@@ -633,6 +633,18 @@ pub fn canboat::schema::BitLookupValue::clone(&self) -> Self
 impl core::fmt::Debug for canboat::schema::BitLookupValue
 pub fn canboat::schema::BitLookupValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::Copy for canboat::schema::BitLookupValue
+pub struct canboat::schema::Continuation
+pub canboat::schema::Continuation::bit_length: u32
+pub canboat::schema::Continuation::bit_offset: u32
+impl core::clone::Clone for canboat::schema::Continuation
+pub fn canboat::schema::Continuation::clone(&self) -> Self
+impl core::cmp::Eq for canboat::schema::Continuation
+impl core::cmp::PartialEq for canboat::schema::Continuation
+pub fn canboat::schema::Continuation::eq(&self, &Self) -> bool
+impl core::fmt::Debug for canboat::schema::Continuation
+pub fn canboat::schema::Continuation::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::schema::Continuation
+impl core::marker::StructuralPartialEq for canboat::schema::Continuation
 pub struct canboat::schema::FieldInfo
 pub canboat::schema::FieldInfo::bit_length: core::option::Option<u32>
 pub canboat::schema::FieldInfo::bit_length_field: core::option::Option<&'static str>
@@ -640,6 +652,8 @@ pub canboat::schema::FieldInfo::bit_length_variable: core::option::Option<bool>
 pub canboat::schema::FieldInfo::bit_offset: core::option::Option<u32>
 pub canboat::schema::FieldInfo::bit_start: core::option::Option<u32>
 pub canboat::schema::FieldInfo::condition: core::option::Option<&'static str>
+pub canboat::schema::FieldInfo::continuation: core::option::Option<canboat::schema::Continuation>
+pub canboat::schema::FieldInfo::continues: core::option::Option<&'static str>
 pub canboat::schema::FieldInfo::description: core::option::Option<&'static str>
 pub canboat::schema::FieldInfo::dynamic_field_length_overhead: u32
 pub canboat::schema::FieldInfo::encoding: core::option::Option<&'static str>

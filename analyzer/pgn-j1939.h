@@ -107,6 +107,10 @@ typedef struct
   int8_t reservedOverride; /* Override reserved (special) value count; 0 = auto, else (count + 1). See SPECIAL_VALUES(). */
   bool    dynamicFieldLength;          /* True if this field's value is the byte length of a following DYNAMIC_FIELD_VALUE field. */
   uint8_t dynamicFieldLengthOverhead;  /* Non-value header bytes counted in the length that must be subtracted (see pgn.h). */
+  uint32_t continuationOffset; /* With continuationBits: this value's high bits sit in another field (keel R43), starting this
+                                *    many bits after this field's start. extractNumber() joins them in above this field's bits. */
+  uint8_t continuationBits;    /* How many high bits that is; 0 = none. */
+  bool    continues;           /* This field holds the high bits of an earlier field's value; it is not printed itself. */
 
   /* The following fields are filled by C, no need to set in initializers */
   uint8_t    order;

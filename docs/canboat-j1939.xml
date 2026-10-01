@@ -2140,6 +2140,189 @@ limitations under the License.
       <EnumPair Value="1862" Name="Sanshin" />
       <EnumPair Value="1863" Name="Thomas G. Faria Co." />
     </LookupEnumeration>
+    <LookupEnumeration Name="J1939_SPN" MaxValue="524287">
+      <EnumPair Value="22" Name="Engine Extended Crankcase Blow-by Pressure" />
+      <EnumPair Value="29" Name="Accelerator Pedal Position 2" />
+      <EnumPair Value="38" Name="Fuel Level 2" />
+      <EnumPair Value="51" Name="Throttle Position" />
+      <EnumPair Value="52" Name="Engine Intercooler Temp" />
+      <EnumPair Value="80" Name="Washer Fluid Level" />
+      <EnumPair Value="81" Name="Particulate Trap Inlet Pressure" />
+      <EnumPair Value="91" Name="Accelerator Pedal Position 1" />
+      <EnumPair Value="92" Name="Engine Percent Load At Current Speed" />
+      <EnumPair Value="94" Name="Engine Fuel Delivery Pressure" />
+      <EnumPair Value="95" Name="Engine Fuel Filter Differential Pressure" />
+      <EnumPair Value="96" Name="Fuel Level 1" />
+      <EnumPair Value="98" Name="Engine Oil Level" />
+      <EnumPair Value="99" Name="Engine Oil Filter Differential Pressure" />
+      <EnumPair Value="100" Name="Engine Oil Pressure" />
+      <EnumPair Value="101" Name="Engine Crankcase Pressure" />
+      <EnumPair Value="102" Name="Boost Pressure" />
+      <EnumPair Value="105" Name="Intake Manifold Temp" />
+      <EnumPair Value="106" Name="Air Inlet Pressure" />
+      <EnumPair Value="107" Name="Air Filter Differential Pressure" />
+      <EnumPair Value="109" Name="Engine Coolant Pressure" />
+      <EnumPair Value="110" Name="Engine Coolant Temp" />
+      <EnumPair Value="111" Name="Engine Coolant Level" />
+      <EnumPair Value="112" Name="Coolant Filter Differential Pressure" />
+      <EnumPair Value="123" Name="Transmission Clutch 1 Pressure" />
+      <EnumPair Value="124" Name="Transmission Oil Level 1" />
+      <EnumPair Value="126" Name="Transmission Filter Differential Pressure" />
+      <EnumPair Value="127" Name="Transmission 1 Oil Pressure" />
+      <EnumPair Value="132" Name="Engine Intake Air Mass Flow Rate" />
+      <EnumPair Value="156" Name="Engine Fuel 1 Injector Timing Rail 1 Pressure" />
+      <EnumPair Value="157" Name="Engine Fuel 1 Injector Metering Rail 1 Pressure" />
+      <EnumPair Value="162" Name="Transmission Requested Range" />
+      <EnumPair Value="163" Name="Transmission Current Range" />
+      <EnumPair Value="164" Name="Engine Fuel Injection Control Pressure" />
+      <EnumPair Value="166" Name="Engine Rated Power" />
+      <EnumPair Value="169" Name="Cargo Ambient Temperature" />
+      <EnumPair Value="173" Name="Exhaust Gas Temperature" />
+      <EnumPair Value="174" Name="Engine Fuel Temp 1" />
+      <EnumPair Value="175" Name="Engine Oil Temp 1" />
+      <EnumPair Value="176" Name="Engine Turbocharger Oil Temp" />
+      <EnumPair Value="177" Name="Transmission 1 Oil Temperature 1" />
+      <EnumPair Value="182" Name="Engine Trip Fuel" />
+      <EnumPair Value="183" Name="Fuel Rate" />
+      <EnumPair Value="184" Name="Instantaneous Fuel Economy" />
+      <EnumPair Value="185" Name="Average Fuel Economy" />
+      <EnumPair Value="189" Name="Engine Rated Speed" />
+      <EnumPair Value="190" Name="Engine RPM" />
+      <EnumPair Value="235" Name="Engine Total Idle Hours" />
+      <EnumPair Value="236" Name="Engine Total Idle Fuel Used" />
+      <EnumPair Value="247" Name="Engine Total Hours of Operation" />
+      <EnumPair Value="249" Name="Engine Total Revolutions" />
+      <EnumPair Value="250" Name="Engine Total Fuel Used" />
+      <EnumPair Value="411" Name="Engine Exhaust Gas Recirculation 1 Differential Pressure" />
+      <EnumPair Value="412" Name="Engine Exhaust Gas Recirculation 1 Temperature" />
+      <EnumPair Value="512" Name="Driver's Demand Engine - Percent Torque" />
+      <EnumPair Value="513" Name="Actual Engine - Percent Torque" />
+      <EnumPair Value="514" Name="Nominal Friction - Percent Torque" />
+      <EnumPair Value="515" Name="Engine's Desired Operating Speed" />
+      <EnumPair Value="519" Name="Engine's Desired Operating Speed Asymmetry Adjustment" />
+      <EnumPair Value="523" Name="Transmission Current Gear" />
+      <EnumPair Value="524" Name="Transmission Selected Gear" />
+      <EnumPair Value="526" Name="Transmission Actual Gear Ratio" />
+      <EnumPair Value="558" Name="Accelerator Pedal 1 Low Idle Switch" />
+      <EnumPair Value="559" Name="Accelerator Pedal Kickdown Switch" />
+      <EnumPair Value="632" Name="Engine Fuel Shutoff 1 Control" />
+      <EnumPair Value="899" Name="Engine Torque Mode" />
+      <EnumPair Value="974" Name="Remote Accelerator Pedal Position" />
+      <EnumPair Value="975" Name="Estimated Percent Fan Speed" />
+      <EnumPair Value="977" Name="Fan Drive State" />
+      <EnumPair Value="1032" Name="Total ECU Distance" />
+      <EnumPair Value="1033" Name="Total ECU Run Time" />
+      <EnumPair Value="1127" Name="Engine Turbocharger 1 Boost Pressure" />
+      <EnumPair Value="1128" Name="Engine Turbocharger 2 Boost Pressure" />
+      <EnumPair Value="1129" Name="Engine Turbocharger 3 Boost Pressure" />
+      <EnumPair Value="1130" Name="Engine Turbocharger 4 Boost Pressure" />
+      <EnumPair Value="1131" Name="Engine Intake Manifold 2 Temperature" />
+      <EnumPair Value="1132" Name="Engine Intake Manifold 3 Temperature" />
+      <EnumPair Value="1133" Name="Engine Intake Manifold 4 Temperature" />
+      <EnumPair Value="1134" Name="Engine Intercooler Thermostat Opening" />
+      <EnumPair Value="1135" Name="Engine Oil Temperature 2" />
+      <EnumPair Value="1136" Name="Engine ECU Temperature" />
+      <EnumPair Value="1349" Name="Engine Fuel 1 Injector Metering Rail 2 Pressure" />
+      <EnumPair Value="1380" Name="Engine Oil Level Remote Reservoir" />
+      <EnumPair Value="1381" Name="Engine Fuel Supply Pump Intake Absolute Pressure" />
+      <EnumPair Value="1382" Name="Engine Fuel Filter (suction side) Differential Pressure" />
+      <EnumPair Value="1437" Name="Road Speed Limit Status" />
+      <EnumPair Value="1483" Name="Source Address of Controlling Device for Engine Control" />
+      <EnumPair Value="1639" Name="Fan Speed" />
+      <EnumPair Value="1675" Name="Engine Starter Mode" />
+      <EnumPair Value="1802" Name="Engine Intake Manifold 5 Temperature" />
+      <EnumPair Value="1803" Name="Engine Intake Manifold 6 Temperature" />
+      <EnumPair Value="2432" Name="Engine Demand - Percent Torque" />
+      <EnumPair Value="2433" Name="Engine Exhaust Manifold Bank 2 Temperature 1" />
+      <EnumPair Value="2434" Name="Engine Exhaust Manifold Bank 1 Temperature 1" />
+      <EnumPair Value="2659" Name="Engine Exhaust Gas Recirculation 1 Mass Flow Rate" />
+      <EnumPair Value="2807" Name="Engine Fuel Shutoff 2 Control" />
+      <EnumPair Value="2809" Name="Engine Air Filter 2 Differential Pressure" />
+      <EnumPair Value="2810" Name="Engine Air Filter 3 Differential Pressure" />
+      <EnumPair Value="2811" Name="Engine Air Filter 4 Differential Pressure" />
+      <EnumPair Value="2896" Name="Momentary Engine Maximum Power Enable" />
+      <EnumPair Value="2970" Name="Accelerator Pedal 2 Low Idle Switch" />
+      <EnumPair Value="2978" Name="Estimated Engine Parasitic Losses - Percent Torque" />
+      <EnumPair Value="2979" Name="Vehicle Acceleration Rate Limit Status" />
+      <EnumPair Value="3026" Name="Transmission Oil Level 1 Measurement Status" />
+      <EnumPair Value="3027" Name="Transmission Oil Level 1 High / Low" />
+      <EnumPair Value="3028" Name="Transmission Oil Level 1 Countdown Timer" />
+      <EnumPair Value="3241" Name="Aftertreatment 1 Intake Gas Temperature 2" />
+      <EnumPair Value="3242" Name="Aftertreatment 1 Intake Gas Pressure 2" />
+      <EnumPair Value="3243" Name="Aftertreatment 1 Intake Gas Temperature 2 Preliminary FMI" />
+      <EnumPair Value="3244" Name="Aftertreatment 1 Intake Gas Pressure 2 Preliminary FMI" />
+      <EnumPair Value="3245" Name="Aftertreatment 1 Outlet Gas Temperature 2" />
+      <EnumPair Value="3246" Name="Aftertreatment 1 Outlet Gas Pressure 2" />
+      <EnumPair Value="3247" Name="Aftertreatment 1 Outlet Gas Temperature 2 Preliminary FMI" />
+      <EnumPair Value="3248" Name="Aftertreatment 1 Outlet Gas Pressure 2 Preliminary FMI" />
+      <EnumPair Value="3249" Name="Aftertreatment 1 Exhaust Gas Temperature 2" />
+      <EnumPair Value="3250" Name="Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature" />
+      <EnumPair Value="3251" Name="Aftertreatment 1 Diesel Particulate Filter Differential Pressure" />
+      <EnumPair Value="3252" Name="Aftertreatment 1 Exhaust Gas Temperature 2 Preliminary FMI" />
+      <EnumPair Value="3253" Name="Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature Preliminary FMI" />
+      <EnumPair Value="3254" Name="Aftertreatment 1 Diesel Particulate Filter Differential Pressure Preliminary FMI" />
+      <EnumPair Value="3357" Name="Actual Maximum Available Engine - Percent Torque" />
+      <EnumPair Value="3543" Name="Engine Operating State" />
+      <EnumPair Value="3544" Name="Time Remaining in Engine Operating State" />
+      <EnumPair Value="3548" Name="Engine Waste Oil Reservoir Level" />
+      <EnumPair Value="3549" Name="Engine Oil Filter Outlet Pressure" />
+      <EnumPair Value="3550" Name="Engine Oil Priming Pump Switch" />
+      <EnumPair Value="3551" Name="Engine Oil Priming State" />
+      <EnumPair Value="3552" Name="Engine Oil Pre-Heated State" />
+      <EnumPair Value="3553" Name="Engine Coolant Pre-heated State" />
+      <EnumPair Value="3554" Name="Engine Ventilation Status" />
+      <EnumPair Value="3562" Name="Engine Intake Manifold" />
+      <EnumPair Value="3563" Name="Engine Intake Manifold" />
+      <EnumPair Value="3589" Name="Engine Oil Priming Pump Control" />
+      <EnumPair Value="3601" Name="Engine Fuel Shutoff Valve Leak Test Control" />
+      <EnumPair Value="3602" Name="Engine Oil Preheater Control" />
+      <EnumPair Value="3603" Name="Engine Electrical System Power Conservation Control" />
+      <EnumPair Value="3604" Name="Engine Block/Coolant Preheater Control" />
+      <EnumPair Value="3605" Name="Engine Coolant Circulating Pump Control" />
+      <EnumPair Value="3606" Name="Engine Controlled Shutdown Request" />
+      <EnumPair Value="3607" Name="Engine Emergency (Immediate) Shutdown Indication" />
+      <EnumPair Value="3608" Name="Engine Fuel Shutoff Vent Control" />
+      <EnumPair Value="3609" Name="Aftertreatment 1 Diesel Particulate Filter Intake Pressure" />
+      <EnumPair Value="3610" Name="Aftertreatment 1 Diesel Particulate Filter Outlet Pressure" />
+      <EnumPair Value="3644" Name="Engine Derate Request" />
+      <EnumPair Value="3669" Name="Engine Rotation Direction" />
+      <EnumPair Value="3671" Name="Crank Attempt Count on Present Start Attempt" />
+      <EnumPair Value="4082" Name="Fuel Pump Primer Control" />
+      <EnumPair Value="4083" Name="Fuel Pump Primer Status" />
+      <EnumPair Value="4154" Name="Actual Engine - Percent Torque High Resolution" />
+      <EnumPair Value="4211" Name="Hydraulic Fan Motor Pressure" />
+      <EnumPair Value="4212" Name="Hydraulic Fan Motor Pressure 2" />
+      <EnumPair Value="4765" Name="Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature" />
+      <EnumPair Value="4766" Name="Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature" />
+      <EnumPair Value="4767" Name="Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure" />
+      <EnumPair Value="4768" Name="Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature Preliminary FMI" />
+      <EnumPair Value="4769" Name="Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature Preliminary FMI" />
+      <EnumPair Value="4770" Name="Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure Preliminary FMI" />
+      <EnumPair Value="4817" Name="Engine Intake Manifold 1 Absolute Pressure (High Resolution)" />
+      <EnumPair Value="5055" Name="Engine Oil Viscosity" />
+      <EnumPair Value="5056" Name="Engine Oil Density" />
+      <EnumPair Value="5257" Name="Engine Exhaust Gas Recirculation 2 Mass Flow Rate" />
+      <EnumPair Value="5422" Name="Engine Intake Manifold 2 Absolute Pressure" />
+      <EnumPair Value="5430" Name="Engine Exhaust Gas Recirculation 1 Intake Absolute Pressure" />
+      <EnumPair Value="5431" Name="Engine Exhaust Gas Recirculation 1 Outlet Absolute Pressure" />
+      <EnumPair Value="5465" Name="Engine Intake Manifold Pressure Control Mode" />
+      <EnumPair Value="5468" Name="Engine Oil Relative Dielectricity" />
+      <EnumPair Value="5537" Name="Engine Fuel Dynamic Viscosity" />
+      <EnumPair Value="5538" Name="Engine Fuel Density" />
+      <EnumPair Value="5539" Name="Engine Fuel Relative Dielectricity" />
+      <EnumPair Value="5540" Name="Engine Fuel Temperature 2" />
+      <EnumPair Value="5862" Name="Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2" />
+      <EnumPair Value="5863" Name="Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI" />
+      <EnumPair Value="5925" Name="Engine Oil Temperature 3" />
+      <EnumPair Value="5969" Name="Engine Exhaust Manifold Bank 2 Temperature 2" />
+      <EnumPair Value="5970" Name="Engine Exhaust Manifold Bank 1 Temperature 2" />
+      <EnumPair Value="6385" Name="Engine Automatic Start Enable Status" />
+      <EnumPair Value="6807" Name="Engine Automatic Start Enable Time Remaining" />
+      <EnumPair Value="6884" Name="Engine Automatic Start Safety Interlock Status" />
+      <EnumPair Value="7104" Name="Engine Fuel Supply Pump Intake Pressure" />
+      <EnumPair Value="7468" Name="Engine Exhaust Gas Recirculation 2 Intake Absolute Pressure" />
+      <EnumPair Value="7469" Name="Engine Exhaust Gas Recirculation 2 Outlet Absolute Pressure" />
+    </LookupEnumeration>
     <LookupEnumeration Name="POWER_FACTOR" MaxValue="3">
       <EnumPair Value="0" Name="Leading" />
       <EnumPair Value="1" Name="Lagging" />
@@ -8273,16 +8456,18 @@ limitations under the License.
         </Field>
         <Field>
           <Order>9</Order>
-          <Id>spnLow</Id>
-          <Name>SPN (low 16 bits)</Name>
-          <Description>The Suspect Parameter Number of the fault is these 16 bits plus SPN (high 3 bits) times 65536</Description>
+          <Id>spn</Id>
+          <Name>SPN</Name>
+          <Description>Suspect Parameter Number of the fault</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
+          <Signed>false</Signed>
           <RangeMin>0</RangeMin>
-          <RangeMax>65535</RangeMax>
-          <FieldType>NUMBER</FieldType>
+          <RangeMax>524287</RangeMax>
+          <FieldType>LOOKUP</FieldType>
+          <LookupEnumeration>J1939_SPN</LookupEnumeration>
         </Field>
         <Field>
           <Order>10</Order>
@@ -8302,6 +8487,7 @@ limitations under the License.
           <Id>spnHigh</Id>
           <Name>SPN (high 3 bits)</Name>
           <Description>The SPN's bits 17-19</Description>
+          <Continues>spn</Continues>
           <BitLength>3</BitLength>
           <BitOffset>37</BitOffset>
           <BitStart>5</BitStart>
@@ -8328,7 +8514,7 @@ limitations under the License.
           <Order>13</Order>
           <Id>cm</Id>
           <Name>CM</Name>
-          <Description>SPN Conversion Method; 0 for the current SPN layout</Description>
+          <Description>SPN Conversion Method. 0 is the current SPN layout, the one decoded here; 1 marks an older J1939-73 layout, so the SPN shown for such a code is wrong</Description>
           <BitLength>1</BitLength>
           <BitOffset>47</BitOffset>
           <BitStart>7</BitStart>

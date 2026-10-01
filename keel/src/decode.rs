@@ -269,10 +269,51 @@ fn decode_one(
     instance: u32,
     out: &mut Vec<DecodedField>,
 ) -> Result<()> {
+    // A field that a later field continues (R43): decode its own bits with
+    // the continuing bits above them, from a scratch buffer, then put the
+    // cursor and the reported position back on its own bits.
+    if let Some((rel, extra)) = f.res_continuation {
+        let own = f.res_bits as usize;
+        // Both parts whole, or no join: extract_bits reads a partial range.
+        let fits = ctx.bit + rel as usize + extra as usize <= data.len() * 8
+            && ctx.bit + own <= data.len() * 8;
+        let low = extract_bits(data, ctx.bit, own, false, 0).filter(|_| fits);
+        let high = extract_bits(data, ctx.bit + rel as usize, extra as usize, false, 0);
+        if let (Some(low), Some(high)) = (low, high) {
+            let joined = (low.raw | (high.raw << own)).to_le_bytes();
+            let start = ctx.bit;
+            ctx.bit = 0;
+            decode_bits(db, f, &joined, ctx, instance, out, own + extra as usize)?;
+            ctx.bit = start + own;
+            if let Some(d) = out.last_mut() {
+                d.bit_offset = start;
+                d.bits = own;
+            }
+            return Ok(());
+        }
+    }
+    // The high bits of an earlier field's value: already part of it, so not
+    // a value of their own (the runtime decoders leave them out too).
+    if f.continues.is_some() {
+        ctx.bit += f.res_bits as usize;
+        return Ok(());
+    }
+    decode_bits(db, f, data, ctx, instance, out, f.res_bits as usize)
+}
+
+/// Decode `f` at the cursor as a field of `declared_bits` bits.
+fn decode_bits(
+    db: &Database,
+    f: &Field,
+    data: &[u8],
+    ctx: &mut Ctx,
+    instance: u32,
+    out: &mut Vec<DecodedField>,
+    declared_bits: usize,
+) -> Result<()> {
     let start_bit = ctx.bit;
     let ft = &db.fieldtypes[f.ft];
     let root = ft.root_name.as_str();
-    let declared_bits = f.res_bits as usize;
     let remaining = (data.len() * 8).saturating_sub(ctx.bit);
 
     // Variable-length fields: DYNAMIC_FIELD_VALUE takes the pending

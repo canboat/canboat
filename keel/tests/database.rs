@@ -239,3 +239,81 @@ fn the_text_explanation_has_a_j1939_flavor() {
         emit_text::emit_text(&db, true)
     );
 }
+
+/// DM1's trouble codes carry a 19-bit SPN split around the FMI. `continues:`
+/// on the 3 high bits places them 21 bits after the start of the 16 low
+/// ones, the joined value is 19 bits wide, and the SPN is named from the
+/// lookup keel builds out of the J1939 fields' `spn:` attributes.
+#[test]
+fn a_dm1_spn_is_joined_and_named() {
+    let (_, db, _) = load();
+    let dm1 = db
+        .pgns_j1939
+        .iter()
+        .find(|p| p.pgn == 65226)
+        .expect("DM1 is defined");
+    let spn = dm1.fields.iter().find(|f| f.id == "spn").unwrap();
+    assert_eq!(spn.res_continuation, Some((21, 3)));
+    assert_eq!(spn.value_bits(), 19);
+    assert_eq!(spn.res_range_max, 524287.0);
+
+    let lk = &db.lookups[derive::SPN_LOOKUP];
+    assert_eq!(lk.bits, 19);
+    assert!(lk.pairs.contains(&(190, "Engine RPM".to_string())));
+    assert!(
+        db.lookups_used(true).contains(derive::SPN_LOOKUP)
+            && !db.lookups_used(false).contains(derive::SPN_LOOKUP),
+        "only the J1939 tree carries the SPN lookup"
+    );
+}
+
+/// R43 refuses a `continues:` that cannot be joined: one naming no earlier
+/// field, one with a scaling of its own, and one continuing a signed field.
+#[test]
+fn r43_refuses_a_continuation_that_cannot_be_joined() {
+    let r43 = |db: &Database| {
+        check::check(db)
+            .into_iter()
+            .filter(|v| v.rule == "R43" && v.error)
+            .count()
+    };
+    let (_, mut db, _) = load();
+    assert_eq!(r43(&db), 0);
+    let high = |db: &mut Database| {
+        db.pgns_j1939
+            .iter_mut()
+            .find(|p| p.pgn == 65226)
+            .unwrap()
+            .fields
+            .iter_mut()
+            .find(|f| f.id == "spnHigh")
+            .unwrap()
+            .clone()
+    };
+    let original = high(&mut db);
+    let set = |db: &mut Database, f: keel::model::Field| {
+        let dm1 = db.pgns_j1939.iter_mut().find(|p| p.pgn == 65226).unwrap();
+        let slot = dm1.fields.iter_mut().find(|g| g.id == f.id).unwrap();
+        *slot = f;
+        derive::fill(db).expect("derive pass succeeds");
+    };
+
+    let mut f = original.clone();
+    f.continues = Some("oc".into()); // a later field
+    set(&mut db, f);
+    assert_eq!(r43(&db), 1);
+
+    let mut f = original.clone();
+    f.resolution = Some(0.5);
+    set(&mut db, f);
+    assert_eq!(r43(&db), 1);
+    set(&mut db, original);
+
+    // The continued field itself must be unsigned: the bits are joined raw.
+    let dm1 = db.pgns_j1939.iter().find(|p| p.pgn == 65226).unwrap();
+    let mut low = dm1.fields.iter().find(|f| f.id == "spn").unwrap().clone();
+    low.type_ = "INTEGER".into();
+    low.lookup = None;
+    set(&mut db, low);
+    assert_eq!(r43(&db), 1);
+}

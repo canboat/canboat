@@ -253,9 +253,11 @@ fn api_model(server: &EditServer) -> Result<String, String> {
         })
         .collect();
     pgns.sort();
+    // J1939_SPN is built from the spn: attributes, not a file to edit.
     let mut lookups: Vec<String> = db
         .lookups
         .values()
+        .filter(|l| l.name != crate::derive::SPN_LOOKUP)
         .map(|l| {
             format!(
                 "{{\"name\":{},\"kind\":{},\"bits\":{}}}",
@@ -304,7 +306,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         .map(|f| {
             let opt_s = |v: &Option<String>| v.as_deref().map(js).unwrap_or_else(|| "null".into());
             format!(
-                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
+                "{{\"id\":{},\"name\":{},\"type\":{},\"bits\":{},\"lookup\":{},\"lookupBits\":{},\"lookupFieldtype\":{},\"lookupIndirect\":{},\"lookupIndirectOrder\":{},\"match\":{},\"unit\":{},\"resolution\":{},\"offset\":{},\"description\":{},\"spn\":{},\"continues\":{},\"note\":{},\"specialValues\":{},\"rangeMin\":{},\"rangeMax\":{},\"bitLengthField\":{},\"encoding\":{},\"allowLookupWidthMismatch\":{},\"primaryKey\":{}}}",
                 js(&f.id),
                 js(&f.name),
                 js(&f.type_),
@@ -320,6 +322,7 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
                 f.offset.map(|o| o.to_string()).unwrap_or_else(|| "null".into()),
                 opt_s(&f.description),
                 f.spn.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
+                opt_s(&f.continues),
                 opt_s(&f.note),
                 f.special_values.map(|s| s.to_string()).unwrap_or_else(|| "null".into()),
                 f.range_min.map(|r| format!("{r:?}")).unwrap_or_else(|| "null".into()),
