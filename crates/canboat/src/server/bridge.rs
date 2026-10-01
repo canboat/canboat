@@ -171,6 +171,7 @@ impl Bridge {
                 crate::build_info::version_banner(
                     units == crate::engine::Units::Si,
                     json_opts.name_value,
+                    config.protocol,
                 )
             )
             .into_bytes()

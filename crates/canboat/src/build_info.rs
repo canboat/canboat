@@ -24,19 +24,25 @@ pub fn commit() -> String {
 }
 
 /// The one-line analyzer version banner, e.g.
-/// `{"version":"0.5.0","commit":"08f08eb","units":"std","showLookupValues":true}`.
+/// `{"version":"0.5.0","commit":"08f08eb","units":"std","protocol":"nmea2000","showLookupValues":true}`.
 ///
 /// Superset of canboat C's banner (`analyzer.c:395`): it carries the
-/// extra `commit` field, but keeps `version` + `units` +
+/// extra `commit` and `protocol` fields, but keeps `version` + `units` +
 /// `showLookupValues` byte-compatible so C's n2kd — which requires
 /// `"version":` and `"showLookupValues":true` in the first line — still
 /// accepts a Rust-produced stream, and vice versa.
-pub fn version_banner(si: bool, name_value: bool) -> String {
+///
+/// `protocol` names the table the records were decoded against
+/// (`nmea2000` or `j1939`): the same PGN number means different things
+/// on the two, so a consumer has to know. A banner without it (canboat
+/// C, Rust before 8.4) is NMEA 2000.
+pub fn version_banner(si: bool, name_value: bool, protocol: crate::engine::BusProtocol) -> String {
     format!(
-        "{{\"version\":\"{}\",\"commit\":\"{}\",\"units\":\"{}\",\"showLookupValues\":{}}}",
+        "{{\"version\":\"{}\",\"commit\":\"{}\",\"units\":\"{}\",\"protocol\":\"{}\",\"showLookupValues\":{}}}",
         VERSION,
         commit(),
         if si { "si" } else { "std" },
+        protocol,
         if name_value { "true" } else { "false" },
     )
 }

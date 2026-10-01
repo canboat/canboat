@@ -399,7 +399,7 @@ fn convert_decoded<W: Write>(
         writeln!(
             out,
             "{}",
-            crate::build_info::version_banner(args.shape.is_si(), args.nv)
+            crate::build_info::version_banner(args.shape.is_si(), args.nv, protocol)
         )
         .context("writing JSON banner")?;
     }
