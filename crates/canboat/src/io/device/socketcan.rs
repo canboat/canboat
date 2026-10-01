@@ -182,6 +182,7 @@ mod imp {
 
     use super::config::Config;
     use crate::engine::fastpacket;
+    use crate::engine::iso_tp::{PGN_TP_CM, TpSender};
     use crate::engine::pgn_list;
     use crate::io::address_claim::{AddressClaim, ClaimState};
     use crate::io::device::{DeviceHandle, WriterCmd, from_parts};
@@ -335,6 +336,8 @@ mod imp {
         fast_seq: HashMap<(u32, u8), u8>,
         /// Decides the framing of every outbound PGN.
         protocol: BusProtocol,
+        /// J1939 messages over 8 bytes, going out over ISO TP.
+        tp: TpSender,
     }
 
     impl TxBuffer {
@@ -349,6 +352,19 @@ mod imp {
                 overflowed: 0,
                 fast_seq: HashMap::new(),
                 protocol,
+                tp: TpSender::new(),
+            }
+        }
+
+        /// Queue a frame that already carries its own header.
+        fn push_frame(&mut self, f: &RawFrame) {
+            self.push(iso11783_compose(f.prio, f.pgn, f.src, f.dst), &f.data);
+        }
+
+        /// Queue whatever ISO TP has due at `now`.
+        fn poll_tp(&mut self, now: u64) {
+            for f in self.tp.poll(now) {
+                self.push_frame(&f);
             }
         }
 
@@ -417,15 +433,28 @@ mod imp {
             // receivers key on the PGN type, not the byte count.
             let is_fast = self.tx_buf.protocol.packet_type(pgn) == FramePacketType::Fast;
             if !is_fast && data.len() > 8 {
-                // J1939 carries this through ISO TP, which we cannot send
-                // yet; never truncate it, and never fast-packet it.
-                log::warn!(
-                    "socketcan: not sending PGN {pgn}: {} bytes need ISO TP, which is not supported for sending yet",
-                    data.len()
-                );
-                return;
-            }
-            if !is_fast {
+                if self.tx_buf.protocol == BusProtocol::Nmea2000 {
+                    // A single-frame PGN cannot carry more; never
+                    // truncate it.
+                    log::warn!(
+                        "socketcan: not sending PGN {pgn}: {} bytes do not fit one frame",
+                        data.len()
+                    );
+                    return;
+                }
+                // J1939: ISO TP, a BAM to global or RTS/CTS to one node.
+                match self.tx_buf.tp.send(now_ms(), pgn, src, dst, data) {
+                    Ok(frames) => {
+                        for f in &frames {
+                            self.tx_buf.push_frame(f);
+                        }
+                    }
+                    Err(e) => {
+                        log::warn!("socketcan: not sending PGN {pgn} over ISO TP: {e}");
+                        return;
+                    }
+                }
+            } else if !is_fast {
                 self.tx_buf.push(can_id, data);
             } else {
                 let seq = self.tx_buf.next_fast_seq(pgn, src);
@@ -1145,6 +1174,13 @@ mod imp {
             data.iter().copied(),
         );
 
+        // A CTS, EOMA or Abort for one of our ISO TP transfers.
+        if claimer.protocol == BusProtocol::J1939 && pgn == PGN_TP_CM {
+            for f in bus.tx_buf.tp.on_frame(when, &single_frame) {
+                bus.tx_buf.push_frame(&f);
+            }
+        }
+
         if claimer.claim.state() != ClaimState::Disabled {
             if pgn == PGN_ISO_ADDRESS_CLAIM {
                 claimer.on_claim(bus, src, data);
@@ -1405,6 +1441,12 @@ mod imp {
                         // the gateway leaves the bus — and confirm only if
                         // nothing was left behind.
                         let flushed = flush_tx(&sock, &mut tx_buf, &progress);
+                        if !tx_buf.tp.is_idle() {
+                            // A BAM paces its packets 50 ms apart, and an
+                            // RTS waits on its receiver: neither is worth
+                            // holding the shutdown for.
+                            log::warn!("socketcan: leaving with an ISO TP transfer unfinished");
+                        }
                         drop(sock);
                         if let Some(done) = done {
                             let _ = done.send(flushed);
@@ -1433,6 +1475,11 @@ mod imp {
             } else {
                 MAX_POLL_MS
             };
+            // ISO TP: the next BAM packet, or a CTS / EOMA timeout.
+            tx_buf.poll_tp(now);
+            if let Some(at) = tx_buf.tp.next_deadline() {
+                wait = wait.min(at.saturating_sub(now));
+            }
             if !tx_buf.is_empty() && wait > 5 {
                 wait = 5;
             }
@@ -1734,6 +1781,132 @@ mod imp {
                 assert_eq!(d.data(), &[0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08]);
                 break;
             }
+        }
+
+        /// Start a J1939 gateway on `iface` and wait for its address.
+        fn j1939_gateway(iface: &str, unique: u32, address: u8) -> (DeviceHandle, u8) {
+            let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+            let config = Config {
+                protocol: BusProtocol::J1939,
+                ..vcan_config(unique, address)
+            };
+            let handle = run(iface, config, Arc::clone(&claim)).expect("gateway starts");
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+            while claim.load(Ordering::Relaxed) == CLAIM_UNCLAIMED {
+                assert!(std::time::Instant::now() < deadline, "never claimed");
+                std::thread::yield_now();
+            }
+            (handle, claim.load(Ordering::Relaxed))
+        }
+
+        /// The next TP frame (PGN 60416 / 60160) `from` puts on the bus,
+        /// as (pgn, dst, data, when).
+        fn next_tp_frame(peer: &CanSocket, from: u8) -> (u32, u8, Vec<u8>, std::time::Instant) {
+            let deadline = std::time::Instant::now() + std::time::Duration::from_secs(5);
+            loop {
+                assert!(std::time::Instant::now() < deadline, "no TP frame");
+                let Ok(socketcan::CanFrame::Data(d)) = peer.read_frame() else {
+                    continue;
+                };
+                let socketcan::Id::Extended(e) = d.id() else {
+                    continue;
+                };
+                let (_, pgn, src, dst) = iso11783_decompose(e.as_raw());
+                if src == from && (pgn == PGN_TP_CM || pgn == crate::engine::iso_tp::PGN_TP_DT) {
+                    return (pgn, dst, d.data().to_vec(), std::time::Instant::now());
+                }
+            }
+        }
+
+        /// A 20-byte J1939 message to global leaves as a BAM whose
+        /// packets are at least the J1939-21 gap apart and reassemble
+        /// into the original.
+        #[test]
+        fn a_j1939_bam_reaches_the_bus() {
+            let Some(iface) = vcan_iface() else {
+                eprintln!("no vcan interface; skipping");
+                return;
+            };
+            let peer = bus_peer(&iface);
+            let (handle, addr) = j1939_gateway(&iface, 0x4444, 40);
+            let data: Vec<u8> = (1..=20).collect();
+            // PGN 0x1FF47 is this test's alone.
+            handle
+                .send_frame(RawFrame::new(
+                    None,
+                    6,
+                    0x1FF47,
+                    0,
+                    ADDR_GLOBAL,
+                    data.iter().copied(),
+                ))
+                .expect("writer accepts the frame");
+
+            let mut reasm = Reassembler::new();
+            let mut last: Option<std::time::Instant> = None;
+            let got = loop {
+                let (pgn, dst, bytes, when) = next_tp_frame(&peer, addr);
+                assert_eq!(dst, ADDR_GLOBAL);
+                if pgn == crate::engine::iso_tp::PGN_TP_DT {
+                    if let Some(prev) = last {
+                        assert!(
+                            when - prev >= std::time::Duration::from_millis(40),
+                            "BAM packets {:?} apart",
+                            when - prev
+                        );
+                    }
+                    last = Some(when);
+                }
+                let f = RawFrame::new(None, 7, pgn, addr, dst, bytes);
+                if let Reassembled::Complete(m) = reasm.push(f, FramePacketType::Single) {
+                    break m;
+                }
+            };
+            assert_eq!(got.pgn, 0x1FF47);
+            assert_eq!(got.data.as_slice(), data.as_slice());
+        }
+
+        /// A 20-byte J1939 message to one address runs the RTS/CTS
+        /// handshake with that node: the peer here plays the receiver.
+        #[test]
+        fn a_j1939_rts_cts_transfer_completes() {
+            let Some(iface) = vcan_iface() else {
+                eprintln!("no vcan interface; skipping");
+                return;
+            };
+            const PEER: u8 = 0x55;
+            const PGN: u32 = 0xDA00; // PDU1, this test's alone
+            let peer = bus_peer(&iface);
+            let (handle, addr) = j1939_gateway(&iface, 0x5555, 50);
+            let data: Vec<u8> = (101..=120).collect();
+            handle
+                .send_frame(RawFrame::new(None, 6, PGN, 0, PEER, data.iter().copied()))
+                .expect("writer accepts the frame");
+
+            let (pgn, dst, rts, _) = next_tp_frame(&peer, addr);
+            assert_eq!((pgn, dst), (PGN_TP_CM, PEER));
+            assert_eq!(rts, [16, 20, 0, 3, 0xFF, 0x00, 0xDA, 0x00], "RTS");
+
+            let reply = |control: u8, b1: u8, b2: u8| {
+                let id = iso11783_compose(7, PGN_TP_CM, PEER, addr);
+                let f = socketcan::CanFrame::new(
+                    ExtendedId::new(id & CAN_EFF_MASK).expect("29-bit id"),
+                    &[control, b1, b2, 0xFF, 0xFF, 0x00, 0xDA, 0x00],
+                )
+                .expect("build frame");
+                peer.write_frame(&f).expect("peer writes");
+            };
+            reply(17, 3, 1); // CTS: all three packets, from 1
+            let mut received = Vec::new();
+            for seq in 1..=3u8 {
+                let (pgn, dst, packet, _) = next_tp_frame(&peer, addr);
+                assert_eq!((pgn, dst), (crate::engine::iso_tp::PGN_TP_DT, PEER));
+                assert_eq!(packet[0], seq);
+                received.extend_from_slice(&packet[1..]);
+            }
+            received.truncate(20);
+            assert_eq!(received, data);
+            reply(19, 20, 0); // EOMA
         }
 
         /// Opening a nonexistent interface is an error, not a panic or a
@@ -2106,8 +2279,8 @@ mod imp {
         }
 
         /// On J1939, a data page 1 PGN that is fast-packet on NMEA 2000
-        /// (130816) goes out as one plain frame, and a payload too long
-        /// for one frame is refused rather than fast-packet framed.
+        /// (130816) goes out as one plain frame, and nothing is ever
+        /// fast-packet framed.
         #[test]
         fn j1939_sends_single_frames_only() {
             let mut tx_buf = TxBuffer::with_protocol(BusProtocol::J1939);
@@ -2118,7 +2291,41 @@ mod imp {
                 vec![vec![9, 8, 7, 6, 5, 4]],
                 "no fast-packet shell on J1939"
             );
-            assert!(send(&mut tx_buf, 130816, &[0; 12]).is_empty());
+        }
+
+        /// A J1939 payload over 8 bytes to global goes out as an ISO TP
+        /// BAM: the announcement at once, the data packets as the
+        /// worker polls the sender.
+        #[test]
+        fn j1939_sends_long_messages_over_iso_tp() {
+            let mut tx_buf = TxBuffer::with_protocol(BusProtocol::J1939);
+            let data: Vec<u8> = (1..=12).collect();
+            let announced = send(&mut tx_buf, 130816, &data);
+            assert_eq!(
+                announced,
+                vec![vec![32, 12, 0, 2, 0xFF, 0x00, 0xFF, 0x01]],
+                "BAM for PGN 130816, 12 bytes in 2 packets"
+            );
+            let id = socketcan::Frame::raw_id(tx_buf.queue.back().unwrap());
+            assert_eq!((id >> 8) & 0x3FFFF, 0xECFF, "TP.CM to global");
+            let at = tx_buf.tp.next_deadline().unwrap();
+            let before = tx_buf.queue.len();
+            tx_buf.poll_tp(at);
+            tx_buf.poll_tp(at + crate::engine::iso_tp::BAM_GAP_MS);
+            let packets: Vec<Vec<u8>> = tx_buf
+                .queue
+                .iter()
+                .skip(before)
+                .map(|f| f.data().to_vec())
+                .collect();
+            assert_eq!(
+                packets,
+                vec![
+                    vec![1, 1, 2, 3, 4, 5, 6, 7],
+                    vec![2, 8, 9, 10, 11, 12, 0xFF, 0xFF]
+                ]
+            );
+            assert!(tx_buf.tp.is_idle());
         }
 
         /// A J1939 node claims in the Global industry group and runs none
