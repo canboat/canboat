@@ -339,6 +339,24 @@ pub const RULES: &[Rule] = &[
                  by SPN, which is how J1939 documentation and DM1 trouble codes \
                  name them.",
     },
+    Rule {
+        id: "R43",
+        scope: Scope::IntraPgn,
+        severity: "error",
+        enforced_in: "check::check_continues",
+        title: "A continues: field holds the high bits of an earlier integer field.",
+        detail: "Some layouts split one value around another: J1939-73 puts a \
+                 trouble code's 19-bit SPN in 16 bits, then the 5-bit FMI, then \
+                 the SPN's top 3 bits. The 3-bit field says `continues: spn`; it \
+                 keeps its place in the layout, so every sequential bit walk is \
+                 unchanged, and a decoder that knows the attribute joins the two \
+                 into one value. So it must follow the field it continues in the \
+                 same record (same repeating set, nothing of variable width in \
+                 between), only one field may continue another, and it is raw \
+                 bits: a NUMBER with no resolution, offset, unit, lookup, match or \
+                 spn: of its own. The continued field is a NUMBER or LOOKUP of at \
+                 most 64 bits in total.",
+    },
 ];
 
 /// Human-readable inventory, grouped by scope.

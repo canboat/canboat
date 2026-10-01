@@ -102,6 +102,12 @@ pub struct Field {
     /// SAE J1939 Suspect Parameter Number: the identifier J1939-71 gives
     /// this value, independent of the PGN that carries it. J1939 tree only.
     pub spn: Option<u32>,
+    /// Id of an earlier field in the same record whose value this field's
+    /// bits continue: they are that value's high bits, above its own width.
+    /// J1939-73 splits a DTC's 19-bit SPN around its FMI this way. The
+    /// field keeps its place in the layout, so every sequential bit walk is
+    /// unchanged; a decoder that knows the attribute joins the two.
+    pub continues: Option<String>,
     /// Authored research note, YAML-only documentation (never emitted to an
     /// artifact). Modeled so the editor can round-trip it through a fields:
     /// block rewrite instead of silently dropping it.
@@ -147,6 +153,17 @@ pub struct Field {
     pub order: u32,
     /// 1-based order of the field named by `bit_length_field`.
     pub bit_length_field_order: Option<u32>,
+    /// On a field that another field `continues`: where its high bits sit,
+    /// as (bit offset from this field's start, bit count).
+    pub res_continuation: Option<(u32, u32)>,
+}
+
+impl Field {
+    /// The width of the value this field decodes to: its own bits plus
+    /// any bits a later field continues it with.
+    pub fn value_bits(&self) -> u32 {
+        self.res_bits + self.res_continuation.map_or(0, |(_, b)| b)
+    }
 }
 
 impl Field {

@@ -442,6 +442,20 @@ limitations under the License.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
+      <xs:element type="xs:string" name="Continues" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>
+            The Id of an earlier field in the same record (and the same
+            repeating set) whose value this field continues: this field's
+            bits are that value's high bits, above the earlier field's own
+            BitLength. The field keeps its own place in the layout. J1939-73
+            splits a trouble code's 19-bit SPN this way, around the FMI.
+            A decoder that does not know this element sees two plain
+            numbers; one that does shows the earlier field with the joined
+            value (and its lookup name), and this field not at all.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
       <xs:element type="xs:boolean" name="BitLengthVariable" minOccurs="0">
         <xs:annotation>
           <xs:documentation>

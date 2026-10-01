@@ -138,10 +138,11 @@ const PGN_KEYS: [&str; 16] = [
 
 /// One entry of a PGN's `fields:` list. `repeat` is handled a level up, in
 /// `fields_and_repeats`, so it is deliberately absent.
-const FIELD_KEYS: [&str; 25] = [
+const FIELD_KEYS: [&str; 26] = [
     "id",
     "name",
     "spn",
+    "continues",
     "type",
     "bits",
     "resolution",
@@ -411,6 +412,7 @@ fn field(y: &Yaml, ctx: &str) -> Result<Field> {
         offset: opt_i64(y, "offset").map(|o| o as i32),
         description: opt_str(y, "description"),
         spn: opt_spn(y, ctx)?,
+        continues: opt_str(y, "continues"),
         note: opt_str(y, "note"),
         match_,
         lookup: opt_str(y, "lookup"),
@@ -664,6 +666,14 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
     for path in sorted_yaml_files(&db_dir.join("lookups"))? {
         let doc = load_file(&path)?;
         let lk = lookup(&doc, &path.display().to_string())?;
+        if lk.name == crate::derive::SPN_LOOKUP {
+            return Err(format!(
+                "{}: lookup {} is built from the J1939 fields' spn: attributes, \
+                 not authored",
+                path.display(),
+                lk.name
+            ));
+        }
         db.lookups.insert(lk.name.clone(), lk);
     }
 

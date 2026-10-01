@@ -466,6 +466,11 @@ impl PgnBuilder {
                                     size,
                                     v,
                                 )?,
+                                None => {
+                                    let fields = &self.pgn.fields[start..start + size];
+                                    let derived = continuing_staged(fields, inst, j);
+                                    emit_field(&mut buf, &mut next_bit, f, derived.as_ref())?
+                                }
                                 other => emit_field(&mut buf, &mut next_bit, f, other.as_ref())?,
                             }
                         }
@@ -492,11 +497,18 @@ impl PgnBuilder {
                     }
                     _ => None,
                 });
+            let derived = match self.staged[idx] {
+                None => continuing_staged(self.pgn.fields, &self.staged, idx),
+                Some(_) => None,
+            };
             emit_field(
                 &mut buf,
                 &mut next_bit,
                 f,
-                auto_count.as_ref().or(self.staged[idx].as_ref()),
+                auto_count
+                    .as_ref()
+                    .or(self.staged[idx].as_ref())
+                    .or(derived.as_ref()),
             )?;
             idx += 1;
         }
@@ -807,7 +819,10 @@ impl PgnBuilder {
                 });
             }
         };
-        Ok(mask_to_width(raw_i64, bl))
+        Ok(mask_to_width(
+            raw_i64,
+            bl + f.continuation.map_or(0, |c| c.bit_length),
+        ))
     }
 
     fn resolve_lookup(&self, f: &FieldInfo, label: &str) -> Result<u64, EncodeError> {
@@ -1013,7 +1028,8 @@ fn stage_dynamic_value(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeEr
 }
 
 fn default_raw(f: &FieldInfo) -> u64 {
-    let bl = f.bit_length.unwrap_or(0);
+    // A continued field's value includes the high bits another field holds.
+    let bl = f.bit_length.unwrap_or(0) + f.continuation.map_or(0, |c| c.bit_length);
     // A variant-selector field: emit the value that identifies this PGN.
     if let Some(mv) = f.match_value {
         return mask_to_width(mv, bl);
@@ -1022,6 +1038,22 @@ fn default_raw(f: &FieldInfo) -> u64 {
         Some(FieldType::Spare) => 0,
         _ => f.unknown_value.unwrap_or_else(|| all_ones(bl)),
     }
+}
+
+/// What a `continues:` field holds when the caller left it unset: the high
+/// bits of the value staged for the field it continues (or of that field's
+/// default), so setting the one field sets both. `None` for any other field.
+fn continuing_staged(fields: &[FieldInfo], staged: &[Option<Staged>], j: usize) -> Option<Staged> {
+    let target = fields[j].continues?;
+    let t = fields[..j].iter().position(|g| g.id == target)?;
+    let low = &fields[t];
+    let shift = low.bit_length?;
+    let value = match &staged[t] {
+        Some(Staged::Scalar(v)) => *v,
+        None => default_raw(low),
+        _ => return None,
+    };
+    Some(Staged::Scalar(value >> shift))
 }
 
 /// Write the "not available" default for a field left unset by the caller.
@@ -1196,6 +1228,55 @@ mod tests {
         assert_eq!(frame.prio, 6);
         assert_eq!(frame.dst, 255);
         assert_eq!(frame.data.as_slice(), &[0x14, 0xf0, 0x01]);
+    }
+
+    /// A J1939 DM1 trouble code's SPN is split around the FMI (J1939-73).
+    /// Setting the one `spn` field writes both halves; decoding joins them
+    /// and names the SPN, and the high-bits field stays out of the output.
+    #[test]
+    fn a_dm1_spn_is_split_on_encode_and_joined_on_decode() {
+        use crate::engine::decode::FieldValue;
+        let db = PgnDatabase::embedded_j1939(crate::engine::Units::Si);
+        let dtc = |spn: EncodeValue| {
+            let mut b = db.encode_by_pgn(65226).unwrap();
+            let i = b.add_set_instance(1).unwrap();
+            b.push_in_set(1, i, "spn", spn)
+                .unwrap()
+                .push_in_set(1, i, "fmi", 2u32)
+                .unwrap()
+                .push_in_set(1, i, "oc", 5u32)
+                .unwrap()
+                .push_in_set(1, i, "cm", 0u32)
+                .unwrap();
+            b.build().unwrap()
+        };
+
+        // 520192 = 0xf000 + 7 << 16: the 7 lands above the FMI's 5 bits.
+        let frame = dtc(EncodeValue::Int(520192));
+        assert_eq!(&frame.data[2..6], &[0x00, 0xf0, 0xe2, 0x05]);
+        let decoded = db.decode(&frame).unwrap();
+        let spn = decoded.fields.iter().find(|f| f.id() == "spn").unwrap();
+        assert!(matches!(
+            spn.value,
+            FieldValue::Lookup {
+                value: 520192,
+                name: None
+            }
+        ));
+        assert!(decoded.fields.iter().all(|f| f.id() != "spnHigh"));
+
+        // A name from the SPN lookup encodes as its number.
+        let frame = dtc(EncodeValue::Lookup("Engine Oil Pressure".into()));
+        assert_eq!(&frame.data[2..6], &[0x64, 0x00, 0x02, 0x05]);
+        let decoded = db.decode(&frame).unwrap();
+        let spn = decoded.fields.iter().find(|f| f.id() == "spn").unwrap();
+        assert!(matches!(
+            spn.value,
+            FieldValue::Lookup {
+                value: 100,
+                name: Some("Engine Oil Pressure")
+            }
+        ));
     }
 
     #[test]

@@ -240,6 +240,9 @@
                       <xsl:value-of select="Description"/>
                     </xsl:with-param>
                   </xsl:call-template>
+                  <xsl:if test="Continues">
+                    <div>High bits of field <xsl:value-of select="Continues"/></div>
+                  </xsl:if>
                 </td>
                 <td>
                   <xsl:value-of select="$notone"/>

@@ -497,6 +497,9 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
         if let Some(spn) = f.spn {
             self.xml_u(10, "SPN", spn as u64);
         }
+        if let Some(target) = &f.continues {
+            self.xml(10, "Continues", Some(target));
+        }
 
         if f.res_bits == 0 {
             self.p("          <BitLengthVariable>true</BitLengthVariable>\n");
@@ -584,20 +587,20 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
                 self.p(&format!("          <RangeMax>{r}</RangeMax>\n"));
             }
         } else if lookup_ref.is_some() && !is_match {
-            let r = self.g15(((1u128 << f.res_bits) - 1) as f64);
+            let r = self.g15(((1u128 << f.value_bits()) - 1) as f64);
             self.p(&format!("          <RangeMax>{r}</RangeMax>\n"));
         }
 
         if f.reserved_count > 0
-            && f.res_bits < 64
+            && f.value_bits() < 64
             && !f.res_range_min.is_nan()
             && !is_match
             && ft.root_sentinels == "TopOfRange"
         {
             let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
-                f.res_bits - 1
+                f.value_bits() - 1
             } else {
-                f.res_bits
+                f.value_bits()
             };
             let raw = (1u64 << highbit) - 1;
             self.p(&format!("          <UnknownValue>{raw}</UnknownValue>\n"));

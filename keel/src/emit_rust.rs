@@ -65,6 +65,10 @@ struct RawField {
     name: String,
     description: Option<String>,
     spn: Option<u32>,
+    /// (bit offset from this field's start, bit count) of the bits a later
+    /// field continues this one with.
+    continuation: Option<(u32, u32)>,
+    continues: Option<String>,
     bit_length: Option<u32>,
     bit_length_field: Option<String>,
     encoding: Option<String>,
@@ -511,6 +515,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
     write!(
         out,
         "FieldInfo{{order:{order},id:{id},name:{name},description:{description},spn:{spn},\
+         continuation:{continuation},continues:{continues},\
          bit_length:{bit_length},bit_length_field:{blf},encoding:{enc},bit_length_variable:{blv},\
          bit_offset:{bit_offset},bit_start:{bit_start},resolution:{resolution},\
          signed:{signed},offset:{offset},range_min:{range_min},range_max:{range_max},\
@@ -526,6 +531,12 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         name = quote(&f.name),
         description = opt_str(&f.description),
         spn = opt_int(&f.spn),
+        continuation = match f.continuation {
+            Some((bit_offset, bit_length)) =>
+                format!("Some(Continuation{{bit_offset:{bit_offset},bit_length:{bit_length}}})"),
+            None => "None".to_string(),
+        },
+        continues = opt_str(&f.continues),
         bit_length = opt_int(&f.bit_length),
         blf = opt_str(&f.bit_length_field),
         enc = opt_str(&f.encoding),
@@ -965,9 +976,9 @@ fn sentinels(
     // recomputes the bound from the bit width at decode time. So: no width
     // guard here.
     let highbit = if ft.has_sign == Some(true) && f.res_offset == 0 {
-        f.res_bits - 1
+        f.value_bits() - 1
     } else {
-        f.res_bits
+        f.value_bits()
     };
     // highbit == 64 for an unsigned 64-bit field, where 1u64 << 64 is UB.
     let raw = if highbit >= 64 {
@@ -998,6 +1009,8 @@ fn raw_field(
         name: f.name.clone(),
         description: f.description.clone(),
         spn: f.spn,
+        continuation: f.res_continuation,
+        continues: f.continues.clone(),
         bit_length: (f.res_bits != 0).then_some(f.res_bits),
         bit_length_field: f.bit_length_field_order.map(|o| o.to_string()),
         encoding: f.encoding.clone(),
@@ -1333,6 +1346,12 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     }
     if ft_tables.iter().any(|t| !t.values.is_empty()) {
         imports.push("LookupFieldTypeValue");
+    }
+    if pgn_with_fields
+        .iter()
+        .any(|(_, fs)| fs.iter().any(|f| f.continuation.is_some()))
+    {
+        imports.push("Continuation");
     }
     imports.sort_unstable();
     writeln!(out, "use crate::engine::types::{{{}}};", imports.join(", ")).unwrap();

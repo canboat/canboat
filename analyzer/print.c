@@ -234,6 +234,25 @@ bool extractNumber(const Field   *field,
 
   logDebug("extractNumber <%s> startBit=%zu bits=%zu\n", name, startBit, bits);
 
+  /* A field whose value another field continues (keel R43): read its own bits, then join the high bits above them.
+   * Only for a read of the field's whole width; a truncated read stays its own bits, as before. */
+  if (field != NULL && field->continuationBits != 0 && bits == field->size && bits + field->continuationBits <= 64)
+  {
+    int64_t high;
+    int64_t highMax;
+
+    if (!extractNumber(NULL, data, dataLen, startBit, bits, value, maxValue))
+    {
+      return false;
+    }
+    if (extractNumber(NULL, data, dataLen, startBit + field->continuationOffset, field->continuationBits, &high, &highMax))
+    {
+      *value |= (int64_t) ((uint64_t) high << bits);
+      *maxValue |= (int64_t) ((uint64_t) highMax << bits);
+    }
+    return true;
+  }
+
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
     return false;

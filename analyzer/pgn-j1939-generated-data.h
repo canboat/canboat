@@ -966,11 +966,11 @@ Pgn pgnList[] = {
       {.name = "Flash Amber Warning Lamp", .camelName = "flashAmberWarningLamp", .fieldType = "NUMBER", .size = 2, .resolution = 1.0},
       {.name = "Flash Red Stop Lamp", .camelName = "flashRedStopLamp", .fieldType = "NUMBER", .size = 2, .resolution = 1.0},
       {.name = "Flash Malfunction Indicator Lamp", .camelName = "flashMalfunctionIndicatorLamp", .fieldType = "NUMBER", .size = 2, .resolution = 1.0},
-      {.name = "SPN (low 16 bits)", .camelName = "spnLow", .fieldType = "NUMBER", .size = 16, .resolution = 1.0, .description = "The Suspect Parameter Number of the fault is these 16 bits plus SPN (high 3 bits) times 65536", .reservedOverride = 1},
+      {.name = "SPN", .camelName = "spn", .fieldType = "LOOKUP", .size = 16, .resolution = 1.0, .description = "Suspect Parameter Number of the fault", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_SPN, .lookup.name = "J1939_SPN", .continuationOffset = 21, .continuationBits = 3, .reservedOverride = 1},
       {.name = "FMI", .camelName = "fmi", .fieldType = "NUMBER", .size = 5, .resolution = 1.0, .description = "Failure Mode Identifier", .reservedOverride = 1},
-      {.name = "SPN (high 3 bits)", .camelName = "spnHigh", .fieldType = "NUMBER", .size = 3, .resolution = 1.0, .description = "The SPN's bits 17-19", .reservedOverride = 1},
+      {.name = "SPN (high 3 bits)", .camelName = "spnHigh", .fieldType = "NUMBER", .size = 3, .resolution = 1.0, .description = "The SPN's bits 17-19", .continues = true, .reservedOverride = 1},
       {.name = "OC", .camelName = "oc", .fieldType = "NUMBER", .size = 7, .resolution = 1.0, .description = "Occurrence Count; 127 is not available", .reservedOverride = 2},
-      {.name = "CM", .camelName = "cm", .fieldType = "NUMBER", .size = 1, .resolution = 1.0, .description = "SPN Conversion Method; 0 for the current SPN layout", .reservedOverride = 1}
+      {.name = "CM", .camelName = "cm", .fieldType = "NUMBER", .size = 1, .resolution = 1.0, .description = "SPN Conversion Method. 0 is the current SPN layout, the one decoded here; 1 marks an older J1939-73 layout, so the SPN shown for such a code is wrong", .reservedOverride = 1}
      },
      .camelDescription = "activeTroubleCodes",
      .repeatingCount1 = 5,

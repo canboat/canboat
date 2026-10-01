@@ -209,6 +209,7 @@ fn fixup_unit(unit: &str, has_sign: bool, range_min: &mut f64, range_max: &mut f
 /// analyzer-explain.c getMinimalPgnLength(), for every PGN.
 pub fn fill(db: &mut Database) -> Result<(), String> {
     db.index();
+    add_spn_lookup(db)?;
     fill_fieldtypes(db)?;
     fill_pgn_list(db, true)?;
     fill_pgn_list(db, false)
@@ -222,6 +223,7 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
         &mut db.pgns_j1939
     });
     for pgn in pgns.iter_mut() {
+        resolve_continuations(pgn, db)?;
         let mut order = 0u32;
         for f in pgn.fields.iter_mut() {
             order += 1;
@@ -289,7 +291,7 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
                 fixup_unit(unit, f_has_sign, &mut f.res_range_min, &mut f.res_range_max);
             }
 
-            let by_size = reserved_count_for_size(f.res_bits);
+            let by_size = reserved_count_for_size(f.value_bits());
             f.res_special_values = f.special_values.or(ft.special_values);
             let count = f.res_special_values.unwrap_or(by_size);
 
@@ -309,9 +311,9 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
                 && f.res_range_max.is_nan()
             {
                 f.res_range_min =
-                    get_min_range(f.res_bits, f.res_resolution, f_has_sign, f.res_offset);
+                    get_min_range(f.value_bits(), f.res_resolution, f_has_sign, f.res_offset);
                 f.res_range_max = get_max_range(
-                    f.res_bits,
+                    f.value_bits(),
                     f.res_resolution,
                     f_has_sign,
                     f.res_offset,
@@ -324,11 +326,11 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             if f.res_special_values.is_some() {
                 f.reserved_count = count;
             } else if f.res_bits != 0
-                && f.res_bits < 64
+                && f.value_bits() < 64
                 && f.res_resolution > 0.0
                 && !f.res_range_max.is_nan()
             {
-                let raw_max: u64 = (1u64 << f.res_bits) - 1;
+                let raw_max: u64 = (1u64 << f.value_bits()) - 1;
                 let raw_range_max = (f.res_range_max / f.res_resolution + 0.5) as u64;
                 f.reserved_count = if raw_range_max >= raw_max {
                     0
@@ -368,6 +370,84 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
         db.pgns = pgns;
     } else {
         db.pgns_j1939 = pgns;
+    }
+    Ok(())
+}
+
+/// The lookup that names J1939 SPNs, built from the `spn:` attributes of the
+/// J1939 tree rather than authored: a field that carries an SPN number, as a
+/// diagnostic trouble code does, names it from here. An SPN takes the name
+/// of the first field (in PGN order) that carries it.
+pub const SPN_LOOKUP: &str = "J1939_SPN";
+
+/// Rebuilt on every pass, so filling twice gives the same table;
+/// `yamlio::load_database` refuses an authored file of the same name.
+fn add_spn_lookup(db: &mut Database) -> Result<(), String> {
+    let mut pgns: Vec<&crate::model::Pgn> = db.pgns_j1939.iter().collect();
+    pgns.sort_by_key(|p| p.pgn);
+    let mut names: std::collections::BTreeMap<u64, String> = std::collections::BTreeMap::new();
+    for f in pgns.iter().flat_map(|p| p.fields.iter()) {
+        if let Some(spn) = f.spn {
+            names.entry(spn as u64).or_insert_with(|| f.name.clone());
+        }
+    }
+    db.lookups.insert(
+        SPN_LOOKUP.to_string(),
+        crate::model::Lookup {
+            name: SPN_LOOKUP.to_string(),
+            kind: "pair".to_string(),
+            bits: 19,
+            pairs: names.into_iter().collect(),
+            ..Default::default()
+        },
+    );
+    Ok(())
+}
+
+/// Place the bits each `continues:` field adds to the field it continues,
+/// as an offset from that field's start. Runs before the per-field fill so
+/// the continued field's range covers its whole value. Both fields must
+/// sit in one fixed-width stretch of the record; R43 says why one that does
+/// not is wrong, so here such a pair is simply left unjoined.
+fn resolve_continuations(pgn: &mut crate::model::Pgn, db: &Database) -> Result<(), String> {
+    for f in pgn.fields.iter_mut() {
+        f.res_continuation = None;
+    }
+    if pgn.fields.iter().all(|f| f.continues.is_none()) {
+        return Ok(());
+    }
+    // Start bit of every field while the layout is fixed; None after the
+    // first field without a width.
+    let mut starts: Vec<Option<u32>> = Vec::with_capacity(pgn.fields.len());
+    let mut widths: Vec<u32> = Vec::with_capacity(pgn.fields.len());
+    let mut at = Some(0u32);
+    for f in &pgn.fields {
+        let ft = &db.fieldtypes[db.fieldtype(&f.type_)?];
+        let bits = match f.bits.unwrap_or(0) {
+            0 => ft.size,
+            b => b,
+        };
+        starts.push(at);
+        widths.push(bits);
+        at = if bits == 0 {
+            None
+        } else {
+            at.map(|a| a + bits)
+        };
+    }
+    for i in 0..pgn.fields.len() {
+        let Some(target) = pgn.fields[i].continues.clone() else {
+            continue;
+        };
+        let Some(t) = pgn.fields[..i].iter().position(|f| f.id == target) else {
+            continue;
+        };
+        if let (Some(from), Some(to)) = (starts[t], starts[i])
+            && pgn.fields[t].res_continuation.is_none()
+        {
+            // A second field continuing the same one is R43's to report.
+            pgn.fields[t].res_continuation = Some((to - from, widths[i]));
+        }
     }
     Ok(())
 }

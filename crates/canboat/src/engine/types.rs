@@ -60,6 +60,15 @@ pub struct FieldInfo {
     /// documentation and diagnostic trouble codes refer to it by. Only on
     /// fields of the J1939 tables.
     pub spn: Option<u32>,
+    /// Set on a field whose value a later field continues: where that
+    /// field's bits sit. The decoder joins them in above this field's own
+    /// bits, so the value (and its lookup name) is the whole one. J1939-73
+    /// splits a trouble code's 19-bit SPN around its FMI this way.
+    pub continuation: Option<Continuation>,
+    /// Set on the field that holds those high bits: the id of the field it
+    /// continues. The decoder leaves it out of the output, as its bits are
+    /// already part of that field's value.
+    pub continues: Option<&'static str>,
     pub bit_length: Option<u32>,
     pub bit_length_field: Option<&'static str>,
     /// Character set to read this field's bytes as when they are not
@@ -109,6 +118,17 @@ pub struct FieldInfo {
     /// record — a class byte and a 16-bit data-type id ahead of the
     /// value — so their overhead is 3. `0` everywhere else.
     pub dynamic_field_length_overhead: u32,
+}
+
+/// Where a field's high bits sit when another field of the same record
+/// holds them (see [`FieldInfo::continuation`]).
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Continuation {
+    /// Start of the high bits, counted from the start of the field they
+    /// continue — the same in every repetition of a repeating set.
+    pub bit_offset: u32,
+    /// How many high bits there are.
+    pub bit_length: u32,
 }
 
 /// A PGN definition.

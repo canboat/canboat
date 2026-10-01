@@ -1029,7 +1029,68 @@ fn decode_one_field_at(
 
     let bit_length = f.bit_length?;
 
-    let value = match f.field_type {
+    // The high bits of an earlier field's value: already joined into that
+    // field, so they are not a value of their own.
+    if f.continues.is_some() {
+        ctx.skip_field = true;
+    }
+
+    // A field that a later one continues: read its own bits and the high
+    // bits as one value, so its scaling, sentinels and lookup name all see
+    // the whole of it. The decoders below read that value from a scratch
+    // buffer; the field still occupies only its own bits here.
+    let joined;
+    let (data, at, width) = match join_continuation(f, data, bit_offset, bit_length) {
+        Some((value, width)) => {
+            joined = value.to_le_bytes();
+            (&joined[..], 0, width)
+        }
+        None => (data, bit_offset, bit_length),
+    };
+    let value = decode_scalar(f, info, data, db, at, width, signed, offset_k, ctx);
+    finish_scalar(f, value, bit_offset, bit_length, ctx)
+}
+
+/// The value of a field with a [`FieldInfo::continuation`]: its own
+/// `bit_length` bits with the continuing bits above them, and the width of
+/// the two together. `None` when the field has no continuation, or when
+/// either part lies beyond the payload — the field then reads as its own
+/// bits alone, as a decoder without the attribute would read it.
+fn join_continuation(
+    f: &FieldInfo,
+    data: &[u8],
+    bit_offset: u32,
+    bit_length: u32,
+) -> Option<(u64, u32)> {
+    let c = f.continuation?;
+    let width = bit_length + c.bit_length;
+    if width > 64 {
+        return None;
+    }
+    let low = extract_bits(data, bit_offset as usize, bit_length as usize, false, 0)?;
+    let high = extract_bits(
+        data,
+        (bit_offset + c.bit_offset) as usize,
+        c.bit_length as usize,
+        false,
+        0,
+    )?;
+    Some((low.raw | (high.raw << bit_length), width))
+}
+
+#[allow(clippy::too_many_arguments)]
+fn decode_scalar(
+    f: &'static FieldInfo,
+    info: &'static PgnInfo,
+    data: &[u8],
+    db: &PgnDatabase,
+    bit_offset: u32,
+    bit_length: u32,
+    signed: bool,
+    offset_k: i64,
+    ctx: &mut DecodeContext,
+) -> FieldValue {
+    match f.field_type {
         Some(FieldType::Decimal) => decode_decimal(data, bit_offset, bit_length),
         Some(FieldType::Number) => decode_number(f, data, bit_offset, bit_length, signed, offset_k),
         Some(FieldType::Float) => decode_float(data, bit_offset, bit_length),
@@ -1070,8 +1131,16 @@ fn decode_one_field_at(
         None => FieldValue::Unsupported {
             field_type: "<no field type>",
         },
-    };
+    }
+}
 
+fn finish_scalar(
+    f: &'static FieldInfo,
+    value: FieldValue,
+    bit_offset: u32,
+    bit_length: u32,
+    ctx: &mut DecodeContext,
+) -> Option<(DecodedField, u32)> {
     // Update the running context based on what we just decoded so the
     // next field can interpret VARIABLE / FIELD_INDEX correctly.
     match &value {
