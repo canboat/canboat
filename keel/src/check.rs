@@ -34,6 +34,22 @@ const PGN_RANGES: [(u32, u32, u32, &str, &str); 8] = [
     (0x1ff00, 0x1ffff, 1, "Manufacturer", "Fast"),
 ];
 
+/// pgn-j1939.h pgnRange[]: J1939 also uses the PDU1 ranges NMEA 2000
+/// leaves empty (0x0000-0xE700, and 0x10000-0x1EC00 on data page 1),
+/// and has no fast-packet: data page 1 is single frame or ISO TP.
+const J1939_PGN_RANGES: [(u32, u32, u32, &str, &str); 10] = [
+    (0x0000, 0xe700, 256, "SAE", "ISO"),
+    (0xe800, 0xee00, 256, "ISO 11783", "Single"),
+    (0xef00, 0xef00, 256, "Manufacturer", "Single"),
+    (0xf000, 0xfeff, 1, "SAE", "Single"),
+    (0xff00, 0xffff, 1, "Manufacturer", "Single"),
+    (0x10000, 0x1ec00, 256, "SAE", "ISO"),
+    (0x1ed00, 0x1ee00, 256, "SAE", "ISO"),
+    (0x1ef00, 0x1ef00, 256, "Manufacturer", "ISO"),
+    (0x1f000, 0x1feff, 1, "SAE", "ISO"),
+    (0x1ff00, 0x1ffff, 1, "Manufacturer", "ISO"),
+];
+
 /// pgn.h IS_MANUFACTURER_PGN()
 fn is_manufacturer_pgn(pgn: u32) -> bool {
     (0xff00..=0xffff).contains(&pgn) || pgn == 0x1ef00 || (0x1ff00..=0x1ffff).contains(&pgn)
@@ -68,7 +84,68 @@ pub fn check(db: &Database) -> Vec<Violation> {
             check_samples(prefix, db, pgn, prefix == "j1939/", &mut v); // R40
         }
     }
+    check_spns(db, &mut v); // R42
     v
+}
+
+/// The largest SPN: J1939 carries them in 19 bits.
+const MAX_SPN: u32 = 0x7FFFF;
+
+/// How a field decodes its SPN: bits, resolution, raw offset, unit.
+type SpnScaling = (u32, f64, i32, Option<String>);
+
+// R42: spn: only on J1939 fields, within 19 bits, and decoded alike by every
+// field that carries the same SPN.
+fn check_spns(db: &Database, v: &mut Vec<Violation>) {
+    use std::collections::BTreeMap;
+    for p in &db.pgns {
+        for f in p.fields.iter().filter(|f| f.spn.is_some()) {
+            v.push(Violation {
+                rule: "R42",
+                error: true,
+                location: pgn_loc("", p),
+                message: format!("field '{}': spn: is a J1939 attribute", f.id),
+            });
+        }
+    }
+    // SPN -> where it was first seen (location, field id) and its scaling.
+    let mut seen: BTreeMap<u32, (String, String, SpnScaling)> = BTreeMap::new();
+    for p in &db.pgns_j1939 {
+        for f in &p.fields {
+            let Some(spn) = f.spn else { continue };
+            if spn > MAX_SPN {
+                v.push(Violation {
+                    rule: "R42",
+                    error: true,
+                    location: pgn_loc("j1939/", p),
+                    message: format!("field '{}': SPN {spn} is beyond 19 bits", f.id),
+                });
+                continue;
+            }
+            let scaling = (
+                f.res_bits,
+                f.res_resolution,
+                f.res_offset,
+                f.res_unit.clone(),
+            );
+            match seen.get(&spn) {
+                None => {
+                    seen.insert(spn, (pgn_loc("j1939/", p), f.id.clone(), scaling));
+                }
+                Some((loc, id, first)) if *first != scaling => v.push(Violation {
+                    rule: "R42",
+                    error: true,
+                    location: pgn_loc("j1939/", p),
+                    message: format!(
+                        "field '{}': SPN {spn} decodes as {scaling:?} here but as {first:?} in \
+                         '{id}' ({loc})",
+                        f.id
+                    ),
+                }),
+                Some(_) => {}
+            }
+        }
+    }
 }
 
 // R40: every stored sample must decode against THIS variant and satisfy its
@@ -205,7 +282,12 @@ fn check_pgn_range(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
     if p.pgn >= ACTISENSE_BEM {
         return; // BEM pseudo-PGNs live outside the wire ranges by design
     }
-    let range = PGN_RANGES.iter().find(|(_, end, ..)| p.pgn <= *end);
+    let ranges: &[_] = if prefix == "j1939/" {
+        &J1939_PGN_RANGES
+    } else {
+        &PGN_RANGES
+    };
+    let range = ranges.iter().find(|(_, end, ..)| p.pgn <= *end);
     let Some((start, _end, step, _who, rtype)) = range else {
         v.push(Violation {
             rule: "R02",

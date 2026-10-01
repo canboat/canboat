@@ -1,0 +1,38 @@
+pgn: 65263
+id: engineFluidLevelPressure1
+description: Engine Fluid Level/Pressure 1
+type: Single
+priority: 6
+interval: 500
+fields:
+- id: engineFuelDeliveryPressure
+  name: Engine Fuel Delivery Pressure
+  spn: 94
+  type: PRESSURE_UINT8_4KPA
+- id: engineExtendedCrankcaseBlowByPressure
+  name: Engine Extended Crankcase Blow-by Pressure
+  spn: 22
+  type: PRESSURE_UINT8_005KPA
+- id: engineOilLevel
+  name: Engine Oil Level
+  spn: 98
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: engineOilPressure
+  name: Engine Oil Pressure
+  spn: 100
+  type: PRESSURE_UINT8_4KPA
+- id: engineCrankcasePressure
+  name: Engine Crankcase Pressure
+  spn: 101
+  type: PRESSURE_UFIX16_J1939_CRANKCASE
+- id: engineCoolantPressure
+  name: Engine Coolant Pressure
+  spn: 109
+  type: PRESSURE_UINT8_2KPA
+- id: engineCoolantLevel
+  name: Engine Coolant Level
+  spn: 111
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+notes: 'J1939 Engine Fluid Level/Pressure 1 (EFL/P1) PGN 65263, layout per SAE J1939-71, as given by the generic J1939 DBC (github.com/Konik-ai/j1939_dbc). Engine oil pressure and coolant level are the values a marine engine panel shows. Checked against a 2015 Kenworth T660 / PACCAR MX-13 drive (Colorado State University), where oil pressure reads 160-524 kPa.'

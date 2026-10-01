@@ -1,0 +1,15 @@
+pgn: 126976
+id: 0x1f0000x1feffStandardizedNonAddressed
+description: '0x1F000-0x1FEFF: Standardized non-addressed'
+type: ISO
+fallback: true
+missing:
+- Fields
+- FieldLengths
+- Resolution
+explanation: Standardized PGNs in PDU2 (non-addressed) PGN range 0x1F000 to 0x1FEFF (126976 - 130815), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 1784

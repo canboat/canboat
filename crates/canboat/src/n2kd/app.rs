@@ -38,7 +38,6 @@ use std::sync::{Arc, Mutex};
 use std::thread;
 use std::time::{SystemTime, UNIX_EPOCH};
 
-use crate::engine::PgnDatabase;
 use crate::engine::format::days_to_ymd;
 use crate::engine::snapshot::SnapshotStore;
 use anyhow::{Context, Result};
@@ -381,6 +380,23 @@ fn run_raw_input_client(stream: TcpStream, copy_to_stdout: bool) {
     }
 }
 
+/// What an analyzer banner declares: whether its `units` are SI, and
+/// its `protocol` (NMEA 2000 when it has none). A protocol this version
+/// doesn't know stops the daemon, as its records would be read against
+/// the wrong table.
+fn parse_banner(banner: &str) -> Result<(bool, crate::engine::BusProtocol)> {
+    let root: serde_json::Value =
+        serde_json::from_str(banner).context("parsing the analyzer banner")?;
+    let si = root.get("units").and_then(serde_json::Value::as_str) == Some("si");
+    let protocol = match root.get("protocol").and_then(serde_json::Value::as_str) {
+        None => crate::engine::BusProtocol::Nmea2000,
+        Some(p) => p
+            .parse()
+            .with_context(|| format!("the analyzer stream's protocol '{p}'"))?,
+    };
+    Ok((si, protocol))
+}
+
 fn run_stdin_pump(hub: &Hub) -> Result<()> {
     let stdin = io::stdin();
     let mut lock = stdin.lock();
@@ -391,6 +407,9 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
     // AIS converters sees the right source unit. Defaults to Metric —
     // the same assumption as a stream with no banner.
     let mut unit_si = false;
+    // The table the producer decoded with, from the banner's `protocol`;
+    // a banner without one (canboat C, older Rust) is NMEA 2000.
+    let mut protocol = crate::engine::BusProtocol::Nmea2000;
     let mut saw_banner = false;
     let mut warned_no_banner = false;
     loop {
@@ -408,7 +427,8 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
             // Learn the stream's unit system so the converters below
             // request the units they need from the right schema.
             saw_banner = true;
-            unit_si = trimmed.contains("\"units\":\"si\"");
+            (unit_si, protocol) = parse_banner(trimmed)?;
+            log::info!("analyzer stream protocol: {protocol}");
             log::info!(
                 "analyzer stream units: {}",
                 if unit_si {
@@ -487,7 +507,7 @@ fn run_stdin_pump(hub: &Hub) -> Result<()> {
         } else {
             crate::engine::Units::Metric
         };
-        let decoded = crate::engine::json_to_decoded(trimmed, PgnDatabase::embedded(units));
+        let decoded = crate::engine::json_to_decoded(trimmed, protocol.database(units));
         // Learn `src → NAME` for the per-device 0183 filter from ISO
         // Address Claims — `iso_name()` re-packs it from the decoded
         // fields (the same helper the live pipeline uses), returning
@@ -646,6 +666,19 @@ impl Hub {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn parse_banner_reads_units_and_protocol() {
+        use crate::engine::BusProtocol;
+        let c = r#"{"version":"7.1.0","units":"std","showLookupValues":true}"#;
+        let j = r#"{"version":"8.4.0","units":"si","protocol":"j1939","showLookupValues":true}"#;
+        assert_eq!(parse_banner(c).unwrap(), (false, BusProtocol::Nmea2000));
+        assert_eq!(parse_banner(j).unwrap(), (true, BusProtocol::J1939));
+        // Any valid JSON spelling, not just the compact one producers write.
+        let spaced = r#"{ "version": "8.4.0", "units": "si", "protocol": "j1939" }"#;
+        assert_eq!(parse_banner(spaced).unwrap(), (true, BusProtocol::J1939));
+        assert!(parse_banner(r#"{"version":"9.0.0","protocol":"quick"}"#).is_err());
+    }
 
     #[test]
     fn extracts_pgn_src() {

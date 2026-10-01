@@ -7,30 +7,32 @@ interval: 500
 fields:
 - id: particulateTrapInletPressure
   name: Particulate Trap Inlet Pressure
-  description: SPN 81
+  spn: 81
   type: PRESSURE_UINT8_2KPA
 - id: boostPressure
   name: Boost Pressure
-  description: SPN 102
+  spn: 102
   type: PRESSURE_UINT8_2KPA
 - id: intakeManifoldTemp
   name: Intake Manifold Temp
-  description: SPN 105
+  spn: 105
   type: TEMPERATURE_UINT8_OFFSET
 - id: airInletPressure
   name: Air Inlet Pressure
-  description: SPN 106
+  spn: 106
   type: PRESSURE_UINT8_2KPA
 - id: airFilterDifferentialPressure
   name: Air Filter Differential Pressure
-  description: SPN 107, 0.05 kPa per bit
+  spn: 107
+  description: 0.05 kPa per bit
   type: PRESSURE_UINT8_005KPA
 - id: exhaustGasTemperature
   name: Exhaust Gas Temperature
-  description: SPN 173
+  spn: 173
   type: TEMPERATURE_UFIX16_J1939
 - id: coolantFilterDifferentialPressure
   name: Coolant Filter Differential Pressure
-  description: SPN 112, 0.5 kPa per bit
+  spn: 112
+  description: 0.5 kPa per bit
   type: PRESSURE_UINT8_KPA
 notes: 'J1939 Inlet/Exhaust Conditions 1 (IC1) PGN 65270, layout per SAE J1939-71'

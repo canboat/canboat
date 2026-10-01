@@ -379,6 +379,72 @@ fn j1939_candump_text() {
     );
 }
 
+/// J1939 catch-alls for PGNs the database does not define: Proprietary B
+/// (0xFF45), Proprietary A (0xEF00) and an unknown standardized PDU2
+/// (0xF0FF). Each decodes as plain `Data`: J1939 puts no Manufacturer
+/// Code / Industry Code header on a payload, so none is shown. The C
+/// analyzer-j1939 prints the same (bar candump2analyzer's wall-clock
+/// timestamps); it used to drop the PropB frame, matching it to the
+/// fast-packet catch-all at 126208.
+#[test]
+fn j1939_catchall_text() {
+    run_case(
+        "j1939-catchall.in",
+        "j1939-catchall.out",
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
+    );
+}
+
+/// J1939 data page 1 has no fast-packet framing. An 8-byte Proprietary B
+/// frame on page 1 (PGN 130885) decodes as one frame — it used to be
+/// taken for the first frame of a fast-packet and never printed — and a
+/// 12-byte payload for the same PGN arrives through an ISO TP BAM. The
+/// C analyzer-j1939 prints the same.
+#[test]
+fn j1939_iso_tp_text() {
+    run_case(
+        "j1939-iso-tp.in",
+        "j1939-iso-tp.out",
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
+    );
+}
+
+/// J1939 scalings that differ from NMEA 2000's, with values worked out
+/// from SAE J1939-71 by hand: percent torque is 1 % per bit from -125 %
+/// (0x7d = 0 %, 0x96 = 25 %, 0x64 = -25 %, 0xff = not available), and a
+/// 16-bit temperature is 0.03125 deg C per bit from -273 deg C (0x2620 =
+/// 32 deg C, shown as 31.85 C because the K scale drops 0.15 K).
+/// EFL/P1 (65263): 4 kPa oil and fuel pressure, 0.4 % levels, and the
+/// 16-bit crankcase pressure, 1/128 kPa from -250 kPa (0x7d40 = 0.5 kPa,
+/// 0.005 bar in Metric). DD (65276): fuel level 0x3c = 24 %. PGN 0
+/// (TSC1) falls to the 0x0000-0xE700 catch-all. DM1 (65226): lamp status
+/// in J1939-73's bit order (0x40 = malfunction indicator on), and DTCs
+/// whose SPN is split around the FMI (64 00 01 03 = SPN 100, FMI 1, OC 3;
+/// 00 f0 e2 05 = SPN 61440 + 7 * 65536 = 520192, FMI 2, OC 5).
+#[test]
+fn j1939_scaling_text() {
+    run_case(
+        "j1939-scaling.in",
+        "j1939-scaling.out",
+        &[
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2023-12-10T18:58:21.487Z",
+        ],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),

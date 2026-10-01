@@ -40,7 +40,7 @@ use std::io::BufRead;
 
 use crate::engine::source::FrameSource;
 use crate::engine::types::{FieldInfo, FieldType};
-use crate::engine::{EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
+use crate::engine::{BusProtocol, EncodeValue, PgnBuilder, PgnDatabase, RawFrame};
 use anyhow::{Context, Result, anyhow, bail};
 use serde_json::{Map, Value};
 
@@ -69,6 +69,13 @@ const BARE_TOP_LEVEL: [&str; 7] = [
 /// against the wrong schema puts the wrong bits on the wire. The
 /// constructor's `db` is only the assumption for a bannerless stream —
 /// the banner always wins.
+///
+/// Its `protocol` is checked rather than adopted: the same PGN number
+/// means different things on NMEA 2000 and J1939, so a J1939 stream
+/// read against the NMEA 2000 table (or the other way round) would
+/// encode garbage. A mismatch is an error naming the `--protocol` to
+/// use. A banner without `protocol` (canboat C, older Rust) is NMEA
+/// 2000.
 pub struct JsonFrameReader<R> {
     src: R,
     db: &'static PgnDatabase,
@@ -90,19 +97,34 @@ impl<R: BufRead> JsonFrameReader<R> {
     }
 }
 
-/// The unit system an analyzer banner declares, or `None` when `line`
-/// isn't a banner or doesn't say. canboat spells them `"si"` (strict SI)
-/// and `"std"` (canboat's practical Metric).
-fn banner_units(line: &str) -> Option<crate::engine::Units> {
+/// What an analyzer banner declares.
+#[derive(Debug, PartialEq, Eq)]
+struct Banner {
+    /// `"si"` (strict SI) or `"std"` (canboat's practical Metric);
+    /// `None` when the banner doesn't say.
+    units: Option<crate::engine::Units>,
+    /// The table the records were decoded against: `nmea2000` when the
+    /// banner predates the key.
+    protocol: std::result::Result<BusProtocol, String>,
+}
+
+/// Parse `line` as an analyzer banner; `None` when it isn't one.
+fn banner(line: &str) -> Option<Banner> {
     if !line.starts_with("{\"version\"") {
         return None;
     }
     let root: Value = serde_json::from_str(line).ok()?;
-    match root.as_object()?.get("units")?.as_str()? {
-        "si" => Some(crate::engine::Units::Si),
-        "std" => Some(crate::engine::Units::Metric),
+    let root = root.as_object()?;
+    let units = match root.get("units").and_then(Value::as_str) {
+        Some("si") => Some(crate::engine::Units::Si),
+        Some("std") => Some(crate::engine::Units::Metric),
         _ => None,
-    }
+    };
+    let protocol = match root.get("protocol").and_then(Value::as_str) {
+        None => Ok(BusProtocol::Nmea2000),
+        Some(p) => p.parse::<BusProtocol>().map_err(|_| p.to_string()),
+    };
+    Some(Banner { units, protocol })
 }
 
 impl<R: BufRead> FrameSource for JsonFrameReader<R> {
@@ -120,8 +142,34 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
             // Adopt the producer's declared unit system for the rest of
             // the stream. The banner itself is not a record, so either
             // way this line yields no frame.
-            if let Some(units) = banner_units(line) {
-                if units != self.db.units() {
+            if let Some(banner) = banner(line) {
+                let ours = self.db.protocol();
+                match banner.protocol {
+                    Ok(theirs) if theirs == ours => {}
+                    Ok(theirs) => {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            format!(
+                                "line {}: the input was decoded as {theirs}, but is read as \
+                                 {ours}; pass --protocol {theirs}",
+                                self.line_no
+                            ),
+                        ));
+                    }
+                    Err(theirs) => {
+                        return Err(std::io::Error::new(
+                            std::io::ErrorKind::InvalidData,
+                            format!(
+                                "line {}: the input was decoded as protocol '{theirs}', \
+                                 which this version cannot read",
+                                self.line_no
+                            ),
+                        ));
+                    }
+                }
+                if let Some(units) = banner.units
+                    && units != self.db.units()
+                {
                     log::info!(
                         "input declares {} units; reading values against that schema",
                         if units == crate::engine::Units::Si {
@@ -130,7 +178,7 @@ impl<R: BufRead> FrameSource for JsonFrameReader<R> {
                             "Metric (deg/°C/bar)"
                         }
                     );
-                    self.db = PgnDatabase::embedded(units);
+                    self.db = ours.database(units);
                 }
                 continue;
             }
@@ -691,15 +739,48 @@ mod tests {
     }
 
     #[test]
-    fn banner_units_reads_the_producers_declaration() {
+    fn banner_reads_the_producers_declaration() {
         let si = r#"{"version":"8.0.0","commit":"abc","units":"si","showLookupValues":true}"#;
         let std = r#"{"version":"7.1.0","units":"std","showLookupValues":true}"#;
-        assert_eq!(banner_units(si), Some(Units::Si));
-        assert_eq!(banner_units(std), Some(Units::Metric));
+        let j1939 =
+            r#"{"version":"8.4.0","units":"si","protocol":"j1939","showLookupValues":true}"#;
+        assert_eq!(banner(si).unwrap().units, Some(Units::Si));
+        assert_eq!(banner(std).unwrap().units, Some(Units::Metric));
+        // A banner from before the key, canboat C's included, is NMEA 2000.
+        assert_eq!(banner(si).unwrap().protocol, Ok(BusProtocol::Nmea2000));
+        assert_eq!(banner(j1939).unwrap().protocol, Ok(BusProtocol::J1939));
+        assert_eq!(
+            banner(r#"{"version":"9.0.0","protocol":"quick"}"#)
+                .unwrap()
+                .protocol,
+            Err("quick".to_string())
+        );
         // Not a banner, or a banner that doesn't say — the caller's
         // assumption stands rather than being silently overridden.
-        assert_eq!(banner_units(r#"{"version":"7.1.0"}"#), None);
-        assert_eq!(banner_units(r#"{"pgn":127250,"fields":{}}"#), None);
+        assert_eq!(banner(r#"{"version":"7.1.0"}"#).unwrap().units, None);
+        assert_eq!(banner(r#"{"pgn":127250,"fields":{}}"#), None);
+    }
+
+    /// A banner's units are adopted, but in the reader's own protocol: a
+    /// J1939 reader stays J1939 when the banner switches it to Metric.
+    #[test]
+    fn banner_units_keep_the_protocol() {
+        let input = "{\"version\":\"8.4.0\",\"units\":\"std\",\"protocol\":\"j1939\",\"showLookupValues\":true}\n";
+        let mut reader =
+            JsonFrameReader::new(input.as_bytes(), BusProtocol::J1939.database(Units::Si));
+        assert!(reader.read_frame().unwrap().is_none());
+        assert!(reader.db.is_j1939());
+        assert_eq!(reader.db.units(), Units::Metric);
+    }
+
+    /// A J1939 stream read against the NMEA 2000 table is refused,
+    /// naming the option that fixes it.
+    #[test]
+    fn a_protocol_mismatch_is_an_error() {
+        let input = "{\"version\":\"8.4.0\",\"units\":\"si\",\"protocol\":\"j1939\",\"showLookupValues\":true}\n";
+        let mut reader = JsonFrameReader::new(input.as_bytes(), db());
+        let err = reader.read_frame().unwrap_err();
+        assert!(err.to_string().contains("--protocol j1939"), "{err}");
     }
 
     /// The whole point of tracking the banner: the same decimal means

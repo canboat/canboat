@@ -15,6 +15,7 @@
 
 pub mod analyzer_json;
 pub mod bits;
+pub mod bus_protocol;
 mod charset_generated;
 pub mod codec;
 pub mod db;
@@ -24,6 +25,9 @@ pub mod fastpacket;
 pub mod format;
 pub mod frame;
 pub mod from_json;
+// Its only user so far is the Linux-only SocketCAN driver.
+#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
+pub mod iso_tp;
 pub mod os;
 pub mod output;
 pub mod pgn_list;
@@ -38,6 +42,7 @@ pub mod startup;
 pub mod types;
 pub mod units;
 
+pub use bus_protocol::{BusProtocol, UnknownBusProtocol};
 pub use db::{PgnDatabase, Units};
 pub use decode::{DecodeError, DecodedField, DecodedPgn, FieldValue};
 pub use encode::{EncodeError, EncodeValue, PgnBuilder};

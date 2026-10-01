@@ -7,21 +7,21 @@ interval: 250
 fields:
 - id: nominalFrictionPercentTorque
   name: Nominal Friction - Percent Torque
-  description: SPN 514
-  type: PERCENTAGE_INT8
+  spn: 514
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: engineDesiredOperatingSpeed
   name: Engine's Desired Operating Speed
-  description: SPN 515
+  spn: 515
   type: ROTATION_UFIX16_RPM_HIGHRES
 - id: engineDesiredOperatingSpeedAsymmetryAdjustment
   name: Engine's Desired Operating Speed Asymmetry Adjustment
-  description: SPN 519
+  spn: 519
   type: NUMBER
   bits: 8
-- id: estimatedEnginePowerLossAccessories
-  name: Estimated Engine Power Loss - Accessories
-  description: SPN 2978
-  type: PERCENTAGE_UINT8
+- id: estimatedEngineParasiticLossesPercentTorque
+  name: Estimated Engine Parasitic Losses - Percent Torque
+  spn: 2978
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: reserved
   name: Reserved
   type: RESERVED

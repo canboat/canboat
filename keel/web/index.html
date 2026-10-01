@@ -257,6 +257,7 @@
       <div class="frow"><label>bits</label><input type="number" id="fe_bits" data-help="bits"></div>
       <div class="frow"><label>signed</label><input type="text" id="fe_signed" data-help="signed" readonly></div>
       <div class="frow"><label>description</label><textarea id="fe_description" rows="2" data-help="description"></textarea></div>
+      <div class="frow"><label>spn</label><input type="number" id="fe_spn" min="0" max="524287" data-help="spn"></div>
       <div class="frow"><label>match</label><input type="text" id="fe_match" list="dl_matchvals" data-help="match"></div>
       <div class="frow"><label>lookup</label><input type="text" id="fe_lookup" list="dl_lookups" data-help="lookup"></div>
       <div class="frow"><label>unit</label><input type="text" id="fe_unit" data-help="unit"></div>
@@ -332,6 +333,12 @@ const FIELD_HELP = {
     help: "END-USER-oriented text shown as the field's description in the decoded " +
           "output, and carried downstream to the .h tables, the XML and the JSON. " +
           "Say what the field means to someone reading the data." },
+  spn: { label: "spn",
+    help: "J1939 only: the SAE J1939-71 Suspect Parameter Number of this value " +
+          "(0 to 524287). It names the value itself, whichever PGN carries it, and " +
+          "is what J1939 documentation and DM1 trouble codes refer to. Published as " +
+          "SPN in the J1939 XML and JSON. Every field with the same SPN must decode " +
+          "it the same way (R42)." },
   note: { label: "note",
     help: "DEVELOPER-oriented annotation — implementation notes, observations from the " +
           "bus, caveats, provenance. Internal to the database ONLY: unlike description " +
@@ -1258,7 +1265,9 @@ function fieldYaml(f, pad) {
   const ft = ftByName(f.type) || {};
   const p = pad + "  ";
   const has = v => v !== "" && v !== undefined && v !== null;
-  let y = `${pad}- id: ${yq(f.id)}\n${p}name: ${yq(f.name)}\n${p}type: ${f.type}\n`;
+  let y = `${pad}- id: ${yq(f.id)}\n${p}name: ${yq(f.name)}\n`;
+  if (has(f.spn)) y += `${p}spn: ${Number(f.spn)}\n`;
+  y += `${p}type: ${f.type}\n`;
   if (has(f.bits) && Number(f.bits) !== ft.bits) y += `${p}bits: ${Number(f.bits)}\n`;
   if (has(f.bitLengthField)) y += `${p}bitLengthField: ${f.bitLengthField}\n`;
   if (has(f.description)) y += `${p}description: ${yq(f.description)}\n`;
@@ -1308,7 +1317,7 @@ function noteYaml(note, pad) {
 
 // ---- One-field editor modal -------------------------------------------------
 let fldEditIndex = -1;
-const FE_TEXT = ["id", "name", "type", "bits", "description", "match", "lookup",
+const FE_TEXT = ["id", "name", "type", "bits", "description", "spn", "match", "lookup",
                  "unit", "resolution", "offset", "note", "specialValues", "rangeMin", "rangeMax"];
 const FE_BOOL = ["primaryKey", "allowLookupWidthMismatch"];
 
@@ -1342,7 +1351,7 @@ function applyTypeConstraints() {
   lock("bits", !!ft.bits, ft.bits ? `from type (${ft.bits})` : "");
   lock("resolution", ft.resolution != null || isRS, ft.resolution != null ? `from type (${ft.resolution})` : "");
   $("fe_signed").value = ft.signed == null ? "(from type)" : (ft.signed ? "signed" : "unsigned");
-  ["description", "match", "lookup", "unit", "offset", "note", "specialValues", "rangeMin", "rangeMax"]
+  ["description", "spn", "match", "lookup", "unit", "offset", "note", "specialValues", "rangeMin", "rangeMax"]
     .forEach(k => lock(k, isRS));
   ["primaryKey", "allowLookupWidthMismatch"].forEach(k => {
     const el = $("fe_" + k);

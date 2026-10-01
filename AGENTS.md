@@ -91,6 +91,7 @@ to the YAML under `database/`, checked by `keel check`, followed by
 | `crates/canboat/src/engine/fastpacket_generated.rs` | **generated** | `keel generate` output: fast-packet framing for PGNs 0x1F000..0x1FFFF. |
 | `docs/canboat.html` | **generated** | `xsltproc canboat.xsl canboat.xml \| fixup-html.sh`. The published doc page. |
 | `docs/canboat.json` | **generated** | `xsltproc canboat2json.xslt canboat.xml`, range-validated. **THE downstream contract.** |
+| `docs/canboat-j1939.{xml,json,html}` | **generated** | The same three for the SAE J1939 tree (`database/j1939/`), from the same stylesheets; `<Protocol>j1939</Protocol>` switches the page text. The JSON is the J1939 contract (UTF-8: the ISO 11783 manufacturer registry has non-ASCII names). |
 | `docs/canboat.dbc` | **generated** | CANdb file (CRLF, version-stamped, ~466 KB) from `docs/canboat.json`. |
 | `sources/nmea_1300.json` | fixture | Deterministic extract of the official NMEA 2000 v1.300 PGN-table PDF (`tools/nmea-pdf/extract.py`). `make validation` reconciles the database against it via `tools/nmea-pdf/reconcile.py` (gate on field-level type/sign/bits; PGN-level is report-only). Documented divergences live in `tools/nmea-pdf/allowlist.json`. The PDF itself is copyrighted and **not** committed. |
 | `samples/` | fixture | Raw N2K capture corpus; evidence cited in `pgn.h` comments. NOT used by the golden-file tests. |
@@ -150,7 +151,7 @@ Key facts:
 | `make` | Builds all tool binaries into `rel/<platform>/`. |
 | `make tests` | Builds, then runs the `analyzer` golden tests. |
 | `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}`, `canboat.dbc`, the C `*-generated-data.h` and the Rust `schema_generated.rs` / `fastpacket_generated.rs`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
-| `make rust` | `keel generate`, then `cargo build --release --workspace`. Also `rust-debug`, `rust-tests`, `rust-clippy`, `rust-fmt`, `rust-precommit`. |
+| `make rust` | `keel generate`, then `cargo build --release --workspace`. Also `rust-debug`, `rust-tests`, `rust-clippy`, `rust-fmt`, `rust-public-api`, `rust-precommit`. |
 | `make keel-generate` | Just `keel/keel generate` — regenerates the committed artifacts and nothing else. No xsltproc/xmllint/python needed, unlike `make generated`. |
 | `make format` | `clang-format -i` over `*/*.c */*.h` (one directory level deep). |
 | `make docker-build` | Runs `make clean generated` inside an `ubuntu:22.04` builder. |

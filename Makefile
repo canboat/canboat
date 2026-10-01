@@ -93,8 +93,19 @@ rust-features:
 rust-fmt:
 	$(CARGO) fmt --all
 
+# The facade's public API against crates/doc/public-api/. Needs nightly and
+# cargo-public-api; without them it says so and carries on, since CI's
+# public-api job runs the same check.
+rust-public-api:
+	@scripts/check-public-api.sh; status=$$?; \
+	if [ $$status -eq 127 ]; then \
+	  echo "rust-public-api: SKIPPED (no nightly toolchain or cargo-public-api)"; \
+	elif [ $$status -ne 0 ]; then \
+	  exit $$status; \
+	fi
+
 # Everything worth having green before opening a PR that touches Rust.
-rust-precommit: rust-fmt rust-clippy rust-features rust-tests
+rust-precommit: rust-fmt rust-clippy rust-features rust-tests rust-public-api
 
 rust-clean:
 	$(CARGO) clean
@@ -186,7 +197,7 @@ aarch64-linux-musl:
 	./cross-compile.sh aarch64-linux-musl
 
 
-.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-features rust-fmt rust-precommit rust-clean keel-generate
+.PHONY : $(SUBDIRS) clean install zip bin format man1 tests generated research-docs compile copyright aarch64-linux-musl openwrt pr rust rust-debug rust-tests rust-clippy rust-features rust-fmt rust-public-api rust-precommit rust-clean keel-generate
 
 $(DESTDIR)$(BINDIR):
 	$(MKDIR) $(DESTDIR)$(BINDIR)

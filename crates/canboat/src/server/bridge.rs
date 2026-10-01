@@ -114,6 +114,18 @@ impl Bridge {
     /// the periodic ISO-request engine. Starts **nothing** on the bus —
     /// call [`Bridge::serve`] and then [`Bridge::spawn`]/[`Bridge::run`].
     pub fn new(config: BridgeConfig) -> Result<Self> {
+        // Every quirk reads or synthesises NMEA 2000 PGNs (an SCX-20, a
+        // Motion Sensor, PGN 127258, GNSS week rollover); on another bus
+        // the same PGN numbers mean something else.
+        if config.protocol != crate::engine::BusProtocol::Nmea2000
+            && let Some(kind) = config.quirk.first()
+        {
+            anyhow::bail!(
+                "--quirk {} works on NMEA 2000 PGNs and cannot run with --protocol {}",
+                kind.name(),
+                config.protocol
+            );
+        }
         // The scx20 and motion quirks impersonate a device (motion claims a
         // whole new virtual node), so they need --socketcan — the one backend
         // that preserves a frame's src on outbound. The wmm quirk emits
@@ -134,7 +146,7 @@ impl Bridge {
         // path discovery, no synthetic-PGN merge — `keel generate`
         // already folded `data/synthetic-pgns.json` into the static tables.
         let units = config.units;
-        let db = PgnDatabase::embedded(units);
+        let db = config.protocol.database(units);
 
         // JsonOptions mirror the pipeline's per-record serializer settings
         // so per-iteration snapshot lines (PGN 130824 etc.) come out
@@ -159,6 +171,7 @@ impl Bridge {
                 crate::build_info::version_banner(
                     units == crate::engine::Units::Si,
                     json_opts.name_value,
+                    config.protocol,
                 )
             )
             .into_bytes()
@@ -166,7 +179,7 @@ impl Bridge {
         );
 
         let snapshot = if config.snapshot_port != 0 {
-            Some(Arc::new(SnapshotStore::new(json_opts.clone())))
+            Some(Arc::new(SnapshotStore::new(json_opts.clone(), db)))
         } else {
             None
         };
@@ -651,6 +664,19 @@ impl Drop for Bridge {
 mod tests {
     use super::state_file_paths;
     use std::path::{Path, PathBuf};
+
+    /// Quirks read or synthesise NMEA 2000 PGNs, so a J1939 bridge
+    /// refuses them before it opens anything.
+    #[test]
+    fn quirks_need_an_nmea2000_bus() {
+        let config = crate::server::BridgeConfig {
+            protocol: crate::engine::BusProtocol::J1939,
+            quirk: vec![crate::server::quirks::QuirkKind::Wmm],
+            ..Default::default()
+        };
+        let err = super::Bridge::new(config).err().expect("refused");
+        assert!(err.to_string().contains("--protocol j1939"), "{err}");
+    }
 
     #[test]
     fn no_config_dir_disables_persistence() {

@@ -227,17 +227,23 @@ bool         extractNumberByOrder(const Pgn *pgn, size_t order, const uint8_t *d
 /* lookup.c */
 extern void fillLookups(void);
 
-#define IS_MANUFACTURER_PGN(x) (((x) >= 0xff00 && (x) <= 0xffff) || (x) >= 0x1ef00 || ((x) >= 0x1ff00 && (x) <= 0x1ffff))
+#define IS_MANUFACTURER_PGN(x) (((x) >= 0xff00 && (x) <= 0xffff) || (x) == 0x1ef00 || ((x) >= 0x1ff00 && (x) <= 0x1ffff))
 
 #ifdef GLOBALS
-PgnRange pgnRange[] = {{0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
+PgnRange pgnRange[] = {/* PDU1 below the ISO range: unused by NMEA 2000, but J1939's (TSC1 = 0,
+                        * TC1 = 256, CM1 = 57344, ...). */
+                       {0x0000, 0xe700, 256, "SAE", PACKET_ISO_TP},
+                       {0xe800, 0xee00, 256, "ISO 11783", PACKET_SINGLE},
                        {0xef00, 0xef00, 256, "NMEA", PACKET_SINGLE},
                        {0xf000, 0xfeff, 1, "NMEA", PACKET_SINGLE},
                        {0xff00, 0xffff, 1, "Manufacturer", PACKET_SINGLE},
-                       {0x1ed00, 0x1ee00, 256, "NMEA", PACKET_FAST},
-                       {0x1ef00, 0x1ef00, 256, "Manufacturer", PACKET_FAST},
-                       {0x1f000, 0x1feff, 1, "NMEA", PACKET_MIXED},
-                       {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_FAST}};
+                       /* Data page 1. J1939 has no fast-packet: a payload over
+                        * 8 bytes arrives through ISO TP (60416 / 60160). */
+                       {0x10000, 0x1ec00, 256, "SAE", PACKET_ISO_TP},
+                       {0x1ed00, 0x1ee00, 256, "SAE", PACKET_ISO_TP},
+                       {0x1ef00, 0x1ef00, 256, "Manufacturer", PACKET_ISO_TP},
+                       {0x1f000, 0x1feff, 1, "SAE", PACKET_ISO_TP},
+                       {0x1ff00, 0x1ffff, 1, "Manufacturer", PACKET_ISO_TP}};
 
 #include "pgn-j1939-generated-data.h"
 

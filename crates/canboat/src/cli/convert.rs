@@ -18,9 +18,9 @@ use std::path::{Path, PathBuf};
 
 use anyhow::{Context, Result};
 
-use crate::engine::RawFrame;
 use crate::engine::format::InputFormat;
 use crate::engine::output::{GeoFormat, JsonOptions, TextOptions, write_json, write_text};
+use crate::engine::{BusProtocol, RawFrame};
 use crate::io::{
     EblReader, EblWriter, FrameReader, FrameWriter, LineFrameReader, PlainWriter, TextLineWriter,
     analyze, container, copy,
@@ -233,12 +233,12 @@ pub struct Args {
     #[arg(long)]
     no_banner: bool,
 
-    /// Decode against the J1939 schema (`database/j1939/pgns/`)
-    /// instead of NMEA 2000 — the counterpart of running the C
-    /// `analyzer-j1939`. For plain J1939 buses (engines, gensets);
-    /// table choice is exclusive, the ISO PGNs exist in both.
-    #[arg(long)]
-    j1939: bool,
+    /// `--protocol j1939` decodes against the J1939 schema
+    /// (`database/j1939/pgns/`) instead of NMEA 2000 — the counterpart
+    /// of running the C `analyzer-j1939`. For plain J1939 buses
+    /// (engines, gensets); the ISO PGNs exist in both tables.
+    #[command(flatten)]
+    protocol: crate::cli::protocol::ProtocolArgs,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
@@ -291,15 +291,18 @@ pub fn run(args: Args) -> Result<()> {
         .try_init();
     args.shape.warn_deprecated();
     args.quirk.apply();
+    // Resolved before any I/O, so a refused `--protocol` never leaves a
+    // half-written output behind, whichever path runs.
+    let protocol = args.protocol.resolve()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let ebl = ebl_input(&args);
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
 
     if args.to.is_frame_level() {
-        convert_raw(&args, forced, ebl, &mut out)
+        convert_raw(&args, protocol, forced, ebl, &mut out)
     } else {
-        convert_decoded(&args, forced, ebl, &mut out)
+        convert_decoded(&args, protocol, forced, ebl, &mut out)
     }
 }
 
@@ -319,6 +322,7 @@ fn ebl_input(args: &Args) -> bool {
 /// chosen by `--to` (PLAIN / YDWG02 / Actisense ASCII / Actisense EBL).
 fn convert_raw<W: Write>(
     args: &Args,
+    protocol: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -332,11 +336,7 @@ fn convert_raw<W: Write>(
         // a bannerless stream. `-nv` raw values are unit-agnostic.
         Box::new(crate::json_input::JsonFrameReader::new(
             source,
-            if args.j1939 {
-                crate::engine::PgnDatabase::embedded_j1939(args.shape.units())
-            } else {
-                crate::engine::PgnDatabase::embedded(args.shape.units())
-            },
+            protocol.database(args.shape.units()),
         ))
     } else {
         match forced {
@@ -369,6 +369,7 @@ fn convert_raw<W: Write>(
 /// JSON or text. Filters are pushed into the pipeline's `Config`.
 fn convert_decoded<W: Write>(
     args: &Args,
+    protocol: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -398,7 +399,7 @@ fn convert_decoded<W: Write>(
         writeln!(
             out,
             "{}",
-            crate::build_info::version_banner(args.shape.is_si(), args.nv)
+            crate::build_info::version_banner(args.shape.is_si(), args.nv, protocol)
         )
         .context("writing JSON banner")?;
     }
@@ -410,7 +411,7 @@ fn convert_decoded<W: Write>(
         dst_filter: args.dst,
         suppress_startup_record: false,
         units: args.shape.units(),
-        j1939: args.j1939,
+        protocol,
         fixed_time: None,
     };
 
@@ -444,11 +445,7 @@ fn convert_decoded<W: Write>(
         // JSON reader tracks the *input's* separately, from its banner,
         // so `--from json` doubles as a unit converter: read a canboat C
         // `"units":"std"` stream, emit SI (or the other way round).
-        let db = if cfg.j1939 {
-            crate::engine::PgnDatabase::embedded_j1939(cfg.units)
-        } else {
-            crate::engine::PgnDatabase::embedded(cfg.units)
-        };
+        let db = cfg.protocol.database(cfg.units);
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
         } else {

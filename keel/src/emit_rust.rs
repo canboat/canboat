@@ -64,6 +64,7 @@ struct RawField {
     id: String,
     name: String,
     description: Option<String>,
+    spn: Option<u32>,
     bit_length: Option<u32>,
     bit_length_field: Option<String>,
     encoding: Option<String>,
@@ -180,6 +181,9 @@ type VariantEntry<'a> = (usize, &'a RawPgn, &'a Vec<RawField>);
 /// SI and Metric schemas.
 struct FieldView {
     resolution: Option<f64>,
+    /// The field's offset, in this view's units. `None` when a unit
+    /// conversion scaled it into `unit_offset` (see `field_view`).
+    offset: Option<i64>,
     unit: Option<String>,
     range_min: Option<f64>,
     range_max: Option<f64>,
@@ -202,6 +206,7 @@ fn field_converts(f: &RawField) -> bool {
 fn field_view(f: &RawField, units: Units) -> FieldView {
     let mut v = FieldView {
         resolution: f.resolution,
+        offset: f.offset,
         unit: f.unit.clone(),
         range_min: f.range_min,
         range_max: f.range_max,
@@ -275,6 +280,19 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
             v.unit = Some("Ah".to_string());
         }
         _ => {}
+    }
+    // `offset` is in SI units, an integer. A conversion that scales the
+    // value (Pa -> bar, rad -> deg, C -> Ah) has to scale the offset
+    // too, which leaves it fractional (J1939 crankcase pressure: -250 kPa
+    // is -2.5 bar), so it moves into `unit_offset`, which the decoder
+    // adds after it scales the raw value. K -> C does not scale, and
+    // keeps its offset.
+    if let (Some(o), Some(r0), Some(r1)) =
+        (f.offset.filter(|o| *o != 0), f.resolution, v.resolution)
+        && r0 != r1
+    {
+        v.unit_offset += o as f64 * (r1 / r0);
+        v.offset = None;
     }
     v
 }
@@ -477,7 +495,7 @@ fn missing_arr(m: &Option<Vec<String>>) -> String {
 fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
     write!(
         out,
-        "FieldInfo{{order:{order},id:{id},name:{name},description:{description},\
+        "FieldInfo{{order:{order},id:{id},name:{name},description:{description},spn:{spn},\
          bit_length:{bit_length},bit_length_field:{blf},encoding:{enc},bit_length_variable:{blv},\
          bit_offset:{bit_offset},bit_start:{bit_start},resolution:{resolution},\
          signed:{signed},offset:{offset},range_min:{range_min},range_max:{range_max},\
@@ -492,6 +510,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         id = quote(&f.id),
         name = quote(&f.name),
         description = opt_str(&f.description),
+        spn = opt_int(&f.spn),
         bit_length = opt_int(&f.bit_length),
         blf = opt_str(&f.bit_length_field),
         enc = opt_str(&f.encoding),
@@ -501,7 +520,7 @@ fn emit_field(out: &mut String, f: &RawField, v: &FieldView) {
         // Units-dependent presentation comes from the FieldView.
         resolution = opt_float(&v.resolution),
         signed = opt_bool(&f.signed),
-        offset = opt_int(&f.offset),
+        offset = opt_int(&v.offset),
         range_min = opt_float(&v.range_min),
         range_max = opt_float(&v.range_max),
         uv = opt_int(&f.unknown_value),
@@ -963,6 +982,7 @@ fn raw_field(
         id: f.id.clone(),
         name: f.name.clone(),
         description: f.description.clone(),
+        spn: f.spn,
         bit_length: (f.res_bits != 0).then_some(f.res_bits),
         bit_length_field: f.bit_length_field_order.map(|o| o.to_string()),
         encoding: f.encoding.clone(),
@@ -1024,7 +1044,7 @@ fn raw_field(
 
 fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
     let mut pgns = Vec::new();
-    let source = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let source = db.flavor_pgns(j1939);
     for p in source {
         // emit_xml's running bit offset: it stops being meaningful once a
         // variable-length field has been seen.

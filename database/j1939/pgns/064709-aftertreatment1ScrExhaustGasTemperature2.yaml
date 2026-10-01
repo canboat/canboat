@@ -7,11 +7,11 @@ interval: 1000
 fields:
 - id: aftertreatment1ScrCatalystIntakeGasTemperature2
   name: Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2
-  description: SPN 5862
+  spn: 5862
   type: TEMPERATURE_UFIX16_J1939
 - id: aftertreatment1ScrCatalystIntakeGasTemperature2PreliminaryFmi
   name: Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI
-  description: SPN 5863
+  spn: 5863
   type: NUMBER
   bits: 5
 - id: reserved

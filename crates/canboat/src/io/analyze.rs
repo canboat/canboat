@@ -19,7 +19,7 @@ use std::path::Path;
 
 use crate::engine::format::InputFormat;
 use crate::engine::{
-    CANBOAT_BEM, DecodedPgn, FramePacketType, PacketType, PgnDatabase, Reassembled, Reassembler,
+    CANBOAT_BEM, DecodedPgn, FramePacketType, PacketType, Reassembled, Reassembler,
 };
 
 use crate::io::{FrameReader, LineFrameReader};
@@ -49,10 +49,10 @@ pub struct Config<'a> {
     /// `--units si`) or `Metric` (deg/°C/bar, `--units metric`, which
     /// is what canboat C prints without `-si`).
     pub units: crate::engine::Units,
-    /// Decode against the J1939 schema flavor instead of NMEA 2000 —
-    /// the Rust counterpart of running `analyzer-j1939`. Table choice
-    /// is exclusive (see `PgnDatabase::embedded_j1939`).
-    pub j1939: bool,
+    /// What the bus carries: picks the PGN table. `J1939` is the Rust
+    /// counterpart of running `analyzer-j1939`; table choice is
+    /// exclusive (see `PgnDatabase::embedded_j1939`).
+    pub protocol: crate::engine::BusProtocol,
     /// Stamp for frames whose input format carries no timestamp at all
     /// (e.g. candump's pretty shape). `None` stamps the wall clock —
     /// what `candump2analyzer` does; a fixed string keeps golden
@@ -123,11 +123,7 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     cfg: &Config<'_>,
     mut sink: F,
 ) -> io::Result<()> {
-    let db = if cfg.j1939 {
-        PgnDatabase::embedded_j1939(cfg.units)
-    } else {
-        PgnDatabase::embedded(cfg.units)
-    };
+    let db = cfg.protocol.database(cfg.units);
     let mut reader = match cfg.forced_format {
         Some(fmt) => LineFrameReader::with_format(source, fmt),
         None => LineFrameReader::new(source),
@@ -514,7 +510,7 @@ mod tests {
         .expect("ok");
 
         let cfg = Config {
-            j1939: true,
+            protocol: crate::engine::BusProtocol::J1939,
             ..Default::default()
         };
         let mut j1939 = None;

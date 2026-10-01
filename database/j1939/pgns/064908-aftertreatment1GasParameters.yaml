@@ -7,11 +7,13 @@ interval: 500
 fields:
 - id: aftertreatment1DieselParticulateFilterIntakePressure
   name: Aftertreatment 1 Diesel Particulate Filter Intake Pressure
-  description: SPN 3609, 0.1 kPa per bit
+  spn: 3609
+  description: 0.1 kPa per bit
   type: PRESSURE_UFIX16_HPA
 - id: aftertreatment1DieselParticulateFilterOutletPressure
   name: Aftertreatment 1 Diesel Particulate Filter Outlet Pressure
-  description: SPN 3610, 0.1 kPa per bit
+  spn: 3610
+  description: 0.1 kPa per bit
   type: PRESSURE_UFIX16_HPA
 - id: reserved
   name: Reserved

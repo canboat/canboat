@@ -80,13 +80,18 @@ const Pgn *searchForUnknownPgn(int pgnId)
 
   for (pgn = pgnList; pgn < pgnList + pgnListSize; pgn++)
   {
+    /* Stop before taking a catch-all that starts above pgnId: when nothing is
+     * defined between a range's catch-all and the next one (J1939 has nothing
+     * past 0xFF00), the next one is a different range, e.g. a fast-packet
+     * catch-all for a single-frame PGN, which then never completes.
+     */
+    if (pgn->pgn > pgnId)
+    {
+      break;
+    }
     if (pgn->fallback)
     {
       fallback = pgn;
-    }
-    if (pgn->pgn >= pgnId)
-    {
-      break;
     }
   }
   if (fallback == NULL)

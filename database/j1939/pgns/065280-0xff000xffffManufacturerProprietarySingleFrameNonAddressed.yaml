@@ -8,22 +8,9 @@ missing:
 - FieldLengths
 - Resolution
 explanation: Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet.
+notes: Unlike NMEA 2000, J1939 does not put a Manufacturer Code and Industry Code at the start of a proprietary payload; SAE J1939-21 leaves all of it to the manufacturer. Who sent the frame is known only from its source address and the NAME that address claimed (PGN 60928).
 fields:
-- id: manufacturerCode
-  name: Manufacturer Code
-  type: LOOKUP
-  bits: 11
-  lookup: J1939_MANUFACTURER_CODE
-- id: reserved
-  name: Reserved
-  type: RESERVED
-  bits: 2
-- id: industryCode
-  name: Industry Code
-  type: LOOKUP
-  bits: 3
-  lookup: INDUSTRY_CODE
 - id: data
   name: Data
   type: BINARY
-  bits: 48
+  bits: 64

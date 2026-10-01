@@ -90,6 +90,9 @@ pub fn main() -> ExitCode {
             // (this binary) owns it. Convert the clap Args to the plain config,
             // then set up env_logger from its verbosity before running.
             args.warn_deprecated();
+            if let Err(e) = args.check() {
+                return finish(Err(e));
+            }
             let mut config: server::BridgeConfig = (*args).into();
             // Config-dir *discovery* is a binary concern, not the library's:
             // when the user didn't pass `--config-dir`, probe for the

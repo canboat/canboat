@@ -1,0 +1,39 @@
+pgn: 65276
+id: dashDisplay
+description: Dash Display
+type: Single
+priority: 6
+interval: 1000
+fields:
+- id: washerFluidLevel
+  name: Washer Fluid Level
+  spn: 80
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: fuelLevel1
+  name: Fuel Level 1
+  spn: 96
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: engineFuelFilterDifferentialPressure
+  name: Engine Fuel Filter Differential Pressure
+  spn: 95
+  type: PRESSURE_UINT8_2KPA
+- id: engineOilFilterDifferentialPressure
+  name: Engine Oil Filter Differential Pressure
+  spn: 99
+  type: PRESSURE_UINT8_KPA
+- id: cargoAmbientTemperature
+  name: Cargo Ambient Temperature
+  spn: 169
+  type: TEMPERATURE_UFIX16_J1939
+- id: fuelLevel2
+  name: Fuel Level 2
+  spn: 38
+  type: PERCENTAGE_UINT8
+  resolution: 0.4
+- id: reserved
+  name: Reserved
+  type: RESERVED
+  bits: 8
+notes: 'J1939 Dash Display (DD) PGN 65276, layout per SAE J1939-71, as given by the generic J1939 DBC (github.com/Konik-ai/j1939_dbc).'

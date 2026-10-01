@@ -31,13 +31,17 @@ use crate::engine::{DecodedField, DecodedPgn, FieldValue, PgnDatabase};
 pub struct SnapshotStore {
     inner: Arc<crate::engine::snapshot::SnapshotStore>,
     json_opts: JsonOptions,
+    /// The table the pipeline decodes against (it follows the bus):
+    /// where a PGN's primary-key fields are looked up.
+    db: &'static PgnDatabase,
 }
 
 impl SnapshotStore {
-    pub fn new(json_opts: JsonOptions) -> Self {
+    pub fn new(json_opts: JsonOptions, db: &'static PgnDatabase) -> Self {
         Self {
             inner: Arc::new(crate::engine::snapshot::SnapshotStore::new()),
             json_opts,
+            db,
         }
     }
 
@@ -63,8 +67,7 @@ impl SnapshotStore {
     /// iteration's fields.
     pub fn store(&self, decoded: &Arc<DecodedPgn>, now: Instant) {
         let is_ais = is_ais_pgn(decoded.pgn);
-        let Some(info) = PgnDatabase::embedded(crate::engine::Units::Metric).first_pgn(decoded.pgn)
-        else {
+        let Some(info) = self.db.first_pgn(decoded.pgn) else {
             self.store_whole(decoded, None, is_ais, now);
             return;
         };
