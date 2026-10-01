@@ -27,6 +27,8 @@
 #                 behind the default build.
 #   - fmt:        rustfmt check.
 #   - docs:       facade rustdoc per library feature set with -D warnings.
+#   - public-api: the facade's public API per library feature set against
+#                 crates/doc/public-api/ (scripts/check-public-api.sh).
 #   - coverage:   llvm-source-based line coverage, with a regression floor.
 name: Rust CI
 
@@ -43,6 +45,7 @@ on:
       - "docs/canboat.json"
       - ".github/workflows/rust-ci.yml"
       - ".github/actions/setup-vcan/action.yml"
+      - "scripts/check-public-api.sh"
   pull_request:
     paths: *rust_paths
 
@@ -227,6 +230,36 @@ jobs:
             cargo doc --no-deps -p canboat --no-default-features --features "$set" --locked
             echo "::endgroup::"
           done
+
+  public-api:
+    name: Rust Public API
+    runs-on: ubuntu-latest
+    env:
+      # cargo-public-api reads rustdoc JSON, which only nightly emits and
+      # whose format each cargo-public-api release supports a range of.
+      # Bump the two together, and re-run the script locally when you do.
+      PUBLIC_API_TOOLCHAIN: nightly-2026-09-23
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install Rust ${{ env.PUBLIC_API_TOOLCHAIN }}
+        uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: ${{ env.PUBLIC_API_TOOLCHAIN }}
+
+      - name: Cache cargo & target
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install cargo-public-api
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-public-api@0.52.0
+
+      # A diff means the public API changed: bless the snapshots with
+      # `scripts/check-public-api.sh --bless` if that was the intent.
+      - name: Check public API against the snapshots
+        run: scripts/check-public-api.sh
 
   coverage:
     name: Rust Coverage
