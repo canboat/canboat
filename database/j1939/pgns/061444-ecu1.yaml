@@ -22,11 +22,11 @@ fields:
 - id: driversDemandEnginePercentTorque
   name: Driver's Demand Engine - Percent Torque
   description: SPN 512
-  type: PERCENTAGE_INT8
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: actualEnginePercentTorque
   name: Actual Engine - Percent Torque
   description: SPN 513
-  type: PERCENTAGE_INT8
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 - id: engineRpm
   name: Engine RPM
   description: SPN 190
@@ -50,5 +50,5 @@ fields:
 - id: engineDemandPercentTorque
   name: Engine Demand - Percent Torque
   description: SPN 2432
-  type: PERCENTAGE_INT8
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 notes: 'J1939 ECU #1 (EEC1) PGN 61444, layout per SAE J1939-71. The percent-torque fields are offset by -125 % in J1939; canboat reports the raw signed byte.'

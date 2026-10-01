@@ -397,10 +397,11 @@ limitations under the License.
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>12</td><td>Actual Maximum Available Engine - Percent Torque</td><td>SPN 3357</td><td>0.4 <a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 100.8</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Estimated Pumping - Percent Torque</td><td>SPN 2978</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>13</td><td>Estimated Pumping - Percent Torque</td><td/><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-61444">0xF004:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr></table><h3 id="pgn-61444">0xF004:
             PGN 61444
             - ECU #1</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -417,22 +418,25 @@ limitations under the License.
               It is normally transmitted every 20 milliseconds.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Torque Mode</td><td>SPN 899</td><td><div class="xs">0 .. 14</div></td><td>4 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Actual Engine - Percent Torque High Resolution</td><td>SPN 4154, fractional part of the actual engine torque in 0.125 % steps</td><td>0.125 %<div class="xs">0 .. 1.75</div></td><td>4 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Driver's Demand Engine - Percent Torque</td><td>SPN 512</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Driver's Demand Engine - Percent Torque</td><td>SPN 512</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Actual Engine - Percent Torque</td><td>SPN 513</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr><tr><td>4</td><td>Actual Engine - Percent Torque</td><td>SPN 513</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine RPM</td><td>SPN 190</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr><tr><td>5</td><td>Engine RPM</td><td>SPN 190</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Source Address of Controlling Device for Engine Control</td><td>SPN 1483</td><td><div class="xs">0 .. 253</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Engine Starter Mode</td><td>SPN 1675</td><td><div class="xs">0 .. 14</div></td><td>4 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Reserved</td><td/><td/><td>4 bits
-                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Engine Demand - Percent Torque</td><td>SPN 2432</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+                  <a href="#ft-RESERVED">RESERVED</a></td><td/></tr><tr><td>9</td><td>Engine Demand - Percent Torque</td><td>SPN 2432</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-61445">0xF005:
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr></table><h3 id="pgn-61445">0xF005:
             PGN 61445
             - Electronic Transmission Controller 2</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -490,11 +494,10 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2</td><td>SPN 5862</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2</td><td>SPN 5862</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI</td><td>SPN 5863</td><td><div class="xs">0 .. 29</div></td><td>5 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 SCR Catalyst Intake Gas Temperature 2 Preliminary FMI</td><td>SPN 5863</td><td><div class="xs">0 .. 29</div></td><td>5 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Reserved</td><td/><td/><td>43 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-64740">0xFCE4:
             PGN 64740
@@ -514,11 +517,10 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Fuel Dynamic Viscosity</td><td>SPN 5537</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Fuel Density</td><td>SPN 5538</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Fuel Relative Dielectricity</td><td>SPN 5539</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Fuel Temperature 2</td><td>SPN 5540</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Fuel Temperature 2</td><td>SPN 5540</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr></table><h3 id="pgn-64751">0xFCEF:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-64751">0xFCEF:
             PGN 64751
             - Engine Fluid Level/Pressure 11</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -563,11 +565,10 @@ limitations under the License.
             </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Oil Viscosity</td><td>SPN 5055, 0.015625 cP per bit</td><td>0.015625 cP<div class="xs">0 .. 1023.9375</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Oil Density</td><td>SPN 5056, 1/32768 g/cm3 per bit</td><td>3.05175781e-05 g/cm3<div class="xs">0 .. 1.9998779280492</div></td><td>16 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Oil Relative Dielectricity</td><td>SPN 5468, 1/8192 per bit</td><td>0.0001220703125 <div class="xs">0 .. 7.99951171875</div></td><td>16 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Oil Temperature 3</td><td>SPN 5925</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Oil Temperature 3</td><td>SPN 5925</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr></table><h3 id="pgn-64777">0xFD09:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-64777">0xFD09:
             PGN 64777
             - Fuel Consumption (Liquid)</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -603,15 +604,13 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 500 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature</td><td>SPN 4765</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature</td><td>SPN 4765</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature</td><td>SPN 4766</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Outlet Gas Temperature</td><td>SPN 4766</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure</td><td>SPN 4767, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Differential Pressure</td><td>SPN 4767, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Aftertreatment 1 Diesel Oxidation Catalyst Intake Gas Temperature Preliminary FMI</td><td>SPN 4768</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -692,15 +691,13 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 500 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Exhaust Gas Temperature 2</td><td>SPN 3249</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Exhaust Gas Temperature 2</td><td>SPN 3249</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature</td><td>SPN 3250</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Diesel Particulate Filter Intermediate Temperature</td><td>SPN 3250</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Particulate Filter Differential Pressure</td><td>SPN 3251, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Diesel Particulate Filter Differential Pressure</td><td>SPN 3251, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Aftertreatment 1 Exhaust Gas Temperature 2 Preliminary FMI</td><td>SPN 3252</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -722,11 +719,10 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 500 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Outlet Gas Temperature 2</td><td>SPN 3245</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Outlet Gas Temperature 2</td><td>SPN 3245</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Outlet Gas Pressure 2</td><td>SPN 3246, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Outlet Gas Pressure 2</td><td>SPN 3246, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Outlet Gas Temperature 2 Preliminary FMI</td><td>SPN 3247</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -748,11 +744,10 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 500 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Intake Gas Temperature 2</td><td>SPN 3241</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Aftertreatment 1 Intake Gas Temperature 2</td><td>SPN 3241</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Intake Gas Pressure 2</td><td>SPN 3242, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Aftertreatment 1 Intake Gas Pressure 2</td><td>SPN 3242, 0.1 kPa per bit</td><td>100 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 6553200</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Aftertreatment 1 Intake Gas Temperature 2 Preliminary FMI</td><td>SPN 3243</td><td><div class="xs">0 .. 29</div></td><td>5 bits
@@ -1436,23 +1431,19 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 1000 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Exhaust Manifold Bank 2 Temperature 1</td><td>SPN 2433</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Exhaust Manifold Bank 2 Temperature 1</td><td>SPN 2433</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Engine Exhaust Manifold Bank 1 Temperature 1</td><td>SPN 2434</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine Exhaust Manifold Bank 1 Temperature 1</td><td>SPN 2434</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>3</td><td>Engine Exhaust Manifold Bank 2 Temperature 2</td><td>SPN 5969</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Manifold Bank 2 Temperature 2</td><td>SPN 5969</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>4</td><td>Engine Exhaust Manifold Bank 1 Temperature 2</td><td>SPN 5970</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Exhaust Manifold Bank 1 Temperature 2</td><td>SPN 5970</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr></table><h3 id="pgn-65130">0xFE6A:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65130">0xFE6A:
             PGN 65130
             - Engine Fuel/Lube Systems</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -1505,20 +1496,17 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 500 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Oil Temperature 2</td><td>SPN 1135</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Engine Oil Temperature 2</td><td>SPN 1135</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>2</td><td>Engine ECU Temperature</td><td>SPN 1136</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine ECU Temperature</td><td>SPN 1136</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 1 Differential Pressure</td><td>SPN 411, 1/128 kPa per bit with a -250 kPa offset</td><td>0.0078125 kPa<div class="xs">0 .. 511.96875</div></td><td>16 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Exhaust Gas Recirculation 1 Temperature</td><td>SPN 412</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine Exhaust Gas Recirculation 1 Differential Pressure</td><td>SPN 411, 1/128 kPa per bit with a -250 kPa offset</td><td>0.0078125 kPa<div class="xs">0 .. 511.96875</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Exhaust Gas Recirculation 1 Temperature</td><td>SPN 412</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr></table><h3 id="pgn-65189">0xFEA5:
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65189">0xFEA5:
             PGN 65189
             - Intake Manifold Information 2</h3><p/><p>
                 This PGN is believed to be (nearly) fully reverse engineered and seems to work in most practical purposes.
@@ -1765,17 +1753,19 @@ limitations under the License.
               The default priority (as observed in the field) is 6.
             
               It is normally transmitted every 250 milliseconds.
-            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Nominal Friction - Percent Torque</td><td>SPN 514</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-127 .. 124</div></td><td>8 bits
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Nominal Friction - Percent Torque</td><td>SPN 514</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
-                        signed
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Engine's Desired Operating Speed</td><td>SPN 515</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr><tr><td>2</td><td>Engine's Desired Operating Speed</td><td>SPN 515</td><td>0.125 <a href="#pq-ANGULAR_VELOCITY">rpm</a><div class="xs">0 .. 8191.5</div></td><td>16 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Engine's Desired Operating Speed Asymmetry Adjustment</td><td>SPN 519</td><td><div class="xs">0 .. 252</div></td><td>8 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Estimated Engine Power Loss - Accessories</td><td>SPN 2978</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">0 .. 252</div></td><td>8 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Estimated Engine Parasitic Losses - Percent Torque</td><td>SPN 2978</td><td><a href="#pq-DIMENSIONLESS_RATIO">%</a><div class="xs">-125 .. 127</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>24 bits
+                      <a href="#ft-NUMBER">NUMBER</a><div>
+                          stored with <a href="#offset">offset</a> -125</div></td><td/></tr><tr><td>5</td><td>Reserved</td><td/><td/><td>24 bits
                   <a href="#ft-RESERVED">RESERVED</a></td><td/></tr></table><h3 id="pgn-65253">0xFEE5:
             PGN 65253
             - Engine Hours, Revolutions</h3><p/><p>
@@ -1839,15 +1829,13 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>3</td><td>Engine Oil Temp 1</td><td>SPN 175, 0.03125 K per bit with a -273 K offset</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                          stored with <a href="#offset">offset</a> 233</div></td><td/></tr><tr><td>3</td><td>Engine Oil Temp 1</td><td>SPN 175, 0.03125 K per bit with a -273 K offset</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>4</td><td>Engine Turbocharger Oil Temp</td><td>SPN 176</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Engine Turbocharger Oil Temp</td><td>SPN 176</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>5</td><td>Engine Intercooler Temp</td><td>SPN 52</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Engine Intercooler Temp</td><td>SPN 52</td><td><a href="#pq-TEMPERATURE">K</a><div class="xs">233 .. 485</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a><div>
@@ -1928,11 +1916,10 @@ limitations under the License.
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Air Filter Differential Pressure</td><td>SPN 107, 0.05 kPa per bit</td><td>50 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 12600</div></td><td>8 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Exhaust Gas Temperature</td><td>SPN 173</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Exhaust Gas Temperature</td><td>SPN 173</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>7</td><td>Coolant Filter Differential Pressure</td><td>SPN 112, 0.5 kPa per bit</td><td>500 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 126000</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Coolant Filter Differential Pressure</td><td>SPN 112, 0.5 kPa per bit</td><td>500 <a href="#pq-PRESSURE">Pa</a><div class="xs">0 .. 126000</div></td><td>8 bits
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h3 id="pgn-65271">0xFEF7:
@@ -1974,11 +1961,10 @@ limitations under the License.
                   
                         unsigned
                       <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>4</td><td>Transmission 1 Oil Pressure</td><td>SPN 127, 16 kPa per bit</td><td>16 kPa<div class="xs">0 .. 4032</div></td><td>8 bits
-                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Transmission 1 Oil Temperature 1</td><td>SPN 177</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">-8.53125 .. 2039.34375</div></td><td>16 bits
+                  <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>5</td><td>Transmission 1 Oil Temperature 1</td><td>SPN 177</td><td>0.03125 <a href="#pq-TEMPERATURE">K</a><div class="xs">0 .. 2047.875</div></td><td>16 bits
                   
                         unsigned
-                      <a href="#ft-NUMBER">NUMBER</a><div>
-                          stored with <a href="#offset">offset</a> -8</div></td><td/></tr><tr><td>6</td><td>Transmission Oil Level 1 High / Low</td><td>SPN 3027, 0.5 litre per bit with a -62.5 litre offset</td><td>0.5 L<div class="xs">0 .. 126</div></td><td>8 bits
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>6</td><td>Transmission Oil Level 1 High / Low</td><td>SPN 3027, 0.5 litre per bit with a -62.5 litre offset</td><td>0.5 L<div class="xs">0 .. 126</div></td><td>8 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>7</td><td>Transmission Oil Level 1 Countdown Timer</td><td>SPN 3028</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>8</td><td>Transmission Oil Level 1 Measurement Status</td><td>SPN 3026</td><td><div class="xs">0 .. 13</div></td><td>4 bits
                   <a href="#ft-NUMBER">NUMBER</a></td><td/></tr></table><h2 id="pgn-65280">0xFF00-0xFFFF: Manufacturer Proprietary single-frame non-addressed</h2><p>Manufacturer proprietary PGNs in PDU2 (non-addressed) single-frame PGN range 0xFF00 to 0xFFFF (65280 - 65535). When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h2 id="pgn-126208">0x1ED00 - 0x1EE00: Standardized addressed</h2><p>Standardized PGNs in PDU1 (addressed) PGN range 0x1ED00 to 0x1EE00 (126208 - 126464), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h2 id="pgn-126720">0x1EF00-0x1EFFF: Manufacturer Proprietary addressed</h2><p>Manufacturer Proprietary PGNs in PDU1 (addressed) PGN range 0x1EF00 to 0x1EFFF (126720 - 126975), data page 1 (Proprietary A2). Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h2 id="pgn-126976">0x1F000-0x1FEFF: Standardized non-addressed</h2><p>Standardized PGNs in PDU2 (non-addressed) PGN range 0x1F000 to 0x1FEFF (126976 - 130815), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h2 id="pgn-130816">0x1FF00-0x1FFFF: Manufacturer Specific non-addressed</h2><p>Manufacturer Specific PGNs in PDU2 (non-addressed) PGN range 0x1FF00 to 0x1FFFF (130816 - 131071), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet.</p><h2 id="physical-quantities">Physical quantities</h2>

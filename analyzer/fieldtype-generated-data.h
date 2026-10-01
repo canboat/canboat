@@ -473,9 +473,8 @@ FieldType fieldTypeList[] = {
 
     {.name = "TEMPERATURE_UFIX16_J1939",
      .description = "Temperature, J1939 16 bit",
-     .encodingDescription = "SAE J1939's 16-bit temperature encoding, 0.03125 K per bit offset by -273 K",
+     .encodingDescription = "SAE J1939's 16-bit temperature encoding: 0.03125 deg C per bit from -273 deg C, which is 0.03125 K per bit from 0.15 K. Read as 0.03125 K per bit from 0 K: the 0.15 K is dropped, as TEMPERATURE_UINT8_OFFSET drops it from its -40 deg C.",
      .baseFieldType = "UFIX16",
-     .offset = -273,
      .resolution = 0.03125,
      .physical = &TEMPERATURE},
 
@@ -991,6 +990,14 @@ FieldType fieldTypeList[] = {
      .description = "Percentage, unsigned",
      .baseFieldType = "UINT8",
      .unit = "%",
+     .physical = &DIMENSIONLESS_RATIO},
+
+    {.name = "PERCENTAGE_UINT8_J1939_TORQUE",
+     .description = "Percent torque, J1939",
+     .encodingDescription = "SAE J1939's percent torque encoding: 1 % per bit from -125 %, so 125 is 0 % and 250 is 125 %.",
+     .baseFieldType = "UINT8",
+     .unit = "%",
+     .offset = -125,
      .physical = &DIMENSIONLESS_RATIO},
 
     {.name = "PERCENTAGE_INT8",

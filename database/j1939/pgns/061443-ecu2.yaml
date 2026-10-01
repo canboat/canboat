@@ -71,6 +71,5 @@ fields:
   resolution: 0.4
 - id: estimatedPumpingPercentTorque
   name: Estimated Pumping - Percent Torque
-  description: SPN 2978
-  type: PERCENTAGE_INT8
+  type: PERCENTAGE_UINT8_J1939_TORQUE
 notes: 'J1939 ECU #2 (EEC2) PGN 61443, layout per SAE J1939-71'
