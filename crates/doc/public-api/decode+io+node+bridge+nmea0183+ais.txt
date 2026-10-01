@@ -94,7 +94,6 @@ pub canboat::bridge::BridgeConfig::ais_port: u16
 pub canboat::bridge::BridgeConfig::analyzer_port: u16
 pub canboat::bridge::BridgeConfig::baud: core::option::Option<u32>
 pub canboat::bridge::BridgeConfig::bind: core::net::ip_addr::Ipv4Addr
-pub canboat::bridge::BridgeConfig::bus: canboat::schema::BusProtocol
 pub canboat::bridge::BridgeConfig::camel_case: canboat::output::CamelCase
 pub canboat::bridge::BridgeConfig::canboat_csv: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::canboat_csv_write: core::option::Option<alloc::string::String>
@@ -115,6 +114,7 @@ pub canboat::bridge::BridgeConfig::no_nmea0183_rate_limit: bool
 pub canboat::bridge::BridgeConfig::no_request_claims: bool
 pub canboat::bridge::BridgeConfig::overrides_port: u16
 pub canboat::bridge::BridgeConfig::pgn_lists: canboat::codec::PgnLists
+pub canboat::bridge::BridgeConfig::protocol: canboat::schema::BusProtocol
 pub canboat::bridge::BridgeConfig::quiet: bool
 pub canboat::bridge::BridgeConfig::quirk: alloc::vec::Vec<canboat::bridge::Quirk>
 pub canboat::bridge::BridgeConfig::raw_port: u16

@@ -233,12 +233,12 @@ pub struct Args {
     #[arg(long)]
     no_banner: bool,
 
-    /// `--bus j1939` decodes against the J1939 schema
+    /// `--protocol j1939` decodes against the J1939 schema
     /// (`database/j1939/pgns/`) instead of NMEA 2000 — the counterpart
     /// of running the C `analyzer-j1939`. For plain J1939 buses
     /// (engines, gensets); the ISO PGNs exist in both tables.
     #[command(flatten)]
-    bus: crate::cli::bus::BusArgs,
+    protocol: crate::cli::protocol::ProtocolArgs,
 
     /// Lat/lon display format. Matches canboat's `-geo`.
     #[arg(long, value_name = "FMT", default_value = "dd")]
@@ -291,18 +291,18 @@ pub fn run(args: Args) -> Result<()> {
         .try_init();
     args.shape.warn_deprecated();
     args.quirk.apply();
-    // Resolved before any I/O, so a refused `--bus` never leaves a
+    // Resolved before any I/O, so a refused `--protocol` never leaves a
     // half-written output behind, whichever path runs.
-    let bus = args.bus.protocol()?;
+    let protocol = args.protocol.resolve()?;
     let forced = args.from.and_then(FromFormat::to_input_format);
     let ebl = ebl_input(&args);
     let stdout = io::stdout();
     let mut out = BufWriter::new(stdout.lock());
 
     if args.to.is_frame_level() {
-        convert_raw(&args, bus, forced, ebl, &mut out)
+        convert_raw(&args, protocol, forced, ebl, &mut out)
     } else {
-        convert_decoded(&args, bus, forced, ebl, &mut out)
+        convert_decoded(&args, protocol, forced, ebl, &mut out)
     }
 }
 
@@ -322,7 +322,7 @@ fn ebl_input(args: &Args) -> bool {
 /// chosen by `--to` (PLAIN / YDWG02 / Actisense ASCII / Actisense EBL).
 fn convert_raw<W: Write>(
     args: &Args,
-    bus: BusProtocol,
+    protocol: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -336,7 +336,7 @@ fn convert_raw<W: Write>(
         // a bannerless stream. `-nv` raw values are unit-agnostic.
         Box::new(crate::json_input::JsonFrameReader::new(
             source,
-            bus.database(args.shape.units()),
+            protocol.database(args.shape.units()),
         ))
     } else {
         match forced {
@@ -369,7 +369,7 @@ fn convert_raw<W: Write>(
 /// JSON or text. Filters are pushed into the pipeline's `Config`.
 fn convert_decoded<W: Write>(
     args: &Args,
-    bus: BusProtocol,
+    protocol: BusProtocol,
     forced: Option<InputFormat>,
     ebl: bool,
     out: &mut W,
@@ -411,7 +411,7 @@ fn convert_decoded<W: Write>(
         dst_filter: args.dst,
         suppress_startup_record: false,
         units: args.shape.units(),
-        bus,
+        protocol,
         fixed_time: None,
     };
 
@@ -445,7 +445,7 @@ fn convert_decoded<W: Write>(
         // JSON reader tracks the *input's* separately, from its banner,
         // so `--from json` doubles as a unit converter: read a canboat C
         // `"units":"std"` stream, emit SI (or the other way round).
-        let db = cfg.bus.database(cfg.units);
+        let db = cfg.protocol.database(cfg.units);
         let mut reader: Box<dyn FrameReader> = if ebl {
             Box::new(EblReader::new(source))
         } else {

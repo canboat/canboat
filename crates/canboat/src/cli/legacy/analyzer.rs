@@ -89,10 +89,10 @@ struct Cli {
     #[arg(long, value_name = "NAME")]
     format: Option<String>,
 
-    /// `--bus j1939` decodes against the J1939 schema instead of NMEA
+    /// `--protocol j1939` decodes against the J1939 schema instead of NMEA
     /// 2000 — the equivalent of running canboat C's `analyzer-j1939`.
     #[command(flatten)]
-    bus: crate::cli::bus::BusArgs,
+    protocol: crate::cli::protocol::ProtocolArgs,
 
     /// Filter: only process frames with this PGN number.
     #[arg(value_name = "PGN")]
@@ -170,7 +170,7 @@ fn run_cli(cli: Cli) -> Result<()> {
         dst_filter: cli.dst,
         suppress_startup_record: cli.fixtime.as_deref().is_some_and(|s| !s.contains("n2kd")),
         units,
-        bus: cli.bus.protocol()?,
+        protocol: cli.protocol.resolve()?,
         fixed_time: cli.fixtime.as_deref(),
     };
 

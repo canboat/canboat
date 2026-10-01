@@ -52,7 +52,7 @@ pub struct Config<'a> {
     /// What the bus carries: picks the PGN table. `J1939` is the Rust
     /// counterpart of running `analyzer-j1939`; table choice is
     /// exclusive (see `PgnDatabase::embedded_j1939`).
-    pub bus: crate::engine::BusProtocol,
+    pub protocol: crate::engine::BusProtocol,
     /// Stamp for frames whose input format carries no timestamp at all
     /// (e.g. candump's pretty shape). `None` stamps the wall clock —
     /// what `candump2analyzer` does; a fixed string keeps golden
@@ -123,7 +123,7 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     cfg: &Config<'_>,
     mut sink: F,
 ) -> io::Result<()> {
-    let db = cfg.bus.database(cfg.units);
+    let db = cfg.protocol.database(cfg.units);
     let mut reader = match cfg.forced_format {
         Some(fmt) => LineFrameReader::with_format(source, fmt),
         None => LineFrameReader::new(source),
@@ -510,7 +510,7 @@ mod tests {
         .expect("ok");
 
         let cfg = Config {
-            bus: crate::engine::BusProtocol::J1939,
+            protocol: crate::engine::BusProtocol::J1939,
             ..Default::default()
         };
         let mut j1939 = None;
