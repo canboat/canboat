@@ -379,6 +379,22 @@ fn j1939_candump_text() {
     );
 }
 
+/// J1939 catch-alls for PGNs the database does not define: Proprietary B
+/// (0xFF45), Proprietary A (0xEF00) and an unknown standardized PDU2
+/// (0xF0FF). Each decodes as plain `Data`: J1939 puts no Manufacturer
+/// Code / Industry Code header on a payload, so none is shown. The C
+/// analyzer-j1939 prints the same (bar candump2analyzer's wall-clock
+/// timestamps); it used to drop the PropB frame, matching it to the
+/// fast-packet catch-all at 126208.
+#[test]
+fn j1939_catchall_text() {
+    run_case(
+        "j1939-catchall.in",
+        "j1939-catchall.out",
+        &["--j1939", "--fixtime", "2023-12-10T18:58:21.487Z"],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),
