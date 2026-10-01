@@ -8716,7 +8716,7 @@
             "Order":3,
             "Id":"engineOilTemp",
             "Name":"Engine Oil Temp 1",
-            "Description":"SPN 175, 0.03125 K per bit with a -273 K offset",
+            "Description":"SPN 175",
             "BitLength":16,
             "BitOffset":16,
             "BitStart":0,

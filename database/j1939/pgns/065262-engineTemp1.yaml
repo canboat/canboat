@@ -15,7 +15,7 @@ fields:
   type: TEMPERATURE_UINT8_OFFSET
 - id: engineOilTemp
   name: Engine Oil Temp 1
-  description: SPN 175, 0.03125 K per bit with a -273 K offset
+  description: SPN 175
   type: TEMPERATURE_UFIX16_J1939
 - id: engineTurbochargerOilTemp
   name: Engine Turbocharger Oil Temp

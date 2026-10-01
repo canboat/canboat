@@ -1053,7 +1053,7 @@ Pgn pgnList[] = {
      {
       {.name = "Engine Coolant Temp", .camelName = "engineCoolantTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 110"},
       {.name = "Engine Fuel Temp 1", .camelName = "engineFuelTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 174"},
-      {.name = "Engine Oil Temp 1", .camelName = "engineOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 175, 0.03125 K per bit with a -273 K offset"},
+      {.name = "Engine Oil Temp 1", .camelName = "engineOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 175"},
       {.name = "Engine Turbocharger Oil Temp", .camelName = "engineTurbochargerOilTemp", .fieldType = "TEMPERATURE_UFIX16_J1939", .description = "SPN 176"},
       {.name = "Engine Intercooler Temp", .camelName = "engineInterCoolerTemp", .fieldType = "TEMPERATURE_UINT8_OFFSET", .description = "SPN 52"},
       {.name = "Engine Intercooler Thermostat Opening", .camelName = "engineInterCoolerThermostatOpening", .fieldType = "PERCENTAGE_UINT8", .resolution = 0.4, .description = "SPN 1134"}

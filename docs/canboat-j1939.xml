@@ -8731,7 +8731,7 @@ limitations under the License.
           <Order>3</Order>
           <Id>engineOilTemp</Id>
           <Name>Engine Oil Temp 1</Name>
-          <Description>SPN 175, 0.03125 K per bit with a -273 K offset</Description>
+          <Description>SPN 175</Description>
           <BitLength>16</BitLength>
           <BitOffset>16</BitOffset>
           <BitStart>0</BitStart>
