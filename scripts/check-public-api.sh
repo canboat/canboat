@@ -7,9 +7,16 @@
 # crates/doc/public-api/<featureset>.txt (commas spelled `+`). A diff means the public API changed — either
 # update the snapshot on purpose (--bless) or reconsider the change.
 #
-# Requires: cargo-public-api + a nightly toolchain for rustdoc JSON.
+# Requires: cargo-public-api + a nightly toolchain for rustdoc JSON, which
+# stable rustdoc cannot emit. The JSON format changes now and then and each
+# cargo-public-api release reads a range of it, so CI pins both (see the
+# public-api job in .github/workflows/rust-ci.yml); PUBLIC_API_TOOLCHAIN
+# picks the toolchain, `nightly` by default.
 #   rustup toolchain install nightly
 #   cargo install cargo-public-api
+#
+# Exits 127 when the tools are missing, which `make rust-public-api` reports
+# as skipped rather than failed.
 #
 # Usage:
 #   scripts/check-public-api.sh          # diff against the snapshots (CI mode)
@@ -32,9 +39,9 @@ FEATURESETS=(
 # rustdoc JSON needs nightly, but rust-toolchain.toml pins `stable`, and
 # that pin beats the `+nightly` cargo-public-api asks for. `rustup run`
 # is the one override the pin does not win against.
-public_api=(rustup run nightly cargo public-api)
+public_api=(rustup run "${PUBLIC_API_TOOLCHAIN:-nightly}" cargo public-api)
 if ! "${public_api[@]}" --version >/dev/null 2>&1; then
-    echo "error: needs rustup, a nightly toolchain and cargo-public-api." >&2
+    echo "error: needs rustup, the ${PUBLIC_API_TOOLCHAIN:-nightly} toolchain and cargo-public-api." >&2
     echo "  rustup toolchain install nightly && cargo install cargo-public-api" >&2
     exit 127
 fi

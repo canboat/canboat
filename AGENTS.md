@@ -150,7 +150,7 @@ Key facts:
 | `make` | Builds all tool binaries into `rel/<platform>/`. |
 | `make tests` | Builds, then runs the `analyzer` golden tests. |
 | `make generated` | Runs `tests`, then regenerates `docs/{xml,html,json}`, `canboat.dbc`, the C `*-generated-data.h` and the Rust `schema_generated.rs` / `fastpacket_generated.rs`, validating schema/JSON and reconciling the database against the NMEA PDF extract (`make validation`). |
-| `make rust` | `keel generate`, then `cargo build --release --workspace`. Also `rust-debug`, `rust-tests`, `rust-clippy`, `rust-fmt`, `rust-precommit`. |
+| `make rust` | `keel generate`, then `cargo build --release --workspace`. Also `rust-debug`, `rust-tests`, `rust-clippy`, `rust-fmt`, `rust-public-api`, `rust-precommit`. |
 | `make keel-generate` | Just `keel/keel generate` — regenerates the committed artifacts and nothing else. No xsltproc/xmllint/python needed, unlike `make generated`. |
 | `make format` | `clang-format -i` over `*/*.c */*.h` (one directory level deep). |
 | `make docker-build` | Runs `make clean generated` inside an `ubuntu:22.04` builder. |
