@@ -21,7 +21,7 @@ import json;
 import traceback;
 
 if (sys.argv[1] == '--line-by-line'):
-    file = open(sys.argv[2])
+    file = open(sys.argv[2], encoding = 'utf-8')
     for line in file.readlines():
         try:
             data = json.loads(line)
@@ -35,13 +35,22 @@ if (sys.argv[1] == '--line-by-line'):
 res = 0
 allowedDuplicates = { } # 'Reserved', 'Spare' }
 checkRange = False
+# canboat.json stays ASCII; canboat-j1939.json carries the ISO 11783
+# manufacturer registry, whose names (Väderstad, Škoda, ...) are UTF-8.
+allowUtf8 = False
 allowedNoRange = { 'RESERVED', 'SPARE', 'BINARY', 'STRING_LZ', 'STRING_FIX' }
 
-if (sys.argv[1] == '--range'):
-    checkRange = True
-    file = open(sys.argv[2])
-else:
-    file = open(sys.argv[1])
+args = sys.argv[1:]
+while (args[0].startswith('--')):
+    if (args[0] == '--range'):
+        checkRange = True
+    elif (args[0] == '--allow-utf8'):
+        allowUtf8 = True
+    else:
+        print("ERROR: unknown option", args[0])
+        exit(2)
+    args = args[1:]
+file = open(args[0], encoding = 'utf-8')
 data = json.loads(file.read())
 file.close()
 
@@ -82,7 +91,7 @@ for pgn in pgns:
                         res = 1
 
 
-if (res == 0):
+if (res == 0 and not allowUtf8):
     s1 = json.dumps(data, indent = 2)
     s2 = json.dumps(data, indent = 2, ensure_ascii = False)
     if (s1 != s2):

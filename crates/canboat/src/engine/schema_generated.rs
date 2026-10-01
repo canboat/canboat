@@ -16,7 +16,7 @@
 //
 // ==========================================================================
 use crate::engine::types::{BitLookupTable, BitLookupValue, FieldInfo, FieldType, IndirectLookupTable, IndirectLookupValue, LookupFieldTypeTable, LookupFieldTypeValue, LookupTable, LookupValue, PacketType, PgnInfo};
-pub const SCHEMA_VERSION: &str = "2.6.0";
+pub const SCHEMA_VERSION: &str = "2.7.0";
 pub const VERSION: &str = "8.3.0";
 pub const SCHEMA_HASH: u64 = 15312337565798703646;
 pub const COPYRIGHT_ID: &str = "(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.";

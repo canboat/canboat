@@ -213,7 +213,7 @@
                      | FieldType/text() | Id/text() | License/text() | LookupBitEnumeration/text()
                      | LookupEnumeration/text() | LookupFieldTypeEnumeration/text()
                      | LookupIndirectEnumeration/text() | MissingAttribute/text() | Name/text()
-                     | PhysicalQuantity/text() | ResearchDoc/text() | SchemaVersion/text()
+                     | PhysicalQuantity/text() | Protocol/text() | ResearchDoc/text() | SchemaVersion/text()
                      | Type/text() | Unit/text() | UnitDescription/text() | URL/text()
                      | Version/text()">
     <xsl:call-template name="escape-string">

@@ -21,7 +21,7 @@
                                           Rust schema_generated.rs
     4. commit the regenerated files IN THE SAME COMMIT
 
-  docs/canboat.{xml,json,html,dbc}, analyzer/*-generated-data.h and
+  docs/canboat.{xml,json,html,dbc}, docs/canboat-j1939.{xml,json,html}, analyzer/*-generated-data.h and
   *_generated*.rs are OUTPUT. Editing them by hand will be undone by the next
   regeneration, and the build-ubuntu gate (which regenerates and diffs) fails.
 
