@@ -1186,5 +1186,132 @@ Pgn pgnList[] = {
      },
      .camelDescription = "0x1ff000x1ffffManufacturerSpecificNonAddressed",
      .fallback = true,
-     .explanation = "Manufacturer Specific PGNs in PDU2 (non-addressed) PGN range 0x1FF00 to 0x1FFFF (130816 - 131071), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."}
+     .explanation = "Manufacturer Specific PGNs in PDU2 (non-addressed) PGN range 0x1FF00 to 0x1FFFF (130816 - 131071), data page 1. Payloads of up to 8 bytes are sent as one frame; longer ones arrive through ISO Transport Protocol (TP.CM 60416 / TP.DT 60160), which the analyzer reassembles. J1939 does not use NMEA 2000 fast-packet framing. When this is shown during analysis it means the PGN is not reverse engineered yet."},
+
+    {"Actisense: Operating mode",
+     262161,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Operating Mode", .camelName = "operatingMode", .fieldType = "UINT16", .resolution = 1.0}
+     },
+     .camelDescription = "actisenseOperatingMode"},
+
+    {"Actisense: Startup status",
+     262384,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Firmware version", .camelName = "firmwareVersion", .fieldType = "VERSION"},
+      {.name = "Reset status", .camelName = "resetStatus", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "A", .camelName = "a", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "actisenseStartupStatus"},
+
+    {"Actisense: System status",
+     262386,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Error ID", .camelName = "errorId", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Indi channel count", .camelName = "indiChannelCount", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Rx Bandwidth", .camelName = "ch1RxBandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Rx Load", .camelName = "ch1RxLoad", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Rx Filtered", .camelName = "ch1RxFiltered", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Rx Dropped", .camelName = "ch1RxDropped", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Tx Bandwidth", .camelName = "ch1TxBandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Tx Load", .camelName = "ch1TxLoad", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Rx Bandwidth", .camelName = "ch2RxBandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Rx Load", .camelName = "ch2RxLoad", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Rx Filtered", .camelName = "ch2RxFiltered", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Rx Dropped", .camelName = "ch2RxDropped", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Tx Bandwidth", .camelName = "ch2TxBandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Tx Load", .camelName = "ch2TxLoad", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Uni channel count", .camelName = "uniChannelCount", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Bandwidth", .camelName = "ch1Bandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 Deleted", .camelName = "ch1Deleted", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 BufferLoading", .camelName = "ch1Bufferloading", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch1 PointerLoading", .camelName = "ch1Pointerloading", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Bandwidth", .camelName = "ch2Bandwidth", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 Deleted", .camelName = "ch2Deleted", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 BufferLoading", .camelName = "ch2Bufferloading", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Ch2 PointerLoading", .camelName = "ch2Pointerloading", .fieldType = "UINT8", .resolution = 1.0}
+     },
+     .camelDescription = "actisenseSystemStatus"},
+
+    {"Actisense: ?",
+     262388,
+     PACKET_FIELDS_UNKNOWN | PACKET_FIELD_LENGTHS_UNKNOWN | PACKET_RESOLUTION_UNKNOWN,
+     PACKET_FAST,
+     {
+      {.name = "SID", .camelName = "sid", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Model ID", .camelName = "modelId", .fieldType = "UINT16", .resolution = 1.0},
+      {.name = "Serial ID", .camelName = "serialId", .fieldType = "UINT32", .resolution = 1.0}
+     },
+     .camelDescription = "actisense"},
+
+    {"NMEA 2000 gateway: network status",
+     262400,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "CAN network load", .camelName = "canNetworkLoad", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Errors", .camelName = "errors", .fieldType = "UINT32", .resolution = 1.0},
+      {.name = "Device count", .camelName = "deviceCount", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Uptime", .camelName = "uptime", .fieldType = "DURATION_UFIX32_S"},
+      {.name = "Gateway address", .camelName = "gatewayAddress", .fieldType = "UINT8", .resolution = 1.0},
+      {.name = "Rejected TX requests", .camelName = "rejectedTxRequests", .fieldType = "UINT32", .resolution = 1.0}
+     },
+     .camelDescription = "nmea2000GatewayNetworkStatus"},
+
+    {"CANboat: Startup",
+     262656,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Version", .camelName = "version", .fieldType = "VERSION"},
+      {.name = "Source", .camelName = "source", .fieldType = "STRING_FIX", .size = 256},
+      {.name = "Device", .camelName = "device", .fieldType = "STRING_FIX", .size = 256}
+     },
+     .camelDescription = "canboatStartup"},
+
+    {"CANboat: NMEA 0183 filter",
+     262657,
+     PACKET_COMPLETE,
+     PACKET_SINGLE,
+     {
+      {.name = "Function", .camelName = "function", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=Report (pipeline->tui), 1=Set (tui->pipeline)"},
+      {.name = "Source", .camelName = "source", .fieldType = "ADDRESS", .resolution = 1.0, .description = "N2K source address this record refers to", .reservedOverride = 1},
+      {.name = "Sentence", .camelName = "sentence", .fieldType = "STRING_FIX", .size = 24, .description = "3-letter NMEA 0183 formatter, or 'ALL' for the whole source"},
+      {.name = "Muted", .camelName = "muted", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=active (emitting), 1=muted"},
+      {.name = "Reserved", .camelName = "reserved", .fieldType = "RESERVED", .size = 16, .resolution = 1.0}
+     },
+     .camelDescription = "canboatNmea0183Filter",
+     .explanation = "Control channel for the NMEA 0183 sentence filter. Carried only on the server's dedicated bidirectional filter port, never on the CAN bus - it is a CANBOAT_BEM pseudo-PGN, like the rest of the 0x40000+ range."},
+
+    {"CANboat: PGN transmission-interval override",
+     262658,
+     PACKET_COMPLETE,
+     PACKET_FAST,
+     {
+      {.name = "Function", .camelName = "function", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "0=Report (server->tui), 1=Set, 2=Request, 3=Delete (tui->server)"},
+      {.name = "Source", .camelName = "source", .fieldType = "ADDRESS", .resolution = 1.0, .description = "N2K source address of the device the override targets", .reservedOverride = 1},
+      {.name = "PGN", .camelName = "pgn", .fieldType = "NUMBER", .size = 24, .resolution = 1.0, .description = "Commanded PGN whose transmission interval is overridden"},
+      {.name = "Interval", .camelName = "intervalMs", .fieldType = "NUMBER", .size = 32, .resolution = 1.0, .description = "Requested transmission interval in ms; 0 = stop transmitting"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "NUMBER", .size = 16, .resolution = 1.0, .description = "For proprietary PGNs; 0xffff = not applicable"},
+      {.name = "Industry Code", .camelName = "industryCode", .fieldType = "NUMBER", .size = 8, .resolution = 1.0, .description = "For proprietary PGNs; 0xff = not applicable"}
+     },
+     .camelDescription = "canboatPgnOverride",
+     .explanation = "Control channel for per-device transmission-interval overrides. A CANBOAT_BEM pseudo-PGN (0x40000+), exchanged between a server and its clients rather than on the CAN bus."}
 };

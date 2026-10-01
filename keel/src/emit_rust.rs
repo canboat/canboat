@@ -1024,7 +1024,7 @@ fn raw_field(
 
 fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
     let mut pgns = Vec::new();
-    let source = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let source = db.flavor_pgns(j1939);
     for p in source {
         // emit_xml's running bit offset: it stops being meaningful once a
         // variable-length field has been seen.

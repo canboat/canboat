@@ -134,7 +134,7 @@ impl Bridge {
         // path discovery, no synthetic-PGN merge — `keel generate`
         // already folded `data/synthetic-pgns.json` into the static tables.
         let units = config.units;
-        let db = PgnDatabase::embedded(units);
+        let db = config.bus.database(units);
 
         // JsonOptions mirror the pipeline's per-record serializer settings
         // so per-iteration snapshot lines (PGN 130824 etc.) come out
@@ -166,7 +166,7 @@ impl Bridge {
         );
 
         let snapshot = if config.snapshot_port != 0 {
-            Some(Arc::new(SnapshotStore::new(json_opts.clone())))
+            Some(Arc::new(SnapshotStore::new(json_opts.clone(), db)))
         } else {
             None
         };

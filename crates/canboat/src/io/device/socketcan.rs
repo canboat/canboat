@@ -65,6 +65,7 @@ pub fn pgn_list_status(lists: &PgnLists) -> PgnListStatus {
 }
 
 mod config {
+    use crate::engine::BusProtocol;
     use crate::engine::pgn_list::PgnLists;
 
     /// Bus-participant configuration. All fields have sensible defaults
@@ -98,8 +99,8 @@ mod config {
         /// canboat-rs binary is driving the bus.
         pub model_version: Option<&'static str>,
         /// When `true`, the driver owns the interface's link lifecycle: before
-        /// opening the socket it brings the link down, sets the NMEA 2000
-        /// bitrate (always 250 kbit/s) with bus-off auto-recovery, and brings
+        /// opening the socket it brings the link down, sets `bitrate` with
+        /// bus-off auto-recovery, and brings
         /// it up — retrying to ride out controllers that intermittently fail
         /// to configure at boot (notably the MCP2515's "didn't enter config
         /// mode"). `false` leaves the interface untouched, assuming it was
@@ -116,6 +117,17 @@ mod config {
         /// first transmission on: a display that asked for the list before
         /// then is not told, so name the PGNs up front as well.
         pub learn_tx_pgns: bool,
+        /// What the bus carries. NMEA 2000 (the default) makes the gateway
+        /// a full NMEA 2000 node: fast-packet framing, Heartbeat, Product
+        /// Information, PGN lists and Group Function. J1939 keeps only
+        /// what the two share — address claim, ISO Request and ISO TP —
+        /// frames everything as single frames, and claims a NAME in the
+        /// Global industry group.
+        pub bus: BusProtocol,
+        /// Bit rate for the managed bring-up (`configure_link`). NMEA 2000
+        /// is always 250 kbit/s; J1939 is 250 kbit/s (J1939-11/-15) or
+        /// 500 kbit/s (J1939-14).
+        pub bitrate: u32,
     }
 
     impl Default for Config {
@@ -132,6 +144,8 @@ mod config {
                 configure_link: false,
                 pgn_lists: PgnLists::default(),
                 learn_tx_pgns: true,
+                bus: BusProtocol::Nmea2000,
+                bitrate: 250_000,
             }
         }
     }
@@ -161,7 +175,9 @@ mod imp {
     use crate::engine::format::ikonvert::{NetworkStatus, build_network_status};
     use crate::engine::format::{days_to_ymd, iso11783_compose, iso11783_decompose};
     use crate::engine::frame::RawFrame;
-    use crate::engine::{ADDR_GLOBAL, ADDR_NULL, FramePacketType, Reassembled, Reassembler};
+    use crate::engine::{
+        ADDR_GLOBAL, ADDR_NULL, BusProtocol, FramePacketType, Reassembled, Reassembler,
+    };
     use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket};
 
     use super::config::Config;
@@ -294,11 +310,17 @@ mod imp {
             // `Config.unique`) to disambiguate.
             crate::engine::os::get_machine_id() as u32
         };
-        // PC Gateway (130) / Inter-Intranetwork Device (25); Marine industry
-        // group and arbitrary-address-capable are the builder's defaults.
+        // PC Gateway (130) / Inter-Intranetwork Device (25); arbitrary-
+        // address-capable is the builder's default. Marine industry group
+        // on NMEA 2000, Global on J1939.
+        let industry_group = match config.bus {
+            BusProtocol::J1939 => 0,
+            _ => 4,
+        };
         crate::io::name::Name::new(config.manufacturer, unique)
             .device_function(130)
             .device_class(25)
+            .industry_group(industry_group)
             .system_instance(config.system_instance)
             .to_u64()
     }
@@ -316,14 +338,22 @@ mod imp {
         /// receiver could fold two consecutive Product-Info responses
         /// into one corrupted reassembly.
         fast_seq: HashMap<(u32, u8), u8>,
+        /// Decides the framing of every outbound PGN.
+        protocol: BusProtocol,
     }
 
     impl TxBuffer {
+        #[cfg(test)]
         fn new() -> Self {
+            Self::with_protocol(BusProtocol::Nmea2000)
+        }
+
+        fn with_protocol(protocol: BusProtocol) -> Self {
             Self {
                 queue: VecDeque::with_capacity(64),
                 overflowed: 0,
                 fast_seq: HashMap::new(),
+                protocol,
             }
         }
 
@@ -371,14 +401,15 @@ mod imp {
     }
 
     impl<'a> Bus<'a> {
-        /// Enqueue a self-generated outbound PGN. Splits >8-byte
-        /// payloads into fast-packet chunks for the wire; when `emit`
+        /// Enqueue a self-generated outbound PGN. On NMEA 2000, splits
+        /// fast-packet PGNs into fast-packet chunks for the wire; when `emit`
         /// is true the consumer also sees one coalesced `RawFrame` on
         /// `frames_tx` (same contract as inbound — never split).
         fn send_pgn(&mut self, prio: u8, pgn: u32, src: u8, dst: u8, data: &[u8], emit: bool) {
             let can_id = iso11783_compose(prio, pgn, src, dst);
-            // Single vs fast-packet is decided strictly from the PGN
-            // type table generated at build time from canboat.json.
+            // Single vs fast-packet is decided strictly from the bus and,
+            // on NMEA 2000, the PGN type table generated at build time
+            // from canboat.json.
             // **Never** infer from `data.len()` alone: a single-frame
             // PGN whose payload happens to be 8 bytes (PGN 127508
             // Battery Status is the canonical example) must NOT be
@@ -389,7 +420,16 @@ mod imp {
             // (PGN 126208 Group Function ACK, 6 bytes) still has to go
             // out with the fast-packet wrapper because strict
             // receivers key on the PGN type, not the byte count.
-            let is_fast = fastpacket::packet_type(pgn) == FramePacketType::Fast;
+            let is_fast = self.tx_buf.protocol.packet_type(pgn) == FramePacketType::Fast;
+            if !is_fast && data.len() > 8 {
+                // J1939 carries this through ISO TP, which we cannot send
+                // yet; never truncate it, and never fast-packet it.
+                log::warn!(
+                    "socketcan: not sending PGN {pgn}: {} bytes need ISO TP, which is not supported for sending yet",
+                    data.len()
+                );
+                return;
+            }
             if !is_fast {
                 self.tx_buf.push(can_id, data);
             } else {
@@ -429,6 +469,10 @@ mod imp {
         /// The shared address-claim state machine (owns NAME, address,
         /// state, and the used-address table).
         claim: AddressClaim,
+        /// `Config::bus`. The NMEA 2000-only responders (Heartbeat,
+        /// Product Information, PGN lists, Group Function) stay silent
+        /// on J1939.
+        bus: BusProtocol,
         heartbeat_interval: u64, // ms, 0 disables
         heartbeat_seq: u8,
         next_heartbeat: u64,    // ms
@@ -488,16 +532,18 @@ mod imp {
                 // the bit), so we yield and move on a lost conflict.
                 AddressClaim::new(name, config.address, true)
             };
+            let nmea2000 = config.bus == BusProtocol::Nmea2000;
             Self {
                 claim,
-                heartbeat_interval: config.heartbeat_ms,
+                bus: config.bus,
+                heartbeat_interval: if nmea2000 { config.heartbeat_ms } else { 0 },
                 heartbeat_seq: 0,
                 next_heartbeat: 0,
                 last_product_info: 0,
                 model_version: config.model_version.unwrap_or(DEFAULT_MODEL_VERSION),
                 tx_pgns: advertised_pgns(&TX_PGN_LIST, &config.pgn_lists.tx, "transmit"),
                 rx_pgns: advertised_pgns(&RX_PGN_LIST, &config.pgn_lists.rx, "receive"),
-                learn_tx_pgns: config.learn_tx_pgns,
+                learn_tx_pgns: config.learn_tx_pgns && nmea2000,
                 tx_pgns_full_warned: false,
                 iface: iface.to_string(),
                 start_ms: now_ms(),
@@ -556,10 +602,11 @@ mod imp {
                 return; // need a claimed address to answer from
             }
 
+            let nmea2000 = self.bus == BusProtocol::Nmea2000;
             match requested {
-                PGN_PRODUCT_INFO => self.send_product_info(bus),
-                PGN_PGN_LIST => self.send_pgn_list(bus, src),
-                PGN_HEARTBEAT => self.send_heartbeat(bus),
+                PGN_PRODUCT_INFO if nmea2000 => self.send_product_info(bus),
+                PGN_PGN_LIST if nmea2000 => self.send_pgn_list(bus, src),
+                PGN_HEARTBEAT if nmea2000 => self.send_heartbeat(bus),
                 _ => {
                     // ISO 11783-3: NAK an addressed request for a PGN we do
                     // not send; silently ignore an unsupported global request.
@@ -701,7 +748,9 @@ mod imp {
             // arm the heartbeat / network-status timers.
             if !was_claimed && self.claim.is_claimed() {
                 log::info!("Address {} claimed", self.addr());
-                self.send_product_info(bus);
+                if self.bus == BusProtocol::Nmea2000 {
+                    self.send_product_info(bus);
+                }
                 if self.heartbeat_interval > 0 {
                     self.next_heartbeat = now + self.heartbeat_interval;
                 }
@@ -1124,14 +1173,18 @@ mod imp {
             claimer.note_seen(src);
         }
 
-        // Classify with the build-time fastpacket table, push through
-        // the reassembler, and forward the coalesced result. A real
-        // single-frame PGN takes the `PassThrough` branch unchanged;
-        // a fast-packet PGN accumulates until `Complete`.
-        let pt = fastpacket::packet_type(pgn);
+        // Classify by the bus (and, on NMEA 2000, the build-time
+        // fastpacket table), push through the reassembler, and forward
+        // the coalesced result. A real single-frame PGN takes the
+        // `PassThrough` branch unchanged; a fast-packet PGN accumulates
+        // until `Complete`; ISO TP is reassembled on either bus.
+        let pt = claimer.bus.packet_type(pgn);
         match reasm.push(single_frame, pt) {
             Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
-                if claimer.claim.state() != ClaimState::Disabled && f.pgn == PGN_GROUP_FUNCTION {
+                if claimer.claim.state() != ClaimState::Disabled
+                    && claimer.bus == BusProtocol::Nmea2000
+                    && f.pgn == PGN_GROUP_FUNCTION
+                {
                     claimer.handle_group_function(bus, src, &f.data);
                 }
                 let _ = bus.frames_tx.send(f);
@@ -1192,12 +1245,9 @@ mod imp {
     /// `Bridge::claimed_address`, and the quirks that emit as our own
     /// node) read it from this atom. The supervisor reuses the same
     /// atom across reconnects.
-    /// NMEA 2000 runs at a fixed 250 kbit/s — the standard never varies, so
-    /// the managed bring-up hard-codes it rather than exposing a knob.
-    const NMEA2000_BITRATE: u32 = 250_000;
     /// Bus-off auto-recovery delay for the managed bring-up (matches the
     /// historical `ip link … restart-ms 100`).
-    const NMEA2000_RESTART_MS: u32 = 100;
+    const CAN_RESTART_MS: u32 = 100;
 
     /// Configure and bring up a SocketCAN link via netlink (RTM_NEWLINK),
     /// replacing an external `ip link set … up type can bitrate 250000 …`
@@ -1208,7 +1258,7 @@ mod imp {
     /// often clears it. Best-effort: on give-up it logs and returns rather
     /// than aborting the device session, so a later supervisor reconnect can
     /// try again. PRIVILEGED — requires the process to run as root.
-    fn configure_can_link(iface: &str) {
+    fn configure_can_link(iface: &str, bitrate: u32) {
         let ci = match CanInterface::open(iface) {
             Ok(ci) => ci,
             Err(e) => {
@@ -1223,14 +1273,14 @@ mod imp {
             // bring-up. An already-down interface makes this a no-op.
             let _ = ci.bring_down();
             let result = ci
-                .set_bitrate(NMEA2000_BITRATE, None::<u32>)
-                .and_then(|()| ci.set_restart_ms(NMEA2000_RESTART_MS))
+                .set_bitrate(bitrate, None::<u32>)
+                .and_then(|()| ci.set_restart_ms(CAN_RESTART_MS))
                 .and_then(|()| ci.bring_up());
             match result {
                 Ok(()) => {
                     log::info!(
-                        "CAN {iface}: configured {NMEA2000_BITRATE} bit/s, \
-                         restart-ms {NMEA2000_RESTART_MS}, link up (attempt {attempt})"
+                        "CAN {iface}: configured {bitrate} bit/s, \
+                         restart-ms {CAN_RESTART_MS}, link up (attempt {attempt})"
                     );
                     return;
                 }
@@ -1257,7 +1307,7 @@ mod imp {
         // because its bring-up unit no longer ran first. Best-effort: `run()`
         // proceeds even if it can't come up, so the supervisor keeps retrying.
         if config.configure_link {
-            configure_can_link(iface);
+            configure_can_link(iface, config.bitrate);
         }
         let sock = CanSocket::open(iface).map_err(std::io::Error::other)?;
         sock.set_nonblocking(true)?;
@@ -1330,7 +1380,7 @@ mod imp {
         // Reset the claim atom to "unclaimed" so a reconnect resumes
         // with no stale value visible to consumers.
         claim_addr.store(super::CLAIM_UNCLAIMED, Ordering::Relaxed);
-        let mut tx_buf = TxBuffer::new();
+        let mut tx_buf = TxBuffer::with_protocol(config.bus);
         let mut last_published_addr: u8 = super::CLAIM_UNCLAIMED;
         // Fast-packet reassembler driven by the build-time
         // `fastpacket` table. The library hands fully coalesced
@@ -2052,6 +2102,69 @@ mod imp {
             let second = send(&mut tx_buf, 126996, &[0xaa; 10]);
             assert_eq!(first[0][0], 0x00);
             assert_eq!(second[0][0], 0x20);
+        }
+
+        fn j1939_config() -> Config {
+            Config {
+                bus: BusProtocol::J1939,
+                ..Default::default()
+            }
+        }
+
+        /// On J1939, a data page 1 PGN that is fast-packet on NMEA 2000
+        /// (130816) goes out as one plain frame, and a payload too long
+        /// for one frame is refused rather than fast-packet framed.
+        #[test]
+        fn j1939_sends_single_frames_only() {
+            let mut tx_buf = TxBuffer::with_protocol(BusProtocol::J1939);
+            let data: Vec<u8> = (1..=8).collect();
+            assert_eq!(send(&mut tx_buf, 130816, &data), vec![data]);
+            assert_eq!(
+                send(&mut tx_buf, 126208, &[9, 8, 7, 6, 5, 4]),
+                vec![vec![9, 8, 7, 6, 5, 4]],
+                "no fast-packet shell on J1939"
+            );
+            assert!(send(&mut tx_buf, 130816, &[0; 12]).is_empty());
+        }
+
+        /// A J1939 node claims in the Global industry group and runs none
+        /// of the NMEA 2000 housekeeping: no Heartbeat, no learned
+        /// Transmit list.
+        #[test]
+        fn j1939_node_has_no_nmea2000_housekeeping() {
+            let name = build_name(&j1939_config());
+            assert_eq!(((name >> 60) & 0x07) as u8, 0, "global industry group");
+            let dev = NmeaDevice::new(&j1939_config(), "vcan-none");
+            assert_eq!(dev.heartbeat_interval, 0);
+            assert!(!dev.learn_tx_pgns);
+        }
+
+        /// An addressed ISO Request for Product Information is NAKed on
+        /// J1939 (it is an NMEA 2000 PGN), where NMEA 2000 answers it.
+        #[test]
+        fn j1939_naks_a_product_information_request() {
+            let mut dev = NmeaDevice::new(&j1939_config(), "vcan-none");
+            let mut tx_buf = TxBuffer::with_protocol(BusProtocol::J1939);
+            let (frames_tx, frames_rx) = mpsc::channel();
+            let mut bus = Bus {
+                tx_buf: &mut tx_buf,
+                frames_tx: &frames_tx,
+            };
+            dev.start(&mut bus);
+            // Scan window, then the claim window, each run to its deadline.
+            for _ in 0..2 {
+                let deadline = dev.claim.deadline();
+                dev.tick(&mut bus, deadline);
+            }
+            assert!(dev.claim.is_claimed());
+            while frames_rx.try_recv().is_ok() {}
+
+            let p = PGN_PRODUCT_INFO.to_le_bytes();
+            dev.on_request(&mut bus, 0x21, dev.addr(), &[p[0], p[1], p[2]]);
+            let sent: Vec<RawFrame> = frames_rx.try_iter().collect();
+            assert_eq!(sent.len(), 1, "{sent:?}");
+            assert_eq!(sent[0].pgn, 59392, "ISO Acknowledgement");
+            assert_eq!(sent[0].data[0], 1, "NAK");
         }
     }
 }

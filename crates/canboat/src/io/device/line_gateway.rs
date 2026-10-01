@@ -19,7 +19,7 @@ use std::sync::Mutex;
 
 use crate::engine::format::{actisense_ascii, iso11783_compose, ydwg02};
 use crate::engine::reassembly::{Reassembled, Reassembler};
-use crate::engine::{FramePacketType, RawFrame};
+use crate::engine::{BusProtocol, FramePacketType, RawFrame};
 
 use super::{DeviceDecoder, DeviceEncoder, DeviceEvent, DeviceHandle};
 use crate::engine::fastpacket;
@@ -37,14 +37,22 @@ pub enum Protocol {
 
 pub struct Decoder {
     protocol: Protocol,
+    /// Decides which RAW frames are fast-packet fragments.
+    bus: BusProtocol,
     acc: String,
     reassembler: Reassembler,
 }
 
 impl Decoder {
+    #[cfg(test)]
     pub fn new(protocol: Protocol) -> Self {
+        Self::with_bus(protocol, BusProtocol::Nmea2000)
+    }
+
+    pub fn with_bus(protocol: Protocol, bus: BusProtocol) -> Self {
         Self {
             protocol,
+            bus,
             acc: String::with_capacity(256),
             reassembler: Reassembler::new(),
         }
@@ -70,7 +78,7 @@ impl DeviceDecoder for Decoder {
                     }
                     match ydwg02::parse_line(&line) {
                         Ok(frame) => {
-                            let pt = fastpacket::packet_type(frame.pgn);
+                            let pt = self.bus.packet_type(frame.pgn);
                             match self.reassembler.push(frame, pt) {
                                 Reassembled::PassThrough(f) | Reassembled::Complete(f) => {
                                     events.push(DeviceEvent::Frame(f))
@@ -95,14 +103,22 @@ impl DeviceDecoder for Decoder {
 
 pub struct Encoder {
     protocol: Protocol,
+    /// Decides which RAW transmissions are fast-packet framed.
+    bus: BusProtocol,
     /// Per-(pgn, src) fast-packet TX sequence counters, mod 8.
     seq: Mutex<HashMap<(u32, u8), u8>>,
 }
 
 impl Encoder {
+    #[cfg(test)]
     pub fn new(protocol: Protocol) -> Self {
+        Self::with_bus(protocol, BusProtocol::Nmea2000)
+    }
+
+    pub fn with_bus(protocol: Protocol, bus: BusProtocol) -> Self {
         Self {
             protocol,
+            bus,
             seq: Mutex::new(HashMap::new()),
         }
     }
@@ -137,7 +153,7 @@ impl DeviceEncoder for Encoder {
                     }
                     out.push_str("\r\n");
                 };
-                if fastpacket::packet_type(frame.pgn) == FramePacketType::Fast {
+                if self.bus.packet_type(frame.pgn) == FramePacketType::Fast {
                     let seq = self.next_seq(frame.pgn, frame.src);
                     let Some(chunks) = fastpacket::fragment(seq, &frame.data) else {
                         log::warn!(
@@ -150,6 +166,15 @@ impl DeviceEncoder for Encoder {
                     for chunk in chunks {
                         write_one(&mut out, &chunk);
                     }
+                } else if frame.data.len() > 8 {
+                    // One RAW line is one CAN frame. On J1939 this payload
+                    // needs ISO TP, which we cannot send yet.
+                    log::warn!(
+                        "not sending PGN {}: {} bytes do not fit one CAN frame",
+                        frame.pgn,
+                        frame.data.len()
+                    );
+                    return None;
                 } else {
                     write_one(&mut out, &frame.data);
                 }
@@ -164,10 +189,11 @@ pub fn run(
     reader: Box<dyn Read + Send>,
     writer: Box<dyn Write + Send>,
     protocol: Protocol,
+    bus: BusProtocol,
 ) -> DeviceHandle {
     super::run(
-        Decoder::new(protocol),
-        Encoder::new(protocol),
+        Decoder::with_bus(protocol, bus),
+        Encoder::with_bus(protocol, bus),
         reader,
         writer,
     )

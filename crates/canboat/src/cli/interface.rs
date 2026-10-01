@@ -25,7 +25,7 @@ use std::thread;
 
 use anyhow::{Context, Result};
 
-use crate::engine::RawFrame;
+use crate::engine::{BusProtocol, RawFrame};
 use crate::io::device::{self, DeviceHandle};
 use crate::io::{FrameWriter, PlainWriter, copy, open_serial_rw};
 
@@ -153,6 +153,13 @@ pub struct Args {
     /// SocketCAN only.
     #[arg(short = 't', long, value_name = "SECONDS", default_value_t = 0)]
     timeout: u64,
+
+    /// `--bus j1939` frames the traffic as J1939 (single frames and ISO
+    /// TP, no fast-packet) and, on SocketCAN, leaves out the NMEA 2000
+    /// Heartbeat, Product Information and PGN lists. SocketCAN and YDWG
+    /// only: the other gateways do NMEA 2000 framing themselves.
+    #[command(flatten)]
+    bus: crate::cli::bus::BusArgs,
 }
 
 pub fn run(args: Args) -> Result<()> {
@@ -295,6 +302,13 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 
 /// Open the selected transport and start its device codec.
 fn open_device(args: &Args) -> Result<DeviceHandle> {
+    let bus = args.bus.protocol()?;
+    if bus != BusProtocol::Nmea2000 && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg) {
+        anyhow::bail!(
+            "--bus {bus} needs a gateway that passes raw CAN frames (socketcan or ydwg); \
+             this one does NMEA 2000 framing itself"
+        );
+    }
     match args.kind {
         Kind::Ngt1 => {
             let (r, w) = open_stream(args)?;
@@ -340,6 +354,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 reader,
                 writer,
                 device::line_gateway::Protocol::YdwgRaw,
+                bus,
             ))
         }
         Kind::W2kAscii => {
@@ -348,6 +363,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 reader,
                 writer,
                 device::line_gateway::Protocol::N2kAscii,
+                bus,
             ))
         }
         Kind::Socketcan => {
@@ -359,6 +375,7 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 heartbeat_ms: args.heartbeat,
                 no_claim: args.no_claim,
                 timeout_secs: args.timeout,
+                bus,
                 ..device::socketcan::Config::default()
             };
             let claim = Arc::new(AtomicU8::new(config.address));

@@ -253,6 +253,10 @@ impl Pgn {
     }
 }
 
+/// First of the gateway pseudo-PGNs (Actisense BEM, CANboat synthetic):
+/// never on a CAN bus, shared by both flavors.
+pub const PSEUDO_PGN_START: u32 = 0x40000;
+
 #[derive(Debug, Default)]
 pub struct Database {
     pub physical_quantities: Vec<PhysicalQuantity>,
@@ -333,16 +337,31 @@ impl Database {
     /// references. Those orphans are already published in `docs/canboat.json`,
     /// so dropping them here would be a silent contract change; they stay put
     /// until something deliberately retires them.
+    /// The PGNs a flavor's generated tables hold. The J1939 flavor is the
+    /// J1939 tree plus the gateway pseudo-PGNs (0x40000 and up: Actisense
+    /// BEM, CANboat's own) from the NMEA 2000 tree, which describe the
+    /// gateway rather than the bus and so apply on either. They sort
+    /// after every real PGN, so the list stays in PGN order.
+    pub fn flavor_pgns(&self, j1939: bool) -> Vec<&Pgn> {
+        if j1939 {
+            self.pgns_j1939
+                .iter()
+                .chain(self.pgns.iter().filter(|p| p.pgn >= PSEUDO_PGN_START))
+                .collect()
+        } else {
+            self.pgns.iter().collect()
+        }
+    }
+
     pub fn lookups_used(&self, j1939: bool) -> HashSet<String> {
-        let names = |pgns: &'_ [Pgn]| -> Vec<String> {
-            pgns.iter()
+        fn names<'p>(pgns: impl IntoIterator<Item = &'p Pgn>) -> Vec<String> {
+            pgns.into_iter()
                 .flat_map(|p| p.fields.iter())
                 .filter_map(|f| f.lookup_ref())
                 .map(|(_, n)| n.to_string())
                 .collect()
-        };
-        let pgns = if j1939 { &self.pgns_j1939 } else { &self.pgns };
-        let mut used: HashSet<String> = names(pgns).into_iter().collect();
+        }
+        let mut used: HashSet<String> = names(self.flavor_pgns(j1939)).into_iter().collect();
 
         if !j1939 {
             let referenced: HashSet<String> = names(&self.pgns)
