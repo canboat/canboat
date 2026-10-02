@@ -682,7 +682,22 @@ extern bool fieldPrintFloat(const Field   *field,
   memcpy(&f.w, data, sizeof(f));
 #endif
 
-  mprintf("%g", f.a);
+  // NMEA 2000 sends a FLOAT that is not available as NaN.
+  if (isnan(f.a))
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+    return true;
+  }
+
+  // The wire value is in the database's unit; fixupUnit may have scaled the
+  // resolution and set an offset to present it in another one.
+  double a = f.a;
+  if (field->resolution != 0.0)
+  {
+    a = a * field->resolution + field->unitOffset;
+  }
+
+  mprintf("%g", a);
   if (!showJson && field->unit != NULL)
   {
     mprintf(" %s", field->unit);

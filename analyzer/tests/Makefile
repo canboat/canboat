@@ -276,7 +276,17 @@ test29:
 	diff $(TEMPDIR)/pgn-dynamic-units-si.out pgn-dynamic-units-si.out
 	diff $(TEMPDIR)/pgn-dynamic-units-si.err pgn-dynamic-units.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29
+test30:
+	$(ANALYZER) -json < pgn-float-units.in > $(TEMPDIR)/pgn-float-units.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-float-units.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-float-units.out
+	diff $(TEMPDIR)/pgn-float-units.out pgn-float-units.out
+	diff $(TEMPDIR)/pgn-float-units.err pgn-float-units.err
+	$(ANALYZER) -json -si < pgn-float-units.in > $(TEMPDIR)/pgn-float-units-si.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-float-units-si.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-float-units-si.out
+	diff $(TEMPDIR)/pgn-float-units-si.out pgn-float-units-si.out
+	diff $(TEMPDIR)/pgn-float-units-si.err pgn-float-units.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so
