@@ -362,6 +362,20 @@ fn to_encode_value(
         // Some field types render their value as a string even in `-nv`
         // (MMSIs, hex binaries); those route through the same per-type
         // string handling as bare string values.
+        // A TIME / DURATION's `name` is its clock form, which reads the
+        // same whatever `value` held: seconds now, the wire count in
+        // captures from before canboat gave seconds.
+        Value::Object(o)
+            if matches!(
+                f.field_type,
+                Some(FieldType::Time) | Some(FieldType::Duration)
+            ) && let Some(seconds) = o
+                .get("name")
+                .and_then(Value::as_str)
+                .and_then(crate::engine::output::parse_time) =>
+        {
+            Some(EncodeValue::Number(seconds))
+        }
         Value::Object(o) => match o.get("value") {
             Some(Value::Number(n)) => Some(raw_number(f, n)?),
             Some(Value::String(s)) => Some(string_value(f, s)?),
@@ -428,8 +442,14 @@ fn to_encode_value(
 /// even when that value happens to be whole (180 deg). `-nv` writes a
 /// FLOAT bare, so an object-form FLOAT is never a raw value.
 fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
-    let is_float = matches!(f.field_type, Some(FieldType::Float));
-    if let Some(i) = n.as_i64().filter(|_| !is_float) {
+    // A FLOAT, TIME or DURATION is never the wire integer, so even a
+    // whole number is scaled: a FLOAT is in the schema's unit, a TIME or
+    // DURATION is seconds.
+    let physical = matches!(
+        f.field_type,
+        Some(FieldType::Float) | Some(FieldType::Time) | Some(FieldType::Duration)
+    );
+    if let Some(i) = n.as_i64().filter(|_| !physical) {
         Ok(EncodeValue::Int(i))
     } else {
         Ok(EncodeValue::Number(n.as_f64().ok_or_else(|| {
@@ -457,7 +477,7 @@ fn string_value(f: &'static FieldInfo, s: &str) -> Result<EncodeValue> {
         Some(FieldType::Date) => parse_date_days(s)
             .map(EncodeValue::Number)
             .ok_or_else(|| anyhow!("field '{}': bad date '{s}'", f.name)),
-        Some(FieldType::Time) | Some(FieldType::Duration) => parse_time_seconds(s)
+        Some(FieldType::Time) | Some(FieldType::Duration) => crate::engine::output::parse_time(s)
             .map(EncodeValue::Number)
             .ok_or_else(|| anyhow!("field '{}': bad time '{s}'", f.name)),
         // A digit string on a lookup is the raw value beyond the
@@ -493,22 +513,6 @@ fn parse_date_days(s: &str) -> Option<f64> {
     let date = chrono::NaiveDate::from_ymd_opt(y, m, d)?;
     let epoch = chrono::NaiveDate::from_ymd_opt(1970, 1, 1)?;
     Some((date - epoch).num_days() as f64)
-}
-
-/// `"HH:MM"`, `"HH:MM:SS"` or `"HH:MM:SS.ffff"` → seconds, the
-/// TIME/DURATION field's physical value.
-fn parse_time_seconds(s: &str) -> Option<f64> {
-    let mut it = s.split(':');
-    let h = it.next()?.parse::<f64>().ok()?;
-    let m = it.next()?.parse::<f64>().ok()?;
-    let sec = match it.next() {
-        Some(x) => x.parse::<f64>().ok()?,
-        None => 0.0,
-    };
-    if it.next().is_some() {
-        return None;
-    }
-    Some(h * 3600.0 + m * 60.0 + sec)
 }
 
 /// Select a PGN variant from a bare record's field values, the way
@@ -669,6 +673,42 @@ mod tests {
         .unwrap()
         .unwrap();
         assert_eq!(f.data[..2], [0xce, 0x19]);
+    }
+
+    #[test]
+    fn time_encodes_from_seconds_or_any_clock_form() {
+        // 126992 System Time 09:10:20.2240 = 33020.2240 s = raw 330202240
+        // (0.0001 s). Seconds, bare or -nv, are what canboat writes now;
+        // the clock string, a number of seconds as text, and an older
+        // -nv object whose value was the raw count (its name still the
+        // clock) are all read too.
+        let want = [0x80u8, 0x7c, 0xae, 0x13];
+        for time in [
+            "33020.224",
+            r#"{"value":33020.2240,"name":"09:10:20.2240"}"#,
+            r#""09:10:20.2240""#,
+            r#""33020.224""#,
+            r#"{"value":330202240,"name":"09:10:20.2240"}"#,
+        ] {
+            let line = format!(
+                r#"{{"pgn":126992,"fields":{{"source":"GPS","date":"2024.07.30","time":{time}}}}}"#
+            );
+            let frame = frame_from_json(db(), &line).unwrap().unwrap();
+            assert_eq!(frame.data[frame.data.len() - 4..], want, "{time}");
+        }
+    }
+
+    #[test]
+    fn negative_duration_clock_encodes_negative() {
+        // "-00:05:00.000" is minus five minutes, not minus zero hours
+        // plus five minutes.
+        assert_eq!(
+            crate::engine::output::parse_time("-00:05:00.000"),
+            Some(-300.0)
+        );
+        assert_eq!(crate::engine::output::parse_time("-300"), Some(-300.0));
+        assert_eq!(crate::engine::output::parse_time("01:10:10"), Some(4210.0));
+        assert_eq!(crate::engine::output::parse_time("later"), None);
     }
 
     #[test]

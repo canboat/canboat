@@ -227,6 +227,31 @@ pub fn format_date(days: u16, w: &mut dyn std::fmt::Write) -> std::fmt::Result {
     write!(w, "{:04}.{:02}.{:02}", y, m, d)
 }
 
+/// A TIME / DURATION value read back as seconds, as leniently as
+/// canboat ever wrote it: a number of seconds (`"300"`, `"-1.5"`), or a
+/// clock `[-]HH:MM`, `[-]HH:MM:SS` or `[-]HH:MM:SS.ffff`.
+pub fn parse_time(s: &str) -> Option<f64> {
+    let s = s.trim();
+    if let Ok(seconds) = s.parse::<f64>() {
+        return seconds.is_finite().then_some(seconds);
+    }
+    // A negative duration ("-00:05:00.000") is negative as a whole.
+    if let Some(rest) = s.strip_prefix('-') {
+        return parse_time(rest).map(|t| -t);
+    }
+    let mut it = s.split(':');
+    let h = it.next()?.parse::<f64>().ok()?;
+    let m = it.next()?.parse::<f64>().ok()?;
+    let sec = match it.next() {
+        Some(x) => x.parse::<f64>().ok()?,
+        None => 0.0,
+    };
+    if it.next().is_some() {
+        return None;
+    }
+    Some(h * 3600.0 + m * 60.0 + sec)
+}
+
 /// Format seconds-since-midnight as `HH:MM:SS[.fff]`. Fractional
 /// digits follow `precision`. When `trim_zero_fraction` is set and
 /// the fractional part is zero, the `.fff` suffix is omitted — this

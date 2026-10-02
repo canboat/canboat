@@ -28,6 +28,7 @@
 use crate::engine::analyzer_json as json;
 use crate::engine::db::PgnDatabase;
 use crate::engine::decode::{DecodedField, DecodedPgn, FieldValue, build_index_by_order};
+use crate::engine::output;
 use crate::engine::types::{FieldInfo, FieldType};
 
 /// Reconstruct a [`DecodedPgn`] from one analyzer `-nv` JSON line, or
@@ -117,15 +118,23 @@ fn field_value_from_json(
         }
         // `-nv`: {"value":<days>,"name":"YYYY.MM.DD"} — take the raw days.
         Some(Date) => Some(FieldValue::Date(nested_or_bare_int(line, name)? as u16)),
-        // `-nv`: {"value":N,"name":"HH:MM:SS.SSSS"}. N is `seconds` for
-        // resolution >= 1 s, the raw scaled integer for sub-second — see
-        // output::json. Recover `seconds` (what the converters read)
-        // accordingly; keep the wire integer in `raw`.
+        // Seconds, bare or as `-nv`'s {"value":S,"name":"HH:MM:SS.SSSS"}
+        // (see output::json); the wire integer is seconds / resolution.
+        // Read leniently: the `-nv` name's clock form first, which reads
+        // the same in captures from before canboat gave seconds (their
+        // `value` was the wire count), then a number, then a clock string.
         Some(Time | Duration) => {
-            let v = nested_or_bare_int(line, name)?;
+            let v = json::value(line, name)?;
+            let seconds = if v.starts_with('{') {
+                json::value(v, "name")
+                    .and_then(output::parse_time)
+                    .or_else(|| json::number(v, "value"))?
+            } else {
+                output::parse_time(v)?
+            };
             let res = fi.resolution.unwrap_or(1.0);
-            let seconds = if res >= 1.0 { v as f64 } else { v as f64 * res };
-            Some(FieldValue::Time { raw: v, seconds })
+            let raw = (seconds / res).round() as i64;
+            Some(FieldValue::Time { raw, seconds })
         }
         Some(Mmsi) => Some(FieldValue::Mmsi(mmsi_from_json(line, name)?)),
         Some(Pgn) => Some(FieldValue::Pgn {
@@ -221,6 +230,33 @@ mod tests {
         assert_eq!(field_f64(&c, "windAngle"), Some(1.2));
         // The lookup keyed by camel id resolves to the same integer.
         assert_eq!(field_f64(&b, "reference"), field_f64(&c, "reference"));
+    }
+
+    #[test]
+    fn time_reads_from_seconds_or_any_clock_form() {
+        // 126992 System Time 09:10:20.2240 in every form canboat writes or
+        // has written: seconds, bare and -nv; the clock string; and an
+        // older -nv object whose value was the raw 0.0001 s count.
+        let db = crate::engine::PgnDatabase::embedded(Units::Si);
+        for time in [
+            "33020.2240",
+            r#"{"value":33020.2240,"name":"09:10:20.2240"}"#,
+            r#""09:10:20.2240""#,
+            r#"{"value":330202240,"name":"09:10:20.2240"}"#,
+        ] {
+            let line = format!(
+                r#"{{"prio":3,"src":1,"dst":255,"pgn":126992,"description":"System Time","fields":{{"Source":{{"value":0,"name":"GPS"}},"Date":{{"value":19934,"name":"2024.07.30"}},"Time":{time}}}}}"#
+            );
+            let d = json_to_decoded(&line, db).expect("decodes");
+            let t = d.fields.iter().find(|f| f.info.id == "time").expect("time");
+            match t.value {
+                FieldValue::Time { raw, seconds } => {
+                    assert_eq!(raw, 330202240, "{time}");
+                    assert!((seconds - 33020.224).abs() < 1e-6, "{time}");
+                }
+                ref other => panic!("{time}: {other:?}"),
+            }
+        }
     }
 
     #[test]
