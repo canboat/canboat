@@ -197,9 +197,12 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     }
 }
 
-/// `-si`: the database's kWh, Ah and % fields leave as J, C and a ratio
-/// (test28 in analyzer/tests/Makefile) — 65005 energy, 127506 and 127513
-/// charge and percentages, 127505 level, 130576 signed trim tabs.
+/// `-si`: the database's non-SI units leave in SI (test28 in
+/// analyzer/tests/Makefile) — kWh/Ah/% as J/C/ratio (65005, 127505,
+/// 127506, 127513, 130576 signed), rpm as Hz (127488, 130825), L and L/h
+/// as m3 and m3/s (127489, 127496, 127497, 130567), semi-circles and
+/// degree offsets as rad (129541, 130818), Pa/hr, ppm and km/h (130324,
+/// 130567, 130825).
 #[test]
 fn pgn_si_units_json() {
     run_case(
