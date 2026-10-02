@@ -868,10 +868,9 @@ fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
 }
 
 /// The default raw bit pattern for a field the caller left unset.
-/// Stage a `STRING_FIX` field: the ASCII bytes right-padded with `0x00`
-/// to the field's fixed byte width. Zero padding is what real devices
-/// (e.g. the Furuno SCX-20) emit and round-trips through the decoder,
-/// which trims trailing NUL / `0xff` / `@` / space.
+/// Stage a `STRING_FIX` field: the UTF-8 bytes right-padded with `0xff`
+/// to the field's fixed byte width, shortened to fit when the text is
+/// longer. The decoder trims trailing NUL / `0xff` / `@` / space alike.
 fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let text = match v {
@@ -897,19 +896,27 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
             });
         }
     };
-    let bytes = text.as_bytes();
-    if bytes.len() > byte_len {
-        return Err(EncodeError::ValueOutOfRange {
-            field: f.name,
-            value: bytes.len() as f64,
-        });
-    }
+    let bytes = fit_utf8(&text, byte_len).as_bytes();
     // Pad with 0xff, the convention real devices and canboatjs use
     // (decoders trim 0xff, 0x00 and '@' runs alike, but matching the
     // dominant on-wire bytes keeps re-encodes bit-identical).
     let mut buf = vec![0xffu8; byte_len];
     buf[..bytes.len()].copy_from_slice(bytes);
     Ok(Staged::Bytes(buf))
+}
+
+/// `s` shortened to at most `max` bytes, cut on a character boundary: a
+/// text too long for its string field is truncated rather than refused,
+/// and a partial UTF-8 sequence would be read back as Latin-1.
+fn fit_utf8(s: &str, max: usize) -> &str {
+    if s.len() <= max {
+        return s;
+    }
+    let mut end = max;
+    while !s.is_char_boundary(end) {
+        end -= 1;
+    }
+    &s[..end]
 }
 
 /// The text of a string [`EncodeValue`], or an error for the wrong variant.
@@ -924,46 +931,36 @@ fn text_of(f: &FieldInfo, v: EncodeValue) -> Result<String, EncodeError> {
     }
 }
 
-/// Stage a `STRING_LZ` field: a `[length][content]` run (canboat's
-/// `fieldPrintStringLZ` — one length byte then that many content bytes).
-/// A fixed-width field is `0x00`-padded to its declared byte width.
+/// Stage a `STRING_LZ` field: `[length][content][0x00]`, where the length
+/// byte counts the content only — what every Fusion device sends, status
+/// and commands alike (canboat's `fieldPrintStringLZ` reads the length
+/// and content and leaves the NUL). A fixed-width field is `0x00`-padded
+/// to its declared byte width. Text too long for the field is shortened
+/// so the length byte, content and NUL still fit.
 fn stage_string_lz(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     let text = text_of(f, v)?;
-    let content = text.as_bytes();
-    if content.len() > u8::MAX as usize {
-        return Err(EncodeError::ValueOutOfRange {
-            field: f.name,
-            value: content.len() as f64,
-        });
-    }
-    let mut buf = Vec::with_capacity(content.len() + 1);
+    let room = match f.bit_length {
+        Some(bl) => (bl as usize / 8).saturating_sub(2),
+        None => u8::MAX as usize,
+    };
+    let content = fit_utf8(&text, room.min(u8::MAX as usize)).as_bytes();
+    let mut buf = Vec::with_capacity(content.len() + 2);
     buf.push(content.len() as u8);
     buf.extend_from_slice(content);
+    buf.push(0);
     if let Some(bl) = f.bit_length {
-        let want = bl as usize / 8;
-        if buf.len() > want {
-            return Err(EncodeError::ValueOutOfRange {
-                field: f.name,
-                value: content.len() as f64,
-            });
-        }
-        buf.resize(want, 0);
+        buf.resize(bl as usize / 8, 0);
     }
     Ok(Staged::Bytes(buf))
 }
 
 /// Stage a `STRING_LAU` field: `[total_len][encoding=1][content]`, where
 /// `total_len` counts the two header bytes (canboat's `fieldPrintStringLAU`).
-/// Encoding `1` is ASCII/UTF-8. Always variable-length (no padding).
+/// Encoding `1` is ASCII/UTF-8. Always variable-length (no padding); text
+/// too long for the length byte is shortened.
 fn stage_string_lau(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     let text = text_of(f, v)?;
-    let content = text.as_bytes();
-    if content.len() + 2 > u8::MAX as usize {
-        return Err(EncodeError::ValueOutOfRange {
-            field: f.name,
-            value: content.len() as f64,
-        });
-    }
+    let content = fit_utf8(&text, u8::MAX as usize - 2).as_bytes();
     let mut buf = Vec::with_capacity(content.len() + 2);
     buf.push((content.len() + 2) as u8);
     buf.push(1); // 1 = ASCII / UTF-8
@@ -1620,6 +1617,84 @@ mod tests {
         assert_eq!(
             d.field(IDENTIFIER).and_then(|f| f.value.as_str()),
             Some("BOW")
+        );
+    }
+
+    #[test]
+    fn string_lz_is_written_as_fusion_sends_it() {
+        // A Fusion MS-RA70N Set Zone Name, sent by an MFD (canboat's
+        // samples/fusion-ms-ra70n-zone-controls.raw): the length byte
+        // counts the content, and a NUL follows it.
+        use crate::engine::field::fusion_set_zone_name::{NAME, ZONE};
+        let frame = db()
+            .encode("fusionSetZoneName")
+            .unwrap()
+            .push(ZONE, 0.0)
+            .unwrap()
+            .push(NAME, "COCKPIT")
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(
+            frame.data.as_slice(),
+            &[
+                0xa3, 0x99, 0x22, 0x00, 0x00, 0x07, b'C', b'O', b'C', b'K', b'P', b'I', b'T', 0x00
+            ]
+        );
+    }
+
+    #[test]
+    fn a_fixed_width_string_lz_keeps_room_for_its_nul() {
+        // Fusion RDS Data's text is a 32-byte STRING_LZ: at most 30 bytes
+        // of content, then the NUL, then zero padding.
+        use crate::engine::field::fusion_rds_data::RDS;
+        let long = "x".repeat(40);
+        let frame = db()
+            .encode("fusionRdsData")
+            .unwrap()
+            .push(RDS, long.as_str())
+            .unwrap()
+            .build()
+            .unwrap();
+        let tail = &frame.data[frame.data.len() - 32..];
+        assert_eq!(tail[0], 30);
+        assert_eq!(&tail[1..31], "x".repeat(30).as_bytes());
+        assert_eq!(tail[31], 0);
+    }
+
+    #[test]
+    fn too_long_strings_are_shortened_not_refused() {
+        // STRING_FIX: Product Information's Model ID is 32 bytes. The cut
+        // never splits a character: 'é' is two bytes and would straddle it.
+        use crate::engine::field::product_information::MODEL_ID;
+        let text = format!("{}é", "a".repeat(31));
+        let frame = db()
+            .encode("productInformation")
+            .unwrap()
+            .push(MODEL_ID, text.as_str())
+            .unwrap()
+            .build()
+            .unwrap();
+        let d = db().decode(&frame).unwrap();
+        assert_eq!(
+            d.field(MODEL_ID).and_then(|f| f.value.as_str()),
+            Some("a".repeat(31).as_str())
+        );
+
+        // STRING_LAU: the length byte counts itself and the control byte,
+        // so 253 bytes of content is the most it can carry.
+        use crate::engine::field::configuration_information::INSTALLATION_DESCRIPTION1 as DESC1;
+        let frame = db()
+            .encode("configurationInformation")
+            .unwrap()
+            .push(DESC1, "y".repeat(300).as_str())
+            .unwrap()
+            .build()
+            .unwrap();
+        let d = db().decode(&frame).unwrap();
+        assert_eq!(
+            d.field(DESC1).and_then(|f| f.value.as_str()).map(str::len),
+            Some(253)
         );
     }
 
