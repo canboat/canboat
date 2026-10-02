@@ -1,0 +1,41 @@
+pgn: 1729
+id: quickChainCount
+description: 'Quick: Chain Count'
+type: Single
+missing:
+- Resolution
+- Lookups
+- Interval
+explanation: A Quick windlass's chain counter, about twice a second.
+fields:
+- id: talkerId
+  name: Talker ID
+  description: The same 16 bits start every Quick message from a device
+  type: UINT16
+  note: 0x18C1 on every message of the one capture, from one windlass. That it identifies the device is a guess.
+- id: chainCounter
+  name: Chain Counter
+  description: Chain paid out, counted in the unit that Units names
+  type: UINT32
+- id: units
+  name: Units
+  description: The unit Chain Counter counts in
+  type: LOOKUP
+  bits: 16
+  lookup: QUICK_CHAIN_UNITS
+samples:
+- raw: "(1702468372.909137) can0 6C1#C1186A0000000200"  # samples/quick-pcs-windlass-chain-up-down.candump
+  expects:
+    talkerId: 6337
+    chainCounter: 106
+    units: Feet
+- raw: "(1702468387.189437) can0 6C1#C118670000000200"  # samples/quick-pcs-windlass-chain-up-down.candump, chain hauled in
+  expects:
+    chainCounter: 103
+- raw: "(1702468391.583401) can0 6C1#C1186B0000000200"  # samples/quick-pcs-windlass-chain-up-down.candump, paid out again
+  expects:
+    chainCounter: 107
+notes: |-
+  The one capture (canboat/canboat#938) is 34 s of a windlass hauling in chain and paying it out again: the counter goes 106, 105, 104, 103 and back up to 107, one step about every 1.1 s, with Units 2 throughout. Read as feet, that is 0.9 ft/s (0.28 m/s, about 17 m/min), a plausible windlass speed; read as tenths of a foot or a metre it is far too slow. So one count is most likely one foot when Units is 2.
+
+  That stays a reading of one capture, so the counter is published as a plain count, and Units names only the value seen. A capture of a windlass set to metres would settle both, and the counter could then become a length in metres.

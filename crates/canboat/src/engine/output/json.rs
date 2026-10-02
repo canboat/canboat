@@ -9,6 +9,9 @@
 //!  "description":"...","fields":{"id":Value,"id":Value,...}}
 //! ```
 //!
+//! On Quick PCS ([`JsonOptions::protocol`]) there is no `prio`, `src` or
+//! `dst`: the record starts `{"timestamp":"...","pgn":N,`.
+//!
 //! Compact (no whitespace), keys in canboat order. Field keys are the
 //! camelCase `Id` from canboat.json by default ([`CamelCase::Lower`]);
 //! [`CamelCase::Off`] switches them to the human-readable `Name`, which
@@ -89,6 +92,11 @@ pub struct JsonOptions {
     /// `--wrap` flag). Off by default: the flat record is what
     /// canboatjs and the Signal K stack consume.
     pub wrap: bool,
+    /// The bus the records come from. On Quick PCS a record has no
+    /// `prio`, `src` or `dst`: an 11-bit identifier is only a message type
+    /// (the record's `pgn`), so those keys are left out rather than filled
+    /// with placeholders that read like a priority and a device address.
+    pub protocol: crate::engine::BusProtocol,
 }
 
 /// Identifier style selector for `--id` (canboat C's `-camel` /
@@ -149,11 +157,15 @@ pub fn write_json<W: fmt::Write>(w: &mut W, pgn: &DecodedPgn, opts: &JsonOptions
         write_json_string(w, &crate::engine::format::normalize_timestamp(ts))?;
         w.write_char(',')?;
     }
-    write!(
-        w,
-        "\"prio\":{},\"src\":{},\"dst\":{},\"pgn\":{}",
-        pgn.prio, pgn.src, pgn.dst, pgn.pgn
-    )?;
+    if opts.protocol.standard_frames() {
+        write!(w, "\"pgn\":{}", pgn.pgn)?;
+    } else {
+        write!(
+            w,
+            "\"prio\":{},\"src\":{},\"dst\":{},\"pgn\":{}",
+            pgn.prio, pgn.src, pgn.dst, pgn.pgn
+        )?;
+    }
     w.write_str(",\"description\":")?;
     write_json_string(w, pgn.description)?;
 
@@ -1004,6 +1016,35 @@ fn write_json_string_with_table<W: fmt::Write>(
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    /// A Quick record leaves out the ISO 11783 header keys; every other
+    /// protocol keeps them.
+    #[test]
+    fn a_quick_record_has_no_prio_src_or_dst() {
+        let db = crate::engine::PgnDatabase::embedded_quick(crate::engine::Units::Si);
+        let frame =
+            crate::engine::RawFrame::new(None, 0, 0x6c1, 0, 255, [0xc1, 0x18, 0x6a, 0, 0, 0, 2, 0]);
+        let pgn = db.decode(&frame).unwrap();
+        let json = |protocol| {
+            let mut out = String::new();
+            let opts = JsonOptions {
+                protocol,
+                ..Default::default()
+            };
+            write_json(&mut out, &pgn, &opts).unwrap();
+            out
+        };
+        let quick = json(crate::engine::BusProtocol::Quick);
+        assert!(
+            quick.starts_with(r#"{"pgn":1729,"description":"Quick: Chain Count""#),
+            "{quick}"
+        );
+        let n2k = json(crate::engine::BusProtocol::Nmea2000);
+        assert!(
+            n2k.starts_with(r#"{"prio":0,"src":0,"dst":255,"pgn":1729,"#),
+            "{n2k}"
+        );
+    }
     use crate::engine::decode::{DecodedField, FieldValue};
 
     fn sample_pgn() -> DecodedPgn {

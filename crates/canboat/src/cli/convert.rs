@@ -339,10 +339,13 @@ fn convert_raw<W: Write>(
             protocol.database(args.shape.units()),
         ))
     } else {
-        match forced {
-            Some(fmt) => Box::new(LineFrameReader::with_format(source, fmt)),
-            None => Box::new(LineFrameReader::new(source)),
-        }
+        Box::new(
+            match forced {
+                Some(fmt) => LineFrameReader::with_format(source, fmt),
+                None => LineFrameReader::new(source),
+            }
+            .protocol(protocol),
+        )
     };
     let mut writer: Box<dyn FrameWriter + '_> = match args.to {
         OutFormat::Plain => Box::new(PlainWriter::new(out)),
@@ -380,6 +383,7 @@ fn convert_decoded<W: Write>(
         debug: args.debug,
         camel_case: args.shape.camel_case(),
         wrap: args.shape.wrap(),
+        protocol,
     };
     let text_opts = TextOptions {
         show_unavailable: args.empty,

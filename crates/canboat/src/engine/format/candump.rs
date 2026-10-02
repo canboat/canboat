@@ -11,7 +11,9 @@
 //! ```
 //!
 //! Both carry one raw CAN frame per line: a 29-bit ISO 11783 identifier
-//! and up to 8 data bytes. The pretty form has no timestamp at all
+//! and up to 8 data bytes. candump prints a 29-bit identifier with 8 hex
+//! digits and an 11-bit one (Quick PCS, other non-ISO devices) with 3, so
+//! the identifier's width says which kind a line holds. The pretty form has no timestamp at all
 //! (`RawFrame.timestamp` stays `None` — the caller stamps receive
 //! time); the log form's epoch seconds are converted to the ISO shape
 //! downstream emitters expect, by pure arithmetic so wasm32 (no host
@@ -61,33 +63,67 @@ pub(crate) fn looks_like_log(line: &str) -> bool {
         && rest[close + 1..].trim_start().contains('#')
 }
 
-/// Parse either candump shape into a [`RawFrame`].
-pub fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
+/// Parse either candump shape into a [`RawFrame`], for a 29-bit ISO 11783
+/// bus. A line with an 11-bit identifier is refused as a bad `canid`.
+#[cfg(test)]
+fn parse_line(line: &str) -> Result<RawFrame, ParseError> {
+    parse_line_for(line, false)?.ok_or_else(|| ParseError::BadInteger {
+        field: "canid",
+        value: "an 11-bit identifier".to_string(),
+        offset: None,
+    })
+}
+
+/// Parse either candump shape, keeping only the frames of one kind:
+/// 11-bit identifiers when `standard` is set (Quick PCS), 29-bit ISO 11783
+/// ones when not. `Ok(None)` for a frame of the other kind.
+///
+/// An 11-bit identifier is a message type with no priority, source or
+/// destination: it becomes the frame's `pgn`, with priority 0, source 0
+/// and destination 255.
+pub fn parse_line_for(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseError> {
     let line = line.trim_end_matches(['\r', '\n']);
     let t = line.trim_start();
     if t.is_empty() {
         return Err(ParseError::Empty);
     }
     if t.starts_with('(') {
-        parse_log(t)
+        parse_log(t, standard)
     } else {
-        parse_pretty(t)
+        parse_pretty(t, standard)
     }
 }
 
+/// The frame header from candump's identifier column, or `None` when the
+/// identifier is not of the `standard` kind asked for.
+fn header(id_tok: &str, standard: bool) -> Result<Option<(u8, u32, u8, u8)>, ParseError> {
+    let canid = u32::from_str_radix(id_tok, 16).map_err(|_| ParseError::BadInteger {
+        field: "canid",
+        value: id_tok.to_string(),
+        offset: None,
+    })?;
+    // candump's `%03X` for a standard frame, `%08X` for an extended one.
+    if (id_tok.len() <= 3) != standard {
+        return Ok(None);
+    }
+    Ok(Some(if standard {
+        (0, canid, 0, 255)
+    } else {
+        iso11783_decompose(canid)
+    }))
+}
+
 /// `  can0  18EEFF00   [8]  8E F2 DD E8 00 96 64 40`
-fn parse_pretty(line: &str) -> Result<RawFrame, ParseError> {
+fn parse_pretty(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseError> {
     let mut toks = line.split_whitespace();
     let _iface = toks.next().ok_or(ParseError::Empty)?;
     let id_tok = toks.next().ok_or(ParseError::BadHeader {
         expected: 3,
         found: 1,
     })?;
-    let canid = u32::from_str_radix(id_tok, 16).map_err(|_| ParseError::BadInteger {
-        field: "canid",
-        value: id_tok.to_string(),
-        offset: None,
-    })?;
+    let Some((prio, pgn, src, dst)) = header(id_tok, standard)? else {
+        return Ok(None);
+    };
     let len_tok = toks.next().ok_or(ParseError::BadHeader {
         expected: 3,
         found: 2,
@@ -112,7 +148,6 @@ fn parse_pretty(line: &str) -> Result<RawFrame, ParseError> {
         });
     }
 
-    let (prio, pgn, src, dst) = iso11783_decompose(canid);
     let mut data: SmallVec<[u8; 8]> = SmallVec::new();
     for (i, tok) in toks.take(declared).enumerate() {
         let b = u8::from_str_radix(tok, 16).map_err(|_| ParseError::BadHexByte {
@@ -122,18 +157,18 @@ fn parse_pretty(line: &str) -> Result<RawFrame, ParseError> {
         })?;
         data.push(b);
     }
-    Ok(RawFrame {
+    Ok(Some(RawFrame {
         timestamp: None,
         prio,
         pgn,
         src,
         dst,
         data,
-    })
+    }))
 }
 
 /// `(1436509053.762905) can0 18EEFF00#8EF2DDE800966440`
-fn parse_log(line: &str) -> Result<RawFrame, ParseError> {
+fn parse_log(line: &str, standard: bool) -> Result<Option<RawFrame>, ParseError> {
     let rest = line.strip_prefix('(').ok_or(ParseError::Empty)?;
     let close = rest.find(')').ok_or(ParseError::BadHeader {
         expected: 3,
@@ -153,14 +188,11 @@ fn parse_log(line: &str) -> Result<RawFrame, ParseError> {
         expected: 3,
         found: 2,
     })?;
-    let canid = u32::from_str_radix(id_part, 16).map_err(|_| ParseError::BadInteger {
-        field: "canid",
-        value: id_part.to_string(),
-        offset: None,
-    })?;
+    let Some((prio, pgn, src, dst)) = header(id_part, standard)? else {
+        return Ok(None);
+    };
     // Remote frames (`R`) and CAN-FD flag digits after `##` are not
     // N2K/J1939 traffic; reject anything but plain hex pairs.
-    let (prio, pgn, src, dst) = iso11783_decompose(canid);
     let mut data: SmallVec<[u8; 8]> = SmallVec::new();
     let bytes = data_part.as_bytes();
     if bytes.len() % 2 != 0 {
@@ -194,14 +226,14 @@ fn parse_log(line: &str) -> Result<RawFrame, ParseError> {
         })?;
         data.push(b);
     }
-    Ok(RawFrame {
+    Ok(Some(RawFrame {
         timestamp: Some(timestamp),
         prio,
         pgn,
         src,
         dst,
         data,
-    })
+    }))
 }
 
 /// `1436509053.762905` → `2015-07-10T06:17:33.762Z` by pure integer
@@ -229,6 +261,25 @@ fn epoch_to_iso(ts: &str) -> String {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    #[test]
+    fn an_identifier_of_3_digits_is_an_11_bit_frame() {
+        let line = "(1702468372.909137) can0 6C1#C1186A0000000200";
+        let f = parse_line_for(line, true).unwrap().unwrap();
+        assert_eq!((f.prio, f.pgn, f.src, f.dst), (0, 0x6c1, 0, 255));
+        assert_eq!(f.data.as_slice(), &[0xc1, 0x18, 0x6a, 0, 0, 0, 2, 0]);
+        let pretty = parse_line_for("  can0  6C1   [8]  C1 18 6A 00 00 00 02 00", true).unwrap();
+        assert_eq!(pretty.unwrap().pgn, 0x6c1);
+
+        // Each bus keeps its own kind of frame and skips the other.
+        assert_eq!(parse_line_for(line, false).unwrap(), None);
+        assert_eq!(
+            parse_line_for("(1.0) can0 18EEFF00#8EF2DDE800966440", true).unwrap(),
+            None
+        );
+        // An 11-bit identifier is not read as a 29-bit one.
+        assert!(parse_line(line).is_err());
+    }
 
     #[test]
     fn parses_pretty_line() {

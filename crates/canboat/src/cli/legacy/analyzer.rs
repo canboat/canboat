@@ -125,12 +125,14 @@ fn run_cli(cli: Cli) -> Result<()> {
     cli.quirk.apply();
     let units = cli.shape.units();
 
+    let protocol = cli.protocol.resolve()?;
     let json_opts = JsonOptions {
         include_empty: cli.empty,
         name_value: cli.nv,
         debug: cli.debug,
         camel_case: cli.shape.camel_case(),
         wrap: cli.shape.wrap(),
+        protocol,
     };
     let geo = match cli.geo.as_str() {
         "dd" => GeoFormat::Dd,
@@ -152,7 +154,6 @@ fn run_cli(cli: Cli) -> Result<()> {
     // suppresses it — unless the fixed timestamp string contains
     // "n2kd", in which case n2kd still wants the banner.
     let suppress_banner = cli.fixtime.as_deref().is_some_and(|s| !s.contains("n2kd"));
-    let protocol = cli.protocol.resolve()?;
     if cli.json && !suppress_banner {
         writeln!(
             out,

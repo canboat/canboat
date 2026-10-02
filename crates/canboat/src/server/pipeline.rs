@@ -583,6 +583,7 @@ mod tests {
                     debug: false,
                     camel_case: crate::engine::output::CamelCase::Off,
                     wrap: false,
+                    protocol: crate::engine::BusProtocol::Nmea2000,
                 },
                 Nmea0183Options {
                     emit_stdout: false,

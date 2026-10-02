@@ -127,7 +127,8 @@ pub fn decode_stream<R: BufRead, F: FnMut(&DecodedPgn)>(
     let mut reader = match cfg.forced_format {
         Some(fmt) => LineFrameReader::with_format(source, fmt),
         None => LineFrameReader::new(source),
-    };
+    }
+    .protocol(cfg.protocol);
     // canboat's PLAIN_OR_FAST mode locks into "coalesced" once any
     // line carries more than 8 payload bytes — from then on every
     // frame is assumed to be pre-assembled and the reassembler is

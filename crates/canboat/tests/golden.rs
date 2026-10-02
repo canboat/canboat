@@ -453,6 +453,28 @@ fn j1939_scaling_text() {
     );
 }
 
+/// Quick PCS (`--protocol quick`) from candump: 11-bit identifiers are the
+/// message types. Lines from the windlass capture of canboat#938 decode
+/// against `database/quick/`, Chain Count with its counter going down and
+/// up again; an identifier with no definition is a plain 11-bit frame, not
+/// a Quick one; and a 29-bit frame in the same file is skipped. Rust only:
+/// Quick has no C analyzer.
+#[test]
+fn quick_pcs_text() {
+    run_case("quick-pcs.in", "quick-pcs.out", &["--protocol", "quick"]);
+}
+
+/// The same as JSON: a Quick record has no `prio`, `src` or `dst`, as an
+/// 11-bit identifier carries none of them.
+#[test]
+fn quick_pcs_json() {
+    run_case(
+        "quick-pcs.in",
+        "quick-pcs-json.out",
+        &["--protocol", "quick", "--json", "--fixtime", "quick-pcs"],
+    );
+}
+
 /// Same pgn-test corpus through `-json -debug` (no -nv). Exercises
 /// the debug-mode bytes annotation across every JSON path that's
 /// shaped differently from -nv: Lookup as string (not {value,name}),

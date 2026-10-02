@@ -701,6 +701,7 @@
     <xsl:variable name="license" select="/PGNDefinitions/License/text()"/>
     <!-- Which protocol this document describes; absent (pre-2.7.0) means NMEA 2000. -->
     <xsl:variable name="j1939" select="/PGNDefinitions/Protocol = 'j1939'"/>
+    <xsl:variable name="quick" select="/PGNDefinitions/Protocol = 'quick'"/>
 
     <html lang="en">
       <head>
@@ -709,6 +710,7 @@
         <title>
           <xsl:choose>
             <xsl:when test="$j1939">CANboat SAE J1939 PGN documentation</xsl:when>
+            <xsl:when test="$quick">CANboat Quick PCS message documentation</xsl:when>
             <xsl:otherwise>CANboat NMEA 2000 PGN documentation</xsl:otherwise>
           </xsl:choose>
         </title>
@@ -745,6 +747,7 @@
             The CANboat project
             <xsl:choose>
               <xsl:when test="$j1939">SAE J1939</xsl:when>
+              <xsl:when test="$quick">Quick PCS</xsl:when>
               <xsl:otherwise>NMEA 2000</xsl:otherwise>
             </xsl:choose>
             PGN documentation version
@@ -756,6 +759,11 @@
                 This page covers buses that speak SAE J1939 (engines, gensets, transmissions). For NMEA 2000 see
                 <a href="canboat.html">the NMEA 2000 PGN documentation</a>. The data is also available as
                 <a href="canboat-j1939.xml">XML</a> and <a href="canboat-j1939.json">JSON</a>.
+              </xsl:when>
+              <xsl:when test="$quick">
+                This page covers the bus of Quick's Proportional Control System (windlasses, thrusters). For NMEA 2000
+                see <a href="canboat.html">the NMEA 2000 PGN documentation</a>. The data is also available as
+                <a href="canboat-quick.xml">XML</a> and <a href="canboat-quick.json">JSON</a>.
               </xsl:when>
               <xsl:otherwise>
                 This page covers NMEA 2000. Engines, gensets and transmissions often speak SAE J1939 instead; see
@@ -770,6 +778,34 @@
           </p>
 
           <xsl:choose>
+            <xsl:when test="$quick">
+          <h2> Quick PCS </h2>
+
+          <p>
+            Quick's Proportional Control System connects its windlasses, thrusters and their controls over a CAN
+            bus of its own. Its frames have a standard 11 bit CAN identifier rather than the 29 bit ISO 11783 one of
+            NMEA 2000 and J1939, and that identifier is only a message type: there is no priority, source or
+            destination in it, and no manufacturer either. On this page the "PGN" of a message is that identifier.
+            A device appears to identify itself in the first two bytes of each message instead.
+          </p>
+          <p>
+            Because an 11 bit identifier says nothing about who sent it, any other device on the bus that uses 11 bit
+            frames would decode as if it were Quick. CANboat therefore only decodes Quick when asked to, with
+            <code>--protocol quick</code>, and an identifier this page does not define is shown as a plain 11 bit
+            frame, not as a Quick one. Only SocketCAN and candump captures carry 11 bit frames; NMEA 2000 gateways
+            drop them.
+          </p>
+          <p>
+            What is here comes from a single capture of one windlass, contributed in
+            <a href="https://github.com/canboat/canboat/pull/938">canboat/canboat#938</a>. More captures, of other
+            devices and settings, are very welcome: please open an issue at
+            <a href="https://github.com/canboat/canboat/issues">https://github.com/canboat/canboat/issues</a>.
+          </p>
+          <p>
+            <b>Note:</b> It should be obvious that all data below is <i><b>not authoritative</b></i>; it is just our
+            interpretation.
+          </p>
+            </xsl:when>
             <xsl:when test="$j1939">
           <h2> SAE J1939 </h2>
 
@@ -839,6 +875,9 @@
 
 
 
+          <!-- The 29 bit ISO 11783 header, its PGN ranges and its framing do not
+               apply to Quick's 11 bit frames. -->
+          <xsl:if test="not($quick)">
           <h2 id='frame-header'>
             <xsl:choose>
               <xsl:when test="$j1939">ISO 11783 and J1939 header</xsl:when>
@@ -1008,6 +1047,8 @@
           </p>
             </xsl:otherwise>
           </xsl:choose>
+
+          </xsl:if>
 
           <xsl:call-template name="pgn-list"/>
           <xsl:call-template name="physicalquantity-list"/>

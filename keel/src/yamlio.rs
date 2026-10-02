@@ -685,13 +685,17 @@ pub fn load_database(db_dir: &Path, version: &str, schema_version: &str) -> Resu
     // includes fallback entries - their in-group position is semantic).
     db.pgns.sort_by_key(|p| (p.pgn, p.variant_order));
 
-    let j1939_dir = db_dir.join("j1939/pgns");
-    if j1939_dir.is_dir() {
-        for path in sorted_yaml_files(&j1939_dir)? {
-            let doc = load_file(&path)?;
-            db.pgns_j1939.push(pgn(&doc, &path.display().to_string())?);
+    for protocol in [crate::model::Protocol::J1939, crate::model::Protocol::Quick] {
+        let dir = db_dir.join(protocol.pgn_dir());
+        if !dir.is_dir() {
+            continue;
         }
-        db.pgns_j1939.sort_by_key(|p| (p.pgn, p.variant_order));
+        let list = db.pgns_of_mut(protocol);
+        for path in sorted_yaml_files(&dir)? {
+            let doc = load_file(&path)?;
+            list.push(pgn(&doc, &path.display().to_string())?);
+        }
+        list.sort_by_key(|p| (p.pgn, p.variant_order));
     }
 
     Ok(db)

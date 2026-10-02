@@ -677,7 +677,9 @@ mod tests {
         // Any valid JSON spelling, not just the compact one producers write.
         let spaced = r#"{ "version": "8.4.0", "units": "si", "protocol": "j1939" }"#;
         assert_eq!(parse_banner(spaced).unwrap(), (true, BusProtocol::J1939));
-        assert!(parse_banner(r#"{"version":"9.0.0","protocol":"quick"}"#).is_err());
+        let q = r#"{"version":"8.4.0","units":"si","protocol":"quick"}"#;
+        assert_eq!(parse_banner(q).unwrap(), (true, BusProtocol::Quick));
+        assert!(parse_banner(r#"{"version":"9.0.0","protocol":"canopen"}"#).is_err());
     }
 
     #[test]

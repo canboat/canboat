@@ -7,7 +7,7 @@
 //! (fieldtype overrule conflicts poison resolution/size/offset).
 
 use crate::decode;
-use crate::model::{ACTISENSE_BEM, Database, Expected, Pgn};
+use crate::model::{ACTISENSE_BEM, Database, Expected, Pgn, Protocol};
 use crate::samples;
 
 #[derive(Debug)]
@@ -60,11 +60,14 @@ pub fn check(db: &Database) -> Vec<Violation> {
 
     check_fieldtypes(db, &mut v); // R23
     check_lookup_wiring(db, &mut v); // R08, R22 (references from BOTH trees)
-    // The marine and J1939 lists are separate namespaces (both contain the
-    // ISO PGNs), so variant and id uniqueness are checked per tree.
-    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
+    // Each protocol's list is its own namespace (the marine and J1939 ones
+    // both contain the ISO PGNs), so variant and id uniqueness are checked
+    // per protocol.
+    for protocol in Protocol::ALL {
+        let prefix = protocol.check_prefix();
+        let list = db.pgns_of(protocol);
         for pgn in list {
-            check_pgn_range(prefix, pgn, &mut v); // R02
+            check_pgn_range(protocol, pgn, &mut v); // R02
             check_frame_length(prefix, pgn, &mut v); // R04
             check_repeating(prefix, pgn, &mut v); // R05
             check_dynamic_length(prefix, db, pgn, &mut v); // R06
@@ -81,13 +84,13 @@ pub fn check(db: &Database) -> Vec<Violation> {
         check_variants(prefix, list, &mut v); // R20
         check_unique_ids(prefix, list, &mut v); // R21
         for pgn in list.iter() {
-            check_samples(prefix, db, pgn, prefix == "j1939/", &mut v); // R40
+            check_samples(protocol, db, pgn, &mut v); // R40
         }
     }
     check_spns(db, &mut v); // R42
-    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
-        for pgn in list {
-            check_continues(prefix, db, pgn, &mut v); // R43
+    for protocol in Protocol::ALL {
+        for pgn in db.pgns_of(protocol) {
+            check_continues(protocol.check_prefix(), db, pgn, &mut v); // R43
         }
     }
     v
@@ -196,14 +199,16 @@ type SpnScaling = (u32, f64, i32, Option<String>);
 // field that carries the same SPN.
 fn check_spns(db: &Database, v: &mut Vec<Violation>) {
     use std::collections::BTreeMap;
-    for p in &db.pgns {
-        for f in p.fields.iter().filter(|f| f.spn.is_some()) {
-            v.push(Violation {
-                rule: "R42",
-                error: true,
-                location: pgn_loc("", p),
-                message: format!("field '{}': spn: is a J1939 attribute", f.id),
-            });
+    for protocol in Protocol::ALL.into_iter().filter(|p| *p != Protocol::J1939) {
+        for p in db.pgns_of(protocol) {
+            for f in p.fields.iter().filter(|f| f.spn.is_some()) {
+                v.push(Violation {
+                    rule: "R42",
+                    error: true,
+                    location: pgn_loc(protocol.check_prefix(), p),
+                    message: format!("field '{}': spn: is a J1939 attribute", f.id),
+                });
+            }
         }
     }
     // SPN -> where it was first seen (location, field id) and its scaling.
@@ -248,7 +253,8 @@ fn check_spns(db: &Database, v: &mut Vec<Violation>) {
 
 // R40: every stored sample must decode against THIS variant and satisfy its
 // (partial) expectations. Captures become regression tests (DESIGN.md §7.2).
-fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<Violation>) {
+fn check_samples(protocol: Protocol, db: &Database, p: &Pgn, v: &mut Vec<Violation>) {
+    let prefix = protocol.check_prefix();
     for (si, spec) in p.samples.iter().enumerate() {
         let loc = || format!("{} sample {}", pgn_loc(prefix, p), si + 1);
         let mut fail = |msg: String| {
@@ -274,8 +280,20 @@ fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<
         if bad || frames.is_empty() {
             continue;
         }
+        // Quick has 11-bit identifiers; the others 29-bit ones.
+        if frames
+            .iter()
+            .any(|f| f.standard != protocol.standard_frames())
+        {
+            fail(format!(
+                "a {} sample must be {}-bit CAN frames",
+                protocol.name(),
+                if protocol.standard_frames() { 11 } else { 29 }
+            ));
+            continue;
+        }
         let assembled = match samples::reassemble(&frames, |pgn| {
-            (if j1939 { &db.pgns_j1939 } else { &db.pgns })
+            db.pgns_of(protocol)
                 .iter()
                 .any(|q| q.pgn == pgn && q.type_ == "Fast")
         }) {
@@ -297,7 +315,7 @@ fn check_samples(prefix: &str, db: &Database, p: &Pgn, j1939: bool, v: &mut Vec<
             fail(format!("sample is PGN {}, file defines {}", a.pgn, p.pgn));
             continue;
         }
-        match decode::select_variant(db, a.pgn, &a.data, j1939) {
+        match decode::select_variant(db, a.pgn, &a.data, protocol) {
             Some(sel) if sel.id == p.id => {}
             Some(sel) => {
                 fail(format!(
@@ -376,11 +394,37 @@ fn expect_mismatch(expected: &Expected, got: &decode::Value) -> Option<String> {
 
 // R02: PGN number in a valid range; PDU1 PGNs end in 0x00; packet type
 // agrees with the range (pgn.c checkPgnList).
-fn check_pgn_range(prefix: &str, p: &Pgn, v: &mut Vec<Violation>) {
+fn check_pgn_range(protocol: Protocol, p: &Pgn, v: &mut Vec<Violation>) {
+    let prefix = protocol.check_prefix();
     if p.pgn >= ACTISENSE_BEM {
         return; // BEM pseudo-PGNs live outside the wire ranges by design
     }
-    let ranges: &[_] = if prefix == "j1939/" {
+    // Quick's "PGN" is an 11-bit CAN identifier, a message type, and one
+    // frame is the whole message.
+    if protocol == Protocol::Quick {
+        let mut err = |message: String| {
+            v.push(Violation {
+                rule: "R02",
+                error: true,
+                location: pgn_loc(prefix, p),
+                message,
+            })
+        };
+        if p.pgn > 0x7ff {
+            err(format!(
+                "Quick message type {} is beyond 11 bits (0x7ff)",
+                p.pgn
+            ));
+        }
+        if p.type_ != "Single" {
+            err(format!(
+                "Quick message type {} is {}; Quick has only Single",
+                p.pgn, p.type_
+            ));
+        }
+        return;
+    }
+    let ranges: &[_] = if protocol == Protocol::J1939 {
         &J1939_PGN_RANGES
     } else {
         &PGN_RANGES
@@ -558,8 +602,9 @@ fn check_proprietary(prefix: &str, db: &Database, p: &Pgn, v: &mut Vec<Violation
 fn check_lookup_wiring(db: &Database, v: &mut Vec<Violation>) {
     let mut referenced: std::collections::HashSet<&str> = std::collections::HashSet::new();
 
-    for (prefix, list) in [("", &db.pgns), ("j1939/", &db.pgns_j1939)] {
-        for p in list {
+    for protocol in Protocol::ALL {
+        let prefix = protocol.check_prefix();
+        for p in db.pgns_of(protocol) {
             for f in &p.fields {
                 let Some((kind, name)) = f.lookup_ref() else {
                     continue;

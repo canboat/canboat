@@ -40,7 +40,7 @@ pub struct PgnDatabase {
     /// both flavors, so anything exchanging field *indices* across
     /// processes must agree on `(schema_hash, units, flavor)` — the
     /// same index resolves to different PGNs in the two tables.
-    j1939: bool,
+    protocol: crate::engine::BusProtocol,
 
     pgns: &'static [PgnInfo],
     /// `(pgn_number, indices_into_pgns)`, sorted by `pgn_number` for
@@ -91,13 +91,13 @@ pub enum Units {
 // manufacturer registries (MANUFACTURER_CODE vs J1939_MANUFACTURER_CODE),
 // so each module carries only the enumerations its own PGNs reference.
 macro_rules! embedded_db {
-    ($flavor:ident, $pgns:ident, $ft_lookups:ident, $units:expr, $j1939:expr) => {
+    ($flavor:ident, $pgns:ident, $ft_lookups:ident, $units:expr, $protocol:expr) => {
         PgnDatabase {
             schema_version: schema_data::SCHEMA_VERSION,
             version: schema_data::VERSION,
             schema_hash: schema_data::SCHEMA_HASH,
             units: $units,
-            j1939: $j1939,
+            protocol: $protocol,
             pgns: crate::engine::$flavor::$pgns,
             pgn_index: crate::engine::$flavor::PGN_INDEX,
             lookups: crate::engine::$flavor::LOOKUPS,
@@ -115,28 +115,42 @@ static EMBEDDED_SI: PgnDatabase = embedded_db!(
     PGNS_SI,
     FIELD_TYPE_LOOKUPS_SI,
     Units::Si,
-    false
+    crate::engine::BusProtocol::Nmea2000
 );
 static EMBEDDED_METRIC: PgnDatabase = embedded_db!(
     schema_data,
     PGNS_METRIC,
     FIELD_TYPE_LOOKUPS_METRIC,
     Units::Metric,
-    false
+    crate::engine::BusProtocol::Nmea2000
 );
 static EMBEDDED_J1939_SI: PgnDatabase = embedded_db!(
     schema_data_j1939,
     PGNS_SI,
     FIELD_TYPE_LOOKUPS_SI,
     Units::Si,
-    true
+    crate::engine::BusProtocol::J1939
 );
 static EMBEDDED_J1939_METRIC: PgnDatabase = embedded_db!(
     schema_data_j1939,
     PGNS_METRIC,
     FIELD_TYPE_LOOKUPS_METRIC,
     Units::Metric,
-    true
+    crate::engine::BusProtocol::J1939
+);
+static EMBEDDED_QUICK_SI: PgnDatabase = embedded_db!(
+    schema_data_quick,
+    PGNS_SI,
+    FIELD_TYPE_LOOKUPS_SI,
+    Units::Si,
+    crate::engine::BusProtocol::Quick
+);
+static EMBEDDED_QUICK_METRIC: PgnDatabase = embedded_db!(
+    schema_data_quick,
+    PGNS_METRIC,
+    FIELD_TYPE_LOOKUPS_METRIC,
+    Units::Metric,
+    crate::engine::BusProtocol::Quick
 );
 
 impl PgnDatabase {
@@ -164,6 +178,17 @@ impl PgnDatabase {
         }
     }
 
+    /// The build-time embedded **Quick PCS** database, generated from
+    /// `database/quick/pgns/`: 11-bit message types, carried as the frame's
+    /// `pgn`. Like the J1939 one, decoding against it is exclusive.
+    #[inline]
+    pub fn embedded_quick(units: Units) -> &'static Self {
+        match units {
+            Units::Si => &EMBEDDED_QUICK_SI,
+            Units::Metric => &EMBEDDED_QUICK_METRIC,
+        }
+    }
+
     /// The unit system this database decodes into.
     #[inline]
     pub fn units(&self) -> Units {
@@ -176,17 +201,13 @@ impl PgnDatabase {
     /// space.
     #[inline]
     pub fn is_j1939(&self) -> bool {
-        self.j1939
+        self.protocol == crate::engine::BusProtocol::J1939
     }
 
     /// The protocol whose PGN tables this database carries.
     #[inline]
     pub fn protocol(&self) -> crate::engine::BusProtocol {
-        if self.j1939 {
-            crate::engine::BusProtocol::J1939
-        } else {
-            crate::engine::BusProtocol::Nmea2000
-        }
+        self.protocol
     }
 
     /// Total number of PGN definitions (including manufacturer variants).

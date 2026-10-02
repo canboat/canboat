@@ -11,6 +11,9 @@ type Result<T> = std::result::Result<T, String>;
 
 #[derive(Debug, Clone)]
 pub struct RawFrame {
+    /// An 11-bit CAN identifier (candump prints those with 3 hex digits),
+    /// which `pgn` then holds as is: no priority, source or destination.
+    pub standard: bool,
     pub prio: u8,
     pub pgn: u32,
     pub src: u8,
@@ -20,7 +23,8 @@ pub struct RawFrame {
 
 /// Parse one sample line; format auto-detected:
 ///  - canboat PLAIN: `<ts>,<prio>,<pgn>,<src>,<dst>,<len>,<hh>,<hh>,...`
-///  - candump:       `[(ts)] [ifname] <8-hex-ID>#<hexdata>` (29-bit id)
+///  - candump:       `[(ts)] [ifname] <8-hex-ID>#<hexdata>` (29-bit id), or
+///    `<3-hex-ID>#<hexdata>` for an 11-bit one
 ///  - YDWG RAW:      `<hh:mm:ss.ddd> <R|T> <8-hex-ID> <hh> <hh> ...`
 pub fn parse_line(line: &str) -> Result<RawFrame> {
     let line = line.trim();
@@ -54,6 +58,18 @@ pub fn parse_line(line: &str) -> Result<RawFrame> {
             .ok_or("candump: missing CAN id")?;
         let id = u32::from_str_radix(id_tok, 16).map_err(|e| format!("candump id: {e}"))?;
         let data = parse_hex(&hex[1..].replace(' ', ""))?;
+        // candump writes a standard frame's identifier with 3 hex digits
+        // and an extended one's with 8.
+        if id_tok.len() <= 3 {
+            return Ok(RawFrame {
+                standard: true,
+                prio: 0,
+                pgn: id,
+                src: 0,
+                dst: 255,
+                data,
+            });
+        }
         return Ok(from_can_id(id, data));
     }
     // canboat PLAIN
@@ -77,6 +93,7 @@ pub fn parse_line(line: &str) -> Result<RawFrame> {
         .map(|b| u8::from_str_radix(b.trim(), 16).map_err(|e| format!("hex byte: {e}")))
         .collect::<Result<Vec<u8>>>()?;
     Ok(RawFrame {
+        standard: false,
         prio,
         pgn,
         src,
@@ -112,6 +129,7 @@ fn from_can_id(id: u32, data: Vec<u8>) -> RawFrame {
         ((dp << 16) | (pf << 8) | ps, 255) // PDU2: broadcast
     };
     RawFrame {
+        standard: false,
         prio,
         pgn,
         src,

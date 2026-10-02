@@ -305,6 +305,12 @@ fn write_prologue<W: Write>(out: &mut W, args: &Args) -> io::Result<()> {
 /// Open the selected transport and start its device codec.
 fn open_device(args: &Args) -> Result<DeviceHandle> {
     let protocol = args.protocol.resolve()?;
+    // Quick's 11-bit frames: only SocketCAN is known to pass them on.
+    if protocol == BusProtocol::Quick && !matches!(args.kind, Kind::Socketcan) {
+        anyhow::bail!(
+            "--protocol quick needs socketcan: the other gateways pass only 29-bit frames"
+        );
+    }
     if protocol != BusProtocol::Nmea2000 && !matches!(args.kind, Kind::Socketcan | Kind::Ydwg) {
         anyhow::bail!(
             "--protocol {protocol} needs a gateway that passes raw CAN frames (socketcan or ydwg); \

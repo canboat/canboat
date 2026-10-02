@@ -20,7 +20,7 @@
 //! analyzer test suite must pass.
 
 use crate::derive::default_field_resolution;
-use crate::model::{Database, Field, FieldType, Interval, Pgn};
+use crate::model::{Database, Field, FieldType, Interval, Pgn, Protocol};
 
 const BANNER: &str = "\
 /* ==========================================================================\n\
@@ -132,8 +132,8 @@ const LOOKUP_EPILOGUE: &str = "// Keep this at the end, so a next include does n
 /// With `j1939` set, emits only the lookups the J1939 tree references, into
 /// `analyzer/lookup-j1939-generated-data.h`. The marine flavor keeps
 /// everything else, so neither binary compiles the other's tables.
-pub fn emit_lookup_h(db: &Database, j1939: bool) -> String {
-    let keep = db.lookups_used(j1939);
+pub fn emit_lookup_h(db: &Database, protocol: Protocol) -> String {
+    let keep = db.lookups_used(protocol);
     let mut out = String::with_capacity(256 << 10);
     out.push_str(BANNER);
     out.push_str(LOOKUP_PROLOGUE);
@@ -501,8 +501,8 @@ fn emit_pgn(db: &Database, p: &Pgn) -> String {
     out
 }
 
-pub fn emit_pgn_data_h(db: &Database, j1939: bool) -> String {
-    let list = db.flavor_pgns(j1939);
+pub fn emit_pgn_data_h(db: &Database, protocol: Protocol) -> String {
+    let list = db.flavor_pgns(protocol);
     let mut out = String::with_capacity(2 << 20);
     out.push_str(BANNER);
     out.push_str("Pgn pgnList[] = {\n");

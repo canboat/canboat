@@ -67,7 +67,7 @@ use anyhow::{Result, bail};
 
 use crate::engine::RawFrame;
 use crate::engine::format::{
-    InputFormat, detect, header_implies_coalesced, parse_format_header, parse_with,
+    InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
 use crate::engine::pgn_list::{PgnListStatus, PgnListSupport, PgnLists};
 use crate::io::device::{self, FrameSender, Supervisor};
@@ -785,7 +785,10 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
     let coalesced_for_pump = pre_coalesced.clone();
     thread::Builder::new()
         .name("stdin-pump".into())
-        .spawn(move || stdin_pump(tx, coalesced_for_pump, None))
+        .spawn({
+            let protocol = config.protocol;
+            move || stdin_pump(tx, coalesced_for_pump, None, protocol)
+        })
         .expect("spawn stdin-pump");
     Ok(OpenedSource {
         frames_rx: rx,
@@ -950,6 +953,7 @@ fn stdin_pump(
     tx: mpsc::Sender<RawFrame>,
     pre_coalesced: Arc<AtomicBool>,
     device_sender: Option<FrameSender>,
+    protocol: crate::engine::BusProtocol,
 ) {
     let stdin = io::stdin();
     let mut reader = BufReader::new(stdin.lock());
@@ -991,7 +995,7 @@ fn stdin_pump(
         if active_format.is_none() {
             active_format = detect(trimmed).or(Some(InputFormat::Plain));
         }
-        let Ok(Some(frame)) = parse_with(active_format.unwrap(), trimmed) else {
+        let Ok(Some(frame)) = parse_for(active_format.unwrap(), protocol, trimmed) else {
             continue;
         };
         if let Some(sender) = &device_sender {
@@ -1016,6 +1020,7 @@ fn install_stdin_loopback(
     device_frames_rx: mpsc::Receiver<RawFrame>,
     sender: FrameSender,
     pre_coalesced: Arc<AtomicBool>,
+    protocol: crate::engine::BusProtocol,
 ) -> mpsc::Receiver<RawFrame> {
     let (merge_tx, merge_rx) = mpsc::channel::<RawFrame>();
     let merge_tx_device = merge_tx.clone();
@@ -1032,7 +1037,7 @@ fn install_stdin_loopback(
         .expect("spawn device-forward");
     thread::Builder::new()
         .name("stdin-pump".into())
-        .spawn(move || stdin_pump(merge_tx_stdin, pre_coalesced, Some(sender)))
+        .spawn(move || stdin_pump(merge_tx_stdin, pre_coalesced, Some(sender), protocol))
         .expect("spawn stdin-pump");
     merge_rx
 }

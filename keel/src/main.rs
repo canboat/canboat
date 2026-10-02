@@ -4,11 +4,9 @@
 //! generates the analyzer's C tables and canboat.xml, decodes sample frames
 //! and serves the editor.
 
-use keel::{
-    charset, check, decode, derive, edit, emit_c, emit_text, emit_xml, harvest, rules, samples,
-    yamlio,
-};
-use keel::{emit_rust, find_repo_root, read_versions};
+use keel::model::Protocol;
+use keel::{check, decode, derive, edit, emit_text, emit_xml, harvest, rules, samples, yamlio};
+use keel::{find_repo_root, generate, read_versions};
 
 use std::fs;
 use std::path::PathBuf;
@@ -28,7 +26,7 @@ struct Args {
     check: bool,
     port: Option<u16>,
     diff: Option<String>,
-    j1939: bool,
+    protocol: Protocol,
     root: PathBuf,
     per_pgn: usize,
     rest: Vec<String>,
@@ -42,7 +40,7 @@ fn parse_args() -> Result<Args, String> {
         check: false,
         port: None,
         diff: None,
-        j1939: false,
+        protocol: Protocol::Nmea2000,
         root: PathBuf::from("."),
         per_pgn: 3,
         rest: Vec::new(),
@@ -71,11 +69,11 @@ fn parse_args() -> Result<Args, String> {
             }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
             "--protocol" => {
-                args.j1939 = match it.next().as_deref() {
-                    Some("nmea2000") => false,
-                    Some("j1939") => true,
-                    _ => return Err("--protocol needs nmea2000|j1939".into()),
-                }
+                args.protocol = it
+                    .next()
+                    .as_deref()
+                    .and_then(Protocol::parse)
+                    .ok_or("--protocol needs nmea2000|j1939|quick")?;
             }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
             pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
@@ -105,13 +103,13 @@ usage: keel <command> [options] [files...]
 Commands:
   check              check the database against every rule (R01..), and
                      its samples against their expected decodes
-  generate           write every generated artifact, for NMEA 2000 and
-                     J1939: docs/canboat*.xml, analyzer/*-generated-data.h,
-                     crates/canboat/src/engine/schema_generated*.rs.
+  generate           write every generated artifact, for every protocol:
+                     docs/canboat*.xml, analyzer/*-generated-data.h (not
+                     for Quick), crates/canboat/src/engine/schema_generated*.rs.
                      `make generated` also runs this, then builds the
                      JSON, HTML and DBC documents from the XML
-  emit               print the XML document (docs/canboat.xml, or with
-                     --protocol j1939 docs/canboat-j1939.xml) on stdout
+  emit               print a protocol's XML document (docs/canboat.xml, or
+                     docs/canboat-<protocol>.xml) on stdout
   explain            print the database as readable text
   decode             decode sample lines from stdin (PLAIN, candump, YDWG
                      RAW) with keel's own decoder
@@ -122,7 +120,7 @@ Commands:
   help               this text
 
 Options:
-  --protocol nmea2000|j1939
+  --protocol nmea2000|j1939|quick
                      the protocol for explain, emit and decode (default
                      nmea2000)
   --check            generate: write nothing, exit 1 when an artifact is
@@ -214,76 +212,20 @@ fn run() -> Result<i32, String> {
                     v.message
                 );
             }
+            let pgns: Vec<String> = Protocol::ALL
+                .into_iter()
+                .map(|p| format!("{} {}", db.pgns_of(p).len(), p.name()))
+                .collect();
             println!(
                 "keel check: {} pgns, {} lookups, {} fieldtypes: {errors} error(s), {warnings} warning(s)",
-                db.pgns.len(),
+                pgns.join(" + "),
                 db.lookups.len(),
                 db.fieldtypes.len()
             );
             Ok(if errors > 0 { 1 } else { 0 })
         }
         "generate" => {
-            let artifacts: Vec<(PathBuf, String)> = vec![
-                (
-                    root.join("docs/canboat.xml"),
-                    emit_xml::emit_xml(&db, false),
-                ),
-                (
-                    root.join("docs/canboat-j1939.xml"),
-                    emit_xml::emit_xml(&db, true),
-                ),
-                (
-                    root.join("analyzer/lookup-generated-data.h"),
-                    emit_c::emit_lookup_h(&db, false),
-                ),
-                (
-                    root.join("analyzer/lookup-j1939-generated-data.h"),
-                    emit_c::emit_lookup_h(&db, true),
-                ),
-                (
-                    root.join("analyzer/physicalquantity-generated-data.h"),
-                    emit_c::emit_physicalquantity_data_h(&db),
-                ),
-                (
-                    root.join("analyzer/fieldtype-generated-data.h"),
-                    emit_c::emit_fieldtype_data_h(&authored_fieldtypes),
-                ),
-                (
-                    root.join("analyzer/pgn-generated-data.h"),
-                    emit_c::emit_pgn_data_h(&db, false),
-                ),
-                (
-                    root.join("analyzer/pgn-j1939-generated-data.h"),
-                    emit_c::emit_pgn_data_h(&db, true),
-                ),
-                // The Rust tables. These used to be produced by a build
-                // script in each crate, which could not be published: a
-                // build script cannot read `database/`, which sits above
-                // the package root. Generated here and committed instead.
-                (
-                    root.join("crates/canboat/src/engine/schema_generated.rs"),
-                    emit_rust::emit_schema(&db, &root, false),
-                ),
-                (
-                    root.join("crates/canboat/src/engine/schema_generated_j1939.rs"),
-                    emit_rust::emit_schema(&db, &root, true),
-                ),
-                (
-                    root.join("crates/canboat/src/engine/fastpacket_generated.rs"),
-                    emit_rust::emit_fastpacket(&db),
-                ),
-                // The Basic RDS character set, for fields that declare
-                // `encoding: RDS_G0`. Emitted from keel/src/charset.rs so the C and
-                // Rust decoders cannot drift from keel's own.
-                (
-                    root.join("analyzer/charset-generated-data.h"),
-                    charset::emit_charset_h(),
-                ),
-                (
-                    root.join("crates/canboat/src/engine/charset_generated.rs"),
-                    charset::emit_charset_rs(),
-                ),
-            ];
+            let artifacts = generate::emit_artifacts(&root, &db, &authored_fieldtypes);
             let mut stale = 0;
             for (path, emitted) in &artifacts {
                 if args.check {
@@ -326,9 +268,9 @@ fn run() -> Result<i32, String> {
         }
         "decode" => {
             // Read sample lines from stdin, reassemble, decode, print.
-            let j1939 = args.j1939;
+            let protocol = args.protocol;
             let mut fast: std::collections::HashSet<u32> = Default::default();
-            for p in if j1939 { &db.pgns_j1939 } else { &db.pgns } {
+            for p in db.pgns_of(protocol) {
                 if p.type_ == "Fast" {
                     fast.insert(p.pgn);
                 }
@@ -350,7 +292,7 @@ fn run() -> Result<i32, String> {
                 eprintln!("keel decode: warning: {w}");
             }
             for a in &assembled {
-                match decode::select_variant(&db, a.pgn, &a.data, j1939) {
+                match decode::select_variant(&db, a.pgn, &a.data, protocol) {
                     None => println!("PGN {}: unknown", a.pgn),
                     Some(p) => {
                         println!("PGN {} {} (src {}):", a.pgn, p.id, a.src);
@@ -394,12 +336,12 @@ fn run() -> Result<i32, String> {
             Ok(0)
         }
         "explain" => {
-            print!("{}", emit_text::emit_text(&db, args.j1939));
+            print!("{}", emit_text::emit_text(&db, args.protocol));
             Ok(0)
         }
         "emit" => {
             // One of the two documents, on stdout.
-            print!("{}", emit_xml::emit_xml(&db, args.j1939));
+            print!("{}", emit_xml::emit_xml(&db, args.protocol));
             Ok(0)
         }
         other => Err(format!("unknown command '{other}'")),

@@ -474,6 +474,9 @@ pub mod codec {
         /// The dialect of a line, or `None` when nothing matches (canboat
         /// then reads it as PLAIN).
         pub use crate::engine::format::detect;
+        /// [`parse`] for a bus of a given protocol: on Quick PCS, candump
+        /// lines with 11-bit identifiers.
+        pub use crate::engine::format::parse_for;
         /// One line in the given dialect → a frame; `Ok(None)` for a line
         /// that carries no frame (an iKonvert control sentence).
         pub use crate::engine::format::parse_with as parse;

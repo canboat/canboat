@@ -4,8 +4,9 @@
 #
 # Upward-compatibility check for the canboat public contract.
 #
-# Diffs each committed contract -- docs/canboat.json (NMEA 2000) and
-# docs/canboat-j1939.json (SAE J1939) -- against the merge-base with the
+# Diffs each committed contract -- docs/canboat.json (NMEA 2000),
+# docs/canboat-j1939.json (SAE J1939) and docs/canboat-quick.json (Quick
+# PCS) -- against the merge-base with the
 # target branch, classifies the changes (breaking / minor / additive / cosmetic via
 # tools/contract.py) and checks that the change is *declared* at a high enough
 # conventional-commit level:
@@ -33,7 +34,7 @@ here="$(cd "$(dirname "$0")" && pwd)"
 root="$(cd "$here/.." && pwd)"
 # The published contracts. The first must exist at the merge-base; a later
 # one may be new, which counts as an additive change.
-contracts=(docs/canboat.json docs/canboat-j1939.json)
+contracts=(docs/canboat.json docs/canboat-j1939.json docs/canboat-quick.json)
 
 gate=0
 base="${BASE_REF:-origin/master}"

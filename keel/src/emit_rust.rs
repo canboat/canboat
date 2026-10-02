@@ -1071,9 +1071,9 @@ fn raw_field(
     }
 }
 
-fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
+fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> CanboatJson {
     let mut pgns = Vec::new();
-    let source = db.flavor_pgns(j1939);
+    let source = db.flavor_pgns(protocol);
     for p in source {
         // emit_xml's running bit offset: it stops being meaningful once a
         // variable-length field has been seen.
@@ -1144,7 +1144,7 @@ fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
     // the marine crate does not embed the J1939 manufacturer registry (and
     // vice versa). Lookups no tree references stay with the marine flavor,
     // where docs/canboat.json already publishes them.
-    let keep = db.lookups_used(j1939);
+    let keep = db.lookups_used(protocol);
     let of_kind = |k: &str| -> Vec<&crate::model::Lookup> { db.ordered_lookups_for(k, &keep) };
     CanboatJson {
         schema_version: db.schema_version.clone(),
@@ -1255,8 +1255,12 @@ fn from_keel(db: &crate::model::Database, j1939: bool) -> CanboatJson {
 /// constants and id constants are shared with the main schema. The two
 /// trees no longer draw on one manufacturer registry, so each carries
 /// just the enumerations its own PGNs reference.
-pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> String {
-    let canboat = from_keel(db, j1939);
+pub fn emit_schema(
+    db: &crate::model::Database,
+    root: &Path,
+    protocol: crate::model::Protocol,
+) -> String {
+    let canboat = from_keel(db, protocol);
 
     // The CANBOAT_BEM pseudo-PGNs (0x40000+) are ordinary members of the
     // database now, and keel hands them over sorted by PGN — so they still
@@ -1318,7 +1322,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
 //   the C tables and canboat.xml); a bare `cargo build` does not.\n\
 //\n\
 // ==========================================================================",
-        pgns = if j1939 { "j1939/pgns" } else { "pgns" }
+        pgns = protocol.pgn_dir()
     )
     .unwrap();
     // The table types are always needed (every static is declared, even
@@ -1356,7 +1360,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     imports.sort_unstable();
     writeln!(out, "use crate::engine::types::{{{}}};", imports.join(", ")).unwrap();
 
-    if !j1939 {
+    if protocol == crate::model::Protocol::Nmea2000 {
         writeln!(
             out,
             "pub const SCHEMA_VERSION: &str = {};",
@@ -1371,7 +1375,7 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         .unwrap();
     }
 
-    if !j1939 {
+    if protocol == crate::model::Protocol::Nmea2000 {
         // Content hash over the authored schema source (database/**.yaml).
         // This is the schema identity two processes
         // would exchange to prove they were built from byte-identical schema
@@ -1499,10 +1503,10 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
     // `pgn::WIND_DATA` / `field::wind_data::WIND_ANGLE` instead of the
     // stringly-typed `("windData","windAngle")` pair. They index the SI
     // arrays (`PGNS_SI` / `F_<ID>`); id/name/order are unit-invariant.
-    // The J1939 flavor skips them: nothing encodes against that table
-    // by constant yet, and the two modules would otherwise export
+    // The other flavors skip them: nothing encodes against those tables
+    // by constant yet, and the modules would otherwise export
     // colliding-by-name constants for the shared ISO PGNs.
-    if !j1939 {
+    if protocol == crate::model::Protocol::Nmea2000 {
         emit_id_constants(&mut out, &pgn_with_fields, &syms);
     }
 
@@ -1606,9 +1610,16 @@ pub fn emit_schema(db: &crate::model::Database, root: &Path, j1939: bool) -> Str
         "/// Pick the right PgnInfo variant for `pgn` given the frame payload."
     )
     .unwrap();
+    // A table where no PGN needs its payload to pick a variant (Quick's)
+    // must still take it, but without an unused-variable warning.
+    let payload = if multi.iter().any(|(_, v)| needs_dispatch_fn(v)) {
+        "payload"
+    } else {
+        "_payload"
+    };
     writeln!(
         out,
-        "pub fn dispatch(pgn: u32, payload: &[u8]) -> Option<usize> {{"
+        "pub fn dispatch(pgn: u32, {payload}: &[u8]) -> Option<usize> {{"
     )
     .unwrap();
     writeln!(out, "    match pgn {{").unwrap();

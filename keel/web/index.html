@@ -131,6 +131,7 @@
       <select id="protocolSel" onchange="setProtocol(this.value)">
         <option value="nmea2000">NMEA 2000</option>
         <option value="j1939">SAE J1939</option>
+        <option value="quick">Quick PCS</option>
       </select></label>
     <input id="search" placeholder="filter PGNs &amp; enumerations…">
     <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
@@ -412,7 +413,9 @@ let currentPgn = null;       // pgn number being edited (existing mode)
 // The protocol whose PGNs are listed, opened and saved: "nmea2000" or
 // "j1939". Lookups and field types are shared between the two.
 let protocol = "nmea2000";
-const PGN_DIR = { nmea2000: "database/pgns", j1939: "database/j1939/pgns" };
+const PGN_DIR = {
+  nmea2000: "database/pgns", j1939: "database/j1939/pgns", quick: "database/quick/pgns",
+};
 let refreshTimer = null;
 let lkBaseYaml = null;       // original lookup YAML (values: block surgically replaced)
 let lkName = null;
@@ -436,10 +439,12 @@ function setProtocol(p) {
 
 function applyProtocol() {
   const j1939 = protocol === "j1939";
-  // J1939 has no fast-packet: longer messages go over ISO TP.
-  const fast = [...$("m_type").options].find(o => o.value === "Fast");
-  fast.hidden = fast.disabled = j1939;
-  if (j1939 && $("m_type").value === "Fast") $("m_type").value = "ISO";
+  // J1939 has no fast-packet: longer messages go over ISO TP. A Quick
+  // message is always one frame.
+  const offered = protocol === "nmea2000" ? ["Single", "Fast", "ISO"]
+    : j1939 ? ["Single", "ISO"] : ["Single"];
+  [...$("m_type").options].forEach(o => { o.hidden = o.disabled = !offered.includes(o.value); });
+  if (!offered.includes($("m_type").value)) $("m_type").value = offered[offered.length - 1];
   // An SPN is a J1939 attribute (R42).
   $("fe_spn").closest(".frow").style.display = j1939 ? "" : "none";
 }
@@ -715,7 +720,8 @@ function startDefinition(pgn, msgs) {
   $("m_prio").value = msgs[0].prio;
   // More than one frame: fast-packet on NMEA 2000, ISO TP on J1939.
   const long = samplesHex.some(h => h.length > 16);
-  $("m_type").value = !long ? "Single" : protocol === "j1939" ? "ISO" : "Fast";
+  $("m_type").value = !long || protocol === "quick" ? "Single"
+    : protocol === "j1939" ? "ISO" : "Fast";
   $("stepDefine").style.display = "";
   $("stepSave").style.display = "";
   $("savePath").textContent = "";

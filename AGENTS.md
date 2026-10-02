@@ -15,8 +15,9 @@ sources.
 
 The database is a **YAML tree**: `database/pgns/` (one file per PGN variant),
 `database/lookups/` (one per enumeration), `database/fieldtypes.yaml`,
-`database/physicalquantities.yaml`, and `database/j1939/pgns/` for the J1939
-build. The `keel` tool (`keel/`, Rust; `keel/keel` shim builds it on first
+`database/physicalquantities.yaml`, `database/j1939/pgns/` for the J1939
+build, and `database/quick/pgns/` for Quick PCS (11-bit message types; Rust
+only, no C analyzer). The `keel` tool (`keel/`, Rust; `keel/keel` shim builds it on first
 use) validates the tree (`keel check`) and generates every artifact
 (`keel generate`): `docs/canboat.xml`, plus the analyzer's C data tables
 (`analyzer/lookup-generated-data.h`, `analyzer/*-data.h`). `make generated` wraps this and
@@ -76,6 +77,7 @@ to the YAML under `database/`, checked by `keel check`, followed by
 | `database/fieldtypes.yaml` | **source** | The FieldType hierarchy (base types, resolutions, print-function names). |
 | `database/physicalquantities.yaml` | **source** | Physical quantities (units, URLs). |
 | `database/j1939/pgns/*.yaml` | **source** | Parallel PGN set for the J1939 build (`-DJ1939`); shares lookups + fieldtypes. |
+| `database/quick/pgns/*.yaml` | **source** | Quick PCS message types: the "PGN" is an 11-bit CAN identifier. Rust and documents only, no C. |
 | `keel/` | **source** | The Rust tool that validates, generates, decodes and serves the editor. |
 | `analyzer/pgn.h` | **source** | Hand-written halves only: `struct Pgn`/`struct Field`, packet enums, ranges; `#include "pgn-generated-data.h"`. |
 | `analyzer/lookup-generated-data.h` | **generated** | X-macro enumeration stream, from `database/lookups/`. |
@@ -92,6 +94,7 @@ to the YAML under `database/`, checked by `keel check`, followed by
 | `docs/canboat.html` | **generated** | `xsltproc canboat.xsl canboat.xml \| fixup-html.sh`. The published doc page. |
 | `docs/canboat.json` | **generated** | `xsltproc canboat2json.xslt canboat.xml`, range-validated. **THE downstream contract.** |
 | `docs/canboat-j1939.{xml,json,html}` | **generated** | The same three for the SAE J1939 tree (`database/j1939/`), from the same stylesheets; `<Protocol>j1939</Protocol>` switches the page text. The JSON is the J1939 contract (UTF-8: the ISO 11783 manufacturer registry has non-ASCII names). |
+| `docs/canboat-quick.{xml,json,html}` | **generated** | The same three for Quick PCS (`database/quick/`), `<Protocol>quick</Protocol>`. The JSON is the Quick contract. |
 | `docs/canboat.dbc` | **generated** | CANdb file (CRLF, version-stamped, ~466 KB) from `docs/canboat.json`. |
 | `sources/nmea_1300.json` | fixture | Deterministic extract of the official NMEA 2000 v1.300 PGN-table PDF (`tools/nmea-pdf/extract.py`). `make validation` reconciles the database against it via `tools/nmea-pdf/reconcile.py` (gate on field-level type/sign/bits; PGN-level is report-only). Documented divergences live in `tools/nmea-pdf/allowlist.json`. The PDF itself is copyrighted and **not** committed. |
 | `samples/` | fixture | Raw N2K capture corpus; evidence cited in `pgn.h` comments. NOT used by the golden-file tests. |
@@ -105,7 +108,7 @@ generated from `database/`).
 ## 3. The generation pipeline
 
 ```
-database/  (YAML — SOURCE OF TRUTH: pgns/, lookups/, fieldtypes.yaml, j1939/)
+database/  (YAML — SOURCE OF TRUTH: pgns/, lookups/, fieldtypes.yaml, j1939/, quick/)
         │  keel check     (rule engine: R02..R23, see keel/DESIGN.md §5)
         │  keel generate
         ▼
@@ -129,11 +132,12 @@ Key facts:
   `analyzer` is invoked only by `fixup-version.py` to read
   `-version`/`-schema-version`. `keel explain` prints the human-readable
   text dump that `analyzer-explain -explain` used to produce.
-- `keel generate` (and so `make generated`) writes both protocols' outputs
+- `keel generate` (and so `make generated`) writes every protocol's outputs
   every time: the J1939 ones are `docs/canboat-j1939.*`,
-  `analyzer/*-j1939-generated-data.h` and `schema_generated_j1939.rs`.
+  `analyzer/*-j1939-generated-data.h` and `schema_generated_j1939.rs`; the
+  Quick ones `docs/canboat-quick.*` and `schema_generated_quick.rs` (no C).
   `keel explain`, `keel emit` and `keel decode` take
-  `--protocol nmea2000|j1939` (default nmea2000) for one of them.
+  `--protocol nmea2000|j1939|quick` (default nmea2000) for one of them.
 - A version bump in `common/version.h` propagates (via `fixup-version.py`) into
   the committed `docs/canboat.xsd` version attribute, the XML, JSON, **and** the
   DBC. They all move together.
@@ -471,6 +475,8 @@ Edit the YAML directly and run `keel/keel check`:
 - new/changed **enumeration value** → `database/lookups/<NAME>.yaml`;
 - new **field encoding** → `database/fieldtypes.yaml` (add it before use);
 - **J1939** PGN → `database/j1939/pgns/`.
+- **Quick PCS** message type → `database/quick/pgns/` (the `pgn:` is the
+  11-bit CAN identifier; samples are candump lines with a 3-digit ID).
 
 Author only the **real data**: `id`, `name`, `type`, per-field `type` and any
 non-default `bits`/`unit`/`resolution`/`match`/`lookup*`. Order, bit offsets,

@@ -34,6 +34,7 @@ pub mod reassembly;
 pub(crate) use charset_generated::rds_g0_char;
 mod schema_data;
 mod schema_data_j1939;
+mod schema_data_quick;
 pub mod snapshot;
 pub mod source;
 pub mod startup;

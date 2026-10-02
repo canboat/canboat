@@ -278,6 +278,59 @@ impl Pgn {
 /// never on a CAN bus, shared by both flavors.
 pub const PSEUDO_PGN_START: u32 = 0x40000;
 
+/// The bus protocols the database describes. Each has its own PGN tree
+/// under `database/`, its own checks and its own generated documents; the
+/// field types, physical quantities and lookups are shared.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Protocol {
+    Nmea2000,
+    J1939,
+    /// Quick's PCS bus (windlasses, thrusters): 11-bit CAN identifiers,
+    /// which are message types and stand in for the PGN.
+    Quick,
+}
+
+impl Protocol {
+    pub const ALL: [Protocol; 3] = [Protocol::Nmea2000, Protocol::J1939, Protocol::Quick];
+
+    /// The name the CLI, the editor and the documents use.
+    pub fn name(self) -> &'static str {
+        match self {
+            Protocol::Nmea2000 => "nmea2000",
+            Protocol::J1939 => "j1939",
+            Protocol::Quick => "quick",
+        }
+    }
+
+    pub fn parse(s: &str) -> Option<Self> {
+        Self::ALL.into_iter().find(|p| p.name() == s)
+    }
+
+    /// Where its PGN files are, relative to `database/`.
+    pub fn pgn_dir(self) -> &'static str {
+        match self {
+            Protocol::Nmea2000 => "pgns",
+            Protocol::J1939 => "j1939/pgns",
+            Protocol::Quick => "quick/pgns",
+        }
+    }
+
+    /// The prefix `check` puts on its file locations (before `pgns/`).
+    pub fn check_prefix(self) -> &'static str {
+        match self {
+            Protocol::Nmea2000 => "",
+            Protocol::J1939 => "j1939/",
+            Protocol::Quick => "quick/",
+        }
+    }
+
+    /// Whether its frames have an 11-bit CAN identifier rather than a
+    /// 29-bit ISO 11783 one.
+    pub fn standard_frames(self) -> bool {
+        self == Protocol::Quick
+    }
+}
+
 #[derive(Debug, Default)]
 pub struct Database {
     pub physical_quantities: Vec<PhysicalQuantity>,
@@ -287,6 +340,8 @@ pub struct Database {
     pub pgns: Vec<Pgn>,
     /// The parallel J1939 list (pgn-j1939.h); shares every other section.
     pub pgns_j1939: Vec<Pgn>,
+    /// Quick PCS message types, likewise.
+    pub pgns_quick: Vec<Pgn>,
     pub version: String,
     pub schema_version: String,
 }
@@ -358,23 +413,40 @@ impl Database {
     /// references. Those orphans are already published in `docs/canboat.json`,
     /// so dropping them here would be a silent contract change; they stay put
     /// until something deliberately retires them.
-    /// The PGNs a flavor's generated tables hold. The J1939 flavor is the
-    /// J1939 tree plus the gateway pseudo-PGNs (0x40000 and up: Actisense
-    /// BEM, CANboat's own) from the NMEA 2000 tree, which describe the
-    /// gateway rather than the bus and so apply on either. They sort
-    /// after every real PGN, so the list stays in PGN order.
-    pub fn flavor_pgns(&self, j1939: bool) -> Vec<&Pgn> {
-        if j1939 {
-            self.pgns_j1939
-                .iter()
-                .chain(self.pgns.iter().filter(|p| p.pgn >= PSEUDO_PGN_START))
-                .collect()
-        } else {
-            self.pgns.iter().collect()
+    /// A protocol's own PGN definitions.
+    pub fn pgns_of(&self, protocol: Protocol) -> &Vec<Pgn> {
+        match protocol {
+            Protocol::Nmea2000 => &self.pgns,
+            Protocol::J1939 => &self.pgns_j1939,
+            Protocol::Quick => &self.pgns_quick,
         }
     }
 
-    pub fn lookups_used(&self, j1939: bool) -> HashSet<String> {
+    pub fn pgns_of_mut(&mut self, protocol: Protocol) -> &mut Vec<Pgn> {
+        match protocol {
+            Protocol::Nmea2000 => &mut self.pgns,
+            Protocol::J1939 => &mut self.pgns_j1939,
+            Protocol::Quick => &mut self.pgns_quick,
+        }
+    }
+
+    /// The PGNs a flavor's generated tables hold. A flavor other than NMEA
+    /// 2000 is its own tree plus the gateway pseudo-PGNs (0x40000 and up:
+    /// Actisense BEM, CANboat's own) from the NMEA 2000 tree, which describe
+    /// the gateway or the analyzer rather than the bus and so apply on any.
+    /// They sort after every real PGN, so the list stays in PGN order.
+    pub fn flavor_pgns(&self, protocol: Protocol) -> Vec<&Pgn> {
+        match protocol {
+            Protocol::Nmea2000 => self.pgns.iter().collect(),
+            other => self
+                .pgns_of(other)
+                .iter()
+                .chain(self.pgns.iter().filter(|p| p.pgn >= PSEUDO_PGN_START))
+                .collect(),
+        }
+    }
+
+    pub fn lookups_used(&self, protocol: Protocol) -> HashSet<String> {
         fn names<'p>(pgns: impl IntoIterator<Item = &'p Pgn>) -> Vec<String> {
             pgns.into_iter()
                 .flat_map(|p| p.fields.iter())
@@ -382,12 +454,12 @@ impl Database {
                 .map(|(_, n)| n.to_string())
                 .collect()
         }
-        let mut used: HashSet<String> = names(self.flavor_pgns(j1939)).into_iter().collect();
+        let mut used: HashSet<String> = names(self.flavor_pgns(protocol)).into_iter().collect();
 
-        if !j1939 {
-            let referenced: HashSet<String> = names(&self.pgns)
+        if protocol == Protocol::Nmea2000 {
+            let referenced: HashSet<String> = Protocol::ALL
                 .into_iter()
-                .chain(names(&self.pgns_j1939))
+                .flat_map(|p| names(self.pgns_of(p)))
                 .collect();
             used.extend(
                 self.lookups
@@ -447,11 +519,11 @@ mod tests {
             db.lookups.insert(n.to_string(), lookup_named(n));
         }
 
-        let marine = db.lookups_used(false);
+        let marine = db.lookups_used(Protocol::Nmea2000);
         assert!(marine.contains("MANUFACTURER_CODE"));
         assert!(!marine.contains("J1939_MANUFACTURER_CODE"));
 
-        let j1939 = db.lookups_used(true);
+        let j1939 = db.lookups_used(Protocol::J1939);
         assert!(j1939.contains("J1939_MANUFACTURER_CODE"));
         assert!(!j1939.contains("MANUFACTURER_CODE"));
     }
@@ -465,8 +537,8 @@ mod tests {
         for n in ["ORPHAN", "J1939_MANUFACTURER_CODE"] {
             db.lookups.insert(n.to_string(), lookup_named(n));
         }
-        assert!(db.lookups_used(false).contains("ORPHAN"));
-        assert!(!db.lookups_used(true).contains("ORPHAN"));
+        assert!(db.lookups_used(Protocol::Nmea2000).contains("ORPHAN"));
+        assert!(!db.lookups_used(Protocol::J1939).contains("ORPHAN"));
     }
 
     /// A fieldtype lookup names a nested lookup per entry; it has to travel
@@ -485,8 +557,8 @@ mod tests {
         db.lookups
             .insert("NESTED".to_string(), lookup_named("NESTED"));
 
-        let marine = db.lookups_used(false);
+        let marine = db.lookups_used(Protocol::Nmea2000);
         assert!(marine.contains("OUTER") && marine.contains("NESTED"));
-        assert!(!db.lookups_used(true).contains("NESTED"));
+        assert!(!db.lookups_used(Protocol::J1939).contains("NESTED"));
     }
 }

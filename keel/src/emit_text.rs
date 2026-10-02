@@ -5,9 +5,9 @@
 //! but kept close to the original format.
 
 use crate::cformat::c_g;
-use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn};
+use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn, Protocol};
 
-pub fn emit_text(db: &Database, j1939: bool) -> String {
+pub fn emit_text(db: &Database, protocol: Protocol) -> String {
     let mut out = String::with_capacity(1 << 20);
     out.push_str(&format!(
         "CANboat version v{}\n\n\
@@ -17,7 +17,7 @@ pub fn emit_text(db: &Database, j1939: bool) -> String {
          completely unknown fields. If you happen to know more, please tell me!\n\n",
         db.version
     ));
-    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let list = db.pgns_of(protocol);
     out.push_str("_______ Complete PGNs _________\n\n");
     for p in list
         .iter()

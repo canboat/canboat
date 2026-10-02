@@ -33,6 +33,9 @@ HTML2FILE=../docs/canboat.html
 XML2FILE_J1939=../docs/canboat-j1939.xml
 JSON2FILE_J1939=../docs/canboat-j1939.json
 HTML2FILE_J1939=../docs/canboat-j1939.html
+XML2FILE_QUICK=../docs/canboat-quick.xml
+JSON2FILE_QUICK=../docs/canboat-quick.json
+HTML2FILE_QUICK=../docs/canboat-quick.html
 GENERATED_DATA=pgn-generated-data.h physicalquantity-generated-data.h fieldtype-generated-data.h
 HEADERS=analyzer.h pgn.h lookup-generated-data.h fieldtype.h $(GENERATED_DATA)
 HEADERS_J1939=analyzer.h pgn-j1939.h lookup-j1939-generated-data.h fieldtype.h physicalquantity-generated-data.h fieldtype-generated-data.h pgn-j1939-generated-data.h
@@ -64,6 +67,7 @@ keel-generate: $(ANALYZER) $(XSD2FILE) fixup-version.py
 	$(KEEL) generate
 	xmllint --schema $(XSD2FILE) $(XML2FILE) --noout
 	xmllint --schema $(XSD2FILE) $(XML2FILE_J1939) --noout
+	xmllint --schema $(XSD2FILE) $(XML2FILE_QUICK) --noout
 
 $(XML2FILE): keel-generate
 
@@ -88,11 +92,19 @@ $(JSON2FILE_J1939): keel-generate canboat2json.xslt validate-json.py
 	xsltproc canboat2json.xslt $(XML2FILE_J1939) >$(@)
 	python3 validate-json.py --range --allow-utf8 $(@)
 
+# The Quick PCS documents, likewise. Quick has no C analyzer.
+$(HTML2FILE_QUICK): keel-generate $(XSL2FILE)
+	xsltproc $(XSL2FILE) $(XML2FILE_QUICK) | ./fixup-html.sh > $(HTML2FILE_QUICK)
+
+$(JSON2FILE_QUICK): keel-generate canboat2json.xslt validate-json.py
+	xsltproc canboat2json.xslt $(XML2FILE_QUICK) >$(@)
+	python3 validate-json.py --range --allow-utf8 $(@)
+
 validation: $(JSON2FILE) $(NMEA_JSONFILE) $(RECONCILE)
 	python3 $(RECONCILE) --canboat $(JSON2FILE) --nmea $(NMEA_JSONFILE) --check
 	
 
-generated: validation $(JSON2FILE) $(HTML2FILE) $(JSON2FILE_J1939) $(HTML2FILE_J1939)
+generated: validation $(JSON2FILE) $(HTML2FILE) $(JSON2FILE_J1939) $(HTML2FILE_J1939) $(JSON2FILE_QUICK) $(HTML2FILE_QUICK)
 
 clean:
 	-rm -f $(TARGETS) *.elf *.gdb

@@ -11,85 +11,45 @@ use std::net::{TcpListener, TcpStream};
 use std::path::PathBuf;
 use std::sync::Arc;
 
-use crate::model::{Database, Pgn};
+use crate::model::{Database, Pgn, Protocol};
 use crate::{check, decode, derive, generate, samples, yamlio};
 
 /// Which protocol's PGN definitions a request is about: the `protocol=`
 /// query parameter, `nmea2000` when absent. Lookups and field types are
 /// shared; each protocol has its own PGN files and its own checks.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-enum Protocol {
-    Nmea2000,
-    J1939,
+fn protocol_from_query(query: &str) -> Result<Protocol, String> {
+    match query_param(query, "protocol") {
+        None => Ok(Protocol::Nmea2000),
+        Some(name) => Protocol::parse(name)
+            .ok_or_else(|| format!("unknown protocol '{name}' (nmea2000, j1939 or quick)")),
+    }
 }
 
-impl Protocol {
-    fn from_query(query: &str) -> Result<Self, String> {
-        match query_param(query, "protocol") {
-            None | Some("nmea2000") => Ok(Protocol::Nmea2000),
-            Some("j1939") => Ok(Protocol::J1939),
-            Some(other) => Err(format!("unknown protocol '{other}' (nmea2000 or j1939)")),
-        }
-    }
+/// Where a protocol's PGN files are, relative to the repo root.
+fn pgn_dir(protocol: Protocol) -> String {
+    format!("database/{}", protocol.pgn_dir())
+}
 
-    /// The protocol whose PGN files live under `file` (a repo-relative
-    /// `database/...` path), or `None` for anything else.
-    fn of_pgn_file(file: &str) -> Option<Self> {
-        [Protocol::J1939, Protocol::Nmea2000]
-            .into_iter()
-            .find(|p| file.starts_with(&format!("{}/", p.dir())))
-    }
+/// The protocol whose PGN files live under `file` (a repo-relative
+/// `database/...` path), or `None` for anything else.
+fn protocol_of_pgn_file(file: &str) -> Option<Protocol> {
+    Protocol::ALL
+        .into_iter()
+        .find(|p| file.starts_with(&format!("{}/", pgn_dir(*p))))
+}
 
-    fn as_str(self) -> &'static str {
-        match self {
-            Protocol::Nmea2000 => "nmea2000",
-            Protocol::J1939 => "j1939",
-        }
-    }
+/// The file a definition must be saved as.
+fn pgn_file(protocol: Protocol, p: &Pgn) -> String {
+    format!("{}/{:06}-{}.yaml", pgn_dir(protocol), p.pgn, p.id)
+}
 
-    fn is_j1939(self) -> bool {
-        self == Protocol::J1939
-    }
-
-    /// Where this protocol's PGN files are, relative to the repo root.
-    fn dir(self) -> &'static str {
-        match self {
-            Protocol::Nmea2000 => "database/pgns",
-            Protocol::J1939 => "database/j1939/pgns",
-        }
-    }
-
-    /// The prefix `check` puts on this protocol's file locations.
-    fn check_prefix(self) -> &'static str {
-        match self {
-            Protocol::Nmea2000 => "",
-            Protocol::J1939 => "j1939/",
-        }
-    }
-
-    fn pgns(self, db: &Database) -> &Vec<Pgn> {
-        match self {
-            Protocol::Nmea2000 => &db.pgns,
-            Protocol::J1939 => &db.pgns_j1939,
-        }
-    }
-
-    /// Put `candidate` in this protocol's list in place of the definition
-    /// with the same id, keeping the list in emission order.
-    fn replace(self, db: &mut Database, candidate: Pgn) {
-        let list = match self {
-            Protocol::Nmea2000 => &mut db.pgns,
-            Protocol::J1939 => &mut db.pgns_j1939,
-        };
-        list.retain(|p| p.id != candidate.id);
-        list.push(candidate);
-        list.sort_by_key(|p| (p.pgn, p.variant_order));
-    }
-
-    /// The file a definition must be saved as.
-    fn file_for(self, p: &Pgn) -> String {
-        format!("{}/{:06}-{}.yaml", self.dir(), p.pgn, p.id)
-    }
+/// Put `candidate` in its protocol's list in place of the definition with
+/// the same id, keeping the list in emission order.
+fn replace_pgn(db: &mut Database, protocol: Protocol, candidate: Pgn) {
+    let list = db.pgns_of_mut(protocol);
+    list.retain(|p| p.id != candidate.id);
+    list.push(candidate);
+    list.sort_by_key(|p| (p.pgn, p.variant_order));
 }
 
 /// The value of `key=` in a query string, as given (no percent-decoding).
@@ -326,9 +286,9 @@ fn api_model(server: &EditServer) -> Result<String, String> {
     let db = load_db(server)?;
     // By PGN number, then id: a sort of the JSON text put 126208 before
     // 59392.
-    let mut listed: Vec<(Protocol, &Pgn)> = [Protocol::Nmea2000, Protocol::J1939]
+    let mut listed: Vec<(Protocol, &Pgn)> = Protocol::ALL
         .into_iter()
-        .flat_map(|proto| proto.pgns(&db).iter().map(move |p| (proto, p)))
+        .flat_map(|proto| db.pgns_of(proto).iter().map(move |p| (proto, p)))
         .collect();
     listed.sort_by(|(_, a), (_, b)| (a.pgn, &a.id).cmp(&(b.pgn, &b.id)));
     let pgns: Vec<String> = listed
@@ -340,7 +300,7 @@ fn api_model(server: &EditServer) -> Result<String, String> {
                 js(&p.id),
                 js(&p.description),
                 p.fallback,
-                js(proto.as_str())
+                js(proto.name())
             )
         })
         .collect();
@@ -384,7 +344,7 @@ fn api_model(server: &EditServer) -> Result<String, String> {
 }
 
 fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
-    let protocol = Protocol::from_query(query)?;
+    let protocol = protocol_from_query(query)?;
     let id = query_param(query, "id").ok_or("missing id=")?;
     let path = find_pgn_file(server, protocol, id)?;
     let yaml = std::fs::read_to_string(&path).map_err(|e| e.to_string())?;
@@ -440,10 +400,10 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
         // Windows too: a Path would print with backslashes there.
         js(&format!(
             "{}/{}",
-            protocol.dir(),
+            pgn_dir(protocol),
             path.file_name().unwrap_or_default().to_string_lossy()
         )),
-        js(protocol.as_str()),
+        js(protocol.name()),
         js(&yaml),
         def.pgn,
         js(&def.id),
@@ -506,7 +466,7 @@ fn api_lookup(server: &EditServer, query: &str) -> Result<String, String> {
 }
 
 fn find_pgn_file(server: &EditServer, protocol: Protocol, id: &str) -> Result<PathBuf, String> {
-    let dir = server.root.join(protocol.dir());
+    let dir = server.root.join(pgn_dir(protocol));
     for entry in std::fs::read_dir(&dir)
         .map_err(|e| e.to_string())?
         .flatten()
@@ -516,12 +476,12 @@ fn find_pgn_file(server: &EditServer, protocol: Protocol, id: &str) -> Result<Pa
             return Ok(entry.path());
         }
     }
-    Err(format!("no {} file for pgn id '{id}'", protocol.as_str()))
+    Err(format!("no {} file for pgn id '{id}'", protocol.name()))
 }
 
 /// POST body: raw sample lines. Response: assembled messages + warnings.
 fn api_analyze(server: &EditServer, query: &str, body: &str) -> Result<String, String> {
-    let protocol = Protocol::from_query(query)?;
+    let protocol = protocol_from_query(query)?;
     let db = load_db(server)?;
     let mut frames = Vec::new();
     for (n, line) in body.lines().enumerate() {
@@ -532,8 +492,7 @@ fn api_analyze(server: &EditServer, query: &str, body: &str) -> Result<String, S
     }
     // J1939 has no fast-packet, and no J1939 definition says Fast.
     let (assembled, warnings) = samples::reassemble_lenient(&frames, |pgn| {
-        protocol
-            .pgns(&db)
+        db.pgns_of(protocol)
             .iter()
             .any(|q| q.pgn == pgn && q.type_ == "Fast")
     })?;
@@ -543,14 +502,14 @@ fn api_analyze(server: &EditServer, query: &str, body: &str) -> Result<String, S
             // A fallback catch-all is never a real match for entered data:
             // treat it as unmatched so the editor guides toward a new
             // definition (or a near-miss clone) instead.
-            let variant = decode::select_variant(&db, a.pgn, &a.data, protocol.is_j1939())
+            let variant = decode::select_variant(&db, a.pgn, &a.data, protocol)
                 .filter(|p| !p.fallback);
             let is_exact = variant.is_some();
             // only suggest near misses when nothing matched exactly
             let near: Vec<String> = if is_exact {
                 Vec::new()
             } else {
-                decode::near_misses(&db, a.pgn, &a.data, protocol.is_j1939())
+                decode::near_misses(&db, a.pgn, &a.data, protocol)
                     .iter()
                     .map(|n| {
                         format!(
@@ -595,7 +554,7 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
         .map(samples::parse_hex)
         .collect::<Result<_, _>>()?;
 
-    let protocol = Protocol::from_query(query)?;
+    let protocol = protocol_from_query(query)?;
     let mut db = load_db(server)?;
     let candidate = yamlio::parse_pgn_str(body, "candidate")?;
     let cand_id = candidate.id.clone();
@@ -606,7 +565,7 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
         protocol.check_prefix(),
         candidate.pgn
     );
-    protocol.replace(&mut db, candidate);
+    replace_pgn(&mut db, protocol, candidate);
     derive::fill(&mut db)?;
 
     let violations: Vec<String> = check::check(&db)
@@ -622,7 +581,11 @@ fn api_decode(server: &EditServer, query: &str, body: &str) -> Result<String, St
         })
         .collect();
 
-    let pgn = protocol.pgns(&db).iter().find(|p| p.id == cand_id).unwrap();
+    let pgn = db
+        .pgns_of(protocol)
+        .iter()
+        .find(|p| p.id == cand_id)
+        .unwrap();
     let mut sample_results = Vec::new();
     for data in &payloads {
         let fields = match decode::decode(&db, pgn, data) {
@@ -697,35 +660,35 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
         db.lookups.insert(candidate.name.clone(), candidate);
     } else {
         // The folder says which protocol the definition belongs to.
-        let protocol = Protocol::of_pgn_file(&file).ok_or_else(|| {
-            format!(
-                "a PGN is saved under {}/ or {}/, not {file}",
-                Protocol::Nmea2000.dir(),
-                Protocol::J1939.dir()
-            )
+        let protocol = protocol_of_pgn_file(&file).ok_or_else(|| {
+            let dirs: Vec<String> = Protocol::ALL
+                .into_iter()
+                .map(|p| pgn_dir(p) + "/")
+                .collect();
+            format!("a PGN is saved under {}, not {file}", dirs.join(" or "))
         })?;
         // A given protocol= must be a known one, and agree with the folder.
         if query_param(query, "protocol").is_some() {
-            let asked = Protocol::from_query(query)?;
+            let asked = protocol_from_query(query)?;
             if asked != protocol {
                 return Err(format!(
                     "{file} is a {} definition, not {}",
-                    protocol.as_str(),
-                    asked.as_str()
+                    protocol.name(),
+                    asked.name()
                 ));
             }
         }
         let candidate = yamlio::parse_pgn_str(body, &file)?;
         // the filename must match the document's pgn + id, so editing the id
         // renames the file instead of silently overwriting another variant
-        let expect = protocol.file_for(&candidate);
+        let expect = pgn_file(protocol, &candidate);
         if file != expect {
             return Err(format!(
                 "id '{}' (PGN {}) must be saved as {expect}, not {file} — set the Id to match, or this would overwrite another variant",
                 candidate.id, candidate.pgn
             ));
         }
-        protocol.replace(&mut db, candidate);
+        replace_pgn(&mut db, protocol, candidate);
     }
     derive::fill(&mut db)?;
     let violations = check::check(&db);
@@ -839,7 +802,7 @@ mod tests {
             "{n}"
         );
         assert!(api_pgn(&s, "id=activeTroubleCodes").is_err());
-        assert!(api_pgn(&s, "id=isoRequest&protocol=quick").is_err());
+        assert!(api_pgn(&s, "id=isoRequest&protocol=bogus").is_err());
     }
 
     #[test]
@@ -873,10 +836,10 @@ mod tests {
         assert!(clash.is_err_and(|e| e.contains("is a j1939 definition")));
         let unknown = api_save(
             &s,
-            &format!("file={file}&protocol=quick&scratch=1"),
+            &format!("file={file}&protocol=bogus&scratch=1"),
             &read(&s, DM1),
         );
-        assert!(unknown.is_err_and(|e| e.contains("unknown protocol 'quick'")));
+        assert!(unknown.is_err_and(|e| e.contains("unknown protocol 'bogus'")));
 
         // A J1939 definition with SPNs, as an NMEA 2000 file, breaks R42.
         let eec1 = std::fs::read_dir(s.root.join("database/j1939/pgns"))

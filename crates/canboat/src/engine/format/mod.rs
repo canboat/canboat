@@ -218,15 +218,38 @@ fn looks_like_ydwg02(line: &str) -> bool {
         && bytes.get(i + 4).is_some_and(u8::is_ascii_hexdigit)
 }
 
-/// Parse a single line in `format`. iKonvert control sentences return
-/// `Ok(None)`; everything else returns either a [`RawFrame`] or a
-/// [`PlainError`].
+/// Parse a single line in `format`, for a bus of `protocol`.
+///
+/// The protocol decides which raw CAN frames count: a Quick PCS bus has
+/// 11-bit identifiers, the others 29-bit ones, and a candump line of the
+/// other kind returns `Ok(None)`, like any line that carries no frame.
+/// Of the line formats, only candump and canboat PLAIN can carry a Quick
+/// frame (PLAIN as the message type in its PGN column); a gateway format
+/// returns `Ok(None)` on a Quick bus.
+pub fn parse_for(
+    format: InputFormat,
+    protocol: crate::engine::BusProtocol,
+    line: &str,
+) -> Result<Option<RawFrame>, plain::ParseError> {
+    let standard = protocol.standard_frames();
+    match format {
+        InputFormat::Candump => candump::parse_line_for(line, standard),
+        InputFormat::Plain | InputFormat::PlainMixFast => parse_with(format, line),
+        _ if standard => Ok(None),
+        _ => parse_with(format, line),
+    }
+}
+
+/// Parse a single line in `format`, for a 29-bit ISO 11783 bus (NMEA 2000
+/// or J1939; see [`parse_for`] for Quick). iKonvert control sentences and
+/// 11-bit candump frames return `Ok(None)`; everything else returns either
+/// a [`RawFrame`] or a [`PlainError`].
 pub fn parse_with(format: InputFormat, line: &str) -> Result<Option<RawFrame>, plain::ParseError> {
     match format {
         InputFormat::Plain | InputFormat::PlainMixFast => plain::parse_line(line).map(Some),
         InputFormat::ActisenseAscii => actisense_ascii::parse_line(line).map(Some),
         InputFormat::Ydwg02 => ydwg02::parse_line(line).map(Some),
-        InputFormat::Candump => candump::parse_line(line).map(Some),
+        InputFormat::Candump => candump::parse_line_for(line, false),
         InputFormat::Ikonvert => match ikonvert::parse_line(line)? {
             ikonvert::IkonvertLine::Frame(f) => Ok(Some(f)),
             // Control sentences and stray noise are not frames.

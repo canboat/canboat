@@ -79,8 +79,10 @@ limitations under the License.
             (docs/canboat.xml) and SAE J1939 (docs/canboat-j1939.xml) share
             the ISO 11783 frame header, address claim and transport protocol
             but define different PGNs, and only NMEA 2000 has fast-packet
-            framing. Absent in documents older than schema 2.7.0, which are
-            all NMEA 2000.
+            framing. Quick PCS (docs/canboat-quick.xml) has 11-bit CAN
+            identifiers instead: there the PGN is the identifier, a message
+            type, with no priority, source or destination. Absent in documents
+            older than schema 2.7.0, which are all NMEA 2000.
           </xs:documentation>
         </xs:annotation>
       </xs:element>
@@ -99,6 +101,7 @@ limitations under the License.
     <xs:restriction base="xs:string">
       <xs:enumeration value="nmea2000"/>
       <xs:enumeration value="j1939"/>
+      <xs:enumeration value="quick"/>
     </xs:restriction>
   </xs:simpleType>
 

@@ -750,10 +750,16 @@ mod tests {
         assert_eq!(banner(si).unwrap().protocol, Ok(BusProtocol::Nmea2000));
         assert_eq!(banner(j1939).unwrap().protocol, Ok(BusProtocol::J1939));
         assert_eq!(
-            banner(r#"{"version":"9.0.0","protocol":"quick"}"#)
+            banner(r#"{"version":"8.4.0","protocol":"quick"}"#)
                 .unwrap()
                 .protocol,
-            Err("quick".to_string())
+            Ok(BusProtocol::Quick)
+        );
+        assert_eq!(
+            banner(r#"{"version":"9.0.0","protocol":"canopen"}"#)
+                .unwrap()
+                .protocol,
+            Err("canopen".to_string())
         );
         // Not a banner, or a banner that doesn't say — the caller's
         // assumption stands rather than being silently overridden.
