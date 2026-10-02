@@ -424,9 +424,12 @@ fn to_encode_value(
 /// not `-nv` after all — treat it as a physical value. That includes a
 /// FLOAT under `-debug`, which wraps every field and gives a FLOAT's
 /// value in the schema's unit (156.27 deg for 2.7274 rad in Metric), so
-/// the encoder must take its resolution off, not write it as bits.
+/// the encoder must take its resolution off, not write it as bits —
+/// even when that value happens to be whole (180 deg). `-nv` writes a
+/// FLOAT bare, so an object-form FLOAT is never a raw value.
 fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
-    if let Some(i) = n.as_i64() {
+    let is_float = matches!(f.field_type, Some(FieldType::Float));
+    if let Some(i) = n.as_i64().filter(|_| !is_float) {
         Ok(EncodeValue::Int(i))
     } else {
         Ok(EncodeValue::Number(n.as_f64().ok_or_else(|| {
@@ -710,6 +713,15 @@ mod tests {
                 "{value}"
             );
         }
+    }
+
+    #[test]
+    fn debug_float_with_a_whole_value_is_still_scaled() {
+        // 180 deg in Metric is π rad on the wire, not 180.0f32.
+        let line = r#"{"pgn":126720,"fields":{"manufacturerCode":"Garmin","industryCode":"Marine Industry","subProtocolId":"Autopilot transport","field":11,"headingToSteer":{"value":180}}}"#;
+        let frame = frame_from_json(db(), line).unwrap().unwrap();
+        let wire = f32::from_le_bytes(frame.data[frame.data.len() - 4..].try_into().unwrap());
+        assert!((wire - std::f32::consts::PI).abs() < 1e-5, "{wire}");
     }
 
     #[test]
