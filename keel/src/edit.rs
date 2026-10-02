@@ -436,11 +436,13 @@ fn api_pgn(server: &EditServer, query: &str) -> Result<String, String> {
     };
     Ok(format!(
         "{{\"path\":{},\"protocol\":{},\"yaml\":{},\"def\":{{\"pgn\":{},\"id\":{},\"description\":{},\"type\":{},\"priority\":{},\"repeating1\":{},\"repeating2\":{},\"fields\":[{}]}}}}",
-        js(&path
-            .strip_prefix(&server.root)
-            .unwrap_or(&path)
-            .display()
-            .to_string()),
+        // Repo-relative with `/`, as the page and /api/save expect, on
+        // Windows too: a Path would print with backslashes there.
+        js(&format!(
+            "{}/{}",
+            protocol.dir(),
+            path.file_name().unwrap_or_default().to_string_lossy()
+        )),
         js(protocol.as_str()),
         js(&yaml),
         def.pgn,
