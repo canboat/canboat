@@ -72,7 +72,7 @@ pub fn copy<R: FrameReader + ?Sized, W: FrameWriter + ?Sized>(
 /// in the analyzer's replay loop: it honours `# format=<NAME>`
 /// headers, auto-detects the format from the first content line when
 /// none is forced, and parses each subsequent line via
-/// [`parse_with`]. Blank lines, comment/header lines and
+/// [`parse_for`](crate::engine::format::parse_for). Blank lines, comment/header lines and
 /// non-frame control sentences (iKonvert `$PDGY` status, Garmin CSV
 /// headers) are swallowed internally so callers only ever see frames.
 ///
