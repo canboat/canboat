@@ -792,9 +792,15 @@ impl PgnBuilder {
             (Some(FieldType::Pgn), EncodeValue::Int(n)) => n,
 
             // FLOAT: IEEE-754 32-bit — the raw bit pattern, not a scaled
-            // integer. (The only non-integer scalar wire form.)
+            // integer. (The only non-integer scalar wire form.) A Number is
+            // in this schema's unit; undo its resolution and unit offset to
+            // get the database's unit the wire carries.
             (Some(FieldType::Float), EncodeValue::Number(x)) => {
-                return Ok(u64::from((x as f32).to_bits()));
+                let wire = match f.resolution {
+                    Some(r) if r != 0.0 => (x - f.unit_offset) / r,
+                    _ => x,
+                };
+                return Ok(u64::from((wire as f32).to_bits()));
             }
             (Some(FieldType::Float), EncodeValue::Int(n)) => {
                 return Ok(u64::from((n as f32).to_bits()));

@@ -229,6 +229,23 @@ fn pgn_dynamic_units_json() {
     );
 }
 
+/// FLOAT fields follow the unit system as scaled numbers do (test30 in
+/// analyzer/tests/Makefile): Garmin autopilot heading and rates of turn,
+/// and the 129045 datum rotations, all IEEE floats in rad and rad/s.
+#[test]
+fn pgn_float_units_json() {
+    run_case(
+        "pgn-float-units.in",
+        "pgn-float-units.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "pgn-float-units.in",
+        "pgn-float-units-si.out",
+        &["--json", "--units", "si", "--fixtime", "pgn-test"],
+    );
+}
+
 #[test]
 fn pgn_60928_json_nv() {
     // The simplest passing case: two PGN 60928 frames, JSON -nv.

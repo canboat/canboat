@@ -1100,7 +1100,7 @@ fn decode_scalar(
     match f.field_type {
         Some(FieldType::Decimal) => decode_decimal(data, bit_offset, bit_length),
         Some(FieldType::Number) => decode_number(f, data, bit_offset, bit_length, signed, offset_k),
-        Some(FieldType::Float) => decode_float(data, bit_offset, bit_length),
+        Some(FieldType::Float) => decode_float(f, data, bit_offset, bit_length),
         Some(FieldType::Lookup) => decode_lookup(f, data, bit_offset, bit_length, db),
         Some(FieldType::IndirectLookup) => {
             decode_indirect_lookup(f, info, data, bit_offset, bit_length, db)
@@ -1467,7 +1467,7 @@ fn decode_number(
     }
 }
 
-fn decode_float(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
+fn decode_float(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
     if bit_length != 32 {
         return FieldValue::Unsupported {
             field_type: "FLOAT (non-32-bit)",
@@ -1477,7 +1477,17 @@ fn decode_float(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
         return FieldValue::NotAvailable;
     };
     let bits = ex.value as u32;
-    FieldValue::Float(f32::from_bits(bits) as f64)
+    // The wire value is in the database's unit; the schema's resolution
+    // and unit offset present it in this schema's unit (rad -> deg, …).
+    let v = f32::from_bits(bits) as f64;
+    // NMEA 2000 sends a FLOAT that is not available as NaN.
+    if v.is_nan() {
+        return FieldValue::NotAvailable;
+    }
+    FieldValue::Float(match f.resolution {
+        Some(r) if r != 0.0 => v * r + f.unit_offset,
+        _ => v,
+    })
 }
 
 fn decode_lookup(
