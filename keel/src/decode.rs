@@ -115,9 +115,10 @@ pub struct NearMiss<'a> {
     pub got: i64,
 }
 
-pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8]) -> Vec<NearMiss<'a>> {
+pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) -> Vec<NearMiss<'a>> {
     let mut out = Vec::new();
-    for p in db.pgns.iter().filter(|p| p.pgn == pgn && !p.fallback) {
+    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    for p in list.iter().filter(|p| p.pgn == pgn && !p.fallback) {
         let mut bit = 0usize;
         let mut diffs: Vec<(String, String, i64, i64, bool)> = Vec::new();
         for f in &p.fields {

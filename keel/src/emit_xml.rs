@@ -5,7 +5,7 @@
 //! the golden byte-diff against analyzer-explain output guards them all.
 
 use crate::cformat::{c_15g, c_g_roundtrip, xml_escape};
-use crate::model::{ACTISENSE_BEM, Database, Field, IKONVERT_BEM, Interval, Pgn};
+use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn};
 
 // NB: no `\`-line-continuations here - they strip the next line's leading
 // whitespace, which corrupts the indented license URL line.
@@ -108,17 +108,12 @@ impl<'a> Emitter<'a> {
 
     // ----- sections ------------------------------------------------------
 
-    /// `styled` drives the stylesheet PI: canboat.xsl only ships for the main
-    /// document, and the sections it styles are absent from the Actisense /
-    /// iKonvert BEM documents anyway.
-    fn header(&mut self, styled: bool, protocol: Option<&str>) {
+    fn header(&mut self, protocol: &str) {
         let cp = copyright(&self.db.version);
         self.p("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n");
         self.p(GENERATED_WARNING);
         self.p(&format!("<!--\n{cp}\n-->\n"));
-        if styled {
-            self.p("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
-        }
+        self.p("<?xml-stylesheet type=\"text/xsl\" href=\"canboat.xsl\"?>\n");
         self.p(&format!(
             "<PGNDefinitions xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \
              xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">\n  <SchemaVersion>{}</SchemaVersion>\n",
@@ -137,9 +132,7 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
             self.db.version
         ));
         self.p(&format!("  <Copyright>{cp}\n</Copyright>\n"));
-        if let Some(protocol) = protocol {
-            self.p(&format!("  <Protocol>{protocol}</Protocol>\n"));
-        }
+        self.p(&format!("  <Protocol>{protocol}</Protocol>\n"));
     }
 
     fn physical_quantities(&mut self) {
@@ -668,44 +661,31 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
 
     // ----- top level ------------------------------------------------------
 
-    pub fn emit(mut self, which: &str) -> String {
-        let full = which == "normal" || which == "j1939";
-        let protocol = match which {
-            "normal" => Some("nmea2000"),
-            "j1939" => Some("j1939"),
-            _ => None,
-        };
-        self.header(full, protocol);
-        if full {
-            // The J1939 document is the "normal" layout of the J1939 build
-            // (analyzer-explain-j1939): full sections, its own pgnList.
-            self.physical_quantities();
-            self.fieldtypes();
-            self.missing();
-            self.lookup_sections(which == "j1939");
-        }
+    pub fn emit(mut self, j1939: bool) -> String {
+        self.header(if j1939 { "j1939" } else { "nmea2000" });
+        self.physical_quantities();
+        self.fieldtypes();
+        self.missing();
+        self.lookup_sections(j1939);
         self.p("  <PGNs>\n");
-        let pgns: Vec<Pgn> = if which == "j1939" {
+        let pgns: Vec<Pgn> = if j1939 {
             self.db.pgns_j1939.clone()
         } else {
             self.db.pgns.clone()
         };
-        for pgn in &pgns {
-            let include = match which {
-                "normal" | "j1939" => pgn.pgn < ACTISENSE_BEM,
-                "actisense" => (ACTISENSE_BEM..IKONVERT_BEM).contains(&pgn.pgn),
-                "ikonvert" => pgn.pgn >= IKONVERT_BEM,
-                _ => false,
-            };
-            if include {
-                self.pgn(pgn);
-            }
+        // canboat's own pseudo-PGNs (gateway and analyzer records, 0x40000
+        // and up) never appear on a bus, so the documents leave them out;
+        // the runtime schema has them.
+        for pgn in pgns.iter().filter(|p| p.pgn < ACTISENSE_BEM) {
+            self.pgn(pgn);
         }
         self.p("  </PGNs>\n</PGNDefinitions>\n");
         self.out
     }
 }
 
-pub fn emit_xml(db: &Database, which: &str) -> String {
-    Emitter::new(db).emit(which)
+/// The NMEA 2000 document (`docs/canboat.xml`), or with `j1939` the J1939
+/// one (`docs/canboat-j1939.xml`).
+pub fn emit_xml(db: &Database, j1939: bool) -> String {
+    Emitter::new(db).emit(j1939)
 }

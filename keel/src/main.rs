@@ -23,10 +23,12 @@ unsafe extern "C" {
 
 struct Args {
     command: String,
+    help: bool,
+    version: bool,
     check: bool,
     port: Option<u16>,
     diff: Option<String>,
-    which: String,
+    j1939: bool,
     root: PathBuf,
     per_pgn: usize,
     rest: Vec<String>,
@@ -35,10 +37,12 @@ struct Args {
 fn parse_args() -> Result<Args, String> {
     let mut args = Args {
         command: String::new(),
+        help: false,
+        version: false,
         check: false,
         port: None,
         diff: None,
-        which: "normal".into(),
+        j1939: false,
         root: PathBuf::from("."),
         per_pgn: 3,
         rest: Vec::new(),
@@ -46,6 +50,8 @@ fn parse_args() -> Result<Args, String> {
     let mut it = std::env::args().skip(1);
     while let Some(a) = it.next() {
         match a.as_str() {
+            "--help" | "-h" => args.help = true,
+            "--version" | "-V" => args.version = true,
             "--check" => args.check = true,
             "--port" => {
                 args.port = Some(
@@ -64,17 +70,71 @@ fn parse_args() -> Result<Args, String> {
                     .map_err(|e| format!("--per-pgn: {e}"))?
             }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
-            "--which" => args.which = it.next().ok_or("--which needs normal|actisense|ikonvert")?,
+            "--protocol" => {
+                args.j1939 = match it.next().as_deref() {
+                    Some("nmea2000") => false,
+                    Some("j1939") => true,
+                    _ => return Err("--protocol needs nmea2000|j1939".into()),
+                }
+            }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
             pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
-    if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--per-pgn N] [--root DIR] [files...]".into());
+    if args.command == "help" {
+        args.help = true;
+    }
+    if args.command.is_empty() && !args.help && !args.version {
+        return Err(format!("{USAGE}\n(keel --help for more)"));
     }
     Ok(args)
 }
+
+const USAGE: &str = "usage: keel <command> [options] [files...]";
+
+const HELP: &str = "\
+keel - the CANboat PGN database tool
+
+The YAML under database/ is the source of truth; keel checks it, generates
+the documents, the analyzer's C tables and the Rust schema from it, decodes
+sample frames against it, and serves the web editor.
+
+usage: keel <command> [options] [files...]
+
+Commands:
+  check              check the database against every rule (R01..), and
+                     its samples against their expected decodes
+  generate           write every generated artifact, for NMEA 2000 and
+                     J1939: docs/canboat*.xml, analyzer/*-generated-data.h,
+                     crates/canboat/src/engine/schema_generated*.rs.
+                     `make generated` also runs this, then builds the
+                     JSON, HTML and DBC documents from the XML
+  emit               print the XML document (docs/canboat.xml, or with
+                     --protocol j1939 docs/canboat-j1939.xml) on stdout
+  explain            print the database as readable text
+  decode             decode sample lines from stdin (PLAIN, candump, YDWG
+                     RAW) with keel's own decoder
+  edit               start the web editor on localhost and open it
+  harvest FILE...    decode capture files and add a few samples per PGN
+                     variant to the database
+  rules [md]         print the rule inventory (as Markdown with `md`)
+  help               this text
+
+Options:
+  --protocol nmea2000|j1939
+                     the protocol for explain, emit and decode (default
+                     nmea2000)
+  --check            generate: write nothing, exit 1 when an artifact is
+                     out of date
+  --diff FILE        generate --check: write where it first differs to FILE
+  --port N           edit: the port to serve on (default 8020)
+  --per-pgn N        harvest: samples to keep per variant (default 3)
+  --root DIR         look for the repository from DIR (default: .)
+  -h, --help         this text
+  -V, --version      print keel's version, and the database's when run
+                     inside the repository
+";
 
 fn write_diff(original: &str, emitted: &str, path: &str) -> std::io::Result<()> {
     // Minimal unified-ish diff: first divergent line with context counts.
@@ -98,6 +158,19 @@ fn write_diff(original: &str, emitted: &str, path: &str) -> std::io::Result<()> 
 
 fn run() -> Result<i32, String> {
     let args = parse_args()?;
+    if args.help {
+        print!("{HELP}");
+        return Ok(0);
+    }
+    if args.version {
+        // keel's own version, and the database's when there is one to read.
+        let db = find_repo_root(&args.root)
+            .and_then(|root| read_versions(&root))
+            .map(|(version, schema)| format!(" (CANboat {version}, schema {schema})"))
+            .unwrap_or_default();
+        println!("keel {}{db}", env!("CARGO_PKG_VERSION"));
+        return Ok(0);
+    }
     // `rules` is pure documentation — needs neither the repo nor the database,
     // so it works anywhere (e.g. regenerating docs).
     if args.command == "rules" {
@@ -153,11 +226,11 @@ fn run() -> Result<i32, String> {
             let artifacts: Vec<(PathBuf, String)> = vec![
                 (
                     root.join("docs/canboat.xml"),
-                    emit_xml::emit_xml(&db, "normal"),
+                    emit_xml::emit_xml(&db, false),
                 ),
                 (
                     root.join("docs/canboat-j1939.xml"),
-                    emit_xml::emit_xml(&db, "j1939"),
+                    emit_xml::emit_xml(&db, true),
                 ),
                 (
                     root.join("analyzer/lookup-generated-data.h"),
@@ -253,7 +326,7 @@ fn run() -> Result<i32, String> {
         }
         "decode" => {
             // Read sample lines from stdin, reassemble, decode, print.
-            let j1939 = args.which == "j1939";
+            let j1939 = args.j1939;
             let mut fast: std::collections::HashSet<u32> = Default::default();
             for p in if j1939 { &db.pgns_j1939 } else { &db.pgns } {
                 if p.type_ == "Fast" {
@@ -321,12 +394,12 @@ fn run() -> Result<i32, String> {
             Ok(0)
         }
         "explain" => {
-            print!("{}", emit_text::emit_text(&db, args.which == "j1939"));
+            print!("{}", emit_text::emit_text(&db, args.j1939));
             Ok(0)
         }
         "emit" => {
-            // Emit any document to stdout (dev tool; also the BEM documents)
-            print!("{}", emit_xml::emit_xml(&db, &args.which));
+            // One of the two documents, on stdout.
+            print!("{}", emit_xml::emit_xml(&db, args.j1939));
             Ok(0)
         }
         other => Err(format!("unknown command '{other}'")),

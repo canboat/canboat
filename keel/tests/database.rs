@@ -88,7 +88,7 @@ fn the_database_is_populated() {
 fn generated_artifacts_are_up_to_date() {
     let (root, db, authored_fieldtypes) = load();
     let artifacts: Vec<(&str, String)> = vec![
-        ("docs/canboat.xml", emit_xml::emit_xml(&db, "normal")),
+        ("docs/canboat.xml", emit_xml::emit_xml(&db, false)),
         (
             "analyzer/lookup-generated-data.h",
             emit_c::emit_lookup_h(&db, false),
@@ -151,8 +151,8 @@ fn generated_artifacts_are_up_to_date() {
 fn emission_is_deterministic() {
     let (root, db, authored) = load();
     assert_eq!(
-        emit_xml::emit_xml(&db, "normal"),
-        emit_xml::emit_xml(&db, "normal")
+        emit_xml::emit_xml(&db, false),
+        emit_xml::emit_xml(&db, false)
     );
     assert_eq!(
         emit_c::emit_pgn_data_h(&db, false),

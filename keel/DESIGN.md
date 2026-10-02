@@ -299,6 +299,7 @@ keel explain     the old analyzer-explain text output, from YAML
 keel rules       print the rule inventory (text, or `md` for docs); §5
 keel decode      stdin sample lines (PLAIN/candump/YDWG) -> decoded fields;
                  keel's own decoder, independent of the C analyzer
+                 (explain, emit and decode take --protocol nmea2000|j1939)
 keel harvest     batch-decode capture files and append `samples:` blocks to
                  the matching PGN yaml (1-3 diverse per variant); the bulk
                  form of the editor's "adopt decodes as expectations" (§7.2)

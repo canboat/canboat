@@ -15,10 +15,7 @@ pub fn emit_artifacts(
     authored_fieldtypes: &[FieldType],
 ) -> Vec<(PathBuf, String)> {
     vec![
-        (
-            root.join("docs/canboat.xml"),
-            emit_xml::emit_xml(db, "normal"),
-        ),
+        (root.join("docs/canboat.xml"), emit_xml::emit_xml(db, false)),
         (
             root.join("analyzer/lookup-generated-data.h"),
             emit_c::emit_lookup_h(db, false),
