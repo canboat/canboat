@@ -421,7 +421,10 @@ fn to_encode_value(
 
 /// The `-nv` raw value: written back verbatim as field bits. Fractional
 /// raws do not exist on the wire, so a float here means the input was
-/// not `-nv` after all — treat it as a physical value.
+/// not `-nv` after all — treat it as a physical value. That includes a
+/// FLOAT under `-debug`, which wraps every field and gives a FLOAT's
+/// value in the schema's unit (156.27 deg for 2.7274 rad in Metric), so
+/// the encoder must take its resolution off, not write it as bits.
 fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
     if let Some(i) = n.as_i64() {
         Ok(EncodeValue::Int(i))
@@ -688,6 +691,24 @@ mod tests {
             let from_si = frame_from_json(si, si_line).unwrap().unwrap();
             let from_metric = frame_from_json(db(), metric_line).unwrap().unwrap();
             assert_eq!(from_si.data, from_metric.data, "{si_line}");
+        }
+    }
+
+    #[test]
+    fn debug_float_encodes_from_its_presented_value() {
+        // -debug wraps a FLOAT as {"value":…} in the schema's unit: deg in
+        // Metric, rad in SI. Both put Heading to Steer's own bits back.
+        let si = PgnDatabase::embedded(Units::Si);
+        for (db, value) in [(db(), "156.26844443585534"), (si, "2.7273988723754883")] {
+            let line = format!(
+                r#"{{"pgn":126720,"fields":{{"manufacturerCode":"Garmin","industryCode":"Marine Industry","subProtocolId":"Autopilot transport","field":11,"headingToSteer":{{"value":{value},"bytes":"B4 8D 2E 40"}}}}}}"#
+            );
+            let frame = frame_from_json(db, &line).unwrap().unwrap();
+            assert_eq!(
+                frame.data[frame.data.len() - 4..],
+                [0xb4, 0x8d, 0x2e, 0x40],
+                "{value}"
+            );
         }
     }
 
