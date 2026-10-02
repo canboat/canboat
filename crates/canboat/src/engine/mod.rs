@@ -25,8 +25,6 @@ pub mod fastpacket;
 pub mod format;
 pub mod frame;
 pub mod from_json;
-// Its only user so far is the Linux-only SocketCAN driver.
-#[cfg_attr(not(target_os = "linux"), allow(dead_code))]
 pub mod iso_tp;
 pub mod os;
 pub mod output;
