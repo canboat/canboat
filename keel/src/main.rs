@@ -64,14 +64,27 @@ fn parse_args() -> Result<Args, String> {
                     .map_err(|e| format!("--per-pgn: {e}"))?
             }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
-            "--which" => args.which = it.next().ok_or("--which needs normal|actisense|ikonvert")?,
+            // The protocol a command works on. `--which` also picks the
+            // Actisense / iKonvert BEM documents for `emit`, so it stays.
+            "--protocol" => {
+                args.which = match it.next().as_deref() {
+                    Some("nmea2000") => "normal".into(),
+                    Some("j1939") => "j1939".into(),
+                    _ => return Err("--protocol needs nmea2000|j1939".into()),
+                }
+            }
+            "--which" => {
+                args.which = it
+                    .next()
+                    .ok_or("--which needs normal|j1939|actisense|ikonvert")?
+            }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
             pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
             other => return Err(format!("unknown argument: {other}")),
         }
     }
     if args.command.is_empty() {
-        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--which normal|actisense|ikonvert] [--per-pgn N] [--root DIR] [files...]".into());
+        return Err("usage: keel <check|generate|emit|explain|decode|edit|harvest|rules> [--check] [--diff FILE] [--protocol nmea2000|j1939] [--which normal|j1939|actisense|ikonvert] [--per-pgn N] [--root DIR] [files...]".into());
     }
     Ok(args)
 }

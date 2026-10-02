@@ -129,6 +129,11 @@ Key facts:
   `analyzer` is invoked only by `fixup-version.py` to read
   `-version`/`-schema-version`. `keel explain` prints the human-readable
   text dump that `analyzer-explain -explain` used to produce.
+- `keel generate` (and so `make generated`) writes both protocols' outputs
+  every time: the J1939 ones are `docs/canboat-j1939.*`,
+  `analyzer/*-j1939-generated-data.h` and `schema_generated_j1939.rs`.
+  `keel explain`, `keel emit` and `keel decode` take
+  `--protocol nmea2000|j1939` (default nmea2000) for one of them.
 - A version bump in `common/version.h` propagates (via `fixup-version.py`) into
   the committed `docs/canboat.xsd` version attribute, the XML, JSON, **and** the
   DBC. They all move together.
