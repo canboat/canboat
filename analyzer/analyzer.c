@@ -175,7 +175,7 @@ static void usage(char **argv, char **av)
   printf("     -camel            Show fieldnames in normalCamelCase\n");
   printf("     -d                Print logging from level ERROR, INFO and DEBUG\n");
   printf("     -q                Print logging from level ERROR\n");
-  printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, etc.\n");
+  printf("     -si               Show values in strict SI units: degrees Kelvin, rotation in radians/sec, percentages as ratios, etc.\n");
   printf("     -geo dd           Print geographic format in dd.dddddd format\n");
   printf("     -geo dm           Print geographic format in dd.mm.mmm format\n");
   printf("     -geo dms          Print geographic format in dd.mm.sss format\n");

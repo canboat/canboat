@@ -197,8 +197,9 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
     }
 }
 
-/// `-si`: the database's kWh and Ah fields leave as J and C (test28 in
-/// analyzer/tests/Makefile) — 65005 energy, 127506 and 127513 charge.
+/// `-si`: the database's kWh, Ah and % fields leave as J, C and a ratio
+/// (test28 in analyzer/tests/Makefile) — 65005 energy, 127506 and 127513
+/// charge and percentages, 127505 level, 130576 signed trim tabs.
 #[test]
 fn pgn_si_units_json() {
     run_case(

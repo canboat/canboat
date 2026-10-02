@@ -45,8 +45,8 @@ pub struct Config<'a> {
     /// producer's build version doesn't leak into version-agnostic
     /// output.
     pub suppress_startup_record: bool,
-    /// Unit system to decode into — `Si` (the default: rad/K/Pa,
-    /// `--units si`) or `Metric` (deg/°C/bar, `--units metric`, which
+    /// Unit system to decode into — `Si` (the default: rad/K/Pa and
+    /// ratios, `--units si`) or `Metric` (deg/°C/bar/%, `--units metric`, which
     /// is what canboat C prints without `-si`).
     pub units: crate::engine::Units,
     /// What the bus carries: picks the PGN table. `J1939` is the Rust
