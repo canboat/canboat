@@ -81,8 +81,8 @@ pub struct ShapeArgs {
           conflicts_with_all = ["camel", "upper_camel"])]
     id: Option<IdStyle>,
 
-    /// Unit system for numeric fields: `si` (rad/K/Pa, the default) or
-    /// `metric` (canboat's humanized deg/°C/bar).
+    /// Unit system for numeric fields: `si` (rad/K/Pa, percentages as
+    /// ratios; the default) or `metric` (canboat's humanized deg/°C/bar/%).
     #[arg(long, value_enum, value_name = "SYSTEM", conflicts_with = "si")]
     units: Option<UnitSystem>,
 

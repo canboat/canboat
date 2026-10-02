@@ -638,6 +638,34 @@ mod tests {
     }
 
     #[test]
+    fn si_percentages_encode_from_ratios() {
+        // The database keeps %; the SI schema reads a ratio, signed ones
+        // included, so both unit systems put the same bits on the wire.
+        let si = PgnDatabase::embedded(Units::Si);
+        for (si_line, metric_line) in [
+            (
+                r#"{"pgn":127505,"fields":{"instance":0,"type":"Fuel","level":0.97536}}"#,
+                r#"{"pgn":127505,"fields":{"instance":0,"type":"Fuel","level":97.536}}"#,
+            ),
+            (
+                r#"{"pgn":130576,"fields":{"portTrimTab":-0.5,"starboardTrimTab":0.25}}"#,
+                r#"{"pgn":130576,"fields":{"portTrimTab":-50,"starboardTrimTab":25}}"#,
+            ),
+        ] {
+            let from_si = frame_from_json(si, si_line).unwrap().unwrap();
+            let from_metric = frame_from_json(db(), metric_line).unwrap().unwrap();
+            assert_eq!(from_si.data, from_metric.data, "{si_line}");
+        }
+        let f = frame_from_json(
+            si,
+            r#"{"pgn":130576,"fields":{"portTrimTab":-0.5,"starboardTrimTab":0.25}}"#,
+        )
+        .unwrap()
+        .unwrap();
+        assert_eq!(f.data[..2], [0xce, 0x19]);
+    }
+
+    #[test]
     fn camel_envelope_encodes_byte_exact() {
         // Integer-only PGN → wire-exact round trip. The envelope id
         // selects the variant; -nv objects carry raw values verbatim.

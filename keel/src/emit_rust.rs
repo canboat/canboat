@@ -204,7 +204,8 @@ struct FieldView {
 /// can share one `FieldInfo` slice between both schemas.
 fn field_converts(f: &RawField) -> bool {
     match f.unit.as_deref() {
-        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") | Some("kWh") | Some("Ah") => true,
+        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") | Some("kWh") | Some("Ah")
+        | Some("%") => true,
         Some("K") => !f.signed.unwrap_or(false),
         _ => false,
     }
@@ -232,8 +233,9 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
     }
 
     if units == Units::Si {
-        // Strict SI base units. The database keeps NMEA 2000's own kWh
-        // and Ah; canboat's SI `fixupUnit` turns them into J and C.
+        // Strict SI base units. The database keeps NMEA 2000's own kWh,
+        // Ah and %; canboat's SI `fixupUnit` turns them into J, C and a
+        // ratio.
         match f.unit.as_deref() {
             Some("kWh") => {
                 v.resolution = f.resolution.map(|r| r * 3.6e6);
@@ -246,6 +248,12 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
                 v.range_min = f.range_min.map(|x| x * 3600.0);
                 v.range_max = f.range_max.map(|x| x * 3600.0);
                 v.unit = Some("C".to_string());
+            }
+            Some("%") => {
+                v.resolution = f.resolution.map(|r| r / 100.0);
+                v.range_min = f.range_min.map(|x| x / 100.0);
+                v.range_max = f.range_max.map(|x| x / 100.0);
+                v.unit = Some("ratio".to_string());
             }
             _ => {}
         }
@@ -326,7 +334,7 @@ struct ComputedFt {
 /// The `units` view of one field-type lookup entry: canboat C runs the
 /// same `fixupUnit` over these (`fillFieldTypeLookupField`) as over
 /// ordinary fields, so the SI and Metric tables differ exactly as
-/// [`field_view`] does — SI turns kWh/Ah into J/C, Metric turns
+/// [`field_view`] does — SI turns kWh/Ah/% into J/C/ratio, Metric turns
 /// rad/K/Pa into deg/°C/bar.
 fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
     let mut v = v.clone();
@@ -352,6 +360,7 @@ fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, Comput
     match (units, unit.as_str()) {
         (Units::Si, "kWh") => scale(3.6e6, "J"),
         (Units::Si, "Ah") => scale(3600.0, "C"),
+        (Units::Si, "%") => scale(0.01, "ratio"),
         (Units::Si, _) => {}
         (Units::Metric, "rad") => {
             scale(RAD_TO_DEG, "deg");

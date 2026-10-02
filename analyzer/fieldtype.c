@@ -158,6 +158,15 @@ void fixupUnit(Field *f)
       f->unit = "C";
       logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
     }
+    // A percentage is a display form; SI wants the ratio itself.
+    else if (strcmp(f->unit, "%") == 0)
+    {
+      f->resolution /= 100.0;
+      f->rangeMin /= 100.0;
+      f->rangeMax /= 100.0;
+      f->unit = "ratio";
+      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+    }
 
     // Many more to follow, but pgn.h is not yet complete enough...
   }
