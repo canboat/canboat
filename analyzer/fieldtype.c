@@ -75,7 +75,7 @@ static double getMinRange(const char *name, uint32_t size, double resolution, bo
 // (NMEA 2000: Unknown / OutOfRange / Reserved). Authoritative source: Cassidy,
 // "NMEA 2000 Explained" -- uint16 valid range is 0..65532, i.e. 3 reserved.
 // https://web.archive.org/web/20151008123209/http://www.kvaser.com/wp-content/uploads/2014/08/nmea2000-explained-cassidy.pdf
-static uint8_t reservedCountForSize(uint32_t size)
+extern uint8_t reservedCountForSize(uint32_t size)
 {
   return (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
 }
