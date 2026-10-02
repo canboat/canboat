@@ -2158,20 +2158,29 @@ extern bool fieldPrintKeyValue(const Field   *field,
   {
     if (g_ftf != NULL)
     {
-      const Field *f = g_ftf;
+      Field f = *g_ftf;
 
-      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field bits=%u\n", fieldName, f->ft->name, f->size);
+      logDebug("fieldPrintKeyValue('%s') is actually a '%s' field bits=%u\n", fieldName, f.ft->name, f.size);
 
       if (*bits == 0)
       {
-        *bits = f->size;
+        *bits = f.size;
       }
-      if (*bits == 0 && f->ft && f->ft->name && strcmp(f->ft->name, "LOOKUP") == 0)
+      if (*bits == 0 && f.ft && f.ft->name && strcmp(f.ft->name, "LOOKUP") == 0)
       {
-        *bits = f->lookup.size;
+        *bits = f.lookup.size;
       }
 
-      r = (f->ft->pf)(f, fieldName, data, dataLen, startBit, bits);
+      // The field a key resolves to is not one of pgnList's fields, so the pass in fieldtype.c that
+      // gives every field its reservedCount never reaches it: give a number or a time the
+      // top-of-range sentinels of the width it is read at, as any field of that width has. An unset
+      // B&G Trip 2 Time (0xffffffff) is then Unknown rather than 1193:02:47.295.
+      if (f.ft->pf == fieldPrintNumber || f.ft->pf == fieldPrintTime)
+      {
+        f.reservedCount = reservedCountForSize((uint32_t) *bits);
+      }
+
+      r = (f.ft->pf)(&f, fieldName, data, dataLen, startBit, bits);
     }
     else
     {

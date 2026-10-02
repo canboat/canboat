@@ -2244,16 +2244,13 @@ fn decode_dynamic_field_length(
 /// it consumed so the iteration walker can advance correctly. Always
 /// clears the dynamic-* slots in the context.
 ///
-/// **No top-of-range sentinel is stripped here.** The value is decoded
-/// against a pseudo-field synthesised from a fieldtype lookup entry,
-/// and in the C those never get a `reservedCount`: that is resolved in
-/// a pass over `pgnList`'s fields (fieldtype.c), which a lookup entry
-/// is not a member of. It therefore stays 0, `extractNumberNotEmpty`'s
-/// threshold becomes `maxValue`, and nothing is ever above it — so an
-/// all-ones dynamic value prints as a number. B&G's `Trip 2 Time`
-/// reads 0xFFFFFFFF on an unstarted trip and canboat renders it
-/// `1193:02:47.295`, where stripping it as "not available" would drop
-/// the field.
+/// A NUMBER or a DURATION / TIME value reserves the top-of-range
+/// sentinels of the width it is read at, as any field of that width does
+/// ([`dynamic_sentinel`]): an unstarted B&G `Trip 2 Time`, 0xFFFFFFFF, is
+/// not available rather than `1193:02:47.295`. The C gets there by giving
+/// the pseudo-field it builds from the key's fieldtype entry a
+/// `reservedCount` (fieldPrintKeyValue, print.c); the pass in fieldtype.c
+/// that resolves it for every other field never reaches that one.
 ///
 /// ISO_NAME is the exception, and not via this mechanism:
 /// `fieldPrintName` tests `value > maxValue - 2` itself, so it applies
@@ -2373,6 +2370,9 @@ fn decode_dynamic_field_value(
             } else {
                 ex_unsigned
             };
+            if let Some(sent) = dynamic_sentinel(ex, bits) {
+                return (sent, bits);
+            }
             let res = entry.resolution.unwrap_or(1.0);
             FieldValue::Time {
                 raw: ex.value,
@@ -2395,6 +2395,26 @@ fn decode_dynamic_field_value(
     (val, bits)
 }
 
+/// The top-of-range sentinels of a dynamic NUMBER / DURATION / TIME read
+/// at `bits`: reservedCountForSize() values below the width's maximum,
+/// signed or not, as `extractNumberNotEmpty` tests them.
+fn dynamic_sentinel(ex: Extracted, bits: u32) -> Option<FieldValue> {
+    let reserved: i64 = match bits {
+        8.. => 3,
+        4..=7 => 2,
+        2..=3 => 1,
+        _ => 0,
+    };
+    if ex.value <= ex.max - reserved {
+        return None;
+    }
+    Some(match ex.max - ex.value {
+        0 => FieldValue::NotAvailable,
+        1 => FieldValue::OutOfRange { value: ex.raw },
+        _ => FieldValue::ReservedValue { value: ex.raw },
+    })
+}
+
 fn decode_dynamic_number(
     data: &[u8],
     bit_offset: u32,
@@ -2405,6 +2425,9 @@ fn decode_dynamic_number(
     let Some(ex) = extract_bits(data, bit_offset as usize, bit_length as usize, signed, 0) else {
         return FieldValue::NotAvailable;
     };
+    if let Some(sent) = dynamic_sentinel(ex, bit_length) {
+        return sent;
+    }
     let raw = ex.value as f64;
     let res = entry.resolution.unwrap_or(1.0);
     if res == 1.0 && entry.unit.is_none() {
@@ -2898,17 +2921,14 @@ mod tests {
     }
 
     #[test]
-    fn all_ones_dynamic_value_is_a_value_not_a_sentinel() {
+    fn all_ones_dynamic_value_is_not_available() {
         // A B&G key-value frame (samples/pgn130824.raw line 2) whose
         // `Trip Time` and `Trip 2 Time` both read 0xFFFFFFFF, the trips
-        // never having been started.
-        //
-        // canboat prints those as `1193:02:47.295`. Its dynamic values
-        // are decoded against a pseudo-field built from a fieldtype
-        // lookup entry, which never gets a `reservedCount` — that pass
-        // walks `pgnList`'s fields — so no top-of-range value is ever
-        // stripped on this path. Treating all-ones as "not available"
-        // here silently drops the field instead.
+        // never having been started. A dynamic value reserves the
+        // top-of-range sentinels of its width like any other field, so
+        // both are not available, not `1193:02:47.295`; the record is
+        // still consumed, so the Race Timer before them and the keys
+        // after them decode as before.
         let data: smallvec::SmallVec<[u8; 8]> = smallvec::smallvec![
             0x7d, 0x99, 0x64, 0x20, 0x2d, 0x00, 0x0d, 0x21, 0x43, 0x00, 0x0e, 0x41, 0xc0, 0xa1,
             0xb2, 0x1f, 0x0f, 0x41, 0xce, 0x50, 0x3c, 0x03, 0x69, 0x20, 0x43, 0x7d, 0xd3, 0x20,
@@ -2927,8 +2947,8 @@ mod tests {
         };
         let dec = db().decode(&frame).expect("decode");
 
-        // Each `Key` of 265 / 267 must be followed by a Value carrying
-        // the raw 0xFFFFFFFF, not by nothing at all.
+        // Each `Key` of 265 / 267 must be followed by a Value that is
+        // not available.
         let mut expecting_value_for: Option<u64> = None;
         let mut seen = 0;
         for f in &dec.fields {
@@ -2946,11 +2966,8 @@ mod tests {
                 ("Value", v) => {
                     if let Some(key) = expecting_value_for.take() {
                         match v {
-                            FieldValue::Time { raw, .. } => {
-                                assert_eq!(*raw, 0xFFFF_FFFF, "key {key}");
-                                seen += 1;
-                            }
-                            other => panic!("key {key}: expected a Time, got {other:?}"),
+                            FieldValue::NotAvailable => seen += 1,
+                            other => panic!("key {key}: expected not available, got {other:?}"),
                         }
                     }
                 }
