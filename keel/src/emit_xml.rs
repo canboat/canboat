@@ -5,7 +5,7 @@
 //! the golden byte-diff against analyzer-explain output guards them all.
 
 use crate::cformat::{c_15g, c_g_roundtrip, xml_escape};
-use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn};
+use crate::model::{ACTISENSE_BEM, Database, Field, Interval, Pgn, Protocol};
 
 // NB: no `\`-line-continuations here - they strip the next line's leading
 // whitespace, which corrupts the indented license URL line.
@@ -259,8 +259,8 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
     /// Emits only the enumerations this document's tree references, so the
     /// marine `docs/canboat.xml` does not publish the J1939 manufacturer
     /// registry (and vice versa). See `Database::lookups_used`.
-    fn lookup_sections(&mut self, j1939: bool) {
-        let keep = self.db.lookups_used(j1939);
+    fn lookup_sections(&mut self, protocol: Protocol) {
+        let keep = self.db.lookups_used(protocol);
         self.p("  <LookupEnumerations>\n");
         for lk in self.db.ordered_lookups_for("pair", &keep) {
             let max_value = (1u128 << lk.bits) - 1;
@@ -661,18 +661,14 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
 
     // ----- top level ------------------------------------------------------
 
-    pub fn emit(mut self, j1939: bool) -> String {
-        self.header(if j1939 { "j1939" } else { "nmea2000" });
+    pub fn emit(mut self, protocol: Protocol) -> String {
+        self.header(protocol.name());
         self.physical_quantities();
         self.fieldtypes();
         self.missing();
-        self.lookup_sections(j1939);
+        self.lookup_sections(protocol);
         self.p("  <PGNs>\n");
-        let pgns: Vec<Pgn> = if j1939 {
-            self.db.pgns_j1939.clone()
-        } else {
-            self.db.pgns.clone()
-        };
+        let pgns: Vec<Pgn> = self.db.pgns_of(protocol).clone();
         // canboat's own pseudo-PGNs (gateway and analyzer records, 0x40000
         // and up) never appear on a bus, so the documents leave them out;
         // the runtime schema has them.
@@ -684,8 +680,8 @@ edit database/pgns/*.yaml and run 'make generated'. See https://github.com/canbo
     }
 }
 
-/// The NMEA 2000 document (`docs/canboat.xml`), or with `j1939` the J1939
-/// one (`docs/canboat-j1939.xml`).
-pub fn emit_xml(db: &Database, j1939: bool) -> String {
-    Emitter::new(db).emit(j1939)
+/// A protocol's document: `docs/canboat.xml`, `docs/canboat-j1939.xml` or
+/// `docs/canboat-quick.xml`.
+pub fn emit_xml(db: &Database, protocol: Protocol) -> String {
+    Emitter::new(db).emit(protocol)
 }

@@ -12,7 +12,7 @@
 
 use std::path::{Path, PathBuf};
 
-use keel::model::{Database, FieldType};
+use keel::model::{Database, FieldType, Protocol};
 use keel::{check, derive, emit_c, emit_rust, emit_text, emit_xml, read_versions, yamlio};
 
 /// The repo root — `keel/`'s parent, resolved from the manifest dir so the
@@ -87,49 +87,12 @@ fn the_database_is_populated() {
 )]
 fn generated_artifacts_are_up_to_date() {
     let (root, db, authored_fieldtypes) = load();
-    let artifacts: Vec<(&str, String)> = vec![
-        ("docs/canboat.xml", emit_xml::emit_xml(&db, false)),
-        (
-            "analyzer/lookup-generated-data.h",
-            emit_c::emit_lookup_h(&db, false),
-        ),
-        (
-            "analyzer/lookup-j1939-generated-data.h",
-            emit_c::emit_lookup_h(&db, true),
-        ),
-        (
-            "analyzer/physicalquantity-generated-data.h",
-            emit_c::emit_physicalquantity_data_h(&db),
-        ),
-        (
-            "analyzer/fieldtype-generated-data.h",
-            emit_c::emit_fieldtype_data_h(&authored_fieldtypes),
-        ),
-        (
-            "analyzer/pgn-generated-data.h",
-            emit_c::emit_pgn_data_h(&db, false),
-        ),
-        (
-            "analyzer/pgn-j1939-generated-data.h",
-            emit_c::emit_pgn_data_h(&db, true),
-        ),
-        (
-            "crates/canboat/src/engine/schema_generated.rs",
-            emit_rust::emit_schema(&db, &root, false),
-        ),
-        (
-            "crates/canboat/src/engine/schema_generated_j1939.rs",
-            emit_rust::emit_schema(&db, &root, true),
-        ),
-        (
-            "crates/canboat/src/engine/fastpacket_generated.rs",
-            emit_rust::emit_fastpacket(&db),
-        ),
-    ];
+    let artifacts = keel::generate::emit_artifacts(&root, &db, &authored_fieldtypes);
 
     let mut stale = Vec::new();
-    for (rel, emitted) in &artifacts {
-        let committed = std::fs::read_to_string(root.join(rel)).unwrap_or_default();
+    for (path, emitted) in &artifacts {
+        let rel = path.strip_prefix(&root).unwrap().display();
+        let committed = std::fs::read_to_string(path).unwrap_or_default();
         if &committed != emitted {
             stale.push(format!(
                 "  {rel} ({} vs {} bytes)",
@@ -151,24 +114,24 @@ fn generated_artifacts_are_up_to_date() {
 fn emission_is_deterministic() {
     let (root, db, authored) = load();
     assert_eq!(
-        emit_xml::emit_xml(&db, false),
-        emit_xml::emit_xml(&db, false)
+        emit_xml::emit_xml(&db, Protocol::Nmea2000),
+        emit_xml::emit_xml(&db, Protocol::Nmea2000)
     );
     assert_eq!(
-        emit_c::emit_pgn_data_h(&db, false),
-        emit_c::emit_pgn_data_h(&db, false)
+        emit_c::emit_pgn_data_h(&db, Protocol::Nmea2000),
+        emit_c::emit_pgn_data_h(&db, Protocol::Nmea2000)
     );
     assert_eq!(
-        emit_c::emit_lookup_h(&db, true),
-        emit_c::emit_lookup_h(&db, true)
+        emit_c::emit_lookup_h(&db, Protocol::J1939),
+        emit_c::emit_lookup_h(&db, Protocol::J1939)
     );
     assert_eq!(
         emit_c::emit_fieldtype_data_h(&authored),
         emit_c::emit_fieldtype_data_h(&authored)
     );
     assert_eq!(
-        emit_rust::emit_schema(&db, &root, false),
-        emit_rust::emit_schema(&db, &root, false)
+        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000),
+        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000)
     );
     assert_eq!(
         emit_rust::emit_fastpacket(&db),
@@ -182,16 +145,16 @@ fn emission_is_deterministic() {
 fn the_j1939_tables_differ_from_the_nmea_ones() {
     let (root, db, _) = load();
     assert_ne!(
-        emit_c::emit_pgn_data_h(&db, false),
-        emit_c::emit_pgn_data_h(&db, true)
+        emit_c::emit_pgn_data_h(&db, Protocol::Nmea2000),
+        emit_c::emit_pgn_data_h(&db, Protocol::J1939)
     );
     assert_ne!(
-        emit_c::emit_lookup_h(&db, false),
-        emit_c::emit_lookup_h(&db, true)
+        emit_c::emit_lookup_h(&db, Protocol::Nmea2000),
+        emit_c::emit_lookup_h(&db, Protocol::J1939)
     );
     assert_ne!(
-        emit_rust::emit_schema(&db, &root, false),
-        emit_rust::emit_schema(&db, &root, true)
+        emit_rust::emit_schema(&db, &root, Protocol::Nmea2000),
+        emit_rust::emit_schema(&db, &root, Protocol::J1939)
     );
 }
 
@@ -201,9 +164,9 @@ fn the_j1939_tables_differ_from_the_nmea_ones() {
 #[test]
 fn the_derive_pass_is_idempotent() {
     let (root, mut db, _) = load();
-    let once = emit_rust::emit_schema(&db, &root, false);
+    let once = emit_rust::emit_schema(&db, &root, Protocol::Nmea2000);
     derive::fill(&mut db).expect("second derive pass succeeds");
-    assert_eq!(once, emit_rust::emit_schema(&db, &root, false));
+    assert_eq!(once, emit_rust::emit_schema(&db, &root, Protocol::Nmea2000));
 }
 
 /// `keel explain` renders the whole database as prose. It is not a
@@ -212,7 +175,7 @@ fn the_derive_pass_is_idempotent() {
 #[test]
 fn the_text_explanation_covers_the_whole_database() {
     let (_, db, _) = load();
-    let out = emit_text::emit_text(&db, false);
+    let out = emit_text::emit_text(&db, Protocol::Nmea2000);
 
     assert!(out.starts_with("CANboat version v"), "missing banner");
     assert!(out.contains("_______ Complete PGNs _________"));
@@ -235,8 +198,8 @@ fn the_text_explanation_covers_the_whole_database() {
 fn the_text_explanation_has_a_j1939_flavor() {
     let (_, db, _) = load();
     assert_ne!(
-        emit_text::emit_text(&db, false),
-        emit_text::emit_text(&db, true)
+        emit_text::emit_text(&db, Protocol::Nmea2000),
+        emit_text::emit_text(&db, Protocol::J1939)
     );
 }
 
@@ -261,8 +224,11 @@ fn a_dm1_spn_is_joined_and_named() {
     assert_eq!(lk.bits, 19);
     assert!(lk.pairs.contains(&(190, "Engine RPM".to_string())));
     assert!(
-        db.lookups_used(true).contains(derive::SPN_LOOKUP)
-            && !db.lookups_used(false).contains(derive::SPN_LOOKUP),
+        db.lookups_used(Protocol::J1939)
+            .contains(derive::SPN_LOOKUP)
+            && !db
+                .lookups_used(Protocol::Nmea2000)
+                .contains(derive::SPN_LOOKUP),
         "only the J1939 tree carries the SPN lookup"
     );
 }

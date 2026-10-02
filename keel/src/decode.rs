@@ -4,7 +4,7 @@
 //! two implementations can differential-test each other over samples/.
 
 use crate::bits::extract_bits;
-use crate::model::{Database, Field, Pgn};
+use crate::model::{Database, Field, Pgn, Protocol};
 
 type Result<T> = std::result::Result<T, String>;
 
@@ -77,8 +77,13 @@ pub struct DecodedField {
 /// Pick the PGN variant whose match fields all match the payload
 /// (port of pgn.c getMatchingPgn): first variant with every match field
 /// equal wins; a variant without match fields is the catch-all.
-pub fn select_variant<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) -> Option<&'a Pgn> {
-    let list = db.flavor_pgns(j1939);
+pub fn select_variant<'a>(
+    db: &'a Database,
+    pgn: u32,
+    data: &[u8],
+    protocol: Protocol,
+) -> Option<&'a Pgn> {
+    let list = db.flavor_pgns(protocol);
     for p in list.iter().filter(|p| p.pgn == pgn && !p.fallback) {
         let mut bit = 0usize;
         let mut ok = true;
@@ -115,9 +120,14 @@ pub struct NearMiss<'a> {
     pub got: i64,
 }
 
-pub fn near_misses<'a>(db: &'a Database, pgn: u32, data: &[u8], j1939: bool) -> Vec<NearMiss<'a>> {
+pub fn near_misses<'a>(
+    db: &'a Database,
+    pgn: u32,
+    data: &[u8],
+    protocol: Protocol,
+) -> Vec<NearMiss<'a>> {
     let mut out = Vec::new();
-    let list = if j1939 { &db.pgns_j1939 } else { &db.pgns };
+    let list = db.pgns_of(protocol);
     for p in list.iter().filter(|p| p.pgn == pgn && !p.fallback) {
         let mut bit = 0usize;
         let mut diffs: Vec<(String, String, i64, i64, bool)> = Vec::new();

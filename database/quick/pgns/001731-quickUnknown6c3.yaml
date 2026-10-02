@@ -1,0 +1,23 @@
+pgn: 1731
+id: quickUnknown6c3
+description: 'Quick: Unknown 0x6C3'
+type: Single
+missing:
+- Fields
+- FieldLengths
+- Resolution
+- Interval
+explanation: Sent by a Quick windlass alongside Chain Count (0x6C1). Its payload did not change in the one capture we have, so what it carries is not known.
+fields:
+- id: talkerId
+  name: Talker ID
+  description: The same 16 bits start every Quick message from a device; see Chain Count
+  type: UINT16
+- id: data
+  name: Data
+  type: BINARY
+  bits: 48
+samples:
+- raw: "(1702468373.238699) can0 6C3#C118000000000000"  # samples/quick-pcs-windlass-chain-up-down.candump
+  expects:
+    talkerId: 6337

@@ -12,7 +12,7 @@
 //! The migration golden test (emitted XML == analyzer-explain output) is what
 //! proves this port correct across the whole database.
 
-use crate::model::Database;
+use crate::model::{Database, Protocol};
 
 pub fn c_min(x: f64, y: f64) -> f64 {
     if x <= y { x } else { y } // analyzer.h: ((x) <= (y) ? (x) : (y))
@@ -211,17 +211,16 @@ pub fn fill(db: &mut Database) -> Result<(), String> {
     db.index();
     add_spn_lookup(db)?;
     fill_fieldtypes(db)?;
-    fill_pgn_list(db, true)?;
-    fill_pgn_list(db, false)
+    for protocol in Protocol::ALL {
+        fill_pgn_list(db, protocol)?;
+    }
+    Ok(())
 }
 
-fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
+fn fill_pgn_list(db: &mut Database, protocol: Protocol) -> Result<(), String> {
+    let marine = protocol == Protocol::Nmea2000;
     // Work around simultaneous &mut pgns / &fieldtypes borrows: take the list.
-    let mut pgns = std::mem::take(if marine {
-        &mut db.pgns
-    } else {
-        &mut db.pgns_j1939
-    });
+    let mut pgns = std::mem::take(db.pgns_of_mut(protocol));
     for pgn in pgns.iter_mut() {
         resolve_continuations(pgn, db)?;
         let mut order = 0u32;
@@ -299,15 +298,15 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
             let ft_has_sign = ft.has_sign;
             // The marine tree authors a range wherever its field type has no
             // sign to derive one from (keeping canboat.json as the C tables
-            // had it). The J1939 tree does not, so there a plain NUMBER or
-            // PGN takes its range from its width like any other numeric
-            // field: unsigned unless the field says otherwise, as J1939
-            // encodes values (J1939-71 offsets do the rest). Nonnumeric
+            // had it). The J1939 and Quick trees do not, so there a plain
+            // NUMBER or PGN takes its range from its width like any other
+            // numeric field: unsigned unless the field says otherwise, as
+            // J1939 encodes values (J1939-71 offsets do the rest). Nonnumeric
             // fields — RESERVED, BINARY, ... — keep none.
-            let j1939_numeric = !marine && matches!(ft.root_name.as_str(), "NUMBER" | "PGN");
+            let width_numeric = !marine && matches!(ft.root_name.as_str(), "NUMBER" | "PGN");
             if f.res_bits != 0
                 && f.res_resolution != 0.0
-                && (ft_has_sign.is_some() || j1939_numeric)
+                && (ft_has_sign.is_some() || width_numeric)
                 && f.res_range_max.is_nan()
             {
                 f.res_range_min =
@@ -366,11 +365,7 @@ fn fill_pgn_list(db: &mut Database, marine: bool) -> Result<(), String> {
 
         fill_pgn_length(pgn)?;
     }
-    if marine {
-        db.pgns = pgns;
-    } else {
-        db.pgns_j1939 = pgns;
-    }
+    *db.pgns_of_mut(protocol) = pgns;
     Ok(())
 }
 

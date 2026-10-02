@@ -8,6 +8,11 @@
 //! on data page 1 (0x10000-0x1FFFF) whose payload fits in 8 bytes is one
 //! plain frame — reading it as the first frame of a fast-packet loses it.
 //! So both the PGN table and the framing follow from the bus.
+//!
+//! Quick's PCS bus is different again: 11-bit CAN identifiers, each only a
+//! message type, which canboat carries in the frame's `pgn`. With no
+//! manufacturer in an 11-bit identifier, nothing tells a Quick frame from
+//! another device's, so Quick is only ever decoded when asked for.
 
 use std::fmt;
 use std::str::FromStr;
@@ -26,18 +31,36 @@ pub enum BusProtocol {
     /// SAE J1939 (engines, gensets, transmissions): single frames, and ISO
     /// TP for anything longer than 8 bytes. No fast-packet framing.
     J1939,
+    /// Quick's Proportional Control System (windlasses, thrusters): 11-bit
+    /// CAN frames, one per message. The identifier is the message type and
+    /// goes in the frame's `pgn`; priority, source and destination do not
+    /// exist and stay 0, 0 and 255.
+    Quick,
 }
 
 impl BusProtocol {
-    /// Every protocol, in the order `--protocol` lists them.
-    pub const ALL: [BusProtocol; 2] = [BusProtocol::Nmea2000, BusProtocol::J1939];
+    /// Every protocol, in the order `--protocol` lists them. A slice, so
+    /// that adding one does not change its type.
+    pub const ALL: &'static [BusProtocol] = &[
+        BusProtocol::Nmea2000,
+        BusProtocol::J1939,
+        BusProtocol::Quick,
+    ];
 
-    /// The `--protocol` spelling: `nmea2000` or `j1939`.
+    /// The `--protocol` spelling: `nmea2000`, `j1939` or `quick`.
     pub fn as_str(self) -> &'static str {
         match self {
             BusProtocol::Nmea2000 => "nmea2000",
             BusProtocol::J1939 => "j1939",
+            BusProtocol::Quick => "quick",
         }
+    }
+
+    /// Whether this bus has 11-bit CAN identifiers rather than 29-bit ISO
+    /// 11783 ones. A reader of raw CAN frames keeps only the frames of the
+    /// protocol it was asked for.
+    pub fn standard_frames(self) -> bool {
+        self == BusProtocol::Quick
     }
 
     /// The embedded PGN table for this bus, in `units`.
@@ -45,6 +68,7 @@ impl BusProtocol {
         match self {
             BusProtocol::Nmea2000 => PgnDatabase::embedded(units),
             BusProtocol::J1939 => PgnDatabase::embedded_j1939(units),
+            BusProtocol::Quick => PgnDatabase::embedded_quick(units),
         }
     }
 
@@ -55,7 +79,7 @@ impl BusProtocol {
     pub fn packet_type(self, pgn: u32) -> FramePacketType {
         match self {
             BusProtocol::Nmea2000 => fastpacket::packet_type(pgn),
-            BusProtocol::J1939 => FramePacketType::Single,
+            BusProtocol::J1939 | BusProtocol::Quick => FramePacketType::Single,
         }
     }
 }
@@ -74,7 +98,7 @@ impl fmt::Display for UnknownBusProtocol {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         write!(
             f,
-            "unknown bus protocol '{}' (expected nmea2000 or j1939)",
+            "unknown bus protocol '{}' (expected nmea2000, j1939 or quick)",
             self.0
         )
     }
@@ -87,7 +111,8 @@ impl FromStr for BusProtocol {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         BusProtocol::ALL
-            .into_iter()
+            .iter()
+            .copied()
             .find(|b| b.as_str().eq_ignore_ascii_case(s))
             .ok_or_else(|| UnknownBusProtocol(s.to_string()))
     }
@@ -99,12 +124,13 @@ mod tests {
 
     #[test]
     fn parses_and_prints_the_cli_spelling() {
-        for b in BusProtocol::ALL {
+        for &b in BusProtocol::ALL {
             assert_eq!(b.as_str().parse::<BusProtocol>(), Ok(b));
             assert_eq!(b.to_string(), b.as_str());
         }
         assert_eq!("J1939".parse::<BusProtocol>(), Ok(BusProtocol::J1939));
-        assert!("quick".parse::<BusProtocol>().is_err());
+        assert_eq!("quick".parse::<BusProtocol>(), Ok(BusProtocol::Quick));
+        assert!("canopen".parse::<BusProtocol>().is_err());
     }
 
     #[test]

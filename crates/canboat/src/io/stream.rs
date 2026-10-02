@@ -28,7 +28,7 @@ use crate::engine::format::ngt1::{EblHeader, Ngt1Decoder, NgtEvent};
 use crate::engine::format::plain::write_line as write_plain;
 use crate::engine::format::ydwg02::write_line as write_ydwg02;
 use crate::engine::format::{
-    InputFormat, detect, header_implies_coalesced, parse_format_header, parse_with,
+    InputFormat, detect, header_implies_coalesced, parse_for, parse_format_header,
 };
 
 /// Pull-based source of [`RawFrame`]s — the engine
@@ -88,6 +88,8 @@ pub struct LineFrameReader<R: BufRead> {
     /// run reassembly downstream consult this to decide whether to
     /// bypass the reassembler.
     header_coalesced: bool,
+    /// The bus the lines come from: which raw CAN frames count.
+    protocol: crate::engine::BusProtocol,
 }
 
 impl<R: BufRead> LineFrameReader<R> {
@@ -98,6 +100,7 @@ impl<R: BufRead> LineFrameReader<R> {
             lines: crate::io::LineReader::new(reader),
             active: None,
             header_coalesced: false,
+            protocol: crate::engine::BusProtocol::Nmea2000,
         }
     }
 
@@ -108,7 +111,16 @@ impl<R: BufRead> LineFrameReader<R> {
             lines: crate::io::LineReader::new(reader),
             active: Some(format),
             header_coalesced: false,
+            protocol: crate::engine::BusProtocol::Nmea2000,
         }
+    }
+
+    /// Read the lines as coming from a bus of `protocol` (NMEA 2000 by
+    /// default). It decides which raw CAN frames a candump line may hold:
+    /// 11-bit ones on Quick, 29-bit ISO 11783 ones otherwise.
+    pub fn protocol(mut self, protocol: crate::engine::BusProtocol) -> Self {
+        self.protocol = protocol;
+        self
     }
 
     /// The format currently in effect: the forced one, or whatever
@@ -157,7 +169,7 @@ impl<R: BufRead> FrameReader for LineFrameReader<R> {
                 log::debug!("input format: {:?}", self.active);
             }
             let format = self.active.expect("active format set above");
-            match parse_with(format, line) {
+            match parse_for(format, self.protocol, line) {
                 Ok(Some(frame)) => return Ok(Some(frame)),
                 // iKonvert control sentences, Garmin CSV headers, etc.
                 Ok(None) => continue,

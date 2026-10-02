@@ -1,0 +1,11 @@
+# Quick PCS, from canboat/canboat#938's capture: one windlass hauling chain in, then paying it out.
+(1702468372.799326) can0 6C0#C118780001000100
+(1702468372.909137) can0 6C1#C1186A0000000200
+(1702468373.019007) can0 6C2#C118000000000000
+(1702468373.238699) can0 6C3#C118000000000000
+(1702468387.189437) can0 6C1#C118670000000200
+(1702468391.583401) can0 6C1#C1186B0000000200
+# An 11-bit identifier with no definition: a plain 11-bit frame, not a Quick one.
+(1702468392.000000) can0 123#A1B2C3D4E5F60708
+# A 29-bit frame on the same capture is not Quick, and is skipped.
+(1702468392.100000) can0 09F80130#E0E1E2E3E4E5E6E7

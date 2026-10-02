@@ -1,0 +1,12 @@
+pgn: 0
+id: standardCanFrame
+description: 11-bit CAN frame
+type: Single
+fallback: true
+interval: irregular
+explanation: An 11-bit CAN identifier with no definition. An 11-bit identifier is only a message type and carries no manufacturer, so nothing says which device or protocol sent it; its payload is shown as is.
+fields:
+- id: data
+  name: Data
+  type: BINARY
+  bits: 64

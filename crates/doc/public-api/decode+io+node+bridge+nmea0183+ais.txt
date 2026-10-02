@@ -169,11 +169,13 @@ pub mod canboat::bus
 #[non_exhaustive] pub enum canboat::bus::BusProtocol
 pub canboat::bus::BusProtocol::J1939
 pub canboat::bus::BusProtocol::Nmea2000
+pub canboat::bus::BusProtocol::Quick
 impl canboat::schema::BusProtocol
-pub const canboat::schema::BusProtocol::ALL: [canboat::schema::BusProtocol; 2]
+pub const canboat::schema::BusProtocol::ALL: &'static [canboat::schema::BusProtocol]
 pub fn canboat::schema::BusProtocol::as_str(self) -> &'static str
 pub fn canboat::schema::BusProtocol::database(self, canboat::Units) -> &'static canboat::Database
 pub fn canboat::schema::BusProtocol::packet_type(self, u32) -> canboat::FramePacketType
+pub fn canboat::schema::BusProtocol::standard_frames(self) -> bool
 impl core::clone::Clone for canboat::schema::BusProtocol
 pub fn canboat::schema::BusProtocol::clone(&self) -> Self
 impl core::cmp::Eq for canboat::schema::BusProtocol
@@ -371,6 +373,7 @@ pub fn canboat::codec::line::ParseError::fmt(&self, &mut core::fmt::Formatter<'_
 impl core::marker::StructuralPartialEq for canboat::codec::line::ParseError
 pub fn canboat::codec::line::detect(&str) -> core::option::Option<canboat::read::InputFormat>
 pub fn canboat::codec::line::parse(canboat::read::InputFormat, &str) -> core::result::Result<core::option::Option<canboat::Frame>, canboat::codec::line::ParseError>
+pub fn canboat::codec::line::parse_for(canboat::read::InputFormat, canboat::schema::BusProtocol, &str) -> core::result::Result<core::option::Option<canboat::Frame>, canboat::codec::line::ParseError>
 pub fn canboat::codec::line::write_actisense_ascii<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
 pub fn canboat::codec::line::write_plain<W: core::fmt::Write>(&mut W, &canboat::Frame) -> core::fmt::Result
 pub mod canboat::codec::maretron
@@ -713,6 +716,7 @@ impl canboat::Database
 pub fn canboat::Database::bit_lookup(&self, &str) -> core::option::Option<&'static canboat::schema::BitLookupTable>
 pub fn canboat::Database::embedded(canboat::Units) -> &'static Self
 pub fn canboat::Database::embedded_j1939(canboat::Units) -> &'static Self
+pub fn canboat::Database::embedded_quick(canboat::Units) -> &'static Self
 pub fn canboat::Database::encode(&'static self, &str) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
 pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
 pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder
@@ -837,6 +841,7 @@ impl<R: alloc::io::buf_read::BufRead> canboat::read::PlainReader<R>
 pub fn canboat::read::PlainReader<R>::active_format(&self) -> core::option::Option<canboat::read::InputFormat>
 pub fn canboat::read::PlainReader<R>::header_coalesced(&self) -> bool
 pub fn canboat::read::PlainReader<R>::new(R) -> Self
+pub fn canboat::read::PlainReader<R>::protocol(self, canboat::schema::BusProtocol) -> Self
 pub fn canboat::read::PlainReader<R>::with_format(R, canboat::read::InputFormat) -> Self
 impl<R: alloc::io::buf_read::BufRead> canboat::read::FrameSource for canboat::read::PlainReader<R>
 pub fn canboat::read::PlainReader<R>::read_frame(&mut self) -> core::io::error::Result<core::option::Option<canboat::Frame>>
@@ -854,11 +859,13 @@ pub mod canboat::schema
 #[non_exhaustive] pub enum canboat::schema::BusProtocol
 pub canboat::schema::BusProtocol::J1939
 pub canboat::schema::BusProtocol::Nmea2000
+pub canboat::schema::BusProtocol::Quick
 impl canboat::schema::BusProtocol
-pub const canboat::schema::BusProtocol::ALL: [canboat::schema::BusProtocol; 2]
+pub const canboat::schema::BusProtocol::ALL: &'static [canboat::schema::BusProtocol]
 pub fn canboat::schema::BusProtocol::as_str(self) -> &'static str
 pub fn canboat::schema::BusProtocol::database(self, canboat::Units) -> &'static canboat::Database
 pub fn canboat::schema::BusProtocol::packet_type(self, u32) -> canboat::FramePacketType
+pub fn canboat::schema::BusProtocol::standard_frames(self) -> bool
 impl core::clone::Clone for canboat::schema::BusProtocol
 pub fn canboat::schema::BusProtocol::clone(&self) -> Self
 impl core::cmp::Eq for canboat::schema::BusProtocol
@@ -1291,6 +1298,7 @@ impl canboat::Database
 pub fn canboat::Database::bit_lookup(&self, &str) -> core::option::Option<&'static canboat::schema::BitLookupTable>
 pub fn canboat::Database::embedded(canboat::Units) -> &'static Self
 pub fn canboat::Database::embedded_j1939(canboat::Units) -> &'static Self
+pub fn canboat::Database::embedded_quick(canboat::Units) -> &'static Self
 pub fn canboat::Database::encode(&'static self, &str) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
 pub fn canboat::Database::encode_by_pgn(&'static self, u32) -> core::result::Result<canboat::PgnBuilder, canboat::EncodeError>
 pub fn canboat::Database::encode_for(&'static self, &'static canboat::schema::PgnInfo) -> canboat::PgnBuilder

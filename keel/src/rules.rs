@@ -73,7 +73,9 @@ pub const RULES: &[Rule] = &[
         detail: "The PGN falls inside a known pgnRange. PDU1 (addressable, PF < \
                  240) PGNs have a zero low byte. The declared packet type is \
                  consistent with the range's kind. BEM pseudo-PGNs live outside \
-                 the wire ranges by design and are exempt.",
+                 the wire ranges by design and are exempt. A Quick PCS \
+                 \"PGN\" is an 11-bit CAN identifier instead: at most 0x7FF, \
+                 and always Single, as one frame is the whole message.",
     },
     Rule {
         id: "R03",

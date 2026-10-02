@@ -235,7 +235,12 @@ impl Bridge {
         // input port deliberately does NOT share this loopback (see
         // `tcp::spawn_input_server`).
         let frames_rx = match device_sender.clone() {
-            Some(sender) => super::install_stdin_loopback(frames_rx, sender, pre_coalesced.clone()),
+            Some(sender) => super::install_stdin_loopback(
+                frames_rx,
+                sender,
+                pre_coalesced.clone(),
+                config.protocol,
+            ),
             None => frames_rx,
         };
 

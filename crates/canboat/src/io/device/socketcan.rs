@@ -122,7 +122,8 @@ mod config {
         /// Information, PGN lists and Group Function. J1939 keeps only
         /// what the two share — address claim, ISO Request and ISO TP —
         /// frames everything as single frames, and claims a NAME in the
-        /// Global industry group.
+        /// Global industry group. Quick PCS makes it a passive bridge for
+        /// 11-bit frames: no address claim and nothing of its own on the bus.
         pub protocol: BusProtocol,
         /// Bit rate for the managed bring-up (`configure_link`). NMEA 2000
         /// is always 250 kbit/s; J1939 is 250 kbit/s (J1939-11/-15) or
@@ -178,7 +179,7 @@ mod imp {
     use crate::engine::{
         ADDR_GLOBAL, ADDR_NULL, BusProtocol, FramePacketType, Reassembled, Reassembler,
     };
-    use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket};
+    use socketcan::{CanInterface, CanSocket, EmbeddedFrame, ExtendedId, Socket, StandardId};
 
     use super::config::Config;
     use crate::engine::fastpacket;
@@ -191,6 +192,8 @@ mod imp {
     const CAN_EFF_MASK: u32 = 0x1FFF_FFFF;
     const CAN_ERR_FLAG: u32 = 0x2000_0000;
     const CAN_EFF_FLAG: u32 = 0x8000_0000;
+    const CAN_RTR_FLAG: u32 = 0x4000_0000;
+    const CAN_SFF_MASK: u32 = 0x7FF;
 
     /// How often to emit the synthetic `NMEA 2000 gateway: network
     /// status` PGN (262400) into the upstream `frames_tx` channel.
@@ -397,6 +400,31 @@ mod imp {
             self.queue.push_back(frame);
         }
 
+        /// Queue an 11-bit (standard) frame, for a Quick bus.
+        fn push_standard(&mut self, id: u32, data: &[u8]) {
+            if self.queue.len() >= TX_BUFFER_CAPACITY {
+                if self.overflowed == 0 {
+                    log::error!(
+                        "CAN TX buffer full ({TX_BUFFER_CAPACITY} frames), dropping outbound frame"
+                    );
+                }
+                self.overflowed += 1;
+                return;
+            }
+            let Some(sid) = u16::try_from(id).ok().and_then(StandardId::new) else {
+                log::warn!("socketcan: not sending {id:#x}: not an 11-bit identifier");
+                return;
+            };
+            let Some(frame) = socketcan::CanFrame::new(socketcan::Id::Standard(sid), data) else {
+                log::warn!(
+                    "socketcan: not sending {id:#x}: {} bytes do not fit one frame",
+                    data.len()
+                );
+                return;
+            };
+            self.queue.push_back(frame);
+        }
+
         fn is_empty(&self) -> bool {
             self.queue.is_empty()
         }
@@ -549,7 +577,9 @@ mod imp {
     impl NmeaDevice {
         fn new(config: &Config, iface: &str) -> Self {
             let name = build_name(config);
-            let claim = if config.no_claim {
+            // A Quick bus has no addresses to claim: the gateway only
+            // relays its 11-bit frames.
+            let claim = if config.no_claim || config.protocol == BusProtocol::Quick {
                 AddressClaim::disabled(name)
             } else {
                 // Our NAME is arbitrary-address-capable (`build_name` sets
@@ -1231,6 +1261,12 @@ mod imp {
                 if f.pgn >= CANBOAT_PGN_START {
                     return; // synthetic, never goes on the bus
                 }
+                // Quick: the message type is the 11-bit identifier, and
+                // one frame is the whole message.
+                if claimer.protocol == BusProtocol::Quick {
+                    bus.tx_buf.push_standard(f.pgn, &f.data);
+                    return;
+                }
                 let src = if f.src == 0 || f.src == ADDR_GLOBAL {
                     claimer.addr()
                 } else {
@@ -1553,11 +1589,30 @@ mod imp {
                         if rx.id & CAN_ERR_FLAG != 0 {
                             continue;
                         }
-                        // NMEA 2000 is always 29-bit extended. CAN 1.0
-                        // standard frames (11-bit, no EFF flag) cannot
-                        // be N2K, so skip them rather than reinterpret
-                        // the low 11 bits as a degenerate 29-bit id.
-                        if rx.id & CAN_EFF_FLAG == 0 {
+                        // NMEA 2000 and J1939 are always 29-bit extended,
+                        // Quick always 11-bit standard: skip the other kind
+                        // rather than reinterpret its identifier.
+                        let standard = rx.id & CAN_EFF_FLAG == 0;
+                        if standard != config.protocol.standard_frames() {
+                            continue;
+                        }
+                        if standard {
+                            // A remote frame carries no data to relay.
+                            if rx.id & CAN_RTR_FLAG == 0 {
+                                let when = if rx.when_ms != 0 {
+                                    rx.when_ms
+                                } else {
+                                    now_ms()
+                                };
+                                let _ = frames_tx.send(RawFrame::new(
+                                    Some(format_iso(when)),
+                                    0,
+                                    rx.id & CAN_SFF_MASK,
+                                    0,
+                                    ADDR_GLOBAL,
+                                    rx.data[..rx.dlc].iter().copied(),
+                                ));
+                            }
                             continue;
                         }
                         let mut bus = Bus {
@@ -1870,6 +1925,60 @@ mod imp {
             };
             assert_eq!(got.pgn, 0x1FF47);
             assert_eq!(got.data.as_slice(), data.as_slice());
+        }
+
+        /// On a Quick bus the gateway relays 11-bit frames both ways, with
+        /// the identifier as the frame's `pgn`, and leaves 29-bit traffic
+        /// alone. It claims no address: nothing of its own goes out.
+        #[test]
+        fn a_quick_bus_relays_11_bit_frames_both_ways() {
+            let Some(iface) = vcan_iface() else {
+                eprintln!("no vcan interface; skipping");
+                return;
+            };
+            let peer = bus_peer(&iface);
+            let config = Config {
+                protocol: BusProtocol::Quick,
+                ..vcan_config(0x6666, 60)
+            };
+            let claim = Arc::new(AtomicU8::new(CLAIM_UNCLAIMED));
+            let handle = run(&iface, config, claim).expect("gateway starts");
+
+            // In: identifiers 0x7E5 / 0x7E6 are this test's alone.
+            let inbound = socketcan::CanFrame::new(
+                StandardId::new(0x7E5).expect("11-bit id"),
+                &[0xc1, 0x18, 0x6a, 0, 0, 0, 2, 0],
+            )
+            .expect("build frame");
+            let got = loop {
+                peer.write_frame(&inbound).expect("peer writes");
+                match handle
+                    .frames_rx
+                    .recv_timeout(std::time::Duration::from_millis(250))
+                {
+                    Ok(f) if f.pgn == 0x7E5 => break f,
+                    Ok(f) => panic!("only 11-bit frames reach a Quick gateway, got {f:?}"),
+                    Err(_) => continue,
+                }
+            };
+            assert_eq!((got.prio, got.src, got.dst), (0, 0, ADDR_GLOBAL));
+            assert_eq!(got.data.as_slice(), &[0xc1, 0x18, 0x6a, 0, 0, 0, 2, 0]);
+
+            // Out: the frame's pgn goes on the bus as an 11-bit identifier.
+            handle
+                .send_frame(RawFrame::new(None, 0, 0x7E6, 0, ADDR_GLOBAL, [1u8, 2, 3]))
+                .expect("writer accepts the frame");
+            let sent = loop {
+                let f = peer.read_frame().expect("the gateway sends the frame");
+                match f.id() {
+                    socketcan::Id::Standard(id) if id.as_raw() == 0x7E6 => break f,
+                    socketcan::Id::Extended(_) => {
+                        panic!("a Quick gateway sends nothing 29-bit: {f:?}")
+                    }
+                    _ => continue,
+                }
+            };
+            assert_eq!(sent.data(), &[1, 2, 3]);
         }
 
         /// A 20-byte J1939 message to one address runs the RTS/CTS

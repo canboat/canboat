@@ -16,7 +16,7 @@
 //! named `On`/`Off` would otherwise parse as a boolean).
 
 use crate::decode::{self, Value};
-use crate::model::Database;
+use crate::model::{Database, Protocol};
 use crate::samples::{RawFrame, parse_line};
 use std::collections::{HashMap, HashSet};
 use std::path::Path;
@@ -93,7 +93,7 @@ pub fn harvest(db: &Database, files: &[String], per_pgn: usize, root: &Path) -> 
             };
             msgs_seen += 1;
             file_msgs += 1;
-            let Some(p) = decode::select_variant(db, a.pgn, &a.data, false) else {
+            let Some(p) = decode::select_variant(db, a.pgn, &a.data, Protocol::Nmea2000) else {
                 continue;
             };
             // Only decodable variants are worth a sample.

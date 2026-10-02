@@ -13,7 +13,7 @@
   CHANGING THE PGN DATABASE? The database is a YAML tree - edit it there, never
   in the generated files:
 
-    1. database/pgns/<pgn:06>-<id>.yaml   (or database/lookups/, database/j1939/)
+    1. database/pgns/<pgn:06>-<id>.yaml   (or database/lookups/, database/j1939/, database/quick/)
        or run  keel/keel edit  for a local web editor
     2. keel/keel check                    validates the tree
     3. make generated                     regenerates docs/*, docs/canboat.dbc,
@@ -21,7 +21,7 @@
                                           Rust schema_generated.rs
     4. commit the regenerated files IN THE SAME COMMIT
 
-  docs/canboat.{xml,json,html,dbc}, docs/canboat-j1939.{xml,json,html}, analyzer/*-generated-data.h and
+  docs/canboat.{xml,json,html,dbc}, docs/canboat-{j1939,quick}.{xml,json,html}, analyzer/*-generated-data.h and
   *_generated*.rs are OUTPUT. Editing them by hand will be undone by the next
   regeneration, and the build-ubuntu gate (which regenerates and diffs) fails.
 

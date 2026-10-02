@@ -16,13 +16,14 @@ use crate::engine::BusProtocol;
 
 #[derive(Debug, Clone, Default, clap::Args)]
 pub struct ProtocolArgs {
-    /// What the CAN bus carries: `nmea2000` (default) or `j1939`. Picks
-    /// the PGN table and the framing — J1939 has no fast-packet, only
-    /// single frames and ISO TP.
+    /// What the CAN bus carries: `nmea2000` (default), `j1939` or `quick`.
+    /// Picks the PGN table and the framing — J1939 has no fast-packet, only
+    /// single frames and ISO TP; Quick PCS has 11-bit frames, read from
+    /// SocketCAN or a candump capture.
     #[arg(
         long = "protocol",
         value_name = "PROTOCOL",
-        value_parser = PossibleValuesParser::new(["nmea2000", "j1939"])
+        value_parser = PossibleValuesParser::new(["nmea2000", "j1939", "quick"])
             .map(|s| s.parse::<BusProtocol>().expect("listed in PossibleValuesParser")),
     )]
     protocol: Vec<BusProtocol>,
@@ -106,7 +107,12 @@ mod tests {
 
     #[test]
     fn refuses_unknown_names() {
-        assert!(protocol(&["--protocol", "quick"]).is_err());
+        assert!(protocol(&["--protocol", "canopen"]).is_err());
+    }
+
+    #[test]
+    fn takes_quick() {
+        assert_eq!(protocol(&["--protocol", "quick"]).unwrap(), BusProtocol::Quick);
     }
 
     #[test]

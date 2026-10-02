@@ -1,0 +1,419 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta charset="UTF-8"/><meta name="description" content="CANBoat PGN documentation"/><title>CANboat Quick PCS message documentation</title><link rel="stylesheet" type="text/css" href="canboat.css"/><script src="canboat.js"></script><link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300&amp;display=swap" rel="stylesheet"/></head><body><div id="sidenav" class="sidenav"><a class="closebtn" onclick="closeNav(event)">×</a><a href="#main">Top</a><a href="#pgn-list">PGN list</a><a href="#physical-quantities">Physical Quantities</a><a href="#field-types">Field Types</a><a href="#lookup-enumerations">Lookup enumerations</a><a href="#indirect-lookup-enumerations">Indirect lookup enumerations</a><a href="#bitfield-enumerations">Bitfield enumerations</a><a href="#lookupfieldtype-enumerations">Lookup with FieldType enumerations</a><a href="#notes">Notes</a></div><div id="sidenav-closed" class="sidenav"><a onclick="openNav(event)" id="hamburger"><span></span><span></span><span></span></a></div><div id="main"><p>
+            The CANboat project
+            Quick PCS
+            PGN documentation version
+            8.3.0.
+          </p><p>
+                This page covers the bus of Quick's Proportional Control System (windlasses, thrusters). For NMEA 2000
+                see <a href="canboat.html">the NMEA 2000 PGN documentation</a>. The data is also available as
+                <a href="canboat-quick.xml">XML</a> and <a href="canboat-quick.json">JSON</a>.
+              </p><h3>Copyright</h3><p class="xs">CANboat version v8.3.0
+
+(C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
+For more information see https://github.com/canboat/canboat
+
+This file is part of CANboat.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+
+</p><h2> Quick PCS </h2><p>
+            Quick's Proportional Control System connects its windlasses, thrusters and their controls over a CAN
+            bus of its own. Its frames have a standard 11 bit CAN identifier rather than the 29 bit ISO 11783 one of
+            NMEA 2000 and J1939, and that identifier is only a message type: there is no priority, source or
+            destination in it, and no manufacturer either. On this page the "PGN" of a message is that identifier.
+            A device appears to identify itself in the first two bytes of each message instead.
+          </p><p>
+            Because an 11 bit identifier says nothing about who sent it, any other device on the bus that uses 11 bit
+            frames would decode as if it were Quick. CANboat therefore only decodes Quick when asked to, with
+            <code>--protocol quick</code>, and an identifier this page does not define is shown as a plain 11 bit
+            frame, not as a Quick one. Only SocketCAN and candump captures carry 11 bit frames; NMEA 2000 gateways
+            drop them.
+          </p><p>
+            What is here comes from a single capture of one windlass, contributed in
+            <a href="https://github.com/canboat/canboat/pull/938">canboat/canboat#938</a>. More captures, of other
+            devices and settings, are very welcome: please open an issue at
+            <a href="https://github.com/canboat/canboat/issues">https://github.com/canboat/canboat/issues</a>.
+          </p><p><b>Note:</b> It should be obvious that all data below is <i><b>not authoritative</b></i>; it is just our
+            interpretation.
+          </p><h2 id="pgn-list">PGN list</h2><h2 id="pgn-0">11-bit CAN frame</h2><p>An 11-bit CAN identifier with no definition. An 11-bit identifier is only a message type and carries no manufacturer, so nothing says which device or protocol sent it; its payload is shown as is.</p><h3 id="pgn-1728">0x6C0:
+            PGN 1728
+            - Quick: Unknown 0x6C0</h3><p>Sent by a Quick windlass alongside Chain Count (0x6C1). Its payload did not change in the one capture we have, so what it carries is not known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 2 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Talker ID</td><td>The same 16 bits start every Quick message from a device; see Chain Count</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-1729">0x6C1:
+            PGN 1729
+            - Quick: Chain Count</h3><p>A Quick windlass's chain counter, about twice a second.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The resolution of one or more fields is likely incorrect</li><li>One or more of the lookup fields contain missing or incorrect values</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 3 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Talker ID</td><td>The same 16 bits start every Quick message from a device</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Chain Counter</td><td>Chain paid out, counted in the unit that Units names</td><td><div class="xs">0 .. 4294967292</div></td><td>32 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>3</td><td>Units</td><td>The unit Chain Counter counts in</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                      lookup
+                      <a href="#lookup-QUICK_CHAIN_UNITS">QUICK_CHAIN_UNITS</a></td><td/></tr></table><h3 id="pgn-1730">0x6C2:
+            PGN 1730
+            - Quick: Unknown 0x6C2</h3><p>Sent by a Quick windlass alongside Chain Count (0x6C1). Its payload did not change in the one capture we have, so what it carries is not known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 2 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Talker ID</td><td>The same 16 bits start every Quick message from a device; see Chain Count</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h3 id="pgn-1731">0x6C3:
+            PGN 1731
+            - Quick: Unknown 0x6C3</h3><p>Sent by a Quick windlass alongside Chain Count (0x6C1). Its payload did not change in the one capture we have, so what it carries is not known.</p><p>
+                This PGN is not fully reverse engineered. Some aspects that are known to be missing/incorrect:
+                <ul><li>The list of fields is incomplete; some fields maybe be missing or their attributes may be incorrect</li><li>The length of one or more fields is likely incorrect</li><li>The resolution of one or more fields is likely incorrect</li><li>The default transmission interval is not known</li></ul></p><p>
+            This
+             single-frame 
+            PGN is
+            8
+            bytes long and contains 2 fields.
+
+            </p><table><tr><th> Field # </th><th> Field Name </th><th> Description </th><th> Unit </th><th> Type </th><th> PartOfPrimaryKey </th></tr><tr><td>1</td><td>Talker ID</td><td>The same 16 bits start every Quick message from a device; see Chain Count</td><td><div class="xs">0 .. 65532</div></td><td>16 bits
+                  
+                        unsigned
+                      <a href="#ft-NUMBER">NUMBER</a></td><td/></tr><tr><td>2</td><td>Data</td><td/><td/><td>48 bits
+                  <a href="#ft-BINARY">BINARY</a></td><td/></tr></table><h2 id="physical-quantities">Physical quantities</h2>
+
+    A lot of fields represent a physical, observable, quantity. 
+
+    <h3 id="pq-ELECTRICAL_CURRENT">ELECTRICAL_CURRENT - Electrical current</h3><p/><p>In the CAN data these are expressed in Ampere, abbreviated as A.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Electric_current">https://en.wikipedia.org/wiki/Electric_current</a></p><h3 id="pq-ELECTRICAL_CHARGE">ELECTRICAL_CHARGE - Electrical charge</h3><p/><p>In the CAN data these are expressed in Coulomb, abbreviated as C.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Electric_charge">https://en.wikipedia.org/wiki/Electric_charge</a></p><h3 id="pq-ELECTRICAL_ENERGY">ELECTRICAL_ENERGY - Electrical energy</h3><p>The amount of electricity used or stored. The base unit used in NMEA 2000 is the Kilo Watt Hour (kWh) which is equivalent to 3.6e6 J (Joules).</p><p>In the CAN data these are expressed in Kilo Watt Hour, abbreviated as kWh.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Electrical_energy">https://en.wikipedia.org/wiki/Electrical_energy</a></p><h3 id="pq-ELECTRICAL_POWER">ELECTRICAL_POWER - Electrical power</h3><p>The amount of energy transferred or converted per unit time.</p><p>In the CAN data these are expressed in Watt, abbreviated as W.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Electrical_power">https://en.wikipedia.org/wiki/Electrical_power</a></p><h3 id="pq-ELECTRICAL_APPARENT_POWER">ELECTRICAL_APPARENT_POWER - AC apparent power</h3><p>The amount of power transferred where the current and voltage are in phase.</p><p>In the CAN data these are expressed in Volt Ampere, abbreviated as VA.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Volt-ampere">https://en.wikipedia.org/wiki/Volt-ampere</a></p><h3 id="pq-ELECTRICAL_REACTIVE_POWER">ELECTRICAL_REACTIVE_POWER - AC reactive power</h3><p>The amount of power transferred where the current and voltage are not in phase.</p><p>In the CAN data these are expressed in Volt Ampere Reactive, abbreviated as VAR.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Volt-ampere#Reactive">https://en.wikipedia.org/wiki/Volt-ampere#Reactive</a></p><h3 id="pq-POTENTIAL_DIFFERENCE">POTENTIAL_DIFFERENCE - Potential difference</h3><p/><p>In the CAN data these are expressed in Volt, abbreviated as V.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Voltage">https://en.wikipedia.org/wiki/Voltage</a></p><h3 id="pq-POWER_FACTOR">POWER_FACTOR - Power Factor</h3><p>Used in AC circuits only, the ratio of the real power absorbed by the load to the apparent power flowing in the circuit. If less than one, the voltage and current are not in phase.</p><p>In the CAN data these are expressed in Cos(Phi), abbreviated as Cos Phi.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Power_factor">https://en.wikipedia.org/wiki/Power_factor</a></p><h3 id="pq-LENGTH">LENGTH - Length</h3><p>The physical size in one dimension of an object.</p><p>In the CAN data these are expressed in Meter, abbreviated as m.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Length">https://en.wikipedia.org/wiki/Length</a></p><h3 id="pq-DISTANCE">DISTANCE - Distance</h3><p>The amount of separation between two objects.</p><p>In the CAN data these are expressed in meter, abbreviated as m.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Distance">https://en.wikipedia.org/wiki/Distance</a></p><h3 id="pq-SPEED">SPEED - Speed</h3><p>The velocity, or length per unit of time.</p><p>In the CAN data these are expressed in meter per second, abbreviated as m/s.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Speed">https://en.wikipedia.org/wiki/Speed</a></p><h3 id="pq-ANGLE">ANGLE - Angle</h3><p>All standardized PGNs seen so far all use radians, but some manufacturer specific PGNs use degrees (deg).</p><p>In the CAN data these are expressed in radian, abbreviated as rad.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Angle">https://en.wikipedia.org/wiki/Angle</a></p><h3 id="pq-ANGULAR_VELOCITY">ANGULAR_VELOCITY - Angular velocity</h3><p>The speed at which a measured angle changes</p><p>In the CAN data these are expressed in radians per second, abbreviated as rad/s.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Angular_velocity">https://en.wikipedia.org/wiki/Angular_velocity</a></p><h3 id="pq-VOLUME">VOLUME - Volume</h3><p>A measure of occupied three-dimensional space.</p><p>In the CAN data these are expressed in liter, abbreviated as L.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Volume">https://en.wikipedia.org/wiki/Volume</a></p><h3 id="pq-VOLUMETRIC_FLOW">VOLUMETRIC_FLOW - Volumetric flow</h3><p>The volume of fluid which passes per unit time.</p><p>In the CAN data these are expressed in liter per hour, abbreviated as L/h.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Volumetric_flow_rate">https://en.wikipedia.org/wiki/Volumetric_flow_rate</a></p><h3 id="pq-MAGNETIC_FIELD">MAGNETIC_FIELD - Magnetic field</h3><p/><p>In the CAN data these are expressed in Tesla, abbreviated as T.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Magnetic_field">https://en.wikipedia.org/wiki/Magnetic_field</a></p><h3 id="pq-FREQUENCY">FREQUENCY - Frequency</h3><p/><p>In the CAN data these are expressed in Hertz, abbreviated as Hz.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Radio_frequency">https://en.wikipedia.org/wiki/Radio_frequency</a></p><h3 id="pq-DATE">DATE - Date</h3><p>A calendar date is a reference to a particular day in time, in NMEA 2000 expressed as the number of days since 1970-01-01 (UNIX epoch).</p><p>In the CAN data these are expressed in days, abbreviated as d.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="pq-TIME">TIME - Time</h3><p>Time is what clocks measure. We use time to place events in sequence one after the other, and we use time to compare how long events last. Absolute times in NMEA2000 are expressed as seconds since midnight(in an undefined timezone)</p><p>In the CAN data these are expressed in Second, abbreviated as s.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="pq-DURATION">DURATION - Duration of an event or interval between two points in time</h3><p/><p>In the CAN data these are expressed in Second, abbreviated as s.</p><h3 id="pq-GEOGRAPHICAL_LATITUDE">GEOGRAPHICAL_LATITUDE - Geographical latitude</h3><p>Combined with a geographical longitude the two fields form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">https://en.wikipedia.org/wiki/Geographic_coordinate_system</a></p><h3 id="pq-GEOGRAPHICAL_LONGITUDE">GEOGRAPHICAL_LONGITUDE - Geographical longitude</h3><p>Combined with a geographical latitude the two fields form a unique point on earth, when height is disregarded.</p><p>In the CAN data these are expressed in degree, abbreviated as deg.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Geographic_coordinate_system">https://en.wikipedia.org/wiki/Geographic_coordinate_system</a></p><h3 id="pq-TEMPERATURE">TEMPERATURE - Temperature</h3><p/><p>In the CAN data these are expressed in Kelvin, abbreviated as K.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Temperature">https://en.wikipedia.org/wiki/Temperature</a></p><h3 id="pq-PRESSURE">PRESSURE - Pressure</h3><p/><p>In the CAN data these are expressed in Pascal, abbreviated as Pa.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Pressure">https://en.wikipedia.org/wiki/Pressure</a></p><h3 id="pq-PRESSURE_RATE">PRESSURE_RATE - Pressure rate</h3><p>How the pressure changes over time.</p><p>In the CAN data these are expressed in Pascal per hour, abbreviated as Pa/hr.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Pressure">https://en.wikipedia.org/wiki/Pressure</a></p><h3 id="pq-CONCENTRATION">CONCENTRATION - Concentration of one substance in another, in this marine context usually the amount of salts in water</h3><p/><p>In the CAN data these are expressed in parts per million, abbreviated as ppm.</p><p>
+          For more information see:
+          <a href="https://www.engineeringtoolbox.com/water-salinity-d_1251.html">https://www.engineeringtoolbox.com/water-salinity-d_1251.html</a></p><h3 id="pq-DIMENSIONLESS_RATIO">DIMENSIONLESS_RATIO - Dimensionless ratio</h3><p>A ratio of two quantities with the same dimension, yielding a unitless number. Includes percentages, eccentricity (m/m), clock drift (s/s), and similar.</p><p>In the CAN data these are expressed in ratio, abbreviated as ratio.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Dimensionless_quantity">https://en.wikipedia.org/wiki/Dimensionless_quantity</a></p><h3 id="pq-SQUARE_ROOT_LENGTH">SQUARE_ROOT_LENGTH - Square root of length</h3><p>Used in GPS/GNSS almanac data for the square root of the semi-major axis of satellite orbits.</p><p>In the CAN data these are expressed in sqrt(m), abbreviated as sqrt(m).</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes">https://en.wikipedia.org/wiki/Semi-major_and_semi-minor_axes</a></p><h3 id="pq-SIGNAL_STRENGTH">SIGNAL_STRENGTH - Signal strength expressed in dB with respect to 1 uV/m</h3><p/><p>In the CAN data these are expressed in decibel, abbreviated as dB.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications">https://en.wikipedia.org/wiki/Signal_strength_in_telecommunications</a></p><h3 id="pq-SIGNAL_TO_NOISE_RATIO">SIGNAL_TO_NOISE_RATIO - Signal-to-noise ratio</h3><p/><p>In the CAN data these are expressed in decibel, abbreviated as dB.</p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Signal-to-noise_ratio">https://en.wikipedia.org/wiki/Signal-to-noise_ratio</a></p><h2 id="field-types">Field types</h2>
+
+    All fields are of one of the following field types.
+
+    <h3 id="ft-NUMBER">NUMBER - Number</h3><p/><p>
+            Encoding:
+            Binary numbers are little endian. Number fields that are at least two bits in length use the highest positive value to represent unknown. Number fields with at least 7 as maximum (3 bits unsigned, 4 bits signed) use the highest value minus one as an error indicator. This is likely also true for numbers where 3 is the maximum value, but there are few fields that have this length -- certainly as a number, there are a lot of lookup fields of two bits length.  For signed numbers the maximum values are the maximum positive value and that minus 1, not the all-ones bit encoding which is the maximum negative value.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Binary_number">https://en.wikipedia.org/wiki/Binary_number</a></p><h3 id="ft-FLOAT">FLOAT - 32 bit IEEE-754 floating point number</h3><p/><p>32 bits
+            
+                signed
+              
+            number
+            </p><p>
+          Unavailable value:
+          
+              the IEEE-754 Not-a-Number value means the field is unavailable.
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/IEEE_754">https://en.wikipedia.org/wiki/IEEE_754</a></p><h3 id="ft-DECIMAL">DECIMAL - An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)</h3><p/><p>
+            Encoding:
+            Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-LOOKUP">LOOKUP - Number value where each value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation. Generally the same special values for Error (max value - 1) and Unknown (max value) that are used for plain numbers are also valid for lookups, but some lookups define a lookup key/value pair for the maximum possible value in that field. In fact, recent additions to PGNs such as alerts have two bit lookup fields that specify four actual valid values. This makes it impossible to send an unknown value for these fields. </p><p>
+            Encoding:
+            Each lookup has a LookupEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-INDIRECT_LOOKUP">INDIRECT_LOOKUP - Number value where each value encodes for a distinct meaning but the meaning also depends on the value in another field</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
+            Encoding:
+            Each lookup has a LookupIndirectEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-BITLOOKUP">BITLOOKUP - Number value where each bit value encodes for a distinct meaning</h3><p>For almost all lookups the list of values is known with some precision, but it is quite possible that a value occurs that has no corresponding textual explanation.</p><p>
+            Encoding:
+            Each LookupBit has a LookupBitEnumeration defining what the possible values mean. A bitfield can have any combination of bits set.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-DYNAMIC_FIELD_KEY">DYNAMIC_FIELD_KEY - Number value where each value encodes for a distinct meaning including a fieldtype of the next variable field; generally followed by an optional DYNAMIC_FIELD_LENGTH and a DYNAMIC_FIELD_VALUE field; when there is no DYNAMIC_FIELD_LENGTH field the length is contained in the lookup table</h3><p>These values have been determined by reverse engineering, given the known values it is anticipated that there are unknown enumeration values and some known values have incorrect datatypes</p><p>
+            Encoding:
+            Each lookup has a LookupFieldTypeEnumeration defining what the possible values mean</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DYNAMIC_FIELD_LENGTH">DYNAMIC_FIELD_LENGTH - Number value that indicates the length of the following DYNAMIC_FIELD_VALUE field</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DYNAMIC_FIELD_VALUE">DYNAMIC_FIELD_VALUE - Variable field whose type and length is dynamic</h3><p/><p>
+            Encoding:
+            The type definition of the field is defined by an earlier LookupFieldTypeEnumeration field. The length is defined by the preceding length field or the length determined by the lookup value.</p><p>
+          Unavailable value:
+          
+              depends on the data type that is resolved at run time through the companion
+              DYNAMIC_FIELD_KEY field.
+            </p><h3 id="ft-TIME">TIME - Time</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Time">https://en.wikipedia.org/wiki/Time</a></p><h3 id="ft-DURATION">DURATION - Duration</h3><p/><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-DATE">DATE - Date</h3><p/><p>16 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            The date, in days since 1 January 1970.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/Calendar_date">https://en.wikipedia.org/wiki/Calendar_date</a></p><h3 id="ft-PGN">PGN - Parameter Group Number</h3><p/><p>
+            Encoding:
+            A 24 bit number referring to a PGN</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-ISO_NAME">ISO_NAME - ISO NAME field</h3><p/><p>64 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            A 64 bit field containing the ISO name, e.g. all fields produced by PGN 60928. Use the definition of PGN 60928 to explain the subfields.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-STRING_FIX">STRING_FIX - A fixed length string containing single byte codepoints.</h3><p>The character encoding is not defined by NMEA 2000. Bytes below 0x80 are ASCII, but above that devices differ, so CANboat decodes the content as UTF-8 when the bytes form well-formed UTF-8 and as ISO 8859-1 (Latin-1) otherwise. See the STRING_LAU comment for the observations behind this.</p><p>
+            Encoding:
+            This always takes up as many bytes as defined in the field definition. Three end-of-string characters are seen: 0xff (255), the standard NMEA 2000 "Unknown" value. '@', the standard AIS "Unknown" value for strings. 0x00, the standard C end-of-string marker. It is encouraged to stop the string at the first such character (and not make it part of the string). An empty string can be considered to make the entire field "Unknown".</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-STRING_LZ">STRING_LZ - A varying length string containing single byte codepoints encoded with a length byte and terminating zero.</h3><p>This type of string is found only in SonicHub and Fusion brand specific PGNs. SonicHub is no longer produced. The use of the Fusion specific PGNs is no longer very prevalent now that there are generic PGNs for audio/media devices. Fusion devices have been observed sending UTF-8 here, including characters that ISO 8859-1 cannot represent at all (see samples/fusion-130820-utf8.raw). CANboat decodes the content as UTF-8 when the bytes form well-formed UTF-8 and as ISO 8859-1 (Latin-1) otherwise.</p><p>
+            Encoding:
+            The length of the string is determined by a starting length byte. It also contains a terminating zero byte. The length byte includes neither the zero byte or itself, and it counts bytes rather than characters, so a multi-byte character contributes more than one. For the character encoding see the comment.</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-STRING_LAU">STRING_LAU - A varying length string containing double or single byte codepoints encoded with a length byte.</h3><p>Observed on a single bus: a Fusion sends UTF-8 under control byte 1 (bytes C5 AB for U+016B, see samples/fusion-126998-utf8.raw) while a B&amp;G sends ISO 8859-1 (byte E6 for U+00E6, see samples/bandg-129285-latin1.raw) -- the same field type under the same control byte. The encoding therefore follows from neither the field type nor the control byte, and CANboat decodes the content as UTF-8 when the bytes form well-formed UTF-8 and as ISO 8859-1 (Latin-1) otherwise. The two devices also frame the field differently: the B&amp;G appends a zero byte and counts it in the length, the Fusion does neither. Control byte 0 has so far only been seen on fields that were empty.</p><p>
+            Encoding:
+            The length of the string is determined by a starting length byte. This count includes the length and type bytes, so any empty string contains count 2. The 2nd byte contains 0 for UNICODE (UTF-16) or 1 for ASCII. In practice the ASCII encoding is not restricted to 7-bit ASCII; bytes above 0x7f do occur, and what they mean depends on the sending device. See the comment.</p><p>
+          Unavailable value:
+          
+              an empty string (after trimming end-of-string bytes such as 0xff, 0x00 and '@')
+              means the whole field is unavailable.
+            </p><h3 id="ft-BINARY">BINARY - Binary field</h3><p/><p>
+            Encoding:
+            Unspecified content consisting of any number of bits.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-RESERVED">RESERVED - Reserved field</h3><p>NMEA reserved for future expansion and/or to align next data on byte boundary</p><p>
+            Encoding:
+            All reserved bits shall be 1</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-SPARE">SPARE - Spare field</h3><p>This is like a reserved field but originates from other sources where unused fields shall be 0, like the AIS ITU-1371 standard.</p><p>
+            Encoding:
+            All spare bits shall be 0</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-MMSI">MMSI - MMSI</h3><p/><p>32 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><p>
+          For more information see:
+          <a href="https://navcen.uscg.gov/maritime-mobile-service-identity">https://navcen.uscg.gov/maritime-mobile-service-identity</a></p><h3 id="ft-VARIABLE">VARIABLE - Variable</h3><p/><p>
+            Encoding:
+            The definition of the field is that of the reference PGN and reference field, this is totally variable.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><h3 id="ft-FIELD_INDEX">FIELD_INDEX - Field Index</h3><p/><p>8 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            Index of the specified field in the PGN referenced.</p><p>
+          Unavailable value:
+          
+              the top of the integer range is reserved. The most positive value means
+              "data not available"; depending on the bit width the next one or two values
+              below it mean "out of range" and "reserved". Each individual field lists its
+              actual reserved values as Unknown, OutOfRange and Reserved. For a lookup, a
+              value that the enumeration names explicitly is a real value and is not reserved.
+            </p><h3 id="ft-ADDRESS">ADDRESS - NMEA 2000 / J1939 network address</h3><p/><p>8 bits
+            
+                unsigned
+              
+            number
+            </p><p>
+            Encoding:
+            One byte holding the bus address of a device. Every value is meaningful, so there are no top-of-range sentinels -- 0..253 are claimable device addresses, 254 is the null address (a device that has not claimed, or cannot claim, an address) and 255 is the global address, meaning broadcast / all devices.</p><p>
+          Unavailable value:
+          
+              none. This field type has no unavailable encoding (it is an identifier, filler
+              or structured field).
+            </p><p>
+          For more information see:
+          <a href="https://en.wikipedia.org/wiki/SAE_J1939">https://en.wikipedia.org/wiki/SAE_J1939</a></p><h2 id="lookup-enumerations">Lookup enumerations</h2><h3 id="lookup-QUICK_CHAIN_UNITS">QUICK_CHAIN_UNITS
+        (0 - 65535)
+      </h3><table><tr><th>Value</th><th>Description</th></tr><tr><td>2</td><td>Feet</td></tr></table><h2 id="lookup-indirect-enumerations">Indirect Lookup enumerations</h2><h2 id="bitfield-enumerations">Bitfield Lookup enumerations</h2><h2 id="lookupfieldtype-enumerations">Lookup with FieldType enumerations</h2><h2 id="notes">Notes</h2><h3 id="offset">Excess-K offset</h3><p>
+            Some fields are not stored as a straight signed two's complement binary number,
+            but as an binary number with an offset.
+          </p><p>
+            So in effect the value <i>is</i> signed, but it is stored as an unsigned number where
+            the unsigned number n should be interpreted as (n + K). As the offset
+            in these definitions is negative, it results in a value that can be negative.
+          </p><p>
+            For more information see: <a href="https://en.wikipedia.org/wiki/Offset_binary">https://en.wikipedia.org/wiki/Offset_binary</a></p></div></body></html>

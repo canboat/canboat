@@ -1,0 +1,6 @@
+name: QUICK_CHAIN_UNITS
+kind: pair
+bits: 16
+values:
+  2: Feet
+note: The only value seen, in one capture of a windlass counting in feet (canboat/canboat#938). The value for metres is not known yet.

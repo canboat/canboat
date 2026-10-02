@@ -1,0 +1,7 @@
+2023-12-13T11:52:52.799Z 0   0 255   1728 Quick: Unknown 0x6C0:  Talker ID = 6337; Data = 78 00 01 00 01 00
+2023-12-13T11:52:52.909Z 0   0 255   1729 Quick: Chain Count:  Talker ID = 6337; Chain Counter = 106; Units = Feet
+2023-12-13T11:52:53.019Z 0   0 255   1730 Quick: Unknown 0x6C2:  Talker ID = 6337; Data = 00 00 00 00 00 00
+2023-12-13T11:52:53.238Z 0   0 255   1731 Quick: Unknown 0x6C3:  Talker ID = 6337; Data = 00 00 00 00 00 00
+2023-12-13T11:53:07.189Z 0   0 255   1729 Quick: Chain Count:  Talker ID = 6337; Chain Counter = 103; Units = Feet
+2023-12-13T11:53:11.583Z 0   0 255   1729 Quick: Chain Count:  Talker ID = 6337; Chain Counter = 107; Units = Feet
+2023-12-13T11:53:12.000Z 0   0 255    291 11-bit CAN frame:  Data = A1 B2 C3 D4 E5 F6 07 08
