@@ -282,6 +282,41 @@ pub fn canboat::codec::ikonvert::Ikonvert::open(&mut self) -> alloc::vec::Vec<u8
 pub fn canboat::codec::ikonvert::Ikonvert::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::ikonvert::Ikonvert::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::ikonvert::Ikonvert::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub mod canboat::codec::iso_tp
+#[non_exhaustive] pub enum canboat::codec::iso_tp::TpError
+pub canboat::codec::iso_tp::TpError::QueueFull
+pub canboat::codec::iso_tp::TpError::Size(usize)
+impl core::clone::Clone for canboat::codec::iso_tp::TpError
+pub fn canboat::codec::iso_tp::TpError::clone(&self) -> Self
+impl core::cmp::Eq for canboat::codec::iso_tp::TpError
+impl core::cmp::PartialEq for canboat::codec::iso_tp::TpError
+pub fn canboat::codec::iso_tp::TpError::eq(&self, &Self) -> bool
+impl core::error::Error for canboat::codec::iso_tp::TpError
+impl core::fmt::Debug for canboat::codec::iso_tp::TpError
+pub fn canboat::codec::iso_tp::TpError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::fmt::Display for canboat::codec::iso_tp::TpError
+pub fn canboat::codec::iso_tp::TpError::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::codec::iso_tp::TpError
+impl core::marker::StructuralPartialEq for canboat::codec::iso_tp::TpError
+pub struct canboat::codec::iso_tp::TpSender
+impl canboat::codec::iso_tp::TpSender
+pub fn canboat::codec::iso_tp::TpSender::abort_all(&mut self) -> alloc::vec::Vec<canboat::Frame>
+pub fn canboat::codec::iso_tp::TpSender::is_idle(&self) -> bool
+pub fn canboat::codec::iso_tp::TpSender::new() -> Self
+pub fn canboat::codec::iso_tp::TpSender::next_deadline(&self) -> core::option::Option<u64>
+pub fn canboat::codec::iso_tp::TpSender::on_frame(&mut self, u64, &canboat::Frame) -> alloc::vec::Vec<canboat::Frame>
+pub fn canboat::codec::iso_tp::TpSender::poll(&mut self, u64) -> alloc::vec::Vec<canboat::Frame>
+pub fn canboat::codec::iso_tp::TpSender::send(&mut self, u64, u32, u8, u8, &[u8]) -> core::result::Result<alloc::vec::Vec<canboat::Frame>, canboat::codec::iso_tp::TpError>
+impl core::default::Default for canboat::codec::iso_tp::TpSender
+pub fn canboat::codec::iso_tp::TpSender::default() -> Self
+impl core::fmt::Debug for canboat::codec::iso_tp::TpSender
+pub fn canboat::codec::iso_tp::TpSender::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+pub const canboat::codec::iso_tp::BAM_GAP_MS: u64
+pub const canboat::codec::iso_tp::PGN_TP_CM: u32
+pub const canboat::codec::iso_tp::PGN_TP_DT: u32
+pub const canboat::codec::iso_tp::T3_MS: u64
+pub const canboat::codec::iso_tp::T4_MS: u64
+pub const canboat::codec::iso_tp::TP_MAX_SIZE: usize
 pub mod canboat::codec::line
 pub enum canboat::codec::line::InputFormat
 pub canboat::codec::line::InputFormat::ActisenseAscii

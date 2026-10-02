@@ -19,12 +19,41 @@
 //! The NMEA 2000 tables reassemble ISO TP as well, but NMEA 2000 sends
 //! long messages as fast-packets; this is J1939's way.
 //!
-//! [`TpSender`] is driven by the caller's clock: [`TpSender::send`]
-//! starts a transfer, [`TpSender::on_frame`] feeds it the TP.CM frames
-//! the bus delivers, and [`TpSender::poll`] hands back whatever is due.
-//! Each returns the frames to put on the bus; [`TpSender::next_deadline`]
-//! says when to poll next. Only one transfer runs per (source,
-//! destination) pair, as the protocol requires; later ones queue.
+//! [`TpSender`] is driven by the caller's clock, in milliseconds from any
+//! fixed point: [`TpSender::send`] starts a transfer,
+//! [`TpSender::on_frame`] feeds it the TP.CM frames the bus delivers, and
+//! [`TpSender::poll`] hands back whatever is due. Each returns the frames
+//! to put on the bus; [`TpSender::next_deadline`] says when to poll next.
+//! Only one transfer runs per (source, destination) pair, as the protocol
+//! requires; later ones queue.
+//!
+//! This is the sending side only. Receiving — a BAM, or an RTS/CTS
+//! transfer between two other nodes — is the reassembler's job; it does
+//! not answer an RTS addressed to us with a CTS.
+//!
+//! ```
+//! use canboat::codec::iso_tp::{BAM_GAP_MS, PGN_TP_CM, PGN_TP_DT, TpSender};
+//!
+//! let mut tp = TpSender::new();
+//! // 20 bytes of PGN 65260 (Vehicle Identification) from address 0x21
+//! // to global: a BAM, then three data packets.
+//! let vin = b"1FUJGLDR12LM12345*\0\0";
+//! let now = 1_000;
+//! let announce = tp.send(now, 65260, 0x21, 255, vin)?;
+//! assert_eq!(announce[0].pgn, PGN_TP_CM);
+//!
+//! let mut sent = Vec::new();
+//! let mut t = now;
+//! while let Some(due) = tp.next_deadline() {
+//!     t = t.max(due); // wait until then, on the caller's clock
+//!     sent.extend(tp.poll(t));
+//! }
+//! assert_eq!(sent.len(), 3);
+//! assert!(sent.iter().all(|f| f.pgn == PGN_TP_DT));
+//! assert_eq!(t, now + 3 * BAM_GAP_MS);
+//! assert!(tp.is_idle());
+//! # Ok::<(), canboat::codec::iso_tp::TpError>(())
+//! ```
 
 use std::collections::VecDeque;
 
@@ -67,6 +96,7 @@ const MAX_QUEUED: usize = 16;
 
 /// Why a message could not be sent.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum TpError {
     /// Up to 8 bytes fit one frame; ISO TP is for 9 to 1785.
     Size(usize),

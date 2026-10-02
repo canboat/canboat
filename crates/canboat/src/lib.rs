@@ -405,7 +405,8 @@ pub mod bus {
 /// To speak raw CAN over a byte pipe instead (SLCAN, candump over a socket),
 /// [`can_id`](codec::can_id) maps the 29-bit identifier and
 /// [`fastpacket`](codec::fastpacket) splits an outgoing message into its
-/// CAN frames; [`Reassembler`] joins incoming ones.
+/// CAN frames; [`Reassembler`] joins incoming ones. On a J1939 bus,
+/// [`iso_tp`](codec::iso_tp) sends a message too long for one frame.
 #[cfg(feature = "decode")]
 pub mod codec {
     pub use crate::engine::codec::{Codec, Event, Refused};
@@ -446,6 +447,17 @@ pub mod codec {
     /// Splitting an outgoing message into CAN frames.
     pub mod fastpacket {
         pub use crate::engine::fastpacket::{fragment, packet_type};
+    }
+
+    /// Sending a J1939 message of 9 to 1785 bytes over the ISO Transport
+    /// Protocol (ISO 11783-3 / J1939-21): BAM to global, RTS/CTS to one
+    /// address. J1939 has no fast-packet; this is how it sends anything
+    /// longer than one frame. Sans I/O and driven by the caller's clock;
+    /// see [`TpSender`](iso_tp::TpSender).
+    pub mod iso_tp {
+        pub use crate::engine::iso_tp::{
+            BAM_GAP_MS, PGN_TP_CM, PGN_TP_DT, T3_MS, T4_MS, TP_MAX_SIZE, TpError, TpSender,
+        };
     }
 
     /// The text line dialects, one [`Frame`](crate::Frame) per line: canboat
