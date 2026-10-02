@@ -702,15 +702,16 @@ fn api_save(server: &EditServer, query: &str, body: &str) -> Result<String, Stri
                 Protocol::J1939.dir()
             )
         })?;
-        if let Ok(asked) = Protocol::from_query(query)
-            && query_param(query, "protocol").is_some()
-            && asked != protocol
-        {
-            return Err(format!(
-                "{file} is a {} definition, not {}",
-                protocol.as_str(),
-                asked.as_str()
-            ));
+        // A given protocol= must be a known one, and agree with the folder.
+        if query_param(query, "protocol").is_some() {
+            let asked = Protocol::from_query(query)?;
+            if asked != protocol {
+                return Err(format!(
+                    "{file} is a {} definition, not {}",
+                    protocol.as_str(),
+                    asked.as_str()
+                ));
+            }
         }
         let candidate = yamlio::parse_pgn_str(body, &file)?;
         // the filename must match the document's pgn + id, so editing the id
@@ -868,6 +869,12 @@ mod tests {
             &read(&s, DM1),
         );
         assert!(clash.is_err_and(|e| e.contains("is a j1939 definition")));
+        let unknown = api_save(
+            &s,
+            &format!("file={file}&protocol=quick&scratch=1"),
+            &read(&s, DM1),
+        );
+        assert!(unknown.is_err_and(|e| e.contains("unknown protocol 'quick'")));
 
         // A J1939 definition with SPNs, as an NMEA 2000 file, breaks R42.
         let eec1 = std::fs::read_dir(s.root.join("database/j1939/pgns"))
