@@ -1372,11 +1372,12 @@ FieldType fieldTypeList[] = {
 
     {.name = "MMSI",
      .description = "MMSI",
-     .encodingDescription = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.",
+     .encodingDescription = "The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation. The top three 32-bit values are reserved, as for any number (see below); in addition 0 is not a valid MMSI (no station holds MID 000) and devices send it for \"none\", so 0 is also treated as not available.",
      .url = "https://navcen.uscg.gov/maritime-mobile-service-identity",
      .size = 32,
      .resolution = 1.0,
      .hasSign = False,
+     .sentinels = SENTINEL_TOP_OF_RANGE,
      .pf = fieldPrintMMSI},
 
     {.name = "VARIABLE",

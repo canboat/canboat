@@ -545,6 +545,17 @@ extern bool fieldPrintMMSI(const Field   *field,
     return true;
   }
 
+  /*
+   * No station holds MMSI 0 (its MID, 000, is not assigned), and devices send
+   * 0 for "none": a Class B unit without a mothership in 129810, a receiver
+   * with garbage. Report it as not available, like the reserved top values.
+   */
+  if (value == 0)
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+    return true;
+  }
+
   if (showJson)
   {
     mprintf("\"%09u\"", (uint32_t) value);

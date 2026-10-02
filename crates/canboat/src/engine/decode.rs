@@ -1863,6 +1863,13 @@ fn decode_mmsi(f: &FieldInfo, data: &[u8], bit_offset: u32, bit_length: u32) -> 
     if let Some(sent) = range_max_sentinel(f, ex, 32) {
         return sent;
     }
+    // No station holds MMSI 0 -- its MID, 000, is not assigned -- and
+    // devices send 0 for "none": every 129810 Mothership User ID from a
+    // Class B unit without one, in all the captures. Not available, like
+    // the reserved top values.
+    if ex.value == 0 {
+        return FieldValue::NotAvailable;
+    }
     FieldValue::Mmsi(ex.value as u32)
 }
 
@@ -2404,6 +2411,38 @@ mod tests {
 
     fn db() -> &'static PgnDatabase {
         PgnDatabase::embedded(crate::engine::Units::Metric)
+    }
+
+    #[test]
+    fn mmsi_zero_is_not_available() {
+        // A Class B unit with no mothership (samples/ikonvert.log): its
+        // 129810 Mothership User ID is 0, which is no station's MMSI.
+        let data: smallvec::SmallVec<[u8; 8]> = "18,8e,96,03,0e,24,4e,56,43,47,4a,57,37,32,4a,\
+             49,4b,39,40,40,78,00,28,00,28,00,3c,00,00,00,00,00,00,00,ff"
+            .split(',')
+            .map(|h| u8::from_str_radix(h.trim(), 16).unwrap())
+            .collect();
+        let frame = RawFrame {
+            timestamp: None,
+            prio: 6,
+            pgn: 129810,
+            src: 43,
+            dst: 255,
+            data,
+        };
+        let dec = db().decode(&frame).expect("decode");
+        let value = |id: &str| {
+            dec.fields
+                .iter()
+                .find(|f| f.id() == id)
+                .map(|f| f.value.clone())
+        };
+        assert!(
+            matches!(value("mothershipUserId"), Some(FieldValue::NotAvailable)),
+            "{:?}",
+            value("mothershipUserId")
+        );
+        assert!(matches!(value("userId"), Some(FieldValue::Mmsi(_))));
     }
 
     #[test]
