@@ -125,6 +125,41 @@ static double getMaxRange(const char *name,
   return r;
 }
 
+// SI conversions for the units the database keeps as NMEA 2000 or common
+// practice defines them. A value in `from` times mul / div is the value in `to`.
+static const struct
+{
+  const char *from;
+  const char *to;
+  double      mul;
+  double      div;
+} siUnits[] = {
+    {"kWh", "J", 3.6e6, 1.0},
+    {"Ah", "C", 3600.0, 1.0},
+    {"%", "ratio", 1.0, 100.0},
+    {"ppm", "ratio", 1.0, 1e6},
+    {"ppt", "ratio", 1.0, 1000.0},
+    {"L", "m3", 1.0, 1000.0},
+    {"L/h", "m3/s", 1.0, 3.6e6},
+    {"km/h", "m/s", 1.0, 3.6},
+    {"kg/h", "kg/s", 1.0, 3600.0},
+    {"g/cm3", "kg/m3", 1000.0, 1.0},
+    {"cP", "Pa.s", 1.0, 1000.0},
+    {"Pa/hr", "Pa/s", 1.0, 3600.0},
+    {"rpm", "Hz", 1.0, 60.0},
+    {"semi-circle", "rad", Pi, 1.0},
+    {"semi-circle/s", "rad/s", Pi, 1.0},
+};
+
+static void scaleUnit(Field *f, double mul, double div, const char *unit)
+{
+  f->resolution = f->resolution * mul / div;
+  f->rangeMin   = f->rangeMin * mul / div;
+  f->rangeMax   = f->rangeMax * mul / div;
+  f->unit       = unit;
+  logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+}
+
 void fixupUnit(Field *f)
 {
   if (showSI)
@@ -140,35 +175,22 @@ void fixupUnit(Field *f)
       {
         f->rangeMax = min(f->rangeMax, 2 * Pi);
       }
+      return;
     }
-    // The database keeps NMEA 2000's own kWh and Ah; SI wants J and C.
-    else if (strcmp(f->unit, "kWh") == 0)
+    // Latitude and longitude stay in degrees; only plain angles become radians.
+    if (strcmp(f->unit, "deg") == 0 && f->ft != NULL && f->ft->physical != NULL && strcmp(f->ft->physical->name, "ANGLE") == 0)
     {
-      f->resolution *= 3.6e6; // 1 kWh = 3.6 MJ
-      f->rangeMin *= 3.6e6;
-      f->rangeMax *= 3.6e6;
-      f->unit = "J";
-      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+      scaleUnit(f, Pi, 180.0, "rad");
+      return;
     }
-    else if (strcmp(f->unit, "Ah") == 0)
+    for (size_t i = 0; i < ARRAY_SIZE(siUnits); i++)
     {
-      f->resolution *= 3600.0; // 1 Ah = 3600 C
-      f->rangeMin *= 3600.0;
-      f->rangeMax *= 3600.0;
-      f->unit = "C";
-      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
+      if (strcmp(f->unit, siUnits[i].from) == 0)
+      {
+        scaleUnit(f, siUnits[i].mul, siUnits[i].div, siUnits[i].to);
+        return;
+      }
     }
-    // A percentage is a display form; SI wants the ratio itself.
-    else if (strcmp(f->unit, "%") == 0)
-    {
-      f->resolution /= 100.0;
-      f->rangeMin /= 100.0;
-      f->rangeMax /= 100.0;
-      f->unit = "ratio";
-      logDebug("fixup <%s> to '%s'\n", f->name, f->unit);
-    }
-
-    // Many more to follow, but pgn.h is not yet complete enough...
   }
   else // NOT SI
   {

@@ -666,6 +666,32 @@ mod tests {
     }
 
     #[test]
+    fn si_volumes_rotations_and_angles_encode_from_si_values() {
+        // The database keeps rpm, L, L/h and degree offsets; the SI schema
+        // reads Hz, m3, m3/s and rad, so both unit systems put the same
+        // bits on the wire.
+        let si = PgnDatabase::embedded(Units::Si);
+        for (si_line, metric_line) in [
+            (
+                r#"{"pgn":127488,"fields":{"instance":0,"speed":30.0}}"#,
+                r#"{"pgn":127488,"fields":{"instance":0,"speed":1800.0}}"#,
+            ),
+            (
+                r#"{"pgn":127497,"fields":{"instance":0,"tripFuelUsed":0.045,"fuelRateAverage":0.0000029166666666666666}}"#,
+                r#"{"pgn":127497,"fields":{"instance":0,"tripFuelUsed":45.0,"fuelRateAverage":10.5}}"#,
+            ),
+            (
+                r#"{"pgn":130818,"fields":{"manufacturerCode":"Furuno","industryCode":"Marine Industry","headingOffset":0.21816615649929116,"pitchOffset":-0.04363323129985824}}"#,
+                r#"{"pgn":130818,"fields":{"manufacturerCode":"Furuno","industryCode":"Marine Industry","headingOffset":12.5,"pitchOffset":-2.5}}"#,
+            ),
+        ] {
+            let from_si = frame_from_json(si, si_line).unwrap().unwrap();
+            let from_metric = frame_from_json(db(), metric_line).unwrap().unwrap();
+            assert_eq!(from_si.data, from_metric.data, "{si_line}");
+        }
+    }
+
+    #[test]
     fn camel_envelope_encodes_byte_exact() {
         // Integer-only PGN → wire-exact round trip. The envelope id
         // selects the variant; -nv objects carry raw values verbatim.

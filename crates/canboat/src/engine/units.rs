@@ -16,7 +16,9 @@
 /// Covers exactly the pairs canboat's `fixupUnit` relates: angle
 /// `rad`↔`deg`, angular rate `rad/s`↔`deg/s`, temperature `K`↔`C`
 /// (Celsius), pressure `Pa`↔`bar`, charge `C`↔`Ah` (Coulomb),
-/// energy `J`↔`kWh` and dimensionless `ratio`↔`%`. The
+/// energy `J`↔`kWh`, dimensionless `ratio`↔`%`/`ppm`/`ppt`, and the SI
+/// conversions of volume, flow, speed, density, viscosity, pressure rate,
+/// rotation (`rpm`↔`Hz`) and GPS `semi-circle` angles. The
 /// `C` string is overloaded (Celsius vs Coulomb) but the source/target
 /// pair disambiguates: `C↔K` is temperature, `C↔Ah` is charge.
 pub fn convert_unit(v: f64, from: &str, to: &str) -> Option<f64> {
@@ -39,6 +41,30 @@ pub fn convert_unit(v: f64, from: &str, to: &str) -> Option<f64> {
         ("kWh", "J") => v * 3.6e6,
         ("ratio", "%") => v * 100.0,
         ("%", "ratio") => v / 100.0,
+        ("ratio", "ppm") => v * 1e6,
+        ("ppm", "ratio") => v / 1e6,
+        ("ratio", "ppt") => v * 1000.0,
+        ("ppt", "ratio") => v / 1000.0,
+        ("m3", "L") => v * 1000.0,
+        ("L", "m3") => v / 1000.0,
+        ("m3/s", "L/h") => v * 3.6e6,
+        ("L/h", "m3/s") => v / 3.6e6,
+        ("m/s", "km/h") => v * 3.6,
+        ("km/h", "m/s") => v / 3.6,
+        ("kg/s", "kg/h") => v * 3600.0,
+        ("kg/h", "kg/s") => v / 3600.0,
+        ("kg/m3", "g/cm3") => v / 1000.0,
+        ("g/cm3", "kg/m3") => v * 1000.0,
+        ("Pa.s", "cP") => v * 1000.0,
+        ("cP", "Pa.s") => v / 1000.0,
+        ("Pa/s", "Pa/hr") => v * 3600.0,
+        ("Pa/hr", "Pa/s") => v / 3600.0,
+        ("Hz", "rpm") => v * 60.0,
+        ("rpm", "Hz") => v / 60.0,
+        ("rad", "semi-circle") => v / std::f64::consts::PI,
+        ("semi-circle", "rad") => v * std::f64::consts::PI,
+        ("rad/s", "semi-circle/s") => v / std::f64::consts::PI,
+        ("semi-circle/s", "rad/s") => v * std::f64::consts::PI,
         _ => return None,
     })
 }
@@ -59,6 +85,26 @@ mod tests {
         assert!((convert_unit(1.0, "kWh", "J").unwrap() - 3.6e6).abs() < 1e-3);
         assert!((convert_unit(-0.5, "ratio", "%").unwrap() + 50.0).abs() < 1e-9);
         assert!((convert_unit(97.536, "%", "ratio").unwrap() - 0.97536).abs() < 1e-9);
+        assert!((convert_unit(1800.0, "rpm", "Hz").unwrap() - 30.0).abs() < 1e-9);
+        assert!((convert_unit(12.5, "L/h", "m3/s").unwrap() - 12.5 / 3.6e6).abs() < 1e-15);
+        assert!(
+            (convert_unit(0.5, "semi-circle", "rad").unwrap() - std::f64::consts::FRAC_PI_2).abs()
+                < 1e-12
+        );
+        assert!((convert_unit(350.0, "ppm", "ratio").unwrap() - 0.00035).abs() < 1e-12);
+        for (unit, si) in [
+            ("L", "m3"),
+            ("km/h", "m/s"),
+            ("kg/h", "kg/s"),
+            ("g/cm3", "kg/m3"),
+            ("cP", "Pa.s"),
+            ("Pa/hr", "Pa/s"),
+            ("ppt", "ratio"),
+            ("semi-circle/s", "rad/s"),
+        ] {
+            let back = convert_unit(convert_unit(7.25, unit, si).unwrap(), si, unit).unwrap();
+            assert!((back - 7.25).abs() < 1e-9, "{unit} <-> {si}");
+        }
     }
 
     #[test]

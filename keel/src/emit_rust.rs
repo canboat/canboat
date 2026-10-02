@@ -150,6 +150,9 @@ struct RawFieldTypeValue {
     bits: Option<String>,
     resolution: Option<f64>,
     unit: Option<String>,
+    /// Physical quantity of the fieldtype, which tells a plain angle
+    /// in degrees (converted under SI) from a latitude (kept).
+    physical: Option<String>,
     lookup_enumeration: Option<String>,
     lookup_bit_enumeration: Option<String>,
     /// Signedness of the fieldtype this entry resolves to — e.g.
@@ -199,15 +202,49 @@ struct FieldView {
     is_dynamic_length_marker: bool,
 }
 
+/// SI conversions for the units the database keeps as NMEA 2000 or
+/// common practice defines them — mirrors `siUnits` in canboat C's
+/// `fieldtype.c`. A value in `from` times `mul / div` is the value in `to`.
+const SI_UNITS: &[(&str, &str, f64, f64)] = &[
+    ("kWh", "J", 3.6e6, 1.0),
+    ("Ah", "C", 3600.0, 1.0),
+    ("%", "ratio", 1.0, 100.0),
+    ("ppm", "ratio", 1.0, 1e6),
+    ("ppt", "ratio", 1.0, 1000.0),
+    ("L", "m3", 1.0, 1000.0),
+    ("L/h", "m3/s", 1.0, 3.6e6),
+    ("km/h", "m/s", 1.0, 3.6),
+    ("kg/h", "kg/s", 1.0, 3600.0),
+    ("g/cm3", "kg/m3", 1000.0, 1.0),
+    ("cP", "Pa.s", 1.0, 1000.0),
+    ("Pa/hr", "Pa/s", 1.0, 3600.0),
+    ("rpm", "Hz", 1.0, 60.0),
+    ("semi-circle", "rad", std::f64::consts::PI, 1.0),
+    ("semi-circle/s", "rad/s", std::f64::consts::PI, 1.0),
+];
+
+/// The SI unit and `(mul, div)` scale for a field in `unit`, or `None`
+/// when SI leaves it alone. Latitude and longitude stay in degrees; only
+/// a plain `ANGLE` in degrees becomes radians.
+fn si_unit(unit: &str, physical: Option<&str>) -> Option<(&'static str, f64, f64)> {
+    if unit == "deg" {
+        return (physical == Some("ANGLE")).then_some(("rad", std::f64::consts::PI, 180.0));
+    }
+    SI_UNITS
+        .iter()
+        .find(|(from, ..)| *from == unit)
+        .map(|&(_, to, mul, div)| (to, mul, div))
+}
+
 /// True when `f`'s unit is one canboat's `fixupUnit` rewrites, i.e. the
 /// SI and Metric views of the field differ. A PGN with no such field
 /// can share one `FieldInfo` slice between both schemas.
 fn field_converts(f: &RawField) -> bool {
     match f.unit.as_deref() {
-        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") | Some("kWh") | Some("Ah")
-        | Some("%") => true,
+        Some("rad") | Some("rad/s") | Some("Pa") | Some("C") => true,
         Some("K") => !f.signed.unwrap_or(false),
-        _ => false,
+        Some(unit) => si_unit(unit, f.physical_quantity.as_deref()).is_some(),
+        None => false,
     }
 }
 
@@ -233,29 +270,17 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
     }
 
     if units == Units::Si {
-        // Strict SI base units. The database keeps NMEA 2000's own kWh,
-        // Ah and %; canboat's SI `fixupUnit` turns them into J, C and a
-        // ratio.
-        match f.unit.as_deref() {
-            Some("kWh") => {
-                v.resolution = f.resolution.map(|r| r * 3.6e6);
-                v.range_min = f.range_min.map(|x| x * 3.6e6);
-                v.range_max = f.range_max.map(|x| x * 3.6e6);
-                v.unit = Some("J".to_string());
-            }
-            Some("Ah") => {
-                v.resolution = f.resolution.map(|r| r * 3600.0);
-                v.range_min = f.range_min.map(|x| x * 3600.0);
-                v.range_max = f.range_max.map(|x| x * 3600.0);
-                v.unit = Some("C".to_string());
-            }
-            Some("%") => {
-                v.resolution = f.resolution.map(|r| r / 100.0);
-                v.range_min = f.range_min.map(|x| x / 100.0);
-                v.range_max = f.range_max.map(|x| x / 100.0);
-                v.unit = Some("ratio".to_string());
-            }
-            _ => {}
+        // Strict SI base units, for the fields the database keeps in
+        // NMEA 2000's or common practice's units (`SI_UNITS`).
+        if let Some((to, mul, div)) = f
+            .unit
+            .as_deref()
+            .and_then(|u| si_unit(u, f.physical_quantity.as_deref()))
+        {
+            v.resolution = f.resolution.map(|r| r * mul / div);
+            v.range_min = f.range_min.map(|x| x * mul / div);
+            v.range_max = f.range_max.map(|x| x * mul / div);
+            v.unit = Some(to.to_string());
         }
         place_offset(f, &mut v);
         return v;
@@ -334,7 +359,7 @@ struct ComputedFt {
 /// The `units` view of one field-type lookup entry: canboat C runs the
 /// same `fixupUnit` over these (`fillFieldTypeLookupField`) as over
 /// ordinary fields, so the SI and Metric tables differ exactly as
-/// [`field_view`] does — SI turns kWh/Ah/% into J/C/ratio, Metric turns
+/// [`field_view`] does — SI applies `SI_UNITS`, Metric turns
 /// rad/K/Pa into deg/°C/bar.
 fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
     let mut v = v.clone();
@@ -358,10 +383,14 @@ fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, Comput
         v.unit = Some(to.to_string());
     };
     match (units, unit.as_str()) {
-        (Units::Si, "kWh") => scale(3.6e6, "J"),
-        (Units::Si, "Ah") => scale(3600.0, "C"),
-        (Units::Si, "%") => scale(0.01, "ratio"),
-        (Units::Si, _) => {}
+        (Units::Si, _) => {
+            if let Some((to, mul, div)) = si_unit(&unit, v.physical.as_deref()) {
+                if let Some(r) = v.resolution.as_mut() {
+                    *r = *r * mul / div;
+                }
+                v.unit = Some(to.to_string());
+            }
+        }
         (Units::Metric, "rad") => {
             scale(RAD_TO_DEG, "deg");
             c.precision = 1;
@@ -1230,6 +1259,7 @@ fn from_keel(db: &crate::model::Database, protocol: crate::model::Protocol) -> C
                                 .map(|b| b.to_string()),
                             resolution: ftv.map(|f| f.resolution).filter(|r| *r != 0.0),
                             unit: ftv.and_then(|f| f.unit.clone()),
+                            physical: ftv.and_then(|f| f.physical.clone()),
                             signed: ftv.and_then(|f| f.has_sign).unwrap_or(false),
                             lookup_enumeration: e
                                 .lookup
