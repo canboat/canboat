@@ -236,20 +236,26 @@ pub fn parse_time(s: &str) -> Option<f64> {
         return seconds.is_finite().then_some(seconds);
     }
     // A negative duration ("-00:05:00.000") is negative as a whole.
-    if let Some(rest) = s.strip_prefix('-') {
-        return parse_time(rest).map(|t| -t);
-    }
-    let mut it = s.split(':');
-    let h = it.next()?.parse::<f64>().ok()?;
-    let m = it.next()?.parse::<f64>().ok()?;
+    let (sign, clock) = match s.strip_prefix('-') {
+        Some(rest) => (-1.0, rest),
+        None => (1.0, s),
+    };
+    let part = |x: &str| {
+        x.parse::<f64>()
+            .ok()
+            .filter(|v| v.is_finite() && !x.starts_with(['-', '+']))
+    };
+    let mut it = clock.split(':');
+    let h = part(it.next()?)?;
+    let m = part(it.next()?)?;
     let sec = match it.next() {
-        Some(x) => x.parse::<f64>().ok()?,
+        Some(x) => part(x)?,
         None => 0.0,
     };
     if it.next().is_some() {
         return None;
     }
-    Some(h * 3600.0 + m * 60.0 + sec)
+    Some(sign * (h * 3600.0 + m * 60.0 + sec))
 }
 
 /// Format seconds-since-midnight as `HH:MM:SS[.fff]`. Fractional

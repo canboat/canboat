@@ -709,6 +709,9 @@ mod tests {
         assert_eq!(crate::engine::output::parse_time("-300"), Some(-300.0));
         assert_eq!(crate::engine::output::parse_time("01:10:10"), Some(4210.0));
         assert_eq!(crate::engine::output::parse_time("later"), None);
+        assert_eq!(crate::engine::output::parse_time("--00:05:00"), None);
+        assert_eq!(crate::engine::output::parse_time("00:-05:00"), None);
+        assert_eq!(crate::engine::output::parse_time("inf:00"), None);
     }
 
     #[test]
