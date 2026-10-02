@@ -284,7 +284,7 @@ pub enum FieldValue {
     /// decimal digits (`%02u`) and simply drops a byte that is not a
     /// valid pair, so the result is a run of digit pairs rather than a
     /// number — leading zeros included. Kept as text to preserve them;
-    /// both formatters emit it unquoted, as the C does.
+    /// JSON quotes it, text prints it bare.
     Decimal(String),
     /// Decoded text (STRING_FIX, STRING_LZ, STRING_LAU).
     String(String),

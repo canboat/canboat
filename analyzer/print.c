@@ -691,6 +691,8 @@ extern bool fieldPrintDecimal(const Field   *field,
   uint64_t bitMagnitude = 1;
   size_t   bit;
   char     buf[128];
+  char     digits[2 * sizeof(buf) + 1];
+  size_t   n = 0;
 
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
@@ -756,11 +758,37 @@ extern bool fieldPrintDecimal(const Field   *field,
     {
       if (value < 100)
       {
-        mprintf("%02u", value);
+        digits[n++] = (char) ('0' + value / 10);
+        digits[n++] = (char) ('0' + value % 10);
       }
       value        = 0;
       bitMagnitude = 1;
     }
+  }
+  digits[n] = '\0';
+
+  /*
+   * A byte that is not a digit pair is dropped, so nothing may be left: that
+   * is "not available", as in the Rust decoder.
+   */
+  if (n == 0)
+  {
+    printEmpty(fieldName, DATAFIELD_UNKNOWN);
+    return true;
+  }
+
+  /*
+   * The digit pairs are text, not a number: a DSC address such as 060173
+   * keeps its leading zero, and printed bare it is not valid JSON at all.
+   * Quote it in JSON, as an MMSI is.
+   */
+  if (showJson)
+  {
+    mprintf("\"%s\"", digits);
+  }
+  else
+  {
+    mprintf("%s", digits);
   }
   return true;
 }
