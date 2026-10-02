@@ -351,6 +351,7 @@ pub canboat::output::JsonOptions::camel_case: canboat::output::CamelCase
 pub canboat::output::JsonOptions::debug: bool
 pub canboat::output::JsonOptions::include_empty: bool
 pub canboat::output::JsonOptions::name_value: bool
+pub canboat::output::JsonOptions::protocol: canboat::schema::BusProtocol
 pub canboat::output::JsonOptions::wrap: bool
 impl core::clone::Clone for canboat::output::JsonOptions
 pub fn canboat::output::JsonOptions::clone(&self) -> Self

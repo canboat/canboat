@@ -1,0 +1,7 @@
+{"timestamp":"2023-12-13T11:52:52.799Z","pgn":1728,"description":"Quick: Unknown 0x6C0","fields":{"Talker ID":6337,"Data":"78 00 01 00 01 00"}}
+{"timestamp":"2023-12-13T11:52:52.909Z","pgn":1729,"description":"Quick: Chain Count","fields":{"Talker ID":6337,"Chain Counter":106,"Units":"Feet"}}
+{"timestamp":"2023-12-13T11:52:53.019Z","pgn":1730,"description":"Quick: Unknown 0x6C2","fields":{"Talker ID":6337,"Data":"00 00 00 00 00 00"}}
+{"timestamp":"2023-12-13T11:52:53.238Z","pgn":1731,"description":"Quick: Unknown 0x6C3","fields":{"Talker ID":6337,"Data":"00 00 00 00 00 00"}}
+{"timestamp":"2023-12-13T11:53:07.189Z","pgn":1729,"description":"Quick: Chain Count","fields":{"Talker ID":6337,"Chain Counter":103,"Units":"Feet"}}
+{"timestamp":"2023-12-13T11:53:11.583Z","pgn":1729,"description":"Quick: Chain Count","fields":{"Talker ID":6337,"Chain Counter":107,"Units":"Feet"}}
+{"timestamp":"2023-12-13T11:53:12.000Z","pgn":291,"description":"11-bit CAN frame","fields":{"Data":"A1 B2 C3 D4 E5 F6 07 08"}}

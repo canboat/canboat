@@ -112,7 +112,10 @@ mod tests {
 
     #[test]
     fn takes_quick() {
-        assert_eq!(protocol(&["--protocol", "quick"]).unwrap(), BusProtocol::Quick);
+        assert_eq!(
+            protocol(&["--protocol", "quick"]).unwrap(),
+            BusProtocol::Quick
+        );
     }
 
     #[test]

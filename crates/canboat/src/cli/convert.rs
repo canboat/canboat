@@ -383,6 +383,7 @@ fn convert_decoded<W: Write>(
         debug: args.debug,
         camel_case: args.shape.camel_case(),
         wrap: args.shape.wrap(),
+        protocol,
     };
     let text_opts = TextOptions {
         show_unavailable: args.empty,

@@ -517,6 +517,7 @@ mod tests {
             debug: false,
             camel_case: CamelCase::Off,
             wrap: false,
+            protocol: crate::engine::BusProtocol::Nmea2000,
         };
         let filter = Mutex::new(filter);
         let out = filter_report_lines(&filter, db, &json_opts);

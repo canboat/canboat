@@ -259,7 +259,13 @@ impl PgnBuilder {
         Self {
             db,
             pgn,
-            prio: pgn.priority.unwrap_or(6),
+            // A Quick message has no priority (an 11-bit identifier is
+            // only its type); 6 is the ISO 11783 default for the others.
+            prio: if db.protocol().standard_frames() {
+                0
+            } else {
+                pgn.priority.unwrap_or(6)
+            },
             src: 0,
             dst: 255,
             timestamp: None,

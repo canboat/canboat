@@ -157,6 +157,7 @@ impl Bridge {
             debug: false,
             camel_case: config.camel_case,
             wrap: config.wrap,
+            protocol: config.protocol,
         };
 
         // The analyzer version banner (version, commit, units,
