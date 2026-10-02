@@ -457,7 +457,7 @@ fn write_field_value_debug<W: fmt::Write>(
     w.write_str("\"value\":")?;
     // The "bare value" emission for the inner `value` key.
     match &f.value {
-        FieldValue::Decimal(d) => w.write_str(d)?,
+        FieldValue::Decimal(d) => write_json_string(w, d)?,
         FieldValue::Number(v) => {
             let p = effective_precision(f.precision(), f.resolution());
             let min_w = if p == 7 && f.unit() == Some("deg") {
@@ -778,9 +778,10 @@ fn write_field_value<W: fmt::Write>(
                 w.write_char(']')
             }
         }
-        // canboat prints a DECIMAL's digit pairs bare, so this lands in
-        // JSON as a number literal rather than a string.
-        FieldValue::Decimal(d) => w.write_str(d),
+        // A DECIMAL's digit pairs are text, not a number: a DSC address
+        // such as 060173 keeps its leading zero, and bare it would not even
+        // be valid JSON. Quoted, as an MMSI is.
+        FieldValue::Decimal(d) => write_json_string(w, d),
         FieldValue::String(s) => write_field_json_string(w, s),
         FieldValue::Date(d) => {
             let mut buf = String::with_capacity(10);
@@ -1045,6 +1046,36 @@ mod tests {
             "{n2k}"
         );
     }
+    /// A DECIMAL's digit pairs are written as a JSON string. The DSC call
+    /// from samples/pgn129808.raw addresses 0022410240: written bare, the
+    /// leading zero made the whole record invalid JSON.
+    #[test]
+    fn a_decimal_is_a_json_string() {
+        let data: Vec<u8> =
+            "74,6c,00,16,29,02,28,64,7e,39,30,30,30,31,36,ff,ff,ff,ff,ff,ff,02,01,ff,ff,ff,\
+             7f,ff,ff,ff,7f,ff,ff,ff,ff,ff,ff,ff,ff,ff,7f,fc,ff,ff,ff,ff,ff,ff,ff,ff,ff,ff,\
+             ff,ff,40,f2,b5,17,d4,34,00,00"
+                .split(',')
+                .map(|h| u8::from_str_radix(h.trim(), 16).unwrap())
+                .collect();
+        let frame = crate::engine::RawFrame::new(None, 4, 129808, 4, 255, data);
+        let pgn = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si)
+            .decode(&frame)
+            .unwrap();
+        for opts in [
+            JsonOptions::default(),
+            JsonOptions {
+                debug: true,
+                ..Default::default()
+            },
+        ] {
+            let mut out = String::new();
+            write_json(&mut out, &pgn, &opts).unwrap();
+            assert!(out.contains("\"0022410240\""), "{out}");
+            assert!(!out.contains(":0022410240"), "bare DECIMAL in {out}");
+        }
+    }
+
     use crate::engine::decode::{DecodedField, FieldValue};
 
     fn sample_pgn() -> DecodedPgn {
