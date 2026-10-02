@@ -983,7 +983,7 @@ Pgn pgnList[] = {
      PACKET_ISO_TP,
      {
       {.name = "Unique Number", .camelName = "uniqueNumber", .fieldType = "BINARY", .size = 21, .resolution = 1.0, .description = "ISO Identity Number"},
-      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .unit = "Manufacturer Code", .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
+      {.name = "Manufacturer Code", .camelName = "manufacturerCode", .fieldType = "LOOKUP", .size = 11, .resolution = 1.0, .lookup.type = LOOKUP_TYPE_PAIR, LOOKUP_PAIR_MEMBER = lookupJ1939_MANUFACTURER_CODE, .lookup.name = "J1939_MANUFACTURER_CODE"},
       {.name = "Device Instance Lower", .camelName = "deviceInstanceLower", .fieldType = "UNSIGNED_INTEGER", .size = 3, .resolution = 1.0, .description = "ISO ECU Instance"},
       {.name = "Device Instance Upper", .camelName = "deviceInstanceUpper", .fieldType = "UNSIGNED_INTEGER", .size = 5, .resolution = 1.0, .description = "ISO Function Instance"},
       {.name = "Device Function", .camelName = "deviceFunction", .fieldType = "INDIRECT_LOOKUP", .size = 8, .resolution = 1.0, .description = "ISO Function", .lookup.type = LOOKUP_TYPE_TRIPLET, LOOKUP_TRIPLET_MEMBER = lookupDEVICE_FUNCTION, .lookup.name = "DEVICE_FUNCTION", .lookup.val1Order = 7},
