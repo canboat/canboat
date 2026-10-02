@@ -23812,7 +23812,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
             number
             </p><p>
             Encoding:
-            The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation.</p><p>
+            The MMSI is encoded as a 32 bit number, but is always printed as a 9 digit number and should be considered as a string. The first three or four digits are special, see the USCG link for a detailed explanation. 0 is not a valid MMSI (no station holds MID 000) and devices send it for "none", so it is treated as not available, as are the top three 32-bit values.</p><p>
           Unavailable value:
           
               none. This field type has no unavailable encoding (it is an identifier, filler
