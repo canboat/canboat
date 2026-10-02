@@ -127,6 +127,11 @@
 <div id="sidebar">
   <header>
     <h1>keel — CANboat PGN database</h1>
+    <label class="hint" style="display:flex; gap:6px; align-items:center; margin-bottom:6px">Protocol
+      <select id="protocolSel" onchange="setProtocol(this.value)">
+        <option value="nmea2000">NMEA 2000</option>
+        <option value="j1939">SAE J1939</option>
+      </select></label>
     <input id="search" placeholder="filter PGNs &amp; enumerations…">
     <div style="margin-top:8px; display:flex; gap:6px; flex-wrap:wrap">
       <button class="primary" onclick="newWizard()">＋ New PGN (wizard)</button>
@@ -404,6 +409,10 @@ let yamlDirty = false;       // textarea hand-edited: it wins over the form
 let baseYaml = null;         // existing PGN: full original YAML (fields: block
                              // gets surgically replaced, everything else kept)
 let currentPgn = null;       // pgn number being edited (existing mode)
+// The protocol whose PGNs are listed, opened and saved: "nmea2000" or
+// "j1939". Lookups and field types are shared between the two.
+let protocol = "nmea2000";
+const PGN_DIR = { nmea2000: "database/pgns", j1939: "database/j1939/pgns" };
 let refreshTimer = null;
 let lkBaseYaml = null;       // original lookup YAML (values: block surgically replaced)
 let lkName = null;
@@ -411,6 +420,29 @@ let lkReadOnly = false;
 
 const $ = (id) => document.getElementById(id);
 const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;");
+// The query parameter every PGN call carries.
+const protoQs = () => "protocol=" + protocol;
+const pgnFile = (pgn, id) => `${PGN_DIR[protocol]}/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+
+// Switch the protocol being edited: the list, the type choices and the
+// J1939-only attributes follow, and any half-made definition is dropped.
+function setProtocol(p) {
+  protocol = p;
+  $("protocolSel").value = p;
+  applyProtocol();
+  renderPgnList($("search").value);
+  newWizard();
+}
+
+function applyProtocol() {
+  const j1939 = protocol === "j1939";
+  // J1939 has no fast-packet: longer messages go over ISO TP.
+  const fast = [...$("m_type").options].find(o => o.value === "Fast");
+  fast.hidden = fast.disabled = j1939;
+  if (j1939 && $("m_type").value === "Fast") $("m_type").value = "ISO";
+  // An SPN is a J1939 attribute (R42).
+  $("fe_spn").closest(".frow").style.display = j1939 ? "" : "none";
+}
 
 async function api(path, body, method="POST") {
   const r = await fetch(path, { method, body });
@@ -439,6 +471,7 @@ async function refreshModel() {
 
 async function init() {
   await refreshModel();
+  applyProtocol();
   renderPgnList("");
   $("search").addEventListener("input", e => renderPgnList(e.target.value));
   initSidebarResize();
@@ -484,6 +517,7 @@ function renderPgnList(filter) {
   const el = $("pgnlist");
   el.innerHTML = "";
   MODEL.pgns
+    .filter(p => p.protocol === protocol)
     .filter(p => !f || String(p.pgn).includes(f) || p.id.toLowerCase().includes(f)
               || p.description.toLowerCase().includes(f))
     .slice(0, 400)
@@ -543,7 +577,7 @@ function loadEvidence(msgs) {
 }
 
 async function openExisting(id) {
-  const r = await api(`/api/pgn?id=${encodeURIComponent(id)}`, null, "GET");
+  const r = await api(`/api/pgn?id=${encodeURIComponent(id)}&${protoQs()}`, null, "GET");
   if (r.error) return flash(r.error, false);
   newWizard();
   baseYaml = r.yaml;
@@ -575,7 +609,7 @@ async function openExisting(id) {
 }
 
 async function analyze() {
-  const r = await api("/api/analyze", $("sampleInput").value);
+  const r = await api("/api/analyze?" + protoQs(), $("sampleInput").value);
   if (r.error) return flash(r.error, false);
   // group by matched variant (falls back to the PGN number for unknowns),
   // so a mixed capture yields one evidence button per definition
@@ -643,7 +677,7 @@ async function analyze() {
 // vendor/shape), pre-setting the one differing match field to the value
 // these samples carry. The user renames id/description and saves a new file.
 async function cloneFrom(variantId, pgn, msgs, diffFieldId, gotValue) {
-  const r = await api(`/api/pgn?id=${encodeURIComponent(variantId)}`, null, "GET");
+  const r = await api(`/api/pgn?id=${encodeURIComponent(variantId)}&${protoQs()}`, null, "GET");
   if (r.error) return flash(r.error, false);
   samplesHex = msgs.map(m => m.hex);
   baseYaml = null;            // a brand-new file, not an edit of the source
@@ -679,11 +713,16 @@ function startDefinition(pgn, msgs) {
   yamlDirty = false;
   $("m_pgn").value = pgn;
   $("m_prio").value = msgs[0].prio;
-  $("m_type").value = samplesHex.some(h => h.length > 16) ? "Fast" : "Single";
+  // More than one frame: fast-packet on NMEA 2000, ISO TP on J1939.
+  const long = samplesHex.some(h => h.length > 16);
+  $("m_type").value = !long ? "Single" : protocol === "j1939" ? "ISO" : "Fast";
   $("stepDefine").style.display = "";
   $("stepSave").style.display = "";
   $("savePath").textContent = "";
-  if ((pgn >= 0xff00 && pgn <= 0xffff) || pgn === 0x1ef00 || (pgn >= 0x1ff00 && pgn <= 0x1ffff)) {
+  // NMEA 2000 starts a proprietary payload with a manufacturer and industry
+  // code; J1939 leaves the whole payload to the manufacturer.
+  if (protocol === "nmea2000" &&
+      ((pgn >= 0xff00 && pgn <= 0xffff) || pgn === 0x1ef00 || (pgn >= 0x1ff00 && pgn <= 0x1ffff))) {
     addProprietaryPreamble();
   }
   renderAll();
@@ -1442,7 +1481,7 @@ function syncSavePath() {
   const y = $("yamlText").value;
   const pgn = (y.match(/^pgn:\s*(\d+)/m) || [])[1];
   const id = (y.match(/^id:\s*(\S+)/m) || [])[1];
-  if (pgn && id) $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+  if (pgn && id) $("savePath").textContent = pgnFile(pgn, id);
 }
 
 function regenerateYaml() {
@@ -1469,7 +1508,7 @@ function regenerateYaml() {
   y += fieldsYaml();
   $("yamlText").value = y;
   const id = $("m_id").value || "newPgn";
-  $("savePath").textContent = `database/pgns/${String(pgn).padStart(6, "0")}-${id}.yaml`;
+  $("savePath").textContent = pgnFile(pgn, id);
 }
 
 // ---- live decode ------------------------------------------------------------
@@ -1482,8 +1521,8 @@ function scheduleRefresh() {
 async function refresh() {
   const yaml = $("yamlText").value;
   if (!yaml.trim()) return;
-  const qs = samplesHex.map(h => "data=" + h).join("&");
-  const r = await api("/api/decode" + (qs ? "?" + qs : ""), yaml);
+  const qs = samplesHex.map(h => "data=" + h).concat(protoQs()).join("&");
+  const r = await api("/api/decode?" + qs, yaml);
   lastDecode = r;
   const vio = $("violations");
   if (r.error) {
@@ -1666,7 +1705,8 @@ async function regenFromDialog() {
 async function save(scratch) {
   const file = $("savePath").textContent.trim();
   if (!file) return flash("no target file (set PGN + id first)", false);
-  const r = await api("/api/save?file=" + encodeURIComponent(file) + (scratch ? "&scratch=1" : ""),
+  const r = await api("/api/save?file=" + encodeURIComponent(file) + "&" + protoQs() +
+    (scratch ? "&scratch=1" : ""),
     $("yamlText").value);
   if (r.error) {
     dialog(scratch ? "Validation failed" : "Not saved (validation failed)", r.error, [
