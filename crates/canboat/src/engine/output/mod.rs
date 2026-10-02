@@ -36,7 +36,7 @@ pub(crate) fn precision_for(resolution: f64) -> usize {
     }
     let mut p = 0usize;
     let mut r = resolution;
-    while r > 0.0 && r < 1.0 && p < 10 {
+    while r > 0.0 && r < 1.0 {
         p += 1;
         r *= 10.0;
     }
@@ -78,8 +78,10 @@ pub(crate) fn write_fixed_float<W: std::fmt::Write>(
     // Fall back to core::fmt for NaN / inf and for values where
     // `v * 10^precision` would exceed the integer-exact range of f64
     // (2^53). That covers the AIS "Altitude unknown" sentinel
-    // (~9.2e12) which canboat C formats via `%.*f` directly.
-    if !v.is_finite() || v.abs() >= 1e12 {
+    // (~9.2e12) which canboat C formats via `%.*f` directly, and the
+    // many-decimal fields (GPS almanac rates, resolution ~1e-11).
+    const EXACT: f64 = 9_007_199_254_740_992.0; // 2^53
+    if !v.is_finite() || v.abs() >= 1e12 || v.abs() * 10f64.powi(precision as i32) >= EXACT {
         return write!(
             w,
             "{:>width$.prec$}",
@@ -285,6 +287,9 @@ mod tests {
         // Edge: zero or negative.
         assert_eq!(precision_for(0.0), 0);
         assert_eq!(precision_for(-1.0), 0);
+        // No cap: canboat C keeps counting, and so must we.
+        assert_eq!(precision_for(2f64.powi(-38)), 12);
+        assert_eq!(precision_for(2f64.powi(-38) * std::f64::consts::PI), 11);
     }
 
     #[test]
@@ -305,6 +310,20 @@ mod tests {
         let mut out = String::new();
         format_time(3661.5, 3, false, &mut out).unwrap();
         assert_eq!(out, "01:01:01.500");
+    }
+
+    #[test]
+    fn many_decimals_match_printf() {
+        // Precisions past 10 come from resolutions near 1e-11 (GPS almanac
+        // rates); `printf("%.*f")` prints those exactly as written here.
+        let fixed = |v: f64, p: usize| {
+            let mut out = String::new();
+            write_fixed_float(&mut out, v, p, 0).unwrap();
+            out
+        };
+        assert_eq!(fixed(-3.1415926535e-7, 11), "-0.00000031416");
+        assert_eq!(fixed(-1.0000076e-7, 12), "-0.000000100001");
+        assert_eq!(fixed(123.456789012345, 12), "123.456789012345");
     }
 }
 
