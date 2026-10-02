@@ -28,7 +28,7 @@ struct Args {
     check: bool,
     port: Option<u16>,
     diff: Option<String>,
-    which: String,
+    j1939: bool,
     root: PathBuf,
     per_pgn: usize,
     rest: Vec<String>,
@@ -42,7 +42,7 @@ fn parse_args() -> Result<Args, String> {
         check: false,
         port: None,
         diff: None,
-        which: "normal".into(),
+        j1939: false,
         root: PathBuf::from("."),
         per_pgn: 3,
         rest: Vec::new(),
@@ -70,19 +70,12 @@ fn parse_args() -> Result<Args, String> {
                     .map_err(|e| format!("--per-pgn: {e}"))?
             }
             "--root" => args.root = PathBuf::from(it.next().ok_or("--root needs a path")?),
-            // The protocol a command works on. `--which` also picks the
-            // Actisense / iKonvert BEM documents for `emit`, so it stays.
             "--protocol" => {
-                args.which = match it.next().as_deref() {
-                    Some("nmea2000") => "normal".into(),
-                    Some("j1939") => "j1939".into(),
+                args.j1939 = match it.next().as_deref() {
+                    Some("nmea2000") => false,
+                    Some("j1939") => true,
                     _ => return Err("--protocol needs nmea2000|j1939".into()),
                 }
-            }
-            "--which" => {
-                args.which = it
-                    .next()
-                    .ok_or("--which needs normal|j1939|actisense|ikonvert")?
             }
             cmd if args.command.is_empty() && !cmd.starts_with('-') => args.command = cmd.into(),
             pos if !pos.starts_with('-') => args.rest.push(pos.to_string()),
@@ -117,7 +110,8 @@ Commands:
                      crates/canboat/src/engine/schema_generated*.rs.
                      `make generated` also runs this, then builds the
                      JSON, HTML and DBC documents from the XML
-  emit               print one XML document on stdout
+  emit               print the XML document (docs/canboat.xml, or with
+                     --protocol j1939 docs/canboat-j1939.xml) on stdout
   explain            print the database as readable text
   decode             decode sample lines from stdin (PLAIN, candump, YDWG
                      RAW) with keel's own decoder
@@ -131,9 +125,6 @@ Options:
   --protocol nmea2000|j1939
                      the protocol for explain, emit and decode (default
                      nmea2000)
-  --which normal|j1939|actisense|ikonvert
-                     the document for emit; also takes the place of
-                     --protocol
   --check            generate: write nothing, exit 1 when an artifact is
                      out of date
   --diff FILE        generate --check: write where it first differs to FILE
@@ -235,11 +226,11 @@ fn run() -> Result<i32, String> {
             let artifacts: Vec<(PathBuf, String)> = vec![
                 (
                     root.join("docs/canboat.xml"),
-                    emit_xml::emit_xml(&db, "normal"),
+                    emit_xml::emit_xml(&db, false),
                 ),
                 (
                     root.join("docs/canboat-j1939.xml"),
-                    emit_xml::emit_xml(&db, "j1939"),
+                    emit_xml::emit_xml(&db, true),
                 ),
                 (
                     root.join("analyzer/lookup-generated-data.h"),
@@ -335,7 +326,7 @@ fn run() -> Result<i32, String> {
         }
         "decode" => {
             // Read sample lines from stdin, reassemble, decode, print.
-            let j1939 = args.which == "j1939";
+            let j1939 = args.j1939;
             let mut fast: std::collections::HashSet<u32> = Default::default();
             for p in if j1939 { &db.pgns_j1939 } else { &db.pgns } {
                 if p.type_ == "Fast" {
@@ -403,12 +394,12 @@ fn run() -> Result<i32, String> {
             Ok(0)
         }
         "explain" => {
-            print!("{}", emit_text::emit_text(&db, args.which == "j1939"));
+            print!("{}", emit_text::emit_text(&db, args.j1939));
             Ok(0)
         }
         "emit" => {
-            // Emit any document to stdout (dev tool; also the BEM documents)
-            print!("{}", emit_xml::emit_xml(&db, &args.which));
+            // One of the two documents, on stdout.
+            print!("{}", emit_xml::emit_xml(&db, args.j1939));
             Ok(0)
         }
         other => Err(format!("unknown command '{other}'")),

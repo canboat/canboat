@@ -20,8 +20,9 @@ pub const MISSING_ATTRIBUTES: [&str; 7] = [
     "MissingCompanyFields",
 ];
 
+/// The first of canboat's own pseudo-PGNs: gateway and analyzer records
+/// that never appear on a bus.
 pub const ACTISENSE_BEM: u32 = 0x40000;
-pub const IKONVERT_BEM: u32 = 0x40100;
 
 #[derive(Debug, Clone, Default)]
 pub struct PhysicalQuantity {

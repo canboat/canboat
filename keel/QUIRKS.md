@@ -69,7 +69,7 @@ heeding.
 | Q3 | `'` unescaped inside single-quoted attributes | retired by Q5 — every attribute is double-quoted, and `"` was already escaped |
 | Q4 | `FieldTypes`/`PhysicalQuantities` emitted with no escaping at all | both route names, text and units through `xml_escape()` |
 | Q5 | attribute quoting inconsistent between sections | every attribute keel emits is double-quoted |
-| Q9 | BEM documents carried a `canboat.xsl` PI that ships for neither | the PI is emitted for the main and J1939 documents only |
+| Q9 | BEM documents carried a `canboat.xsl` PI that ships for neither | the PI is emitted for the main and J1939 documents only; keel no longer emits the BEM documents at all |
 | Q10 | C's lowercase `false` aliased to the tri-state `Null`, so ISO_NAME emitted no `Signed` at all | ISO_NAME carries `signed: false`; see the Q11 note below for the second-order effect |
 | Q11 | fieldtype-level `rangeMin`/`rangeMax` initializers looked like dead config | they were **suppressors**, not dead — see below |
 | Q14 | `BitLengthField` hardcoded to `order - 1`, keyed on the type name | authored as `bitLengthField: <id>`, validated by rule **R15** |
