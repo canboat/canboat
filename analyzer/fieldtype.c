@@ -80,6 +80,34 @@ extern uint8_t reservedCountForSize(uint32_t size)
   return (size >= 8) ? 3 : (size >= 4) ? 2 : (size >= 2) ? 1 : 0;
 }
 
+/*
+ * Decimals a scaled number with this resolution prints with, worked out once per field rather than
+ * per value (canboat#969). A resolution that is a whole number of 10^-p steps prints exactly with p
+ * decimals: 0.01 -> 2, 0.004 -> 3, integers -> 0. Any other one -- a binary fraction, or a step an
+ * SI conversion divided by 60 or 3.6e6 -- gets two more, so a value is off by under 1 % of a step
+ * instead of up to half of one. Mirrors precision_for in the Rust output module.
+ */
+extern int decimalsForResolution(double resolution)
+{
+  int    precision = 0;
+  double r         = resolution;
+
+  if (!(r > 0.0) || isinf(r))
+  {
+    return 0;
+  }
+  while (r < 1.0)
+  {
+    precision++;
+    r *= 10.0;
+  }
+  if (fabs(r - round(r)) > 1e-9 * r)
+  {
+    precision += 2;
+  }
+  return precision;
+}
+
 extern const char *sentinelsName(Sentinels s)
 {
   switch (s)
@@ -439,6 +467,10 @@ extern void fillFieldType(bool doUnitFixup)
       {
         fixupUnit(f);
       }
+      if (f->precision == 0)
+      {
+        f->precision = decimalsForResolution(f->resolution);
+      }
       if (f->hasMatchValue)
       {
         pgnList[i].hasMatchFields = true;
@@ -553,6 +585,10 @@ extern void fillFieldTypeLookupField(Field *f, const char *lookup, const size_t 
   if (f->unit != NULL)
   {
     fixupUnit(f);
+  }
+  if (f->precision == 0)
+  {
+    f->precision = decimalsForResolution(f->resolution);
   }
 
   logDebug("fillFieldTypeLookupField(Field, lookup='%s', key=%zu, str='%s', ft='%s' unit='%s' bits=%u\n",

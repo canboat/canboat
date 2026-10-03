@@ -26,7 +26,7 @@ use std::fmt::{self, Write as _};
 
 use crate::engine::decode::{DecodedField, DecodedPgn, FieldValue};
 
-use super::{effective_precision, write_fixed_float};
+use super::{effective_precision, time_precision_for, write_fixed_float};
 
 /// Display name for a field under the current camelCase mode.
 /// Off → human-readable `name`; Lower → camelCase `id` (already
@@ -554,7 +554,7 @@ fn write_field_value_debug<W: fmt::Write>(
             }
         }
         FieldValue::Time { seconds, .. } => {
-            let p = effective_precision(f.precision(), f.resolution());
+            let p = time_precision_for(f.resolution());
             let mut buf = String::with_capacity(12);
             super::format_time(*seconds, p, false, &mut buf)?;
             // Seconds, as the non-debug `Time` arm.
@@ -789,7 +789,7 @@ fn write_field_value<W: fmt::Write>(
             }
         }
         FieldValue::Time { seconds, .. } => {
-            let p = effective_precision(f.precision(), f.resolution());
+            let p = time_precision_for(f.resolution());
             let mut buf = String::with_capacity(12);
             super::format_time(*seconds, p, false, &mut buf)?;
             // A time of day or a duration is a number of seconds, like

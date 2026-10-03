@@ -249,6 +249,15 @@ fn field_converts(f: &RawField) -> bool {
 }
 
 fn field_view(f: &RawField, units: Units) -> FieldView {
+    let mut v = field_view_units(f, units);
+    if v.precision == 0 {
+        v.precision = decimals_for(v.resolution);
+    }
+    v
+}
+
+/// [`field_view`] before the default precision is filled in.
+fn field_view_units(f: &RawField, units: Units) -> FieldView {
     let mut v = FieldView {
         resolution: f.resolution,
         offset: f.offset,
@@ -326,6 +335,30 @@ fn field_view(f: &RawField, units: Units) -> FieldView {
     v
 }
 
+/// Decimals a scaled number with this resolution prints with, worked
+/// out once here rather than per value (canboat#969); mirrors
+/// `precision_for` in the crate's output module and canboat C's
+/// `decimalsForResolution`. A resolution that is a whole number of
+/// 10^-p steps prints with p decimals (0.01 -> 2, 0.004 -> 3); any other
+/// one, a binary fraction or one an SI conversion divided by 60 or
+/// 3.6e6, with two more, so a value is off by under 1 % of a step.
+fn decimals_for(resolution: Option<f64>) -> u8 {
+    let Some(resolution) = resolution.filter(|r| r.is_finite() && *r > 0.0) else {
+        return 0;
+    };
+    let mut p = 0u8;
+    let mut r = resolution;
+    while r < 1.0 {
+        p += 1;
+        r *= 10.0;
+    }
+    if (r - r.round()).abs() <= 1e-9 * r {
+        p
+    } else {
+        p + 2
+    }
+}
+
 /// Put `f`'s offset where the decoder can hold it, in `v`'s units.
 fn place_offset(f: &RawField, v: &mut FieldView) {
     // `FieldInfo::offset` is an integer. An offset with a fraction does
@@ -362,6 +395,15 @@ struct ComputedFt {
 /// [`field_view`] does — SI applies `SI_UNITS`, Metric turns
 /// rad/K/Pa into deg/°C/bar.
 fn compute_ft(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
+    let (v, mut c) = compute_ft_units(v, units);
+    if c.precision == 0 {
+        c.precision = decimals_for(v.resolution);
+    }
+    (v, c)
+}
+
+/// [`compute_ft`] before the default precision is filled in.
+fn compute_ft_units(v: &RawFieldTypeValue, units: Units) -> (RawFieldTypeValue, ComputedFt) {
     let mut v = v.clone();
     let mut c = ComputedFt {
         // The fieldtype's own signedness is the answer. The unit test
