@@ -802,6 +802,7 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             learn_tx_pgns: config.learn_tx_pgns,
             protocol: config.protocol,
             bitrate: config.socketcan_bitrate,
+            state_dir: config.config_dir.clone(),
             ..device::socketcan::Config::default()
         };
         // Shared across factory reconnects so the live claim address

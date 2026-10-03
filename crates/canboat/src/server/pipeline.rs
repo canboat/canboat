@@ -538,7 +538,7 @@ mod tests {
         // cover the construction itself.
         let quirks = {
             let _guard = crate::server::quirks::tests::switch_guard();
-            crate::server::quirks::Quirks::new(Vec::new())
+            crate::server::quirks::Quirks::new(Vec::new(), None)
         };
         Hubs {
             raw: Arc::new(Hub::new()),

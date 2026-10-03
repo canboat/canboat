@@ -132,7 +132,9 @@ pub struct Args {
     no_claim: bool,
 
     /// SocketCAN: unique number for the ISO NAME (default derived from
-    /// the machine id, stable per-host across restarts).
+    /// the machine id, stable per-host across restarts; on a machine
+    /// that can't be identified, a random one stored with the server's
+    /// state files).
     #[arg(short = 'u', long, value_name = "N", default_value_t = 0)]
     unique: u32,
 
@@ -384,6 +386,8 @@ fn open_device(args: &Args) -> Result<DeviceHandle> {
                 no_claim: args.no_claim,
                 timeout_secs: args.timeout,
                 protocol,
+                // Probing creates the dir, so only when it may be needed.
+                state_dir: (args.unique == 0).then(super::app::resolve_config_dir),
                 ..device::socketcan::Config::default()
             };
             let claim = Arc::new(AtomicU8::new(config.address));

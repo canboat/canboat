@@ -517,7 +517,10 @@ impl Bridge {
             analyzer: self.analyzer_hub.clone(),
             snapshot: self.snapshot.clone(),
             engine: Arc::clone(&self.engine),
-            quirks: quirks::Quirks::new(self.config.quirk.clone()),
+            quirks: quirks::Quirks::new(
+                self.config.quirk.clone(),
+                self.config.config_dir.as_deref(),
+            ),
             device_sender: self.device_sender.clone(),
             claim_addr: self.claim_addr.clone(),
             overrides: self.overrides.clone(),
