@@ -255,7 +255,8 @@ pub fn parse_time(s: &str) -> Option<f64> {
     if it.next().is_some() {
         return None;
     }
-    Some(sign * (h * 3600.0 + m * 60.0 + sec))
+    let total = sign * (h * 3600.0 + m * 60.0 + sec);
+    total.is_finite().then_some(total)
 }
 
 /// Format seconds-since-midnight as `HH:MM:SS[.fff]`. Fractional

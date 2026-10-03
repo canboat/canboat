@@ -712,6 +712,7 @@ mod tests {
         assert_eq!(crate::engine::output::parse_time("--00:05:00"), None);
         assert_eq!(crate::engine::output::parse_time("00:-05:00"), None);
         assert_eq!(crate::engine::output::parse_time("inf:00"), None);
+        assert_eq!(crate::engine::output::parse_time("1e308:00"), None);
     }
 
     #[test]
@@ -859,6 +860,32 @@ mod tests {
         assert_eq!(
             frame.data.as_slice(),
             &[0x01, 0x00, 0xee, 0x00, 0xf8, 0x02, 0x03, 0x05, 0x04, 0x00]
+        );
+    }
+
+    #[test]
+    fn variable_time_target_encodes_from_seconds_or_clock() {
+        // A 126208 Command setting 126992 System Time's Time (field 5)
+        // through a VARIABLE: seconds, whole or not, bare or -nv, and the
+        // clock string all reach the same wire value (0.0001 s units).
+        let encode = |value: &str| {
+            let line = format!(
+                r#"{{"pgn":126208,"prio":3,"dst":42,"fields":{{"Function Code":"Command","PGN":126992,"priority":8,"numberOfParameters":1,"list":[{{"parameter":5,"value":{value}}}]}}}}"#
+            );
+            frame_from_json(db(), &line).unwrap().unwrap().data.to_vec()
+        };
+        let want = encode("33020.5");
+        for value in [
+            r#""09:10:20.5""#,
+            r#"{"value":33020.5,"name":"09:10:20.5000"}"#,
+        ] {
+            assert_eq!(encode(value), want, "{value}");
+        }
+        // A whole number of seconds is seconds, not the wire count.
+        assert_eq!(encode("600"), encode("600.0"));
+        assert_eq!(
+            encode(r#"{"value":600,"name":"00:10:00"}"#),
+            encode("600.0")
         );
     }
 
