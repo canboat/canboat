@@ -444,13 +444,22 @@ fn to_encode_value(
 fn raw_number(f: &FieldInfo, n: &serde_json::Number) -> Result<EncodeValue> {
     // A FLOAT, TIME or DURATION is never the wire integer, so even a
     // whole number is scaled: a FLOAT is in the schema's unit, a TIME or
-    // DURATION is seconds.
+    // DURATION is seconds. Nor is a group-function VARIABLE: its value is
+    // the target field's, written like that field's own.
     let physical = matches!(
         f.field_type,
-        Some(FieldType::Float) | Some(FieldType::Time) | Some(FieldType::Duration)
+        Some(FieldType::Float)
+            | Some(FieldType::Time)
+            | Some(FieldType::Duration)
+            | Some(FieldType::Variable)
     );
-    if let Some(i) = n.as_i64().filter(|_| !physical) {
-        Ok(EncodeValue::Int(i))
+    // The wire bits: a signed field's negative raw two's-complements back
+    // into its width, and a 64-bit one (an ISO NAME) can exceed i64.
+    let raw = n.as_u64().or_else(|| n.as_i64().map(|i| i as u64));
+    if let Some(raw) = raw.filter(|_| !physical) {
+        Ok(EncodeValue::Raw(raw))
+    } else if let Some(i) = n.as_i64() {
+        Ok(EncodeValue::Int(i)) // the same value as a Number, kept exact
     } else {
         Ok(EncodeValue::Number(n.as_f64().ok_or_else(|| {
             anyhow!("field '{}': bad number {n}", f.name)

@@ -81,3 +81,23 @@ fn list_includes_known_pgn() {
     assert!(list.contains("isoRequest"), "list missing isoRequest");
     assert!(list.contains("windData"), "list missing windData");
 }
+
+/// A number is a value in the field's unit however it is spelled (#981):
+/// `1000`, `1000.0` and `0x3e8` W alike. Only `raw:` writes wire bits.
+/// Real Power is a J1939 Excess-K field (offset -2e9), so a raw 1000
+/// would decode as -1999999000 W.
+#[test]
+fn an_integer_is_a_value_not_raw() {
+    let payload = |value: &str| {
+        let line = fm(&["generatorTotalAcPower", &format!("realPower={value}")]);
+        let bytes: Vec<String> = line.trim_end().split(',').map(String::from).collect();
+        bytes[bytes.len() - 8..].to_vec()
+    };
+    let kw = payload("1000.0");
+    assert_eq!(payload("1000"), kw);
+    assert_eq!(payload("0x3e8"), kw);
+    // 1000 + 2e9 = 0x773597e8, little-endian, in the first four bytes.
+    assert_eq!(payload("raw:0x773597e8"), kw);
+    assert_eq!(&kw[..4], ["e8", "97", "35", "77"], "{kw:?}");
+    assert_eq!(&payload("raw:0xffffffff")[..4], ["ff", "ff", "ff", "ff"]);
+}
