@@ -128,6 +128,35 @@ Findings:
   in `lookup-generated-data.h`), so gaps remain (e.g. mbar/hPa/mmHg/atm variants not yet
   captured for the general Pressure key). See #729.
 
+### Display backlight and night mode — PGN 130845 (Simnet: Key Value)
+
+Brightness and the day/night palette are two separate keys, both sent as a Set
+to every display in a Display Group:
+
+| Key | Name | Value |
+|---|---|---|
+| 4863 (0x12FF) | Backlight level | 0–99, 99 the brightest (`SIMNET_BACKLIGHT_LEVEL`) |
+| 9983 (0x26FF) | Night mode | 2 = Day, 4 = Night (`SIMNET_NIGHT_MODE`) |
+
+The backlight is a **0–99 scale**, set in two ways:
+
+- **Older-generation devices** set it in ten steps of 11: 0, 11, 22 … 99,
+  shown on the device as 10 %, 20 % … 100 %. These are the
+  `SIMNET_BACKLIGHT_LEVEL` labels. Devices that do this: B&G Triton and Triton²
+  and their Simrad counterparts (IS35, IS40), the AP24, AP28 and AP48 autopilot
+  controllers, and the NOS-based MFDs. In `samples/ac42-commissioning.raw` an
+  AP48 (src 21) sweeps 30 %, 10 %, 50 % … 100 %, every value one of those
+  steps.
+- **NEON-based chartplotters** set it in steps of 1, so any value 0–99 occurs.
+  In `samples/navico-source-selection.raw` a B&G Zeus SR-16 (src 32, software
+  2.5.204) sends 64 and 46. A value between the labels is valid and decodes
+  as a plain number.
+
+Day and night mode are not backlight values. The lookup used to have "Day
+mode" = 1 and "Night mode" = 4 entries, which no capture supports; the real
+switch is key 9983, seen in `samples/ac42-commissioning.raw` (Day) and
+`samples/simrad-ap48.raw` (Night, then Day).
+
 ### Instrument damping — PGN 130845 (Simnet: Key Value)
 
 The same channel also carries **damping** (averaging time) for individual
