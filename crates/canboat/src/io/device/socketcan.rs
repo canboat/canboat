@@ -18,7 +18,8 @@
 //! `frame.src == 0` is treated as "use my claim address" and rewritten to
 //! the currently-claimed source; any other value is sent on the wire as
 //! given. While no address is claimed such a frame is dropped: ISO
-//! 11783-5 allows only address claims from the null address (254). This matches canboat C's stdin pump and lets quirk
+//! 11783-5 allows only address claims (and requests for them) from the
+//! null address (254), so an explicit `src == 254` is dropped otherwise. This matches canboat C's stdin pump and lets quirk
 //! synthesisers (e.g. the SCX-20 PGN 126996 fabrication) impersonate
 //! other nodes by passing the impersonated `src` explicitly.
 //!
@@ -1273,6 +1274,13 @@ mod imp {
                     bus.tx_buf.push_standard(f.pgn, &f.data);
                     return;
                 }
+                // ISO 11783-5: from the null address only an address
+                // claim ("cannot claim") or a Request for Address Claimed
+                // may go out, whoever's frame it is.
+                if f.src == ADDR_NULL && !may_send_from_null(f.pgn, &f.data) {
+                    log::debug!("socketcan: dropping PGN {} from the null address", f.pgn);
+                    return;
+                }
                 let own = claimer.claim.send_address();
                 let src = if f.src == 0 || f.src == ADDR_GLOBAL {
                     // ISO 11783-5: only an address claim may go out from
@@ -1322,6 +1330,15 @@ mod imp {
                 log::debug!("WriterCmd::Bytes ignored by socketcan adapter");
             }
         }
+    }
+
+    /// Whether a frame may go out from the null address (254): an Address
+    /// Claim, or an ISO Request for one.
+    fn may_send_from_null(pgn: u32, data: &[u8]) -> bool {
+        pgn == PGN_ISO_ADDRESS_CLAIM
+            || (pgn == PGN_ISO_REQUEST
+                && data.len() >= 3
+                && u32::from_le_bytes([data[0], data[1], data[2], 0]) == PGN_ISO_ADDRESS_CLAIM)
     }
 
     /// Open the SocketCAN interface and spawn the bus-participant
@@ -2539,7 +2556,7 @@ mod imp {
         /// ISO 11783-5 allows only address claims from the null address:
         /// a frame sent as us (src 0) before we own an address is dropped,
         /// not put on the wire from 254. One impersonating another device
-        /// still goes out.
+        /// still goes out, and an explicit 254 only for a claim.
         #[test]
         fn drops_own_frames_until_an_address_is_claimed() {
             let config = Config::default();
@@ -2572,6 +2589,16 @@ mod imp {
             assert_eq!(sources(&mut bus), Vec::<u8>::new(), "claim settling");
             dispatch_cmd(&mut bus, &mut dev, frame(52));
             assert_eq!(sources(&mut bus), vec![52], "impersonation goes out");
+            // An explicit null source: only a claim, or a request for one.
+            dispatch_cmd(&mut bus, &mut dev, frame(ADDR_NULL));
+            assert_eq!(sources(&mut bus), Vec::<u8>::new(), "not from 254");
+            let claim = RawFrame::new(None, 6, PGN_ISO_ADDRESS_CLAIM, ADDR_NULL, 255, [0xff; 8]);
+            dispatch_cmd(&mut bus, &mut dev, WriterCmd::Frame(claim));
+            let p = PGN_ISO_ADDRESS_CLAIM.to_le_bytes();
+            let request =
+                RawFrame::new(None, 6, PGN_ISO_REQUEST, ADDR_NULL, 255, [p[0], p[1], p[2]]);
+            dispatch_cmd(&mut bus, &mut dev, WriterCmd::Frame(request));
+            assert_eq!(sources(&mut bus), vec![ADDR_NULL, ADDR_NULL]);
 
             let deadline = dev.claim.deadline();
             dev.tick(&mut bus, deadline);
