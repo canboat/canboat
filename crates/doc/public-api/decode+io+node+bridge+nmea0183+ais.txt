@@ -118,6 +118,8 @@ pub canboat::bridge::BridgeConfig::protocol: canboat::schema::BusProtocol
 pub canboat::bridge::BridgeConfig::quiet: bool
 pub canboat::bridge::BridgeConfig::quirk: alloc::vec::Vec<canboat::bridge::Quirk>
 pub canboat::bridge::BridgeConfig::raw_port: u16
+pub canboat::bridge::BridgeConfig::replay: core::option::Option<std::path::PathBuf>
+pub canboat::bridge::BridgeConfig::replay_sent: core::option::Option<std::path::PathBuf>
 pub canboat::bridge::BridgeConfig::snapshot_port: u16
 pub canboat::bridge::BridgeConfig::socketcan: core::option::Option<alloc::string::String>
 pub canboat::bridge::BridgeConfig::socketcan_address: u8

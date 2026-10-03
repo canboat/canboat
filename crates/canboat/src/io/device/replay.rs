@@ -86,10 +86,12 @@ pub fn scan(path: &Path, protocol: BusProtocol) -> io::Result<Scan> {
         let line = line?;
         let trimmed = line.trim_end_matches('\r');
         if trimmed.starts_with('#') {
+            // The header names the format, as play_once reads it: a
+            // Garmin CSV data row is not one `detect` recognises.
             if format.is_none()
-                && header_coalesced.is_none()
-                && parse_format_header(trimmed).is_some()
+                && let Some(fmt) = parse_format_header(trimmed)
             {
+                format = Some(fmt);
                 header_coalesced = Some(header_implies_coalesced(trimmed));
             }
             continue;
@@ -120,6 +122,19 @@ pub fn scan(path: &Path, protocol: BusProtocol) -> io::Result<Scan> {
 /// Start playing the capture. Fails when the capture or the `sent` file
 /// cannot be opened.
 pub fn run(config: Config) -> io::Result<DeviceHandle> {
+    // Frames written to the capture itself would come back on the next
+    // pass as bus traffic.
+    if let Some(sent) = &config.sent
+        && same_file(sent, &config.path)
+    {
+        return Err(io::Error::new(
+            io::ErrorKind::InvalidInput,
+            format!(
+                "{}: the replay capture and the sent file must differ",
+                sent.display()
+            ),
+        ));
+    }
     // Open now so a bad path fails the open rather than the thread.
     let file = File::open(&config.path)?;
     let mut writer: Box<dyn Write + Send> = match &config.sent {
@@ -150,6 +165,14 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
         writer: Some(writer_join),
         progress,
     })
+}
+
+/// Whether two paths name the same file, also through a link or `..`.
+fn same_file(a: &Path, b: &Path) -> bool {
+    match (a.canonicalize(), b.canonicalize()) {
+        (Ok(a), Ok(b)) => a == b,
+        _ => a == b,
+    }
 }
 
 /// Play the capture over and over until the receiver goes away.
@@ -429,6 +452,33 @@ mod tests {
         assert_eq!(
             scan(&long, BusProtocol::Nmea2000).unwrap(),
             Scan { coalesced: true }
+        );
+    }
+
+    /// A Garmin CSV data row is not a format `detect` recognises; the
+    /// header names it, as play_once reads it.
+    #[test]
+    fn scan_takes_the_format_from_the_header() {
+        let path = capture(
+            "garmin",
+            "# format=GARMIN_CSV1\n\
+             0,486942,127508,Battery Status,Garmin,6,255,2,1,8,0x017505FF7FFFFFFF\n",
+        );
+        assert_eq!(
+            scan(&path, BusProtocol::Nmea2000).unwrap(),
+            Scan { coalesced: true }
+        );
+    }
+
+    /// Sent frames written into the capture would come back as bus traffic.
+    #[test]
+    fn refuses_to_send_into_the_capture_it_plays() {
+        let path = capture("same", LINES);
+        let mut config = Config::new(&path);
+        config.sent = Some(path.parent().unwrap().join(".").join("capture.raw"));
+        assert_eq!(
+            run(config).err().map(|e| e.kind()),
+            Some(io::ErrorKind::InvalidInput)
         );
     }
 
