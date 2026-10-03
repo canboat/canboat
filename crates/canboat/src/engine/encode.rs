@@ -892,6 +892,7 @@ impl PgnBuilder {
 /// Mirrors the extraction-signedness quirk: a non-zero schema `offset`
 /// forces the field unsigned, so the raw is a plain magnitude.
 fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
+    let scaled = full_turn_angle(f, scaled);
     let resolution = f.resolution.unwrap_or(1.0);
     let display_offset = f.offset.map(|o| o as f64).unwrap_or(0.0);
     let raw = (scaled - f.unit_offset - display_offset) / resolution;
@@ -918,6 +919,27 @@ fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
         }
     }
     Ok(rounded as i64)
+}
+
+/// An angle field that covers a full turn (0 to 2 pi rad, 0 to 360 deg)
+/// takes a negative angle down to minus half a turn as the same direction:
+/// -0.5 rad is 2 pi - 0.5. Signal K and others give a port angle as
+/// -pi..0, and before the range check (#970) the wrap at the field width
+/// sent those right. Any other value is left as it is.
+fn full_turn_angle(f: &FieldInfo, value: f64) -> f64 {
+    if f.physical_quantity != Some("ANGLE") || f.range_min != Some(0.0) || value >= 0.0 {
+        return value;
+    }
+    let full = match f.unit {
+        Some("rad") => std::f64::consts::TAU,
+        Some("deg") => 360.0,
+        _ => return value,
+    };
+    // The top of the range is a step or a rounding short of the full turn.
+    match f.range_max {
+        Some(max) if max >= full * 0.999 && value >= -full / 2.0 => value + full,
+        _ => value,
+    }
 }
 
 /// The default raw bit pattern for a field the caller left unset.
@@ -1306,6 +1328,28 @@ mod tests {
         inclination(min).unwrap();
         inclination(max + res * 0.4).unwrap();
         assert!(inclination(max + res).is_err());
+    }
+
+    /// A full-turn angle takes a port angle down to minus half a turn as
+    /// the same direction, so -pi..pi senders keep working (#970).
+    #[test]
+    fn a_full_turn_angle_takes_a_negative_angle_as_the_same_direction() {
+        use crate::engine::field::wind_data::WIND_ANGLE;
+        let si = PgnDatabase::embedded(crate::engine::Units::Si);
+        let wind = |v: f64| {
+            let mut b = si.encode_for(crate::engine::pgn::WIND_DATA);
+            b.push(WIND_ANGLE, v)?;
+            Ok::<_, EncodeError>(b.build()?.data[3..5].to_vec())
+        };
+        let tau = std::f64::consts::TAU;
+        assert_eq!(wind(-0.5).unwrap(), wind(tau - 0.5).unwrap());
+        assert_eq!(
+            wind(-std::f64::consts::PI).unwrap(),
+            wind(std::f64::consts::PI).unwrap()
+        );
+        // Past half a turn back, or a full turn forward, is still refused.
+        assert!(wind(-3.2).is_err());
+        assert!(wind(tau + 0.1).is_err());
     }
 
     #[test]
