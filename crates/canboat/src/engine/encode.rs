@@ -495,9 +495,21 @@ impl PgnBuilder {
                                 None => {
                                     let fields = &self.pgn.fields[start..start + size];
                                     let derived = continuing_staged(fields, inst, j);
-                                    emit_field(&mut buf, &mut next_bit, f, derived.as_ref())?
+                                    emit_field(
+                                        &mut buf,
+                                        &mut next_bit,
+                                        self.pgn.pgn,
+                                        f,
+                                        derived.as_ref(),
+                                    )?
                                 }
-                                other => emit_field(&mut buf, &mut next_bit, f, other.as_ref())?,
+                                other => emit_field(
+                                    &mut buf,
+                                    &mut next_bit,
+                                    self.pgn.pgn,
+                                    f,
+                                    other.as_ref(),
+                                )?,
                             }
                         }
                     }
@@ -530,6 +542,7 @@ impl PgnBuilder {
             emit_field(
                 &mut buf,
                 &mut next_bit,
+                self.pgn.pgn,
                 f,
                 auto_count
                     .as_ref()
@@ -785,7 +798,7 @@ impl PgnBuilder {
     /// scalar bit pattern.
     fn stage_value(&self, f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
         match f.field_type {
-            Some(FieldType::StringFix) => stage_string_fix(f, v),
+            Some(FieldType::StringFix) => stage_string_fix(f, v, string_fix_pad(self.pgn.pgn)),
             Some(FieldType::StringLz) => stage_string_lz(f, v),
             Some(FieldType::StringLau) => stage_string_lau(f, v),
             Some(FieldType::Binary) => stage_binary(f, v),
@@ -943,10 +956,28 @@ fn full_turn_angle(f: &FieldInfo, value: f64) -> f64 {
 }
 
 /// The default raw bit pattern for a field the caller left unset.
-/// Stage a `STRING_FIX` field: the UTF-8 bytes right-padded with `0xff`
-/// to the field's fixed byte width, shortened to fit when the text is
-/// longer. The decoder trims trailing NUL / `0xff` / `@` / space alike.
-fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
+/// The AIS PGNs with fixed-width text: 129040 Name; 129794 Callsign, Name
+/// and Destination; 129809 Name; 129810 Vendor ID and Callsign. Matches
+/// canboatjs's `AIS_TEXT_PGNS`, so both encoders send the same bytes.
+const AIS_TEXT_PGNS: [u32; 4] = [129040, 129794, 129809, 129810];
+
+/// The byte a `STRING_FIX` field in `pgn` is padded with. AIS pads unused
+/// text characters with `@` (6-bit code 0, ITU-R M.1371), and MFDs
+/// (Raymarine Axiom, Furuno TZT) show 0xff padding in AIS names as junk.
+/// Every other fixed string pads with 0xff, the convention real devices
+/// and canboatjs use. The decoder trims NUL, 0xff, `@` and space alike.
+fn string_fix_pad(pgn: u32) -> u8 {
+    if AIS_TEXT_PGNS.contains(&pgn) {
+        b'@'
+    } else {
+        0xff
+    }
+}
+
+/// Stage a `STRING_FIX` field: the UTF-8 bytes right-padded with `pad`
+/// ([`string_fix_pad`]) to the field's fixed byte width, shortened to fit
+/// when the text is longer.
+fn stage_string_fix(f: &FieldInfo, v: EncodeValue, pad: u8) -> Result<Staged, EncodeError> {
     let byte_len = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))? as usize / 8;
     let text = match v {
         EncodeValue::Text(s) => s,
@@ -973,10 +1004,7 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
         }
     };
     let bytes = fit_utf8(&text, byte_len).as_bytes();
-    // Pad with 0xff, the convention real devices and canboatjs use
-    // (decoders trim 0xff, 0x00 and '@' runs alike, but matching the
-    // dominant on-wire bytes keeps re-encodes bit-identical).
-    let mut buf = vec![0xffu8; byte_len];
+    let mut buf = vec![pad; byte_len];
     buf[..bytes.len()].copy_from_slice(bytes);
     Ok(Staged::Bytes(buf))
 }
@@ -1144,6 +1172,7 @@ fn continuing_staged(fields: &[FieldInfo], staged: &[Option<Staged>], j: usize) 
 fn emit_field(
     buf: &mut Vec<u8>,
     next_bit: &mut usize,
+    pgn: u32,
     f: &FieldInfo,
     staged: Option<&Staged>,
 ) -> Result<(), EncodeError> {
@@ -1166,15 +1195,26 @@ fn emit_field(
         // one reaching here means a VARIABLE field outside a repeating
         // set, which the schema does not produce.
         Some(Staged::Deferred(_)) => Err(EncodeError::NotFixedLength(f.name)),
-        None => write_unset(buf, next_bit, f),
+        None => write_unset(buf, next_bit, pgn, f),
     }
 }
 
-fn write_unset(buf: &mut Vec<u8>, next_bit: &mut usize, f: &FieldInfo) -> Result<(), EncodeError> {
+fn write_unset(
+    buf: &mut Vec<u8>,
+    next_bit: &mut usize,
+    pgn: u32,
+    f: &FieldInfo,
+) -> Result<(), EncodeError> {
     match f.field_type {
-        // Fixed string / binary: all-1s (the decoder trims the 0xff run to
-        // an empty string; binary fields are whole bytes).
-        Some(FieldType::StringFix) | Some(FieldType::Binary) if f.bit_length.is_some() => {
+        // Fixed string: all padding (the decoder trims it to an empty
+        // string), `@` for AIS text.
+        Some(FieldType::StringFix) if f.bit_length.is_some() => {
+            for _ in 0..f.bit_length.unwrap() as usize / 8 {
+                write_bits(buf, next_bit, 8, u64::from(string_fix_pad(pgn)));
+            }
+        }
+        // Binary: all-1s (binary fields are whole bytes).
+        Some(FieldType::Binary) if f.bit_length.is_some() => {
             for _ in 0..f.bit_length.unwrap() as usize / 8 {
                 write_bits(buf, next_bit, 8, 0xff);
             }
@@ -1721,6 +1761,69 @@ mod tests {
             d.field(MODEL_ID).and_then(|f| f.value.as_str()),
             Some("SCX-20")
         );
+    }
+
+    /// AIS text pads with '@' (ITU-R M.1371), as canboatjs does: MFDs
+    /// show 0xff padding in AIS names as junk.
+    #[test]
+    fn ais_text_is_padded_with_at_signs() {
+        use crate::engine::field::ais_class_bstatic_data_msg24_part_a::NAME;
+        let frame = db()
+            .encode("aisClassBStaticDataMsg24PartA")
+            .unwrap()
+            .push(NAME, "MERRIMAC")
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(&frame.data[5..25], b"MERRIMAC@@@@@@@@@@@@");
+        let d = db().decode(&frame).unwrap();
+        assert_eq!(
+            d.field(NAME).and_then(|f| f.value.as_str()),
+            Some("MERRIMAC")
+        );
+    }
+
+    /// Unset AIS text is all '@' too, in every PGN of the set.
+    #[test]
+    fn unset_ais_text_is_all_at_signs() {
+        let frame = db()
+            .encode("aisClassBStaticDataMsg24PartB")
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(&frame.data[6..20], &[b'@'; 14], "Vendor ID and Callsign");
+        for pgn in AIS_TEXT_PGNS {
+            let info = db().pgns().find(|p| p.pgn == pgn).unwrap();
+            let frame = db().encode(info.id).unwrap().build().unwrap();
+            let mut offset = 0;
+            for f in info.fields {
+                let bits = f.bit_length.unwrap_or(0) as usize;
+                if f.field_type == Some(FieldType::StringFix) {
+                    let text = &frame.data[offset / 8..(offset + bits) / 8];
+                    assert!(
+                        text.iter().all(|&b| b == b'@'),
+                        "{pgn} {}: {text:?}",
+                        f.name
+                    );
+                }
+                offset += bits;
+            }
+        }
+    }
+
+    /// Fixed strings outside AIS keep the 0xff padding.
+    #[test]
+    fn other_fixed_strings_are_padded_with_0xff() {
+        use crate::engine::field::product_information::MODEL_ID;
+        let frame = db()
+            .encode("productInformation")
+            .unwrap()
+            .push(MODEL_ID, "SCX-20")
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(&frame.data[4..10], b"SCX-20");
+        assert!(frame.data[10..36].iter().all(|&b| b == 0xff));
     }
 
     #[test]
