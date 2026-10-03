@@ -1756,7 +1756,12 @@ fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
         return FieldValue::NotAvailable;
     }
     let avail = (data.len() as u32 * 8).saturating_sub(bit_offset);
-    let bits = bit_length.min(avail);
+    // A field the packet ends inside is not available: the digits that are
+    // present are not the number (#962).
+    if bit_length > avail {
+        return FieldValue::NotAvailable;
+    }
+    let bits = bit_length;
     let nbytes = bits.div_ceil(8) as usize;
     let end = (start_byte + nbytes).min(data.len());
     if data[start_byte..end].iter().all(|&b| b == 0xff) {
@@ -1781,10 +1786,14 @@ fn decode_decimal(data: &[u8], bit_offset: u32, bit_length: u32) -> FieldValue {
         }
         magnitude <<= 1;
         if bit % 8 == 7 {
-            if value < 100 {
-                out.push((b'0' + (value / 10) as u8) as char);
-                out.push((b'0' + (value % 10) as u8) as char);
+            // A byte that is not a digit pair (0..99) makes the whole number
+            // unknown: dropping just that byte would give a different,
+            // valid-looking number (#962).
+            if value >= 100 {
+                return FieldValue::NotAvailable;
             }
+            out.push((b'0' + (value / 10) as u8) as char);
+            out.push((b'0' + (value % 10) as u8) as char);
             value = 0;
             magnitude = 1;
         }
