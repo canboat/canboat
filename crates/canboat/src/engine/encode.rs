@@ -131,8 +131,14 @@ pub enum EncodeError {
     NoSuchField { pgn_id: &'static str, field: String },
     /// A `LOOKUP` field was given a label that isn't in its table.
     UnknownLookupLabel { field: &'static str, label: String },
-    /// A value doesn't fit the field's bit width / range.
-    ValueOutOfRange { field: &'static str, value: f64 },
+    /// A value doesn't fit the field's bit width / range. `range` is the
+    /// field's valid range in the schema's unit, when the value is a
+    /// number outside it.
+    ValueOutOfRange {
+        field: &'static str,
+        value: f64,
+        range: Option<(f64, f64)>,
+    },
     /// A group-function *dynamic* field (`VARIABLE` /
     /// `DYNAMIC_FIELD_KEY`/`LENGTH`/`VALUE`) was left unset — its width is
     /// determined by sibling fields, so it can't be defaulted in isolation.
@@ -179,7 +185,21 @@ impl fmt::Display for EncodeError {
             EncodeError::UnknownLookupLabel { field, label } => {
                 write!(f, "field '{field}': '{label}' is not a valid value")
             }
-            EncodeError::ValueOutOfRange { field, value } => {
+            EncodeError::ValueOutOfRange {
+                field,
+                value,
+                range: Some((min, max)),
+            } => {
+                write!(
+                    f,
+                    "field '{field}': value {value} is outside its range {min} to {max}"
+                )
+            }
+            EncodeError::ValueOutOfRange {
+                field,
+                value,
+                range: None,
+            } => {
                 write!(f, "field '{field}': value {value} out of range")
             }
             EncodeError::NotFixedLength(field) => {
@@ -880,7 +900,22 @@ fn scaled_to_raw(f: &FieldInfo, scaled: f64) -> Result<i64, EncodeError> {
         return Err(EncodeError::ValueOutOfRange {
             field: f.name,
             value: scaled,
+            range: None,
         });
+    }
+    // Outside the field's range the raw value would wrap at the field
+    // width, or land on a sentinel, and decode as some other value (#970).
+    // Compare raw against raw, so a value within half a step of an end
+    // still rounds onto it.
+    if let (Some(min), Some(max)) = (f.range_min, f.range_max) {
+        let raw_of = |v: f64| ((v - f.unit_offset - display_offset) / resolution).round();
+        if rounded < raw_of(min) || rounded > raw_of(max) {
+            return Err(EncodeError::ValueOutOfRange {
+                field: f.name,
+                value: scaled,
+                range: Some((min, max)),
+            });
+        }
     }
     Ok(rounded as i64)
 }
@@ -903,6 +938,7 @@ fn stage_string_fix(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError
                 return Err(EncodeError::ValueOutOfRange {
                     field: f.name,
                     value: b.len() as f64,
+                    range: None,
                 });
             }
             return Ok(Staged::Bytes(b));
@@ -1011,6 +1047,7 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
                 return Err(EncodeError::ValueOutOfRange {
                     field: f.name,
                     value: bytes.len() as f64,
+                    range: None,
                 });
             }
             let mut raw: u64 = 0;
@@ -1025,6 +1062,7 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
             return Err(EncodeError::ValueOutOfRange {
                 field: f.name,
                 value: bytes.len() as f64,
+                range: None,
             });
         }
         bytes.resize(want, 0);
@@ -1202,6 +1240,7 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
                 .map_err(|_| EncodeError::ValueOutOfRange {
                     field: f.name,
                     value: f64::NAN,
+                    range: None,
                 })
         }
         Some(FieldType::StringFix)
@@ -1219,6 +1258,7 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
                 Err(EncodeError::ValueOutOfRange {
                     field: f.name,
                     value: f64::NAN,
+                    range: None,
                 })
             }
         }
@@ -1231,6 +1271,41 @@ mod tests {
 
     fn db() -> &'static PgnDatabase {
         PgnDatabase::embedded(crate::engine::Units::Metric)
+    }
+
+    /// A number outside its field's range is refused, not wrapped at the
+    /// field width (#970): 0.3 semi-circles in the 16-bit Inclination
+    /// Angle (range about +/-0.0625, 0.196 rad) used to go out as 0.05.
+    #[test]
+    fn a_number_outside_its_field_range_is_refused() {
+        use crate::engine::field::gps_almanac_data::INCLINATION_ANGLE;
+        // The field constants describe the SI schema.
+        let si = PgnDatabase::embedded(crate::engine::Units::Si);
+        let inclination = |v: f64| {
+            si.encode_for(crate::engine::pgn::GPS_ALMANAC_DATA)
+                .push(INCLINATION_ANGLE, v)
+                .map(|_| ())
+        };
+        let err = inclination(0.3 * std::f64::consts::PI).unwrap_err();
+        assert!(matches!(
+            err,
+            EncodeError::ValueOutOfRange {
+                field: "Inclination Angle",
+                range: Some((min, max)),
+                ..
+            } if min < -0.196 && max > 0.196
+        ));
+        assert!(err.to_string().contains("outside its range"));
+        assert!(inclination(-0.3 * std::f64::consts::PI).is_err());
+        // Both ends are in range, and so is a value within half a step
+        // past one, which rounds onto it.
+        let res = INCLINATION_ANGLE.field.resolution.unwrap();
+        let max = INCLINATION_ANGLE.field.range_max.unwrap();
+        let min = INCLINATION_ANGLE.field.range_min.unwrap();
+        inclination(max).unwrap();
+        inclination(min).unwrap();
+        inclination(max + res * 0.4).unwrap();
+        assert!(inclination(max + res).is_err());
     }
 
     #[test]
