@@ -1,0 +1,9 @@
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":61450,"description":"Engine Gas Flow Rate 1","fields":{"Engine Exhaust Gas Recirculation 1 Mass Flow Rate":0.0833333,"Engine Intake Air Mass Flow Rate":0.1388889}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":64776,"description":"Engine Oil Message","fields":{"Engine Oil Viscosity":0.0500000,"Engine Oil Density":850.0061,"Engine Oil Temperature 3":363.1562}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65005,"description":"Utility Total AC Energy","fields":{"Total Energy Export":14806800000,"Total Energy Import":1080000000}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65001,"description":"Bus #1 Phase C Basic AC Quantities","fields":{"Line-Line AC RMS Voltage":400,"Line-Neutral AC RMS Voltage":230,"AC Frequency":50.00000}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65006,"description":"Utility Phase C AC Reactive Power","fields":{"Reactive Power":1500,"Power factor":0.8499756}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65007,"description":"Utility Phase C AC Power","fields":{"Real Power":10000,"Apparent Power":12000}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65008,"description":"Utility Phase C Basic AC Quantities","fields":{"Line-Line AC RMS Voltage":400,"Line-Neutral AC RMS Voltage":230,"AC Frequency":50.00000,"AC RMS Current":32}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65253,"description":"Engine Hours, Revolutions","fields":{"Engine Total Hours of Operation":44443800,"Engine Total Revolutions":123456000}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":6,"src":0,"dst":255,"pgn":65266,"description":"Fuel Economy","fields":{"Fuel Rate":0.0000034722,"Throttle Position":0.500}}
