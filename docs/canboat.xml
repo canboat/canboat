@@ -3644,8 +3644,6 @@ limitations under the License.
     </LookupEnumeration>
     <LookupEnumeration Name="SIMNET_BACKLIGHT_LEVEL" MaxValue="255">
       <EnumPair Value="0" Name="10% (Min)" />
-      <EnumPair Value="1" Name="Day mode" />
-      <EnumPair Value="4" Name="Night mode" />
       <EnumPair Value="11" Name="20%" />
       <EnumPair Value="22" Name="30%" />
       <EnumPair Value="33" Name="40%" />
@@ -83931,7 +83929,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
       <PGN>130845</PGN>
       <Id>simnetKeyValue</Id>
       <Description>Simnet: Key Value</Description>
-      <Explanation>Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter (and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed against NAC3 and AC42 autopilot and MFD capture corpus.</Explanation>
+      <Explanation>Navico/Simrad get-set protocol for instrument and autopilot settings. The Key selects which parameter (and thus the data type of the Value); the Operation byte selects read/set/reply. The Operation byte is NOT a value length (the Value width comes from the resolved data type); it is only ever 0/1/2, confirmed against NAC3 and AC42 autopilot and MFD capture corpus. Backlight level (key 4863) is a 0-99 scale, 99 being the brightest. Its labels (10% at 0 up to 100% at 99, in steps of 11) are the levels set by older-generation devices, namely B&amp;G Triton and Triton2 and their Simrad counterparts (IS35, IS40), the AP24, AP28 and AP48 autopilot controllers, and NOS-based MFDs. The NEON-based chartplotters set it in steps of 1, so a value between the labels is valid and decodes as a plain number. Day and night mode are a separate key, 9983 (Night mode).</Explanation>
       <ResearchDoc>navico_alarms_and_commands</ResearchDoc>
       <Type>Fast</Type>
       <Complete>false</Complete>

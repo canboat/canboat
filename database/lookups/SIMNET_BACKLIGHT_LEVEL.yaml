@@ -3,8 +3,6 @@ kind: pair
 bits: 8
 values:
   0: 10% (Min)
-  1: Day mode
-  4: Night mode
   11: 20%
   22: 30%
   33: 40%
