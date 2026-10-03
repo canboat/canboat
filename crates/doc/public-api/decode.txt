@@ -784,6 +784,7 @@ pub canboat::EncodeValue::Lookup(alloc::string::String)
 pub canboat::EncodeValue::NotAvailable
 pub canboat::EncodeValue::Number(f64)
 pub canboat::EncodeValue::Pgn(u32)
+pub canboat::EncodeValue::Raw(u64)
 pub canboat::EncodeValue::Text(alloc::string::String)
 impl core::clone::Clone for canboat::EncodeValue
 pub fn canboat::EncodeValue::clone(&self) -> Self
@@ -797,6 +798,8 @@ impl core::convert::From<alloc::string::String> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(alloc::string::String) -> Self
 impl core::convert::From<alloc::vec::Vec<u8>> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(alloc::vec::Vec<u8>) -> Self
+impl core::convert::From<canboat::Raw> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(canboat::Raw) -> Self
 impl core::convert::From<f64> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(f64) -> Self
 impl core::convert::From<i32> for canboat::EncodeValue
@@ -805,8 +808,6 @@ impl core::convert::From<i64> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(i64) -> Self
 impl core::convert::From<u32> for canboat::EncodeValue
 pub fn canboat::EncodeValue::from(u32) -> Self
-impl core::convert::From<u64> for canboat::EncodeValue
-pub fn canboat::EncodeValue::from(u64) -> Self
 impl core::fmt::Debug for canboat::EncodeValue
 pub fn canboat::EncodeValue::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 impl core::marker::StructuralPartialEq for canboat::EncodeValue
@@ -1020,6 +1021,18 @@ pub fn canboat::PgnBuilder::push_by_name(&mut self, &str, impl core::convert::In
 pub fn canboat::PgnBuilder::push_in_set(&mut self, usize, usize, &str, impl core::convert::Into<canboat::EncodeValue>) -> core::result::Result<&mut Self, canboat::EncodeError>
 pub fn canboat::PgnBuilder::source(self, u8) -> Self
 pub fn canboat::PgnBuilder::timestamp(self, impl core::convert::Into<alloc::string::String>) -> Self
+pub struct canboat::Raw(pub u64)
+impl core::clone::Clone for canboat::Raw
+pub fn canboat::Raw::clone(&self) -> Self
+impl core::cmp::Eq for canboat::Raw
+impl core::cmp::PartialEq for canboat::Raw
+pub fn canboat::Raw::eq(&self, &Self) -> bool
+impl core::convert::From<canboat::Raw> for canboat::EncodeValue
+pub fn canboat::EncodeValue::from(canboat::Raw) -> Self
+impl core::fmt::Debug for canboat::Raw
+pub fn canboat::Raw::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
+impl core::marker::Copy for canboat::Raw
+impl core::marker::StructuralPartialEq for canboat::Raw
 pub struct canboat::Reassembler
 impl canboat::Reassembler
 pub fn canboat::Reassembler::new() -> Self

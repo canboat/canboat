@@ -17,7 +17,7 @@
 use std::collections::HashMap;
 use std::time::{Duration, Instant, SystemTime, UNIX_EPOCH};
 
-use crate::engine::encode::EncodeError;
+use crate::engine::encode::{EncodeError, Raw};
 use crate::engine::{ADDR_GLOBAL, DecodedPgn, PgnDatabase, RawFrame, Units, field};
 
 /// NMEA 2000 PGN numbers the matcher cares about.
@@ -184,7 +184,7 @@ fn build_scx20_product_info(src: u8) -> Option<RawFrame> {
             .destination(ADDR_GLOBAL)
             .timestamp(now_iso());
         use field::product_information as pi;
-        b.push(pi::NMEA2000_VERSION, SCX20_DB_VERSION)?;
+        b.push(pi::NMEA2000_VERSION, Raw(SCX20_DB_VERSION as u64))?;
         b.push(pi::PRODUCT_CODE, SCX20_PRODUCT_CODE)?;
         // The captured SCX-20 pads its fixed strings with 0x00, not the
         // encoder's 0xff default — stage the exact bytes so the

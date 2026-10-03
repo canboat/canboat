@@ -35,9 +35,11 @@ pub struct Args {
     /// PGN to build: schema id (e.g. `isoRequest`) or number (`126996`).
     pgn: Option<String>,
 
-    /// Field assignments as `FIELD=VALUE` (field by name or id). Fields
-    /// you don't set default to "not available", or — for a variant's
-    /// selector fields — to the value that selects this variant.
+    /// Field assignments as `FIELD=VALUE` (field by name or id). A number
+    /// is a value in the field's unit (`1000`, `1000.0` and `0x3e8` alike);
+    /// `raw:N` writes the wire bits verbatim. Fields you don't set default
+    /// to "not available", or — for a variant's selector fields — to the
+    /// value that selects this variant.
     #[arg(value_name = "FIELD=VALUE")]
     assignments: Vec<String>,
 
@@ -190,7 +192,10 @@ fn describe(pgn: &'static PgnInfo, si: bool) {
             f.order, f.name, f.id, kind, unit, note
         );
     }
-    println!("\nUnset fields default to \"not available\". Example:");
+    println!(
+        "\nA number is a value in the field's unit; raw:N (e.g. raw:0xffff) writes \
+         the wire bits.\nUnset fields default to \"not available\". Example:"
+    );
     let example = pgn
         .fields
         .iter()
@@ -206,6 +211,7 @@ fn print_usage() {
          [--prio N] [--si] [--to FORMAT]\n\
          \n\
          <PGN> is a schema id (isoRequest) or number (126996).\n\
+         A VALUE number is in the field's unit; raw:N writes the wire bits.\n\
          \n\
          canboat format-message --list              list all PGNs\n\
          canboat format-message <PGN> --help        list a PGN's settable fields\n\

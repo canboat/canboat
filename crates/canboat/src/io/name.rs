@@ -29,6 +29,14 @@ pub struct Name {
     arbitrary_address_capable: bool,
 }
 
+/// An ISO NAME field's value: [`PgnBuilder::push`](crate::engine::encode::PgnBuilder::push)
+/// takes the NAME itself rather than its `u64`.
+impl From<Name> for crate::engine::encode::EncodeValue {
+    fn from(name: Name) -> Self {
+        crate::engine::encode::EncodeValue::Raw(name.to_u64())
+    }
+}
+
 impl Name {
     /// A NAME for an 11-bit `manufacturer_code` and a 21-bit `unique_number`
     /// (both masked to width), defaulting to industry group 4 (Marine) and
@@ -168,5 +176,27 @@ mod tests {
             .device_class(60)
             .to_u64();
         assert_eq!(got, expected);
+    }
+
+    /// A NAME goes into an ISO NAME field as itself, all 64 bits.
+    #[test]
+    fn a_name_is_pushed_as_itself() {
+        use crate::engine::field::simnet_data_source_selection::SOURCE;
+        let db = crate::engine::PgnDatabase::embedded(crate::engine::Units::Si);
+        let name = Name::new(275, 0x1abcd).device_function(130);
+        let frame = db
+            .encode("simnetDataSourceSelection")
+            .unwrap()
+            .push(SOURCE, name)
+            .unwrap()
+            .build()
+            .unwrap();
+        let d = db.decode(&frame).unwrap();
+        match d.field(SOURCE).map(|f| &f.value) {
+            Some(crate::engine::FieldValue::IsoName { value, .. }) => {
+                assert_eq!(*value, name.to_u64())
+            }
+            other => panic!("expected an ISO NAME, got {other:?}"),
+        }
     }
 }
