@@ -19,9 +19,10 @@
 PLATFORM?=$(shell uname | tr '[A-Z]' '[a-z]')-$(shell uname -m)
 TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
+ANALYZER_J1939=$(TARGETDIR)/analyzer-j1939
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34 tests
 
 all:	tests
 
@@ -315,7 +316,34 @@ test32:
 	diff $(TEMPDIR)/pgn-decimal.out pgn-decimal.out
 	diff $(TEMPDIR)/pgn-decimal.err pgn-decimal.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32
+#
+# Sentinels in a field with an offset (#984): PGN 127513 Peukert Exponent is
+# raw 0..250 plus 500, so 1.0..1.5. The lines carry 1.25, the top value 1.5,
+# and then 0xfd, 0xfe and 0xff, which are reserved, out of range and not
+# available, and so have no value.
+#
+test33:
+	$(ANALYZER) -json < pgn-offset-sentinels.in > $(TEMPDIR)/pgn-offset-sentinels.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-offset-sentinels.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-offset-sentinels.out
+	diff $(TEMPDIR)/pgn-offset-sentinels.out pgn-offset-sentinels.out
+	diff $(TEMPDIR)/pgn-offset-sentinels.err pgn-offset-sentinels.err
+
+#
+# The same for J1939 temperatures in Excess-K notation (#984), where raw 0 is
+# 233 K: PGN 65262 with a coolant and fuel temperature, then the top coolant
+# value 485 K next to sentinels, then all 0xff. In Metric and SI.
+#
+test34:
+	$(ANALYZER_J1939) -json < j1939-offset-sentinels.in > $(TEMPDIR)/j1939-offset-sentinels.out -fixtime pgn-test 2> $(TEMPDIR)/j1939-offset-sentinels.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/j1939-offset-sentinels.out
+	diff $(TEMPDIR)/j1939-offset-sentinels.out j1939-offset-sentinels.out
+	diff $(TEMPDIR)/j1939-offset-sentinels.err j1939-offset-sentinels.err
+	$(ANALYZER_J1939) -json -si < j1939-offset-sentinels.in > $(TEMPDIR)/j1939-offset-sentinels-si.out -fixtime pgn-test 2> $(TEMPDIR)/j1939-offset-sentinels-si.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/j1939-offset-sentinels-si.out
+	diff $(TEMPDIR)/j1939-offset-sentinels-si.out j1939-offset-sentinels-si.out
+	diff $(TEMPDIR)/j1939-offset-sentinels-si.err j1939-offset-sentinels.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 test33 test34
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so
