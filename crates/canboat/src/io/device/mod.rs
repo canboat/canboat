@@ -32,6 +32,7 @@ pub mod ikonvert;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
+pub mod replay;
 pub mod socketcan;
 pub mod supervisor;
 
