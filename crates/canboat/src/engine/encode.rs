@@ -715,10 +715,22 @@ impl PgnBuilder {
             ))?;
         // A label for a lookup-typed target arrives as Text (the caller
         // cannot know the target's type up front); retype it.
+        let is_time = matches!(
+            target_field.field_type,
+            Some(FieldType::Time) | Some(FieldType::Duration)
+        );
         let value = match v {
             EncodeValue::Text(s) if target_field.lookup_enumeration.is_some() => {
                 EncodeValue::Lookup(s.clone())
             }
+            // A TIME / DURATION target is seconds, as canboat writes it:
+            // a whole number is seconds too, not the wire count, and a
+            // clock string ("09:10:20.2240") reads as its seconds.
+            EncodeValue::Int(n) if is_time => EncodeValue::Number(*n as f64),
+            EncodeValue::Text(s) if is_time => match crate::engine::output::parse_time(s) {
+                Some(seconds) => EncodeValue::Number(seconds),
+                None => v.clone(),
+            },
             other => other.clone(),
         };
         match self.stage_value(target_field, value)? {

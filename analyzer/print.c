@@ -1383,21 +1383,30 @@ extern bool fieldPrintTime(const Field   *field,
 
   if (showJson)
   {
-    if (showJsonValue)
-    {
-      mprintf("%s%" PRId64 ",\"name\":", sign, value);
-    }
+    /*
+     * JSON gives a time of day or a duration as a number of seconds, like every other quantity in
+     * it, in SI and Metric alike; -nv keeps the clock form as the name.
+     */
+    uint64_t whole = t / unitspersecond;
+
     if (digits > 0)
     {
-      mprintf("\"%s%02u:%02u:%02u.%0*u\"", sign, hours, minutes, seconds, digits, fraction);
+      mprintf("%s%" PRIu64 ".%0*u", sign, whole, digits, fraction);
     }
     else
     {
-      mprintf("\"%s%02u:%02u:%02u\"", sign, hours, minutes, seconds);
+      mprintf("%s%" PRIu64, sign, whole);
     }
     if (showJsonValue)
     {
-      mprintf("}");
+      if (digits > 0)
+      {
+        mprintf(",\"name\":\"%s%02u:%02u:%02u.%0*u\"}", sign, hours, minutes, seconds, digits, fraction);
+      }
+      else
+      {
+        mprintf(",\"name\":\"%s%02u:%02u:%02u\"}", sign, hours, minutes, seconds);
+      }
     }
   }
   else
