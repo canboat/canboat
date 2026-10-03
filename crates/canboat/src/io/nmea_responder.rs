@@ -13,6 +13,7 @@
 //! builder rather than hand-laid bytes. Pairs with
 //! [`crate::io::address_claim`], which owns the claim state machine itself.
 
+use crate::engine::encode::Raw;
 use crate::engine::{ADDR_GLOBAL, PgnDatabase, RawFrame, Units, field};
 
 const PGN_ISO_ACK: u32 = 59392;
@@ -44,7 +45,7 @@ impl ProductInfo<'_> {
         let db = PgnDatabase::embedded(Units::Si);
         let build = || -> Result<RawFrame, crate::engine::encode::EncodeError> {
             let mut b = db.encode("productInformation")?.source(src);
-            b.push(pi::NMEA2000_VERSION, self.db_version)?;
+            b.push(pi::NMEA2000_VERSION, Raw(self.db_version as u64))?;
             b.push(pi::PRODUCT_CODE, self.product_code)?;
             b.push(pi::MODEL_ID, self.model_id)?;
             b.push(pi::SOFTWARE_VERSION_CODE, self.software_version)?;

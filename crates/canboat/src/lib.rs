@@ -52,6 +52,27 @@
 //! # Ok::<(), Box<dyn std::error::Error>>(())
 //! ```
 //!
+//! ## Numbers and raw bits
+//!
+//! A number is a value in the field's unit, whether it is written as an
+//! integer or not: `push(wd::WIND_SPEED, 5)` is 5 m/s, exactly like `5.0`.
+//! To write a field's wire bits verbatim — a sentinel such as "not
+//! available", say — wrap them in [`Raw`], the one spelling that skips the
+//! scaling and the range check:
+//!
+//! ```
+//! # use canboat::{Database, Raw, Units};
+//! # use canboat::ids::field::wind_data as wd;
+//! # let db = Database::embedded(Units::Si);
+//! let five = db.encode("windData")?.push(wd::WIND_SPEED, 5)?.build()?;
+//! let also_five = db.encode("windData")?.push(wd::WIND_SPEED, 5.0)?.build()?;
+//! assert_eq!(five.data, also_five.data);
+//! // 500 is the wire count of 0.01 m/s steps: the same 5 m/s.
+//! let raw = db.encode("windData")?.push(wd::WIND_SPEED, Raw(500))?.build()?;
+//! assert_eq!(raw.data, five.data);
+//! # Ok::<(), Box<dyn std::error::Error>>(())
+//! ```
+//!
 //! No constant to hand (the field is chosen at runtime — a config-driven
 //! encoder, a CLI arg)? Use the `*_by_name` twins,
 //! [`PgnBuilder::push_by_name`] and [`DecodedPgn::field_by_name`] — an `O(n)`
@@ -71,17 +92,17 @@
 //!
 //! ## Lookup (enum) fields
 //!
-//! A `LOOKUP` field carries a raw integer that maps to a label. Encode it by
-//! **label** ([`EncodeValue::Lookup`], shown above) or by **raw value**
-//! ([`EncodeValue::Int`]); on decode, [`FieldValue::Lookup`] gives you both
-//! the number and its resolved name, so you can match on whichever you have:
+//! A `LOOKUP` field carries an integer code that maps to a label. Encode it
+//! by **label** ([`EncodeValue::Lookup`], shown above) or by **code** (an
+//! integer); on decode, [`FieldValue::Lookup`] gives you both the number
+//! and its resolved name, so you can match on whichever you have:
 //!
 //! ```
 //! # use canboat::{Database, EncodeValue, FieldValue, Units};
 //! # use canboat::ids::field::wind_data as wd;
 //! # let db = Database::embedded(Units::Metric);
-//! // Reference = 2 is "Apparent" — set the enum's raw value directly.
-//! let frame = db.encode("windData")?.push(wd::REFERENCE, EncodeValue::Int(2))?.build()?;
+//! // Reference = 2 is "Apparent" — set the enum's code directly.
+//! let frame = db.encode("windData")?.push(wd::REFERENCE, 2)?.build()?;
 //!
 //! let decoded = db.decode(&frame).unwrap();
 //! match &decoded.field(wd::REFERENCE).unwrap().value {
@@ -201,6 +222,7 @@ pub use crate::engine::{
     PgnDatabase as Database,
     RAWFRAME_MAX_SIZE as FRAME_MAX_SIZE,
     // frames — the wire-side pivot
+    Raw,
     RawFrame as Frame,
     Reassembled,
     // fast-packet reassembly

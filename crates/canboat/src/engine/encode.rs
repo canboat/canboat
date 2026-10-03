@@ -49,13 +49,23 @@ use crate::engine::frame::RawFrame;
 /// borrows `&'static` schema references).
 #[derive(Debug, Clone, PartialEq)]
 pub enum EncodeValue {
-    /// A scaled physical value in the field's unit (e.g. `1.23` rad/s).
+    /// A physical value in the field's unit (e.g. `1.23` rad/s).
     /// Inverse of the decoder's `raw * resolution + offset + unit_offset`.
     Number(f64),
-    /// A raw, unscaled integer written to the field bits verbatim
-    /// (instances, counts, enum values, a PGN number, …). Signed values
-    /// are two's-complemented into the field width.
+    /// An integer value. Means exactly what the same [`Number`] would: a
+    /// value in the field's unit, so `1000` and `1000.0` W encode alike.
+    /// On a field whose value is a code (a `LOOKUP` / `BITLOOKUP` code,
+    /// a PGN, MMSI or ISO NAME) it is that code. Kept apart from `Number`
+    /// so that a field without scaling takes it exactly, beyond `f64`'s
+    /// 53 bits.
+    ///
+    /// [`Number`]: EncodeValue::Number
     Int(i64),
+    /// The field's wire bits, written verbatim: no scaling and no range
+    /// check, so it can write a sentinel ("not available", "error") on
+    /// purpose. The only way to ask for raw bits; build it with
+    /// [`Raw`].
+    Raw(u64),
     /// A `LOOKUP` / `BITLOOKUP` selected by its label (e.g. `"Apparent"`).
     Lookup(String),
     /// Text for a `STRING_FIX` / `STRING_LZ` / `STRING_LAU` field.
@@ -67,6 +77,18 @@ pub enum EncodeValue {
     Pgn(u32),
     /// Leave the field at its "not available" sentinel.
     NotAvailable,
+}
+
+/// The wire bits of a field, for [`PgnBuilder::push`]: `push(f, Raw(0xffff))`
+/// writes them verbatim, where `push(f, 0xffff)` is a value in the field's
+/// unit. See [`EncodeValue::Raw`].
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Raw(pub u64);
+
+impl From<Raw> for EncodeValue {
+    fn from(v: Raw) -> Self {
+        EncodeValue::Raw(v.0)
+    }
 }
 
 impl From<f64> for EncodeValue {
@@ -97,13 +119,6 @@ impl From<&str> for EncodeValue {
 impl From<String> for EncodeValue {
     fn from(v: String) -> Self {
         EncodeValue::Text(v)
-    }
-}
-impl From<u64> for EncodeValue {
-    /// A raw 64-bit pattern (e.g. an ISO NAME). Reinterpreted as `Int`;
-    /// the field width masks it back, so the full `u64` range survives.
-    fn from(v: u64) -> Self {
-        EncodeValue::Int(v as i64)
     }
 }
 impl From<Vec<u8>> for EncodeValue {
@@ -756,10 +771,9 @@ impl PgnBuilder {
             EncodeValue::Text(s) if target_field.lookup_enumeration.is_some() => {
                 EncodeValue::Lookup(s.clone())
             }
-            // A TIME / DURATION target is seconds, as canboat writes it:
-            // a whole number is seconds too, not the wire count, and a
-            // clock string ("09:10:20.2240") reads as its seconds.
-            EncodeValue::Int(n) if is_time => EncodeValue::Number(*n as f64),
+            // A TIME / DURATION target is seconds, as canboat writes it
+            // (a whole number too, like any number), and a clock string
+            // ("09:10:20.2240") reads as its seconds.
             EncodeValue::Text(s) if is_time => match crate::engine::output::parse_time(s) {
                 Some(seconds) => EncodeValue::Number(seconds),
                 None => v.clone(),
@@ -818,9 +832,18 @@ impl PgnBuilder {
     /// masked/two's-complemented into the field width.
     fn value_to_raw(&self, f: &FieldInfo, v: EncodeValue) -> Result<u64, EncodeError> {
         let bl = f.bit_length.ok_or(EncodeError::NotFixedLength(f.name))?;
+        let width = bl + f.continuation.map_or(0, |c| c.bit_length);
+        // An integer on a FLOAT is the same value as a Number.
+        let v = match (f.field_type, v) {
+            (Some(FieldType::Float), EncodeValue::Int(n)) => EncodeValue::Number(n as f64),
+            (_, v) => v,
+        };
         let raw_i64: i64 = match (f.field_type, v) {
             // Explicit "leave unset".
             (_, EncodeValue::NotAvailable) => return Ok(default_raw(f)),
+
+            // The wire bits, as asked for.
+            (_, EncodeValue::Raw(raw)) => return Ok(raw & all_ones(width)),
 
             // Lookup by label → its raw value; or a raw integer.
             (
@@ -847,9 +870,6 @@ impl PgnBuilder {
                 };
                 return Ok(u64::from((wire as f32).to_bits()));
             }
-            (Some(FieldType::Float), EncodeValue::Int(n)) => {
-                return Ok(u64::from((n as f32).to_bits()));
-            }
 
             // Text / binary reach `value_to_raw` only on a scalar field
             // (e.g. a string value handed to a NUMBER) — a type error.
@@ -863,10 +883,12 @@ impl PgnBuilder {
             // A PGN number on any field is just a raw integer.
             (_, EncodeValue::Pgn(p)) => p as i64,
 
-            // Numeric families: a raw integer is written verbatim…
-            (_, EncodeValue::Int(n)) => n,
-            // …a scaled Number is inverted through resolution/offset.
+            // A physical value, spelled as an integer or not, is inverted
+            // through resolution and offsets…
+            (Some(t), EncodeValue::Int(n)) if is_scaled(t) => int_to_raw(f, n)?,
             (_, EncodeValue::Number(x)) => scaled_to_raw(f, x)?,
+            // …and on every other field an integer is the code itself.
+            (_, EncodeValue::Int(n)) => n,
 
             // A bare Lookup label on a non-lookup field.
             (_, EncodeValue::Lookup(_)) => {
@@ -876,10 +898,7 @@ impl PgnBuilder {
                 });
             }
         };
-        Ok(mask_to_width(
-            raw_i64,
-            bl + f.continuation.map_or(0, |c| c.bit_length),
-        ))
+        Ok(mask_to_width(raw_i64, width))
     }
 
     fn resolve_lookup(&self, f: &FieldInfo, label: &str) -> Result<u64, EncodeError> {
@@ -899,6 +918,41 @@ impl PgnBuilder {
             label: label.to_string(),
         })
     }
+}
+
+/// Whether a field's value is a physical quantity, scaled to and from its
+/// wire value (as opposed to a code, where the integer is the value).
+fn is_scaled(t: FieldType) -> bool {
+    matches!(
+        t,
+        FieldType::Number
+            | FieldType::Decimal
+            | FieldType::Float
+            | FieldType::Date
+            | FieldType::Time
+            | FieldType::Duration
+    )
+}
+
+/// An integer value in the field's unit. Taken exactly when the field
+/// has no scaling (resolution 1, no offsets), so a 64-bit counter keeps
+/// every bit; otherwise scaled like the same [`EncodeValue::Number`].
+fn int_to_raw(f: &FieldInfo, n: i64) -> Result<i64, EncodeError> {
+    let unscaled =
+        f.resolution.unwrap_or(1.0) == 1.0 && f.offset.unwrap_or(0) == 0 && f.unit_offset == 0.0;
+    if !unscaled {
+        return scaled_to_raw(f, n as f64);
+    }
+    if let (Some(min), Some(max)) = (f.range_min, f.range_max)
+        && ((n as f64) < min || (n as f64) > max)
+    {
+        return Err(EncodeError::ValueOutOfRange {
+            field: f.name,
+            value: n as f64,
+            range: Some((min, max)),
+        });
+    }
+    Ok(n)
 }
 
 /// Invert the decoder's `raw * resolution + offset + unit_offset`.
@@ -1078,6 +1132,11 @@ fn stage_binary(f: &FieldInfo, v: EncodeValue) -> Result<Staged, EncodeError> {
     let mut bytes = match v {
         EncodeValue::Bytes(b) => b,
         EncodeValue::NotAvailable => Vec::new(),
+        // The bits, little-endian, in the field's whole bytes.
+        EncodeValue::Raw(raw) if f.bit_length.is_some_and(|bl| bl <= 64) => {
+            let width = f.bit_length.unwrap().div_ceil(8) as usize;
+            raw.to_le_bytes()[..width].to_vec()
+        }
         _ => {
             return Err(EncodeError::TypeMismatch {
                 field: f.name,
@@ -1282,7 +1341,22 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
     if s.eq_ignore_ascii_case("n/a") || s.is_empty() {
         return Ok(EncodeValue::NotAvailable);
     }
-    // 0x-hex → raw integer.
+    // `raw:N` (decimal or 0x-hex) → the wire bits, verbatim.
+    if let Some(raw) = s.strip_prefix("raw:") {
+        let raw = raw.trim();
+        let parsed = match raw.strip_prefix("0x").or_else(|| raw.strip_prefix("0X")) {
+            Some(hex) => u64::from_str_radix(hex, 16),
+            None => raw.parse::<u64>(),
+        };
+        return parsed
+            .map(EncodeValue::Raw)
+            .map_err(|_| EncodeError::ValueOutOfRange {
+                field: f.name,
+                value: f64::NAN,
+                range: None,
+            });
+    }
+    // 0x-hex → an integer, the same as its decimal spelling.
     if let Some(hex) = s.strip_prefix("0x").or_else(|| s.strip_prefix("0X"))
         && let Ok(n) = i64::from_str_radix(hex, 16)
     {
@@ -1310,8 +1384,8 @@ fn coerce_arg(f: &FieldInfo, s: &str) -> Result<EncodeValue, EncodeError> {
         | Some(FieldType::StringLau)
         | Some(FieldType::Variable) => Ok(EncodeValue::Text(s.to_string())),
         _ => {
-            // Numeric field: an integer literal is a raw value, a decimal
-            // is a scaled physical value.
+            // Numeric field: a value in the field's unit, however it is
+            // spelled (`raw:` above asks for wire bits).
             if let Ok(n) = s.parse::<i64>() {
                 Ok(EncodeValue::Int(n))
             } else if let Ok(x) = s.parse::<f64>() {
@@ -1975,6 +2049,111 @@ mod tests {
         assert!((got - 1.5).abs() < 1e-6, "got {got}");
     }
 
+    /// An integer is a value in the field's unit, like the same number
+    /// written as a float (#981): 5 m/s is not 0.05 m/s, 300 K not 3 K.
+    #[test]
+    fn an_integer_is_a_value_in_the_fields_unit() {
+        use crate::engine::field::temperature::ACTUAL_TEMPERATURE;
+        use crate::engine::field::wind_data::{REFERENCE, WIND_SPEED};
+        let si = PgnDatabase::embedded(crate::engine::Units::Si);
+        let wind = |v: EncodeValue| {
+            si.encode_for(crate::engine::pgn::WIND_DATA)
+                .push(WIND_SPEED, v)
+                .unwrap()
+                .build()
+                .unwrap()
+                .data
+        };
+        assert_eq!(wind(5.into()), wind(5.0.into()));
+        let temperature = |v: EncodeValue| {
+            si.encode_for(crate::engine::pgn::TEMPERATURE)
+                .push(ACTUAL_TEMPERATURE, v)
+                .unwrap()
+                .build()
+                .unwrap()
+        };
+        let frame = temperature(300.into());
+        assert_eq!(frame.data, temperature(300.0.into()).data);
+        let d = si.decode(&frame).unwrap();
+        let got = d.field(ACTUAL_TEMPERATURE).and_then(|f| f.value.as_f64());
+        assert!((got.unwrap() - 300.0).abs() < 1e-9, "{got:?}");
+        // On a lookup the integer is the code.
+        let frame = si
+            .encode_for(crate::engine::pgn::WIND_DATA)
+            .push(REFERENCE, 2)
+            .unwrap()
+            .build()
+            .unwrap();
+        let d = si.decode(&frame).unwrap();
+        assert_eq!(
+            d.field(REFERENCE).and_then(|f| f.value.as_str()),
+            Some("Apparent")
+        );
+    }
+
+    /// `Raw` writes the wire bits verbatim, a sentinel included, where an
+    /// integer outside the field's range is refused like any number.
+    #[test]
+    fn raw_writes_the_wire_bits() {
+        use crate::engine::field::temperature::{ACTUAL_TEMPERATURE, INSTANCE};
+        let si = PgnDatabase::embedded(crate::engine::Units::Si);
+        let b = || si.encode_for(crate::engine::pgn::TEMPERATURE);
+        assert!(matches!(
+            b().push(INSTANCE, 255),
+            Err(EncodeError::ValueOutOfRange { .. })
+        ));
+        let frame = b()
+            .push(INSTANCE, Raw(255))
+            .unwrap()
+            .push(ACTUAL_TEMPERATURE, Raw(0x7531))
+            .unwrap()
+            .build()
+            .unwrap();
+        assert_eq!(frame.data[1], 255);
+        assert_eq!(&frame.data[3..5], &[0x31, 0x75]);
+        // Wider than the field: masked to its width.
+        let frame = b().push(INSTANCE, Raw(0x1_23)).unwrap().build().unwrap();
+        assert_eq!(frame.data[1], 0x23);
+    }
+
+    /// An integer on an unscaled 64-bit field keeps every bit, beyond
+    /// what an f64 holds.
+    #[test]
+    fn an_unscaled_integer_is_exact() {
+        let f = FieldInfo {
+            resolution: Some(1.0),
+            range_min: None,
+            range_max: None,
+            ..db()
+                .pgns()
+                .flat_map(|p| p.fields)
+                .find(|f| f.field_type == Some(FieldType::Number) && f.bit_length == Some(64))
+                .copied()
+                .unwrap()
+        };
+        let n = (1i64 << 60) + 1;
+        assert_eq!(int_to_raw(&f, n).unwrap(), n);
+    }
+
+    #[test]
+    fn format_message_spells_raw_explicitly() {
+        use crate::engine::field::wind_data::{REFERENCE, WIND_SPEED};
+        let speed = WIND_SPEED.field;
+        assert_eq!(coerce_arg(speed, "5").unwrap(), EncodeValue::Int(5));
+        assert_eq!(coerce_arg(speed, "0x5").unwrap(), EncodeValue::Int(5));
+        assert_eq!(coerce_arg(speed, "5.0").unwrap(), EncodeValue::Number(5.0));
+        assert_eq!(
+            coerce_arg(speed, "raw:0xffff").unwrap(),
+            EncodeValue::Raw(0xffff)
+        );
+        assert_eq!(coerce_arg(speed, "raw:500").unwrap(), EncodeValue::Raw(500));
+        assert!(coerce_arg(speed, "raw:-1").is_err());
+        assert_eq!(
+            coerce_arg(REFERENCE.field, "2").unwrap(),
+            EncodeValue::Int(2)
+        );
+    }
+
     #[test]
     fn iso_name_round_trips() {
         // A NAME with the top (arbitrary-address-capable) bit set exercises
@@ -1984,7 +2163,7 @@ mod tests {
         let frame = db()
             .encode("simnetDataSourceSelection")
             .unwrap()
-            .push(SOURCE, name)
+            .push(SOURCE, Raw(name))
             .unwrap()
             .build()
             .unwrap();
@@ -1998,7 +2177,7 @@ mod tests {
     #[test]
     fn simnet_key_value_encodes_key_and_value() {
         // PGN 130845 simnetKeyValue is a key/value PGN: the KEY is a
-        // fixed 24-bit DYNAMIC_FIELD_KEY (set as a raw Int) and the VALUE
+        // fixed 24-bit DYNAMIC_FIELD_KEY (an integer: the key code) and the VALUE
         // is a DYNAMIC_FIELD_VALUE whose bytes are written verbatim. This
         // is the frame merrimac sends to set Simrad display night mode
         // (key 9983, value 0x04).
@@ -2008,11 +2187,11 @@ mod tests {
             .destination(255)
             .push_by_name("Address", EncodeValue::Int(255))
             .unwrap()
-            .push_by_name("Instance", EncodeValue::Int(255))
+            .push_by_name("Instance", Raw(255))
             .unwrap()
             .push_by_name("Network Group", EncodeValue::Int(1))
             .unwrap()
-            .push_by_name("Source", EncodeValue::Int(255))
+            .push_by_name("Source", Raw(255))
             .unwrap()
             .push_by_name("Key", EncodeValue::Int(9983))
             .unwrap()
