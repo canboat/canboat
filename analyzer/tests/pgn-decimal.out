@@ -1,0 +1,3 @@
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":3,"src":1,"dst":255,"pgn":129808,"description":"DSC Call Information","fields":{"DSC Format Symbol":"Distress","DSC Category Symbol":"Safety","DSC Message Address":"2350763930","1st Telecommand":39}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":3,"src":1,"dst":255,"pgn":129808,"description":"DSC Call Information","fields":{"DSC Format Symbol":"Distress","DSC Category Symbol":"Safety","1st Telecommand":39}}
+{"timestamp":"2026-10-03T00:00:00.000Z","prio":3,"src":1,"dst":255,"pgn":129808,"description":"DSC Call Information","fields":{"DSC Format Symbol":"Distress","DSC Category Symbol":"Safety"}}

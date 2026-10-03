@@ -712,6 +712,7 @@ extern bool fieldPrintDecimal(const Field   *field,
   char     buf[128];
   char     digits[2 * sizeof(buf) + 1];
   size_t   n = 0;
+  bool     valid = true;
 
   if (!adjustDataLenStart(&data, &dataLen, &startBit))
   {
@@ -720,9 +721,19 @@ extern bool fieldPrintDecimal(const Field   *field,
 
   bitMask = 1 << startBit;
 
-  if (startBit + *bits > dataLen * 8)
+  /*
+   * A field the packet ends inside is not available: the digits that are
+   * present are not the number (#962).
+   */
   {
-    *bits = dataLen * 8 - startBit;
+    size_t want = (field->size != 0) ? field->size : field->ft->size;
+
+    if (*bits < want || startBit + *bits > dataLen * 8)
+    {
+      *bits = min(*bits, dataLen * 8 - startBit);
+      printEmpty(fieldName, DATAFIELD_UNKNOWN);
+      return true;
+    }
   }
 
   /*
@@ -780,6 +791,10 @@ extern bool fieldPrintDecimal(const Field   *field,
         digits[n++] = (char) ('0' + value / 10);
         digits[n++] = (char) ('0' + value % 10);
       }
+      else
+      {
+        valid = false;
+      }
       value        = 0;
       bitMagnitude = 1;
     }
@@ -787,10 +802,11 @@ extern bool fieldPrintDecimal(const Field   *field,
   digits[n] = '\0';
 
   /*
-   * A byte that is not a digit pair is dropped, so nothing may be left: that
-   * is "not available", as in the Rust decoder.
+   * A byte that is not a digit pair (0..99) makes the whole number unknown:
+   * dropping just that byte would print a different, valid-looking number
+   * (#962). As in the Rust decoder.
    */
-  if (n == 0)
+  if (!valid || n == 0)
   {
     printEmpty(fieldName, DATAFIELD_UNKNOWN);
     return true;

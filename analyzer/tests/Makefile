@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32 tests
 
 all:	tests
 
@@ -304,7 +304,18 @@ test31:
 	diff $(TEMPDIR)/pgn-unit-coverage-si.out pgn-unit-coverage-si.out
 	diff $(TEMPDIR)/pgn-unit-coverage-si.err pgn-unit-coverage.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31
+#
+# DECIMAL (#962): a PGN 129808 DSC Message Address that is valid, one with a
+# byte that is not a digit pair (0xab), and one the packet ends inside. Only
+# the first has a value; the others are not available, not a shorter number.
+#
+test32:
+	$(ANALYZER) -json < pgn-decimal.in > $(TEMPDIR)/pgn-decimal.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-decimal.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-decimal.out
+	diff $(TEMPDIR)/pgn-decimal.out pgn-decimal.out
+	diff $(TEMPDIR)/pgn-decimal.err pgn-decimal.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 test32
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so

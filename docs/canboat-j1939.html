@@ -2335,7 +2335,7 @@ limitations under the License.
           For more information see:
           <a href="https://en.wikipedia.org/wiki/IEEE_754">https://en.wikipedia.org/wiki/IEEE_754</a></p><h3 id="ft-DECIMAL">DECIMAL - An unsigned numeric value where each byte holds the binary value of two decimal digits (0..99)</h3><p/><p>
             Encoding:
-            Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes).</p><p>
+            Each byte contains the binary value of two decimal digits, so 1234 is represented by 2 bytes containing 0x0c (=12) and 0x22 (=34). This is NOT BCD. A value with an odd number of digits is padded with a trailing zero, e.g. the 9-digit MMSI 512000953 is encoded as 5120009530 (5 bytes). A byte that is not a digit pair (above 99), or a field the packet ends inside, makes the whole value not available.</p><p>
           Unavailable value:
           
               none. This field type has no unavailable encoding (it is an identifier, filler

@@ -229,6 +229,17 @@ fn pgn_dynamic_units_json() {
     );
 }
 
+/// DECIMAL (#962, test32 in analyzer/tests/Makefile): a byte that is not
+/// a digit pair, or a field the packet ends inside, is not available.
+#[test]
+fn pgn_decimal_json() {
+    run_case(
+        "pgn-decimal.in",
+        "pgn-decimal.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+}
+
 /// A real value for every unit the database uses, static and dynamic, in
 /// Metric and SI (test31 in analyzer/tests/Makefile).
 #[test]
