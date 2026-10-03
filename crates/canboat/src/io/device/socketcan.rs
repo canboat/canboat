@@ -2248,8 +2248,8 @@ mod imp {
         }
 
         /// A PGN the application sends from our address joins the
-        /// Transmit list; one sent as another device, or with learning
-        /// off, does not.
+        /// Transmit list; one sent as another device, one dropped for
+        /// want of an address, or with learning off, does not.
         #[test]
         fn transmitted_pgns_are_learned() {
             fn send(dev: &mut NmeaDevice, pgn: u32, src: u8) {
@@ -2269,8 +2269,30 @@ mod imp {
                 };
                 dispatch_cmd(&mut bus, dev, WriterCmd::Frame(frame));
             }
+            // Only frames that go out as us are learned, which needs an
+            // address of our own: scan, then claim, each to its deadline.
+            fn claimed(config: &Config) -> NmeaDevice {
+                let mut dev = NmeaDevice::new(config, "vcan-none");
+                let mut tx_buf = TxBuffer::new();
+                let (frames_tx, _frames_rx) = mpsc::channel();
+                let mut bus = Bus {
+                    tx_buf: &mut tx_buf,
+                    frames_tx: &frames_tx,
+                };
+                dev.start(&mut bus);
+                for _ in 0..2 {
+                    let deadline = dev.claim.deadline();
+                    dev.tick(&mut bus, deadline);
+                }
+                assert!(dev.claim.is_claimed());
+                dev
+            }
 
             let mut dev = NmeaDevice::new(&Config::default(), "vcan-none");
+            send(&mut dev, 127508, 0);
+            assert_eq!(dev.tx_pgns, TX_PGN_LIST, "dropped while unclaimed");
+
+            let mut dev = claimed(&Config::default());
             send(&mut dev, 127508, 0);
             send(&mut dev, 127508, 0);
             send(&mut dev, 130824, 24); // as the impersonated H5000
@@ -2282,7 +2304,7 @@ mod imp {
                 learn_tx_pgns: false,
                 ..Default::default()
             };
-            let mut dev = NmeaDevice::new(&config, "vcan-none");
+            let mut dev = claimed(&config);
             send(&mut dev, 127508, 0);
             assert_eq!(dev.tx_pgns, TX_PGN_LIST);
         }
