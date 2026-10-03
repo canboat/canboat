@@ -497,7 +497,9 @@ extern void fillFieldType(bool doUnitFixup)
 
       // Number of top-of-range sentinels (Unknown / OutOfRange / Reserved). An explicit
       // SPECIAL_VALUES() override wins. Otherwise the count is the gap between the raw bit-width
-      // maximum and the field's raw rangeMax, capped at the width-derived count. This makes it
+      // maximum and the field's raw rangeMax, capped at the width-derived count. The raw rangeMax
+      // is the bit pattern that decodes to rangeMax: rangeMax already includes the field's offset
+      // (Peukert Exponent's 1.0..1.5 is raw 0..250 plus 500), so the offset comes off. This makes it
       // follow a rangeMax that was pulled up: a field spanning its full UNSIGNED width reserves
       // none (the "all values valid" idiom), and a LOOKUP whose enumeration names values in the
       // sentinel region (getMaxRange raised its rangeMax for them) reserves only the sentinels left
@@ -513,9 +515,17 @@ extern void fillFieldType(bool doUnitFixup)
       else if (f->size != 0 && f->size < 64 && f->resolution > 0.0 && !isnan(f->rangeMax))
       {
         uint64_t rawMax      = (UINT64_C(1) << f->size) - 1;
-        uint64_t rawRangeMax = (uint64_t) (f->rangeMax / f->resolution + 0.5);
+        double   rawRangeMax = f->rangeMax / f->resolution - f->offset + 0.5;
 
-        f->reservedCount = (rawRangeMax >= rawMax) ? 0 : (uint8_t) CB_MIN(rawMax - rawRangeMax, (uint64_t) bySize);
+        if (rawRangeMax >= (double) rawMax)
+        {
+          f->reservedCount = 0;
+        }
+        else
+        {
+          uint64_t gap     = rawMax - (rawRangeMax < 0.0 ? 0 : (uint64_t) rawRangeMax);
+          f->reservedCount = (uint8_t) CB_MIN(gap, (uint64_t) bySize);
+        }
       }
       else
       {
