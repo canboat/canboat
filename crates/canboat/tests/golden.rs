@@ -229,6 +229,53 @@ fn pgn_dynamic_units_json() {
     );
 }
 
+/// A real value for every unit the database uses, static and dynamic, in
+/// Metric and SI (test31 in analyzer/tests/Makefile).
+#[test]
+fn pgn_unit_coverage_json() {
+    run_case(
+        "pgn-unit-coverage.in",
+        "pgn-unit-coverage.out",
+        &["--json", "--fixtime", "pgn-test"],
+    );
+    run_case(
+        "pgn-unit-coverage.in",
+        "pgn-unit-coverage-si.out",
+        &["--json", "--units", "si", "--fixtime", "pgn-test"],
+    );
+}
+
+/// The units only J1939 uses, each with a real value, in Metric and SI:
+/// kg/h, cP, g/cm3, kWh, Hz, VAR, Cos Phi, W and VA with their offset, A,
+/// revolutions (r) and L/h.
+#[test]
+fn j1939_unit_coverage_json() {
+    run_case(
+        "j1939-unit-coverage.in",
+        "j1939-unit-coverage.out",
+        &[
+            "--json",
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2026-10-03T00:00:00.000Z",
+        ],
+    );
+    run_case(
+        "j1939-unit-coverage.in",
+        "j1939-unit-coverage-si.out",
+        &[
+            "--json",
+            "--units",
+            "si",
+            "--protocol",
+            "j1939",
+            "--fixtime",
+            "2026-10-03T00:00:00.000Z",
+        ],
+    );
+}
+
 /// FLOAT fields follow the unit system as scaled numbers do (test30 in
 /// analyzer/tests/Makefile): Garmin autopilot heading and rates of turn,
 /// and the 129045 datum rotations, all IEEE floats in rad and rad/s.

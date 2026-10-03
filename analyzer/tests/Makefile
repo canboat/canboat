@@ -21,7 +21,7 @@ TARGETDIR=../../rel/$(PLATFORM)
 ANALYZER=$(TARGETDIR)/analyzer
 TEMPDIR=/tmp
 
-.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 tests
+.PHONY: test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31 tests
 
 all:	tests
 
@@ -286,7 +286,25 @@ test30:
 	diff $(TEMPDIR)/pgn-float-units-si.out pgn-float-units-si.out
 	diff $(TEMPDIR)/pgn-float-units-si.err pgn-float-units.err
 
-tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30
+#
+# A real value for every unit the database uses, in Metric and SI: the AC
+# quantities (A, VA, VAR, Cos Phi, W with its offset), Airmar compass
+# calibration (T, an angle in degrees, durations), position deltas (degrees
+# that are no angle), the GPS almanac (m/m, sqrt(m), s/s, semi-circles),
+# 130321 salinity (ppt, a FLOAT), and dynamic values in Ah, %, A, V, K, W
+# (Victron 61184), L and % (Mercury 130824) and K and % (B&G 130824).
+#
+test31:
+	$(ANALYZER) -json < pgn-unit-coverage.in > $(TEMPDIR)/pgn-unit-coverage.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-unit-coverage.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-unit-coverage.out
+	diff $(TEMPDIR)/pgn-unit-coverage.out pgn-unit-coverage.out
+	diff $(TEMPDIR)/pgn-unit-coverage.err pgn-unit-coverage.err
+	$(ANALYZER) -json -si < pgn-unit-coverage.in > $(TEMPDIR)/pgn-unit-coverage-si.out -fixtime pgn-test 2> $(TEMPDIR)/pgn-unit-coverage-si.err
+	python3 ../validate-json.py --line-by-line $(TEMPDIR)/pgn-unit-coverage-si.out
+	diff $(TEMPDIR)/pgn-unit-coverage-si.out pgn-unit-coverage-si.out
+	diff $(TEMPDIR)/pgn-unit-coverage-si.err pgn-unit-coverage.err
+
+tests:	test1 test2 test3 test4 test5 test6 test7 test8 test9 test10 test11 test12 test13 test14 test15 test16 test17 test18 test19 test20 test21 test22 test23 test24 test25 test26 test27 test28 test29 test30 test31
 
 #
 # 8-bit string fields carry whichever encoding the sending device felt like, so

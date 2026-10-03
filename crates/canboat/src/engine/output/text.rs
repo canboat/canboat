@@ -17,7 +17,7 @@ use std::fmt;
 
 use crate::engine::decode::{DecodedField, DecodedPgn, FieldValue};
 
-use super::{effective_precision, format_date, format_time};
+use super::{effective_precision, format_date, format_time, time_precision_for};
 
 /// Knobs for text output. Reserved for `-si`, `-geo` extensions —
 /// for now `show_unavailable` and `debug` only.
@@ -351,7 +351,7 @@ fn write_field_value<W: fmt::Write>(
         FieldValue::String(s) => w.write_str(s),
         FieldValue::Date(d) => format_date(*d, w),
         FieldValue::Time { seconds, .. } => {
-            let p = effective_precision(f.precision(), f.resolution());
+            let p = time_precision_for(f.resolution());
             format_time(*seconds, p, true, w)
         }
         FieldValue::Mmsi(v) => write!(w, "\"{:09}\"", v),

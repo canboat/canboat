@@ -610,19 +610,12 @@ extern bool fieldPrintNumber(const Field   *field,
   }
   else
   {
-    int    precision;
-    double r;
+    int precision;
 
     a = (double) value * field->resolution + field->unitOffset;
 
+    // Worked out once per field when the field table is set up (decimalsForResolution).
     precision = field->precision;
-    if (precision == 0)
-    {
-      for (r = field->resolution; (r > 0.0) && (r < 1.0); r *= 10.0)
-      {
-        precision++;
-      }
-    }
 
     if (showJson)
     {

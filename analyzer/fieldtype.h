@@ -242,5 +242,6 @@ extern FieldType *getFieldType(const char *name);
 extern void       fillFieldType(bool doUnitFixup);
 extern void       fillFieldTypeLookupField(Field *f, const char *lookup, const size_t key, const char *str, const char *ft);
 extern uint8_t    reservedCountForSize(uint32_t size);
+extern int        decimalsForResolution(double resolution);
 
 #endif // FIELD_H_INCLUDED
