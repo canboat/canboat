@@ -950,24 +950,29 @@ mod tests {
     /// different bits depending on the stream's units.
     #[test]
     fn banner_units_decide_how_bare_values_encode() {
-        let deg = frame_from_json(
-            PgnDatabase::embedded(Units::Metric),
-            r#"{"pgn":127250,"src":27,"description":"Vessel Heading","fields":{"heading":210.9}}"#,
-        )
-        .unwrap()
-        .unwrap();
-        let rad = frame_from_json(
-            PgnDatabase::embedded(Units::Si),
-            r#"{"pgn":127250,"src":27,"description":"Vessel Heading","fields":{"heading":210.9}}"#,
-        )
-        .unwrap()
-        .unwrap();
+        let heading = |units, value: f64| {
+            frame_from_json(
+                PgnDatabase::embedded(units),
+                &format!(
+                    r#"{{"pgn":127250,"src":27,"description":"Vessel Heading","fields":{{"heading":{value}}}}}"#
+                ),
+            )
+        };
+        let deg = heading(Units::Metric, 3.5).unwrap().unwrap();
+        let rad = heading(Units::Si, 3.5).unwrap().unwrap();
         assert_ne!(
             deg.data.as_slice(),
             rad.data.as_slice(),
-            "210.9 deg and 210.9 rad must not encode alike"
+            "3.5 deg and 3.5 rad must not encode alike"
         );
-        // 210.9 deg = 3.68094 rad, i.e. 36809 in 0.0001 rad units.
-        assert_eq!(&deg.data[1..3], &[0xc9, 0x8f]);
+        // 3.5 deg = 0.0610865 rad, i.e. 611 in 0.0001 rad units.
+        assert_eq!(&deg.data[1..3], &[0x63, 0x02]);
+        // 210.9 deg is a heading; 210.9 rad is outside the field's range
+        // and is refused rather than wrapped (#970).
+        assert_eq!(
+            &heading(Units::Metric, 210.9).unwrap().unwrap().data[1..3],
+            &[0xc9, 0x8f]
+        );
+        assert!(heading(Units::Si, 210.9).is_err());
     }
 }

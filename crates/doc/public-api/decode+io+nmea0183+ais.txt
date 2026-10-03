@@ -869,6 +869,7 @@ pub canboat::EncodeError::UnknownLookupLabel::field: &'static str
 pub canboat::EncodeError::UnknownLookupLabel::label: alloc::string::String
 pub canboat::EncodeError::ValueOutOfRange
 pub canboat::EncodeError::ValueOutOfRange::field: &'static str
+pub canboat::EncodeError::ValueOutOfRange::range: core::option::Option<(f64, f64)>
 pub canboat::EncodeError::ValueOutOfRange::value: f64
 pub canboat::EncodeError::VariableUnresolved
 pub canboat::EncodeError::VariableUnresolved::field: &'static str
