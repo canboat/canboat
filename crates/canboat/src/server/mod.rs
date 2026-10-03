@@ -20,6 +20,10 @@
 //!   chosen serial port / TCP socket and emits `RawFrame`s
 //!   directly. In this mode, the write-only input port and the lazy
 //!   output TCP servers are also wired up.
+//! * **replay** (`--replay <FILE>`): a [`crate::io::device::replay`]
+//!   device plays a capture as a live bus — looped, paced and stamped
+//!   with the current time — with the input port wired up as for a
+//!   device, so a consumer can be tested end to end without a boat.
 //!
 //! Output: NMEA 0183 sentences on stdout.
 //!
@@ -63,7 +67,7 @@ use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc;
 use std::thread;
 
-use anyhow::{Result, bail};
+use anyhow::{Context, Result, bail};
 
 use crate::engine::RawFrame;
 use crate::engine::format::{
@@ -85,7 +89,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "DEVICE",
-        conflicts_with_all = ["ikonvert", "maretron", "canboat_csv", "socketcan"]
+        conflicts_with_all = ["ikonvert", "maretron", "canboat_csv", "socketcan", "replay"]
     )]
     actisense: Option<String>,
 
@@ -94,7 +98,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "DEVICE",
-        conflicts_with_all = ["actisense", "maretron", "canboat_csv", "socketcan"]
+        conflicts_with_all = ["actisense", "maretron", "canboat_csv", "socketcan", "replay"]
     )]
     ikonvert: Option<String>,
 
@@ -103,7 +107,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "canboat_csv", "socketcan"]
+        conflicts_with_all = ["actisense", "ikonvert", "canboat_csv", "socketcan", "replay"]
     )]
     maretron: Option<String>,
 
@@ -114,7 +118,7 @@ pub struct Args {
     #[arg(
         long,
         value_name = "IFACE",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "canboat_csv"]
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "canboat_csv", "replay"]
     )]
     socketcan: Option<String>,
 
@@ -143,9 +147,29 @@ pub struct Args {
     #[arg(
         long,
         value_name = "URL",
-        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan"]
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "replay"]
     )]
     canboat_csv: Option<String>,
+
+    /// Play this capture as if it were a live bus, for testing a consumer
+    /// without a boat. Any format canboat reads (PLAIN, FAST, candump,
+    /// Actisense ASCII, YDWG-02, …). Frames keep the capture's pacing but
+    /// carry the current time, and the capture starts over at its end.
+    ///
+    /// The input port accepts writes as it does for a real gateway; they
+    /// go to `--replay-sent`, or are dropped.
+    #[arg(
+        long,
+        value_name = "FILE",
+        conflicts_with_all = ["actisense", "ikonvert", "maretron", "socketcan", "canboat_csv"]
+    )]
+    replay: Option<PathBuf>,
+
+    /// With `--replay`: append the frames written to the bus to this file,
+    /// as canboat PLAIN/FAST lines, so a test can check what a consumer
+    /// sent.
+    #[arg(long, value_name = "FILE", requires = "replay")]
+    replay_sent: Option<PathBuf>,
 
     /// `--protocol j1939` decodes against the J1939 table and runs the
     /// SocketCAN gateway as a J1939 node: single frames and ISO TP, no
@@ -396,6 +420,12 @@ pub struct BridgeConfig {
     pub protocol: crate::engine::BusProtocol,
     pub canboat_csv: Option<String>,
     pub canboat_csv_write: Option<String>,
+    /// Play this capture as the bus, looped and restamped with the current
+    /// time (`--replay`).
+    pub replay: Option<PathBuf>,
+    /// Where frames written to a `replay` bus go (`--replay-sent`);
+    /// `None` drops them.
+    pub replay_sent: Option<PathBuf>,
     pub baud: Option<u32>,
     pub maretron_password: String,
     pub ikonvert_rx: Option<String>,
@@ -467,6 +497,8 @@ impl Default for BridgeConfig {
             protocol: crate::engine::BusProtocol::Nmea2000,
             canboat_csv: None,
             canboat_csv_write: None,
+            replay: None,
+            replay_sent: None,
             baud: None,
             maretron_password: String::new(),
             ikonvert_rx: None,
@@ -535,6 +567,8 @@ impl From<Args> for BridgeConfig {
                 .expect("Args::check rejects a --protocol this cannot convert"),
             canboat_csv: a.canboat_csv,
             canboat_csv_write: a.canboat_csv_write,
+            replay: a.replay,
+            replay_sent: a.replay_sent,
             baud: a.baud,
             maretron_password: a.maretron_password,
             ikonvert_rx: a.ikonvert_rx,
@@ -733,6 +767,26 @@ fn open_source(config: &BridgeConfig) -> Result<OpenedSource> {
             frames_rx: rx,
             supervisor: Some(sup),
             pre_coalesced: Arc::new(AtomicBool::new(true)),
+            claim_addr: None,
+            pgn_list_status: unsupported_pgn_lists(config),
+        });
+    }
+    if let Some(path) = config.replay.as_deref() {
+        let scan = device::replay::scan(path, config.protocol)
+            .with_context(|| format!("--replay {}", path.display()))?;
+        let replay = device::replay::Config {
+            path: path.to_path_buf(),
+            protocol: config.protocol,
+            sent: config.replay_sent.clone(),
+            ..device::replay::Config::new(path)
+        };
+        let factory = NamedFactory::new("replay", move || device::replay::run(replay.clone()));
+        let sup = Supervisor::new(factory);
+        let (rx, sup) = split_supervisor(sup);
+        return Ok(OpenedSource {
+            frames_rx: rx,
+            supervisor: Some(sup),
+            pre_coalesced: Arc::new(AtomicBool::new(scan.coalesced)),
             claim_addr: None,
             pgn_list_status: unsupported_pgn_lists(config),
         });

@@ -141,6 +141,20 @@ That's 46 % less wall time than the piped setup while doing strictly more
 work (it's a long-running service with TCP fan-out); on CPU time the ratio
 is closer to 3.4 ×.
 
+## A capture as a live bus (`--replay`)
+
+`canboat server --replay <capture>` plays a capture as if it were a gateway,
+so you can test a consumer such as Signal K without a boat. It reads any
+format canboat reads, keeps the capture's pacing but stamps every frame with
+the current time, and starts over at the end. The TCP ports are the same as
+for a real gateway, the input port included: frames written to it go to
+`--replay-sent <file>` as PLAIN/FAST lines, or are dropped, and are not
+echoed back.
+
+```sh
+canboat server --replay samples/dirona-actisense-serial.raw --replay-sent sent.raw
+```
+
 ## Transmit and receive PGN lists (`--tx-pgn`, `--rx-pgn`)
 
 Other devices ask a node which PGNs it sends and reads (PGN 126464).

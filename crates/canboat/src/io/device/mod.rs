@@ -32,6 +32,7 @@ pub mod ikonvert;
 pub mod line_gateway;
 pub mod maretron;
 pub mod ngt1;
+pub mod replay;
 pub mod socketcan;
 pub mod supervisor;
 
@@ -156,6 +157,9 @@ impl DeviceHandle {
     /// Signal shutdown to the writer thread and wait for both threads
     /// to exit.
     pub fn join(self) {
+        // Nothing receives any more: a reader that only stops when its
+        // send fails (replay) must see that, or the join waits for ever.
+        drop(self.frames_rx);
         drop(self.cmd_tx);
         for j in self.joins.into_iter().chain(self.writer) {
             let _ = j.join();
