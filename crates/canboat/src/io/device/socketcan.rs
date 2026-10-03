@@ -17,7 +17,9 @@
 //! `src` convention on outbound frames sent via `DeviceHandle::send_frame`:
 //! `frame.src == 0` is treated as "use my claim address" and rewritten to
 //! the currently-claimed source; any other value is sent on the wire as
-//! given. This matches canboat C's stdin pump and lets quirk
+//! given. While no address is claimed such a frame is dropped: ISO
+//! 11783-5 allows only address claims (and requests for them) from the
+//! null address (254), so an explicit `src == 254` is dropped otherwise. This matches canboat C's stdin pump and lets quirk
 //! synthesisers (e.g. the SCX-20 PGN 126996 fabrication) impersonate
 //! other nodes by passing the impersonated `src` explicitly.
 //!
@@ -564,6 +566,9 @@ mod imp {
         /// delta over the time between the previous and current emit.
         /// First emit reports `load_pct = None` (no baseline yet).
         prev_load_sample: Option<LoadSample>,
+        /// Frames [`dispatch_cmd`] dropped because we had no address to
+        /// send them from, since we last had one. Logged once per spell.
+        dropped_unclaimed: u64,
     }
 
     /// Send each frame the address-claim state machine produced onto the
@@ -605,14 +610,16 @@ mod imp {
                 seen_addrs: [false; 256],
                 bitrate_bps: read_bitrate_bps(iface).unwrap_or(config.bitrate),
                 prev_load_sample: None,
+                dropped_unclaimed: 0,
             }
         }
 
-        /// Our claimed source address, or [`ADDR_NULL`] before we own one.
-        /// Device responders below only run once claimed, so this resolves
-        /// to the real address for them.
+        /// The address we send from ([`AddressClaim::send_address`]), or
+        /// [`ADDR_NULL`] when we have none. Device responders below only
+        /// run once claimed, and [`dispatch_cmd`] drops what would go out
+        /// from the null address, so nothing but a claim is sent from it.
         fn addr(&self) -> u8 {
-            self.claim.address().unwrap_or(ADDR_NULL)
+            self.claim.send_address().unwrap_or(ADDR_NULL)
         }
 
         /// Our 64-bit ISO NAME.
@@ -1252,8 +1259,8 @@ mod imp {
     /// Apply an outbound `WriterCmd` from the public `DeviceHandle` API.
     /// `src == 0` (PC-gateway / unset default) and `src == 255`
     /// (broadcast — never a valid source on the bus) are both
-    /// interpreted as "use my claim address"; any other value is
-    /// forwarded unchanged so quirk synthesisers can impersonate other
+    /// interpreted as "use my claim address", and dropped while we have
+    /// none; any other value is forwarded unchanged so quirk synthesisers can impersonate other
     /// nodes on the wire (e.g. the SCX-20 quirk uses `src = 52`).
     fn dispatch_cmd(bus: &mut Bus<'_>, claimer: &mut NmeaDevice, cmd: WriterCmd) {
         match cmd {
@@ -1267,14 +1274,44 @@ mod imp {
                     bus.tx_buf.push_standard(f.pgn, &f.data);
                     return;
                 }
+                // ISO 11783-5: from the null address only an address
+                // claim ("cannot claim") or a Request for Address Claimed
+                // may go out, whoever's frame it is.
+                if f.src == ADDR_NULL && !may_send_from_null(f.pgn, &f.data) {
+                    log::debug!("socketcan: dropping PGN {} from the null address", f.pgn);
+                    return;
+                }
+                let own = claimer.claim.send_address();
                 let src = if f.src == 0 || f.src == ADDR_GLOBAL {
-                    claimer.addr()
+                    // ISO 11783-5: only an address claim may go out from
+                    // the null address, so without an address of our own
+                    // (scanning, settling a new claim, or none to be had)
+                    // there is nothing to send this from.
+                    let Some(own) = own else {
+                        if claimer.dropped_unclaimed == 0 {
+                            log::warn!(
+                                "socketcan: no source address claimed yet; dropping outbound \
+                                 frames until one is"
+                            );
+                        }
+                        claimer.dropped_unclaimed += 1;
+                        return;
+                    };
+                    own
                 } else {
                     f.src
                 };
+                if own.is_some() && claimer.dropped_unclaimed > 0 {
+                    log::info!(
+                        "socketcan: sending from address {} again; dropped {} frames without one",
+                        claimer.addr(),
+                        claimer.dropped_unclaimed
+                    );
+                    claimer.dropped_unclaimed = 0;
+                }
                 // Only what goes out as us: a quirk impersonating another
                 // device sends from that device's address.
-                if src == claimer.addr() {
+                if Some(src) == own {
                     claimer.learn_tx_pgn(f.pgn);
                 }
                 // emit=false: this is a user-initiated send; the caller
@@ -1293,6 +1330,15 @@ mod imp {
                 log::debug!("WriterCmd::Bytes ignored by socketcan adapter");
             }
         }
+    }
+
+    /// Whether a frame may go out from the null address (254): an Address
+    /// Claim, or an ISO Request for one.
+    fn may_send_from_null(pgn: u32, data: &[u8]) -> bool {
+        pgn == PGN_ISO_ADDRESS_CLAIM
+            || (pgn == PGN_ISO_REQUEST
+                && data.len() >= 3
+                && u32::from_le_bytes([data[0], data[1], data[2], 0]) == PGN_ISO_ADDRESS_CLAIM)
     }
 
     /// Open the SocketCAN interface and spawn the bus-participant
@@ -1656,7 +1702,10 @@ mod imp {
             //    when actually claimed; while scanning/pending/failed
             //    leave it at CLAIM_UNCLAIMED so the caller knows not
             //    to rewrite yet.
-            let live = claimer.claim.address().unwrap_or(super::CLAIM_UNCLAIMED);
+            let live = claimer
+                .claim
+                .send_address()
+                .unwrap_or(super::CLAIM_UNCLAIMED);
             if live != last_published_addr {
                 claim_addr.store(live, Ordering::Relaxed);
                 last_published_addr = live;
@@ -2216,8 +2265,8 @@ mod imp {
         }
 
         /// A PGN the application sends from our address joins the
-        /// Transmit list; one sent as another device, or with learning
-        /// off, does not.
+        /// Transmit list; one sent as another device, one dropped for
+        /// want of an address, or with learning off, does not.
         #[test]
         fn transmitted_pgns_are_learned() {
             fn send(dev: &mut NmeaDevice, pgn: u32, src: u8) {
@@ -2237,8 +2286,30 @@ mod imp {
                 };
                 dispatch_cmd(&mut bus, dev, WriterCmd::Frame(frame));
             }
+            // Only frames that go out as us are learned, which needs an
+            // address of our own: scan, then claim, each to its deadline.
+            fn claimed(config: &Config) -> NmeaDevice {
+                let mut dev = NmeaDevice::new(config, "vcan-none");
+                let mut tx_buf = TxBuffer::new();
+                let (frames_tx, _frames_rx) = mpsc::channel();
+                let mut bus = Bus {
+                    tx_buf: &mut tx_buf,
+                    frames_tx: &frames_tx,
+                };
+                dev.start(&mut bus);
+                for _ in 0..2 {
+                    let deadline = dev.claim.deadline();
+                    dev.tick(&mut bus, deadline);
+                }
+                assert!(dev.claim.is_claimed());
+                dev
+            }
 
             let mut dev = NmeaDevice::new(&Config::default(), "vcan-none");
+            send(&mut dev, 127508, 0);
+            assert_eq!(dev.tx_pgns, TX_PGN_LIST, "dropped while unclaimed");
+
+            let mut dev = claimed(&Config::default());
             send(&mut dev, 127508, 0);
             send(&mut dev, 127508, 0);
             send(&mut dev, 130824, 24); // as the impersonated H5000
@@ -2250,7 +2321,7 @@ mod imp {
                 learn_tx_pgns: false,
                 ..Default::default()
             };
-            let mut dev = NmeaDevice::new(&config, "vcan-none");
+            let mut dev = claimed(&config);
             send(&mut dev, 127508, 0);
             assert_eq!(dev.tx_pgns, TX_PGN_LIST);
         }
@@ -2480,6 +2551,62 @@ mod imp {
             assert_eq!(sent.len(), 1, "{sent:?}");
             assert_eq!(sent[0].pgn, 59392, "ISO Acknowledgement");
             assert_eq!(sent[0].data[0], 1, "NAK");
+        }
+
+        /// ISO 11783-5 allows only address claims from the null address:
+        /// a frame sent as us (src 0) before we own an address is dropped,
+        /// not put on the wire from 254. One impersonating another device
+        /// still goes out, and an explicit 254 only for a claim.
+        #[test]
+        fn drops_own_frames_until_an_address_is_claimed() {
+            let config = Config::default();
+            let mut dev = NmeaDevice::new(&config, "vcan-none");
+            let mut tx_buf = TxBuffer::new();
+            let (frames_tx, _frames_rx) = mpsc::channel();
+            let mut bus = Bus {
+                tx_buf: &mut tx_buf,
+                frames_tx: &frames_tx,
+            };
+            let frame = |src| WriterCmd::Frame(RawFrame::new(None, 2, 127250, src, 255, [0; 8]));
+            let sources = |bus: &mut Bus<'_>| -> Vec<u8> {
+                bus.tx_buf
+                    .queue
+                    .drain(..)
+                    .map(|f| (socketcan::Frame::raw_id(&f) & 0xff) as u8)
+                    .collect()
+            };
+
+            dev.start(&mut bus);
+            sources(&mut bus);
+            dispatch_cmd(&mut bus, &mut dev, frame(0));
+            dispatch_cmd(&mut bus, &mut dev, frame(ADDR_GLOBAL));
+            assert_eq!(sources(&mut bus), Vec::<u8>::new(), "scanning");
+
+            let deadline = dev.claim.deadline();
+            dev.tick(&mut bus, deadline);
+            sources(&mut bus);
+            dispatch_cmd(&mut bus, &mut dev, frame(0));
+            assert_eq!(sources(&mut bus), Vec::<u8>::new(), "claim settling");
+            dispatch_cmd(&mut bus, &mut dev, frame(52));
+            assert_eq!(sources(&mut bus), vec![52], "impersonation goes out");
+            // An explicit null source: only a claim, or a request for one.
+            dispatch_cmd(&mut bus, &mut dev, frame(ADDR_NULL));
+            assert_eq!(sources(&mut bus), Vec::<u8>::new(), "not from 254");
+            let claim = RawFrame::new(None, 6, PGN_ISO_ADDRESS_CLAIM, ADDR_NULL, 255, [0xff; 8]);
+            dispatch_cmd(&mut bus, &mut dev, WriterCmd::Frame(claim));
+            let p = PGN_ISO_ADDRESS_CLAIM.to_le_bytes();
+            let request =
+                RawFrame::new(None, 6, PGN_ISO_REQUEST, ADDR_NULL, 255, [p[0], p[1], p[2]]);
+            dispatch_cmd(&mut bus, &mut dev, WriterCmd::Frame(request));
+            assert_eq!(sources(&mut bus), vec![ADDR_NULL, ADDR_NULL]);
+
+            let deadline = dev.claim.deadline();
+            dev.tick(&mut bus, deadline);
+            assert!(dev.claim.is_claimed());
+            sources(&mut bus);
+            dispatch_cmd(&mut bus, &mut dev, frame(0));
+            assert_eq!(sources(&mut bus), vec![dev.addr()]);
+            assert_eq!(dev.dropped_unclaimed, 0, "reset once sending again");
         }
     }
 }

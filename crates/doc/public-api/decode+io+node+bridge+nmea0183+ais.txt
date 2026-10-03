@@ -539,6 +539,7 @@ pub fn canboat::device::Claimer::name(&self) -> u64
 pub fn canboat::device::Claimer::new(u64, u8, bool) -> Self
 pub fn canboat::device::Claimer::on_address_claim(&mut self, u64, u8, u64) -> alloc::vec::Vec<canboat::Frame>
 pub fn canboat::device::Claimer::respond_to_claim_request(&self) -> core::option::Option<canboat::Frame>
+pub fn canboat::device::Claimer::send_address(&self) -> core::option::Option<u8>
 pub fn canboat::device::Claimer::start(&mut self, u64) -> alloc::vec::Vec<canboat::Frame>
 pub fn canboat::device::Claimer::state(&self) -> canboat::device::ClaimState
 pub fn canboat::device::Claimer::tick(&mut self, u64) -> alloc::vec::Vec<canboat::Frame>
