@@ -169,12 +169,12 @@ fn install_shims(dir: Option<PathBuf>) -> anyhow::Result<()> {
 }
 
 /// Resolve the directory holding the server's persistent state files
-/// (`overrides.json`, `nmea0183-filter.json`) when the user didn't pass
+/// (`overrides.json`, `nmea0183-filter.json`, `unique-number`) when the user didn't pass
 /// `--config-dir`. Prefer `/etc/default/canboat` when it's writable (the
 /// systemd/root case), otherwise fall back to `$HOME/.local/canboat`. This
 /// filesystem probe is a *binary* concern — the library takes an explicit
 /// path — so it lives here rather than in `server`.
-fn resolve_config_dir() -> PathBuf {
+pub(super) fn resolve_config_dir() -> PathBuf {
     let system = PathBuf::from("/etc/default/canboat");
     if dir_is_writable(&system) {
         return system;

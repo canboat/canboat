@@ -146,7 +146,9 @@ pub struct Quirks {
 }
 
 impl Quirks {
-    pub fn new(kinds: Vec<QuirkKind>) -> Self {
+    /// `state_dir` is where the Motion Sensor stores a random unique
+    /// number if the machine can't be identified.
+    pub fn new(kinds: Vec<QuirkKind>, state_dir: Option<&std::path::Path>) -> Self {
         // Not a frame emitter: it flips a switch in the decoder and
         // has no state of its own here. The switch is process-wide --
         // `decode()` takes no options -- so set it both ways, or a
@@ -159,7 +161,9 @@ impl Quirks {
         Self {
             scx20: kinds.contains(&QuirkKind::Scx20).then(scx20::Scx20::new),
             wmm: kinds.contains(&QuirkKind::Wmm).then(wmm::WmmQuirk::new),
-            motion: kinds.contains(&QuirkKind::Motion).then(motion::Motion::new),
+            motion: kinds
+                .contains(&QuirkKind::Motion)
+                .then(|| motion::Motion::new(state_dir)),
             gps_relay: kinds
                 .contains(&QuirkKind::GpsRelay)
                 .then(gps_relay::GpsRelay::new),
@@ -264,10 +268,10 @@ pub(crate) mod tests {
     #[test]
     fn enabled_reflects_configured_quirks() {
         let _guard = switch_guard();
-        assert!(!Quirks::new(vec![]).is_enabled());
-        assert!(Quirks::new(vec![QuirkKind::Scx20]).is_enabled());
-        assert!(Quirks::new(vec![QuirkKind::Wmm]).is_enabled());
-        let both = Quirks::new(vec![QuirkKind::Scx20, QuirkKind::Wmm]);
+        assert!(!Quirks::new(vec![], None).is_enabled());
+        assert!(Quirks::new(vec![QuirkKind::Scx20], None).is_enabled());
+        assert!(Quirks::new(vec![QuirkKind::Wmm], None).is_enabled());
+        let both = Quirks::new(vec![QuirkKind::Scx20, QuirkKind::Wmm], None);
         assert!(both.is_enabled());
         assert!(both.scx20.is_some() && both.wmm.is_some());
     }
@@ -278,9 +282,9 @@ pub(crate) mod tests {
     #[test]
     fn gps_rollover_does_not_leak_into_the_next_pipeline() {
         let _guard = switch_guard();
-        let _first = Quirks::new(vec![QuirkKind::GpsRollover(Target::Gnss)]);
+        let _first = Quirks::new(vec![QuirkKind::GpsRollover(Target::Gnss)], None);
         assert!(crate::engine::quirk::gps_rollover_reference_day().is_some());
-        let _second = Quirks::new(vec![QuirkKind::Wmm]);
+        let _second = Quirks::new(vec![QuirkKind::Wmm], None);
         assert!(crate::engine::quirk::gps_rollover_reference_day().is_none());
     }
 }

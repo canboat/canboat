@@ -144,16 +144,10 @@ pub struct Motion {
     rate_source: Option<u8>,
 }
 
-impl Default for Motion {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 impl Motion {
-    pub fn new() -> Self {
+    pub fn new(state_dir: Option<&std::path::Path>) -> Self {
         Self {
-            claim: AddressClaim::new(build_name(), PREFERRED_ADDRESS, true),
+            claim: AddressClaim::new(build_name(state_dir), PREFERRED_ADDRESS, true),
             base: None,
             started: false,
             rate_source: None,
@@ -320,11 +314,13 @@ impl Motion {
 
 /// The 64-bit ISO NAME for the Motion Sensor personality. The Unique
 /// Number is derived from the host machine id so it is stable per host and
-/// distinct from a real unit's (avoiding a NAME clash if both are present).
+/// distinct from a real unit's (avoiding a NAME clash if both are present);
+/// on a machine that can't be identified it is the random one stored in
+/// `state_dir`.
 /// Marine industry group and arbitrary-address-capable are the builder's
 /// defaults.
-fn build_name() -> u64 {
-    let unique = crate::engine::os::get_machine_id() as u32;
+fn build_name(state_dir: Option<&std::path::Path>) -> u64 {
+    let unique = crate::engine::os::unique_number(state_dir);
     crate::io::name::Name::new(MFG_BANDG, unique)
         .device_function(DEVICE_FUNCTION)
         .device_class(DEVICE_CLASS)
@@ -463,14 +459,14 @@ mod tests {
 
     #[test]
     fn claims_preferred_address_on_idle_bus() {
-        let mut m = Motion::new();
+        let mut m = Motion::new(None);
         let addr = drive_to_claimed(&mut m, Instant::now());
         assert_eq!(addr, PREFERRED_ADDRESS);
     }
 
     #[test]
     fn answers_product_info_with_the_gate_code() {
-        let mut m = Motion::new();
+        let mut m = Motion::new(None);
         let t0 = Instant::now();
         let addr = drive_to_claimed(&mut m, t0);
         let out = m.process(
@@ -534,7 +530,7 @@ mod tests {
 
     #[test]
     fn transcodes_furuno_6dof_into_bg_rates() {
-        let mut m = Motion::new();
+        let mut m = Motion::new(None);
         let t0 = Instant::now();
         let addr = drive_to_claimed(&mut m, t0);
         let out = m.process(&six_dof(52), t0 + Duration::from_millis(1400));
@@ -560,7 +556,7 @@ mod tests {
 
     #[test]
     fn answers_address_claim_request() {
-        let mut m = Motion::new();
+        let mut m = Motion::new(None);
         let t0 = Instant::now();
         let addr = drive_to_claimed(&mut m, t0);
         let out = m.process(

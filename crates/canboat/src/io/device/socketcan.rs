@@ -81,7 +81,9 @@ mod config {
         /// Preferred source address to claim. Defaults to 0.
         pub address: u8,
         /// Unique number for the ISO NAME's identity field. 0 = derive
-        /// from the machine id (stable per-host across restarts).
+        /// from the machine id (stable per-host across restarts), or, if
+        /// the machine can't be identified, a random number stored in
+        /// `state_dir`.
         pub unique: u32,
         /// Manufacturer code for the ISO NAME. Defaults to 999 (Signal K).
         pub manufacturer: u16,
@@ -131,6 +133,9 @@ mod config {
         /// is always 250 kbit/s; J1939 is 250 kbit/s (J1939-11/-15) or
         /// 500 kbit/s (J1939-14).
         pub bitrate: u32,
+        /// Where a random unique number is stored when `unique` is 0 and
+        /// the machine can't be identified. `None`: it holds for this run.
+        pub state_dir: Option<std::path::PathBuf>,
     }
 
     impl Default for Config {
@@ -149,6 +154,7 @@ mod config {
                 learn_tx_pgns: true,
                 protocol: BusProtocol::Nmea2000,
                 bitrate: 250_000,
+                state_dir: None,
             }
         }
     }
@@ -309,7 +315,7 @@ mod imp {
             // Per-machine, stable across restarts. Two CANboat gateways
             // on the same host would collide; pass `--unique N` (or
             // `Config.unique`) to disambiguate.
-            crate::engine::os::get_machine_id() as u32
+            crate::engine::os::unique_number(config.state_dir.as_deref())
         };
         // PC Gateway (130) / Inter-Intranetwork Device (25); arbitrary-
         // address-capable is the builder's default. Marine industry group
