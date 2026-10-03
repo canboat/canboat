@@ -63,6 +63,9 @@ pub struct AddressClaim {
     /// The NAME's arbitrary-address-capable bit: when set we move to
     /// another free address on losing a conflict, otherwise we go silent.
     arbitrary: bool,
+    /// Pending only because we won a contest for an address we already
+    /// owned: it stays ours, so we may go on sending from it.
+    defending: bool,
     /// When each address was last claimed by someone else (a 60928 heard,
     /// or a contest lost); `None` if never. See [`USED_TTL_MS`].
     last_seen: [Option<u64>; 256],
@@ -80,6 +83,7 @@ impl AddressClaim {
             state: ClaimState::Pending,
             deadline: 0,
             arbitrary,
+            defending: false,
             last_seen: [None; 256],
         }
     }
@@ -117,6 +121,18 @@ impl AddressClaim {
     /// The claimed source address, or `None` until one is owned.
     pub fn address(&self) -> Option<u8> {
         self.is_claimed().then_some(self.address)
+    }
+
+    /// The source address application frames may go out from, or `None`
+    /// when there is none: while scanning, while a claim for a new address
+    /// settles, and once claiming failed. ISO 11783-5 lets only address
+    /// claims go out from the null address, so callers drop anything else
+    /// rather than send it from 254. Unlike [`address`](Self::address),
+    /// this keeps the address while a won contest is re-claimed: the
+    /// address never stopped being ours.
+    pub fn send_address(&self) -> Option<u8> {
+        (self.state == ClaimState::Claimed || (self.state == ClaimState::Pending && self.defending))
+            .then_some(self.address)
     }
 
     /// The 64-bit ISO NAME this node claims under.
@@ -176,11 +192,15 @@ impl AddressClaim {
                 describe_name(their_name),
                 describe_name(self.name)
             );
+            // Already ours (claimed, or defended before), or still
+            // settling a claim for a new address.
+            self.defending = self.send_address().is_some();
             self.state = ClaimState::Pending;
             self.deadline = now + CLAIM_TIMEOUT_MS;
             return vec![self.claim_frame()];
         }
         // We lost: yield the address.
+        self.defending = false;
         self.last_seen[src as usize] = Some(now);
         if self.arbitrary
             && let Some(next) = self.pick_free(now)
@@ -224,6 +244,7 @@ impl AddressClaim {
             ClaimState::Scanning if now >= self.deadline => self.begin_claim(now),
             ClaimState::Pending if now >= self.deadline => {
                 self.state = ClaimState::Claimed;
+                self.defending = false;
                 Vec::new()
             }
             _ => Vec::new(),
@@ -246,6 +267,7 @@ impl AddressClaim {
             self.address = self.preferred;
         }
         self.state = ClaimState::Pending;
+        self.defending = false;
         self.deadline = now + CLAIM_TIMEOUT_MS;
         vec![self.claim_frame()]
     }
@@ -478,5 +500,78 @@ mod tests {
         assert!(c.tick(10_000).is_empty());
         assert_eq!(c.state(), ClaimState::Disabled);
         assert_eq!(c.address(), None);
+    }
+
+    /// Nothing but a claim goes out from the null address: no address to
+    /// send from until the first claim settles.
+    #[test]
+    fn no_send_address_until_claimed() {
+        let mut c = AddressClaim::new(LOW, 42, true);
+        c.start(0);
+        assert_eq!(c.send_address(), None, "scanning");
+        c.tick(SCAN_TIMEOUT_MS);
+        assert_eq!(c.send_address(), None, "first claim settling");
+        c.tick(SCAN_TIMEOUT_MS + CLAIM_TIMEOUT_MS);
+        assert_eq!(c.send_address(), Some(42));
+    }
+
+    /// Defending an owned address against a higher NAME re-claims it, but
+    /// it never stopped being ours: sending goes on.
+    #[test]
+    fn keeps_sending_while_defending_an_owned_address() {
+        let mut c = AddressClaim::new(LOW, 42, true);
+        c.start(0);
+        c.tick(SCAN_TIMEOUT_MS);
+        let now = SCAN_TIMEOUT_MS + CLAIM_TIMEOUT_MS;
+        c.tick(now);
+        c.on_address_claim(now, 42, HIGH);
+        assert_eq!(c.state(), ClaimState::Pending);
+        assert_eq!(c.address(), None);
+        assert_eq!(c.send_address(), Some(42));
+        // A second contest during the re-claim: still ours.
+        c.on_address_claim(now + 10, 42, HIGH);
+        assert_eq!(c.send_address(), Some(42));
+        c.tick(now + 10 + CLAIM_TIMEOUT_MS);
+        assert_eq!(c.address(), Some(42));
+        assert_eq!(c.send_address(), Some(42));
+    }
+
+    /// Winning a contest before the first claim settled doesn't make the
+    /// address ours any sooner.
+    #[test]
+    fn winning_before_the_claim_settles_is_not_owning() {
+        let mut c = AddressClaim::new(LOW, 42, true);
+        c.start(0);
+        c.tick(SCAN_TIMEOUT_MS);
+        c.on_address_claim(SCAN_TIMEOUT_MS, 42, HIGH);
+        assert_eq!(c.send_address(), None);
+    }
+
+    /// Losing the address stops sending until the new claim settles, also
+    /// when it was being defended.
+    #[test]
+    fn losing_an_owned_address_stops_sending() {
+        let mut c = AddressClaim::new(HIGH, 42, true);
+        c.start(0);
+        c.tick(SCAN_TIMEOUT_MS);
+        let now = SCAN_TIMEOUT_MS + CLAIM_TIMEOUT_MS;
+        c.tick(now);
+        c.on_address_claim(now, 42, u64::MAX); // won: defending 42
+        assert_eq!(c.send_address(), Some(42));
+        c.on_address_claim(now + 10, 42, LOW); // lost: moves to 43
+        assert_eq!(c.send_address(), None);
+        c.tick(now + 10 + CLAIM_TIMEOUT_MS);
+        assert_eq!(c.send_address(), Some(43));
+    }
+
+    #[test]
+    fn no_send_address_once_claiming_failed() {
+        let mut c = AddressClaim::new(HIGH, 42, false);
+        c.start(0);
+        c.tick(SCAN_TIMEOUT_MS);
+        c.tick(SCAN_TIMEOUT_MS + CLAIM_TIMEOUT_MS);
+        c.on_address_claim(SCAN_TIMEOUT_MS + CLAIM_TIMEOUT_MS, 42, LOW);
+        assert_eq!(c.state(), ClaimState::Failed);
+        assert_eq!(c.send_address(), None);
     }
 }

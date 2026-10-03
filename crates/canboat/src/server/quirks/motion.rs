@@ -254,10 +254,11 @@ impl Motion {
 
     /// Transcode a Furuno SCX-20 PGN 130842 "Six Degrees Of Freedom
     /// Movement" (`d`) into a B&G PGN 130824 rate frame emitted from our
-    /// claimed address. `None` until we own an address, for a non-Furuno
-    /// 130842, or for any source other than the latched rate source.
+    /// claimed address. `None` while we have no address to send from, for
+    /// a non-Furuno 130842, or for any source other than the latched rate
+    /// source. Rates keep flowing while a won contest is re-claimed.
     fn maybe_emit_rates(&mut self, d: &DecodedPgn) -> Option<RawFrame> {
-        let addr = self.claim.address()?;
+        let addr = self.claim.send_address()?;
         if d.src == addr {
             return None; // never consume our own emissions
         }
