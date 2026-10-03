@@ -42,7 +42,8 @@ fn unique_number_for(machine: &str) -> u32 {
 
 /// The stored random unique number, drawing and storing one on first use.
 /// Serialised, so two devices in one process don't each store their own;
-/// a number that can't be stored is kept for the rest of the run.
+/// across processes [`store_unique_number`] lets only the first one store.
+/// A number that can't be stored is kept for the rest of the run.
 fn stored_unique_number(state_dir: Option<&Path>) -> u32 {
     static UNSTORED: Mutex<Option<u32>> = Mutex::new(None);
     let mut unstored = UNSTORED.lock().unwrap_or_else(|e| e.into_inner());
@@ -54,13 +55,13 @@ fn stored_unique_number(state_dir: Option<&Path>) -> u32 {
         return n;
     }
     let n = random_unique_number();
-    match path.as_deref().map(|p| write_unique_number(p, n)) {
-        Some(Ok(())) => {
+    match path.as_deref().map(|p| store_unique_number(p, n)) {
+        Some(Ok(stored)) => {
             log::info!(
-                "cannot identify this machine; stored random unique number {n} in {}",
+                "cannot identify this machine; stored random unique number {stored} in {}",
                 path.as_deref().unwrap().display()
             );
-            return n;
+            return stored;
         }
         Some(Err(e)) => log::warn!(
             "cannot identify this machine, nor store random unique number {n} in {}: {e}; \
@@ -81,11 +82,27 @@ fn read_unique_number(path: &Path) -> Option<u32> {
     (n < ALL_ONES).then_some(n)
 }
 
-fn write_unique_number(path: &Path, n: u32) -> std::io::Result<()> {
-    if let Some(dir) = path.parent() {
-        std::fs::create_dir_all(dir)?;
-    }
-    std::fs::write(path, format!("{n}\n"))
+/// Store `n` at `path` unless another process stored one first, and return
+/// the number that is stored. The number is written to a temporary file
+/// and hard-linked into place: the link is atomic and fails if `path`
+/// exists, so exactly one of several processes starting at once stores
+/// its number, and the others read it back complete. A `path` holding no
+/// valid number is replaced, as it is on a filesystem without hard links.
+fn store_unique_number(path: &Path, n: u32) -> std::io::Result<u32> {
+    let dir = path.parent().unwrap_or(Path::new("."));
+    std::fs::create_dir_all(dir)?;
+    let tmp = dir.join(format!(".{UNIQUE_NUMBER_FILE}.{}.tmp", std::process::id()));
+    std::fs::write(&tmp, format!("{n}\n"))?;
+    let stored = match std::fs::hard_link(&tmp, path) {
+        Ok(()) => Ok(n),
+        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => match read_unique_number(path) {
+            Some(theirs) => Ok(theirs),
+            None => std::fs::rename(&tmp, path).map(|()| n),
+        },
+        Err(_) => std::fs::rename(&tmp, path).map(|()| n),
+    };
+    let _ = std::fs::remove_file(&tmp); // gone already after a rename
+    stored
 }
 
 /// A random unique number in 0..0x1fffff (all ones excluded), without a
@@ -234,6 +251,28 @@ mod tests {
         // A stored one is kept, even one this run did not draw.
         std::fs::write(dir.join(UNIQUE_NUMBER_FILE), "424242\n").unwrap();
         assert_eq!(stored_unique_number(Some(&dir)), 424242);
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    /// Another process that stored its number first wins: ours is not
+    /// written over it, and the temporary file is gone.
+    #[test]
+    fn the_first_stored_unique_number_wins() {
+        let dir = std::env::temp_dir().join(format!("canboat-unique-race-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let path = dir.join(UNIQUE_NUMBER_FILE);
+        assert_eq!(store_unique_number(&path, 1234).unwrap(), 1234);
+        assert_eq!(store_unique_number(&path, 5678).unwrap(), 1234);
+        assert_eq!(read_unique_number(&path), Some(1234));
+        // A file holding no valid number is replaced.
+        std::fs::write(&path, "x").unwrap();
+        assert_eq!(store_unique_number(&path, 5678).unwrap(), 5678);
+        assert_eq!(read_unique_number(&path), Some(5678));
+        let names: Vec<_> = std::fs::read_dir(&dir)
+            .unwrap()
+            .map(|e| e.unwrap().file_name())
+            .collect();
+        assert_eq!(names, [UNIQUE_NUMBER_FILE], "no temporary file left");
         std::fs::remove_dir_all(&dir).unwrap();
     }
 
