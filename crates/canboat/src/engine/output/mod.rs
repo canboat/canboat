@@ -19,18 +19,43 @@ pub use text::{GeoFormat, TextOptions, write_text};
 
 use crate::engine::format::timestamp::days_to_ymd;
 
-/// Round-up decimal precision implied by `resolution`, matching
-/// canboat's algorithm in `analyzer/print.c`:
+/// Decimals for a scaled number with this resolution (canboat#969),
+/// as canboat C's `decimalsForResolution`:
 ///
 /// ```text
 ///   precision = 0
 ///   for r = resolution; 0 < r < 1.0; r *= 10:
 ///       precision++
+///   if r is not a whole number: precision += 2
 /// ```
 ///
-/// `resolution = 0.01` → 2 decimals; `0.0001` → 4; integer
-/// resolutions → 0.
+/// A resolution that is a whole number of 10⁻ᵖ steps prints exactly with
+/// p decimals: `0.01` → 2, `0.004` → 3, integers → 0. Any other one — a
+/// binary fraction, a step divided by 60 or 3.6e6 by an SI conversion —
+/// gets two more, so a value is off by under 1 % of a step instead of up
+/// to half of one: 0.1 L/h in m³/s (2.78e-8) → 10.
 pub(crate) fn precision_for(resolution: f64) -> usize {
+    if !resolution.is_finite() || resolution <= 0.0 {
+        return 0;
+    }
+    let mut p = 0usize;
+    let mut r = resolution;
+    while r > 0.0 && r < 1.0 {
+        p += 1;
+        r *= 10.0;
+    }
+    if (r - r.round()).abs() <= 1e-9 * r {
+        p
+    } else {
+        p + 2
+    }
+}
+
+/// Decimals for a TIME or DURATION's seconds: one per factor of ten in
+/// its resolution, as canboat C's `fieldPrintTime` takes them from the
+/// units per second. A time ignores a field's display precision.
+pub(crate) fn time_precision_for(resolution: Option<f64>) -> usize {
+    let resolution = resolution.unwrap_or(1.0);
     if !resolution.is_finite() || resolution <= 0.0 {
         return 0;
     }
@@ -319,9 +344,17 @@ mod tests {
         // Edge: zero or negative.
         assert_eq!(precision_for(0.0), 0);
         assert_eq!(precision_for(-1.0), 0);
+        // A whole number of 10^-p steps keeps p decimals.
+        assert_eq!(precision_for(0.004), 3);
+        assert_eq!(precision_for(0.05), 2);
+        assert_eq!(precision_for(180.0), 0);
+        // Any other resolution gets two more (canboat#969).
+        assert_eq!(precision_for(0.03125), 4);
+        assert_eq!(precision_for(0.25 / 60.0), 5);
+        assert_eq!(precision_for(0.1 / 3.6e6), 10);
         // No cap: canboat C keeps counting, and so must we.
-        assert_eq!(precision_for(2f64.powi(-38)), 12);
-        assert_eq!(precision_for(2f64.powi(-38) * std::f64::consts::PI), 11);
+        assert_eq!(precision_for(2f64.powi(-38)), 14);
+        assert_eq!(precision_for(2f64.powi(-38) * std::f64::consts::PI), 13);
     }
 
     #[test]
