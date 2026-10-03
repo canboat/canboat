@@ -21,7 +21,7 @@
 use std::fs::{File, OpenOptions};
 use std::io::{self, BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
-use std::sync::atomic::AtomicU64;
+use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
 use std::sync::{Arc, mpsc};
 use std::thread;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
@@ -147,16 +147,23 @@ pub fn run(config: Config) -> io::Result<DeviceHandle> {
     let progress = Arc::new(AtomicU64::new(0));
     let writer_progress = progress.clone();
 
+    // The writer stops when it cannot write the sent file (it logs why)
+    // or when the device closes. Either way the reader stops too, so the
+    // closed frames channel tells the supervisor, which reconnects, rather
+    // than the capture playing on while what is sent goes nowhere.
+    let writing = Arc::new(AtomicBool::new(true));
+    let reader_writing = writing.clone();
     let encoder = SentEncoder;
     let init = encoder.init_bytes();
     let writer_join = thread::Builder::new()
         .name("replay-writer".into())
         .spawn(move || {
-            writer_thread(&mut *writer, encoder, init, None, cmd_rx, &writer_progress)
+            writer_thread(&mut *writer, encoder, init, None, cmd_rx, &writer_progress);
+            writing.store(false, Ordering::Release);
         })?;
     let reader_join = thread::Builder::new()
         .name("replay-reader".into())
-        .spawn(move || play(file, &config, &frames_tx))?;
+        .spawn(move || play(file, &config, &frames_tx, &reader_writing))?;
 
     Ok(DeviceHandle {
         frames_rx,
@@ -176,11 +183,11 @@ fn same_file(a: &Path, b: &Path) -> bool {
 }
 
 /// Play the capture over and over until the receiver goes away.
-fn play(mut file: File, config: &Config, frames_tx: &mpsc::Sender<RawFrame>) {
+fn play(mut file: File, config: &Config, frames_tx: &mpsc::Sender<RawFrame>, writing: &AtomicBool) {
     let mut pass = 0u64;
     loop {
         pass += 1;
-        match play_once(file, config, frames_tx) {
+        match play_once(file, config, frames_tx, writing) {
             Ok(Played::Done(0)) => {
                 log::error!("replay: {} holds no frames", config.path.display());
                 return;
@@ -218,6 +225,7 @@ fn play_once(
     file: File,
     config: &Config,
     frames_tx: &mpsc::Sender<RawFrame>,
+    writing: &AtomicBool,
 ) -> io::Result<Played> {
     let mut reader = BufReader::new(file);
     let mut line = String::with_capacity(512);
@@ -246,7 +254,7 @@ fn play_once(
         let at_ms = frame.timestamp.as_deref().and_then(timestamp_ms);
         thread::sleep(pacer.wait(at_ms));
         frame.timestamp = Some(now_iso());
-        if frames_tx.send(frame).is_err() {
+        if !writing.load(Ordering::Acquire) || frames_tx.send(frame).is_err() {
             return Ok(Played::Stopped);
         }
         frames += 1;
@@ -480,6 +488,39 @@ mod tests {
             run(config).err().map(|e| e.kind()),
             Some(io::ErrorKind::InvalidInput)
         );
+    }
+
+    /// Joining stops a replay nobody reads from: its reader only ends
+    /// when a send fails.
+    #[test]
+    fn join_stops_a_replay_nobody_reads() {
+        let handle = run(Config::new(capture("join", LINES))).unwrap();
+        let (done_tx, done_rx) = mpsc::channel();
+        thread::spawn(move || {
+            handle.join();
+            let _ = done_tx.send(());
+        });
+        assert!(
+            done_rx.recv_timeout(Duration::from_secs(5)).is_ok(),
+            "join did not return"
+        );
+    }
+
+    /// Once the writer has stopped (it could not write the sent file), the
+    /// capture is not played on into the void.
+    #[test]
+    fn stops_playing_when_the_writer_has_stopped() {
+        let path = capture("writer-gone", LINES);
+        let (frames_tx, frames_rx) = mpsc::channel();
+        let played = play_once(
+            File::open(&path).unwrap(),
+            &Config::new(&path),
+            &frames_tx,
+            &AtomicBool::new(false),
+        )
+        .unwrap();
+        assert!(matches!(played, Played::Stopped));
+        assert!(frames_rx.try_recv().is_err());
     }
 
     #[test]
