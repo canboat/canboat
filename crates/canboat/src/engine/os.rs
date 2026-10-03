@@ -43,7 +43,8 @@ fn unique_number_for(machine: &str) -> u32 {
 /// The stored random unique number, drawing and storing one on first use.
 /// Serialised, so two devices in one process don't each store their own;
 /// across processes [`store_unique_number`] lets only the first one store.
-/// A number that can't be stored is kept for the rest of the run.
+/// A number that can't be stored is kept for the rest of the run, and
+/// stored by the first later call that has somewhere to store it.
 fn stored_unique_number(state_dir: Option<&Path>) -> u32 {
     static UNSTORED: Mutex<Option<u32>> = Mutex::new(None);
     let mut unstored = UNSTORED.lock().unwrap_or_else(|e| e.into_inner());
@@ -51,16 +52,14 @@ fn stored_unique_number(state_dir: Option<&Path>) -> u32 {
     if let Some(n) = path.as_deref().and_then(read_unique_number) {
         return n;
     }
-    if let Some(n) = *unstored {
-        return n;
-    }
-    let n = random_unique_number();
+    let n = unstored.unwrap_or_else(random_unique_number);
     match path.as_deref().map(|p| store_unique_number(p, n)) {
         Some(Ok(stored)) => {
             log::info!(
                 "cannot identify this machine; stored random unique number {stored} in {}",
                 path.as_deref().unwrap().display()
             );
+            *unstored = None;
             return stored;
         }
         Some(Err(e)) => log::warn!(
@@ -68,6 +67,7 @@ fn stored_unique_number(state_dir: Option<&Path>) -> u32 {
              pass --unique to keep the NAME across restarts",
             path.as_deref().unwrap().display()
         ),
+        None if unstored.is_some() => return n,
         None => log::warn!(
             "cannot identify this machine; using random unique number {n} for this run \
              (pass --unique to keep the NAME across restarts)"
@@ -82,27 +82,26 @@ fn read_unique_number(path: &Path) -> Option<u32> {
     (n < ALL_ONES).then_some(n)
 }
 
-/// Store `n` at `path` unless another process stored one first, and return
-/// the number that is stored. The number is written to a temporary file
-/// and hard-linked into place: the link is atomic and fails if `path`
-/// exists, so exactly one of several processes starting at once stores
-/// its number, and the others read it back complete. A `path` holding no
-/// valid number is replaced, as it is on a filesystem without hard links.
+/// Store `n` at `path` unless another process stored a number first, and
+/// return the number that is stored. An exclusive lock on a lock file
+/// beside it covers the re-read and the write, so of several processes
+/// starting at once only the first stores its number; the others read it
+/// back. The number is written to a temporary file and renamed into
+/// place, so a reader never sees half of it.
 fn store_unique_number(path: &Path, n: u32) -> std::io::Result<u32> {
     let dir = path.parent().unwrap_or(Path::new("."));
     std::fs::create_dir_all(dir)?;
+    let lock = std::fs::File::create(dir.join(format!("{UNIQUE_NUMBER_FILE}.lock")))?;
+    lock.lock()?; // released when `lock` is dropped
+    if let Some(theirs) = read_unique_number(path) {
+        return Ok(theirs);
+    }
     let tmp = dir.join(format!(".{UNIQUE_NUMBER_FILE}.{}.tmp", std::process::id()));
     std::fs::write(&tmp, format!("{n}\n"))?;
-    let stored = match std::fs::hard_link(&tmp, path) {
-        Ok(()) => Ok(n),
-        Err(e) if e.kind() == std::io::ErrorKind::AlreadyExists => match read_unique_number(path) {
-            Some(theirs) => Ok(theirs),
-            None => std::fs::rename(&tmp, path).map(|()| n),
-        },
-        Err(_) => std::fs::rename(&tmp, path).map(|()| n),
-    };
-    let _ = std::fs::remove_file(&tmp); // gone already after a rename
-    stored
+    std::fs::rename(&tmp, path).inspect_err(|_| {
+        let _ = std::fs::remove_file(&tmp);
+    })?;
+    Ok(n)
 }
 
 /// A random unique number in 0..0x1fffff (all ones excluded), without a
@@ -193,6 +192,10 @@ fn machine_string() -> Option<String> {
 mod tests {
     use super::*;
 
+    /// Held by the tests that go through `stored_unique_number`: they
+    /// share its process-wide unstored number.
+    static STORED: Mutex<()> = Mutex::new(());
+
     #[test]
     fn fnv1a_matches_the_reference_vectors() {
         assert_eq!(fnv1a_64(b""), 0xcbf2_9ce4_8422_2325);
@@ -241,6 +244,7 @@ mod tests {
 
     #[test]
     fn random_unique_number_is_stored_and_reused() {
+        let _guard = STORED.lock().unwrap_or_else(|e| e.into_inner());
         let dir = std::env::temp_dir().join(format!("canboat-unique-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&dir);
         let n = stored_unique_number(Some(&dir));
@@ -268,11 +272,52 @@ mod tests {
         std::fs::write(&path, "x").unwrap();
         assert_eq!(store_unique_number(&path, 5678).unwrap(), 5678);
         assert_eq!(read_unique_number(&path), Some(5678));
-        let names: Vec<_> = std::fs::read_dir(&dir)
+        let mut names: Vec<_> = std::fs::read_dir(&dir)
             .unwrap()
-            .map(|e| e.unwrap().file_name())
+            .map(|e| e.unwrap().file_name().into_string().unwrap())
             .collect();
-        assert_eq!(names, [UNIQUE_NUMBER_FILE], "no temporary file left");
+        names.sort();
+        assert_eq!(
+            names,
+            [UNIQUE_NUMBER_FILE, &format!("{UNIQUE_NUMBER_FILE}.lock")],
+            "no temporary file left"
+        );
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    /// Processes racing to store: every one gets the same number.
+    #[test]
+    fn concurrent_stores_agree() {
+        let dir = std::env::temp_dir().join(format!("canboat-unique-conc-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        std::fs::create_dir_all(&dir).unwrap();
+        let path = dir.join(UNIQUE_NUMBER_FILE);
+        std::fs::write(&path, "garbage").unwrap();
+        let path = &path;
+        let got: Vec<u32> = std::thread::scope(|s| {
+            let handles: Vec<_> = (0..8)
+                .map(|i| s.spawn(move || store_unique_number(path, 1000 + i).unwrap()))
+                .collect();
+            handles.into_iter().map(|h| h.join().unwrap()).collect()
+        });
+        assert!(got.iter().all(|&n| n == got[0]), "{got:?}");
+        assert_eq!(read_unique_number(path), Some(got[0]));
+        std::fs::remove_dir_all(&dir).unwrap();
+    }
+
+    /// A number drawn without a place to store it is stored, not replaced,
+    /// once a call has one.
+    #[test]
+    fn an_unstored_number_is_stored_later() {
+        let _guard = STORED.lock().unwrap_or_else(|e| e.into_inner());
+        let dir = std::env::temp_dir().join(format!("canboat-unique-late-{}", std::process::id()));
+        let _ = std::fs::remove_dir_all(&dir);
+        let first = stored_unique_number(None);
+        assert_eq!(stored_unique_number(Some(&dir)), first);
+        assert_eq!(
+            read_unique_number(&dir.join(UNIQUE_NUMBER_FILE)),
+            Some(first)
+        );
         std::fs::remove_dir_all(&dir).unwrap();
     }
 
