@@ -532,6 +532,13 @@ FieldType fieldTypeList[] = {
      .resolution = 0.5,
      .physical = &VOLUME},
 
+    {.name = "INT8_J1939_OFFSET",
+     .description = "8 bit integer, J1939 offset",
+     .encodingDescription = "SAE J1939's 1 per bit encoding from -125: raw 0 is -125, so -125 to 125 (SPN 523, 524: gears)",
+     .baseFieldType = "UINT8",
+     .offset = -125,
+     .resolution = 1.0},
+
     {.name = "VOLUME_UFIX16_L",
      .description = "Volume",
      .baseFieldType = "UFIX16",

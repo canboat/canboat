@@ -2455,6 +2455,42 @@ mod tests {
         PgnDatabase::embedded(crate::engine::Units::Metric)
     }
 
+    /// J1939 gears (SPN 523, 524) are raw - 125: neutral is raw 125, reverse
+    /// below it, and raw 251 is Park (126 here). Not a signed byte.
+    #[test]
+    fn j1939_gears_are_offset_by_125() {
+        let db = PgnDatabase::embedded_j1939(crate::engine::Units::Metric);
+        let gears = |selected: u8, current: u8| {
+            let frame = RawFrame {
+                timestamp: None,
+                prio: 6,
+                pgn: 61445,
+                src: 3,
+                dst: 255,
+                data: smallvec::smallvec![selected, 0xe8, 0x03, current, 0x44, 0x20, 0x52, 0x20],
+            };
+            let d = db.decode(&frame).expect("decode");
+            let gear = |name: &str| d.field_by_name(name).map(|f| f.value.clone());
+            (
+                gear("Transmission Selected Gear"),
+                gear("Transmission Current Gear"),
+            )
+        };
+        let number = |v: &Option<FieldValue>| match v {
+            Some(FieldValue::Number(x)) => Some(*x),
+            _ => None,
+        };
+        let (selected, current) = gears(125, 124);
+        assert_eq!(number(&selected), Some(0.0), "neutral");
+        assert_eq!(number(&current), Some(-1.0), "reverse");
+        let (park, unknown) = gears(251, 0xff);
+        assert_eq!(number(&park), Some(126.0), "Park");
+        assert!(
+            matches!(unknown, Some(FieldValue::NotAvailable)),
+            "{unknown:?}"
+        );
+    }
+
     #[test]
     fn mmsi_zero_is_not_available() {
         // A Class B unit with no mothership (samples/ikonvert.log): its
