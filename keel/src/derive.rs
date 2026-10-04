@@ -37,7 +37,10 @@ pub fn get_min_range(size: u32, resolution: f64, sign: bool, offset: i32) -> f64
     if !sign || offset != 0 {
         (offset as f64) * resolution
     } else {
-        -((((1i128 << highbit) - 1) as f64) * resolution)
+        // The full negative end: NMEA 2000 reserves its sentinels at the
+        // top of the range only (DF84, an int16 at 0.004%, is -131.072%
+        // to 131.056%: raw -32768 to 32764).
+        -(((1i128 << highbit) as f64) * resolution)
     }
 }
 
@@ -478,4 +481,28 @@ fn fill_pgn_length(pgn: &mut crate::model::Pgn) -> Result<(), String> {
     pgn.length = length_bits / 8;
     pgn.is_variable = is_variable;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// A signed field reaches the full negative end of its bits: NMEA 2000
+    /// reserves sentinels at the top only. DF84, an int16 at 0.004%, is
+    /// -131.072% to 131.056% (raw -32768 to 32764).
+    #[test]
+    fn a_signed_range_reaches_the_full_negative_end() {
+        assert_eq!(get_min_range(8, 1.0, true, 0), -128.0);
+        assert_eq!(get_min_range(16, 0.004, true, 0), -131.072);
+        assert_eq!(get_min_range(64, 1.0, true, 0), -(2f64.powi(63)));
+        assert_eq!(get_max_range(16, 0.004, true, 0, None, 3), 131.056);
+    }
+
+    /// Unsigned, or signed with an offset (which reads as unsigned): the
+    /// minimum is the offset.
+    #[test]
+    fn an_unsigned_range_starts_at_its_offset() {
+        assert_eq!(get_min_range(16, 1.0, false, 0), 0.0);
+        assert_eq!(get_min_range(8, 1.0, true, -40), -40.0);
+    }
 }

@@ -8986,7 +8986,7 @@ limitations under the License.
           <Unit>m</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483.647</RangeMin>
+          <RangeMin>-2147483.648</RangeMin>
           <RangeMax>2147483.644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -10537,7 +10537,7 @@ limitations under the License.
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -11507,7 +11507,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-838.8607</RangeMin>
+          <RangeMin>-838.8608</RangeMin>
           <RangeMax>838.8604</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -12448,7 +12448,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.25</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-8191.75</RangeMin>
+          <RangeMin>-8192</RangeMin>
           <RangeMax>8191</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -15700,7 +15700,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -15946,7 +15946,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -16045,7 +16045,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1.27</RangeMin>
+          <RangeMin>-1.28</RangeMin>
           <RangeMax>1.24</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -17154,7 +17154,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -17928,7 +17928,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3.2767</RangeMin>
+          <RangeMin>-3.2768</RangeMin>
           <RangeMax>3.2764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -17944,7 +17944,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3.2767</RangeMin>
+          <RangeMin>-3.2768</RangeMin>
           <RangeMax>3.2764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -17960,7 +17960,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3.2767</RangeMin>
+          <RangeMin>-3.2768</RangeMin>
           <RangeMax>3.2764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -19214,7 +19214,7 @@ limitations under the License.
           <Unit>V</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -23105,7 +23105,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -25765,7 +25765,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25782,7 +25782,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25799,7 +25799,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25816,7 +25816,7 @@ limitations under the License.
           <Unit>T</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25834,7 +25834,7 @@ limitations under the License.
           <Unit>T</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25852,7 +25852,7 @@ limitations under the License.
           <Unit>T</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25870,7 +25870,7 @@ limitations under the License.
           <Unit>deg</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25889,7 +25889,7 @@ limitations under the License.
           <Unit>s</Unit>
           <Resolution>0.05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1638.35</RangeMin>
+          <RangeMin>-1638.4</RangeMin>
           <RangeMax>1638.2</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -25908,7 +25908,7 @@ limitations under the License.
           <Unit>s</Unit>
           <Resolution>0.05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1638.35</RangeMin>
+          <RangeMin>-1638.4</RangeMin>
           <RangeMax>1638.2</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -29242,7 +29242,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -29347,7 +29347,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -29866,7 +29866,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -29882,7 +29882,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -29898,7 +29898,7 @@ limitations under the License.
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -32469,7 +32469,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -32487,7 +32487,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1.02396875</RangeMin>
+          <RangeMin>-1.024</RangeMin>
           <RangeMax>1.023875</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -32505,7 +32505,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -32779,7 +32779,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>3.125e-08</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-67.10886396875</RangeMin>
+          <RangeMin>-67.108864</RangeMin>
           <RangeMax>67.108863875</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -32841,7 +32841,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -33132,7 +33132,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -33245,7 +33245,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>V</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -33263,7 +33263,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -33371,7 +33371,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -33389,7 +33389,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -33681,7 +33681,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -33699,7 +33699,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -34502,7 +34502,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -34520,7 +34520,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -34538,7 +34538,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -36115,7 +36115,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-131.068</RangeMin>
+          <RangeMin>-131.072</RangeMin>
           <RangeMax>131.056</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -36484,7 +36484,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>V</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -36502,7 +36502,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -37191,7 +37191,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -37223,7 +37223,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -37421,7 +37421,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>W</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -37503,7 +37503,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>W</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -37585,7 +37585,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>W</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -38101,7 +38101,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-83886.07</RangeMin>
+          <RangeMin>-83886.08</RangeMin>
           <RangeMax>83886.04</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -38223,7 +38223,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -38239,7 +38239,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -38255,7 +38255,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -38390,7 +38390,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -38503,7 +38503,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>A</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -39069,7 +39069,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -39327,7 +39327,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -39381,7 +39381,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -39400,7 +39400,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483.647</RangeMin>
+          <RangeMin>-2147483.648</RangeMin>
           <RangeMax>2147483.644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -39889,7 +39889,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -40973,7 +40973,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>deg</Unit>
           <Resolution>2.777777777777778e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.0233016861111111</RangeMin>
+          <RangeMin>-0.0233016888888889</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -40990,7 +40990,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>deg</Unit>
           <Resolution>2.777777777777778e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.0233016861111111</RangeMin>
+          <RangeMin>-0.0233016888888889</RangeMin>
           <RangeMax>0.0233016777777778</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -41116,7 +41116,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-8388.607</RangeMin>
+          <RangeMin>-8388.608</RangeMin>
           <RangeMax>8388.604</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -41321,7 +41321,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -41338,7 +41338,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -41356,7 +41356,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -41490,7 +41490,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>60</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1966020</RangeMin>
+          <RangeMin>-1966080</RangeMin>
           <RangeMax>1965840</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -41731,7 +41731,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>3.125e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1.02396875</RangeMin>
+          <RangeMin>-1.024</RangeMin>
           <RangeMax>1.023875</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -43013,7 +43013,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43055,7 +43055,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43074,7 +43074,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43093,7 +43093,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43175,7 +43175,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43287,7 +43287,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -43562,7 +43562,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -43900,7 +43900,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483.647</RangeMin>
+          <RangeMin>-2147483.648</RangeMin>
           <RangeMax>2147483.644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -44164,7 +44164,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44181,7 +44181,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44199,7 +44199,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44280,7 +44280,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -44392,7 +44392,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44409,7 +44409,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44426,7 +44426,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44568,7 +44568,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44586,7 +44586,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474.83647</RangeMin>
+          <RangeMin>-21474.83648</RangeMin>
           <RangeMax>21474.83644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -44735,7 +44735,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>semi-circle</Unit>
           <Resolution>1.9073486328125e-06</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.0624980926513672</RangeMin>
+          <RangeMin>-0.0625</RangeMin>
           <RangeMax>0.0624923706054688</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44754,7 +44754,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>semi-circle/s</Unit>
           <Resolution>3.637978807091713e-12</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-1.19205651571974e-07</RangeMin>
+          <RangeMin>-1.19209289550781e-07</RangeMin>
           <RangeMax>1.19194737635553e-07</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -44792,7 +44792,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>semi-circle</Unit>
           <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.99999988079071</RangeMin>
+          <RangeMin>-1</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -44811,7 +44811,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>semi-circle</Unit>
           <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.99999988079071</RangeMin>
+          <RangeMin>-1</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -44830,7 +44830,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>semi-circle</Unit>
           <Resolution>1.1920928955078125e-07</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.99999988079071</RangeMin>
+          <RangeMin>-1</RangeMin>
           <RangeMax>0.999999523162842</RangeMax>
           <UnknownValue>8388607</UnknownValue>
           <OutOfRangeValue>8388606</OutOfRangeValue>
@@ -44849,7 +44849,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>9.5367431640625e-07</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-0.000975608825683594</RangeMin>
+          <RangeMin>-0.0009765625</RangeMin>
           <RangeMax>0.000972747802734375</RangeMax>
           <UnknownValue>1023</UnknownValue>
           <OutOfRangeValue>1022</OutOfRangeValue>
@@ -44868,7 +44868,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s/s</Unit>
           <Resolution>3.637978807091713e-12</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3.72165231965482e-09</RangeMin>
+          <RangeMin>-3.72529029846191e-09</RangeMin>
           <RangeMax>3.71073838323355e-09</RangeMax>
           <UnknownValue>1023</UnknownValue>
           <OutOfRangeValue>1022</OutOfRangeValue>
@@ -45110,7 +45110,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45128,7 +45128,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45146,7 +45146,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45180,7 +45180,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45198,7 +45198,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45216,7 +45216,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45265,7 +45265,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -45283,7 +45283,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -45605,7 +45605,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-214748.3647</RangeMin>
+          <RangeMin>-214748.3648</RangeMin>
           <RangeMax>214748.3644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -45623,7 +45623,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.0001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3.2767</RangeMin>
+          <RangeMin>-3.2768</RangeMin>
           <RangeMax>3.2764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -45841,7 +45841,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -45859,7 +45859,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -47711,7 +47711,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474836.47</RangeMin>
+          <RangeMin>-21474836.48</RangeMin>
           <RangeMax>21474836.44</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51879,7 +51879,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51897,7 +51897,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51915,7 +51915,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51933,7 +51933,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51951,7 +51951,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51969,7 +51969,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -51987,7 +51987,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52125,7 +52125,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52143,7 +52143,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52161,7 +52161,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52179,7 +52179,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52197,7 +52197,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52215,7 +52215,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52233,7 +52233,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52371,7 +52371,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52398,7 +52398,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -52416,7 +52416,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -52434,7 +52434,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>1e-09</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2.147483647</RangeMin>
+          <RangeMin>-2.147483648</RangeMin>
           <RangeMax>2.147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -53242,7 +53242,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -53646,7 +53646,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -54116,7 +54116,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -54547,7 +54547,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-131.068</RangeMin>
+          <RangeMin>-131.072</RangeMin>
           <RangeMax>131.056</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -54757,7 +54757,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-131.068</RangeMin>
+          <RangeMin>-131.072</RangeMin>
           <RangeMax>131.056</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -54775,7 +54775,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>0.004</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-131.068</RangeMin>
+          <RangeMin>-131.072</RangeMin>
           <RangeMax>131.056</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -54867,7 +54867,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>Pa</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-214748364.7</RangeMin>
+          <RangeMin>-214748364.8</RangeMin>
           <RangeMax>214748364.4</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -54959,7 +54959,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>Pa</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-214748364.7</RangeMin>
+          <RangeMin>-214748364.8</RangeMin>
           <RangeMax>214748364.4</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -55215,7 +55215,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -56143,7 +56143,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>Pa/hr</Unit>
           <Resolution>10</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327670</RangeMin>
+          <RangeMin>-327680</RangeMin>
           <RangeMax>327640</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -56428,7 +56428,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -56444,7 +56444,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -56521,7 +56521,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -56625,7 +56625,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -58189,7 +58189,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>Pa</Unit>
           <Resolution>1000</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767000</RangeMin>
+          <RangeMin>-32768000</RangeMin>
           <RangeMax>32764000</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -58225,7 +58225,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -58243,7 +58243,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>L/h</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -59702,7 +59702,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -59720,7 +59720,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -59939,7 +59939,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -59957,7 +59957,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -59975,7 +59975,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -59993,7 +59993,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -60011,7 +60011,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -60029,7 +60029,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m/s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32.767</RangeMin>
+          <RangeMin>-32.768</RangeMin>
           <RangeMax>32.764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -60796,7 +60796,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -60814,7 +60814,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -60850,7 +60850,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -60868,7 +60868,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -60886,7 +60886,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -64205,7 +64205,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -65180,7 +65180,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -65412,7 +65412,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -65626,7 +65626,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>deg</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -65644,7 +65644,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>deg</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -65662,7 +65662,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>deg</Unit>
           <Resolution>0.1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-3276.7</RangeMin>
+          <RangeMin>-3276.8</RangeMin>
           <RangeMax>3276.4</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -65712,7 +65712,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483.647</RangeMin>
+          <RangeMin>-2147483.648</RangeMin>
           <RangeMax>2147483.644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -65730,7 +65730,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>s</Unit>
           <Resolution>0.001</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483.647</RangeMin>
+          <RangeMin>-2147483.648</RangeMin>
           <RangeMax>2147483.644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -70197,7 +70197,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -70739,7 +70739,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -71092,7 +71092,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -71108,7 +71108,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -71124,7 +71124,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -73603,7 +73603,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -73710,7 +73710,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -78637,7 +78637,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -78910,7 +78910,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -80375,7 +80375,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -81130,7 +81130,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -81146,7 +81146,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -82732,7 +82732,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82748,7 +82748,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82764,7 +82764,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82780,7 +82780,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
@@ -82797,7 +82797,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMin>-37480.6602903389</RangeMin>
           <RangeMax>37480.6602205258</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82815,7 +82815,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMin>-37480.6602903389</RangeMin>
           <RangeMax>37480.6602205258</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82833,7 +82833,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>rad/s</Unit>
           <Resolution>1.7453292519943296e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-37480.6602728857</RangeMin>
+          <RangeMin>-37480.6602903389</RangeMin>
           <RangeMax>37480.6602205258</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -82850,7 +82850,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-32767</RangeMin>
+          <RangeMin>-32768</RangeMin>
           <RangeMax>32764</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -83884,7 +83884,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>dB</Unit>
           <Resolution>0.01</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-327.67</RangeMin>
+          <RangeMin>-327.68</RangeMin>
           <RangeMax>327.64</RangeMax>
           <UnknownValue>32767</UnknownValue>
           <OutOfRangeValue>32766</OutOfRangeValue>
@@ -83902,7 +83902,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>m</Unit>
           <Resolution>1e-05</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-21474.83647</RangeMin>
+          <RangeMin>-21474.83648</RangeMin>
           <RangeMax>21474.83644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -87613,7 +87613,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -87629,7 +87629,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -87661,7 +87661,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -88153,7 +88153,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -88170,7 +88170,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-2147483647</RangeMin>
+          <RangeMin>-2147483648</RangeMin>
           <RangeMax>2147483644</RangeMax>
           <UnknownValue>2147483647</UnknownValue>
           <OutOfRangeValue>2147483646</OutOfRangeValue>
@@ -88187,7 +88187,7 @@ The Default update rate of this PGN is autonomous, as it is dependent upon notif
           <Unit>%</Unit>
           <Resolution>1</Resolution>
           <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
+          <RangeMin>-128</RangeMin>
           <RangeMax>124</RangeMax>
           <UnknownValue>127</UnknownValue>
           <OutOfRangeValue>126</OutOfRangeValue>
