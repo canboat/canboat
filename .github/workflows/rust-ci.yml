@@ -21,7 +21,7 @@
 #                 interface so the SocketCAN device tests exercise a real
 #                 socket.
 #   - armv6:      static musl cross-build for 32-bit ARMv6 (Raspberry Pi Zero
-#                 and 1), with the full test suite run under qemu as an
+#                 and 1), with the golden tests run under qemu as an
 #                 ARM1176.
 #   - msrv:       cargo check at the workspace's declared rust-version.
 #   - wasm:       the sans-I/O library features (decode, json-input, node)
@@ -130,10 +130,10 @@ jobs:
 
   # ARMv6 with VFPv2: the Raspberry Pi Zero and 1, which the armv7 build does
   # not run on. Static musl like the other linux builds, linked by rust-lld
-  # against the musl Rust ships, so no cross toolchain is needed. The tests
-  # run under qemu-user as an ARM1176 (the Pi Zero's core): QEMU_CPU reaches
-  # the binaries the golden tests spawn through binfmt too. This is also the
-  # only 32-bit run of the test suite.
+  # against the musl Rust ships, so no cross toolchain is needed. The golden
+  # tests run under qemu-user as an ARM1176 (the Pi Zero's core): QEMU_CPU
+  # reaches the canboat binary they spawn through binfmt too. The unit tests
+  # are left to the native legs.
   armv6:
     name: Rust armv6 (qemu)
     runs-on: ubuntu-latest
@@ -168,8 +168,8 @@ jobs:
             readelf -A "$f" | grep -Eq "Tag_CPU_arch: v6(KZ)?$" || { echo "::error::$bin is not ARMv6"; exit 1; }
           done
 
-      - name: Test (golden fixtures required)
-        run: cargo test --workspace --locked --target arm-unknown-linux-musleabihf
+      - name: Golden tests (fixtures required)
+        run: cargo test -p canboat --test golden --locked --target arm-unknown-linux-musleabihf
         env:
           CANBOAT_DIR: ${{ github.workspace }}
           CANBOAT_GOLDEN: required
