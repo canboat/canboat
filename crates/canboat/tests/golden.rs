@@ -1,11 +1,5 @@
 // (C) 2009-2026, Kees Verruijt, Harlingen, The Netherlands.
 
-// argv[0] routing (the `analyzer` alias) is a Unix symlink concept;
-// `CommandExt::arg0` is Unix-only. The golden fixtures live in a
-// sibling canboat checkout that isn't present on Windows CI anyway,
-// so gate the whole module to Unix.
-#![cfg(unix)]
-
 //! Golden tests against canboat's `analyzer/tests/*.in` / `*.out`
 //! files. Each case feeds an `.in` through the `canboat` binary
 //! invoked as `analyzer` (its argv[0] alias) with the same flags
@@ -22,7 +16,6 @@
 //! missing features) as their support lands.
 
 use std::io::Write;
-use std::os::unix::process::CommandExt;
 use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
@@ -83,6 +76,31 @@ fn canboat_path() -> PathBuf {
     PathBuf::from(env!("CARGO_BIN_EXE_canboat"))
 }
 
+/// The `canboat` binary invoked as `analyzer`, its argv[0] alias, as the
+/// installed shim invokes it.
+#[cfg(unix)]
+fn analyzer() -> Command {
+    use std::os::unix::process::CommandExt;
+    let mut cmd = Command::new(canboat_path());
+    cmd.arg0("analyzer");
+    cmd
+}
+
+/// Windows has no argv[0] of its own choosing: a process's argv[0] is
+/// the name it was started by. So start a copy named `analyzer.exe`,
+/// as a user who copies the binary under that name would.
+#[cfg(windows)]
+fn analyzer() -> Command {
+    use std::sync::OnceLock;
+    static COPY: OnceLock<PathBuf> = OnceLock::new();
+    let copy = COPY.get_or_init(|| {
+        let copy = PathBuf::from(env!("CARGO_TARGET_TMPDIR")).join("analyzer.exe");
+        std::fs::copy(canboat_path(), &copy).expect("copy canboat.exe to analyzer.exe");
+        copy
+    });
+    Command::new(copy)
+}
+
 /// The `.out` fixtures are canboat C's output, and canboat C prints
 /// spaced field names in its humanized units. The Rust `analyzer` now
 /// defaults to the machine-facing shape (camelCase keys, strict SI, no
@@ -127,8 +145,7 @@ fn run_case_skipping(in_name: &str, expected_name: &str, args: &[&str], skip_lin
 
     // Invoke the canboat binary as `analyzer` so its argv[0] alias
     // dispatches into the analyzer path — same as the installed shim.
-    let mut child = Command::new(canboat_path())
-        .arg0("analyzer")
+    let mut child = analyzer()
         .args(C_SHAPE)
         .args(default_units(args))
         .args(args)
@@ -652,8 +669,7 @@ fn dms_format_text() {
     let expected = std::fs::read(dir.join("dms-format.out")).expect("read .out");
     let mut combined = Vec::new();
     for geo in ["dd", "dm", "dms"] {
-        let mut child = Command::new(canboat_path())
-            .arg0("analyzer")
+        let mut child = analyzer()
             .args(["--geo", geo])
             .stdin(Stdio::piped())
             .stdout(Stdio::piped())

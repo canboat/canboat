@@ -26,6 +26,8 @@ use anyhow::Result;
 
 /// Every legacy name `canboat` answers to. Kept in sync with [`route`]
 /// so [`install_shims`] never creates a symlink `canboat` can't serve.
+/// Only that (Unix) code reads it.
+#[cfg_attr(not(unix), allow(dead_code))]
 pub const LEGACY_NAMES: &[&str] = &[
     // prefix-translate → interface
     "actisense-serial",

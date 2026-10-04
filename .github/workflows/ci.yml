@@ -146,7 +146,7 @@ jobs:
       - name: Set up Cygwin
         uses: egor-tensin/setup-cygwin@v4
         with:
-            packages: make gcc-core
+            packages: make gcc-core python3 diffutils
             hardlinks: 1
 
       # Derived from GITHUB_WORKSPACE (the login shell starts in the Cygwin
@@ -155,3 +155,16 @@ jobs:
       # running the workflow from a fork.
       - name: make
         run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"
+
+      # The build puts a copy of cygwin1.dll next to the programs, so they run
+      # outside Cygwin from the release zip. Inside Cygwin that copy stops
+      # them loading (exit 127), so it goes before the tests, which then run
+      # per directory: the top-level `make tests` would rebuild and copy it
+      # back. The tests send stderr to /tmp/*.err; show it when one fails.
+      - name: make tests
+        run: |
+          cd "$(cygpath -u "$GITHUB_WORKSPACE")"
+          rm rel/*/cygwin1.dll
+          for dir in analyzer actisense-serial/tests candump2analyzer/tests; do
+            make -C "$dir" tests || { tail -n 20 /tmp/*.err; exit 1; }
+          done

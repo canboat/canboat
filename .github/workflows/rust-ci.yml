@@ -73,8 +73,8 @@ jobs:
 
       # Golden fixtures come from this very checkout: the schema the crates
       # build against IS docs/canboat.json, so schema and fixtures cannot
-      # drift. Windows skips them — the runner checks files out with CRLF,
-      # which breaks the byte-exact diffs.
+      # drift. .gitattributes checks them out with LF everywhere, so the
+      # byte-exact diffs hold on Windows too.
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@stable
 
@@ -92,15 +92,10 @@ jobs:
         run: cargo build --workspace --locked
 
       - name: Test (golden fixtures required)
-        if: runner.os != 'Windows'
         run: cargo test --workspace --locked
         env:
           CANBOAT_DIR: ${{ github.workspace }}
           CANBOAT_GOLDEN: required
-
-      - name: Test
-        if: runner.os == 'Windows'
-        run: cargo test --workspace --locked
 
   msrv:
     name: Rust MSRV
