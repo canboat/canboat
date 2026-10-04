@@ -156,13 +156,15 @@ jobs:
       - name: make
         run: make -C "$(cygpath -u "$GITHUB_WORKSPACE")"
 
-      # The tests send stderr to /tmp/*.err; show it when one fails.
+      # The build puts a copy of cygwin1.dll next to the programs, so they run
+      # outside Cygwin from the release zip. Inside Cygwin that copy stops
+      # them loading (exit 127), so it goes before the tests, which then run
+      # per directory: the top-level `make tests` would rebuild and copy it
+      # back. The tests send stderr to /tmp/*.err; show it when one fails.
       - name: make tests
         run: |
           cd "$(cygpath -u "$GITHUB_WORKSPACE")"
-          ls -l rel/*/
-          cygcheck rel/*/analyzer.exe || true
-          ldd rel/*/analyzer.exe || true
-          rel/*/analyzer -version || echo "analyzer -version exited $?"
-          mv rel/*/cygwin1.dll /tmp/ && { rel/*/analyzer -version || echo "without the copied cygwin1.dll: exited $?"; mv /tmp/cygwin1.dll rel/*/; }
-          make tests || { tail -n 20 /tmp/*.err; exit 1; }
+          rm rel/*/cygwin1.dll
+          for dir in analyzer actisense-serial/tests candump2analyzer/tests; do
+            make -C "$dir" tests || { tail -n 20 /tmp/*.err; exit 1; }
+          done
