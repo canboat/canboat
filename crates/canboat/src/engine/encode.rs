@@ -2091,6 +2091,29 @@ mod tests {
         );
     }
 
+    /// A signed field reaches the full negative end of its bits: NMEA 2000
+    /// reserves sentinels at the top only, so -3276.8 A (raw -32768) is a
+    /// value, and a step below it is refused.
+    #[test]
+    fn a_signed_field_takes_its_full_negative_end() {
+        use crate::engine::field::battery_status::CURRENT;
+        let si = PgnDatabase::embedded(crate::engine::Units::Si);
+        let current = |a: f64| {
+            si.encode_for(crate::engine::pgn::BATTERY_STATUS)
+                .push(CURRENT, a)
+                .and_then(|b| b.build())
+        };
+        let frame = current(-3276.8).unwrap();
+        assert_eq!(&frame.data[3..5], &[0x00, 0x80]);
+        let d = si.decode(&frame).unwrap();
+        let got = d.field(CURRENT).and_then(|f| f.value.as_f64()).unwrap();
+        assert!((got + 3276.8).abs() < 1e-9, "{got}");
+        assert!(matches!(
+            current(-3276.9),
+            Err(EncodeError::ValueOutOfRange { .. })
+        ));
+    }
+
     /// `Raw` writes the wire bits verbatim, a sentinel included, where an
     /// integer outside the field's range is refused like any number.
     #[test]
