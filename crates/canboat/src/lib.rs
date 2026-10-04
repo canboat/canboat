@@ -276,6 +276,10 @@ pub mod read {
     pub use crate::engine::json_to_decoded as from_analyzer_json;
     pub use crate::engine::{Decoder, FrameSource};
 
+    /// A [`FrameSource`] over a stream of Actisense BST `0xD0` "N2K"
+    /// messages, as a W2K-1 sends them in its Actisense data mode.
+    #[cfg(feature = "io")]
+    pub use crate::io::ActisenseN2kReader;
     /// A [`FrameSource`] over an Actisense `.ebl` binary log.
     #[cfg(feature = "io")]
     pub use crate::io::EblReader;
@@ -453,6 +457,12 @@ pub mod codec {
     /// Maretron IPG100 / IPG200 (TCP).
     pub mod maretron {
         pub use crate::engine::codec::maretron::{Config, Maretron};
+    }
+
+    /// Actisense W2K-1 in its Actisense mode: binary BST `0xD0` messages
+    /// (TCP).
+    pub mod actisense_n2k {
+        pub use crate::engine::codec::actisense_n2k::ActisenseN2k;
     }
 
     /// The 29-bit ISO 11783 CAN identifier ⇄ priority, PGN, source and

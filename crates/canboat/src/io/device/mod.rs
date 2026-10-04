@@ -27,6 +27,7 @@
 //! # Ok::<(), std::io::Error>(())
 //! ```
 
+pub mod actisense_n2k;
 pub mod canboat_csv;
 pub mod ikonvert;
 pub mod line_gateway;

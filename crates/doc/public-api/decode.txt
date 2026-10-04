@@ -1,5 +1,20 @@
 pub mod canboat
 pub mod canboat::codec
+pub mod canboat::codec::actisense_n2k
+pub struct canboat::codec::actisense_n2k::ActisenseN2k
+impl canboat::codec::actisense_n2k::ActisenseN2k
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::new() -> Self
+impl canboat::codec::Codec for canboat::codec::actisense_n2k::ActisenseN2k
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl core::default::Default for canboat::codec::actisense_n2k::ActisenseN2k
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::default() -> Self
+impl core::fmt::Debug for canboat::codec::actisense_n2k::ActisenseN2k
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::fmt(&self, &mut core::fmt::Formatter<'_>) -> core::fmt::Result
 pub mod canboat::codec::can_id
 pub fn canboat::codec::can_id::compose(u8, u32, u8, u8) -> u32
 pub fn canboat::codec::can_id::decompose(u32) -> (u8, u32, u8, u8)
@@ -220,6 +235,13 @@ pub fn canboat::codec::Codec::open(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::Codec::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 pub fn canboat::codec::Codec::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
 pub fn canboat::codec::Codec::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+impl canboat::codec::Codec for canboat::codec::actisense_n2k::ActisenseN2k
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::close(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::open(&mut self) -> alloc::vec::Vec<u8>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::receive(&mut self, &[u8], u64, &mut alloc::vec::Vec<canboat::codec::Event>)
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::send(&mut self, &canboat::Frame) -> core::result::Result<alloc::vec::Vec<u8>, canboat::codec::Refused>
+pub fn canboat::codec::actisense_n2k::ActisenseN2k::tick(&mut self, u64, &mut alloc::vec::Vec<canboat::codec::Event>)
 impl canboat::codec::Codec for canboat::codec::ikonvert::Ikonvert
 pub fn canboat::codec::ikonvert::Ikonvert::close(&mut self) -> alloc::vec::Vec<u8>
 pub fn canboat::codec::ikonvert::Ikonvert::keepalive(&self) -> core::option::Option<(core::time::Duration, alloc::vec::Vec<u8>)>

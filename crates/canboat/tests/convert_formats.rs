@@ -268,3 +268,39 @@ fn actisense_ebl_emits_binary_framing() {
     assert!(ebl.len() > 16, "ebl too short: {ebl:?}");
     assert_eq!(&ebl[..2], &[0x1b, 0x01], "expected ESC SOH opener");
 }
+
+/// Drop every `"timestamp":"…",` from JSON lines: a BST `0xD0` message
+/// carries only the device's own clock, so its frames have none.
+fn without_timestamps(json: &[u8]) -> String {
+    let text = String::from_utf8_lossy(json);
+    let mut out = String::new();
+    let mut rest = text.as_ref();
+    while let Some(i) = rest.find("\"timestamp\":\"") {
+        out.push_str(&rest[..i]);
+        let after = &rest[i + "\"timestamp\":\"".len()..];
+        let end = after
+            .find("\",")
+            .expect("timestamp is followed by another field");
+        rest = &after[end + 2..];
+    }
+    out.push_str(rest);
+    out
+}
+
+/// Actisense BST `0xD0` messages (#993), as a W2K-1 sends them in its
+/// Actisense mode. The fixture is pgn-test.in's 31 messages, 23 of them
+/// fast-packets, written by canboatjs's `encodeN2KActisense`, the
+/// reference for the format. They decode exactly as pgn-test.in does.
+#[test]
+fn actisense_n2k_decodes_as_pgn_test() {
+    let dir = std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join("../../analyzer/tests");
+    let plain = std::fs::read(dir.join("pgn-test.in")).expect("read pgn-test.in");
+    let bst = std::fs::read(dir.join("pgn-test-actisense-n2k.bin")).expect("read fixture");
+    let want = without_timestamps(&run(&["convert", "--no-banner"], &plain));
+    let got = without_timestamps(&run(
+        &["convert", "--no-banner", "--from", "actisense-n2k"],
+        &bst,
+    ));
+    assert_eq!(got.lines().count(), 31);
+    assert_eq!(got, want);
+}
