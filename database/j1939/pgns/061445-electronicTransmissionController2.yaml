@@ -8,8 +8,10 @@ fields:
 - id: transmissionSelectedGear
   name: Transmission Selected Gear
   spn: 524
-  description: Offset by -125 in J1939; negative gears are reverse, 0 is neutral
-  type: INT8
+  description: Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126
+  type: INT8_J1939_OFFSET
+  rangeMin: -125
+  rangeMax: 125
 - id: transmissionActualGearRatio
   name: Transmission Actual Gear Ratio
   spn: 526
@@ -20,8 +22,10 @@ fields:
 - id: transmissionCurrentGear
   name: Transmission Current Gear
   spn: 523
-  description: Offset by -125 in J1939; negative gears are reverse, 0 is neutral
-  type: INT8
+  description: Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126
+  type: INT8_J1939_OFFSET
+  rangeMin: -125
+  rangeMax: 125
 - id: transmissionRequestedRange
   name: Transmission Requested Range
   spn: 162

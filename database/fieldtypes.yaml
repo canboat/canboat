@@ -427,6 +427,12 @@
   resolution: 0.5
   offset: -125
   physical: VOLUME
+- name: INT8_J1939_OFFSET
+  base: UINT8
+  description: 8 bit integer, J1939 offset
+  encodingDescription: 'SAE J1939''s 1 per bit encoding from -125: raw 0 is -125, so -125 to 125 (SPN 523, 524: gears)'
+  resolution: 1.0
+  offset: -125
 - name: VOLUME_UFIX16_L
   base: UFIX16
   description: Volume

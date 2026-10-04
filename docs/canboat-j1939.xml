@@ -3857,18 +3857,19 @@ limitations under the License.
           <Order>1</Order>
           <Id>transmissionSelectedGear</Id>
           <Name>Transmission Selected Gear</Name>
-          <Description>Offset by -125 in J1939; negative gears are reverse, 0 is neutral</Description>
+          <Description>Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126</Description>
           <SPN>524</SPN>
           <BitLength>8</BitLength>
           <BitOffset>0</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
-          <RangeMax>124</RangeMax>
-          <UnknownValue>127</UnknownValue>
-          <OutOfRangeValue>126</OutOfRangeValue>
-          <ReservedValue>125</ReservedValue>
+          <Signed>false</Signed>
+          <Offset>-125</Offset>
+          <RangeMin>-125</RangeMin>
+          <RangeMax>125</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
@@ -3892,18 +3893,19 @@ limitations under the License.
           <Order>3</Order>
           <Id>transmissionCurrentGear</Id>
           <Name>Transmission Current Gear</Name>
-          <Description>Offset by -125 in J1939; negative gears are reverse, 0 is neutral</Description>
+          <Description>Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126</Description>
           <SPN>523</SPN>
           <BitLength>8</BitLength>
           <BitOffset>24</BitOffset>
           <BitStart>0</BitStart>
           <Resolution>1</Resolution>
-          <Signed>true</Signed>
-          <RangeMin>-127</RangeMin>
-          <RangeMax>124</RangeMax>
-          <UnknownValue>127</UnknownValue>
-          <OutOfRangeValue>126</OutOfRangeValue>
-          <ReservedValue>125</ReservedValue>
+          <Signed>false</Signed>
+          <Offset>-125</Offset>
+          <RangeMin>-125</RangeMin>
+          <RangeMax>125</RangeMax>
+          <UnknownValue>255</UnknownValue>
+          <OutOfRangeValue>254</OutOfRangeValue>
+          <ReservedValue>253</ReservedValue>
           <FieldType>NUMBER</FieldType>
         </Field>
         <Field>
