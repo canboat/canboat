@@ -272,9 +272,9 @@ Pgn pgnList[] = {
      PACKET_COMPLETE,
      PACKET_SINGLE,
      {
-      {.name = "Transmission Selected Gear", .camelName = "transmissionSelectedGear", .fieldType = "INT8", .resolution = 1.0, .hasSign = true, .description = "Offset by -125 in J1939; negative gears are reverse, 0 is neutral"},
+      {.name = "Transmission Selected Gear", .camelName = "transmissionSelectedGear", .fieldType = "INT8_J1939_OFFSET", .description = "Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126", .rangeMin = -125.0, .rangeMax = 125.0},
       {.name = "Transmission Actual Gear Ratio", .camelName = "transmissionActualGearRatio", .fieldType = "NUMBER", .size = 16, .resolution = 0.001, .description = "0.001 per bit"},
-      {.name = "Transmission Current Gear", .camelName = "transmissionCurrentGear", .fieldType = "INT8", .resolution = 1.0, .hasSign = true, .description = "Offset by -125 in J1939; negative gears are reverse, 0 is neutral"},
+      {.name = "Transmission Current Gear", .camelName = "transmissionCurrentGear", .fieldType = "INT8_J1939_OFFSET", .description = "Offset by -125 in J1939; negative gears are reverse, 0 is neutral. Raw 251 is Park, which reads as 126", .rangeMin = -125.0, .rangeMax = 125.0},
       {.name = "Transmission Requested Range", .camelName = "transmissionRequestedRange", .fieldType = "STRING_FIX", .size = 16, .description = "Two ASCII characters"},
       {.name = "Transmission Current Range", .camelName = "transmissionCurrentRange", .fieldType = "STRING_FIX", .size = 16, .description = "Two ASCII characters"}
      },
